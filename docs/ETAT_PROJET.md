@@ -1,26 +1,13 @@
-# Couronnes & Arcanes — V2.8 (compétences exclusives)
+# Couronnes & Arcanes — V2.9
 
-- **Version de référence après fusion de la PR #3 : V2.8** (branche principale `main`), jeu HTML solo autonome hors ligne. La base V2.7.1 et les sauvegardes historiques sont préservées.
-- **Nouveautés :** 8 compétences originales, 2 par classe, 68 cartes ; apprentissage aux niveaux 3 et 6 contre 30 ou 70 éclats ; barrières, ralliement, gel, dégâts magiques, flèche perforante, pioche, soins et bénédiction.
-- **Tests exécutés sur la PR #3 :** 130/130 tests JavaScript, 60/60 combats de parité, `npm run build`, vérification de `JOUER.html`, parcours Playwright Chromium bureau et téléphone simulé. Preuve : Actions #38173354595 (succès).
-- **Limites :** pas de test sur smartphone réel ni d'équilibrage humain exhaustif ; les simulations ne remplacent pas les joueurs.
-- **Coordination :** GitHub est la référence officielle ; une branche par session, CI + tests + revue, puis fusion autonome après succès. Le joueur teste occasionnellement, pas nécessairement à chaque version ; bloquer en cas de risque ou d'échec.
-- **Prochaine étape :** mesurer les huit compétences avec des decks et combats diversifiés avant tout rééquilibrage.
+- **Version : 2.9.0**, branche `feat/v2.9-battle-control`, intégration dans `main` après contrôles verts de la PR. Base distante de départ : V2.8, commit `5c362b7610526275aa7276e89c78a4825bac1409`.
+- **Livrable :** 74 cartes ; silence borné avec répit, téléportation latérale et pièges publics ; six nouvelles cartes obtenables en Alchimie et paquets. Les huit compétences exclusives V2.8 et les 68 cartes précédentes sont intactes.
+- **Architecture :** nouveau module pur `src/engine/battle-control.js`, partagé par moteur/IA/aperçus ; dégâts, armures, barrières et statistiques réutilisent le moteur. 19 modules dans l'export, 12 portraits partagés.
+- **Sauvegardes :** clés `couronnes_arcanes_v1` et `couronnes_arcanes_bataille_v1` conservées ; aucun champ nouveau obligatoire, aucune réinitialisation. Propriétaire/expiration des pièges et états des unités persistants.
+- **Contrôles locaux exécutés :** 165/165 tests Node, 60/60 parités historiques, build synchronisé ; Chromium V2.8/V2.9 bureau/mobile simulé, export autonome hors ligne, stockage réel/rechargement et parcours de fin de combat. Débordement de la main mobile corrigé.
+- **Simulations :** 20 480 scénarios comparatifs, rejoués à l'identique ; quatre classes × quatre compositions × deux niveaux × cinq variantes × huit adversaires × seize graines. Zéro état invalide, aucun combat inachevé, maximum observé 32 tours. Rapport : `BATTLE_CONTROL_V2_9.md`, données : `BATTLE_CONTROL_BENCHMARK_V2_9.json`.
+- **CI :** workflow étendu aux parcours V2.9 et aux simulations ; consulter les résultats de la PR et vérifier les SHA distants avant de fusionner. Aucun succès distant présumé.
+- **Limites :** bots heuristiques, pas de test physique ni d'équilibrage humain ; rencontres historiques inchangées, IA avec les nouvelles cartes vérifiée en laboratoire ; illustrations partagées et absence de réseau.
+- **Proposition V3.0 :** donjon original en trois salles avec des boss utilisant progressivement les trois contrôles ; mesurer sa difficulté avec les anciennes et nouvelles compositions avant intégration.
 
-# Couronnes & Arcanes — état V2.7.1 (récupération du projet)
-
-- **Version courante : 2.7.1**, jeu solo HTML autonome hors ligne. Structure de jeu modulaire inchangée ; les nouveaux modules `scripts/lib/` servent uniquement aux simulations.
-- **Nouveauté :** étude comparée des quatre compositions de deck sur 24 configurations, 16 rencontres et 32 graines ; 12 288 combats par version, avant/après.
-- **Correction :** composition Arcanes limitée à trois sorts au lieu de cinq ; comparaison améliorée dans les six profils simulés. Assaut, Rempart et Équilibré inchangés.
-- **Qualité :** script `npm run deck-balance`, tests de non-régression, parité 60 combats et CI GitHub Actions prête à activer après publication du dépôt.
-- **Sauvegardes :** clés `couronnes_arcanes_v1` et `couronnes_arcanes_bataille_v1` conservées, aucun champ obligatoire ni reset.
-- **Limites :** IA du joueur simulée, pas de statistiques humaines ; pas de preuve d'exécution Actions ni de push GitHub sans accès effectif au dépôt.
-- **Suite :** mesure de performances avec des parties humaines, améliorer les stratégies du joueur automatisé et les rapports de test, puis nouvelles fonctionnalités.
-
-Voir `docs/DECK_BALANCE_V2_7.md` et `docs/COMPOSITIONS_DECKS_V2_6.md`.
-
-## Continuité des sessions — 11 octobre 2026
-
-- Les huit fichiers remplacés accidentellement par V1.2 ont été conservés en archive, et la base V2.7 rétablie. Les mécanismes de Concorde étaient déjà présents en V2.7.
-- Cette V2.7.1 harmonise les instructions, le numéro de version et le fichier HTML autonome, sans changer volontairement le gameplay.
-- Référence de développement : dépôt GitHub, branches séparées, pull requests contrôlées ; archives sur Google Drive.
+GitHub reste la source de vérité. Toujours reprendre le dernier `main`, préserver les décisions techniques et utiliser une PR contrôlée. La fusion est autorisée sans test manuel du joueur si les portes obligatoires passent.

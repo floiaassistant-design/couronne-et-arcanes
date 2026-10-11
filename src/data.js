@@ -86,7 +86,15 @@ export const CLASS_SKILLS=Object.freeze({
  skill_cleric_light:{hero:'clerc',level:3,shards:30},
  skill_cleric_bless:{hero:'clerc',level:6,shards:70}
 });
-raw.push(...expansion,...classCards);
+const controlCards=[
+ ['seal_silence','Sceau du Mutisme','sort','rare',2,0,0,'spell_silence','⊘','Réduit au silence la capacité ennemie la plus dangereuse de la ligne pour 2 résolutions. Attaques normales et traits passifs conservés. Non renouvelable immédiatement.'],
+ ['mist_inquisitor','Inquisiteur des Brumes','ombre','rare',3,2,6,'silence','⊘','Avant le déplacement, réduit au silence un ennemi de sa ligne pour la résolution en cours. Capacité utilisable tous les 3 tours.'],
+ ['transposition','Faille de Transposition','sort','rare',2,0,0,'spell_teleport','✧','Déplace vers la ligne choisie l’allié le plus avancé des autres lignes, à la même colonne libre. Exclut la case devant la couronne adverse ; une téléportation par créature et par tour.'],
+ ['portal_walker','Marcheur des Portails','ether','rare',2,3,5,'portal','✧','Change de ligne à la même colonne si la position est avantageuse, avant le déplacement. Une fois tous les 3 tours ; aucune arrivée devant la couronne adverse.'],
+ ['rune_trap','Piège runique','sort','commun',2,0,0,'spell_trap','⌁','Arme une case centrale libre (3, puis côté allié, puis opposé). Le prochain ennemi qui y arrive subit 3 dégâts avant armure. Dure 3 résolutions ; 2 pièges par camp maximum, visibles.'],
+ ['sylvan_trapper','Trappeur sylvestre','sylve','commun',2,2,5,'trapper','⌁','Arme la case libre devant lui entre les colonnes 2 et 4, tous les 3 tours. Le prochain ennemi qui y arrive subit 1 dégât avant armure et perd son déplacement et son attaque de cette résolution. Piège visible, durée 3 résolutions.']
+];
+raw.push(...expansion,...classCards,...controlCards);
 export const CARDS = Object.fromEntries(raw.map(([id,name,faction,rarity,delay,attack,hp,ability,icon,description]) =>
  [id,{id,name,faction,rarity,delay,attack,hp,ability,icon,description,type:ability.startsWith('spell_')?'sort':'unité',heroClass:CLASS_SKILLS[id]?.hero||null}]));
 
@@ -111,6 +119,9 @@ export function cardTraits(id){
  if(c?.ability==='inspire')traits.push('Inspiration');
  if(c?.ability==='ward')traits.push('Protection');
  if(c?.ability==='haste')traits.push('Célérité');
+ if(['silence','spell_silence'].includes(c?.ability))traits.push('Silence');
+ if(['portal','spell_teleport'].includes(c?.ability))traits.push('Téléportation');
+ if(['trapper','spell_trap'].includes(c?.ability))traits.push('Piège');
  return traits;
 }
 export const FACTIONS = {
@@ -154,7 +165,9 @@ export function towerMission(floor){
  const factions=['aube','sylve','ombre','forge','ether'];
  const faction=factions[Math.floor((n-1)/4)];
  const aiStyle=({aube:'bastion',sylve:'meute',ombre:'rituel',forge:'assaut',ether:'rituel'})[faction];
- const units=Object.values(CARDS).filter(c=>c.faction===faction&&c.type==='unité'&&c.rarity!=='légendaire');
+ // La Tour historique reste stable lorsque le catalogue reçoit une extension.
+ const controlIds=new Set(controlCards.map(c=>c[0]));
+ const units=Object.values(CARDS).filter(c=>!controlIds.has(c.id)&&c.faction===faction&&c.type==='unité'&&c.rarity!=='légendaire');
  const spells=['firebolt','healing','warcry','storm','entangle','sanctuary'];
  const deck=Array.from({length:16+Math.floor(n/5)},(_,i)=>i%5===4?spells[(n+i)%spells.length]:units[(i+n*3)%units.length].id);
  const boss=n%5===0;

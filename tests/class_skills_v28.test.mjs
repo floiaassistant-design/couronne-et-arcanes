@@ -16,7 +16,7 @@ function unit(id,side,uid,hp=6,maxhp=8,armor=0){
  return {id,side,uid,hp,maxhp,atk:3,armor,ranged:false,ability:'',stun:0,poison:0,poisonTurns:0};
 }
 test('V2.8 eight unique exclusive skills extend the 60 existing cards',()=>{
- assert.equal(Object.keys(CARDS).length,68);assert.equal(ids.length,8);
+ assert.equal(Object.keys(CARDS).length,74);assert.equal(ids.length,8);
  assert.equal(new Set(ids).size,8);
  for(const id of ids){
   assert.equal(CARDS[id].heroClass,CLASS_SKILLS[id].hero);

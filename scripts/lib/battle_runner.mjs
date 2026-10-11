@@ -2,6 +2,8 @@
 // Ne prédit pas la réussite des joueurs humains.
 import {CARDS} from '../../src/data.js';
 import {createBattle,playPlayerCard,endPlayerTurn,usePower} from '../../src/engine.js';
+import {classSkillTargetError} from '../../src/engine/class-skills.js';
+import {controlTargetError,silenceTarget,silenceValue,teleportPlan,teleportGain,trapPlan} from '../../src/engine/battle-control.js';
 
 export function chooseSimulatedMove(b){
  const moves=[];
@@ -10,6 +12,7 @@ export function chooseSimulatedMove(b){
   if(!c||entry.wait>0)continue;
   for(let lane=0;lane<3;lane++){
    const row=b.board[lane];if(c.type==='unité'&&row[1])continue;
+   if(classSkillTargetError(b,'p',c,lane)||controlTargetError(b,'p',c,lane))continue;
    const friends=row.filter(u=>u&&u.side==='p'),foes=row.filter(u=>u&&u.side==='e');
    const threat=foes.reduce((sum,u)=>sum+u.atk+(u.hp>=8?3:0),0);
    const matching=friends.filter(u=>CARDS[u.id]?.faction===c.faction).length;
@@ -20,6 +23,16 @@ export function chooseSimulatedMove(b){
     c.ability==='spell_buff'?friends.length*3:
     c.ability==='spell_root'?foes.length*3:
     c.ability==='spell_ward'?Math.max(0,12-b.heroes.p.shield)*.7:0;
+   if(c.ability==='spell_silence')score=silenceValue(silenceTarget(b,'p',lane)?.u)*1.3;
+   if(c.ability==='spell_teleport')score=teleportGain(b,'p',teleportPlan(b,'p',lane));
+   if(c.ability==='spell_trap'){
+    const plan=trapPlan(b,'p',lane);
+    score=plan&&row.some((u,col)=>u?.side==='e'&&col>plan.col)?5+threat*.2:0;
+   }
+   if(c.heroClass)score=c.ability==='spell_ranger_draw'?5:c.ability==='spell_guard_rally'?friends.length*3:
+    c.ability==='spell_cleric_light'?friends.reduce((n,u)=>n+Math.min(3,u.maxhp-u.hp),0):
+    ['spell_guard_wall','spell_cleric_bless'].includes(c.ability)?friends.length*2+threat*.2:foes.length*4+threat*.25;
+   if((c.heroClass||['spell_silence','spell_teleport','spell_trap'].includes(c.ability))&&score<=0)continue;
    if(lane===1)score+=.15;
    moves.push({i,lane,score});
   }
@@ -27,7 +40,7 @@ export function chooseSimulatedMove(b){
  moves.sort((a,b)=>b.score-a.score||a.i-b.i||a.lane-b.lane);
  return moves[0]||null;
 }
-export function simulateBattle(profile,mission,seed,{turnLimit=40}={}){
+export function simulateBattle(profile,mission,seed,{turnLimit=40,observe}={}){
  const b=createBattle(profile,mission,seed);let turns=0,powers=0;
  while(b.status==='active'&&turns<turnLimit){
   if(b.powerCooldown===0){const result=usePower(b);if(result.ok)powers++;}
@@ -36,6 +49,7 @@ export function simulateBattle(profile,mission,seed,{turnLimit=40}={}){
    const result=playPlayerCard(b,best.i,best.lane);if(!result.ok)throw Error(result.reason);
   }
   if(b.status==='active')endPlayerTurn(b);
+  observe?.(b);
   turns++;
  }
  if(b.status==='active')throw Error(`Simulation inachevée (${mission.id}, ${seed})`);

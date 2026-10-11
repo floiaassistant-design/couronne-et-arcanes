@@ -32,8 +32,18 @@ function fxImpact(point,kind,damage){
  if(damage>0){const dmg=fxNode('vfx-damage',point.x,point.y-12,`−${damage}`);animateFx(dmg,[{opacity:0,transform:'translate(-50%,-50%) translateY(8px)'},{opacity:1,offset:.2},{opacity:0,transform:'translate(-50%,-50%) translateY(-35px)'}],660);}
 }
 function fxOne(event){
- const start=fxPoint(event.lane,event.from??event.col??1),end=fxPoint(event.lane,event.to??event.col??1);
+ const start=fxPoint(event.fromLane??event.lane,event.from??event.col??1),end=fxPoint(event.lane,event.to??event.col??1);
  if(!end)return;
+ if(event.type==='teleport'){
+  fxImpact(start,'magic',0);fxImpact(end,'magic',0);
+  const portal=fxNode('vfx-moving',end.x,end.y,'✧');
+  animateFx(portal,[{opacity:0,transform:'translate(-50%,-50%) scale(.3)'},{opacity:1,offset:.5,transform:'translate(-50%,-50%) scale(1.7)'},{opacity:0,transform:'translate(-50%,-50%) scale(2.2)'}],500);return;
+ }
+ if(['silence','trap-place','trap-trigger','trap-expire'].includes(event.type)){
+  fxImpact(end,'magic',event.damage||0);
+  const label=fxNode('vfx-tactic',end.x,end.y-20,event.type==='silence'?'⊘ SILENCE':event.type==='trap-trigger'?'⌁ PIÈGE !':event.type==='trap-place'?'⌁ ARMÉ':'⌁ EXPIRÉ');
+  animateFx(label,[{opacity:0},{opacity:1,offset:.3},{opacity:0,transform:'translate(-50%,-50%) translateY(-25px)'}],700);return;
+ }
  if(event.type==='spawn'){
   const unit=end.el.querySelector('.unit-on-board');
   unit?.animate([{filter:'brightness(2)',transform:'scale(.65)'},{filter:'brightness(1.4)',transform:'scale(1.12)',offset:.55},{filter:'brightness(1)',transform:'scale(1)'}],{duration:520,easing:'ease-out'});
