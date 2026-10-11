@@ -23,3 +23,5 @@ jobs:
         run: npm run test:parity
       - name: Construire le jeu hors ligne
         run: npm run build
+      - name: Vérifier la synchronisation du HTML autonome
+        run: git diff --exit-code -- JOUER.html
