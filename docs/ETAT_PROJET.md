@@ -1,10 +1,11 @@
-# Couronnes & Arcanes — préparation V2.8 (branche feat/v2.8-class-skills)
+# Couronnes & Arcanes — V2.8 (compétences exclusives)
 
-- **Version stable officiellement sur main : V2.7.1**. V2.8 est une candidate indépendante, ne pas fusionner avant validation.
-- **Ajouts candidats :** huit compétences originales (2 par classe), 68 cartes au total, apprentissage garanti aux niveaux 3/6 contre 30/70 éclats, restrictions de decks et nouvelles protections en combat.
-- **Règles inchangées :** 3 lignes, deux cartes par tour, progression et récompenses historiques, classes/talents, sauvegardes localStorage et anciens profils.
-- **Tests à contrôler :** nouveaux tests ciblés, suite Node, parité 60 scénarios, compilation HTML autonome, parcours navigateur et téléphone réel quand disponible.
-- **Attention :** l'état stable de la V2.7.1 sur main demeure la référence tant que ces tests ne sont pas concluants.
+- **Version de référence après fusion de la PR #3 : V2.8** (branche principale `main`), jeu HTML solo autonome hors ligne. La base V2.7.1 et les sauvegardes historiques sont préservées.
+- **Nouveautés :** 8 compétences originales, 2 par classe, 68 cartes ; apprentissage aux niveaux 3 et 6 contre 30 ou 70 éclats ; barrières, ralliement, gel, dégâts magiques, flèche perforante, pioche, soins et bénédiction.
+- **Tests exécutés sur la PR #3 :** 130/130 tests JavaScript, 60/60 combats de parité, `npm run build`, vérification de `JOUER.html`, parcours Playwright Chromium bureau et téléphone simulé. Preuve : Actions #38173354595 (succès).
+- **Limites :** pas de test sur smartphone réel ni d'équilibrage humain exhaustif ; les simulations ne remplacent pas les joueurs.
+- **Coordination :** GitHub est la référence officielle ; une branche par session, CI + tests + revue, puis fusion autonome après succès. Le joueur teste occasionnellement, pas nécessairement à chaque version ; bloquer en cas de risque ou d'échec.
+- **Prochaine étape :** mesurer les huit compétences avec des decks et combats diversifiés avant tout rééquilibrage.
 
 # Couronnes & Arcanes — état V2.7.1 (récupération du projet)
 
