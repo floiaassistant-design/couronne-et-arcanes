@@ -191,7 +191,7 @@ const {AI_STYLES,aiStyle,aiEnraged}=__load("src/ai.js");
 const {TALENT_TREE,TALENT_LEVELS}=__load("src/talents.js");
 const {visualFor,artSrc}=__load("src/visuals.js");
 const {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission}=__load("src/dungeons.js");
-const {DECK_STYLES,proposeDeck,applyDeckStyle,deckOverview,freshProfile,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,BUILDINGS,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,chooseHeroTalent,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
+const {DECK_STYLES,proposeDeck,applyDeckStyle,deckOverview,freshProfile,changeHeroClass,learnClassSkill,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,BUILDINGS,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,chooseHeroTalent,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
 const VFX_KEY='couronnes_arcanes_animations_v13';
 let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}catch{return true;}})();
 
@@ -298,6 +298,7 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
   hideModal();save();render();toast(`Deck « ${DECK_STYLES[id].name} » prêt : ${result.deck.length} cartes.`);
   break;
  }
+ case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}const result=learnClassSkill(profile,id);if(result.ok){save();render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}else toast(result.reason);break;}
  case 'deck-add':case 'deck-remove':if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();render();}else toast('Impossible de modifier ce deck davantage.');break;
  case 'select-card':if(!battle||battle.status!=='active')break;
   if(battle.heroes.p.cardsPlayed>=2){toast('Vous avez déjà joué deux cartes ce tour.');break;}
@@ -312,7 +313,7 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
  case 'close-modal':hideModal();break;
  case 'battle-exit':const previousMode=battle?.mode;hideModal();battle=null;persistBattle();navigate(previousMode==='tower'?'tower':previousMode==='dungeon'?'dungeons':'campaign');break;
  case 'battle-deck':hideModal();battle=null;persistBattle();navigate('collection');break;
- case 'choose-class':if(battle?.status==='active'){toast('Terminez le combat avant de changer de classe.');break;}profile.heroClass=id;save();render();toast('Nouvelle classe sélectionnée.');break;
+ case 'choose-class':{if(battle?.status==='active'){toast('Terminez le combat avant de changer de classe.');break;}const result=changeHeroClass(profile,id);if(!result.ok){toast(result.reason);break;}save();render();toast('Nouvelle classe sélectionnée.');break;}
  case 'choose-talent':{if(battle?.status==='active'){toast('Terminez le combat avant de changer vos talents.');break;}const result=chooseHeroTalent(profile,id);if(result.ok){save();render();toast('Voie de talent sélectionnée.');}else toast(result.reason);break;}
  case 'craft-equipment':{const result=craftEquipment(profile,id);if(result.ok){save();render();toast('Équipement fabriqué et équipé.');}else toast(result.reason);break;}
  case 'equip-equipment':{const result=equipEquipment(profile,id);if(result.ok){save();render();toast('Équipement changé.');}else toast(result.reason);break;}
@@ -361,7 +362,7 @@ function btn(label,action,extra='',cls=''){return `<button type="button" class="
 function cardUI(id,{compact=false,index=null,select=false,canEdit=false,upgradable=false,cooldown=null}={}){
  const c=CARDS[id];if(!c)return '';const tone=FACTIONS[c.faction].tone,bonus=profile.upgrades[id]||0,owned=profile.collection[id]||0,visual=visualFor(c),rank=masteryRank(profile,id),masteryXp=profile.mastery?.[id]||0;
  return `<div class="unit-card ${compact?'compact':''} ${cooldown>0?'on-cooldown':''} ${select?'selected':''}" data-rarity="${c.rarity}" style="--tone:${tone}" ${compact?`data-action="select-card" data-index="${index}" role="button" tabindex="0" aria-label="${esc(c.name)}${cooldown>0?' indisponible pendant '+cooldown+' tours':''}"`:''}>
- <div class="card-head"><span>${esc(FACTIONS[c.faction].short)}</span><b>${c.type==='sort'?'SORT':'UNITÉ'}</b></div>
+ <div class="card-head"><span>${esc(c.heroClass?CLASSES[c.heroClass].name:FACTIONS[c.faction].short)}</span><b>${c.heroClass?'COMPÉTENCE':c.type==='sort'?'SORT':'UNITÉ'}</b></div>
  <div class="portrait creature-portrait role-${visual.role}"><img class="creature-image" src="${artSrc(visual.art)}" alt="Illustration de ${esc(c.name)}" loading="lazy" draggable="false" /><span class="portrait-emblem" aria-hidden="true">${c.icon}</span></div>
  <div class="card-title">${esc(c.name)}${bonus?` <span class="tiny gold">+${bonus}</span>`:''}${rank?` <span class="mastery-seal" title="Maîtrise ${rank}/3">✦${rank}</span>`:''}</div>
  <div class="card-detail">${esc(c.description)}</div>
@@ -382,7 +383,7 @@ Object.assign(__exports,{createViews});
 },
 "src/ui/pages.js":function(__exports,__load){
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
-const {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
+const {CARDS,CLASS_SKILLS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
 const {AI_STYLES,aiStyle,aiEnraged}=__load("src/ai.js");
 const {TALENT_TREE,TALENT_LEVELS}=__load("src/talents.js");
 const {visualFor,artSrc}=__load("src/visuals.js");
@@ -432,8 +433,16 @@ function dungeonUI(){
 function collectionUI(){const list=Object.values(CARDS).filter(c=>(collectionFilter==='all'||c.faction===collectionFilter)&&(!collectionOwned||(profile.collection[c.id]||0)>0));
  const counts={};profile.deck.forEach(id=>counts[id]=(counts[id]||0)+1);const invalid=validateDeck(profile);
  const overview=deckOverview(profile.deck),busy=battle?.status==='active';
+
+ const classSkillIds=Object.keys(CLASS_SKILLS).filter(id=>CLASS_SKILLS[id].hero===profile.heroClass);
+ const skillsPanel=`<section class="card-panel spaced"><div class="section-caption">V2.8 · COMPÉTENCES EXCLUSIVES</div><h2 class="section-title">Arcanes du ${esc(CLASSES[profile.heroClass].name)}</h2><p class="page-sub">Apprenez des cartes propres à votre classe avec des éclats gagnés en jeu. Une copie par compétence, conservée même après un changement de héros. Retirez les compétences incompatibles du deck avant de changer de classe.</p><div class="card-grid">${classSkillIds.map(id=>{
+  const info=CLASS_SKILLS[id],known=(profile.collection[id]||0)>0,ready=heroLevel(profile)>=info.level;
+  const label=known?'✓ Apprise':!ready?'Niveau '+info.level+' requis':'Apprendre · '+info.shards+' ✧';
+  const attrs='data-id="'+id+'" '+(known||!ready||profile.shards<info.shards||busy?'disabled':'');
+  return '<div class="alchemy-recipe">'+cardUI(id)+'<div class="alchemy-action">'+btn(label,'learn-class-skill',attrs,'primary')+'</div></div>';
+ }).join('')}</div></section>`;
  const workshop=`<section class="card-panel deck-workshop spaced"><div class="split-head"><div><div class="section-caption">ATELIER DE COMPOSITIONS</div><h2 class="section-title">Quatre stratégies, vos propres cartes</h2></div><span class="pill">Gratuit · sans nouvelles cartes</span></div><p class="page-sub">Découvrez une composition adaptée à votre collection. Prévisualisez toutes les cartes avant de remplacer votre deck. Vous pourrez ensuite le modifier manuellement.</p><div class="deck-preset-grid">${Object.entries(DECK_STYLES).map(([id,style])=>{const proposed=proposeDeck(profile,id);return `<article class="deck-preset-card"><b>${esc(style.name)}</b><p>${esc(style.description)}</p><small>${proposed.ok?`${proposed.overview.total} cartes · ${proposed.overview.units} unités · ${proposed.overview.spells} sorts`:esc(proposed.reason)}</small>${btn('Voir la composition','deck-preview',`data-id="${id}" ${!proposed.ok||busy?'disabled':''}`,'small ghost')}</article>`;}).join('')}</div>${busy?'<div class="hint">Terminez le combat en cours avant de changer de composition.</div>':''}</section>`;
- return `<div class="kicker">VOTRE ARSENAL</div><h1 class="page-title">Collection & deck</h1><p class="page-sub">Possédez des cartes, puis ajoutez-les à votre deck. Vous pouvez construire un jeu entre 12 et 24 cartes : les decks courts sont plus réguliers, les longs offrent davantage d'options.</p>${workshop}<div class="collection-layout"><section><div class="library-toolbar"><label class="tiny muted" for="faction">Ordre :</label><select id="faction" class="select" data-control="faction"><option value="all" ${collectionFilter==='all'?'selected':''}>Toutes les cartes</option>${Object.keys(FACTIONS).map(f=>`<option value="${f}" ${collectionFilter===f?'selected':''}>${esc(FACTIONS[f].name)}</option>`).join('')}</select><label class="small"><input type="checkbox" id="owned-only" ${collectionOwned?'checked':''}/> Mes cartes uniquement</label><span class="pill">${list.length} cartes affichées</span></div><div class="card-grid">${list.map(c=>cardUI(c.id,{canEdit:true})).join('')}</div></section><aside class="card-panel deck-aside"><div class="section-caption">Votre composition</div><h2 class="section-title" style="margin-top:9px">Deck actif</h2><div class="stat-row"><div class="stat-box"><strong>${profile.deck.length}</strong><small>Cartes / 24</small></div><div class="stat-box"><strong>${overview.units} / ${overview.spells}</strong><small>Unités / sorts</small></div></div>${invalid?`<div class="hint red">${esc(invalid)}</div>`:`<div class="hint green">Deck valide. Prêt au combat.</div>`}<div class="deck-list">${Object.entries(counts).map(([id,count])=>`<div class="deck-item"><span><span class="gold">${count}×</span> ${esc(CARDS[id].name)}</span><button class="remove" aria-label="Retirer ${esc(CARDS[id].name)}" data-action="deck-remove" data-id="${id}">×</button></div>`).join('')}</div>${btn('⚔ Lancer la campagne','nav','data-page="campaign"','primary')}</aside></div>`;
+ return `<div class="kicker">VOTRE ARSENAL</div><h1 class="page-title">Collection & deck</h1><p class="page-sub">Possédez des cartes, puis ajoutez-les à votre deck. Vous pouvez construire un jeu entre 12 et 24 cartes : les decks courts sont plus réguliers, les longs offrent davantage d'options.</p>${workshop}${skillsPanel}<div class="collection-layout"><section><div class="library-toolbar"><label class="tiny muted" for="faction">Ordre :</label><select id="faction" class="select" data-control="faction"><option value="all" ${collectionFilter==='all'?'selected':''}>Toutes les cartes</option>${Object.keys(FACTIONS).map(f=>`<option value="${f}" ${collectionFilter===f?'selected':''}>${esc(FACTIONS[f].name)}</option>`).join('')}</select><label class="small"><input type="checkbox" id="owned-only" ${collectionOwned?'checked':''}/> Mes cartes uniquement</label><span class="pill">${list.length} cartes affichées</span></div><div class="card-grid">${list.map(c=>cardUI(c.id,{canEdit:true})).join('')}</div></section><aside class="card-panel deck-aside"><div class="section-caption">Votre composition</div><h2 class="section-title" style="margin-top:9px">Deck actif</h2><div class="stat-row"><div class="stat-box"><strong>${profile.deck.length}</strong><small>Cartes / 24</small></div><div class="stat-box"><strong>${overview.units} / ${overview.spells}</strong><small>Unités / sorts</small></div></div>${invalid?`<div class="hint red">${esc(invalid)}</div>`:`<div class="hint green">Deck valide. Prêt au combat.</div>`}<div class="deck-list">${Object.entries(counts).map(([id,count])=>`<div class="deck-item"><span><span class="gold">${count}×</span> ${esc(CARDS[id].name)}</span><button class="remove" aria-label="Retirer ${esc(CARDS[id].name)}" data-action="deck-remove" data-id="${id}">×</button></div>`).join('')}</div>${btn('⚔ Lancer la campagne','nav','data-page="campaign"','primary')}</aside></div>`;
 }
 function alchemyUI(){
  const recipes=FUSION_RECIPES.map(id=>CARDS[id]);
@@ -464,6 +473,7 @@ function guideUI(){const steps=[
  ['Protégez votre couronne','Évitez que les créatures adverses atteignent votre porte. Faites tomber les PV du héros ennemi à zéro pour gagner.'],
  ['Activez une formation','Placez au moins deux créatures du même Ordre sur une même ligne : chacune gagne +1 attaque tant que la formation tient. Ce bonus est visible avec ✦ Concorde et fonctionne aussi pour les ennemis.'],
  ['Choisissez vos talents','À partir des niveaux 4 et 8, l’Atelier propose deux voies exclusives par palier. Changez de voie gratuitement entre deux combats. Les talents sélectionnés restent propres à chaque classe.'],
+ ['Apprenez les compétences de classe','Dans la Collection, apprenez des cartes réservées à votre classe aux niveaux 3 et 6 en échange d’éclats. Une carte de classe incompatible doit être retirée du deck avant de changer de héros.'],
  ['Progressez en jouant','Chaque victoire apporte de l’expérience au héros. Les cartes réellement jouées gagnent en maîtrise (les unités reçoivent +1 PV au rang 3 ; les sorts gagnent des insignes). Les niveaux de héros 5 et 9 donnent chacun +1 bouclier.'],
  ['Améliorez votre armée','Chaque victoire apporte de l’or, des éclats et parfois une carte. Modifiez votre deck, équipez votre héros et choisissez votre classe.'],
     ['Gravissez la Tour','La Tour des Couronnes propose 20 épreuves. Les étages de gardiens 5, 10, 15 et 20 peuvent offrir une carte exclusive.'],
@@ -546,9 +556,30 @@ const expansion = [
 ['arcflare','Éclairs d’Obsidienne','sort','épique',3,0,0,'spell_storm','ϟ','Frappe toutes les unités ennemies sur une ligne.'],
 ['vines','Racines du Monde','sort','commun',1,0,0,'spell_root','❧','Immobilise la première unité ennemie.']
 ];
-raw.push(...expansion);
+// V2.8 : compétences de classe originales. Une seule copie par recette d'apprentissage.
+const classCards=[
+ ['skill_guard_wall','Mur des Serments','sort','rare',2,0,0,'spell_guard_wall','⬡','Accorde 2 points de barrière aux alliés de la ligne (maximum 4).'],
+ ['skill_guard_rally','Ralliement royal','sort','rare',2,0,0,'spell_guard_rally','⚑','Donne +1 attaque aux alliés de la ligne pendant deux tours, sans cumul.'],
+ ['skill_arc_freeze','Gel astral','sort','rare',2,0,0,'spell_arc_freeze','❄','Inflige 1 dégât et immobilise le premier ennemi de la ligne.'],
+ ['skill_arc_chain','Arc des éclairs','sort','épique',3,0,0,'spell_arc_chain','ϟ','Inflige 3 dégâts au premier ennemi et 2 au suivant sur la même ligne.'],
+ ['skill_ranger_pierce','Flèche de rupture','sort','rare',2,0,0,'spell_ranger_pierce','➶','Inflige 5 dégâts à la première unité ennemie en ignorant son armure.'],
+ ['skill_ranger_draw','Préparation du pisteur','sort','épique',3,0,0,'spell_ranger_draw','✦','Pioche jusqu’à 2 cartes supplémentaires (main limitée à 7).'],
+ ['skill_cleric_light','Lumière de concorde','sort','rare',2,0,0,'spell_cleric_light','✚','Rend 3 PV à chaque allié blessé de la ligne.'],
+ ['skill_cleric_bless','Bénédiction du refuge','sort','épique',3,0,0,'spell_cleric_bless','✧','Accorde 4 points de barrière à l’allié le plus blessé (maximum 6).']
+];
+const CLASS_SKILLS=Object.freeze({
+ skill_guard_wall:{hero:'gardien',level:3,shards:30},
+ skill_guard_rally:{hero:'gardien',level:6,shards:70},
+ skill_arc_freeze:{hero:'arcaniste',level:3,shards:30},
+ skill_arc_chain:{hero:'arcaniste',level:6,shards:70},
+ skill_ranger_pierce:{hero:'rodeur',level:3,shards:30},
+ skill_ranger_draw:{hero:'rodeur',level:6,shards:70},
+ skill_cleric_light:{hero:'clerc',level:3,shards:30},
+ skill_cleric_bless:{hero:'clerc',level:6,shards:70}
+});
+raw.push(...expansion,...classCards);
 const CARDS = Object.fromEntries(raw.map(([id,name,faction,rarity,delay,attack,hp,ability,icon,description]) =>
- [id,{id,name,faction,rarity,delay,attack,hp,ability,icon,description,type:ability.startsWith('spell_')?'sort':'unité'}]));
+ [id,{id,name,faction,rarity,delay,attack,hp,ability,icon,description,type:ability.startsWith('spell_')?'sort':'unité',heroClass:CLASS_SKILLS[id]?.hero||null}]));
 
 const FLYING_IDS=new Set(['griffin','dragon','banshee','owl','pixie','dawnbastion','seraph']);
 const GUARD_IDS=new Set(['shield','treant','crypt','golem','sentinel']);
@@ -622,7 +653,7 @@ function towerMission(floor){
  return {id:`T${String(n).padStart(2,'0')}`,aiStyle,mode:'tower',floor:n,region:'Tour des Couronnes',name:`Étage ${n} — ${boss?'Gardien du Sceau':FACTIONS[faction].short}`,enemy:boss?`Gardien du Sceau ${n}`:`Épreuve ${FACTIONS[faction].short}`,difficulty:Math.min(5,1+Math.floor((n-1)/4)),hp:(n<=4?15:17)+Math.ceil(n*1.15)+(boss?5:0),reward:25+n*6,shards:10+n*2,unlock:rewardCard,deck,boss,story:'Un nouveau cercle de la tour met votre stratégie à l’épreuve.'};
 }
 
-Object.assign(__exports,{CARDS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS,cardTraits,FACTIONS,CLASSES,CAMPAIGN,START_DECK,START_COLLECTION,TOWER_MAX,towerMission});
+Object.assign(__exports,{CLASS_SKILLS,CARDS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS,cardTraits,FACTIONS,CLASSES,CAMPAIGN,START_DECK,START_COLLECTION,TOWER_MAX,towerMission});
 
 },
 "src/ai.js":function(__exports,__load){
@@ -837,7 +868,9 @@ const direct={
  cannon:'golem',mechanist:'knight',ironwraith:'golem',alchemist:'shade',
  tempest:'blizzard',seer:'blizzard',aetherknight:'paladin',seraph:'healer',
  firebolt:'sunlight',healing:'healer',warcry:'paladin',storm:'blizzard',entangle:'treant',sanctuary:'sunlight',
- sundawn:'sunlight',bloodpact:'healer',arcflare:'blizzard',vines:'treant'
+ sundawn:'sunlight',bloodpact:'healer',arcflare:'blizzard',vines:'treant',
+ skill_guard_wall:'paladin',skill_guard_rally:'knight',skill_arc_freeze:'blizzard',skill_arc_chain:'blizzard',
+ skill_ranger_pierce:'archer',skill_ranger_draw:'ranger',skill_cleric_light:'healer',skill_cleric_bless:'sunlight'
 };
 const roles={
  wolf:'beast',bear:'beast',stag:'beast',griffin:'flying',dragon:'flying',pixie:'flying',owl:'flying',
@@ -920,7 +953,7 @@ Object.assign(__exports,{});
 },
 "src/engine/profile.js":function(__exports,__load){
 // Profil, équipements, maîtrise et construction du deck. Sans DOM.
-const {CARDS,TOWER_MAX}=__load("src/data.js");
+const {CARDS,CLASSES,TOWER_MAX}=__load("src/data.js");
 const {dungeonById}=__load("src/dungeons.js");
 const {TALENT_LEVELS,talentInfo,normalizeTalentChoices}=__load("src/talents.js");
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
@@ -1012,13 +1045,23 @@ function grantBattleProgress(profile,b){
  return {heroXp:gained,levelBefore:before,levelAfter:after,levelShards,mastered};
 }
 function validateDeck(profile){
- if(profile.deck.length<12||profile.deck.length>24)return 'Le deck doit contenir entre 12 et 24 cartes.';
+ if(!Array.isArray(profile.deck)||profile.deck.length<12||profile.deck.length>24)return 'Le deck doit contenir entre 12 et 24 cartes.';
  const counts={};for(const id of profile.deck)counts[id]=(counts[id]||0)+1;
- for(const [id,n] of Object.entries(counts))if(n>ownedCopies(profile,id))return `Trop d’exemplaires : ${CARDS[id].name}.`;
+ for(const [id,n] of Object.entries(counts)){
+  const c=CARDS[id];if(!c)return 'Carte inconnue dans le deck.';
+  if(c.heroClass&&c.heroClass!==profile.heroClass)return `${c.name} est réservée à la classe ${CLASSES[c.heroClass].name}.`;
+  if(n>ownedCopies(profile,id))return `Trop d’exemplaires : ${c.name}.`;
+ }
  return '';
 }
+function changeHeroClass(profile,id){
+ if(!CLASSES[id])return {ok:false,reason:'Classe inconnue.'};
+ const restricted=profile.deck.map(cardId=>CARDS[cardId]).find(card=>card?.heroClass&&card.heroClass!==id);
+ if(restricted)return {ok:false,reason:`Retirez d’abord ${restricted.name} de votre deck pour changer de classe.`};
+ profile.heroClass=id;return {ok:true};
+}
 function modifyDeck(profile,id,delta){
- if(!CARDS[id])return false;
+ if(!CARDS[id]||(delta>0&&CARDS[id].heroClass&&CARDS[id].heroClass!==profile.heroClass))return false;
  const count=profile.deck.filter(x=>x===id).length;
  if(delta>0&&count<ownedCopies(profile,id)&&profile.deck.length<24){profile.deck.push(id);return true;}
  if(delta<0&&count>0){profile.deck.splice(profile.deck.indexOf(id),1);return true;}
@@ -1045,13 +1088,14 @@ function equipEquipment(p,id){
 function reputationLevel(p,faction){return Math.min(3,Math.floor((p.reputation?.[faction]||0)/15));}
 function gearBonus(p,bonus){return Object.values(p.equipped||{}).reduce((n,id)=>n+(EQUIPMENT[id]?.bonus===bonus?EQUIPMENT[id].value:0),0);}
 
-Object.assign(__exports,{ownedCopies,freshProfile,normalizeProfile,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,heroLevel,heroShieldBonus,chooseHeroTalent,MASTERY_THRESHOLDS,masteryRank,grantBattleProgress,validateDeck,modifyDeck,EQUIPMENT,craftEquipment,equipEquipment,reputationLevel});
+Object.assign(__exports,{ownedCopies,freshProfile,normalizeProfile,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,heroLevel,heroShieldBonus,chooseHeroTalent,MASTERY_THRESHOLDS,masteryRank,grantBattleProgress,validateDeck,changeHeroClass,modifyDeck,EQUIPMENT,craftEquipment,equipEquipment,reputationLevel});
 
 },
 "src/engine/battle.js":function(__exports,__load){
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 const {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
 const {rankEnemyMoves}=__load("src/ai.js");
+const {classSkillTargetError,resolveClassSkill}=__load("src/engine/class-skills.js");
 const {chosenTalents}=__load("src/talents.js");
 const {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,masteryRank,EQUIPMENT,reputationLevel}=__load("src/engine/profile.js");
 const LANES=3, WIDTH=7;
@@ -1146,6 +1190,7 @@ function locateEnemy(b,side,lane){
 }
 function cast(b,side,id,lane){
  const c=CARDS[id],enemy=side==='p'?'e':'p',foe=locateEnemy(b,side,lane);
+ let drawAfter=0;
  const supportSpell=['spell_heal','spell_buff','spell_ward'].includes(c.ability);
  const allied=b.board[lane].findIndex(u=>u&&u.side===side);
  fx(b,{type:'spell',side,lane,from:side==='p'?0:6,to:supportSpell?(allied>=1?allied:side==='p'?0:6):(foe?foe.i:side==='p'?6:0),variant:c.ability,icon:c.icon});
@@ -1162,10 +1207,13 @@ function cast(b,side,id,lane){
   if(foe)foe.u.stun=2;
  }else if(c.ability==='spell_ward'){
   b.heroes[side].shield=Math.min(15,b.heroes[side].shield+5);
+ }else if(c.heroClass){
+  drawAfter=resolveClassSkill(b,side,c,lane,hit);
  }
  note(b,`${side==='p'?'Vous lancez':'L’ennemi lance'} ${c.name} (ligne ${lane+1}).`);
  sweepDead(b);
  checkOutcome(b);
+ return drawAfter;
 }
 function play(b,side,index,lane){
  if(b.status!=='active'||lane<0||lane>=LANES)return {ok:false,reason:'Combat terminé ou ligne invalide.'};
@@ -1174,17 +1222,25 @@ function play(b,side,index,lane){
  if(hand.wait>0)return {ok:false,reason:`Cette carte sera disponible dans ${hand.wait} tour(s).`};
  if(hero.cardsPlayed>=2)return {ok:false,reason:'Limite de deux cartes par tour.'};
  const c=CARDS[hand.id];
+ if(!c)return {ok:false,reason:'Carte inconnue.'};
+ if(c.heroClass&&(side!=='p'||c.heroClass!==b.heroClass))return {ok:false,reason:'Compétence réservée à une autre classe.'};
+ const targetError=classSkillTargetError(b,side,c,lane);
+ if(targetError)return {ok:false,reason:targetError};
  if(c.type==='unité'&&!spawn(b,side,hand.id,lane))return {ok:false,reason:'La case de déploiement est occupée.'};
- if(c.type==='sort')cast(b,side,hand.id,lane);
+ const drawAfter=c.type==='sort'?cast(b,side,hand.id,lane):0;
  if(side==='p'){if(!b.cardUses)b.cardUses={};b.cardUses[hand.id]=(b.cardUses[hand.id]||0)+1;}
  hero.discard.push(hand.id);hero.hand.splice(index,1);hero.cardsPlayed++;
+ if(drawAfter)draw(b,side,drawAfter);
  return {ok:true};
 }
 function playPlayerCard(b,index,lane){return b.phase==='player'?play(b,'p',index,lane):{ok:false,reason:'Ce n’est pas votre tour.'};}
 function hit(b,u,raw,bySide,ignoreArmor=false){
  // Une attaque sur une unité déjà vaincue ne doit pas créer un second kill.
  if(!u||u.hp<=0)return 0;
- const dmg=Math.max(1,raw-(ignoreArmor?0:(u.armor||0)));u.hp=Math.max(0,u.hp-dmg);
+ let dmg=Math.max(1,raw-(ignoreArmor?0:(u.armor||0)));
+ const barrier=u.barrier||0;
+ if(barrier>0){const absorbed=Math.min(barrier,dmg);u.barrier=barrier-absorbed;dmg-=absorbed;}
+ u.hp=Math.max(0,u.hp-dmg);
  if(bySide!==u.side&&u.hp<=0)b.stats[bySide==='p'?'playerKills':'enemyKills']++;
  return dmg;
 }
@@ -1278,7 +1334,7 @@ function resolveAttacks(b){
  for(let lane=0;lane<LANES;lane++)for(let col=1;col<=5;col++){
   const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0)continue;
   const target=findTarget(b,lane,col,u);
-  if(target)intents.push({u,lane,col,target,atk:u.atk+formationBonus(b,lane,u)+(CHARGE_IDS.has(u.id)&&u.movedThisRound?2:0),ability:u.ability,charged:CHARGE_IDS.has(u.id)&&!!u.movedThisRound});
+  if(target)intents.push({u,lane,col,target,atk:u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(CHARGE_IDS.has(u.id)&&u.movedThisRound?2:0),ability:u.ability,charged:CHARGE_IDS.has(u.id)&&!!u.movedThisRound});
  }
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
@@ -1401,6 +1457,60 @@ function endPlayerTurn(b){
 Object.assign(__exports,{LANES,note,createBattle,formationBonus,playPlayerCard,usePower,endPlayerTurn});
 
 },
+"src/engine/class-skills.js":function(__exports,__load){
+// Effets des compétences de classe : règles isolées du DOM et de la sauvegarde.
+// Les unités anciennes sans barrier/rallyUntil restent totalement compatibles.
+const own=(u,side)=>u&&u.hp>0&&u.side===side;
+function allies(b,side,lane){return b.board[lane].filter(u=>own(u,side));}
+function enemies(b,side,lane){
+ const found=b.board[lane].map((u,col)=>u&&u.hp>0&&u.side!==side?{u,col}:null).filter(Boolean);
+ return found.sort((a,z)=>side==='p'?a.col-z.col:z.col-a.col);
+}
+function classSkillTargetError(b,side,card,lane){
+ if(!card.heroClass)return '';
+ if(!Number.isInteger(lane)||lane<0||lane>=3)return 'Ligne invalide.';
+ const friendly=allies(b,side,lane),foes=enemies(b,side,lane),h=b.heroes[side];
+ switch(card.ability){
+  case 'spell_guard_wall':case 'spell_guard_rally':case 'spell_cleric_bless':
+   return friendly.length?'':'Cette compétence demande une créature alliée sur la ligne.';
+  case 'spell_cleric_light':
+   return friendly.some(u=>u.hp<u.maxhp)?'':'Aucun allié blessé sur cette ligne.';
+  case 'spell_arc_freeze':case 'spell_arc_chain':case 'spell_ranger_pierce':
+   return foes.length?'':'Aucun ennemi sur cette ligne.';
+  case 'spell_ranger_draw':
+   return h.deck.length||h.discard.length?'':'Aucune carte disponible à piocher.';
+  default:return 'Compétence inconnue.';
+ }
+}
+// Les effets sont déterministes ; hit() applique les armures, les barrières et les victimes.
+function resolveClassSkill(b,side,card,lane,hit){
+ const friends=allies(b,side,lane),foes=enemies(b,side,lane),ability=card.ability;
+ if(ability==='spell_guard_wall'){
+  for(const u of friends)u.barrier=Math.min(4,(u.barrier||0)+2);
+ }else if(ability==='spell_guard_rally'){
+  for(const u of friends)u.rallyUntil=Math.max(u.rallyUntil||0,b.round+1);
+ }else if(ability==='spell_arc_freeze'){
+  const u=foes[0].u;hit(b,u,1,side);if(u.hp>0)u.stun=Math.max(u.stun||0,2);
+ }else if(ability==='spell_arc_chain'){
+  hit(b,foes[0].u,3,side);
+  if(foes[1])hit(b,foes[1].u,2,side);
+ }else if(ability==='spell_ranger_pierce'){
+  hit(b,foes[0].u,5,side,true);
+ }else if(ability==='spell_ranger_draw'){
+  // Le moteur pioche après avoir retiré la carte jouée de la main.
+  return 2;
+ }else if(ability==='spell_cleric_light'){
+  for(const u of friends)u.hp=Math.min(u.maxhp,u.hp+3);
+ }else if(ability==='spell_cleric_bless'){
+  const target=[...friends].sort((a,z)=>a.hp/a.maxhp-z.hp/z.maxhp||a.uid-z.uid)[0];
+  target.barrier=Math.min(6,(target.barrier||0)+4);
+ }
+ return 0;
+}
+
+Object.assign(__exports,{classSkillTargetError,resolveClassSkill});
+
+},
 "src/engine/dungeon-run.js":function(__exports,__load){
 // Progression et récompenses d'une expédition en plusieurs salles.
 const {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission}=__load("src/dungeons.js");
@@ -1488,8 +1598,8 @@ Object.assign(__exports,{dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDun
 },
 "src/engine/economy.js":function(__exports,__load){
 // Gains de mission, récompenses et économie interne (sans paiement réel).
-const {CARDS,TOWER_MAX}=__load("src/data.js");
-const {ownedCopies,grantBattleProgress}=__load("src/engine/profile.js");
+const {CARDS,CLASS_SKILLS,TOWER_MAX}=__load("src/data.js");
+const {ownedCopies,grantBattleProgress,heroLevel}=__load("src/engine/profile.js");
 function completeBattle(profile,mission,b){
  if(b.status!=='victory'&&b.status!=='defeat')return null;
  if(b.progressionGranted)return {victory:b.status==='victory',gold:0,shards:0,card:null,reputation:[],heroXp:0,levelShards:0,mastered:[]};
@@ -1521,7 +1631,7 @@ function completeBattle(profile,mission,b){
 function buyPack(profile,random=Math.random){
  if(profile.gold<95)return {ok:false,reason:'Il faut 95 pièces d’or.'};
  profile.gold-=95;
- const all=Object.values(CARDS),result=[];
+ const all=Object.values(CARDS).filter(c=>!c.heroClass),result=[];
  for(let i=0;i<3;i++){
   const roll=random();const pool=all.filter(c=>roll<0.65?c.rarity==='commun':roll<0.93?c.rarity==='rare':c.rarity==='épique');
   const card=pool[Math.floor(random()*pool.length)]||all[0];profile.collection[card.id]=(profile.collection[card.id]||0)+1;result.push(card.id);
@@ -1536,11 +1646,24 @@ function upgradeCard(profile,id){
  profile.shards-=cost;profile.upgrades[id]=level+1;return {ok:true,cost};
 }
 // Guaranteed in-game card crafting (no premium currency, no random failure).
+// Apprentissage déterministe : accessible aux anciens profils de haut niveau.
+// Une seule copie par compétence. Aucune modification de clé de sauvegarde.
+function learnClassSkill(profile,id){
+ const skill=CLASS_SKILLS[id];
+ if(!skill)return {ok:false,reason:'Compétence de classe inconnue.'};
+ if(heroLevel(profile)<skill.level)return {ok:false,reason:'Niveau '+skill.level+' requis.'};
+ if((profile.collection[id]||0)>0)return {ok:false,reason:'Compétence déjà apprise.'};
+ if(profile.shards<skill.shards)return {ok:false,reason:'Il faut '+skill.shards+' éclats.'};
+ profile.shards-=skill.shards;
+ profile.collection[id]=(profile.collection[id]||0)+1;
+ return {ok:true,cost:skill.shards};
+}
 const FUSION_RECIPES=['lancer','scoutcaptain','sunpriest','archdruid','vampire','graveknight','cannon','mechanist','tempest','aetherknight','dawnbastion','seraph','sundawn','arcflare'];
 const FUSION_COSTS={'commun':{gold:12,shards:26},'rare':{gold:32,shards:64},'épique':{gold:85,shards:145},'légendaire':{gold:180,shards:290}};
 const EXTRACTION_SHARDS={'commun':8,'rare':18,'épique':44,'légendaire':90};
 function extractCard(p,id){
  const c=CARDS[id];if(!c)return {ok:false,reason:'Carte inconnue.'};
+ if(c.heroClass)return {ok:false,reason:'Une compétence de classe apprise ne peut pas être extraite.'};
  const used=p.deck.filter(x=>x===id).length;
  if((p.collection[id]||0)<=used)return {ok:false,reason:'Retirez un exemplaire du deck avant extraction.'};
  p.collection[id]--;p.shards+=EXTRACTION_SHARDS[c.rarity];
@@ -1566,7 +1689,7 @@ function upgradeBuilding(profile,key){
  profile.gold-=cost;profile.buildings[key]=level+1;return {ok:true,cost};
 }
 
-Object.assign(__exports,{completeBattle,buyPack,upgradeCard,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,BUILDINGS,upgradeBuilding});
+Object.assign(__exports,{completeBattle,buyPack,upgradeCard,learnClassSkill,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,BUILDINGS,upgradeBuilding});
 
 },
 "src/engine/deck-builder.js":function(__exports,__load){
@@ -1601,7 +1724,7 @@ function candidateCards(profile,style){
  const owned=profile?.collection||{};
  const cards=[];
  for(const [id,quantity] of Object.entries(owned)){
-  const c=CARDS[id];if(!c)continue;
+  const c=CARDS[id];if(!c||(c.heroClass&&c.heroClass!==profile.heroClass))continue;
   const n=Number(quantity);
   const count=Number.isFinite(n)?Math.min(24,Math.max(0,Math.floor(n))):0;
   const base=c.type==='sort'?8+(spellBonuses[style]?.[c.ability]||0)-c.delay*.65:unitScore(c,style);
@@ -1655,9 +1778,9 @@ function createBattleView(getState,{btn,cardUI,esc,num}){
  let profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled;
  const bind=fn=>(...args)=>{({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled}=getState());return fn(...args);};
 function battleCell(u,lane,col){
- const card=u?CARDS[u.id]:null;const concord=u?formationBonus(battle,lane,u):0;const visual=u?visualFor(card):null;
+ const card=u?CARDS[u.id]:null;const concord=u?formationBonus(battle,lane,u):0;const rallied=u&&u.rallyUntil>=battle.round?1:0;const attack=u?u.atk+concord+rallied:0;const visual=u?visualFor(card):null;
  return `<div class="battle-cell ${selectedCard>=0&&col===1&&!u?'available':''}" ${col===1?`data-action="deploy" data-lane="${lane}" aria-label="Déployer sur la ligne ${lane+1}"`:''}>
- ${u?`<div class="unit-on-board ${u.side==='e'?'enemy':''}" style="--tone:${FACTIONS[card.faction].tone}" title="${esc(card.name)} · ${esc(cardTraits(u.id).join(', '))} · Attaque ${u.atk+concord}${concord?' (dont +1 Concorde)':''} · PV ${u.hp}/${u.maxhp}">${concord?'<div class="formation-badge" aria-label="Concorde de faction active">✦ Concorde</div>':''}<div class="sprite-stage role-${visual.role}" aria-hidden="true"><img class="sprite-figure" src="${artSrc(visual.art)}" alt="" draggable="false" /><span class="sprite-aura"></span></div><div class="unit-name">${esc(card.name)}</div><div class="unit-meta">⚔ ${u.atk+concord}${concord?' ✦':''}${CHARGE_IDS.has(u.id)?' ⚡':''}${RIPOSTE_IDS.has(u.id)?' ↶':''} &nbsp; ♥ ${u.hp}${u.armor?' ◈':''}${u.poisonTurns?' ☣':''}</div></div>`:`<span class="slot-num">${col}</span>`}</div>`;
+ ${u?`<div class="unit-on-board ${u.side==='e'?'enemy':''}" style="--tone:${FACTIONS[card.faction].tone}" title="${esc(card.name)} · ${esc(cardTraits(u.id).join(', '))} · Attaque ${attack}${concord?' (dont +1 Concorde)':''}${rallied?' (dont +1 Ralliement)':''} · PV ${u.hp}/${u.maxhp}${u.barrier?' · Barrière '+u.barrier:''}">${concord?'<div class="formation-badge" aria-label="Concorde de faction active">✦ Concorde</div>':''}<div class="sprite-stage role-${visual.role}" aria-hidden="true"><img class="sprite-figure" src="${artSrc(visual.art)}" alt="" draggable="false" /><span class="sprite-aura"></span></div><div class="unit-name">${esc(card.name)}</div><div class="unit-meta">⚔ ${attack}${concord?' ✦':''}${rallied?' ⚑':''}${CHARGE_IDS.has(u.id)?' ⚡':''}${RIPOSTE_IDS.has(u.id)?' ↶':''} &nbsp; ♥ ${u.hp}${u.armor?' ◈':''}${u.barrier?' ⬡ '+u.barrier:''}${u.poisonTurns?' ☣':''}</div></div>`:`<span class="slot-num">${col}</span>`}</div>`;
 }
 function battleUI(){const p=battle.heroes.p,e=battle.heroes.e;
  return `<div class="split-head"><div><div class="kicker">COMBAT TACTIQUE · ${esc(battle.missionName)}</div><h1 class="page-title" style="font-size:31px">Le champ des trois lignes</h1></div><span class="pill">2 cartes maximum par tour</span></div>

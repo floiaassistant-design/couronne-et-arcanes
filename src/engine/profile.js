@@ -1,5 +1,5 @@
 // Profil, équipements, maîtrise et construction du deck. Sans DOM.
-import {CARDS,TOWER_MAX} from '../data.js';
+import {CARDS,CLASSES,TOWER_MAX} from '../data.js';
 import {dungeonById} from '../dungeons.js';
 import {TALENT_LEVELS,talentInfo,normalizeTalentChoices} from '../talents.js';
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
@@ -91,13 +91,23 @@ export function grantBattleProgress(profile,b){
  return {heroXp:gained,levelBefore:before,levelAfter:after,levelShards,mastered};
 }
 export function validateDeck(profile){
- if(profile.deck.length<12||profile.deck.length>24)return 'Le deck doit contenir entre 12 et 24 cartes.';
+ if(!Array.isArray(profile.deck)||profile.deck.length<12||profile.deck.length>24)return 'Le deck doit contenir entre 12 et 24 cartes.';
  const counts={};for(const id of profile.deck)counts[id]=(counts[id]||0)+1;
- for(const [id,n] of Object.entries(counts))if(n>ownedCopies(profile,id))return `Trop d’exemplaires : ${CARDS[id].name}.`;
+ for(const [id,n] of Object.entries(counts)){
+  const c=CARDS[id];if(!c)return 'Carte inconnue dans le deck.';
+  if(c.heroClass&&c.heroClass!==profile.heroClass)return `${c.name} est réservée à la classe ${CLASSES[c.heroClass].name}.`;
+  if(n>ownedCopies(profile,id))return `Trop d’exemplaires : ${c.name}.`;
+ }
  return '';
 }
+export function changeHeroClass(profile,id){
+ if(!CLASSES[id])return {ok:false,reason:'Classe inconnue.'};
+ const restricted=profile.deck.map(cardId=>CARDS[cardId]).find(card=>card?.heroClass&&card.heroClass!==id);
+ if(restricted)return {ok:false,reason:`Retirez d’abord ${restricted.name} de votre deck pour changer de classe.`};
+ profile.heroClass=id;return {ok:true};
+}
 export function modifyDeck(profile,id,delta){
- if(!CARDS[id])return false;
+ if(!CARDS[id]||(delta>0&&CARDS[id].heroClass&&CARDS[id].heroClass!==profile.heroClass))return false;
  const count=profile.deck.filter(x=>x===id).length;
  if(delta>0&&count<ownedCopies(profile,id)&&profile.deck.length<24){profile.deck.push(id);return true;}
  if(delta<0&&count>0){profile.deck.splice(profile.deck.indexOf(id),1);return true;}

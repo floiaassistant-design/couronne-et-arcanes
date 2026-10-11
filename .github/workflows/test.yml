@@ -23,3 +23,13 @@ jobs:
         run: npm run test:parity
       - name: Construire le jeu hors ligne
         run: npm run build
+      - name: Vérifier la synchronisation du HTML autonome
+        run: git diff --exit-code -- JOUER.html
+      - name: Installer Playwright et Chromium
+        run: |
+          python3 -m pip install playwright
+          python3 -m playwright install --with-deps chromium
+      - name: Construire le HTML réservé aux tests navigateur
+        run: npm run build:test
+      - name: Parcours V2.8 ordinateur et téléphone simulé
+        run: python3 tests/browser_class_skills_v28.py

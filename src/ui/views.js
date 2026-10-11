@@ -23,7 +23,7 @@ function btn(label,action,extra='',cls=''){return `<button type="button" class="
 function cardUI(id,{compact=false,index=null,select=false,canEdit=false,upgradable=false,cooldown=null}={}){
  const c=CARDS[id];if(!c)return '';const tone=FACTIONS[c.faction].tone,bonus=profile.upgrades[id]||0,owned=profile.collection[id]||0,visual=visualFor(c),rank=masteryRank(profile,id),masteryXp=profile.mastery?.[id]||0;
  return `<div class="unit-card ${compact?'compact':''} ${cooldown>0?'on-cooldown':''} ${select?'selected':''}" data-rarity="${c.rarity}" style="--tone:${tone}" ${compact?`data-action="select-card" data-index="${index}" role="button" tabindex="0" aria-label="${esc(c.name)}${cooldown>0?' indisponible pendant '+cooldown+' tours':''}"`:''}>
- <div class="card-head"><span>${esc(FACTIONS[c.faction].short)}</span><b>${c.type==='sort'?'SORT':'UNITÉ'}</b></div>
+ <div class="card-head"><span>${esc(c.heroClass?CLASSES[c.heroClass].name:FACTIONS[c.faction].short)}</span><b>${c.heroClass?'COMPÉTENCE':c.type==='sort'?'SORT':'UNITÉ'}</b></div>
  <div class="portrait creature-portrait role-${visual.role}"><img class="creature-image" src="${artSrc(visual.art)}" alt="Illustration de ${esc(c.name)}" loading="lazy" draggable="false" /><span class="portrait-emblem" aria-hidden="true">${c.icon}</span></div>
  <div class="card-title">${esc(c.name)}${bonus?` <span class="tiny gold">+${bonus}</span>`:''}${rank?` <span class="mastery-seal" title="Maîtrise ${rank}/3">✦${rank}</span>`:''}</div>
  <div class="card-detail">${esc(c.description)}</div>

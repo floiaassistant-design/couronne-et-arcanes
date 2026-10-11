@@ -4,9 +4,9 @@ import {CARDS} from '../src/data.js';
 import {visualFor,artSrc,ART_NAMES} from '../src/visuals.js';
 import {existsSync} from 'node:fs';
 
- test('V1.4 visual mapping covers 60 cards with valid original assets and roles',()=>{
+ test('V1.4 visual mapping covers 68 cards with valid original assets and roles',()=>{
    const valid=new Set(['fighter','heavy','ranged','beast','flying','caster','support','undead','spell']);
-   assert.equal(Object.keys(CARDS).length,60);
+   assert.equal(Object.keys(CARDS).length,68);
    for(const card of Object.values(CARDS)){
      const {art,role}=visualFor(card);
      assert.ok(ART_NAMES.includes(art),card.name+' art is missing');
