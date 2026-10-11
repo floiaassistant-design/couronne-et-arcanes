@@ -1,4 +1,4 @@
-# Couronnes & Arcanes — V2.8 (candidate sur branche dédiée)
+# Couronnes & Arcanes — V2.8
 
 
 > **Reprise du 11 octobre 2026 :** la version jouable et les documents ont été rétablis depuis le commit V2.7 après qu'une autre session a recopié huit anciens fichiers V1.2. Les mécaniques de Concorde de V1.2 étaient déjà conservées dans les sources. La version V2.7.1 ne change pas le gameplay ; elle corrige la continuité du projet et renforce les règles multi-agents de `AGENTS.md`. État opérationnel : `docs/ETAT_PROJET.md`.
@@ -9,7 +9,7 @@
 - Dans **Collection & deck**, apprenez les deux compétences de votre classe aux niveaux 3 et 6 pour 30 et 70 éclats. Une copie par compétence, aucun tirage aléatoire et aucune dépense d'argent réel.
 - Les compétences apprises restent dans la collection. Un changement de classe nécessite d'abord de retirer du deck les compétences incompatibles ; les autres cartes ne sont pas touchées.
 - Même champ de bataille, mêmes clés de sauvegarde et mêmes règles de deux cartes par tour. Le catalogue passe de 60 à 68 cartes.
-- **Ceci est une version candidate en cours de vérification, non fusionnée sur `main`**. Tests `npm test`, `npm run test:parity` et `npm run build` requis avant validation.
+- **Tests V2.8 validés sur la PR #3 :** 130 tests Node, 60 scénarios historiques de parité, compilation autonome et parcours Chromium bureau/mobile simulé. Le rendu sur téléphone physique reste à tester par le joueur. Les développements suivants pourront être intégrés après contrôles automatiques, sans demander au joueur de tester à chaque version.
 
 ## Nouveauté V2.7 — compositions évaluées sur plusieurs stratégies
 
