@@ -26,6 +26,14 @@
 
 **Contrôle préalable obligatoire :** identifier les modules concernés, leurs dépendances et tests avant de coder. **Contrôle final obligatoire :** rechercher les doublons, les responsabilités mélangées, les imports circulaires et les fichiers devenus trop volumineux ; les réorganiser si utile, puis documenter les exceptions justifiées.
 
+## V2.8 — compétences exclusives (branche candidate)
+
+- Cartes V2.8 dans `src/data.js` (`CLASS_SKILLS`) : huit sorts réservés aux quatre classes, sans modifier les 60 anciennes cartes.
+- Effets et validation de cible dans `src/engine/class-skills.js`, consommation des actions et dégâts dans `src/engine/battle.js`, coût d'apprentissage dans `src/engine/economy.js`.
+- Changer de classe impose de retirer les compétences incompatibles du deck actif ; ne pas supprimer les exemplaires appris.
+- Aucun champ obligatoire ajouté aux sauvegardes ; les anciens combats restent jouables sans `barrier` ni `rallyUntil`.
+- Vérifier les nouvelles capacités avec `tests/class_skills_v28.test.mjs`, les tests historiques et la parité avant fusion.
+
 ## V2.7 — comparateur de compositions (version courante)
 
 - Lire `docs/DECK_BALANCE_V2_7.md` avant de modifier les styles, le nombre de sorts, la pioche ou les scores de cartes.
