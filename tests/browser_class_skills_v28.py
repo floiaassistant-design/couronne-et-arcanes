@@ -49,7 +49,7 @@ async def run(browser,label,viewport):
     await page.locator('[data-action="learn-class-skill"][data-id="skill_arc_freeze"]').click()
     await page.locator('[data-action="deck-add"][data-id="skill_arc_freeze"]').click()
     assert await page.evaluate('profile.deck.includes("skill_arc_freeze")')
-    await page.locator('[data-action="nav"][data-page="campaign"]').click()
+    await page.locator('#nav [data-action="nav"][data-page="campaign"]').click()
     await page.locator('[data-action="start-mission"][data-id="01"]').click()
     await page.evaluate('''() => {
       battle.heroes.p.hand=[{id:'skill_arc_freeze',wait:0}];
