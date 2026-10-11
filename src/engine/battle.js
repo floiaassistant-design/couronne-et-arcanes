@@ -1,6 +1,7 @@
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 import {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
 import {rankEnemyMoves} from '../ai.js';
+import {classSkillTargetError,resolveClassSkill} from './class-skills.js';
 import {chosenTalents} from '../talents.js';
 import {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,masteryRank,EQUIPMENT,reputationLevel} from './profile.js';
 export const LANES=3, WIDTH=7;
@@ -95,6 +96,7 @@ function locateEnemy(b,side,lane){
 }
 function cast(b,side,id,lane){
  const c=CARDS[id],enemy=side==='p'?'e':'p',foe=locateEnemy(b,side,lane);
+ let drawAfter=0;
  const supportSpell=['spell_heal','spell_buff','spell_ward'].includes(c.ability);
  const allied=b.board[lane].findIndex(u=>u&&u.side===side);
  fx(b,{type:'spell',side,lane,from:side==='p'?0:6,to:supportSpell?(allied>=1?allied:side==='p'?0:6):(foe?foe.i:side==='p'?6:0),variant:c.ability,icon:c.icon});
@@ -111,10 +113,13 @@ function cast(b,side,id,lane){
   if(foe)foe.u.stun=2;
  }else if(c.ability==='spell_ward'){
   b.heroes[side].shield=Math.min(15,b.heroes[side].shield+5);
+ }else if(c.heroClass){
+  drawAfter=resolveClassSkill(b,side,c,lane,hit);
  }
  note(b,`${side==='p'?'Vous lancez':'L’ennemi lance'} ${c.name} (ligne ${lane+1}).`);
  sweepDead(b);
  checkOutcome(b);
+ return drawAfter;
 }
 function play(b,side,index,lane){
  if(b.status!=='active'||lane<0||lane>=LANES)return {ok:false,reason:'Combat terminé ou ligne invalide.'};
@@ -123,17 +128,24 @@ function play(b,side,index,lane){
  if(hand.wait>0)return {ok:false,reason:`Cette carte sera disponible dans ${hand.wait} tour(s).`};
  if(hero.cardsPlayed>=2)return {ok:false,reason:'Limite de deux cartes par tour.'};
  const c=CARDS[hand.id];
+ if(!c)return {ok:false,reason:'Carte inconnue.'};
+ if(c.heroClass&&(side!=='p'||c.heroClass!==b.heroClass))return {ok:false,reason:'Compétence réservée à une autre classe.'};
+ const targetError=classSkillTargetError(b,side,c,lane);
+ if(targetError)return {ok:false,reason:targetError};
  if(c.type==='unité'&&!spawn(b,side,hand.id,lane))return {ok:false,reason:'La case de déploiement est occupée.'};
- if(c.type==='sort')cast(b,side,hand.id,lane);
+ const drawAfter=c.type==='sort'?cast(b,side,hand.id,lane):0;
  if(side==='p'){if(!b.cardUses)b.cardUses={};b.cardUses[hand.id]=(b.cardUses[hand.id]||0)+1;}
  hero.discard.push(hand.id);hero.hand.splice(index,1);hero.cardsPlayed++;
+ if(drawAfter)draw(b,side,drawAfter);
  return {ok:true};
 }
 export function playPlayerCard(b,index,lane){return b.phase==='player'?play(b,'p',index,lane):{ok:false,reason:'Ce n’est pas votre tour.'};}
 function hit(b,u,raw,bySide,ignoreArmor=false){
  // Une attaque sur une unité déjà vaincue ne doit pas créer un second kill.
  if(!u||u.hp<=0)return 0;
- const dmg=Math.max(1,raw-(ignoreArmor?0:(u.armor||0)));u.hp=Math.max(0,u.hp-dmg);
+ let dmg=Math.max(1,raw-(ignoreArmor?0:(u.armor||0)));
+ const absorbed=Math.min(u.barrier||0,dmg);u.barrier=Math.max(0,(u.barrier||0)-absorbed);dmg-=absorbed;
+ u.hp=Math.max(0,u.hp-dmg);
  if(bySide!==u.side&&u.hp<=0)b.stats[bySide==='p'?'playerKills':'enemyKills']++;
  return dmg;
 }
@@ -227,7 +239,7 @@ function resolveAttacks(b){
  for(let lane=0;lane<LANES;lane++)for(let col=1;col<=5;col++){
   const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0)continue;
   const target=findTarget(b,lane,col,u);
-  if(target)intents.push({u,lane,col,target,atk:u.atk+formationBonus(b,lane,u)+(CHARGE_IDS.has(u.id)&&u.movedThisRound?2:0),ability:u.ability,charged:CHARGE_IDS.has(u.id)&&!!u.movedThisRound});
+  if(target)intents.push({u,lane,col,target,atk:u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(CHARGE_IDS.has(u.id)&&u.movedThisRound?2:0),ability:u.ability,charged:CHARGE_IDS.has(u.id)&&!!u.movedThisRound});
  }
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
