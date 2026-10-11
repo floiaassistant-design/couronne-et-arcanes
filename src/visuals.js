@@ -13,7 +13,9 @@ const direct={
  cannon:'golem',mechanist:'knight',ironwraith:'golem',alchemist:'shade',
  tempest:'blizzard',seer:'blizzard',aetherknight:'paladin',seraph:'healer',
  firebolt:'sunlight',healing:'healer',warcry:'paladin',storm:'blizzard',entangle:'treant',sanctuary:'sunlight',
- sundawn:'sunlight',bloodpact:'healer',arcflare:'blizzard',vines:'treant'
+ sundawn:'sunlight',bloodpact:'healer',arcflare:'blizzard',vines:'treant',
+ skill_guard_wall:'paladin',skill_guard_rally:'knight',skill_arc_freeze:'blizzard',skill_arc_chain:'blizzard',
+ skill_ranger_pierce:'archer',skill_ranger_draw:'ranger',skill_cleric_light:'healer',skill_cleric_bless:'sunlight'
 };
 const roles={
  wolf:'beast',bear:'beast',stag:'beast',griffin:'flying',dragon:'flying',pixie:'flying',owl:'flying',
