@@ -144,7 +144,8 @@ function hit(b,u,raw,bySide,ignoreArmor=false){
  // Une attaque sur une unité déjà vaincue ne doit pas créer un second kill.
  if(!u||u.hp<=0)return 0;
  let dmg=Math.max(1,raw-(ignoreArmor?0:(u.armor||0)));
- const absorbed=Math.min(u.barrier||0,dmg);u.barrier=Math.max(0,(u.barrier||0)-absorbed);dmg-=absorbed;
+ const barrier=u.barrier||0;
+ if(barrier>0){const absorbed=Math.min(barrier,dmg);u.barrier=barrier-absorbed;dmg-=absorbed;}
  u.hp=Math.max(0,u.hp-dmg);
  if(bySide!==u.side&&u.hp<=0)b.stats[bySide==='p'?'playerKills':'enemyKills']++;
  return dmg;
