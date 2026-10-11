@@ -151,3 +151,14 @@
 .modal:has(.deck-preview-list){max-height:90vh;overflow-y:auto}
 @media(max-width:950px){.deck-preset-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:540px){.deck-preset-grid,.deck-preview-list{grid-template-columns:1fr}}
+
+/* V2.9 : états publics de contrôle, lisibles sur un plateau défilant sur mobile. */
+.battle-cell{position:relative}
+.terrain-trap{position:absolute;bottom:3px;left:3px;right:3px;z-index:4;padding:3px 2px;border:1px solid #8bccb6;border-radius:4px;background:#102c26;color:#bcf5dd;font-size:9px;font-weight:700;text-align:center;pointer-events:none}
+.terrain-trap.enemy{border-color:#e2a080;background:#3d211c;color:#ffd1b6}
+.silence-badge{position:absolute;top:22px;left:3px;right:3px;z-index:5;background:#291d42;color:#ede0ff;border:1px solid #baa0e3;border-radius:4px;padding:3px;font-size:10px;text-align:center}
+.unit-on-board.silenced .sprite-figure{filter:saturate(.4)}
+.control-tip,.teleport-preview{font-size:12px;line-height:1.6;padding:8px 12px;background:#142536;color:#c9e2e6;border-radius:6px}
+.teleport-preview{border:1px solid #789eaf}
+.hand-panel>*{min-width:0}
+@media(max-width:760px){.hand-panel{grid-template-columns:minmax(0,1fr)}}

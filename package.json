@@ -1,6 +1,6 @@
 {
   "name": "couronnes-et-arcanes",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,6 +10,7 @@
     "balance": "node scripts/balance_simulation.mjs",
     "talent-balance": "node scripts/talent_balance.mjs",
     "deck-balance": "node scripts/deck_style_balance.mjs",
+    "control-balance": "node scripts/battle_control_balance.mjs",
     "build:test": "node scripts/build_standalone.mjs --test",
     "test:parity": "node scripts/parity_snapshot.mjs --check"
   },

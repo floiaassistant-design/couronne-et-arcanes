@@ -1,3 +1,16 @@
+## V2.9 — Mobilité et contrôle du champ de bataille (2026-10-11)
+
+- Six cartes originales ajoutées, catalogue de 68 à 74 ; huit compétences V2.8 conservées, fabrication avec or/éclats et acquisition par paquets.
+- Silence temporaire des capacités déclenchées, attaques et traits passifs conservés, expiration et résolution de répit empêchant le renouvellement permanent.
+- Téléportation latérale déterministe, aperçu par ligne, destinations libres, protection des couronnes et limite par unité/tour. Capacités des nouvelles créatures limitées à une activation tous les trois tours.
+- Pièges publics sur case centrale, dégâts/immobilisation à l'arrivée, consommation avant effet, expiration, plafond de deux par camp et persistance de leur propriétaire/état.
+- IA adaptée aux nouvelles cartes et aux menaces visibles, sans lecture des cartes privées ; decks historiques de campagne/Tour conservés.
+- Nouveau module pur `battle-control.js`, sans duplication du calcul des dégâts ; export autonome de 19 modules, mêmes clés de sauvegarde, propriétés facultatives et aucun reset.
+- Indicateurs de silence/durée, pièges et téléportation animée ; descriptions et Guide actualisés. Correction du débordement de la main et des actions sur petit écran.
+- 165/165 tests JavaScript locaux, 60/60 scénarios historiques identiques, build synchronisé ; Chromium bureau/mobile V2.8/V2.9, stockage réel et rechargement de l'export hors ligne.
+- 20 480 scénarios d'équilibrage comparatifs rejoués à l'identique, aucun état invalide ni combat inachevé ; limites et résultats dans `docs/BATTLE_CONTROL_V2_9.md`.
+- Workflow GitHub Actions étendu aux parcours V2.9 et aux simulations. Les résultats distants doivent être vérifiés sur la PR avant fusion.
+
 ## V2.8 — Compétences exclusives des quatre classes (2026-10-11)
 
 - Huit nouvelles compétences originales : deux par classe (Gardien, Arcaniste, Rôdeur, Clerc), 68 cartes au total.

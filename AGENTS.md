@@ -2,7 +2,7 @@
 
 ## Version stable et coordination multi-sessions — PRIORITAIRE
 
-- **Base courante : V2.8 (après intégration de la PR #3)**. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
+- **Base courante : V2.9 (après intégration de la PR V2.9)**. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
 - **Ne jamais copier une ancienne version par-dessus la dernière version.** La copie V1.2 avait écrasé huit fichiers de V2.7 le 11/10/2026 ; les fichiers ont été récupérés depuis le commit local `145a2e8`.
 - **Une branche par agent/session** lorsque plusieurs agents développent en parallèle. Un seul intégrateur fusionne après comparaison des modifications et exécution des tests.
 - **Anti-écrasement :** vérifier l'état GitHub avant chaque publication ; si la branche cible a avancé, fusionner les changements utiles et ne jamais forcer la réécriture de l'historique.
@@ -35,7 +35,17 @@
 
 **Contrôle préalable obligatoire :** identifier les modules concernés, leurs dépendances et tests avant de coder. **Contrôle final obligatoire :** rechercher les doublons, les responsabilités mélangées, les imports circulaires et les fichiers devenus trop volumineux ; les réorganiser si utile, puis documenter les exceptions justifiées.
 
-## V2.8 — compétences exclusives (branche candidate)
+## V2.9 — contrôles du champ de bataille
+
+- `src/engine/battle-control.js` porte silence, téléportation, pièges et plans de ciblage purs, partagés par `battle.js`, `ai.js` et `ui/battle-view.js`. Il ne dépend ni du moteur ni de l'IA : conserver ce sens de dépendance.
+- Silence suspend uniquement les capacités déclenchées ; armure, Distance, Vol, Garde, Concorde et effets déjà appliqués restent actifs. Maximum deux résolutions, puis une résolution de répit ; ne pas empiler/renouveler un silence.
+- Téléportation latérale : même colonne libre, aucune arrivée devant la couronne adverse, une fois par unité et par tour. Réutiliser `teleportPlan` pour l'aperçu et l'IA, et le hook d'entrée pour les pièges.
+- Pièges publics : deux par camp, cases 2–4, trois résolutions maximum ; retirer avant d'appliquer leurs effets. Utiliser `hit` du moteur, conserver propriétaire/expiration et ne pas sauvegarder les VFX.
+- Les propriétés `traps`, `silenceUntil`, `silenceGuardUntil`, `teleportedRound` et `controlReadyRound` sont facultatives ; ne pas les imposer aux anciens combats ni réinitialiser un profil.
+- Les decks historiques de Tour sont filtrés pour rester stables lors de l'extension du catalogue. Ne pas remplacer la référence de parité V2.4 ; `tests/fixtures/catalogue_v28.json` fige les 68 cartes et rencontres V2.8.
+- Tests : `tests/battle_control_v29.test.mjs`, `tests/browser_battle_control_v29.py`, contrôles V2.8, parité et build. `npm run control-balance` utilise le simulateur partagé et des profils fictifs ; rapport et limites dans `docs/BATTLE_CONTROL_V2_9.md`.
+
+## V2.8 — compétences exclusives (version historique)
 
 - Cartes V2.8 dans `src/data.js` (`CLASS_SKILLS`) : huit sorts réservés aux quatre classes, sans modifier les 60 anciennes cartes.
 - Effets et validation de cible dans `src/engine/class-skills.js`, consommation des actions et dégâts dans `src/engine/battle.js`, coût d'apprentissage dans `src/engine/economy.js`.

@@ -1,6 +1,7 @@
 // Gains de mission, récompenses et économie interne (sans paiement réel).
 import {CARDS,CLASS_SKILLS,TOWER_MAX} from '../data.js';
 import {ownedCopies,grantBattleProgress,heroLevel} from './profile.js';
+import {CONTROL_IDS} from './battle-control.js';
 export function completeBattle(profile,mission,b){
  if(b.status!=='victory'&&b.status!=='defeat')return null;
  if(b.progressionGranted)return {victory:b.status==='victory',gold:0,shards:0,card:null,reputation:[],heroXp:0,levelShards:0,mastered:[]};
@@ -59,7 +60,7 @@ export function learnClassSkill(profile,id){
  profile.collection[id]=(profile.collection[id]||0)+1;
  return {ok:true,cost:skill.shards};
 }
-export const FUSION_RECIPES=['lancer','scoutcaptain','sunpriest','archdruid','vampire','graveknight','cannon','mechanist','tempest','aetherknight','dawnbastion','seraph','sundawn','arcflare'];
+export const FUSION_RECIPES=['lancer','scoutcaptain','sunpriest','archdruid','vampire','graveknight','cannon','mechanist','tempest','aetherknight','dawnbastion','seraph','sundawn','arcflare',...CONTROL_IDS];
 export const FUSION_COSTS={'commun':{gold:12,shards:26},'rare':{gold:32,shards:64},'épique':{gold:85,shards:145},'légendaire':{gold:180,shards:290}};
 export const EXTRACTION_SHARDS={'commun':8,'rare':18,'épique':44,'légendaire':90};
 export function extractCard(p,id){

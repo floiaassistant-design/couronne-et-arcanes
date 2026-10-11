@@ -2,6 +2,7 @@
 import {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
 import {rankEnemyMoves} from '../ai.js';
 import {classSkillTargetError,resolveClassSkill} from './class-skills.js';
+import {silenced,activeAbility,controlTargetError,resolveControlSpell,prepareControlUnits,triggerTrap,expireControl} from './battle-control.js';
 import {chosenTalents} from '../talents.js';
 import {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,masteryRank,EQUIPMENT,reputationLevel} from './profile.js';
 export const LANES=3, WIDTH=7;
@@ -9,6 +10,8 @@ function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed
 function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand(b)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 export function note(b,message){b.log.unshift(message);b.log=b.log.slice(0,12);}
 function fx(b,event){if(Array.isArray(b.vfx)&&b.vfx.length<80)b.vfx.push(event);}
+function enterCell(b,u,lane,col){triggerTrap(b,u,lane,col,hit,fx,note);sweepDead(b);}
+const controlHooks={emit:fx,note,enter:enterCell};
 
 function draw(b,side,n=1){
  const hero=b.heroes[side];for(let j=0;j<n;j++){
@@ -113,6 +116,8 @@ function cast(b,side,id,lane){
   if(foe)foe.u.stun=2;
  }else if(c.ability==='spell_ward'){
   b.heroes[side].shield=Math.min(15,b.heroes[side].shield+5);
+ }else if(['spell_silence','spell_teleport','spell_trap'].includes(c.ability)){
+  resolveControlSpell(b,side,c,lane,controlHooks);
  }else if(c.heroClass){
   drawAfter=resolveClassSkill(b,side,c,lane,hit);
  }
@@ -122,7 +127,7 @@ function cast(b,side,id,lane){
  return drawAfter;
 }
 function play(b,side,index,lane){
- if(b.status!=='active'||lane<0||lane>=LANES)return {ok:false,reason:'Combat terminé ou ligne invalide.'};
+ if(b.status!=='active'||!Number.isInteger(lane)||lane<0||lane>=LANES)return {ok:false,reason:'Combat terminé ou ligne invalide.'};
  const hero=b.heroes[side],hand=hero.hand[index];
  if(!hand)return {ok:false,reason:'Carte introuvable.'};
  if(hand.wait>0)return {ok:false,reason:`Cette carte sera disponible dans ${hand.wait} tour(s).`};
@@ -130,7 +135,7 @@ function play(b,side,index,lane){
  const c=CARDS[hand.id];
  if(!c)return {ok:false,reason:'Carte inconnue.'};
  if(c.heroClass&&(side!=='p'||c.heroClass!==b.heroClass))return {ok:false,reason:'Compétence réservée à une autre classe.'};
- const targetError=classSkillTargetError(b,side,c,lane);
+ const targetError=classSkillTargetError(b,side,c,lane)||controlTargetError(b,side,c,lane);
  if(targetError)return {ok:false,reason:targetError};
  if(c.type==='unité'&&!spawn(b,side,hand.id,lane))return {ok:false,reason:'La case de déploiement est occupée.'};
  const drawAfter=c.type==='sort'?cast(b,side,hand.id,lane):0;
@@ -194,7 +199,7 @@ function moveUnits(b){
  for(const side of b.round%2?['p','e']:['e','p'])for(let lane=0;lane<LANES;lane++){
   const cols=side==='p'?[5,4,3,2,1]:[1,2,3,4,5];
   for(const original of cols){const u=b.board[lane][original];if(!u||u.side!==side||u.stun>0)continue;
-   let col=original;const steps=u.ability==='haste'?2:1;
+   let col=original;const steps=activeAbility(b,u)==='haste'?2:1;
    for(let step=0;step<steps;step++){
     if(findTarget(b,lane,col,u))break;
     const next=col+forward(side);
@@ -208,6 +213,7 @@ function moveUnits(b){
       }else break;
     }
     b.board[lane][destination]=u;b.board[lane][col]=null;u.movedThisRound=true;fx(b,{type:'move',lane,from:col,to:destination,side,icon:CARDS[u.id]?.icon||'♞'});col=destination;
+    enterCell(b,u,lane,col);if(u.hp<=0||u.stun>0)break;
    }
   }
  }
@@ -225,7 +231,7 @@ function findGuardianForHero(b,lane,heroSide){
 function retaliate(b,defender,attacker,lane,defenderCol,attackerCol){
  // Riposte : seulement contre une attaque au contact, si les deux unités vivent.
  // Une seule riposte par tour et aucune contre-riposte en chaîne.
- if(!RIPOSTE_IDS.has(defender.id)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
+ if(!RIPOSTE_IDS.has(defender.id)||silenced(b,defender)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
     defender.side===attacker.side||Math.abs(defenderCol-attackerCol)!==1||defender.lastRiposteRound===b.round)return;
  defender.lastRiposteRound=b.round;
  const dealt=hit(b,attacker,2,defender.side);
@@ -240,7 +246,8 @@ function resolveAttacks(b){
  for(let lane=0;lane<LANES;lane++)for(let col=1;col<=5;col++){
   const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0)continue;
   const target=findTarget(b,lane,col,u);
-  if(target)intents.push({u,lane,col,target,atk:u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(CHARGE_IDS.has(u.id)&&u.movedThisRound?2:0),ability:u.ability,charged:CHARGE_IDS.has(u.id)&&!!u.movedThisRound});
+  const charged=!silenced(b,u)&&CHARGE_IDS.has(u.id)&&!!u.movedThisRound;
+  if(target)intents.push({u,lane,col,target,atk:u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?2:0),ability:activeAbility(b,u),charged});
  }
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
@@ -272,11 +279,11 @@ function resolveAttacks(b){
  sweepDead(b);
  // Persistent support abilities trigger after combat.
  for(let lane=0;lane<LANES;lane++)for(const u of b.board[lane])if(u&&u.hp>0){
-  if(u.ability==='heal'){
+  if(activeAbility(b,u)==='heal'){
    const allies=b.board[lane].filter(v=>v&&v.side===u.side&&v.hp<v.maxhp);
    if(allies.length){allies.sort((a,z)=>(a.hp/a.maxhp)-(z.hp/z.maxhp));allies[0].hp=Math.min(allies[0].maxhp,allies[0].hp+2);const col=b.board[lane].indexOf(allies[0]);fx(b,{type:'heal',lane,col});}
   }
-  if(u.ability==='inspire'){
+  if(activeAbility(b,u)==='inspire'){
    const allies=b.board[lane].filter(v=>v&&v.side===u.side&&v.uid!==u.uid);
    if(allies.length&&b.round%3===0){allies[0].atk=Math.min(allies[0].atk+1,12);}
   }
@@ -338,7 +345,7 @@ export function endPlayerTurn(b){
  if(b.phase!=='player'||b.status!=='active')return {ok:false,reason:'Le tour est terminé.'};
  b.phase='resolving';enemyAct(b);
  if(b.status==='active'){
-  resolvePoison(b);moveUnits(b);resolveAttacks(b);
+  resolvePoison(b);prepareControlUnits(b,controlHooks);moveUnits(b);resolveAttacks(b);expireControl(b,fx);
   // Fatigue of the battlefield avoids endless defensive stalemates.
   if(b.round>=17&&b.status==='active'){
    const attrition=1+Math.floor((b.round-17)/6);

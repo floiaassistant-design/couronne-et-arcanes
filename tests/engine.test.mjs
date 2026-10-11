@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import {CAMPAIGN,CARDS,CLASSES,towerMission,TOWER_MAX} from '../src/data.js';
 import {freshProfile,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,reputationLevel,FUSION_COSTS,extractCard,fuseCard} from '../src/engine.js';
 const mk=(seed=42)=>createBattle(freshProfile(),CAMPAIGN[0],seed);
-test('68 original cards and 12 missions',()=>{
- assert.equal(Object.keys(CARDS).length,68);assert.equal(CAMPAIGN.length,12);
- assert.equal(new Set(Object.keys(CARDS)).size,68);
+test('74 original cards and 12 missions',()=>{
+ assert.equal(Object.keys(CARDS).length,74);assert.equal(CAMPAIGN.length,12);
+ assert.equal(new Set(Object.keys(CARDS)).size,74);
  for(const m of CAMPAIGN){assert.ok(m.deck.every(id=>CARDS[id]));assert.ok(CARDS[m.unlock]);}
 });
 test('default deck is valid and campaign can begin',()=>{

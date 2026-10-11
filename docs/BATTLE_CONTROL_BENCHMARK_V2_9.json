@@ -1,0 +1,1626 @@
+{
+  "schema": 1,
+  "seeds": 16,
+  "completed": 20480,
+  "maxTurns": 32,
+  "trapStates": 28219,
+  "silentStates": 12494,
+  "uses": {
+    "seal_silence": 7970,
+    "mist_inquisitor": 6403,
+    "transposition": 7035,
+    "portal_walker": 7070,
+    "rune_trap": 6710,
+    "sylvan_trapper": 7283,
+    "skill_guard_wall": 4914,
+    "skill_guard_rally": 4256,
+    "skill_arc_freeze": 4542,
+    "skill_arc_chain": 3549,
+    "skill_ranger_pierce": 4992,
+    "skill_ranger_draw": 3845,
+    "skill_cleric_light": 4687,
+    "skill_cleric_bless": 3706
+  },
+  "rows": [
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "assaut",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 79,
+      "winRate": 61.7,
+      "meanTurns": 11.5
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "assaut",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 73,
+      "winRate": 57,
+      "meanTurns": 11.78
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "assaut",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 72,
+      "winRate": 56.3,
+      "meanTurns": 11.38
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "assaut",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 75,
+      "winRate": 58.6,
+      "meanTurns": 11.8
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "assaut",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 69,
+      "winRate": 53.9,
+      "meanTurns": 11.05
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "rempart",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 104,
+      "winRate": 81.3,
+      "meanTurns": 14.93
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "rempart",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 105,
+      "winRate": 82,
+      "meanTurns": 14.83
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "rempart",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 100,
+      "winRate": 78.1,
+      "meanTurns": 14.45
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "rempart",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 102,
+      "winRate": 79.7,
+      "meanTurns": 14.93
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "rempart",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 96,
+      "winRate": 75,
+      "meanTurns": 15.63
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "arcanes",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 53,
+      "winRate": 41.4,
+      "meanTurns": 12.75
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "arcanes",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 50,
+      "winRate": 39.1,
+      "meanTurns": 13.11
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "arcanes",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 55,
+      "winRate": 43,
+      "meanTurns": 12.48
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "arcanes",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 46,
+      "winRate": 35.9,
+      "meanTurns": 13.38
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "arcanes",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 52,
+      "winRate": 40.6,
+      "meanTurns": 12.05
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "soutien",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 88,
+      "winRate": 68.8,
+      "meanTurns": 12.34
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "soutien",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 76,
+      "winRate": 59.4,
+      "meanTurns": 13.64
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "soutien",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 78,
+      "winRate": 60.9,
+      "meanTurns": 13.37
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "soutien",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 78,
+      "winRate": 60.9,
+      "meanTurns": 13.78
+    },
+    {
+      "level": 6,
+      "hero": "gardien",
+      "style": "soutien",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 60,
+      "winRate": 46.9,
+      "meanTurns": 12.87
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "assaut",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 89,
+      "winRate": 69.5,
+      "meanTurns": 11.09
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "assaut",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 80,
+      "winRate": 62.5,
+      "meanTurns": 11.81
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "assaut",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 85,
+      "winRate": 66.4,
+      "meanTurns": 11.37
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "assaut",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 86,
+      "winRate": 67.2,
+      "meanTurns": 11.65
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "assaut",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 81,
+      "winRate": 63.3,
+      "meanTurns": 11.06
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "rempart",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 120,
+      "winRate": 93.8,
+      "meanTurns": 14.2
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "rempart",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 118,
+      "winRate": 92.2,
+      "meanTurns": 14.09
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "rempart",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 120,
+      "winRate": 93.8,
+      "meanTurns": 14.28
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "rempart",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 121,
+      "winRate": 94.5,
+      "meanTurns": 14.18
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "rempart",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 105,
+      "winRate": 82,
+      "meanTurns": 14.6
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 71,
+      "winRate": 55.5,
+      "meanTurns": 13.22
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 68,
+      "winRate": 53.1,
+      "meanTurns": 13.2
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 71,
+      "winRate": 55.5,
+      "meanTurns": 12.54
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 70,
+      "winRate": 54.7,
+      "meanTurns": 13.48
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 66,
+      "winRate": 51.6,
+      "meanTurns": 12.85
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "soutien",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 102,
+      "winRate": 79.7,
+      "meanTurns": 12.73
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "soutien",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 97,
+      "winRate": 75.8,
+      "meanTurns": 14.14
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "soutien",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 92,
+      "winRate": 71.9,
+      "meanTurns": 13.52
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "soutien",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 96,
+      "winRate": 75,
+      "meanTurns": 13.82
+    },
+    {
+      "level": 6,
+      "hero": "arcaniste",
+      "style": "soutien",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 84,
+      "winRate": 65.6,
+      "meanTurns": 13.63
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "assaut",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 90,
+      "winRate": 70.3,
+      "meanTurns": 11.13
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "assaut",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 85,
+      "winRate": 66.4,
+      "meanTurns": 11.79
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "assaut",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 87,
+      "winRate": 68,
+      "meanTurns": 11.05
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "assaut",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 88,
+      "winRate": 68.8,
+      "meanTurns": 11.55
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "assaut",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 80,
+      "winRate": 62.5,
+      "meanTurns": 10.78
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "rempart",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 116,
+      "winRate": 90.6,
+      "meanTurns": 14.03
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "rempart",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 113,
+      "winRate": 88.3,
+      "meanTurns": 14.15
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "rempart",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 118,
+      "winRate": 92.2,
+      "meanTurns": 13.89
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "rempart",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 115,
+      "winRate": 89.8,
+      "meanTurns": 14.05
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "rempart",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 105,
+      "winRate": 82,
+      "meanTurns": 14.13
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "arcanes",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 72,
+      "winRate": 56.3,
+      "meanTurns": 12.87
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "arcanes",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 73,
+      "winRate": 57,
+      "meanTurns": 12.89
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "arcanes",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 66,
+      "winRate": 51.6,
+      "meanTurns": 11.83
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "arcanes",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 73,
+      "winRate": 57,
+      "meanTurns": 12.85
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "arcanes",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 68,
+      "winRate": 53.1,
+      "meanTurns": 11.97
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "soutien",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 102,
+      "winRate": 79.7,
+      "meanTurns": 12.76
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "soutien",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 100,
+      "winRate": 78.1,
+      "meanTurns": 14.05
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "soutien",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 96,
+      "winRate": 75,
+      "meanTurns": 13.4
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "soutien",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 103,
+      "winRate": 80.5,
+      "meanTurns": 13.58
+    },
+    {
+      "level": 6,
+      "hero": "rodeur",
+      "style": "soutien",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 87,
+      "winRate": 68,
+      "meanTurns": 13.04
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "assaut",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 81,
+      "winRate": 63.3,
+      "meanTurns": 10.55
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "assaut",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 74,
+      "winRate": 57.8,
+      "meanTurns": 10.96
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "assaut",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 75,
+      "winRate": 58.6,
+      "meanTurns": 10.53
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "assaut",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 73,
+      "winRate": 57,
+      "meanTurns": 10.98
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "assaut",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 65,
+      "winRate": 50.8,
+      "meanTurns": 10.37
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "rempart",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 98,
+      "winRate": 76.6,
+      "meanTurns": 14.59
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "rempart",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 106,
+      "winRate": 82.8,
+      "meanTurns": 14.55
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "rempart",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 97,
+      "winRate": 75.8,
+      "meanTurns": 14.78
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "rempart",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 103,
+      "winRate": 80.5,
+      "meanTurns": 14.95
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "rempart",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 94,
+      "winRate": 73.4,
+      "meanTurns": 15.46
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "arcanes",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 57,
+      "winRate": 44.5,
+      "meanTurns": 12.01
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "arcanes",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 55,
+      "winRate": 43,
+      "meanTurns": 12.23
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "arcanes",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 57,
+      "winRate": 44.5,
+      "meanTurns": 11.77
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "arcanes",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 54,
+      "winRate": 42.2,
+      "meanTurns": 11.96
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "arcanes",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 56,
+      "winRate": 43.8,
+      "meanTurns": 11.48
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "soutien",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 77,
+      "winRate": 60.2,
+      "meanTurns": 12.07
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "soutien",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 82,
+      "winRate": 64.1,
+      "meanTurns": 13.55
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "soutien",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 81,
+      "winRate": 63.3,
+      "meanTurns": 12.77
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "soutien",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 78,
+      "winRate": 60.9,
+      "meanTurns": 13.05
+    },
+    {
+      "level": 6,
+      "hero": "clerc",
+      "style": "soutien",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 60,
+      "winRate": 46.9,
+      "meanTurns": 12.58
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "assaut",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 120,
+      "winRate": 93.8,
+      "meanTurns": 9.35
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "assaut",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 114,
+      "winRate": 89.1,
+      "meanTurns": 10.45
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "assaut",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 113,
+      "winRate": 88.3,
+      "meanTurns": 10.06
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "assaut",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 117,
+      "winRate": 91.4,
+      "meanTurns": 10.16
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "assaut",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 106,
+      "winRate": 82.8,
+      "meanTurns": 9.93
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "rempart",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 120,
+      "winRate": 93.8,
+      "meanTurns": 11.83
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "rempart",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 124,
+      "winRate": 96.9,
+      "meanTurns": 11.55
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "rempart",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 123,
+      "winRate": 96.1,
+      "meanTurns": 11.45
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "rempart",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 122,
+      "winRate": 95.3,
+      "meanTurns": 11.58
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "rempart",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 112,
+      "winRate": 87.5,
+      "meanTurns": 12.65
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "arcanes",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 94,
+      "winRate": 73.4,
+      "meanTurns": 12.55
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "arcanes",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 88,
+      "winRate": 68.8,
+      "meanTurns": 12.69
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "arcanes",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 93,
+      "winRate": 72.7,
+      "meanTurns": 11.95
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "arcanes",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 101,
+      "winRate": 78.9,
+      "meanTurns": 12.8
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "arcanes",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 93,
+      "winRate": 72.7,
+      "meanTurns": 11.85
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "soutien",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 113,
+      "winRate": 88.3,
+      "meanTurns": 10.99
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "soutien",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 114,
+      "winRate": 89.1,
+      "meanTurns": 11.98
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "soutien",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 112,
+      "winRate": 87.5,
+      "meanTurns": 11.92
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "soutien",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 114,
+      "winRate": 89.1,
+      "meanTurns": 11.73
+    },
+    {
+      "level": 9,
+      "hero": "gardien",
+      "style": "soutien",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 100,
+      "winRate": 78.1,
+      "meanTurns": 12.34
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "assaut",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 123,
+      "winRate": 96.1,
+      "meanTurns": 8.98
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "assaut",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 118,
+      "winRate": 92.2,
+      "meanTurns": 10
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "assaut",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 124,
+      "winRate": 96.9,
+      "meanTurns": 9.2
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "assaut",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 122,
+      "winRate": 95.3,
+      "meanTurns": 9.38
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "assaut",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 113,
+      "winRate": 88.3,
+      "meanTurns": 9.47
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "rempart",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 126,
+      "winRate": 98.4,
+      "meanTurns": 11.06
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "rempart",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 126,
+      "winRate": 98.4,
+      "meanTurns": 10.95
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "rempart",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 125,
+      "winRate": 97.7,
+      "meanTurns": 10.8
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "rempart",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 126,
+      "winRate": 98.4,
+      "meanTurns": 10.85
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "rempart",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 122,
+      "winRate": 95.3,
+      "meanTurns": 12.13
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 111,
+      "winRate": 86.7,
+      "meanTurns": 11.96
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 110,
+      "winRate": 85.9,
+      "meanTurns": 11.88
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 108,
+      "winRate": 84.4,
+      "meanTurns": 11.89
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 109,
+      "winRate": 85.2,
+      "meanTurns": 11.85
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 113,
+      "winRate": 88.3,
+      "meanTurns": 11.43
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "soutien",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 121,
+      "winRate": 94.5,
+      "meanTurns": 10.83
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "soutien",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 120,
+      "winRate": 93.8,
+      "meanTurns": 11.27
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "soutien",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 117,
+      "winRate": 91.4,
+      "meanTurns": 11.16
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "soutien",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 120,
+      "winRate": 93.8,
+      "meanTurns": 11.32
+    },
+    {
+      "level": 9,
+      "hero": "arcaniste",
+      "style": "soutien",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 109,
+      "winRate": 85.2,
+      "meanTurns": 11.95
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "assaut",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 122,
+      "winRate": 95.3,
+      "meanTurns": 9
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "assaut",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 120,
+      "winRate": 93.8,
+      "meanTurns": 9.6
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "assaut",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 119,
+      "winRate": 93,
+      "meanTurns": 9.55
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "assaut",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 124,
+      "winRate": 96.9,
+      "meanTurns": 9.55
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "assaut",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 118,
+      "winRate": 92.2,
+      "meanTurns": 9.37
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "rempart",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 128,
+      "winRate": 100,
+      "meanTurns": 10.88
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "rempart",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 126,
+      "winRate": 98.4,
+      "meanTurns": 10.77
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "rempart",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 126,
+      "winRate": 98.4,
+      "meanTurns": 10.55
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "rempart",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 125,
+      "winRate": 97.7,
+      "meanTurns": 10.76
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "rempart",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 124,
+      "winRate": 96.9,
+      "meanTurns": 11.95
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "arcanes",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 112,
+      "winRate": 87.5,
+      "meanTurns": 11.83
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "arcanes",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 106,
+      "winRate": 82.8,
+      "meanTurns": 11.93
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "arcanes",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 106,
+      "winRate": 82.8,
+      "meanTurns": 11.09
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "arcanes",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 106,
+      "winRate": 82.8,
+      "meanTurns": 11.58
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "arcanes",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 112,
+      "winRate": 87.5,
+      "meanTurns": 11.49
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "soutien",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 122,
+      "winRate": 95.3,
+      "meanTurns": 10.67
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "soutien",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 118,
+      "winRate": 92.2,
+      "meanTurns": 11.38
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "soutien",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 118,
+      "winRate": 92.2,
+      "meanTurns": 11.15
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "soutien",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 122,
+      "winRate": 95.3,
+      "meanTurns": 11.23
+    },
+    {
+      "level": 9,
+      "hero": "rodeur",
+      "style": "soutien",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 119,
+      "winRate": 93,
+      "meanTurns": 11.95
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "assaut",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 112,
+      "winRate": 87.5,
+      "meanTurns": 9.23
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "assaut",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 112,
+      "winRate": 87.5,
+      "meanTurns": 10.02
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "assaut",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 113,
+      "winRate": 88.3,
+      "meanTurns": 9.63
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "assaut",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 112,
+      "winRate": 87.5,
+      "meanTurns": 9.8
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "assaut",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 104,
+      "winRate": 81.3,
+      "meanTurns": 9.05
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "rempart",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 120,
+      "winRate": 93.8,
+      "meanTurns": 11.94
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "rempart",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 116,
+      "winRate": 90.6,
+      "meanTurns": 11.62
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "rempart",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 118,
+      "winRate": 92.2,
+      "meanTurns": 11.52
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "rempart",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 119,
+      "winRate": 93,
+      "meanTurns": 11.81
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "rempart",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 113,
+      "winRate": 88.3,
+      "meanTurns": 12.9
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "arcanes",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 93,
+      "winRate": 72.7,
+      "meanTurns": 11.62
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "arcanes",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 101,
+      "winRate": 78.9,
+      "meanTurns": 11.78
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "arcanes",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 95,
+      "winRate": 74.2,
+      "meanTurns": 11.3
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "arcanes",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 99,
+      "winRate": 77.3,
+      "meanTurns": 11.53
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "arcanes",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 95,
+      "winRate": 74.2,
+      "meanTurns": 10.96
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "soutien",
+      "variant": "reference",
+      "battles": 128,
+      "wins": 109,
+      "winRate": 85.2,
+      "meanTurns": 10.88
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "soutien",
+      "variant": "silence",
+      "battles": 128,
+      "wins": 108,
+      "winRate": 84.4,
+      "meanTurns": 11.85
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "soutien",
+      "variant": "teleportation",
+      "battles": 128,
+      "wins": 108,
+      "winRate": 84.4,
+      "meanTurns": 11.54
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "soutien",
+      "variant": "pieges",
+      "battles": 128,
+      "wins": 110,
+      "winRate": 85.9,
+      "meanTurns": 11.57
+    },
+    {
+      "level": 9,
+      "hero": "clerc",
+      "style": "soutien",
+      "variant": "mixte",
+      "battles": 128,
+      "wins": 92,
+      "winRate": 71.9,
+      "meanTurns": 11.49
+    }
+  ]
+}
