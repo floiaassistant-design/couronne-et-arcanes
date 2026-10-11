@@ -1,3 +1,9 @@
+## V2.7.1 — Récupération et prévention des conflits (2026-10-11)
+
+- Restauration de huit fichiers écrasés par une ancienne V1.2 depuis le commit local V2.7 `145a2e8` avec sauvegarde préalable ; mécaniques du jeu préservées.
+- Règles de coordination des agents renforcées ; restauration de la documentation et des numéros de version.
+- Aucun changement des règles de combat ou des données de sauvegarde.
+
 ## V2.7 — Audit des compositions et préparation GitHub (2026-10-11)
 
 - Comparaison contrôlée de 24 configurations de decks : 12 288 combats déterministes par version, résultat avant/après conservé en JSON.
