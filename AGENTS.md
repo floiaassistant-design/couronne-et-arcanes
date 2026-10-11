@@ -2,12 +2,21 @@
 
 ## Version stable et coordination multi-sessions — PRIORITAIRE
 
-- **Base courante : V2.7.1**. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
+- **Base courante : V2.8 (après intégration de la PR #3)**. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
 - **Ne jamais copier une ancienne version par-dessus la dernière version.** La copie V1.2 avait écrasé huit fichiers de V2.7 le 11/10/2026 ; les fichiers ont été récupérés depuis le commit local `145a2e8`.
 - **Une branche par agent/session** lorsque plusieurs agents développent en parallèle. Un seul intégrateur fusionne après comparaison des modifications et exécution des tests.
 - **Anti-écrasement :** vérifier l'état GitHub avant chaque publication ; si la branche cible a avancé, fusionner les changements utiles et ne jamais forcer la réécriture de l'historique.
 - **Fin de session :** tests, documentation de l'état, journal des changements, commit explicite, export autonome si nécessaire.
 - **Source de vérité :** GitHub pour les sources de développement, `JOUER.html` généré depuis ces sources pour jouer, Drive pour les archives. Une archive sur Drive n'est pas automatiquement synchronisée avec GitHub.
+
+## Fusion continue après contrôle automatique — politique à compter de la V2.8
+
+- L'utilisateur teste le jeu à intervalles libres, **pas obligatoirement à chaque version**. Les versions suivantes peuvent être fusionnées sur `main` par l'agent de développement dans la même session **sans redemander de validation manuelle**, dès lors que l'évolution a été préalablement demandée ou approuvée et que les contrôles sont verts.
+- Une branche et une pull request par évolution ; relire le diff, comparer au `main` courant, vérifier zéro régression involontaire, les sauvegardes historiques, les limites du gameplay et les tests pertinents.
+- **Portes obligatoires** : `npm test`, `npm run test:parity` pour les règles inchangées, `npm run build`, identité du HTML autonome et parcours navigateur desktop/mobile en cas de changement de l'interface. Corriger et relancer si échec. Ne pas considérer une CI absente ou en cours comme « verte ».
+- Bloquer la fusion et demander une décision seulement en cas de conflit non résolu, d'impact incertain sur les sauvegardes, de changement de règles non approuvé, de tests indisponibles, de régression, ou de risque majeur identifié. Les tests ne remplacent pas une validation réelle de l'ergonomie sur téléphone.
+- Ne jamais fusionner une branche dont la tête a changé depuis la vérification ; utiliser l'identifiant de commit attendu, ne jamais écraser `main` et ne jamais forcer l'historique. Après fusion, annoncer la version, le commit, la CI et les éventuelles limites.
+- Cette politique autorise une fusion **lors de nos sessions de développement** ; elle ne promet aucun suivi asynchrone du dépôt entre les conversations.
 
 ## Règle permanente — architecture modulaire et qualité du code
 
