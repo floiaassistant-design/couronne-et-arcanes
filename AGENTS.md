@@ -1,5 +1,14 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Version stable et coordination multi-sessions — PRIORITAIRE
+
+- **Base courante : V2.7.1**. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
+- **Ne jamais copier une ancienne version par-dessus la dernière version.** La copie V1.2 avait écrasé huit fichiers de V2.7 le 11/10/2026 ; les fichiers ont été récupérés depuis le commit local `145a2e8`.
+- **Une branche par agent/session** lorsque plusieurs agents développent en parallèle. Un seul intégrateur fusionne après comparaison des modifications et exécution des tests.
+- **Anti-écrasement :** vérifier l'état GitHub avant chaque publication ; si la branche cible a avancé, fusionner les changements utiles et ne jamais forcer la réécriture de l'historique.
+- **Fin de session :** tests, documentation de l'état, journal des changements, commit explicite, export autonome si nécessaire.
+- **Source de vérité :** GitHub pour les sources de développement, `JOUER.html` généré depuis ces sources pour jouer, Drive pour les archives. Une archive sur Drive n'est pas automatiquement synchronisée avec GitHub.
+
 ## Règle permanente — architecture modulaire et qualité du code
 
 **Priorité à chaque mission de développement.** Cette section s'applique à toutes les futures versions et prévaut sur les indications d'architecture des sections historiques plus bas. Conserver des fichiers compréhensibles et une architecture cohérente au fil des ajouts, pas seulement lors d'une refonte ponctuelle.
