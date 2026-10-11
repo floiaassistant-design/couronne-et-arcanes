@@ -1,0 +1,348 @@
+{
+  "method": "paired deterministic seeds, fixed scripted bot, non-human benchmark",
+  "seedCount": 32,
+  "encounters": 14,
+  "perVariant": 448,
+  "classes": {
+    "gardien": [
+      {
+        "talents": [],
+        "winPct": 53.6,
+        "avgPowers": 4.6,
+        "avgTurns": 12.8,
+        "avgRemainingHpPct": 38.3
+      },
+      {
+        "talents": [
+          "gardien_rempart"
+        ],
+        "winPct": 53.8,
+        "avgPowers": 4.6,
+        "avgTurns": 12.9,
+        "avgRemainingHpPct": 39.9
+      },
+      {
+        "talents": [
+          "gardien_serment"
+        ],
+        "winPct": 55.4,
+        "avgPowers": 4.6,
+        "avgTurns": 13,
+        "avgRemainingHpPct": 40.6
+      },
+      {
+        "talents": [
+          "gardien_sentinelle"
+        ],
+        "winPct": 56.7,
+        "avgPowers": 4.5,
+        "avgTurns": 12.7,
+        "avgRemainingHpPct": 41.8
+      },
+      {
+        "talents": [
+          "gardien_barriere"
+        ],
+        "winPct": 54.9,
+        "avgPowers": 4.7,
+        "avgTurns": 13.1,
+        "avgRemainingHpPct": 41.6
+      },
+      {
+        "talents": [
+          "gardien_rempart",
+          "gardien_sentinelle"
+        ],
+        "winPct": 57.1,
+        "avgPowers": 4.6,
+        "avgTurns": 12.8,
+        "avgRemainingHpPct": 43.3
+      },
+      {
+        "talents": [
+          "gardien_rempart",
+          "gardien_barriere"
+        ],
+        "winPct": 55.8,
+        "avgPowers": 4.7,
+        "avgTurns": 13.2,
+        "avgRemainingHpPct": 42.7
+      },
+      {
+        "talents": [
+          "gardien_serment",
+          "gardien_sentinelle"
+        ],
+        "winPct": 59.6,
+        "avgPowers": 4.6,
+        "avgTurns": 12.9,
+        "avgRemainingHpPct": 44.5
+      },
+      {
+        "talents": [
+          "gardien_serment",
+          "gardien_barriere"
+        ],
+        "winPct": 57.6,
+        "avgPowers": 4.7,
+        "avgTurns": 13.3,
+        "avgRemainingHpPct": 44
+      }
+    ],
+    "arcaniste": [
+      {
+        "talents": [],
+        "winPct": 52.9,
+        "avgPowers": 4.4,
+        "avgTurns": 12.1,
+        "avgRemainingHpPct": 38.6
+      },
+      {
+        "talents": [
+          "arcaniste_focus"
+        ],
+        "winPct": 57.6,
+        "avgPowers": 4.5,
+        "avgTurns": 12.5,
+        "avgRemainingHpPct": 41.5
+      },
+      {
+        "talents": [
+          "arcaniste_barriere"
+        ],
+        "winPct": 58,
+        "avgPowers": 4.6,
+        "avgTurns": 12.9,
+        "avgRemainingHpPct": 44.8
+      },
+      {
+        "talents": [
+          "arcaniste_echos"
+        ],
+        "winPct": 55.6,
+        "avgPowers": 4.4,
+        "avgTurns": 12.1,
+        "avgRemainingHpPct": 42
+      },
+      {
+        "talents": [
+          "arcaniste_tissage"
+        ],
+        "winPct": 54.7,
+        "avgPowers": 4.5,
+        "avgTurns": 12.4,
+        "avgRemainingHpPct": 41.5
+      },
+      {
+        "talents": [
+          "arcaniste_focus",
+          "arcaniste_echos"
+        ],
+        "winPct": 61.2,
+        "avgPowers": 4.5,
+        "avgTurns": 12.5,
+        "avgRemainingHpPct": 46.2
+      },
+      {
+        "talents": [
+          "arcaniste_focus",
+          "arcaniste_tissage"
+        ],
+        "winPct": 60.5,
+        "avgPowers": 4.6,
+        "avgTurns": 12.9,
+        "avgRemainingHpPct": 45.2
+      },
+      {
+        "talents": [
+          "arcaniste_barriere",
+          "arcaniste_echos"
+        ],
+        "winPct": 62.1,
+        "avgPowers": 4.6,
+        "avgTurns": 12.9,
+        "avgRemainingHpPct": 49.2
+      },
+      {
+        "talents": [
+          "arcaniste_barriere",
+          "arcaniste_tissage"
+        ],
+        "winPct": 59.6,
+        "avgPowers": 4.7,
+        "avgTurns": 13.2,
+        "avgRemainingHpPct": 47.5
+      }
+    ],
+    "rodeur": [
+      {
+        "talents": [],
+        "winPct": 54.5,
+        "avgPowers": 4.3,
+        "avgTurns": 11.8,
+        "avgRemainingHpPct": 36
+      },
+      {
+        "talents": [
+          "rodeur_precision"
+        ],
+        "winPct": 61.2,
+        "avgPowers": 4.5,
+        "avgTurns": 12.5,
+        "avgRemainingHpPct": 44.8
+      },
+      {
+        "talents": [
+          "rodeur_couvert"
+        ],
+        "winPct": 58.9,
+        "avgPowers": 4.5,
+        "avgTurns": 12.4,
+        "avgRemainingHpPct": 44.1
+      },
+      {
+        "talents": [
+          "rodeur_poursuite"
+        ],
+        "winPct": 58,
+        "avgPowers": 4.3,
+        "avgTurns": 12,
+        "avgRemainingHpPct": 43.3
+      },
+      {
+        "talents": [
+          "rodeur_concentration"
+        ],
+        "winPct": 56.5,
+        "avgPowers": 4.3,
+        "avgTurns": 12.1,
+        "avgRemainingHpPct": 39.7
+      },
+      {
+        "talents": [
+          "rodeur_precision",
+          "rodeur_poursuite"
+        ],
+        "winPct": 70.8,
+        "avgPowers": 4.5,
+        "avgTurns": 12.6,
+        "avgRemainingHpPct": 53.4
+      },
+      {
+        "talents": [
+          "rodeur_precision",
+          "rodeur_concentration"
+        ],
+        "winPct": 63.8,
+        "avgPowers": 4.6,
+        "avgTurns": 12.8,
+        "avgRemainingHpPct": 48.9
+      },
+      {
+        "talents": [
+          "rodeur_couvert",
+          "rodeur_poursuite"
+        ],
+        "winPct": 61.8,
+        "avgPowers": 4.5,
+        "avgTurns": 12.7,
+        "avgRemainingHpPct": 50
+      },
+      {
+        "talents": [
+          "rodeur_couvert",
+          "rodeur_concentration"
+        ],
+        "winPct": 61.8,
+        "avgPowers": 4.6,
+        "avgTurns": 12.7,
+        "avgRemainingHpPct": 47.3
+      }
+    ],
+    "clerc": [
+      {
+        "talents": [],
+        "winPct": 55.4,
+        "avgPowers": 4.4,
+        "avgTurns": 12.1,
+        "avgRemainingHpPct": 37.1
+      },
+      {
+        "talents": [
+          "clerc_soutien"
+        ],
+        "winPct": 56.5,
+        "avgPowers": 4.4,
+        "avgTurns": 12.3,
+        "avgRemainingHpPct": 39.1
+      },
+      {
+        "talents": [
+          "clerc_foi"
+        ],
+        "winPct": 60.9,
+        "avgPowers": 4.5,
+        "avgTurns": 12.7,
+        "avgRemainingHpPct": 44.7
+      },
+      {
+        "talents": [
+          "clerc_purification"
+        ],
+        "winPct": 58.3,
+        "avgPowers": 4.4,
+        "avgTurns": 12.4,
+        "avgRemainingHpPct": 41.1
+      },
+      {
+        "talents": [
+          "clerc_souffle"
+        ],
+        "winPct": 57.4,
+        "avgPowers": 4.4,
+        "avgTurns": 12.3,
+        "avgRemainingHpPct": 40.1
+      },
+      {
+        "talents": [
+          "clerc_soutien",
+          "clerc_purification"
+        ],
+        "winPct": 60.9,
+        "avgPowers": 4.5,
+        "avgTurns": 12.5,
+        "avgRemainingHpPct": 43.1
+      },
+      {
+        "talents": [
+          "clerc_soutien",
+          "clerc_souffle"
+        ],
+        "winPct": 60,
+        "avgPowers": 4.5,
+        "avgTurns": 12.5,
+        "avgRemainingHpPct": 41.7
+      },
+      {
+        "talents": [
+          "clerc_foi",
+          "clerc_purification"
+        ],
+        "winPct": 61.2,
+        "avgPowers": 4.6,
+        "avgTurns": 12.9,
+        "avgRemainingHpPct": 48.4
+      },
+      {
+        "talents": [
+          "clerc_foi",
+          "clerc_souffle"
+        ],
+        "winPct": 62.1,
+        "avgPowers": 4.6,
+        "avgTurns": 12.9,
+        "avgRemainingHpPct": 47.5
+      }
+    ]
+  }
+}

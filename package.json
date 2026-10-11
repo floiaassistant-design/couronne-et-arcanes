@@ -1,0 +1,17 @@
+{
+  "name": "couronnes-et-arcanes",
+  "version": "2.7.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 8080",
+    "test": "node --test tests/*.test.mjs",
+    "build": "node scripts/build_standalone.mjs",
+    "balance": "node scripts/balance_simulation.mjs",
+    "talent-balance": "node scripts/talent_balance.mjs",
+    "deck-balance": "node scripts/deck_style_balance.mjs",
+    "build:test": "node scripts/build_standalone.mjs --test",
+    "test:parity": "node scripts/parity_snapshot.mjs --check"
+  },
+  "description": "Jeu solo original de cartes tactiques fantasy, jouable dans le navigateur sans dépendances."
+}

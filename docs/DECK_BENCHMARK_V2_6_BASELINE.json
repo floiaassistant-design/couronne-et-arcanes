@@ -1,0 +1,4236 @@
+{
+  "version": "2.7",
+  "method": "paired mission and PRNG seed, fixed scripted player, independent battles; non-human estimate",
+  "seedCount": 32,
+  "encounters": 16,
+  "variants": 24,
+  "battles": 12288,
+  "rows": [
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "wins": 133,
+      "n": 512,
+      "winPct": 26,
+      "avgTurns": 12.52,
+      "avgRemainingHpPct": 15.4,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 2,
+        "quick": 9,
+        "dominant": "aube",
+        "counts": {
+          "firebolt": 2,
+          "healing": 2,
+          "ranger": 2,
+          "wolf": 2,
+          "shield": 2,
+          "spark": 1,
+          "archer": 2,
+          "smith": 1,
+          "bone": 1,
+          "drill": 1,
+          "militia": 2
+        }
+      }
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "wins": 129,
+      "n": 512,
+      "winPct": 25.2,
+      "avgTurns": 12.77,
+      "avgRemainingHpPct": 15.4,
+      "deckSize": 16,
+      "overview": {
+        "total": 16,
+        "units": 14,
+        "spells": 2,
+        "guards": 0,
+        "quick": 11,
+        "dominant": "aube",
+        "counts": {
+          "firebolt": 2,
+          "wolf": 2,
+          "bone": 1,
+          "drill": 1,
+          "militia": 4,
+          "ranger": 2,
+          "spark": 1,
+          "smith": 1,
+          "thorn": 1,
+          "archer": 1
+        }
+      }
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "wins": 130,
+      "n": 512,
+      "winPct": 25.4,
+      "avgTurns": 12.99,
+      "avgRemainingHpPct": 15.5,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 2,
+        "quick": 10,
+        "dominant": "aube",
+        "counts": {
+          "healing": 2,
+          "firebolt": 2,
+          "shield": 2,
+          "drill": 1,
+          "smith": 1,
+          "militia": 4,
+          "thorn": 1,
+          "ranger": 2,
+          "bone": 1,
+          "wolf": 2
+        }
+      }
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "wins": 127,
+      "n": 512,
+      "winPct": 24.8,
+      "avgTurns": 11.93,
+      "avgRemainingHpPct": 15.9,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 2,
+        "quick": 9,
+        "dominant": "aube",
+        "counts": {
+          "firebolt": 2,
+          "healing": 2,
+          "spark": 1,
+          "ranger": 2,
+          "archer": 2,
+          "smith": 1,
+          "bone": 1,
+          "wolf": 2,
+          "drill": 1,
+          "militia": 2,
+          "shield": 2
+        }
+      }
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "wins": 146,
+      "n": 512,
+      "winPct": 28.5,
+      "avgTurns": 11.83,
+      "avgRemainingHpPct": 15.9,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 2,
+        "quick": 9,
+        "dominant": "aube",
+        "counts": {
+          "firebolt": 2,
+          "healing": 2,
+          "ranger": 2,
+          "wolf": 2,
+          "shield": 2,
+          "spark": 1,
+          "archer": 2,
+          "smith": 1,
+          "bone": 1,
+          "drill": 1,
+          "militia": 2
+        }
+      }
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "wins": 129,
+      "n": 512,
+      "winPct": 25.2,
+      "avgTurns": 11.95,
+      "avgRemainingHpPct": 14.8,
+      "deckSize": 16,
+      "overview": {
+        "total": 16,
+        "units": 14,
+        "spells": 2,
+        "guards": 0,
+        "quick": 11,
+        "dominant": "aube",
+        "counts": {
+          "firebolt": 2,
+          "wolf": 2,
+          "bone": 1,
+          "drill": 1,
+          "militia": 4,
+          "ranger": 2,
+          "spark": 1,
+          "smith": 1,
+          "thorn": 1,
+          "archer": 1
+        }
+      }
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "wins": 138,
+      "n": 512,
+      "winPct": 27,
+      "avgTurns": 12.55,
+      "avgRemainingHpPct": 15.6,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 2,
+        "quick": 10,
+        "dominant": "aube",
+        "counts": {
+          "healing": 2,
+          "firebolt": 2,
+          "shield": 2,
+          "drill": 1,
+          "smith": 1,
+          "militia": 4,
+          "thorn": 1,
+          "ranger": 2,
+          "bone": 1,
+          "wolf": 2
+        }
+      }
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "wins": 133,
+      "n": 512,
+      "winPct": 26,
+      "avgTurns": 11.38,
+      "avgRemainingHpPct": 16.8,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 2,
+        "quick": 9,
+        "dominant": "aube",
+        "counts": {
+          "firebolt": 2,
+          "healing": 2,
+          "spark": 1,
+          "ranger": 2,
+          "archer": 2,
+          "smith": 1,
+          "bone": 1,
+          "wolf": 2,
+          "drill": 1,
+          "militia": 2,
+          "shield": 2
+        }
+      }
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "wins": 324,
+      "n": 512,
+      "winPct": 63.3,
+      "avgTurns": 13.1,
+      "avgRemainingHpPct": 50.4,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 6,
+        "quick": 4,
+        "dominant": "ether",
+        "counts": {
+          "firebolt": 2,
+          "healing": 2,
+          "treant": 2,
+          "griffin": 2,
+          "golem": 2,
+          "sentinel": 2,
+          "mystic": 2,
+          "ranger": 2,
+          "wolf": 2
+        }
+      }
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "wins": 190,
+      "n": 512,
+      "winPct": 37.1,
+      "avgTurns": 12.49,
+      "avgRemainingHpPct": 26.8,
+      "deckSize": 16,
+      "overview": {
+        "total": 16,
+        "units": 14,
+        "spells": 2,
+        "guards": 0,
+        "quick": 10,
+        "dominant": "ombre",
+        "counts": {
+          "firebolt": 2,
+          "wolf": 3,
+          "griffin": 2,
+          "shade": 2,
+          "bone": 1,
+          "nightblade": 3,
+          "drill": 1,
+          "militia": 2
+        }
+      }
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "wins": 332,
+      "n": 512,
+      "winPct": 64.8,
+      "avgTurns": 16.87,
+      "avgRemainingHpPct": 55.8,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 9,
+        "quick": 1,
+        "dominant": "aube",
+        "counts": {
+          "healing": 3,
+          "sanctuary": 1,
+          "golem": 2,
+          "treant": 2,
+          "sentinel": 2,
+          "shield": 3,
+          "drill": 1,
+          "dryad": 2,
+          "cleric": 2
+        }
+      }
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "wins": 199,
+      "n": 512,
+      "winPct": 38.9,
+      "avgTurns": 12.71,
+      "avgRemainingHpPct": 27.3,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 13,
+        "spells": 5,
+        "guards": 2,
+        "quick": 5,
+        "dominant": "ether",
+        "counts": {
+          "storm": 2,
+          "entangle": 2,
+          "firebolt": 1,
+          "mystic": 3,
+          "spark": 3,
+          "griffin": 2,
+          "sentinel": 2,
+          "ranger": 2,
+          "archer": 1
+        }
+      }
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "wins": 358,
+      "n": 512,
+      "winPct": 69.9,
+      "avgTurns": 12.54,
+      "avgRemainingHpPct": 55,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 6,
+        "quick": 4,
+        "dominant": "ether",
+        "counts": {
+          "firebolt": 2,
+          "healing": 2,
+          "treant": 2,
+          "griffin": 2,
+          "golem": 2,
+          "sentinel": 2,
+          "mystic": 2,
+          "ranger": 2,
+          "wolf": 2
+        }
+      }
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "wins": 196,
+      "n": 512,
+      "winPct": 38.3,
+      "avgTurns": 11.86,
+      "avgRemainingHpPct": 29.1,
+      "deckSize": 16,
+      "overview": {
+        "total": 16,
+        "units": 14,
+        "spells": 2,
+        "guards": 0,
+        "quick": 10,
+        "dominant": "ombre",
+        "counts": {
+          "firebolt": 2,
+          "wolf": 3,
+          "griffin": 2,
+          "shade": 2,
+          "bone": 1,
+          "nightblade": 3,
+          "drill": 1,
+          "militia": 2
+        }
+      }
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "wins": 367,
+      "n": 512,
+      "winPct": 71.7,
+      "avgTurns": 16.22,
+      "avgRemainingHpPct": 62.6,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 9,
+        "quick": 1,
+        "dominant": "aube",
+        "counts": {
+          "healing": 3,
+          "sanctuary": 1,
+          "golem": 2,
+          "treant": 2,
+          "sentinel": 2,
+          "shield": 3,
+          "drill": 1,
+          "dryad": 2,
+          "cleric": 2
+        }
+      }
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "wins": 197,
+      "n": 512,
+      "winPct": 38.5,
+      "avgTurns": 11.91,
+      "avgRemainingHpPct": 24.3,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 13,
+        "spells": 5,
+        "guards": 2,
+        "quick": 5,
+        "dominant": "ether",
+        "counts": {
+          "storm": 2,
+          "entangle": 2,
+          "firebolt": 1,
+          "mystic": 3,
+          "spark": 3,
+          "griffin": 2,
+          "sentinel": 2,
+          "ranger": 2,
+          "archer": 1
+        }
+      }
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "wins": 491,
+      "n": 512,
+      "winPct": 95.9,
+      "avgTurns": 10.22,
+      "avgRemainingHpPct": 88.1,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 2,
+        "quick": 0,
+        "dominant": "ether",
+        "counts": {
+          "firebolt": 2,
+          "sundawn": 2,
+          "seraph": 1,
+          "cannon": 3,
+          "aetherknight": 2,
+          "treant": 2,
+          "dragon": 1,
+          "graveknight": 2,
+          "griffin": 2,
+          "stag": 1
+        }
+      }
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "wins": 477,
+      "n": 512,
+      "winPct": 93.2,
+      "avgTurns": 8.67,
+      "avgRemainingHpPct": 84.4,
+      "deckSize": 16,
+      "overview": {
+        "total": 16,
+        "units": 14,
+        "spells": 2,
+        "guards": 0,
+        "quick": 3,
+        "dominant": "sylve",
+        "counts": {
+          "firebolt": 2,
+          "wolf": 3,
+          "griffin": 3,
+          "stag": 3,
+          "aetherknight": 2,
+          "spectre": 2,
+          "shade": 1
+        }
+      }
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "wins": 470,
+      "n": 512,
+      "winPct": 91.8,
+      "avgTurns": 15.07,
+      "avgRemainingHpPct": 88.1,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 14,
+        "quick": 0,
+        "dominant": "aube",
+        "counts": {
+          "healing": 2,
+          "bloodpact": 2,
+          "golem": 3,
+          "treant": 3,
+          "sentinel": 3,
+          "shield": 3,
+          "crypt": 2
+        }
+      }
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "wins": 354,
+      "n": 512,
+      "winPct": 69.1,
+      "avgTurns": 13.65,
+      "avgRemainingHpPct": 54.9,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 13,
+        "spells": 5,
+        "guards": 0,
+        "quick": 2,
+        "dominant": "ether",
+        "counts": {
+          "vines": 2,
+          "arcflare": 2,
+          "storm": 1,
+          "dragon": 1,
+          "elemental": 3,
+          "tempest": 3,
+          "mystic": 2,
+          "spark": 2,
+          "seer": 2
+        }
+      }
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "wins": 505,
+      "n": 512,
+      "winPct": 98.6,
+      "avgTurns": 9.72,
+      "avgRemainingHpPct": 91.5,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 2,
+        "quick": 0,
+        "dominant": "ether",
+        "counts": {
+          "firebolt": 2,
+          "sundawn": 2,
+          "seraph": 1,
+          "cannon": 3,
+          "aetherknight": 2,
+          "treant": 2,
+          "dragon": 1,
+          "graveknight": 2,
+          "griffin": 2,
+          "stag": 1
+        }
+      }
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "wins": 497,
+      "n": 512,
+      "winPct": 97.1,
+      "avgTurns": 7.99,
+      "avgRemainingHpPct": 88.5,
+      "deckSize": 16,
+      "overview": {
+        "total": 16,
+        "units": 14,
+        "spells": 2,
+        "guards": 0,
+        "quick": 3,
+        "dominant": "sylve",
+        "counts": {
+          "firebolt": 2,
+          "wolf": 3,
+          "griffin": 3,
+          "stag": 3,
+          "aetherknight": 2,
+          "spectre": 2,
+          "shade": 1
+        }
+      }
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "wins": 480,
+      "n": 512,
+      "winPct": 93.8,
+      "avgTurns": 13.77,
+      "avgRemainingHpPct": 90.6,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 14,
+        "spells": 4,
+        "guards": 14,
+        "quick": 0,
+        "dominant": "aube",
+        "counts": {
+          "healing": 2,
+          "bloodpact": 2,
+          "golem": 3,
+          "treant": 3,
+          "sentinel": 3,
+          "shield": 3,
+          "crypt": 2
+        }
+      }
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "wins": 381,
+      "n": 512,
+      "winPct": 74.4,
+      "avgTurns": 13.31,
+      "avgRemainingHpPct": 51.9,
+      "deckSize": 18,
+      "overview": {
+        "total": 18,
+        "units": 13,
+        "spells": 5,
+        "guards": 0,
+        "quick": 2,
+        "dominant": "ether",
+        "counts": {
+          "vines": 2,
+          "arcflare": 2,
+          "storm": 1,
+          "dragon": 1,
+          "elemental": 3,
+          "tempest": 3,
+          "mystic": 2,
+          "spark": 2,
+          "seer": 2
+        }
+      }
+    }
+  ],
+  "groups": [
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "spreadPp": 1.2,
+      "best": "equilibre",
+      "worst": "arcanes"
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "spreadPp": 3.3,
+      "best": "equilibre",
+      "worst": "assaut"
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "spreadPp": 27.7,
+      "best": "rempart",
+      "worst": "assaut"
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "spreadPp": 33.4,
+      "best": "rempart",
+      "worst": "assaut"
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "spreadPp": 26.8,
+      "best": "equilibre",
+      "worst": "arcanes"
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "spreadPp": 24.2,
+      "best": "equilibre",
+      "worst": "arcanes"
+    }
+  ],
+  "byEncounter": [
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 22,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 22,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 8,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 6,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 23,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 9,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 5,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 28,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 18,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 20,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 5,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 7,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 22,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 18,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 24,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 20,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 20,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 6,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 5,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 19,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 13,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 5,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 26,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 18,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 25,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 7,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 11,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 17,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 7,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 5,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 23,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 29,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 24,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 7,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 6,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 21,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 9,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 9,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 26,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 18,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 7,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 23,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 5,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 8,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 28,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 29,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 20,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 6,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 20,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 5,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 9,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 8,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 27,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 23,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 21,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 6,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 11,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 21,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 5,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 6,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 27,
+      "n": 32
+    },
+    {
+      "collection": "depart",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 29,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 20,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 24,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 25,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 12,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 24,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 13,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 10,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 6,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 27,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 25,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 11,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 29,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 10,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 15,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 8,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 28,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 17,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 10,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 23,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 29,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 29,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 18,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 19,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 14,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 6,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 5,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 28,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 22,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 13,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 29,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 29,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 10,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 15,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 6,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 28,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 16,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 18,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 21,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 25,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 16,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 28,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 18,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 8,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 8,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 29,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 29,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 17,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 9,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 13,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 6,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 3,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 0,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 16,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 15,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 21,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 29,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 19,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 28,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 19,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 13,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 5,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 26,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 28,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 19,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 29,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 6,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 13,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 5,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 15,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 16,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "progression",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 5,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 27,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 16,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "equilibre",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 20,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 17,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "assaut",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 22,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 23,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 11,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "rempart",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 25,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 19,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 16,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 14,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 15,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 1,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 28,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "gardien",
+      "style": "arcanes",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 13,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 26,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "equilibre",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 26,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 25,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "assaut",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 29,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 8,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "rempart",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C01",
+      "enemyStyle": "assaut",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C02",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C03",
+      "enemyStyle": "bastion",
+      "wins": 27,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C04",
+      "enemyStyle": "assaut",
+      "wins": 30,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C05",
+      "enemyStyle": "bastion",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C06",
+      "enemyStyle": "assaut",
+      "wins": 21,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C07",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C08",
+      "enemyStyle": "rituel",
+      "wins": 21,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C09",
+      "enemyStyle": "rituel",
+      "wins": 19,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C10",
+      "enemyStyle": "rituel",
+      "wins": 20,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C11",
+      "enemyStyle": "bastion",
+      "wins": 4,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "C12",
+      "enemyStyle": "assaut",
+      "wins": 2,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "T05",
+      "enemyStyle": "meute",
+      "wins": 31,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "T10",
+      "enemyStyle": "rituel",
+      "wins": 28,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "D01",
+      "enemyStyle": "meute",
+      "wins": 32,
+      "n": 32
+    },
+    {
+      "collection": "catalogue",
+      "hero": "arcaniste",
+      "style": "arcanes",
+      "id": "D03",
+      "enemyStyle": "rituel",
+      "wins": 19,
+      "n": 32
+    }
+  ]
+}
