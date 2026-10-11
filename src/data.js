@@ -65,9 +65,30 @@ const expansion = [
 ['arcflare','Éclairs d’Obsidienne','sort','épique',3,0,0,'spell_storm','ϟ','Frappe toutes les unités ennemies sur une ligne.'],
 ['vines','Racines du Monde','sort','commun',1,0,0,'spell_root','❧','Immobilise la première unité ennemie.']
 ];
-raw.push(...expansion);
+// V2.8 : compétences de classe originales. Une seule copie par recette d'apprentissage.
+const classCards=[
+ ['skill_guard_wall','Mur des Serments','sort','rare',2,0,0,'spell_guard_wall','⬡','Accorde 2 points de barrière aux alliés de la ligne (maximum 4).'],
+ ['skill_guard_rally','Ralliement royal','sort','rare',2,0,0,'spell_guard_rally','⚑','Donne +1 attaque aux alliés de la ligne pendant deux tours, sans cumul.'],
+ ['skill_arc_freeze','Gel astral','sort','rare',2,0,0,'spell_arc_freeze','❄','Inflige 1 dégât et immobilise le premier ennemi de la ligne.'],
+ ['skill_arc_chain','Arc des éclairs','sort','épique',3,0,0,'spell_arc_chain','ϟ','Inflige 3 dégâts au premier ennemi et 2 au suivant sur la même ligne.'],
+ ['skill_ranger_pierce','Flèche de rupture','sort','rare',2,0,0,'spell_ranger_pierce','➶','Inflige 5 dégâts à la première unité ennemie en ignorant son armure.'],
+ ['skill_ranger_draw','Préparation du pisteur','sort','épique',3,0,0,'spell_ranger_draw','✦','Pioche jusqu’à 2 cartes supplémentaires (main limitée à 7).'],
+ ['skill_cleric_light','Lumière de concorde','sort','rare',2,0,0,'spell_cleric_light','✚','Rend 3 PV à chaque allié blessé de la ligne.'],
+ ['skill_cleric_bless','Bénédiction du refuge','sort','épique',3,0,0,'spell_cleric_bless','✧','Accorde 4 points de barrière à l’allié le plus blessé (maximum 6).']
+];
+export const CLASS_SKILLS=Object.freeze({
+ skill_guard_wall:{hero:'gardien',level:3,shards:30},
+ skill_guard_rally:{hero:'gardien',level:6,shards:70},
+ skill_arc_freeze:{hero:'arcaniste',level:3,shards:30},
+ skill_arc_chain:{hero:'arcaniste',level:6,shards:70},
+ skill_ranger_pierce:{hero:'rodeur',level:3,shards:30},
+ skill_ranger_draw:{hero:'rodeur',level:6,shards:70},
+ skill_cleric_light:{hero:'clerc',level:3,shards:30},
+ skill_cleric_bless:{hero:'clerc',level:6,shards:70}
+});
+raw.push(...expansion,...classCards);
 export const CARDS = Object.fromEntries(raw.map(([id,name,faction,rarity,delay,attack,hp,ability,icon,description]) =>
- [id,{id,name,faction,rarity,delay,attack,hp,ability,icon,description,type:ability.startsWith('spell_')?'sort':'unité'}]));
+ [id,{id,name,faction,rarity,delay,attack,hp,ability,icon,description,type:ability.startsWith('spell_')?'sort':'unité',heroClass:CLASS_SKILLS[id]?.hero||null}]));
 
 export const FLYING_IDS=new Set(['griffin','dragon','banshee','owl','pixie','dawnbastion','seraph']);
 export const GUARD_IDS=new Set(['shield','treant','crypt','golem','sentinel']);
