@@ -6,7 +6,7 @@ import {AI_STYLES,aiStyle,aiEnraged} from './ai.js';
 import {TALENT_TREE,TALENT_LEVELS} from './talents.js';
 import {visualFor,artSrc} from './visuals.js';
 import {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission} from './dungeons.js';
-import {DECK_STYLES,proposeDeck,applyDeckStyle,deckOverview,freshProfile,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,BUILDINGS,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,chooseHeroTalent,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon} from './engine.js';
+import {DECK_STYLES,proposeDeck,applyDeckStyle,deckOverview,freshProfile,changeHeroClass,learnClassSkill,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,BUILDINGS,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,chooseHeroTalent,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon} from './engine.js';
 const VFX_KEY='couronnes_arcanes_animations_v13';
 let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}catch{return true;}})();
 
@@ -113,6 +113,7 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
   hideModal();save();render();toast(`Deck « ${DECK_STYLES[id].name} » prêt : ${result.deck.length} cartes.`);
   break;
  }
+ case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}const result=learnClassSkill(profile,id);if(result.ok){save();render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}else toast(result.reason);break;}
  case 'deck-add':case 'deck-remove':if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();render();}else toast('Impossible de modifier ce deck davantage.');break;
  case 'select-card':if(!battle||battle.status!=='active')break;
   if(battle.heroes.p.cardsPlayed>=2){toast('Vous avez déjà joué deux cartes ce tour.');break;}
@@ -127,7 +128,7 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
  case 'close-modal':hideModal();break;
  case 'battle-exit':const previousMode=battle?.mode;hideModal();battle=null;persistBattle();navigate(previousMode==='tower'?'tower':previousMode==='dungeon'?'dungeons':'campaign');break;
  case 'battle-deck':hideModal();battle=null;persistBattle();navigate('collection');break;
- case 'choose-class':if(battle?.status==='active'){toast('Terminez le combat avant de changer de classe.');break;}profile.heroClass=id;save();render();toast('Nouvelle classe sélectionnée.');break;
+ case 'choose-class':{if(battle?.status==='active'){toast('Terminez le combat avant de changer de classe.');break;}const result=changeHeroClass(profile,id);if(!result.ok){toast(result.reason);break;}save();render();toast('Nouvelle classe sélectionnée.');break;}
  case 'choose-talent':{if(battle?.status==='active'){toast('Terminez le combat avant de changer vos talents.');break;}const result=chooseHeroTalent(profile,id);if(result.ok){save();render();toast('Voie de talent sélectionnée.');}else toast(result.reason);break;}
  case 'craft-equipment':{const result=craftEquipment(profile,id);if(result.ok){save();render();toast('Équipement fabriqué et équipé.');}else toast(result.reason);break;}
  case 'equip-equipment':{const result=equipEquipment(profile,id);if(result.ok){save();render();toast('Équipement changé.');}else toast(result.reason);break;}
