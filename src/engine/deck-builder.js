@@ -30,7 +30,7 @@ function candidateCards(profile,style){
  const owned=profile?.collection||{};
  const cards=[];
  for(const [id,quantity] of Object.entries(owned)){
-  const c=CARDS[id];if(!c)continue;
+  const c=CARDS[id];if(!c||(c.heroClass&&c.heroClass!==profile.heroClass))continue;
   const n=Number(quantity);
   const count=Number.isFinite(n)?Math.min(24,Math.max(0,Math.floor(n))):0;
   const base=c.type==='sort'?8+(spellBonuses[style]?.[c.ability]||0)-c.delay*.65:unitScore(c,style);
