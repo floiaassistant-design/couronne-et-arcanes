@@ -1,4 +1,4 @@
-## V2.8 — Compétences exclusives des quatre classes (branche de développement)
+## V2.8 — Compétences exclusives des quatre classes (2026-10-11)
 
 - Huit nouvelles compétences originales : deux par classe (Gardien, Arcaniste, Rôdeur, Clerc), 68 cartes au total.
 - Apprentissage aux niveaux 3 et 6 via 30/70 éclats gagnés en jeu, une copie garantie, non échangeable, sans tirage aléatoire.
@@ -6,7 +6,7 @@
 - Barrières temporaires par absorption, ralliement de deux tours, gel, chaîne d'éclairs, flèche perforante, pioche, soins et bénédiction.
 - Restriction de deck selon la classe actuelle ; changement de classe refusé tant qu'une compétence incompatible est équipée ; aucun effacement de la collection.
 - Anciennes clés de sauvegarde et profils V2.7.1 conservés ; aucun nouveau champ obligatoire du profil.
-- Tests ciblés dans `tests/class_skills_v28.test.mjs`. Validation CI et navigateur requise avant la fusion.
+- Tests ciblés dans `tests/class_skills_v28.test.mjs` : 130/130 tests Node, parité 60/60, build autonome et tests Chromium desktop/mobile simulé réussis (GitHub Actions #38173354595).
 
 ## V2.7.1 — Récupération et prévention des conflits (2026-10-11)
 
