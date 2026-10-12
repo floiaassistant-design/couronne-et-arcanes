@@ -35,6 +35,14 @@
 
 **Contrôle préalable obligatoire :** identifier les modules concernés, leurs dépendances et tests avant de coder. **Contrôle final obligatoire :** rechercher les doublons, les responsabilités mélangées, les imports circulaires et les fichiers devenus trop volumineux ; les réorganiser si utile, puis documenter les exceptions justifiées.
 
+## V2.10 — compte à rebours tactique
+
+- `src/engine/tempo.js` réalise exclusivement le ciblage et la modification déterministes des valeurs `wait` de la main ; les propriétés existantes de sauvegarde restent intactes.
+- Élan des Heures (`hourglass_surge`) : −2 tours sur la carte alliée la plus lente (égalité : premier indice), interdit sans cible.
+- Nœud du Temps (`time_bind`) : +2 tours sur la carte adverse la plus proche d'être disponible (égalité : premier indice), plafond 6, identité non révélée dans le journal ; interdit sans cible éligible.
+- Le moteur peut cibler la main adverse lors de la résolution ; `src/ai.js` n'a jamais accès au contenu de la main privée du joueur pour ses choix.
+- Tests dédiés : `tests/tempo_v210.test.mjs` + contrôles historiques, build synchronisé et navigateur. Aucun remplacement d'anciennes données de carte.
+
 ## V2.9 — contrôles du champ de bataille
 
 - `src/engine/battle-control.js` porte silence, téléportation, pièges et plans de ciblage purs, partagés par `battle.js`, `ai.js` et `ui/battle-view.js`. Il ne dépend ni du moteur ni de l'IA : conserver ce sens de dépendance.

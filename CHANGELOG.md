@@ -1,3 +1,10 @@
+## V2.10 — Tempo des cartes (2026-10-12)
+
+- 2 sorts originaux, catalogue de 74 à 76 cartes ; accélération de 2 tours d’une carte alliée, ralentissement de 2 tours d’une carte ennemie (plafond 6).
+- Cibles déterministes, deux cartes jouables par tour inchangées ; IA sans lecture du contenu de la main adverse pour la décision ; journal sans divulgation des cartes ennemies.
+- Nouveau module pur `src/engine/tempo.js`. Alchimie et paquets, interface de combat, Guide et tests de non-régression adaptés.
+- Délais historiques, sauvegardes et scénarios de campagne/Tour inchangés. Validation CI à contrôler sur la PR.
+
 ## V2.9 — Mobilité et contrôle du champ de bataille (2026-10-11)
 
 - Six cartes originales ajoutées, catalogue de 68 à 74 ; huit compétences V2.8 conservées, fabrication avec or/éclats et acquisition par paquets.

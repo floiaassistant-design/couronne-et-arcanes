@@ -4,6 +4,7 @@ import {rankEnemyMoves} from '../ai.js';
 import {classSkillTargetError,resolveClassSkill} from './class-skills.js';
 import {silenced,activeAbility,controlTargetError,resolveControlSpell,prepareControlUnits,triggerTrap,expireControl} from './battle-control.js';
 import {chosenTalents} from '../talents.js';
+import {tempoTargetError,resolveTempoSpell} from './tempo.js';
 import {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,masteryRank,EQUIPMENT,reputationLevel} from './profile.js';
 export const LANES=3, WIDTH=7;
 function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed/4294967296;}
@@ -118,6 +119,8 @@ function cast(b,side,id,lane){
   b.heroes[side].shield=Math.min(15,b.heroes[side].shield+5);
  }else if(['spell_silence','spell_teleport','spell_trap'].includes(c.ability)){
   resolveControlSpell(b,side,c,lane,controlHooks);
+ }else if(['spell_hasten','spell_slow'].includes(c.ability)){
+  resolveTempoSpell(b,side,c,note);
  }else if(c.heroClass){
   drawAfter=resolveClassSkill(b,side,c,lane,hit);
  }
@@ -135,7 +138,7 @@ function play(b,side,index,lane){
  const c=CARDS[hand.id];
  if(!c)return {ok:false,reason:'Carte inconnue.'};
  if(c.heroClass&&(side!=='p'||c.heroClass!==b.heroClass))return {ok:false,reason:'Compétence réservée à une autre classe.'};
- const targetError=classSkillTargetError(b,side,c,lane)||controlTargetError(b,side,c,lane);
+ const targetError=classSkillTargetError(b,side,c,lane)||controlTargetError(b,side,c,lane)||tempoTargetError(b,side,c);
  if(targetError)return {ok:false,reason:targetError};
  if(c.type==='unité'&&!spawn(b,side,hand.id,lane))return {ok:false,reason:'La case de déploiement est occupée.'};
  const drawAfter=c.type==='sort'?cast(b,side,hand.id,lane):0;

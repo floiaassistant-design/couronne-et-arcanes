@@ -1,4 +1,4 @@
-# Couronnes & Arcanes — V2.9
+# Couronnes & Arcanes — V2.10
 
 Jeu original de cartes tactiques solo, inspiré du genre de Kings and Legends / Rise of Mythos, avec son propre univers et ses propres cartes. Jouable hors ligne, sur ordinateur et navigateur mobile.
 
@@ -8,9 +8,18 @@ Ouvrez **JOUER.html** dans Chrome, Edge ou Firefox. Tout le code, le style et le
 
 Pour développer, lancez `npm run dev` puis ouvrez `http://localhost:8080`. `index.html` utilise des modules et doit être servi par HTTP ; `JOUER.html` peut être ouvert directement.
 
+## V2.10 — Manipulation des comptes à rebours
+
+Le jeu propose désormais **76 cartes**. Deux sorts originaux s’ajoutent aux 74 cartes précédentes, sans changer les délais historiques :
+
+- **Élan des Heures** (rare, délai 1) : réduit de deux tours le compteur de la carte alliée la plus lente en main (égalité : première à gauche). Impossible si aucune autre carte n'attend.
+- **Nœud du Temps** (rare, délai 2) : ajoute deux tours au compteur de la carte adverse la plus proche d'être prête, sans révéler son identité, dans une limite de six tours. Impossible si aucune carte adverse n'est éligible.
+
+Chaque sort consomme une des deux actions de carte du tour. Effets symétriques joueur/IA et accessibles en Alchimie (32 or + 64 éclats) ou par les paquets habituels. L'IA n'inspecte pas les cartes de la main du joueur lorsqu'elle évalue ces sorts. Sauvegardes et scénarios de rencontres existants conservés. Détails : `docs/TEMPO_V2_10.md`.
+
 ## V2.9 — Mobilité et contrôle
 
-Le catalogue contient maintenant **74 cartes**. Les 68 cartes précédentes, dont les huit compétences exclusives de classe V2.8, sont conservées.
+La V2.9 avait introduit six cartes (68 à 74), toutes conservées en V2.10. Les 68 cartes précédentes, dont les huit compétences exclusives de classe V2.8, sont conservées.
 
 | Carte | Mécanique | Acquisition |
 |---|---|---|
@@ -76,6 +85,6 @@ Clés conservées : `couronnes_arcanes_v1`, `couronnes_arcanes_bataille_v1` et l
 - Douze portraits partagés et animations CSS, pas 74 illustrations uniques ni sprites image par image.
 - Pas de PvP, coop, guildes, backend ou monétisation réelle.
 
-Proposition V3.0 : **un donjon tactique inédit**, avec trois boss utilisant progressivement silence, portails et pièges, et des récompenses acquises uniquement en jeu.
+Prochaine piste après V2.10 — proposition V3.0 : **un donjon tactique inédit**, avec trois boss utilisant progressivement silence, portails et pièges, et des récompenses acquises uniquement en jeu.
 
 Historique : `CHANGELOG.md`. État de reprise : `docs/ETAT_PROJET.md`. Vision à long terme : `docs/BIBLE_DU_JEU.md`.
