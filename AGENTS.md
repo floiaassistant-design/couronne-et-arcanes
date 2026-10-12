@@ -2,7 +2,7 @@
 
 ## Version stable et coordination multi-sessions — PRIORITAIRE
 
-- **Base courante : V2.10, issue de V2.9**. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
+- **Base courante : V2.11, issue de V2.10, PR nº 6 fusionnée le 12/10/2026 (commit `51c4d7ab`)**. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
 - **Ne jamais copier une ancienne version par-dessus la dernière version.** La copie V1.2 avait écrasé huit fichiers de V2.7 le 11/10/2026 ; les fichiers ont été récupérés depuis le commit local `145a2e8`.
 - **Une branche par agent/session** lorsque plusieurs agents développent en parallèle. Un seul intégrateur prépare la fusion après comparaison des modifications et exécution des tests, **sans jamais fusionner avant l'accord explicite de l'utilisateur**.
 - **Anti-écrasement :** vérifier l'état GitHub avant chaque publication ; si la branche cible a avancé, réconcilier les changements utiles sur la branche de travail et ne jamais forcer la réécriture de l'historique. Ce travail ne constitue jamais une autorisation de fusionner sur `main`.
@@ -36,7 +36,7 @@
 
 **Contrôle préalable obligatoire :** identifier les modules concernés, leurs dépendances et tests avant de coder. **Contrôle final obligatoire :** rechercher les doublons, les responsabilités mélangées, les imports circulaires et les fichiers devenus trop volumineux ; les réorganiser si utile, puis documenter les exceptions justifiées.
 
-## V2.11 — arène et géométrie (branche de proposition)
+## V2.11 — arène et géométrie (intégrée sur main)
 
 - La mission arène impose une PR **sans fusion automatique** ; elle prévaut ici sur la politique générale. Ne pas intégrer cette branche sans instruction ultérieure.
 - `src/engine/board.js` est le propriétaire des dimensions. Les tableaux sauvegardés déterminent les cases et lignes ; ne jamais utiliser `LANES`/`WIDTH` comme limites d’un combat déjà créé.

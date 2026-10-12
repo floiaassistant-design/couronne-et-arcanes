@@ -1,4 +1,4 @@
-## V2.11 — Arène fantasy lo-fi (2026-10-12, proposition non fusionnée)
+## V2.11 — Arène fantasy lo-fi (2026-10-12, fusionnée sur main)
 
 - Dix cases jouables par ligne ; duels à deux lignes, rencontres avancées à trois et boss solo à quatre. Couronnes hors grille, déploiement aux extrémités.
 - Géométrie centralisée dans `src/engine/board.js` : déplacements, attaques, IA, compétences, pièges, téléportations et sauvegardes adaptés. Anciens combats 3×5 conservés, sans déplacement ni réinitialisation du profil.
@@ -6,8 +6,8 @@
 - IA tient compte de la distance à la vraie couronne et évite un piège trop éloigné pour se déclencher avant son expiration. VFX ciblent les couronnes réelles, événements exclus du stockage.
 - Branche arène initiale : 210 tests Node et 60 parités historiques réussis. Après réconciliation des PR nº 8 et 9 : **219 tests Node et 60 parités réussis** ; Chromium bureau/portrait/paysage, suites V2.8/V2.9 et export autonome avec stockage réel validés sur [CI #38235167355](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/38235167355).
 - 6 144 comparaisons ancien/nouveau plateau rejouées à l’identique, et 20 480 simulations des contrôles ; aucun état invalide ni blocage. Durée moyenne comparée 12,7 → 19,4 tours ; rapport `docs/ARENE_V2_11.md`.
-- Branche et PR séparées, sans fusion automatique à la demande de l’utilisateur.
-- Réconciliation avec `main` V2.10 : compteurs de cartes et styles de la PR nº 8, IA tempo de la PR nº 9, évaluation du risque sur couronne aux dimensions variables ; 6 144 comparaisons rejouées avec résultats identiques aux références. PR nº 6 toujours ouverte, approbation expresse requise.
+- Branche et PR séparées : fusion de la PR nº 6 autorisée par l’utilisateur et effectuée le 12/10/2026, commit `51c4d7ab`.
+- Réconciliation avec `main` V2.10 : compteurs de cartes et styles de la PR nº 8, IA tempo de la PR nº 9, évaluation du risque sur couronne aux dimensions variables ; 6 144 comparaisons rejouées avec résultats identiques aux références. PR nº 6 fusionnée sur main après approbation spécifique ; autres PR soumises à validation distincte.
 
 ## V2.10 — Tempo des cartes (2026-10-12)
 
