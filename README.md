@@ -97,6 +97,6 @@ Clés conservées : `couronnes_arcanes_v1`, `couronnes_arcanes_bataille_v1` et l
 - Douze portraits partagés pour les cartes, huit silhouettes en pixels pour l’arène et animations CSS ; pas de sprites dessinés image par image pour les 76 cartes.
 - Pas de PvP, coop, guildes, backend ou monétisation réelle.
 
-Prochaine piste après V2.10 — proposition V3.0 : **un donjon tactique inédit**, avec trois boss utilisant progressivement silence, portails et pièges, et des récompenses acquises uniquement en jeu.
+Prochaine piste après V2.11 — proposition V3.0 : **un donjon tactique inédit**, avec trois boss utilisant progressivement silence, portails et pièges, et des récompenses acquises uniquement en jeu.
 
 Historique : `CHANGELOG.md`. État de reprise : `docs/ETAT_PROJET.md`. Vision à long terme : `docs/BIBLE_DU_JEU.md`.
