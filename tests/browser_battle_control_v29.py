@@ -58,6 +58,8 @@ async def check_hand_countdowns(page,label):
     after=await page.evaluate('Object.keys(JSON.parse(__saves.couronnes_arcanes_bataille_v1)).sort()')
     assert before==after
     assert await page.evaluate('battle.heroes.p.hand[1].wait')==0
+    # La sélection de démonstration ne doit pas influencer les étapes de combat suivantes.
+    await page.evaluate('()=>{selectedCard=-1;render()}')
 
 async def play(page,id,lane):
     await page.evaluate('(id)=>{battle.heroes.p.hand=[{id,wait:0}];battle.heroes.p.cardsPlayed=0;render()}',id)
