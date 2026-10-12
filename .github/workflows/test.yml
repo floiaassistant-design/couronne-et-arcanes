@@ -39,5 +39,7 @@ jobs:
         run: npm run control-balance
       - name: Arène 2/3/4 lignes, mobile et reprise historique
         run: python3 tests/browser_arena_v211.py
+      - name: Clôture du combat, stockage et reprise après coupure
+        run: python3 tests/browser_save_integrity_v211.py
       - name: Comparaison de géométrie et reproductibilité
         run: npm run arena-balance
