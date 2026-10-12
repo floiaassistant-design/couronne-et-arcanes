@@ -1,6 +1,6 @@
 import {createViews} from './ui/views.js';
 import {createCombatFx} from './ui/combat-fx.js';
-import {loadProfile,saveProfile,restoreBattle,storeBattle} from './ui/storage.js';
+import {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile} from './ui/storage.js';
 import {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS} from './data.js';
 import {AI_STYLES,aiStyle,aiEnraged} from './ai.js';
 import {TALENT_TREE,TALENT_LEVELS} from './talents.js';
@@ -173,5 +173,5 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
 }
 document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();act(el.dataset.action,el.dataset);});
 document.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){const el=event.target.closest('.unit-card.compact,[data-action="deploy"]');if(el){event.preventDefault();act(el.dataset.action,el.dataset);}}});
-document.addEventListener('change',async event=>{if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;try{const raw=JSON.parse(await file.text());if(!raw||!Array.isArray(raw.deck)||!raw.collection)throw Error('Format de sauvegarde invalide.');profile=normalizeProfile(raw);battle=null;persistBattle();save();navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='faction'){collectionFilter=event.target.value;render();}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
+document.addEventListener('change',async event=>{if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='faction'){collectionFilter=event.target.value;render();}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
 render();if(battle&&battle.status!=='active')settle();else welcome();
