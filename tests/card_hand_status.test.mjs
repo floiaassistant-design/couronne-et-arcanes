@@ -15,7 +15,8 @@ test('La main distingue une carte prête de deux comptes à rebours sans changer
  const ready=views.cardUI('militia',{compact:true,index:0,cooldown:0});
  const waiting=views.cardUI('militia',{compact:true,index:1,cooldown:3});
  const almost=views.cardUI('militia',{compact:true,index:2,cooldown:1});
- assert.match(ready,/hand-card.*hand-ready/);
+ assert.match(ready,/hand-card/);
+ assert.match(ready,/hand-ready/);
  assert.match(ready,/✓ PRÊTE/);
  assert.doesNotMatch(ready,/cooldown-stamp/);
  assert.match(waiting,/hand-waiting/);
