@@ -39,16 +39,6 @@ jobs:
         run: npm run control-balance
       - name: Arène 2/3/4 lignes, mobile et reprise historique
         run: python3 tests/browser_arena_v211.py
-      - name: Publier les captures intégrales du plateau sur PC
-        uses: actions/upload-artifact@v4
-        with:
-          name: arene-celeste-pc-pr11
-          path: |
-            /tmp/ca-arena-desktop-2.png
-            /tmp/ca-arena-desktop-3.png
-            /tmp/ca-arena-desktop-4.png
-          if-no-files-found: error
-          retention-days: 7
       - name: Clôture du combat, stockage et reprise après coupure
         run: python3 tests/browser_save_integrity_v211.py
       - name: Comparaison de géométrie et reproductibilité
