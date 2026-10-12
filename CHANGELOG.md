@@ -1,3 +1,13 @@
+## V2.11 — Arène fantasy lo-fi (2026-10-12, proposition non fusionnée)
+
+- Dix cases jouables par ligne ; duels à deux lignes, rencontres avancées à trois et boss solo à quatre. Couronnes hors grille, déploiement aux extrémités.
+- Géométrie centralisée dans `src/engine/board.js` : déplacements, attaques, IA, compétences, pièges, téléportations et sauvegardes adaptés. Anciens combats 3×5 conservés, sans déplacement ni réinitialisation du profil.
+- Décor et huit silhouettes originales en pixel art SVG, couleur par ordre, animation CSS ; portraits de collection conservés. Défilement mobile préservé après les actions et déploiement au clavier.
+- IA tient compte de la distance à la vraie couronne et évite un piège trop éloigné pour se déclencher avant son expiration. VFX ciblent les couronnes réelles, événements exclus du stockage.
+- 210 tests Node, 60 parités historiques, Chromium bureau/portrait/paysage, suites V2.8/V2.9 et export autonome avec stockage réel : réussis.
+- 6 144 comparaisons ancien/nouveau plateau rejouées à l’identique, et 20 480 simulations des contrôles ; aucun état invalide ni blocage. Durée moyenne comparée 12,7 → 19,4 tours ; rapport `docs/ARENE_V2_11.md`.
+- Branche et PR séparées, sans fusion automatique à la demande de l’utilisateur.
+
 ## V2.10 — Tempo des cartes (2026-10-12)
 
 - 2 sorts originaux, catalogue de 74 à 76 cartes ; accélération de 2 tours d’une carte alliée, ralentissement de 2 tours d’une carte ennemie (plafond 6).

@@ -1,7 +1,7 @@
 // IA tactique V1.7 — heuristique déterministe, sans accès aux cartes cachées du joueur.
 // Évalue l'état public du plateau et les cartes réellement présentes dans sa propre main.
 import {CARDS,GUARD_IDS,CHARGE_IDS} from './data.js';
-import {silenceTarget,silenceValue,teleportPlan,teleportGain,trapPlan} from './engine/battle-control.js';
+import {silenceTarget,silenceValue,teleportPlan,teleportGain,trapPlan,activeAbility} from './engine/battle-control.js';
 import {accelerationTarget} from './engine/tempo.js';
 export const AI_STYLES = Object.freeze({
  equilibre:{name:'Équilibré',desc:'Combine attaque, défense et opportunités de cartes.'},
@@ -12,27 +12,27 @@ export const AI_STYLES = Object.freeze({
 });
 export const aiStyle = b => AI_STYLES[b?.aiStyle] ? b.aiStyle : 'equilibre';
 export const aiEnraged = b => Boolean(b?.aiBoss && b?.heroes?.e && b.heroes.e.hp>0 && b.heroes.e.hp*2<=b.heroes.e.maxhp);
-const enemyEntry = 5;
+import {laneCount,lastCell,crownColumn,entryColumn} from './engine/board.js';
 const finite=(n)=>Number.isFinite(n)?n:0;
 const alive=(u)=>!!u && u.hp>0;
 
 export function inspectEnemyLane(b,lane){
  const row=b.board[lane]||[];
  const threats=[],friends=[];
- for(let col=1;col<=5;col++){
+ for(let col=1;col<=lastCell(b);col++){
   const u=row[col];if(!alive(u))continue;
   if(u.side==='p')threats.push({u,col});
   else if(u.side==='e')friends.push({u,col});
  }
  // Plus un ennemi est proche de la couronne ennemie (droite), plus il faut l'arrêter.
  const urgency=threats.reduce((sum,{u,col})=>{
-  const steps=Math.max(1,6-col);
-  return sum+(col>=4?7:col===3?3:0)+Math.max(1,u.atk)*(col===5?3:col===4?1.65:col===3?.6:.15)
-   +(CHARGE_IDS.has(u.id)&&col>=3?2:0)+(u.ranged&&col>=3?2:0)+1/steps;
+  const steps=Math.max(1,crownColumn(b,'e')-col);
+  return sum+(steps<=2?7:steps===3?3:0)+Math.max(1,u.atk)*(steps===1?3:steps===2?1.65:steps===3?.6:.15)
+   +(CHARGE_IDS.has(u.id)&&steps<=3?2:0)+(u.ranged&&steps<=3?2:0)+1/steps;
  },0);
  const frontline=threats.sort((a,z)=>z.col-a.col)[0]||null;
  const guard=friends.some(({u})=>GUARD_IDS.has(u.id));
- return {lane,threats,friends,frontline,urgency,guard,entryFree:!alive(row[enemyEntry])};
+ return {lane,threats,friends,frontline,urgency,guard,entryFree:!alive(row[entryColumn(b,'e')])};
 }
 
 function scoreOption(b,card,laneInfo){
@@ -51,9 +51,9 @@ function scoreOption(b,card,laneInfo){
   score+=friends.length===0&&threats.length===0?2.4:0;
   score-=friends.length>=3?2:0;
   if(card.ability==='silence'&&silenceTarget(b,'e',laneInfo.lane))score+=5;
-  if(card.ability==='trapper'&&threats.length&&trapPlan(b,'e',laneInfo.lane,4))score+=3;
+  if(card.ability==='trapper'&&threats.length&&trapPlan(b,'e',laneInfo.lane,entryColumn(b,'e')-1))score+=3;
   // Les pièges visibles près de l'entrée pénalisent les unités fragiles.
-  if((b.traps||[]).some(t=>t.owner==='p'&&t.lane===laneInfo.lane&&t.col===4&&t.expiresRound>=b.round))score-=card.hp<=3?5:2;
+  if((b.traps||[]).some(t=>t.owner==='p'&&t.lane===laneInfo.lane&&t.col===entryColumn(b,'e')-1&&t.expiresRound>=b.round))score-=card.hp<=3?5:2;
   const reason=urgency>=12?'Défense prioritaire':synergy?'Formation de faction':threats.length?'Contre-attaque':'Percée stratégique';
   return {score,reason};
  }
@@ -70,7 +70,7 @@ function scoreOption(b,card,laneInfo){
    score=2+damage*1.25+threats.length*2.5+Math.min(22,urgency)*.45;
    reason='Dissiper l’assaut';}
  }else if(ability==='spell_root'){
-  if(frontline&&frontline.u.stun<=0){score=3+Math.min(25,urgency)*.55+(frontline.col>=4?5:0);reason='Immobiliser l’avant-garde';}
+  if(frontline&&frontline.u.stun<=0){score=3+Math.min(25,urgency)*.55+(frontline.col>=lastCell(b)-1?5:0);reason='Immobiliser l’avant-garde';}
  }else if(ability==='spell_heal'){
   if(hpLoss||injured){score=1+Math.min(5,hpLoss)*1.15+Math.min(injured,friends.length*2)*1.2+Math.min(25,urgency)*.2;
    if(hero.hp<=8)score+=8;
@@ -86,7 +86,7 @@ function scoreOption(b,card,laneInfo){
   if(gain>=2){score=5+gain;reason='Repositionner un allié';}
  }else if(ability==='spell_trap'){
   const plan=trapPlan(b,'e',laneInfo.lane);
-  if(plan&&threats.some(({u,col})=>col<plan.col&&u.stun<=0)){
+  if(plan&&threats.some(({u,col})=>col<plan.col&&u.stun<=0&&plan.col-col<=3*(activeAbility(b,u)==='haste'?2:1))){
    score=4+Math.min(20,urgency)*.5;reason='Préparer une embuscade';
   }
  }else if(ability==='spell_hasten'){
@@ -144,7 +144,7 @@ export function personalityBonus(b,card,laneInfo){
 // La liste est pure : aucun RNG ni modification du combat, donc facilement testable.
 export function rankEnemyMoves(b){
  if(!b||b.status!=='active'||!b.heroes?.e)return [];
- const rows=Array.from({length:3},(_,lane)=>inspectEnemyLane(b,lane));
+ const rows=Array.from({length:laneCount(b)},(_,lane)=>inspectEnemyLane(b,lane));
  const results=[];
  b.heroes.e.hand.forEach((entry,index)=>{
   const card=CARDS[entry.id];if(!card||entry.wait>0) return;

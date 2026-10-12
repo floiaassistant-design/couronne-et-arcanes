@@ -6,7 +6,7 @@ const results=[];
 for(let seed=10;seed<70;seed++){
  const p=freshProfile();p.heroClass=['gardien','arcaniste','rodeur','clerc'][seed%4];p.heroXp=seed*7;
  const mission=seed%2?CAMPAIGN[seed%12]:towerMission(1+seed%20);
- const b=createBattle(p,mission,seed);
+ const b=createBattle(p,mission,seed,{legacy:true});
  for(let turn=0;turn<7&&b.status==='active';turn++){
   for(let played=0;played<2;played++){
    const options=b.heroes.p.hand.map((c,i)=>({c,i})).filter(o=>o.c.wait===0);

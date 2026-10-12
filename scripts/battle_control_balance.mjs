@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import {CARDS,CAMPAIGN,CLASS_SKILLS} from '../src/data.js';
 import {freshProfile,validateDeck,HERO_LEVEL_THRESHOLD} from '../src/engine.js';
+import {laneCount,lastCell} from '../src/engine/board.js';
 import {CONTROL_IDS} from '../src/engine/battle-control.js';
 import {simulateBattle} from './lib/battle_runner.mjs';
 const seeds=Number(process.env.CONTROL_SEEDS||16);
@@ -33,7 +34,7 @@ for(const level of [6,9])for(const hero of ['gardien','arcaniste','rodeur','cler
    assert.ok(b.heroes.p.hp>=0&&b.heroes.e.hp>=0&&b.round<=36);
    for(const u of units){assert.ok(u.hp>0);if(u.silenceUntil>=b.round){assert.ok(u.silenceUntil-b.round<=1);silentStates++;}}
    for(const side of ['p','e'])assert.ok((b.traps||[]).filter(t=>t.owner===side).length<=2);
-   for(const t of b.traps||[]){assert.ok(t.lane>=0&&t.lane<3&&t.col>=2&&t.col<=4&&t.expiresRound>=b.round);trapStates++;}
+   for(const t of b.traps||[]){assert.ok(t.lane>=0&&t.lane<laneCount(b)&&t.col>=2&&t.col<lastCell(b)&&t.expiresRound>=b.round);trapStates++;}
   }});
   wins+=Number(result.win);turns+=result.turns;maxTurns=Math.max(maxTurns,result.turns);completed++;
   for(const id of Object.keys(uses))uses[id]+=last.cardUses?.[id]||0;

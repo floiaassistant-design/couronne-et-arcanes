@@ -29,6 +29,7 @@ async def run(browser,label,viewport):
     await page.locator('#nav [data-page="campaign"]').click()
     await page.locator('[data-action="start-mission"][data-id="01"]').click()
     await page.evaluate('''()=>{
+      battle=createBattle(profile,{id:'01',name:'Reprise historique',enemy:'Sentinelle',hp:80,difficulty:1,deck:[]},11,{legacy:true});
       window.__unit=(id,side,uid,ability='')=>({uid,id,side,atk:2,hp:20,maxhp:20,armor:0,ranged:false,ability,stun:0,poison:0,poisonTurns:0});
       battle.heroes.e.hand=[];battle.heroes.e.deck=[];battle.heroes.e.discard=[];
       battle.board[0][4]=__unit('lich','e',90,'splash');render();

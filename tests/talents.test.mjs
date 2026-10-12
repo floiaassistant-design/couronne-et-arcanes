@@ -1,8 +1,9 @@
+import {createBattle} from './fixtures/legacy-battle.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {TALENT_TREE,TALENT_LEVELS,normalizeTalentChoices,chosenTalents} from '../src/talents.js';
 import {CAMPAIGN} from '../src/data.js';
-import {freshProfile,normalizeProfile,heroLevel,HERO_LEVEL_THRESHOLD,chooseHeroTalent,createBattle,usePower} from '../src/engine.js';
+import {freshProfile,normalizeProfile,heroLevel,HERO_LEVEL_THRESHOLD,chooseHeroTalent,usePower} from '../src/engine.js';
 
 const prof=(hero='gardien',level=8)=>{const p=freshProfile();p.heroClass=hero;p.heroXp=HERO_LEVEL_THRESHOLD(level);return p;};
 const mk=(hero='gardien',ids=[],level=8)=>{const p=prof(hero,level);for(const id of ids)assert.equal(chooseHeroTalent(p,id).ok,true);return createBattle(p,CAMPAIGN[0],7289);};
