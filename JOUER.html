@@ -259,7 +259,7 @@ const __factories={
 "src/app.js":function(__exports,__load){
 const {createViews}=__load("src/ui/views.js");
 const {createCombatFx}=__load("src/ui/combat-fx.js");
-const {loadProfile,saveProfile,restoreBattle,storeBattle}=__load("src/ui/storage.js");
+const {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile}=__load("src/ui/storage.js");
 const {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
 const {AI_STYLES,aiStyle,aiEnraged}=__load("src/ai.js");
 const {TALENT_TREE,TALENT_LEVELS}=__load("src/talents.js");
@@ -271,19 +271,29 @@ let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}ca
 
 const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='all',collectionOwned=false;
+let deferredBattleModal='',battleStorageWarning=false;
 const {stopBattleFx,playBattleFx}=createCombatFx(()=>({animationsEnabled,screen}));
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled}));
 function load(){return loadProfile();}
 function save(){if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
-function persistBattle(){storeBattle(battle);}
+function persistBattle(){
+ const ok=storeBattle(battle);
+ if(!ok&&!battleStorageWarning){battleStorageWarning=true;toast('Combat non sauvegardé : vérifiez le stockage local et exportez votre profil.');}
+ if(ok)battleStorageWarning=false;
+ return ok;
+}
 
 // Render combat VFX from actual rules-engine events. These never enter saved battles.
 function withBattleFx(operation){
  if(!battle)return;
  battle.vfx=[];const result=operation();const events=battle.vfx;delete battle.vfx;
- selectedCard=-1;persistBattle();render();
- playBattleFx(result?.ok===false?[]:events,()=>{if(battle&&battle.status!=='active')settle();});
+ selectedCard=-1;persistBattle();
+ // Apply and persist the outcome before waiting for cosmetic animations.
+ if(battle.status!=='active')settle({deferModal:true});
+ render();
+ playBattleFx(result?.ok===false?[]:events,()=>{if(deferredBattleModal){showModal(deferredBattleModal);deferredBattleModal='';}});
+
  if(result?.ok===false)toast(result.reason);
 }
 
@@ -300,17 +310,32 @@ function render(){
  $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='battle'&&battle?battleUI():homeUI();
  const arena=document.querySelector('.battle-grid');if(arena)arena.scrollLeft=arenaScroll;
 }
-function settle(){if(!battle||battle.status==='active'||battle.rewardGiven)return;
- battle.rewardGiven=true;
+function settle({deferModal=false}={}){
+ if(!battle||battle.status==='active'||battle.rewardGiven)return;
+ // The pending finished battle survives a reload until its profile receipt is saved.
+ battle.settlementId ||= [battle.missionId,battle.seed,battle.round,battle.heroes.p.hp,battle.heroes.e.hp].join(':');
+ persistBattle();
+ if(profile.lastBattleSettlementId===battle.settlementId){
+  battle.rewardGiven=true;persistBattle();return;
+ }
  const dungeon=battle.mode==='dungeon';
  const mission=dungeon?dungeonStageMission(battle.dungeonId,battle.dungeonStage):battle.mode==='tower'?towerMission(Number(battle.missionId.slice(1))):CAMPAIGN.find(m=>m.id===battle.missionId);
- const reward=dungeon?settleDungeonBattle(profile,battle):completeBattle(profile,mission,battle);
- save();persistBattle();render();
- if(!reward?.ok&&dungeon){showModal(`<h2>Expédition interrompue</h2><p>Le combat ne correspond plus à une expédition valide. Aucun butin n'a été versé.</p><div class="button-row">${btn('Retour aux donjons','dungeon-exit','','primary')}</div>`);return;}
+ const nextProfile=JSON.parse(JSON.stringify(profile)),nextBattle=JSON.parse(JSON.stringify(battle));
+ const reward=dungeon?settleDungeonBattle(nextProfile,nextBattle):completeBattle(nextProfile,mission,nextBattle);
+ nextProfile.lastBattleSettlementId=battle.settlementId;
+ if(!saveProfile(nextProfile)){
+  toast('Récompense non enregistrée : libérez le stockage et rechargez la page pour réessayer.');
+  return;
+ }
+ profile=nextProfile;battle.rewardGiven=true;battle.progressionGranted=nextBattle.progressionGranted;
+ persistBattle();
+ if(!deferModal)render();
+ const showResult=html=>{if(deferModal)deferredBattleModal=html;else showModal(html);};
+ if(!reward?.ok&&dungeon){showResult(`<h2>Expédition interrompue</h2><p>Le combat ne correspond plus à une expédition valide. Aucun butin n'a été versé.</p><div class="button-row">${btn('Retour aux donjons','dungeon-exit','','primary')}</div>`);return;}
  const victory=reward.victory;
  if(dungeon){
   const subtitle=victory?reward.finished?'Donjon terminé !':reward.bonus?'Embuscade vaincue !':'Salle remportée !':'Expédition échouée';
-  showModal(`<div class="kicker">${esc(subtitle)}</div><h2>${victory?'Votre équipe est victorieuse !':'Votre troupe doit battre en retraite.'}</h2>
+  showResult(`<div class="kicker">${esc(subtitle)}</div><h2>${victory?'Votre équipe est victorieuse !':'Votre troupe doit battre en retraite.'}</h2>
    <p>${victory?reward.finished?'Le boss final est vaincu. Vous avez terminé cette expédition.':reward.choicePending?`Votre souverain reprend son souffle : ${reward.retainedHp} PV. Choisissez une halte avant la prochaine salle.`:`Épreuve remportée : ${reward.retainedHp} PV conservés pour la prochaine salle.`:'Le donjon s’achève ici. Les ressources remportées lors des salles précédentes sont conservées.'}</p>
    <div class="stat-row"><div class="stat-box"><strong>+${reward.gold}</strong><small>Or</small></div><div class="stat-box"><strong>+${reward.shards}</strong><small>Éclats</small></div></div>
    ${reward.heroXp?`<p class="gold">♛ +${reward.heroXp} XP de héros${reward.levelAfter>reward.levelBefore?` · Niveau ${reward.levelAfter} atteint !`:''}${reward.mastered?.length?` · ${reward.mastered.length} carte(s) ont progressé en maîtrise`:''}</p>`:''}
@@ -318,7 +343,7 @@ function settle(){if(!battle||battle.status==='active'||battle.rewardGiven)retur
    <div class="button-row">${victory&&!reward.finished?(reward.choicePending?btn('✦ Choisir un événement','dungeon-choice-open','','primary'):btn('⚔ Salle suivante','dungeon-next','','primary')):''}${btn('Retour aux donjons','dungeon-exit','','ghost')}</div>`);
   return;
  }
- showModal(`<div class="kicker">${victory?'VICTOIRE REMPORTÉE':'LE COMBAT EST TERMINÉ'}</div><h2>${victory?'La couronne est vôtre !':'Vos troupes se replient.'}</h2><p>${victory?`Vous avez vaincu <b>${esc(mission.enemy)}</b>. Votre armée gagne en expérience et de nouvelles terres s’ouvrent à vous.`:'Vous recevez quelques ressources pour préparer votre revanche. Modifiez votre deck et réessayez.'}</p><div class="stat-row"><div class="stat-box"><strong>+${reward.gold}</strong><small>Or</small></div>${victory?`<div class="stat-box"><strong>+${reward.shards}</strong><small>Éclats</small></div>`:''}</div>${reward.heroXp?`<p class="gold">♛ +${reward.heroXp} XP de héros${reward.levelAfter>reward.levelBefore?` · Niveau ${reward.levelAfter} atteint !`:''}${reward.mastered?.length?` · ${reward.mastered.length} progression(s) de maîtrise`:''}</p>`:''}${reward.card?`<p class="gold">✦ Nouvelle carte obtenue : ${esc(CARDS[reward.card].name)}</p>`:''}${reward.reputation?.length?`<p class="page-sub">Réputation : ${reward.reputation.map(([f,n])=>esc(FACTIONS[f].short)+' +'+n).join(' · ')}</p>`:''}<div class="button-row">${btn(battle.mode==='tower'?'Retour à la Tour':'Continuer la campagne','battle-exit','','primary')}${btn('Modifier mon deck','battle-deck','','ghost')}</div>`);
+ showResult(`<div class="kicker">${victory?'VICTOIRE REMPORTÉE':'LE COMBAT EST TERMINÉ'}</div><h2>${victory?'La couronne est vôtre !':'Vos troupes se replient.'}</h2><p>${victory?`Vous avez vaincu <b>${esc(mission.enemy)}</b>. Votre armée gagne en expérience et de nouvelles terres s’ouvrent à vous.`:'Vous recevez quelques ressources pour préparer votre revanche. Modifiez votre deck et réessayez.'}</p><div class="stat-row"><div class="stat-box"><strong>+${reward.gold}</strong><small>Or</small></div>${victory?`<div class="stat-box"><strong>+${reward.shards}</strong><small>Éclats</small></div>`:''}</div>${reward.heroXp?`<p class="gold">♛ +${reward.heroXp} XP de héros${reward.levelAfter>reward.levelBefore?` · Niveau ${reward.levelAfter} atteint !`:''}${reward.mastered?.length?` · ${reward.mastered.length} progression(s) de maîtrise`:''}</p>`:''}${reward.card?`<p class="gold">✦ Nouvelle carte obtenue : ${esc(CARDS[reward.card].name)}</p>`:''}${reward.reputation?.length?`<p class="page-sub">Réputation : ${reward.reputation.map(([f,n])=>esc(FACTIONS[f].short)+' +'+n).join(' · ')}</p>`:''}<div class="button-row">${btn(battle.mode==='tower'?'Retour à la Tour':'Continuer la campagne','battle-exit','','primary')}${btn('Modifier mon deck','battle-deck','','ghost')}</div>`);
 }
 function startDungeonStage(){
  if(!profile.dungeonRun){navigate('dungeons');return;}
@@ -385,7 +410,7 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
  case 'hero-power':if(!battle)return;withBattleFx(()=>usePower(battle));break;
  case 'toggle-animations':animationsEnabled=!animationsEnabled;try{localStorage.setItem(VFX_KEY,animationsEnabled?'on':'off');}catch{}render();break;
  case 'retreat':showModal(`<div class="kicker">RETRAITE</div><h2>Abandonner la bataille ?</h2><p>Cette décision compte comme une défaite. Dans un donjon, elle met fin à l’expédition.</p><div class="button-row">${btn('Oui, battre en retraite','confirm-retreat','','danger')}${btn('Rester au combat','close-modal','','ghost')}</div>`);break;
- case 'confirm-retreat':if(battle?.status==='active'){battle.status='defeat';battle.phase='finished';hideModal();settle();}break;
+ case 'confirm-retreat':if(battle?.status==='active'){battle.status='defeat';battle.phase='finished';hideModal();persistBattle();settle();}break;
  case 'close-modal':hideModal();break;
  case 'battle-exit':const previousMode=battle?.mode;hideModal();battle=null;persistBattle();navigate(previousMode==='tower'?'tower':previousMode==='dungeon'?'dungeons':'campaign');break;
  case 'battle-deck':hideModal();battle=null;persistBattle();navigate('collection');break;
@@ -407,8 +432,8 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
 }
 document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();act(el.dataset.action,el.dataset);});
 document.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){const el=event.target.closest('.unit-card.compact,[data-action="deploy"]');if(el){event.preventDefault();act(el.dataset.action,el.dataset);}}});
-document.addEventListener('change',async event=>{if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;try{const raw=JSON.parse(await file.text());if(!raw||!Array.isArray(raw.deck)||!raw.collection)throw Error('Format de sauvegarde invalide.');profile=normalizeProfile(raw);battle=null;persistBattle();save();navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='faction'){collectionFilter=event.target.value;render();}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
-render();welcome();
+document.addEventListener('change',async event=>{if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='faction'){collectionFilter=event.target.value;render();}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
+render();if(battle&&battle.status!=='active')settle();else welcome();
 
 Object.assign(__exports,{});
 
@@ -1355,6 +1380,8 @@ const {CARDS,CLASSES,TOWER_MAX}=__load("src/data.js");
 const {dungeonById}=__load("src/dungeons.js");
 const {TALENT_LEVELS,talentInfo,normalizeTalentChoices}=__load("src/talents.js");
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+const safeCount=(n,fallback=0,max=1000000000)=>Number.isSafeInteger(n)&&n>=0?Math.min(n,max):fallback;
+const objectOf=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{};
 const ownedCopies=(meta,id)=>meta.collection[id]||0;
 function freshProfile(){return {
  version:1,name:'Souverain des Couronnes',heroClass:'gardien',gold:110,shards:50,stars:0,heroXp:0,mastery:{},talents:{},
@@ -1364,9 +1391,24 @@ function freshProfile(){return {
 };}
 function normalizeProfile(raw){
  const base=freshProfile();if(!raw||typeof raw!=='object')return base;
- const p={...base,...raw,collection:{...base.collection,...(raw.collection||{})},
-   upgrades:{...(raw.upgrades||{})},buildings:{...base.buildings,...(raw.buildings||{})},
-   reputation:{...base.reputation,...(raw.reputation||{})},equipped:{...base.equipped,...(raw.equipped||{})}};
+ const p={...base,...raw,collection:{...base.collection,...objectOf(raw.collection)},
+   upgrades:{...objectOf(raw.upgrades)},buildings:{...base.buildings,...objectOf(raw.buildings)},
+   reputation:{...base.reputation,...objectOf(raw.reputation)},equipped:{...base.equipped,...objectOf(raw.equipped)}};
+ for(const key of ['gold','shards','stars','wins','losses'])p[key]=safeCount(raw[key],base[key]);
+ for(const [id,qty] of Object.entries(p.collection)){
+  if(!CARDS[id])delete p.collection[id];
+  else p.collection[id]=safeCount(qty,0,100000);
+ }
+ for(const [id,level] of Object.entries(p.upgrades)){
+  if(!CARDS[id]||CARDS[id].type==='sort')delete p.upgrades[id];
+  else p.upgrades[id]=safeCount(level,0,3);
+ }
+ for(const [name,max] of Object.entries({bastion:3,forge:3,bibliotheque:2}))
+  p.buildings[name]=safeCount(p.buildings[name],0,max);
+ for(const faction of Object.keys(base.reputation))p.reputation[faction]=safeCount(p.reputation[faction],0,100000);
+ p.name=typeof raw.name==='string'?raw.name.slice(0,80):base.name;
+ if(typeof raw.lastBattleSettlementId!=='string')delete p.lastBattleSettlementId;
+ else p.lastBattleSettlementId=raw.lastBattleSettlementId.slice(0,256);
  p.heroXp=Number.isFinite(raw.heroXp)?clamp(Math.floor(raw.heroXp),0,1000000):0;
  p.talents=normalizeTalentChoices(raw.talents);
  p.mastery={};
@@ -2359,17 +2401,59 @@ Object.assign(__exports,{createCombatFx});
 
 },
 "src/ui/storage.js":function(__exports,__load){
-// Contrat de sauvegarde inchangé : les versions précédentes se rechargent.
-const {freshProfile,normalizeProfile}=__load("src/engine.js");
-const {supportedBoard}=__load("src/engine/board.js");
+// Sauvegardes locales : validation rétrocompatible et clôture récupérable.
+const {freshProfile,normalizeProfile,validateDeck}=__load("src/engine.js");
+const {supportedBoard,lastCell}=__load("src/engine/board.js");
+const {CARDS}=__load("src/data.js");
 const SAVE_KEY='couronnes_arcanes_v1';
 const BATTLE_KEY='couronnes_arcanes_bataille_v1';
+const hasCard=id=>typeof id==='string'&&Object.prototype.hasOwnProperty.call(CARDS,id);
+const nonNegative=n=>Number.isFinite(n)&&n>=0;
+const validPile=p=>Array.isArray(p)&&p.every(hasCard);
+const validHand=h=>Array.isArray(h)&&h.every(c=>c&&hasCard(c.id)&&Number.isInteger(c.wait)&&c.wait>=0&&c.wait<=100);
+const validHero=h=>h&&typeof h.name==='string'&&nonNegative(h.hp)&&Number.isFinite(h.maxhp)&&h.maxhp>0&&
+ nonNegative(h.shield)&&validPile(h.deck)&&validPile(h.discard)&&validHand(h.hand)&&Number.isInteger(h.cardsPlayed)&&h.cardsPlayed>=0&&h.cardsPlayed<=2;
+const validUnit=u=>u===null||(u&&typeof u==='object'&&hasCard(u.id)&&CARDS[u.id].type==='unité'&&
+ ['p','e'].includes(u.side)&&Number.isInteger(u.uid)&&u.uid>=0&&nonNegative(u.hp)&&Number.isFinite(u.maxhp)&&u.maxhp>0&&
+ Number.isFinite(u.atk)&&nonNegative(u.armor||0)&&nonNegative(u.stun||0)&&nonNegative(u.poison||0)&&nonNegative(u.poisonTurns||0));
+function validStoredBattle(b){
+ if(!b||!['active','victory','defeat'].includes(b.status)||b.rewardGiven||
+  !['player','resolving','finished'].includes(b.phase)||!Number.isInteger(b.round)||b.round<1||
+  typeof b.missionId!=='string'||!supportedBoard(b.board)||
+  !validHero(b.heroes?.p)||!validHero(b.heroes?.e)||
+  !Array.isArray(b.log)||!b.log.every(x=>typeof x==='string'))return false;
+ if(!b.board.every(row=>row.every(validUnit)))return false;
+ if(b.traps!==undefined&&(!Array.isArray(b.traps)||!b.traps.every(t=>t&&['p','e'].includes(t.owner)&&
+   Number.isInteger(t.lane)&&t.lane>=0&&t.lane<b.board.length&&
+   Number.isInteger(t.col)&&t.col>=1&&t.col<=lastCell(b)&&nonNegative(t.damage))))return false;
+ return true;
+}
+function validateImportedProfile(raw){
+ if(!raw||typeof raw!=='object'||Array.isArray(raw)||!Array.isArray(raw.deck)||
+  !raw.collection||typeof raw.collection!=='object'||Array.isArray(raw.collection))throw Error('Format de profil invalide.');
+ for(const key of ['gold','shards','stars','wins','losses','heroXp']){
+  if(raw[key]!==undefined&&(!Number.isSafeInteger(raw[key])||raw[key]<0))throw Error('Montant ou progression invalide : '+key);
+ }
+ if(raw.deck.length<12||raw.deck.length>24||!raw.deck.every(hasCard))throw Error('Cartes du deck invalides.');
+ for(const amount of Object.values(raw.collection))if(!Number.isSafeInteger(amount)||amount<0)throw Error('Quantité de cartes invalide.');
+ const p=normalizeProfile(raw),error=validateDeck(p);
+ if(error)throw Error(error);
+ return p;
+}
 function loadProfile(){try{const value=localStorage.getItem(SAVE_KEY);return value?normalizeProfile(JSON.parse(value)):freshProfile();}catch{return freshProfile();}}
 function saveProfile(profile){try{localStorage.setItem(SAVE_KEY,JSON.stringify(profile));return true;}catch{return false;}}
-function restoreBattle(){try{const b=JSON.parse(localStorage.getItem(BATTLE_KEY)||'null');return b&&b.status==='active'&&supportedBoard(b.board)&&b.heroes?.p&&b.heroes?.e?b:null;}catch{return null;}}
-function storeBattle(battle){try{if(battle?.status==='active'){const {vfx,...saved}=battle;localStorage.setItem(BATTLE_KEY,JSON.stringify(saved));}else localStorage.removeItem(BATTLE_KEY);return true;}catch{return false;}}
+function restoreBattle(){try{
+ const b=JSON.parse(localStorage.getItem(BATTLE_KEY)||'null');
+ return validStoredBattle(b)?b:null;
+}catch{return null;}}
+function storeBattle(battle){try{
+ if(battle?.status==='active'||(battle&&['victory','defeat'].includes(battle.status)&&!battle.rewardGiven)){
+  const {vfx,...saved}=battle;localStorage.setItem(BATTLE_KEY,JSON.stringify(saved));
+ }else localStorage.removeItem(BATTLE_KEY);
+ return true;
+}catch{return false;}}
 
-Object.assign(__exports,{SAVE_KEY,BATTLE_KEY,loadProfile,saveProfile,restoreBattle,storeBattle});
+Object.assign(__exports,{SAVE_KEY,BATTLE_KEY,validStoredBattle,validateImportedProfile,loadProfile,saveProfile,restoreBattle,storeBattle});
 
 }
 };
