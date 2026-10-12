@@ -106,7 +106,7 @@ async def production(browser,label,viewport):
     await page.locator('[data-action="retreat"]').click()
     await page.locator('[data-action="confirm-retreat"]').click()
     await page.locator('[data-action="battle-deck"]').click()
-    assert await page.locator('.collection-layout .unit-card').count()==74
+    assert await page.locator('.collection-layout .unit-card').count()==76
     await page.locator('#nav [data-page="forge"]').click()
     assert await page.locator('.forge-tile').count()>0
     assert not errors,errors
