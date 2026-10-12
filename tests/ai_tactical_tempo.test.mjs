@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CARDS,CAMPAIGN} from '../src/data.js';
-import {freshProfile,createBattle,endPlayerTurn} from '../src/engine.js';
+import {freshProfile,endPlayerTurn} from '../src/engine.js';
+import {createBattle} from './fixtures/legacy-battle.mjs';
 import {rankEnemyMoves} from '../src/ai.js';
 import {rankEnemyMoves as rankBaseline} from './fixtures/ai_v210_baseline.mjs';
 
