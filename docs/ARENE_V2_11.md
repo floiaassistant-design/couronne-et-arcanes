@@ -62,3 +62,7 @@ Chaque taux porte sur 768 combats par classe et géométrie. Total : 1 806/3 072
 Le plateau plus long modifie volontairement le tempo : davantage de préparation et de combats sous attrition. Les bots sont heuristiques et les huit rencontres comparatives ne représentent pas toute une campagne humaine. Ces taux ne prouvent ni l'équilibrage final ni la difficulté vécue par un joueur ; aucun avantage caché n'a été ajouté pour les améliorer.
 
 Pas de téléphone physique testé, de coop, de PvP, de nouvelle musique ni de portraits uniques par carte. Une revue humaine du rendu et du rythme reste utile avant intégration. Prochaine amélioration cohérente : mesurer l'attrition et la durée sur ce plateau avec le retour du joueur, puis développer le donjon tactique prévu pour V3.0.
+
+## Réconciliation avec les PR nº 8 et 9 (12 octobre 2026)
+
+La proposition d'arène a été synchronisée avec `main` V2.10 après les fusions graphiques et IA tactique. Les états « prête/en attente », les micro-animations accessibles et l'IA de tempo/défense de la couronne sont conservés ; les distances des nouveaux scores de risque sont calculées d'après la géométrie de la partie (ancien plateau 3×5 ou nouveau plateau 2/3/4×10). Le bilan comparatif original ci-dessus reste une **mesure historique de la branche arène avant réconciliation**, pas une mesure des bots après intégration. Les nouveaux tests/CI du commit de réconciliation doivent être vérifiés séparément. Aucune fusion de la PR nº 6 sur `main` n'est autorisée sans accord explicite de l'utilisateur.
