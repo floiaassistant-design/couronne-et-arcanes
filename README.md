@@ -71,7 +71,7 @@ GitHub Actions exécute tests, parité, build, vérification de synchronisation,
 
 Les règles sont dans `src/engine/`, les données dans `src/data.js`, l'IA dans `src/ai.js`, les vues et sauvegardes dans `src/ui/`. La façade `src/engine.js` conserve les anciennes API. Le nouveau module pur `src/engine/battle-control.js` centralise les contrôles et leurs plans pour le moteur, l'IA et les aperçus. Le générateur embarque automatiquement les 19 modules et les illustrations.
 
-GitHub est la référence. Avant de développer, vérifier le dernier commit et lire `AGENTS.md`, ce fichier, `CHANGELOG.md` et `docs/ETAT_PROJET.md`. Une branche et une PR par évolution, revue et contrôles verts, puis fusion autonome autorisée ; jamais de réécriture forcée de main ni de restauration depuis une vieille archive.
+GitHub est la référence. Avant de développer, vérifier le dernier commit et lire `AGENTS.md`, ce fichier, `CHANGELOG.md` et `docs/ETAT_PROJET.md`. Une branche et une PR par évolution, revue et contrôles verts, puis **attente de l'accord explicite de l'utilisateur pour chaque fusion sur `main`**. Aucune fusion autonome ni GitHub Auto-merge, y compris pour les correctifs ; jamais de réécriture forcée de `main` ni de restauration depuis une vieille archive.
 
 ## Sauvegardes
 
