@@ -7,6 +7,7 @@
 - **Validation vérifiée pour la PR nº 6** : GitHub Actions #38235681138 — 219 tests Node, 60 parités V2.4, build autonome synchronisé, Chromium bureau/mobile simulé, 20 480 simulations de contrôle et 6 144 combats comparatifs. Ce n'est pas un test sur smartphone physique.
 - **Rythme mesuré** : 12,7 → 19,4 tours moyens entre 3×5 et les plateaux V2.11 ; attrition plus fréquente. Pas de décision d'équilibrage sans essai humain.
 - **Correctifs proposés (non fusionnés)** : branche `fix/fiabilite-sauvegardes-v211` — clôture de bataille récupérable, validation des imports et sauvegardes, signalement d'échec du stockage, tests ciblés ; aucun changement des règles, des cartes ou des récompenses.
+- **Évolution visuelle proposée (non fusionnée)** : branche `feat/arene-celeste-pixel-art`, arrière-plan céleste pixel art original en WebP embarqué hors ligne. Le moteur, les règles, l'IA et les sauvegardes restent inchangés. Voir `docs/ARENE_CELESTE.md`.
 - Prochaines pistes indépendantes : audit du ressenti des combats, lisibilité du code UI et contrat d'animations pour le dépôt de ressources graphiques.
 
 GitHub et le dernier `main` sont la référence. Toute évolution doit être proposée par branche et PR, sans fusion ni auto-merge sans accord spécifique de l'utilisateur. L'export `JOUER.html` est régénéré uniquement depuis les sources.
