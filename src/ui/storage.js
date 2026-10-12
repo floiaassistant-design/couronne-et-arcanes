@@ -31,6 +31,7 @@ export function validateImportedProfile(raw){
  for(const key of ['gold','shards','stars','wins','losses','heroXp']){
   if(raw[key]!==undefined&&(!Number.isSafeInteger(raw[key])||raw[key]<0))throw Error('Montant ou progression invalide : '+key);
  }
+ if(raw.deck.length<12||raw.deck.length>24||!raw.deck.every(hasCard))throw Error('Cartes du deck invalides.');
  for(const amount of Object.values(raw.collection))if(!Number.isSafeInteger(amount)||amount<0)throw Error('Quantité de cartes invalide.');
  const p=normalizeProfile(raw),error=validateDeck(p);
  if(error)throw Error(error);
