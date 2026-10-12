@@ -163,6 +163,31 @@
 .hand-panel>*{min-width:0}
 @media(max-width:760px){.hand-panel{grid-template-columns:minmax(0,1fr)}}
 
+/* Main de combat : états de tempo lisibles sans masquer les illustrations. */
+.unit-card.hand-card{width:140px;min-height:228px;border-width:2px;isolation:isolate;scroll-snap-align:start}
+.unit-card.hand-ready{border-color:#8dcca7;box-shadow:inset 0 0 0 1px #10261d,0 6px 18px #0004}
+.unit-card.hand-waiting{opacity:1;border-color:#bfa475;background:linear-gradient(160deg,#263039,#141e27);box-shadow:inset 0 0 0 1px #3a3228,0 6px 18px #0004}
+.unit-card.hand-waiting .creature-image{filter:saturate(.53) brightness(.78)}
+.unit-card.hand-waiting .card-title{color:#dfd0b8}
+.unit-card.hand-waiting:hover{transform:none;border-color:#d0b582}
+.unit-card.hand-card.hand-ready:hover{transform:translateY(-5px)}
+.unit-card.hand-card.selected{border-color:#f2d490;box-shadow:0 0 0 2px #efd08e88,0 9px 24px #0006}
+.unit-card.hand-card:focus-visible{outline:3px solid #f6dd9e;outline-offset:3px}
+.hand-readiness{display:block;text-align:center;white-space:nowrap;letter-spacing:.07em;font-size:10px;font-weight:800;line-height:1.25;padding:5px 3px;margin:6px 2px 0;border:1px solid transparent;border-radius:5px}
+.hand-readiness.ready{background:#174133;color:#d5fbe0;border-color:#6cb58a77}
+.hand-readiness.waiting{background:#4c3827;color:#ffe3b4;border-color:#ca9a6277}
+.unit-card.hand-card .cooldown-stamp{inset:35px 12px auto auto;display:flex;flex-direction:column;justify-content:center;align-items:center;width:57px;height:57px;padding:4px;border:2px solid #eac688;border-radius:50%;background:#0a1720f2;box-shadow:0 3px 15px #0009;color:#ffe1a9;pointer-events:none}
+.unit-card.hand-card .cooldown-stamp b{font:700 29px/1 Georgia,serif}
+.unit-card.hand-card .cooldown-stamp small{font:800 8px/1.2 Inter,system-ui,sans-serif;letter-spacing:.08em;margin:2px 0 0}
+.hand{scroll-snap-type:x proximity;overscroll-behavior-x:contain}
+@keyframes hand-ready-arrive{from{opacity:.55;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+@keyframes hand-wait-arrive{from{opacity:.65;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+.unit-card.hand-card.timer-motion.hand-ready .hand-readiness{animation:hand-ready-arrive .32s ease-out both}
+.unit-card.hand-card.timer-motion.hand-waiting .cooldown-stamp{animation:hand-wait-arrive .32s ease-out both}
+body.animations-off .hand-card .hand-readiness,body.animations-off .hand-card .cooldown-stamp{animation:none!important}
+@media(max-width:660px){.hand{gap:8px;padding:12px 5px 22px}.unit-card.hand-card{width:130px;min-height:226px}.unit-card.hand-card .cooldown-stamp{right:10px;width:53px;height:53px}.hand-readiness{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.hand{scroll-snap-type:none}.hand-card .hand-readiness,.hand-card .cooldown-stamp{animation:none!important}}
+
 /* V2.11 — arène fantasy lo-fi. Dix cases réelles, couronnes hors grille. */
 .arena-lofi{background:#151c2c;border:2px solid #5a617a;border-radius:4px;box-shadow:0 4px 0 #090f1b,inset 0 0 0 2px #222c40}
 .arena-caption{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#a9c7ca;font:700 11px ui-monospace,monospace;letter-spacing:.08em;padding:15px 5px 10px}
