@@ -5,7 +5,7 @@ import {freshProfile,normalizeProfile,validateDeck,modifyDeck,createBattle,playP
 const mk=(seed=42)=>createBattle(freshProfile(),CAMPAIGN[0],seed);
 test('76 original cards and 12 missions',()=>{
  assert.equal(Object.keys(CARDS).length,76);assert.equal(CAMPAIGN.length,12);
- assert.equal(new Set(Object.keys(CARDS)).size,74);
+ assert.equal(new Set(Object.keys(CARDS)).size,76);
  for(const m of CAMPAIGN){assert.ok(m.deck.every(id=>CARDS[id]));assert.ok(CARDS[m.unlock]);}
 });
 test('default deck is valid and campaign can begin',()=>{
