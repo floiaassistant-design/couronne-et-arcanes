@@ -189,7 +189,10 @@ export function rankEnemyMoves(b){
  if(!b||b.status!=='active'||!b.heroes?.e)return [];
  const rows=Array.from({length:3},(_,lane)=>inspectEnemyLane(b,lane));
  const results=[];
- const risks=rows.map(crownRisk),incoming=risks.reduce((sum,n)=>sum+n,0);
+ // Pas de changement des décisions des rencontres historiques sans sort V2.10.
+ // Les nouvelles priorités s'activent uniquement avec du tempo dans NOTRE main.
+ const hasTempo=b.heroes.e.hand.some(x=>x.id==='hourglass_surge'||x.id==='time_bind');
+ const risks=rows.map(row=>hasTempo?crownRisk(row):0),incoming=risks.reduce((sum,n)=>sum+n,0);
  const hero=b.heroes.e;
  const context={rows,risks,incoming,lethal:incoming>=Math.max(1,hero.hp+(hero.shield||0))};
  b.heroes.e.hand.forEach((entry,index)=>{
