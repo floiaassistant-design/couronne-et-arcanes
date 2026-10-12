@@ -187,3 +187,41 @@
 body.animations-off .hand-card .hand-readiness,body.animations-off .hand-card .cooldown-stamp{animation:none!important}
 @media(max-width:660px){.hand{gap:8px;padding:12px 5px 22px}.unit-card.hand-card{width:130px;min-height:226px}.unit-card.hand-card .cooldown-stamp{right:10px;width:53px;height:53px}.hand-readiness{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.hand{scroll-snap-type:none}.hand-card .hand-readiness,.hand-card .cooldown-stamp{animation:none!important}}
+
+/* V2.11 — arène fantasy lo-fi. Dix cases réelles, couronnes hors grille. */
+.arena-lofi{background:#151c2c;border:2px solid #5a617a;border-radius:4px;box-shadow:0 4px 0 #090f1b,inset 0 0 0 2px #222c40}
+.arena-caption{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#a9c7ca;font:700 11px ui-monospace,monospace;letter-spacing:.08em;padding:15px 5px 10px}
+.arena-lofi .battle-grid{position:relative;padding:0 10px 15px;background:linear-gradient(0deg,#273d43 0%,#1e343e 60%,#242d48 100%);border:2px solid #5b6b75;border-radius:2px;overflow-x:auto;scrollbar-color:#8696a5 #161e32;overscroll-behavior-x:contain}
+.arena-sky{height:116px;min-width:calc(var(--cells)*78px + 132px);background-image:var(--arena-scene);background-size:100% 116px;background-position:center bottom;background-repeat:no-repeat;border-bottom:3px solid #3b5260;image-rendering:pixelated;position:relative}
+.arena-sky::after{content:'';position:absolute;bottom:0;left:0;right:0;height:16px;background:repeating-linear-gradient(90deg,#263c4c 0 70px,#354859 70px 76px);opacity:.6;animation:arena-mist 8s steps(12) infinite alternate}
+.arena-lofi .lane-row{grid-template-columns:24px 44px repeat(var(--cells),minmax(68px,1fr)) 44px;gap:4px;min-width:calc(var(--cells)*78px + 132px);min-height:114px;margin:8px 0 0;position:relative}
+.arena-lofi .lane-label{font:700 15px ui-monospace,monospace;color:#a5bac3}
+.arena-lofi .battle-cell{min-height:114px;border:1px solid #64797b;border-radius:1px;background:repeating-linear-gradient(0deg,transparent 0 27px,#40535c55 27px 29px),repeating-linear-gradient(90deg,#354e5366 0 25px,#66808022 25px 27px);box-shadow:inset 0 2px 0 #83979b30,inset 0 -4px 0 #142d3880}
+.arena-lofi .battle-cell:nth-child(even){background-color:#2d444c}
+.arena-lofi .battle-cell.available{border:2px solid #e5c887;background-color:#5a684a;box-shadow:inset 0 0 0 2px #30454d,0 0 10px #b8d17a33}
+.arena-lofi .battle-cell.available:hover,.arena-lofi .battle-cell:focus-visible{outline:2px solid #f3d9a5;outline-offset:2px}
+.arena-lofi .slot-num{font:700 10px ui-monospace,monospace;color:#b0c5c9;bottom:5px;right:5px}
+.arena-lofi .lane-gate{border-radius:0;background:#23384b;border:1px solid #83969a;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:12px}
+.arena-lofi .lane-gate b{font:20px Georgia,serif;z-index:2;color:#f5dca8}
+.arena-lofi .lane-gate.enemy{background:#34273f;border-color:#947b97}
+.pixel-tower{width:24px;height:38px;background:repeating-linear-gradient(0deg,#869c9c 0 7px,#5c7686 7px 9px);border-left:4px solid #4e6579;border-right:4px solid #afbeb0;box-shadow:0 4px 0 #101e2e;position:relative}
+.pixel-tower::before{content:'';position:absolute;top:-7px;left:-5px;width:7px;height:9px;background:#acc2b8;box-shadow:10px 0 #acc2b8,20px 0 #acc2b8}
+.pixel-tower::after{content:'';position:absolute;bottom:0;left:5px;width:6px;height:13px;background:#18243a;box-shadow:0 -17px #e0cc97}
+.enemy .pixel-tower{filter:hue-rotate(90deg) saturate(.65)}
+.arena-lofi .unit-on-board,.arena-lofi .unit-on-board.enemy{min-height:112px;justify-content:flex-end;padding:2px 2px 5px;border-radius:0;background:transparent;border:0;overflow:hidden}
+.arena-lofi .unit-on-board .sprite-stage,.arena-lofi .unit-on-board:has(.formation-badge) .sprite-stage{inset:9px 0 26px;width:100%;height:auto;border-radius:0;overflow:visible;align-items:flex-end}
+.arena-lofi .unit-on-board .sprite-stage::after{display:none}
+.arena-lofi .unit-on-board .sprite-figure{width:52px;height:56px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 4px 0 #122334aa);animation-timing-function:steps(3)}
+.arena-lofi .unit-on-board.enemy .sprite-stage{transform:scaleX(-1)}
+.arena-lofi .unit-on-board.silenced .sprite-figure{filter:saturate(.3) brightness(.8)}
+.arena-lofi .sprite-aura{bottom:0;height:5px;border-radius:0;left:22%;right:22%;background:#8ac9c633;border-color:#9ec9c9;box-shadow:none}
+.arena-lofi .unit-name{font-size:9px;background:#172438e8;border-radius:0;padding:2px;max-width:100%;line-height:1.1}
+.arena-lofi .unit-meta{font:700 10px ui-monospace,monospace;line-height:1.2;white-space:normal;text-align:center;color:#f4e3bb}
+.arena-lofi .formation-badge{font-size:8px;top:1px;padding:2px;border-radius:0}
+.arena-lofi .silence-badge{top:18px;font-size:9px;border-radius:0;padding:2px}
+.arena-lofi .terrain-trap{bottom:3px;font-size:8px;border-radius:0;padding:2px;box-shadow:0 2px 0 #0b1f27}
+.arena-scroll-hint{font-size:11px;color:#a9bbc6;margin:8px 3px 0}
+@keyframes arena-mist{from{opacity:.2}to{opacity:.55}}
+.animations-off .arena-sky::after{animation:none}
+@media(prefers-reduced-motion:reduce){.arena-sky::after{animation:none}}
+@media(max-width:700px){.arena-lofi{padding:8px}.arena-lofi .battle-grid{padding-inline:5px}.arena-lofi .battle-hud{gap:9px}.arena-lofi .fighter h3{font-size:13px}.arena-caption{font-size:10px;letter-spacing:0}.arena-lofi .enemy-style-tag{font-size:10px}.arena-lofi .battle-mid{min-width:35px}}

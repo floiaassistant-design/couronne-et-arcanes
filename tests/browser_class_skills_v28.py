@@ -66,7 +66,7 @@ async def run(browser,label,viewport):
     assert await page.evaluate('profile.heroClass')=='arcaniste'
     assert await page.evaluate('profile.collection.skill_arc_freeze')==1
     assert await page.evaluate('battle.board[0][3].stun')==2
-    assert await page.locator('.battle-grid .lane-row').count()==3
+    assert await page.locator('.battle-grid .lane-row').count()==2
     assert not errors,errors
     print('V2.8 '+label+': apprentissage/classe/combat/sauvegarde PASS')
     await page.close()

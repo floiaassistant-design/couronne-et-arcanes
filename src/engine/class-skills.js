@@ -1,5 +1,6 @@
 // Effets des compétences de classe : règles isolées du DOM et de la sauvegarde.
 // Les unités anciennes sans barrier/rallyUntil restent totalement compatibles.
+import {validLane} from './board.js';
 const own=(u,side)=>u&&u.hp>0&&u.side===side;
 function allies(b,side,lane){return b.board[lane].filter(u=>own(u,side));}
 function enemies(b,side,lane){
@@ -8,7 +9,7 @@ function enemies(b,side,lane){
 }
 export function classSkillTargetError(b,side,card,lane){
  if(!card.heroClass)return '';
- if(!Number.isInteger(lane)||lane<0||lane>=3)return 'Ligne invalide.';
+ if(!validLane(b,lane))return 'Ligne invalide.';
  const friendly=allies(b,side,lane),foes=enemies(b,side,lane),h=b.heroes[side];
  switch(card.ability){
   case 'spell_guard_wall':case 'spell_guard_rally':case 'spell_cleric_bless':

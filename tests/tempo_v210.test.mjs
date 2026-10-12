@@ -1,7 +1,8 @@
+import {createBattle} from './fixtures/legacy-battle.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CARDS,CAMPAIGN} from '../src/data.js';
-import {freshProfile,createBattle,playPlayerCard,endPlayerTurn,fuseCard,FUSION_COSTS} from '../src/engine.js';
+import {freshProfile,playPlayerCard,endPlayerTurn,fuseCard,FUSION_COSTS} from '../src/engine.js';
 import {rankEnemyMoves} from '../src/ai.js';
 import {TEMPO_IDS,TEMPO_MAX_WAIT,accelerationTarget,obstructionTarget,tempoTargetError} from '../src/engine/tempo.js';
 function battle(id='hourglass_surge'){

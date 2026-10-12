@@ -10,7 +10,7 @@ function stopBattleFx(){
 function fxPoint(lane,col){
  const row=document.querySelectorAll('.battle-grid .lane-row')[lane];
  if(!row)return null;
- const el=col===0?row.querySelector('.lane-gate:not(.enemy)'):col===6?row.querySelector('.lane-gate.enemy'):row.querySelectorAll('.battle-cell')[col-1];
+ const el=col===0?row.querySelector('.lane-gate:not(.enemy)'):col===Number(row.dataset.crownCol)?row.querySelector('.lane-gate.enemy'):row.querySelectorAll('.battle-cell')[col-1];
  if(!el)return null;
  const r=el.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,el};
 }

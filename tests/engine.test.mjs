@@ -1,7 +1,8 @@
+import {createBattle} from './fixtures/legacy-battle.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CAMPAIGN,CARDS,CLASSES,towerMission,TOWER_MAX} from '../src/data.js';
-import {freshProfile,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,reputationLevel,FUSION_COSTS,extractCard,fuseCard} from '../src/engine.js';
+import {freshProfile,normalizeProfile,validateDeck,modifyDeck,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,reputationLevel,FUSION_COSTS,extractCard,fuseCard} from '../src/engine.js';
 const mk=(seed=42)=>createBattle(freshProfile(),CAMPAIGN[0],seed);
 test('76 original cards and 12 missions',()=>{
  assert.equal(Object.keys(CARDS).length,76);assert.equal(CAMPAIGN.length,12);

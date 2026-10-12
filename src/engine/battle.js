@@ -6,7 +6,8 @@ import {silenced,activeAbility,controlTargetError,resolveControlSpell,prepareCon
 import {chosenTalents} from '../talents.js';
 import {tempoTargetError,resolveTempoSpell} from './tempo.js';
 import {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,masteryRank,EQUIPMENT,reputationLevel} from './profile.js';
-export const LANES=3, WIDTH=7;
+import {laneCount,lastCell,crownColumn,entryColumn,validLane,missionLayout} from './board.js';
+export * from './board.js';
 function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed/4294967296;}
 function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand(b)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 export function note(b,message){b.log.unshift(message);b.log=b.log.slice(0,12);}
@@ -27,10 +28,11 @@ function draw(b,side,n=1){
 }
 
 function gearBonus(p,bonus){return Object.values(p.equipped||{}).reduce((n,id)=>n+(EQUIPMENT[id]?.bonus===bonus?EQUIPMENT[id].value:0),0);}
-export function createBattle(profile,mission,seed=Date.now()){
+export function createBattle(profile,mission,seed=Date.now(),options={}){
  const p=normalizeProfile(profile);if(validateDeck(p))throw Error(validateDeck(p));
+ const layout=missionLayout(mission,options);
  const b={seed:seed>>>0,missionId:mission.id,missionName:mission.name,round:1,phase:'player',status:'active',
- board:Array.from({length:LANES},()=>Array(WIDTH).fill(null)),nextUnitId:1,log:[],powerCooldown:0,talentDrawUsed:false,cardUses:{},progressionGranted:false,heroTalents:chosenTalents(p,heroLevel(p)),
+ board:Array.from({length:layout.lanes},()=>Array(layout.cells+2).fill(null)),nextUnitId:1,log:[],powerCooldown:0,talentDrawUsed:false,cardUses:{},progressionGranted:false,heroTalents:chosenTalents(p,heroLevel(p)),
  heroes:{p:{name:p.name,hp:26+p.buildings.bastion*4+gearBonus(p,'hp'),maxhp:26+p.buildings.bastion*4+gearBonus(p,'hp'),shield:gearBonus(p,'shield')+heroShieldBonus(p)+(chosenTalents(p,heroLevel(p)).includes('gardien_rempart')?3:0),deck:[],discard:[],hand:[],cardsPlayed:0},
  e:{name:mission.enemy,hp:mission.hp,maxhp:mission.hp,shield:0,deck:[],discard:[],hand:[],cardsPlayed:0}},
  heroClass:p.heroClass,forgeBonus:p.buildings.forge||0,libraryBonus:(p.buildings.bibliotheque||0)+gearBonus(p,'hand'),unitAtkBonus:gearBonus(p,'unitAtk'),powerBonus:gearBonus(p,'power'),reputationBonus:Object.fromEntries(Object.keys(FACTIONS).map(k=>[k,reputationLevel(p,k)])),
@@ -43,7 +45,6 @@ export function createBattle(profile,mission,seed=Date.now()){
  return b;
 }
 const forward=side=>side==='p'?1:-1;
-const entry=side=>side==='p'?1:5;
 const isFlying=u=>!!u&&FLYING_IDS.has(u.id);
 const isGuard=u=>!!u&&GUARD_IDS.has(u.id) && u.hp>0;
 
@@ -51,7 +52,7 @@ const isGuard=u=>!!u&&GUARD_IDS.has(u.id) && u.hp>0;
 // Deux unités vivantes du même Ordre, du même camp et sur la même ligne
 // gagnent chacune +1 attaque. Le bonus disparaît si la formation est rompue.
 export function formationBonus(b,lane,unit){
- if(!unit||unit.hp<=0||lane<0||lane>=LANES)return 0;
+ if(!unit||unit.hp<=0||!validLane(b,lane))return 0;
  const faction=CARDS[unit.id]?.faction;
  if(!faction||faction==='sort')return 0;
  let allies=0;
@@ -60,7 +61,7 @@ export function formationBonus(b,lane,unit){
  }
  return allies>=2?1:0;
 }
-function enemyAt(b,lane,col,side){return col>=1&&col<=5&&b.board[lane][col]&&b.board[lane][col].side!==side?b.board[lane][col]:null;}
+function enemyAt(b,lane,col,side){return col>=1&&col<=lastCell(b)&&b.board[lane][col]&&b.board[lane][col].side!==side?b.board[lane][col]:null;}
 function findTarget(b,lane,col,unit){
  const range=unit.ranged?2:1;
  let fallback=null;
@@ -71,12 +72,12 @@ function findTarget(b,lane,col,unit){
   if(target && !fallback)fallback={type:'unit',target,col:targetCol};
  }
  if(fallback)return fallback;
- const heroDist=unit.side==='p'?6-col:col;
+ const heroDist=unit.side==='p'?crownColumn(b,'e')-col:col;
  return heroDist<=range?{type:'hero',side:unit.side==='p'?'e':'p'}:null;
 }
 function spawn(b,side,id,lane){
  const c=CARDS[id];if(!c||c.type==='sort')return false;
- const col=entry(side);if(b.board[lane][col])return false;
+ const col=entryColumn(b,side);if(b.board[lane][col])return false;
  const level=side==='p'?(b.upgrades[id]||0):Math.max(0,b.enemyDifficulty-3);
  const extraHP=side==='p'?b.forgeBonus:0;
  const factionBonus=side==='p'?(b.reputationBonus?.[c.faction]||0):0;
@@ -103,7 +104,7 @@ function cast(b,side,id,lane){
  let drawAfter=0;
  const supportSpell=['spell_heal','spell_buff','spell_ward'].includes(c.ability);
  const allied=b.board[lane].findIndex(u=>u&&u.side===side);
- fx(b,{type:'spell',side,lane,from:side==='p'?0:6,to:supportSpell?(allied>=1?allied:side==='p'?0:6):(foe?foe.i:side==='p'?6:0),variant:c.ability,icon:c.icon});
+ fx(b,{type:'spell',side,lane,from:crownColumn(b,side),to:supportSpell?(allied>=1?allied:crownColumn(b,side)):(foe?foe.i:crownColumn(b,enemy)),variant:c.ability,icon:c.icon});
  if(c.ability==='spell_bolt'){
   if(foe)hit(b,foe.u,4,side);else damageHero(b,enemy,2);
  }else if(c.ability==='spell_heal'){
@@ -130,7 +131,7 @@ function cast(b,side,id,lane){
  return drawAfter;
 }
 function play(b,side,index,lane){
- if(b.status!=='active'||!Number.isInteger(lane)||lane<0||lane>=LANES)return {ok:false,reason:'Combat terminé ou ligne invalide.'};
+ if(b.status!=='active'||!Number.isInteger(lane)||!validLane(b,lane))return {ok:false,reason:'Combat terminé ou ligne invalide.'};
  const hero=b.heroes[side],hand=hero.hand[index];
  if(!hand)return {ok:false,reason:'Carte introuvable.'};
  if(hand.wait>0)return {ok:false,reason:`Cette carte sera disponible dans ${hand.wait} tour(s).`};
@@ -159,7 +160,7 @@ function hit(b,u,raw,bySide,ignoreArmor=false){
  return dmg;
 }
 function sweepDead(b){
- for(let lane=0;lane<LANES;lane++)for(let col=1;col<=5;col++){
+ for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
   const u=b.board[lane][col];if(u&&u.hp<=0){fx(b,{type:'death',lane,col,side:u.side,icon:CARDS[u.id]?.icon||'✦'});b.board[lane][col]=null;}
  }
 }
@@ -199,19 +200,19 @@ function resolvePoison(b){
 }
 function moveUnits(b){
  // Alternate start side by round to avoid systematic movement advantage.
- for(const side of b.round%2?['p','e']:['e','p'])for(let lane=0;lane<LANES;lane++){
-  const cols=side==='p'?[5,4,3,2,1]:[1,2,3,4,5];
+ for(const side of b.round%2?['p','e']:['e','p'])for(let lane=0;lane<laneCount(b);lane++){
+  const cols=Array.from({length:lastCell(b)},(_,i)=>side==='p'?lastCell(b)-i:i+1);
   for(const original of cols){const u=b.board[lane][original];if(!u||u.side!==side||u.stun>0)continue;
    let col=original;const steps=activeAbility(b,u)==='haste'?2:1;
    for(let step=0;step<steps;step++){
     if(findTarget(b,lane,col,u))break;
     const next=col+forward(side);
-    if(next<1||next>5)break;
+    if(next<1||next>lastCell(b))break;
     let destination=next;
     if(b.board[lane][next]){
       if(isFlying(u)){
         const leap=next+forward(side);
-        if(leap<1||leap>5||b.board[lane][leap])break;
+        if(leap<1||leap>lastCell(b)||b.board[lane][leap])break;
         destination=leap;
       }else break;
     }
@@ -223,7 +224,7 @@ function moveUnits(b){
 }
 function findGuardianForHero(b,lane,heroSide){
  const guards=[];
- for(let col=1;col<=5;col++){
+ for(let col=1;col<=lastCell(b);col++){
   const u=b.board[lane][col];
   if(u&&u.side===heroSide&&isGuard(u))guards.push({u,col});
  }
@@ -246,7 +247,7 @@ function retaliate(b,defender,attacker,lane,defenderCol,attackerCol){
 
 function resolveAttacks(b){
  const intents=[];
- for(let lane=0;lane<LANES;lane++)for(let col=1;col<=5;col++){
+ for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
   const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0)continue;
   const target=findTarget(b,lane,col,u);
   const charged=!silenced(b,u)&&CHARGE_IDS.has(u.id)&&!!u.movedThisRound;
@@ -255,7 +256,7 @@ function resolveAttacks(b){
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
   const guardIntercept = target.type==='hero' ? findGuardianForHero(b,lane,target.side) : null;
-  const targetColForFx = guardIntercept?guardIntercept.col:(target.type==='hero'?(u.side==='p'?6:0):target.col);
+  const targetColForFx = guardIntercept?guardIntercept.col:(target.type==='hero'?crownColumn(b,target.side):target.col);
   fx(b,{type:'attack',side:u.side,lane,from:intent.col,to:targetColForFx,ranged:!!u.ranged,magic:['splash','poison'].includes(ability),damage:atk,charged,icon:CARDS[u.id]?.icon||'⚔'});
   if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +2 attaque sur la ligne ${lane+1}.`);
   if(target.type==='hero'){
@@ -281,7 +282,7 @@ function resolveAttacks(b){
  for(const row of b.board)for(const u of row)if(u)u.movedThisRound=false;
  sweepDead(b);
  // Persistent support abilities trigger after combat.
- for(let lane=0;lane<LANES;lane++)for(const u of b.board[lane])if(u&&u.hp>0){
+ for(let lane=0;lane<laneCount(b);lane++)for(const u of b.board[lane])if(u&&u.hp>0){
   if(activeAbility(b,u)==='heal'){
    const allies=b.board[lane].filter(v=>v&&v.side===u.side&&v.hp<v.maxhp);
    if(allies.length){allies.sort((a,z)=>(a.hp/a.maxhp)-(z.hp/z.maxhp));allies[0].hp=Math.min(allies[0].maxhp,allies[0].hp+2);const col=b.board[lane].indexOf(allies[0]);fx(b,{type:'heal',lane,col});}
@@ -299,7 +300,7 @@ export function usePower(b){
  if(b.phase!=='player'||b.status!=='active')return {ok:false,reason:'Action impossible.'};
  if(b.powerCooldown>0)return {ok:false,reason:`Pouvoir disponible dans ${b.powerCooldown} tour(s).`};
  b.powerCooldown=3;
- fx(b,{type:'power',lane:1,from:0,to:6,variant:b.heroClass});
+ fx(b,{type:'power',lane:Math.floor(laneCount(b)/2),from:0,to:crownColumn(b,'e'),variant:b.heroClass});
  if(b.heroClass==='gardien'){
   const h=b.heroes.p;h.hp=Math.min(h.maxhp,h.hp+4+(hasBattleTalent(b,'gardien_serment')?2:0));h.shield=Math.min(15,h.shield+2+(hasBattleTalent(b,'gardien_barriere')?1:0));
   if(hasBattleTalent(b,'gardien_sentinelle')){
@@ -309,7 +310,7 @@ export function usePower(b){
   note(b,'Serment protecteur : le héros et ses alliés sont renforcés.');
  }else if(b.heroClass==='arcaniste'){
   let target=null;
-  for(let l=0;l<LANES;l++){const foe=locateEnemy(b,'p',l);if(foe&&(!target||foe.i<target.i))target=foe;}
+  for(let l=0;l<laneCount(b);l++){const foe=locateEnemy(b,'p',l);if(foe&&(!target||foe.i<target.i))target=foe;}
   if(target){
    hit(b,target.u,4+(b.powerBonus||0)+(hasBattleTalent(b,'arcaniste_focus')?1:0),'p');
    if(hasBattleTalent(b,'arcaniste_echos')){
@@ -323,7 +324,7 @@ export function usePower(b){
   note(b,'Éclat astral : l’ennemi subit un sort.');
  }else if(b.heroClass==='rodeur'){
   let hits=0;
-  for(let l=0;l<LANES;l++){const target=locateEnemy(b,'p',l);if(target){hit(b,target.u,2+(hasBattleTalent(b,'rodeur_precision')?2:0),'p');hits++;}}
+  for(let l=0;l<laneCount(b);l++){const target=locateEnemy(b,'p',l);if(target){hit(b,target.u,2+(hasBattleTalent(b,'rodeur_precision')?2:0),'p');hits++;}}
   if(hasBattleTalent(b,'rodeur_couvert'))b.heroes.p.shield=Math.min(15,b.heroes.p.shield+2);
   if(hasBattleTalent(b,'rodeur_poursuite')&&!b.talentDrawUsed&&b.heroes.p.hand.length<7){
    const before=b.heroes.p.hand.length;draw(b,'p',1);
@@ -333,7 +334,7 @@ export function usePower(b){
   sweepDead(b);note(b,'Volée : les lignes ennemies sont touchées.');
  }else if(b.heroClass==='clerc'){
   const h=b.heroes.p;h.hp=Math.min(h.maxhp,h.hp+3+(b.powerBonus||0)+(hasBattleTalent(b,'clerc_souffle')?2:0)+(hasBattleTalent(b,'clerc_soutien')?1:0));
-  for(let lane=0;lane<LANES;lane++){const allies=b.board[lane].filter(u=>u&&u.side==='p'&&u.hp<u.maxhp).sort((a,z)=>(a.hp/a.maxhp)-(z.hp/z.maxhp));if(allies[0])allies[0].hp=Math.min(allies[0].maxhp,allies[0].hp+3+(b.powerBonus||0)+(hasBattleTalent(b,'clerc_soutien')?2:0));}
+  for(let lane=0;lane<laneCount(b);lane++){const allies=b.board[lane].filter(u=>u&&u.side==='p'&&u.hp<u.maxhp).sort((a,z)=>(a.hp/a.maxhp)-(z.hp/z.maxhp));if(allies[0])allies[0].hp=Math.min(allies[0].maxhp,allies[0].hp+3+(b.powerBonus||0)+(hasBattleTalent(b,'clerc_soutien')?2:0));}
   if(hasBattleTalent(b,'clerc_foi'))h.shield=Math.min(15,h.shield+2);
   if(hasBattleTalent(b,'clerc_purification')){
    // Useful between poison encounters, while keeping the branch below major healing.

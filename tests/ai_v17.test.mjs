@@ -1,7 +1,8 @@
+import {createBattle} from './fixtures/legacy-battle.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CARDS,CAMPAIGN} from '../src/data.js';
-import {freshProfile,createBattle,endPlayerTurn} from '../src/engine.js';
+import {freshProfile,endPlayerTurn} from '../src/engine.js';
 import {rankEnemyMoves,inspectEnemyLane} from '../src/ai.js';
 const make=(seed=309)=>{
  const b=createBattle(freshProfile(),CAMPAIGN[0],seed);

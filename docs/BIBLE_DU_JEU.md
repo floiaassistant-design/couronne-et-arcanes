@@ -1,3 +1,5 @@
+> **Mise à jour de géométrie V2.11 (proposition)** : 10 cases par ligne, 2 lignes en duel, 3 dans les rencontres avancées et 4 pour les boss solo ; anciens combats 3×5 conservés. Style de l’arène : fantasy lo-fi en pixels originaux. La présente bible contient des sections V1 historiques ; le README et `ETAT_PROJET.md` décrivent l’état courant.
+
 # COURONNES & ARCANES
 ## Bible du jeu et cahier de production — Édition 1.0
 

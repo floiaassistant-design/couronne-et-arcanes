@@ -1,7 +1,8 @@
+import {createBattle} from './fixtures/legacy-battle.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CAMPAIGN,CARDS,towerMission,TOWER_MAX} from '../src/data.js';
-import {freshProfile,createBattle,endPlayerTurn} from '../src/engine.js';
+import {freshProfile,endPlayerTurn} from '../src/engine.js';
 import {AI_STYLES,aiStyle,aiEnraged,personalityBonus,rankEnemyMoves} from '../src/ai.js';
 const mk=(seed=111)=>{const b=createBattle(freshProfile(),CAMPAIGN[0],seed);for(const side of ['p','e']){b.heroes[side].hand=[];b.heroes[side].deck=[];b.heroes[side].discard=[];}return b;};
 const unit=(id,side='p')=>({uid:100,id,side,hp:CARDS[id].hp,maxhp:CARDS[id].hp,atk:CARDS[id].attack,armor:CARDS[id].ability==='armor'?2:0,ranged:CARDS[id].ability==='ranged',ability:CARDS[id].ability,stun:0,poison:0,poisonTurns:0});

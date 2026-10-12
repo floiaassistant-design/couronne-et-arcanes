@@ -36,6 +36,16 @@
 
 **Contrôle préalable obligatoire :** identifier les modules concernés, leurs dépendances et tests avant de coder. **Contrôle final obligatoire :** rechercher les doublons, les responsabilités mélangées, les imports circulaires et les fichiers devenus trop volumineux ; les réorganiser si utile, puis documenter les exceptions justifiées.
 
+## V2.11 — arène et géométrie (branche de proposition)
+
+- La mission arène impose une PR **sans fusion automatique** ; elle prévaut ici sur la politique générale. Ne pas intégrer cette branche sans instruction ultérieure.
+- `src/engine/board.js` est le propriétaire des dimensions. Les tableaux sauvegardés déterminent les cases et lignes ; ne jamais utiliser `LANES`/`WIDTH` comme limites d’un combat déjà créé.
+- Nouveaux combats : dix cases (colonnes 1–10), couronnes en 0/11 ; 2 lignes difficulté 1–2, 3 lignes difficulté ≥3, 4 pour un boss. Anciens combats 3×5 : garder exactement le tableau, couronnes 0/6.
+- `src/ui/arena-art.js` fournit l’art SVG en pixels partagé par rôle, sans règles métier. L’export doit embarquer ce module et rester sans réseau.
+- Tests historiques dont les positions sont codées en 3×5 utilisent `tests/fixtures/legacy-battle.mjs`. Ne pas modifier leurs assertions ni la référence de parité pour masquer un échec. `tests/arena_v211.test.mjs` couvre les nouvelles dimensions, les capacités en colonnes 6–10 et les sauvegardes.
+- Contrôler `browser_arena_v211.py` sur desktop, mobile portrait/paysage ; préserver le défilement après rendu et mapper les VFX aux bonnes couronnes. Aucun événement VFX en stockage.
+- `npm run arena-balance` compare les deux géométries et exige deux passes identiques. Les nouveaux combats plus longs et l’attrition plus fréquente sont une conséquence connue, pas une preuve d’équilibrage humain. Voir `docs/ARENE_V2_11.md`.
+
 ## V2.10 — compte à rebours tactique
 
 - `src/engine/tempo.js` réalise exclusivement le ciblage et la modification déterministes des valeurs `wait` de la main ; les propriétés existantes de sauvegarde restent intactes.
