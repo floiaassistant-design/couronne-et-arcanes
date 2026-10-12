@@ -132,7 +132,7 @@ function scoreOption(b,card,laneInfo,context){
   }
  }else if(ability==='spell_slow'){
   // Score fixe : aucune lecture des cartes privées du joueur pour décider.
-  score=6-(context.incoming?Math.min(9,context.incoming*1.5):0);
+  score=context.lethal?-20:6-(context.incoming?Math.min(9,context.incoming*1.5):0);
   reason='Ralentir la main adverse';
  }else if(ability==='spell_ward'){
   const room=Math.max(0,15-hero.shield);
