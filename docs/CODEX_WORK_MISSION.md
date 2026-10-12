@@ -11,7 +11,7 @@ Développer **Couronnes & Arcanes**, jeu indépendant original inspiré du genre
 ## Consignes à l'orchestrateur
 
 1. **Premier contrôle :** lancer les tests, ouvrir le jeu dans un vrai navigateur, terminer au moins une mission (victoire ou défaite), vérifier deck, atelier, profil, sauvegarde et mobile. Noter toute anomalie observée.
-2. **Sauvegarder le projet dans GitHub** après obtention des autorisations et d’un dépôt : commits lisibles, branche dédiée, PR ou contrôle pour les changements risqués, version stable qui fonctionne en permanence. Ne jamais prétendre avoir poussé un commit non confirmé.
+2. **Sauvegarder le projet dans GitHub** : commits lisibles, branche dédiée et PR pour chaque évolution ; maintenir une version stable sur `main`. **Ne jamais fusionner automatiquement : attendre l'accord explicite de l'utilisateur sur chaque PR, même avec tests verts.** Une autorisation de coder n'est pas une autorisation de fusionner. Ne pas activer Auto-merge ou un bot de fusion. Ne jamais prétendre avoir poussé un commit non confirmé.
 3. **Privilégier les résultats complets :** résoudre plusieurs tâches cohérentes dans une session plutôt qu'un changement cosmétique isolé. Ne pas créer 20 agents ou 10 fichiers de gestion redondants.
 4. **Priorité visuelle :** transformer les glyphes provisoires en de **véritables cartes illustrées originales**, puis les unités de plateau en sprites animés, effets de projectile et environnements ; produire un style cohérent d’abord sur une petite sélection avant de généraliser.
 5. **Priorité gameplay :** tester et équilibrer l’ensemble des 12 missions et 60 cartes, fiabiliser les pouvoirs, empêcher les blocages, ajouter un tutoriel interactif et rendre le combat plus lisible.

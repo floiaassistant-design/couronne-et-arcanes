@@ -4,19 +4,20 @@
 
 - **Base courante : V2.10, issue de V2.9**. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
 - **Ne jamais copier une ancienne version par-dessus la dernière version.** La copie V1.2 avait écrasé huit fichiers de V2.7 le 11/10/2026 ; les fichiers ont été récupérés depuis le commit local `145a2e8`.
-- **Une branche par agent/session** lorsque plusieurs agents développent en parallèle. Un seul intégrateur fusionne après comparaison des modifications et exécution des tests.
-- **Anti-écrasement :** vérifier l'état GitHub avant chaque publication ; si la branche cible a avancé, fusionner les changements utiles et ne jamais forcer la réécriture de l'historique.
+- **Une branche par agent/session** lorsque plusieurs agents développent en parallèle. Un seul intégrateur prépare la fusion après comparaison des modifications et exécution des tests, **sans jamais fusionner avant l'accord explicite de l'utilisateur**.
+- **Anti-écrasement :** vérifier l'état GitHub avant chaque publication ; si la branche cible a avancé, réconcilier les changements utiles sur la branche de travail et ne jamais forcer la réécriture de l'historique. Ce travail ne constitue jamais une autorisation de fusionner sur `main`.
 - **Fin de session :** tests, documentation de l'état, journal des changements, commit explicite, export autonome si nécessaire.
 - **Source de vérité :** GitHub pour les sources de développement, `JOUER.html` généré depuis ces sources pour jouer, Drive pour les archives. Une archive sur Drive n'est pas automatiquement synchronisée avec GitHub.
 
-## Fusion continue après contrôle automatique — politique à compter de la V2.8
+## Fusion sur `main` uniquement après validation explicite — POLITIQUE PRIORITAIRE
 
-- L'utilisateur teste le jeu à intervalles libres, **pas obligatoirement à chaque version**. Les versions suivantes peuvent être fusionnées sur `main` par l'agent de développement dans la même session **sans redemander de validation manuelle**, dès lors que l'évolution a été préalablement demandée ou approuvée et que les contrôles sont verts.
-- Une branche et une pull request par évolution ; relire le diff, comparer au `main` courant, vérifier zéro régression involontaire, les sauvegardes historiques, les limites du gameplay et les tests pertinents.
-- **Portes obligatoires** : `npm test`, `npm run test:parity` pour les règles inchangées, `npm run build`, identité du HTML autonome et parcours navigateur desktop/mobile en cas de changement de l'interface. Corriger et relancer si échec. Ne pas considérer une CI absente ou en cours comme « verte ».
-- Bloquer la fusion et demander une décision seulement en cas de conflit non résolu, d'impact incertain sur les sauvegardes, de changement de règles non approuvé, de tests indisponibles, de régression, ou de risque majeur identifié. Les tests ne remplacent pas une validation réelle de l'ergonomie sur téléphone.
-- Ne jamais fusionner une branche dont la tête a changé depuis la vérification ; utiliser l'identifiant de commit attendu, ne jamais écraser `main` et ne jamais forcer l'historique. Après fusion, annoncer la version, le commit, la CI et les éventuelles limites.
-- Cette politique autorise une fusion **lors de nos sessions de développement** ; elle ne promet aucun suivi asynchrone du dépôt entre les conversations.
+- **Aucune fusion automatique ou autonome.** Les agents, Work, Codex et les outils GitHub ne doivent jamais déclencher une fusion sur `main` simplement parce que les tests sont verts, qu'une évolution a été demandée, ou que le joueur n'a pas signalé de défauts.
+- **Une branche et une pull request par évolution.** L'agent peut coder, tester, pousser sur sa branche, ouvrir une PR et proposer son intégration. Il doit **s'arrêter avant toute fusion**, présenter le résumé des changements, le lien de PR, les tests réellement exécutés et les risques éventuels.
+- **Accord obligatoire pour chaque PR :** seule une instruction explicite et spécifique de l'utilisateur du type « fusionne cette PR » ou une fusion effectuée directement par l'utilisateur dans GitHub autorise l'intégration sur `main`. Un « vas-y », « continue », « améliore le jeu » ou « lance les tests » **n'autorise pas** la fusion. Un accord sur une PR ne s'étend jamais aux PR suivantes.
+- **Interdictions :** ne pas activer GitHub Auto-merge, ne pas programmer de workflow/bot de fusion, ne pas utiliser une commande de fusion avant validation humaine. Cette règle s'applique également aux correctifs, à la documentation et aux modifications de la présente politique.
+- **Contrôles avant proposition :** relire le diff, comparer au `main` actuel, vérifier les sauvegardes historiques, l'équilibrage et les tests pertinents ; exécuter `npm test`, `npm run test:parity` lorsque les règles sont inchangées, `npm run build`, vérifier `JOUER.html` et effectuer des parcours navigateur desktop/mobile si l'interface change. Ne jamais qualifier une CI absente, incomplète ou rouge de « verte ».
+- **Après autorisation explicite uniquement :** revérifier le commit `head`, la branche cible, les tests, les éventuels conflits et les mises à jour depuis la revue. Ne jamais écraser `main` ni forcer l'historique. Si la PR a changé ou si un contrôle échoue, suspendre et demander une nouvelle décision au besoin.
+- **Continuité :** le joueur teste quand il le souhaite ; les évolutions peuvent rester sur des branches et des PR ouvertes sans être fusionnées. À chaque fin de session, enregistrer le code et l'état du travail sur la branche, sans publier une nouvelle version stable sans accord.
 
 ## Règle permanente — architecture modulaire et qualité du code
 
