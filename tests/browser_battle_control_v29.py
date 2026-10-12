@@ -6,6 +6,61 @@ from browser_class_skills_v28 import make_page
 ROOT=Path(__file__).resolve().parents[1]
 IDS=['seal_silence','mist_inquisitor','transposition','portal_walker','rune_trap','sylvan_trapper']
 
+
+async def check_hand_countdowns(page,label):
+    """UI seulement : états, compteurs, focus, responsive et animation réduite."""
+    await page.evaluate('''()=>{
+      battle.heroes.p.hand=[
+        {id:'militia',wait:0},{id:'dragon',wait:3},{id:'archer',wait:1}
+      ];
+      battle.heroes.p.cardsPlayed=0;persistBattle();render();
+    }''')
+    hand=page.locator('.hand .hand-card')
+    assert await hand.count()==3
+    assert await page.locator('.hand .hand-ready').count()==1
+    assert await page.locator('.hand .hand-waiting').count()==2
+    assert await hand.nth(0).locator('.hand-readiness').inner_text()=='✓ PRÊTE'
+    assert await hand.nth(1).locator('.hand-readiness').inner_text()=='◷ EN ATTENTE'
+    assert await hand.nth(1).locator('.cooldown-stamp b').inner_text()=='3'
+    assert await hand.nth(2).locator('.cooldown-stamp b').inner_text()=='1'
+    assert await hand.nth(1).get_attribute('aria-disabled')=='true'
+    assert '3 tours' in await hand.nth(1).get_attribute('aria-label')
+    # Les chiffres tiennent dans les cartes et les étiquettes ne sont pas tronquées.
+    measures=await page.evaluate('''()=>{
+      const cards=[...document.querySelectorAll('.hand .hand-card')];
+      return cards.map(c=>{
+        const badge=c.querySelector('.hand-readiness'),stamp=c.querySelector('.cooldown-stamp');
+        const b=badge.getBoundingClientRect(),r=c.getBoundingClientRect(),s=stamp?.getBoundingClientRect();
+        return {readable:parseFloat(getComputedStyle(badge).fontSize)>=10,
+          fits:b.left>=r.left&&b.right<=r.right&&(!s||(s.left>=r.left&&s.right<=r.right)),
+          labelFits:badge.scrollWidth<=badge.clientWidth+1};
+      });
+    }''')
+    assert all(m['readable'] and m['fits'] and m['labelFits'] for m in measures),measures
+    assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
+    await page.screenshot(path=f'/tmp/ca-hand-countdowns-{label}.png',full_page=True)
+    await hand.nth(0).click()
+    assert await page.locator('.hand .hand-ready.selected').count()==1
+    # L'option d'animation existante et la préférence d'accessibilité priment.
+    await page.locator('[data-action="toggle-animations"]').click()
+    assert await page.locator('.hand .timer-motion').count()==0
+    await page.locator('[data-action="toggle-animations"]').click()
+    await page.emulate_media(reduced_motion='reduce')
+    assert await page.locator('.hand .hand-waiting .cooldown-stamp').first.evaluate('(el)=>getComputedStyle(el).animationName')=='none'
+    await page.emulate_media(reduced_motion='no-preference')
+    # Le temps de jeu et le format de sauvegarde sont conservés.
+    before=await page.evaluate('Object.keys(JSON.parse(__saves.couronnes_arcanes_bataille_v1)).sort()')
+    await page.evaluate('''()=>{
+      battle.heroes.p.hand[1].wait=0;persistBattle();render();
+    }''')
+    assert await page.locator('.hand .hand-ready').count()==2
+    assert await page.locator('.hand .hand-waiting').count()==1
+    after=await page.evaluate('Object.keys(JSON.parse(__saves.couronnes_arcanes_bataille_v1)).sort()')
+    assert before==after
+    assert await page.evaluate('battle.heroes.p.hand[1].wait')==0
+    # La sélection de démonstration ne doit pas influencer les étapes de combat suivantes.
+    await page.evaluate('()=>{selectedCard=-1;render()}')
+
 async def play(page,id,lane):
     await page.evaluate('(id)=>{battle.heroes.p.hand=[{id,wait:0}];battle.heroes.p.cardsPlayed=0;render()}',id)
     await page.locator('.hand [data-action="select-card"]').click()
@@ -28,6 +83,7 @@ async def run(browser,label,viewport):
         assert len(await card.locator('.card-detail').inner_text())>50
     await page.locator('#nav [data-page="campaign"]').click()
     await page.locator('[data-action="start-mission"][data-id="01"]').click()
+    await check_hand_countdowns(page,label)
     await page.evaluate('''()=>{
       window.__unit=(id,side,uid,ability='')=>({uid,id,side,atk:2,hp:20,maxhp:20,armor:0,ranged:false,ability,stun:0,poison:0,poisonTurns:0});
       battle.heroes.e.hand=[];battle.heroes.e.deck=[];battle.heroes.e.discard=[];
