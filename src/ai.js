@@ -2,6 +2,7 @@
 // Évalue l'état public du plateau et les cartes réellement présentes dans sa propre main.
 import {CARDS,GUARD_IDS,CHARGE_IDS} from './data.js';
 import {silenceTarget,silenceValue,teleportPlan,teleportGain,trapPlan} from './engine/battle-control.js';
+import {accelerationTarget} from './engine/tempo.js';
 export const AI_STYLES = Object.freeze({
  equilibre:{name:'Équilibré',desc:'Combine attaque, défense et opportunités de cartes.'},
  assaut:{name:'Assaut',desc:'Favorise les unités offensives et les percées rapides.'},
@@ -88,6 +89,12 @@ function scoreOption(b,card,laneInfo){
   if(plan&&threats.some(({u,col})=>col<plan.col&&u.stun<=0)){
    score=4+Math.min(20,urgency)*.5;reason='Préparer une embuscade';
   }
+ }else if(ability==='spell_hasten'){
+  const target=accelerationTarget(b,'e');
+  if(target){score=5+Math.min(2,target.wait)*2.4;reason='Accélérer une carte en attente';}
+ }else if(ability==='spell_slow'){
+  // Score fixe : aucune lecture des cartes privées du joueur pour décider.
+  score=6;reason='Ralentir la main adverse';
  }else if(ability==='spell_ward'){
   const room=Math.max(0,15-hero.shield);
   if(room>0){score=room>=5?2+Math.min(5,room)*.5+Math.min(25,urgency)*.38 : -Infinity;

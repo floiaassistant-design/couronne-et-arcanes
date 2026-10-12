@@ -2,7 +2,7 @@
 
 ## Version stable et coordination multi-sessions — PRIORITAIRE
 
-- **Base courante : V2.9 (après intégration de la PR V2.9)**. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
+- **Base courante : V2.10, issue de V2.9**. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
 - **Ne jamais copier une ancienne version par-dessus la dernière version.** La copie V1.2 avait écrasé huit fichiers de V2.7 le 11/10/2026 ; les fichiers ont été récupérés depuis le commit local `145a2e8`.
 - **Une branche par agent/session** lorsque plusieurs agents développent en parallèle. Un seul intégrateur fusionne après comparaison des modifications et exécution des tests.
 - **Anti-écrasement :** vérifier l'état GitHub avant chaque publication ; si la branche cible a avancé, fusionner les changements utiles et ne jamais forcer la réécriture de l'historique.
@@ -34,6 +34,14 @@
 10. **Privilégier lisibilité et stabilité.** Un fichier légèrement plus long mais cohérent vaut mieux qu'un découpage confus. Les performances, la simplicité et la capacité d'un nouvel agent à reprendre le travail priment sur un quota arbitraire de lignes.
 
 **Contrôle préalable obligatoire :** identifier les modules concernés, leurs dépendances et tests avant de coder. **Contrôle final obligatoire :** rechercher les doublons, les responsabilités mélangées, les imports circulaires et les fichiers devenus trop volumineux ; les réorganiser si utile, puis documenter les exceptions justifiées.
+
+## V2.10 — compte à rebours tactique
+
+- `src/engine/tempo.js` réalise exclusivement le ciblage et la modification déterministes des valeurs `wait` de la main ; les propriétés existantes de sauvegarde restent intactes.
+- Élan des Heures (`hourglass_surge`) : −2 tours sur la carte alliée la plus lente (égalité : premier indice), interdit sans cible.
+- Nœud du Temps (`time_bind`) : +2 tours sur la carte adverse la plus proche d'être disponible (égalité : premier indice), plafond 6, identité non révélée dans le journal ; interdit sans cible éligible.
+- Le moteur peut cibler la main adverse lors de la résolution ; `src/ai.js` n'a jamais accès au contenu de la main privée du joueur pour ses choix.
+- Tests dédiés : `tests/tempo_v210.test.mjs` + contrôles historiques, build synchronisé et navigateur. Aucun remplacement d'anciennes données de carte.
 
 ## V2.9 — contrôles du champ de bataille
 

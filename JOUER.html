@@ -487,6 +487,7 @@ function guideUI(){const steps=[
  ['Apprenez les compétences de classe','Dans la Collection, apprenez des cartes réservées à votre classe aux niveaux 3 et 6 en échange d’éclats. Une carte de classe incompatible doit être retirée du deck avant de changer de héros.'],
  ['Contrôlez le terrain','Les six cartes de contrôle sont fabriquables en Alchimie avec l’or et les éclats du jeu, ou obtenables dans les paquets. Silence : suspend Poison, Soin, Inspiration, Impact de zone, Vol de vie, Perforation, Célérité, Charge, Riposte et les capacités de contrôle. Armure, Distance, Vol, Garde, Concorde et bonus déjà appliqués sont conservés. Un tour de répit suit chaque silence ; le poison déjà appliqué continue.'],
  ['Changez de ligne et préparez un piège','Faille : choisissez une ligne d’arrivée ; l’allié le plus avancé d’une autre ligne rejoint la même colonne libre (égalité : ligne la plus haute). La case devant la couronne adverse est exclue. Une téléportation par unité et par tour. Les pièges sont publics, persistent trois résolutions et se déclenchent quand un ennemi entre sur leur case par déplacement ou téléportation ; une case survolée ne les déclenche pas.'],
+ ['Maîtrisez le temps','Élan des Heures réduit de deux tours le compteur de votre carte en attente la plus lente. Nœud du Temps ajoute deux tours au compteur d’une carte ennemie sans révéler son identité (maximum six). Ces sorts consomment une action parmi les deux cartes jouables par tour et sont fabricables en Alchimie.'],
  ['Progressez en jouant','Chaque victoire apporte de l’expérience au héros. Les cartes réellement jouées gagnent en maîtrise (les unités reçoivent +1 PV au rang 3 ; les sorts gagnent des insignes). Les niveaux de héros 5 et 9 donnent chacun +1 bouclier.'],
  ['Améliorez votre armée','Chaque victoire apporte de l’or, des éclats et parfois une carte. Modifiez votre deck, équipez votre héros et choisissez votre classe.'],
     ['Gravissez la Tour','La Tour des Couronnes propose 20 épreuves. Les étages de gardiens 5, 10, 15 et 20 peuvent offrir une carte exclusive.'],
@@ -598,7 +599,12 @@ const controlCards=[
  ['rune_trap','Piège runique','sort','commun',2,0,0,'spell_trap','⌁','Arme une case centrale libre (3, puis côté allié, puis opposé). Le prochain ennemi qui y arrive subit 3 dégâts avant armure. Dure 3 résolutions ; 2 pièges par camp maximum, visibles.'],
  ['sylvan_trapper','Trappeur sylvestre','sylve','commun',2,2,5,'trapper','⌁','Arme la case libre devant lui entre les colonnes 2 et 4, tous les 3 tours. Le prochain ennemi qui y arrive subit 1 dégât avant armure et perd son déplacement et son attaque de cette résolution. Piège visible, durée 3 résolutions.']
 ];
-raw.push(...expansion,...classCards,...controlCards);
+// V2.10 : sortilèges de tempo, sans modification des cartes précédentes.
+const tempoCards=[
+ ['hourglass_surge','Élan des Heures','sort','rare',1,0,0,'spell_hasten','◷','Réduit de 2 tours l’attente de la carte alliée la plus lente en main (égalité : première à gauche). Nécessite une autre carte en attente.'],
+ ['time_bind','Nœud du Temps','sort','rare',2,0,0,'spell_slow','⌛','Retarde de 2 tours une carte de la main adverse parmi les plus proches d’être prêtes, sans révéler son identité (maximum 6 tours).']
+];
+raw.push(...expansion,...classCards,...controlCards,...tempoCards);
 const CARDS = Object.fromEntries(raw.map(([id,name,faction,rarity,delay,attack,hp,ability,icon,description]) =>
  [id,{id,name,faction,rarity,delay,attack,hp,ability,icon,description,type:ability.startsWith('spell_')?'sort':'unité',heroClass:CLASS_SKILLS[id]?.hero||null}]));
 
@@ -687,6 +693,7 @@ Object.assign(__exports,{CLASS_SKILLS,CARDS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPO
 // Évalue l'état public du plateau et les cartes réellement présentes dans sa propre main.
 const {CARDS,GUARD_IDS,CHARGE_IDS}=__load("src/data.js");
 const {silenceTarget,silenceValue,teleportPlan,teleportGain,trapPlan}=__load("src/engine/battle-control.js");
+const {accelerationTarget}=__load("src/engine/tempo.js");
 const AI_STYLES = Object.freeze({
  equilibre:{name:'Équilibré',desc:'Combine attaque, défense et opportunités de cartes.'},
  assaut:{name:'Assaut',desc:'Favorise les unités offensives et les percées rapides.'},
@@ -773,6 +780,12 @@ function scoreOption(b,card,laneInfo){
   if(plan&&threats.some(({u,col})=>col<plan.col&&u.stun<=0)){
    score=4+Math.min(20,urgency)*.5;reason='Préparer une embuscade';
   }
+ }else if(ability==='spell_hasten'){
+  const target=accelerationTarget(b,'e');
+  if(target){score=5+Math.min(2,target.wait)*2.4;reason='Accélérer une carte en attente';}
+ }else if(ability==='spell_slow'){
+  // Score fixe : aucune lecture des cartes privées du joueur pour décider.
+  score=6;reason='Ralentir la main adverse';
  }else if(ability==='spell_ward'){
   const room=Math.max(0,15-hero.shield);
   if(room>0){score=room>=5?2+Math.min(5,room)*.5+Math.min(25,urgency)*.38 : -Infinity;
@@ -986,6 +999,50 @@ function prepareControlUnits(b,hooks){
 }
 
 Object.assign(__exports,{CONTROL_IDS,silenced,activeAbility,silenceValue,canSilence,silenceTarget,applySilence,teleportDestinationError,teleportPlan,teleportGain,teleportUnit,trapPlan,placeTrap,triggerTrap,expireControl,controlTargetError,resolveControlSpell,prepareControlUnits});
+
+},
+"src/engine/tempo.js":function(__exports,__load){
+// Compte à rebours tactique : règles indépendantes du DOM et des sauvegardes.
+const {CARDS}=__load("src/data.js");
+const TEMPO_IDS=Object.freeze(['hourglass_surge','time_bind']);
+const TEMPO_MAX_WAIT=6;
+const wait=c=>Number.isFinite(c?.wait)?Math.max(0,Math.trunc(c.wait)):0;
+const options=(hand,allow)=>(hand||[]).map((card,index)=>({card,index,wait:wait(card)})).filter(allow);
+// Choisir l'attente la plus longue, puis la carte la plus à gauche.
+function accelerationTarget(b,side){
+ return options(b.heroes?.[side]?.hand,x=>x.wait>0).sort((a,z)=>z.wait-a.wait||a.index-z.index)[0]||null;
+}
+// Choisir la carte adverse la plus proche d'être jouable, sans communiquer son ID.
+function obstructionTarget(b,side){
+ const other=side==='p'?'e':'p';
+ return options(b.heroes?.[other]?.hand,x=>x.wait<TEMPO_MAX_WAIT).sort((a,z)=>a.wait-z.wait||a.index-z.index)[0]||null;
+}
+function tempoTargetError(b,side,card){
+ if(card.ability==='spell_hasten'&&!accelerationTarget(b,side))return 'Aucune autre carte de votre main ne possède un compte à rebours à accélérer.';
+ if(card.ability==='spell_slow'&&!obstructionTarget(b,side))return 'Aucune carte adverse ne peut être ralentie.';
+ return '';
+}
+function resolveTempoSpell(b,side,card,note){
+ if(card.ability==='spell_hasten'){
+  const target=accelerationTarget(b,side);if(!target)return false;
+  target.card.wait=Math.max(0,target.wait-2);
+  note(b,side==='p'
+   ? `Élan des Heures : ${CARDS[target.card.id]?.name||'une carte'} passe de ${target.wait} à ${target.card.wait} tour(s) d’attente.`
+   : 'L’ennemi accélère une carte de sa main.');
+  return true;
+ }
+ if(card.ability==='spell_slow'){
+  const target=obstructionTarget(b,side);if(!target)return false;
+  target.card.wait=Math.min(TEMPO_MAX_WAIT,target.wait+2);
+  note(b,side==='p'
+   ? 'Nœud du Temps : une carte de la main ennemie est retardée de 2 tours (maximum 6).'
+   : 'L’ennemi retarde une de vos cartes de 2 tours (maximum 6).');
+  return true;
+ }
+ return false;
+}
+
+Object.assign(__exports,{TEMPO_IDS,TEMPO_MAX_WAIT,accelerationTarget,obstructionTarget,tempoTargetError,resolveTempoSpell});
 
 },
 "src/talents.js":function(__exports,__load){
@@ -1292,6 +1349,7 @@ const {rankEnemyMoves}=__load("src/ai.js");
 const {classSkillTargetError,resolveClassSkill}=__load("src/engine/class-skills.js");
 const {silenced,activeAbility,controlTargetError,resolveControlSpell,prepareControlUnits,triggerTrap,expireControl}=__load("src/engine/battle-control.js");
 const {chosenTalents}=__load("src/talents.js");
+const {tempoTargetError,resolveTempoSpell}=__load("src/engine/tempo.js");
 const {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,masteryRank,EQUIPMENT,reputationLevel}=__load("src/engine/profile.js");
 const LANES=3, WIDTH=7;
 function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed/4294967296;}
@@ -1406,6 +1464,8 @@ function cast(b,side,id,lane){
   b.heroes[side].shield=Math.min(15,b.heroes[side].shield+5);
  }else if(['spell_silence','spell_teleport','spell_trap'].includes(c.ability)){
   resolveControlSpell(b,side,c,lane,controlHooks);
+ }else if(['spell_hasten','spell_slow'].includes(c.ability)){
+  resolveTempoSpell(b,side,c,note);
  }else if(c.heroClass){
   drawAfter=resolveClassSkill(b,side,c,lane,hit);
  }
@@ -1423,7 +1483,7 @@ function play(b,side,index,lane){
  const c=CARDS[hand.id];
  if(!c)return {ok:false,reason:'Carte inconnue.'};
  if(c.heroClass&&(side!=='p'||c.heroClass!==b.heroClass))return {ok:false,reason:'Compétence réservée à une autre classe.'};
- const targetError=classSkillTargetError(b,side,c,lane)||controlTargetError(b,side,c,lane);
+ const targetError=classSkillTargetError(b,side,c,lane)||controlTargetError(b,side,c,lane)||tempoTargetError(b,side,c);
  if(targetError)return {ok:false,reason:targetError};
  if(c.type==='unité'&&!spawn(b,side,hand.id,lane))return {ok:false,reason:'La case de déploiement est occupée.'};
  const drawAfter=c.type==='sort'?cast(b,side,hand.id,lane):0;
@@ -1802,6 +1862,7 @@ Object.assign(__exports,{dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDun
 const {CARDS,CLASS_SKILLS,TOWER_MAX}=__load("src/data.js");
 const {ownedCopies,grantBattleProgress,heroLevel}=__load("src/engine/profile.js");
 const {CONTROL_IDS}=__load("src/engine/battle-control.js");
+const {TEMPO_IDS}=__load("src/engine/tempo.js");
 function completeBattle(profile,mission,b){
  if(b.status!=='victory'&&b.status!=='defeat')return null;
  if(b.progressionGranted)return {victory:b.status==='victory',gold:0,shards:0,card:null,reputation:[],heroXp:0,levelShards:0,mastered:[]};
@@ -1860,7 +1921,7 @@ function learnClassSkill(profile,id){
  profile.collection[id]=(profile.collection[id]||0)+1;
  return {ok:true,cost:skill.shards};
 }
-const FUSION_RECIPES=['lancer','scoutcaptain','sunpriest','archdruid','vampire','graveknight','cannon','mechanist','tempest','aetherknight','dawnbastion','seraph','sundawn','arcflare',...CONTROL_IDS];
+const FUSION_RECIPES=['lancer','scoutcaptain','sunpriest','archdruid','vampire','graveknight','cannon','mechanist','tempest','aetherknight','dawnbastion','seraph','sundawn','arcflare',...CONTROL_IDS,...TEMPO_IDS];
 const FUSION_COSTS={'commun':{gold:12,shards:26},'rare':{gold:32,shards:64},'épique':{gold:85,shards:145},'légendaire':{gold:180,shards:290}};
 const EXTRACTION_SHARDS={'commun':8,'rare':18,'épique':44,'légendaire':90};
 function extractCard(p,id){
@@ -1998,7 +2059,7 @@ function battleUI(){const p=battle.heroes.p,e=battle.heroes.e;
  <div class="battle-grid" aria-label="Plateau de combat animé">${Array.from({length:3},(_,lane)=>`<div class="lane-row"><div class="lane-label">${['I','II','III'][lane]}</div><div class="lane-gate">♜</div>${Array.from({length:5},(_,i)=>battleCell(battle.board[lane][i+1],lane,i+1)).join('')}<div class="lane-gate enemy">♛</div></div>`).join('')}</div>
  <div class="vfx-controls"><span>Effets du combat : attaques, flèches, magie et déplacements.</span><button type="button" class="vfx-toggle" data-action="toggle-animations" aria-pressed="${animationsEnabled}">${animationsEnabled?'✦ Animations activées':'Animations désactivées'}</button></div>
  ${battle.mode==='dungeon'?`<div class="dungeon-battle-banner">♛ DONJON · ${battle.dungeonBonus?'Épreuve bonus':'Salle '+(battle.dungeonStage+1)+'/3'} · Les PV du héros sont conservés entre les combats (+6 PV après victoire).</div>`:''}
- <p class="control-tip">⊘ Silence : capacités déclenchées suspendues, attaques et traits passifs conservés. ✧ Téléportation : autre ligne, même colonne. ⌁ Pièges publics : déclenchés à l’arrivée d’un ennemi, deux par camp.</p>${preview?`<p class="teleport-preview" role="status">${preview}</p>`:''}
+ <p class="control-tip">⊘ Silence : capacités déclenchées suspendues, attaques et traits passifs conservés. ✧ Téléportation : autre ligne, même colonne. ⌁ Pièges publics : déclenchés à l’arrivée d’un ennemi, deux par camp. ◷ Tempo : accélérez vos cartes ou ralentissez une carte adverse.</p>${preview?`<p class="teleport-preview" role="status">${preview}</p>`:''}
  <p class="formation-tip">✦ CONCORDE : deux alliés du même Ordre gagnent +1 attaque. ⚡ CHARGE : +2 attaque après déplacement. ↶ RIPOSTE : 2 dégâts avant armure, une fois par tour au contact.</p>
  <div class="battle-tip"><span>← VOTRE COURONNE · VOS UNITÉS AVANCENT →</span><span>← L’ENNEMI AVANCE · COURONNE ADVERSE →</span></div>
  <div class="hand-panel"><div><div class="hand-header"><div><div class="section-caption">Votre main · ${p.hand.length} cartes</div><div class="selection-guide">${selectedCard>=0?'✦ Carte sélectionnée : choisissez l’une des trois lignes sur le plateau.':'Sélectionnez une carte disponible, puis cliquez sur une ligne.'}</div></div><span class="pill">${p.cardsPlayed}/2 jouées</span></div><div class="hand">${p.hand.map((c,i)=>cardUI(c.id,{compact:true,index:i,select:selectedCard===i,cooldown:c.wait})).join('')||'<div class="hint">Votre main est vide. Terminez le tour.</div>'}</div></div>

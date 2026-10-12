@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import {CARDS,CAMPAIGN,CLASS_SKILLS,towerMission} from '../src/data.js';
 import {freshProfile,normalizeProfile,createBattle,playPlayerCard,endPlayerTurn,modifyDeck,validateDeck,fuseCard,buyPack} from '../src/engine.js';
 import {rankEnemyMoves} from '../src/ai.js';
+import {TEMPO_IDS} from '../src/engine/tempo.js';
 import {CONTROL_IDS,silenced,applySilence,teleportDestinationError,teleportPlan,trapPlan,placeTrap,expireControl} from '../src/engine/battle-control.js';
 import {storeBattle,restoreBattle,SAVE_KEY,BATTLE_KEY} from '../src/ui/storage.js';
 const unit=(id,side,uid,extras={})=>({uid,id,side,hp:20,maxhp:20,atk:2,armor:0,ranged:CARDS[id].ability==='ranged',ability:CARDS[id].ability,stun:0,poison:0,poisonTurns:0,...extras});
@@ -17,10 +18,10 @@ function storage(){
 }
 test('V2.9 catalogue preserves all 68 V2.8 cards, campaign and 20 tower decks',()=>{
  const baseline=JSON.parse(readFileSync(new URL('./fixtures/catalogue_v28.json',import.meta.url)));
- assert.deepEqual(Object.fromEntries(Object.entries(CARDS).filter(([id])=>!CONTROL_IDS.includes(id))),baseline.cards);
+ assert.deepEqual(Object.fromEntries(Object.entries(CARDS).filter(([id])=>!CONTROL_IDS.includes(id)&&!TEMPO_IDS.includes(id))),baseline.cards);
  assert.deepEqual(CAMPAIGN,baseline.campaign);
  assert.deepEqual(Array.from({length:20},(_,i)=>towerMission(i+1)),baseline.tower);
- assert.equal(Object.keys(CARDS).length,74);assert.equal(Object.keys(CLASS_SKILLS).length,8);
+ assert.equal(Object.keys(CARDS).length,76);assert.equal(Object.keys(CLASS_SKILLS).length,8);
 });
 test('V2.9 silence selects dangerous ability deterministically, and rejects empty/passive targets',()=>{
  const b=combat();const initial=JSON.stringify(b);

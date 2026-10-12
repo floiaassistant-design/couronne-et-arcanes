@@ -94,7 +94,12 @@ const controlCards=[
  ['rune_trap','Piège runique','sort','commun',2,0,0,'spell_trap','⌁','Arme une case centrale libre (3, puis côté allié, puis opposé). Le prochain ennemi qui y arrive subit 3 dégâts avant armure. Dure 3 résolutions ; 2 pièges par camp maximum, visibles.'],
  ['sylvan_trapper','Trappeur sylvestre','sylve','commun',2,2,5,'trapper','⌁','Arme la case libre devant lui entre les colonnes 2 et 4, tous les 3 tours. Le prochain ennemi qui y arrive subit 1 dégât avant armure et perd son déplacement et son attaque de cette résolution. Piège visible, durée 3 résolutions.']
 ];
-raw.push(...expansion,...classCards,...controlCards);
+// V2.10 : sortilèges de tempo, sans modification des cartes précédentes.
+const tempoCards=[
+ ['hourglass_surge','Élan des Heures','sort','rare',1,0,0,'spell_hasten','◷','Réduit de 2 tours l’attente de la carte alliée la plus lente en main (égalité : première à gauche). Nécessite une autre carte en attente.'],
+ ['time_bind','Nœud du Temps','sort','rare',2,0,0,'spell_slow','⌛','Retarde de 2 tours une carte de la main adverse parmi les plus proches d’être prêtes, sans révéler son identité (maximum 6 tours).']
+];
+raw.push(...expansion,...classCards,...controlCards,...tempoCards);
 export const CARDS = Object.fromEntries(raw.map(([id,name,faction,rarity,delay,attack,hp,ability,icon,description]) =>
  [id,{id,name,faction,rarity,delay,attack,hp,ability,icon,description,type:ability.startsWith('spell_')?'sort':'unité',heroClass:CLASS_SKILLS[id]?.hero||null}]));
 

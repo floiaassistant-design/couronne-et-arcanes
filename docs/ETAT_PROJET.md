@@ -1,13 +1,11 @@
-# Couronnes & Arcanes — V2.9
+# Couronnes & Arcanes — V2.10
 
-- **Version : 2.9.0**, branche `feat/v2.9-battle-control`, intégration dans `main` après contrôles verts de la PR. Base distante de départ : V2.8, commit `5c362b7610526275aa7276e89c78a4825bac1409`.
-- **Livrable :** 74 cartes ; silence borné avec répit, téléportation latérale et pièges publics ; six nouvelles cartes obtenables en Alchimie et paquets. Les huit compétences exclusives V2.8 et les 68 cartes précédentes sont intactes.
-- **Architecture :** nouveau module pur `src/engine/battle-control.js`, partagé par moteur/IA/aperçus ; dégâts, armures, barrières et statistiques réutilisent le moteur. 19 modules dans l'export, 12 portraits partagés.
-- **Sauvegardes :** clés `couronnes_arcanes_v1` et `couronnes_arcanes_bataille_v1` conservées ; aucun champ nouveau obligatoire, aucune réinitialisation. Propriétaire/expiration des pièges et états des unités persistants.
-- **Contrôles locaux exécutés :** 165/165 tests Node, 60/60 parités historiques, build synchronisé ; Chromium V2.8/V2.9 bureau/mobile simulé, export autonome hors ligne, stockage réel/rechargement et parcours de fin de combat. Débordement de la main mobile corrigé.
-- **Simulations :** 20 480 scénarios comparatifs, rejoués à l'identique ; quatre classes × quatre compositions × deux niveaux × cinq variantes × huit adversaires × seize graines. Zéro état invalide, aucun combat inachevé, maximum observé 32 tours. Rapport : `BATTLE_CONTROL_V2_9.md`, données : `BATTLE_CONTROL_BENCHMARK_V2_9.json`.
-- **CI :** workflow étendu aux parcours V2.9 et aux simulations ; consulter les résultats de la PR et vérifier les SHA distants avant de fusionner. Aucun succès distant présumé.
-- **Limites :** bots heuristiques, pas de test physique ni d'équilibrage humain ; rencontres historiques inchangées, IA avec les nouvelles cartes vérifiée en laboratoire ; illustrations partagées et absence de réseau.
-- **Proposition V3.0 :** donjon original en trois salles avec des boss utilisant progressivement les trois contrôles ; mesurer sa difficulté avec les anciennes et nouvelles compositions avant intégration.
+- Base officielle avant évolution : V2.9 sur `main`, commit `91e69ae7acb94d92c67a656c82ec50f8ddd83d36`.
+- Branche de développement : `feat/v2.10-tempo-countdown`.
+- 76 cartes : deux nouveaux sorts de tempo, sans modification des 74 cartes antérieures, ni des rencontres historiques.
+- Module pur `src/engine/tempo.js` pour le ciblage et les effets ; IA, combat, alchimie et Guide adaptés. Même format de sauvegarde (`wait` sur les cartes en main).
+- Tests : `tests/tempo_v210.test.mjs`, suites historiques, 60 parités, compilation autonome et contrôle navigateur/équilibrage à vérifier dans la CI de la PR.
+- Limites : aucune nouvelle unité chronomancienne ; IA heuristique ; pas de preuve de test sur téléphone physique.
+- Après V2.10 : donjon tactique original, puis équilibrage en situation.
 
-GitHub reste la source de vérité. Toujours reprendre le dernier `main`, préserver les décisions techniques et utiliser une PR contrôlée. La fusion est autorisée sans test manuel du joueur si les portes obligatoires passent.
+Après validation et fusion de la PR V2.10, `main` devient la référence stable ; conserver l'historique GitHub.
