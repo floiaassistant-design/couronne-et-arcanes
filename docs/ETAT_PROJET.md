@@ -15,6 +15,7 @@ GitHub est la source de vérité ; aucune archive ne doit écraser une version p
 
 - La PR nº 6 a été réconciliée sur le nouveau `main` sans modifier les règles de validation des fusions. Les fonctionnalités des PR nº 8 et 9, les tests nouveaux et le rendu des cartes sont conservés.
 - `src/ai.js` utilise la géométrie réelle du plateau pour l'estimation des menaces sur la couronne et conserve les nouvelles décisions tactiques des sorts de tempo.
-- `JOUER.html` est à reconstruire depuis les sources combinées. **Contrôler le résultat GitHub Actions sur le dernier commit de la PR avant toute décision de fusion**.
-- Les chiffres de simulation cités plus haut correspondent à la PR nº 6 avant l'intégration de l'IA améliorée ; ils devront être revalidés sur la combinaison et ne préjugent pas des performances humaines.
+- `JOUER.html` a été régénéré depuis les sources combinées et contrôlé identique par la compilation GitHub Actions. La PR nº 6 reste ouverte et attend une revue humaine.
+- Les mesures du plateau ont été **revalidées sur la combinaison** par la CI #38235167355 : 6 144 combats comparatifs (3 072 par géométrie), 20 480 scénarios de contrôle, aucun état invalide. 12,7 → 19,4 tours moyens et 1 806 → 1 866 victoires des bots joueurs, résultats cohérents avec l'ancien rapport ; ils ne prouvent pas l'équilibrage humain.
+- Contrôles sur le commit de code `dd12378e9e5482fe3d4fa1aef4ee328137930c68` : **219 tests Node, 60 parités, build autonome synchronisé, Chromium desktop/mobile/paysage, reprises anciennes et hors ligne : tous réussis**, [CI GitHub](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/38235167355). Aucun téléphone physique testé.
 - **La PR nº 6 doit rester ouverte tant que l'utilisateur n'a pas donné une autorisation de fusion spécifique.**
