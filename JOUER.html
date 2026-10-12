@@ -726,7 +726,19 @@ function inspectEnemyLane(b,lane){
  return {lane,threats,friends,frontline,urgency,guard,entryFree:!alive(row[enemyEntry])};
 }
 
-function scoreOption(b,card,laneInfo){
+// Estimation limitée au plateau public : une unité interposée ou un gardien
+// empêche de compter un coup direct sur la couronne au prochain combat.
+function crownRisk(laneInfo){
+ if(laneInfo.guard)return 0;
+ return laneInfo.threats.reduce((sum,{u,col})=>{
+  if((u.stun||0)>0||!(col>=4||(col===3&&u.ability==='haste')))return sum;
+  const range=u.ranged?2:1;
+  if(laneInfo.friends.some(x=>x.col>col&&x.col-col<=range))return sum;
+  return sum+Math.max(1,u.atk)+(CHARGE_IDS.has(u.id)&&col<5?2:0);
+ },0);
+}
+
+function scoreOption(b,card,laneInfo,context){
  const {urgency,threats,friends,frontline,guard}=laneInfo;
  const hero=b.heroes.e,enemyHero=b.heroes.p;
  if(card.type==='unité'){
@@ -734,6 +746,9 @@ function scoreOption(b,card,laneInfo){
   const synergy=friends.filter(({u})=>CARDS[u.id]?.faction===card.faction).length;
   let score=4.4+card.attack*.65+card.hp*.17;
   score+=Math.min(22,urgency)*.75;
+  // L'unité invoquée sur la case d'entrée 5 fait écran face à une attaque proche.
+  if(context.risks[laneInfo.lane]>0&&threats.some(x=>x.col===4))
+   score+=Math.min(14,5+context.risks[laneInfo.lane]*1.7);
   score+=synergy?5.2+Math.min(2,synergy)*1.3:0;
   score+=threats.length&&card.ability==='ranged'?3.1:0;
   score+=threats.length&&card.ability==='pierce'&&threats.some(({u})=>(u.armor||0)>0)?4:0;
@@ -754,17 +769,25 @@ function scoreOption(b,card,laneInfo){
  const hpLoss=Math.max(0,hero.maxhp-hero.hp);
  const injured=friends.reduce((n,{u})=>n+Math.max(0,u.maxhp-u.hp),0);
  if(ability==='spell_bolt'){
-  if(frontline){score=5+Math.min(4,frontline.u.hp)*1.2+Math.min(25,urgency)*.72+(frontline.u.hp<=Math.max(1,4-(frontline.u.armor||0))?5:0);reason='Éliminer une menace';}
+  if(frontline){score=5+Math.min(4,frontline.u.hp)*1.2+Math.min(25,urgency)*.72+(frontline.u.hp<=Math.max(1,4-(frontline.u.armor||0))?5:0);if(context.risks[laneInfo.lane]>0&&frontline.u.hp<=Math.max(1,4-(frontline.u.armor||0)))
+    score+=Math.min(20,6+context.risks[laneInfo.lane]*2);
+   reason='Éliminer une menace';}
   else if(enemyHero.hp<=2){score=100;reason='Achever la couronne';}
  }else if(ability==='spell_storm'){
   if(threats.length){const damage=threats.reduce((n,{u})=>n+Math.min(u.hp,Math.max(1,3-(u.armor||0))),0);
    score=2+damage*1.25+threats.length*2.5+Math.min(22,urgency)*.45;
+   if(context.risks[laneInfo.lane]>0)
+    score+=Math.min(18,context.risks[laneInfo.lane]*2)*(threats.some(x=>x.u.hp<=3)?1:.3);
    reason='Dissiper l’assaut';}
  }else if(ability==='spell_root'){
-  if(frontline&&frontline.u.stun<=0){score=3+Math.min(25,urgency)*.55+(frontline.col>=4?5:0);reason='Immobiliser l’avant-garde';}
+  if(frontline&&frontline.u.stun<=0){score=3+Math.min(25,urgency)*.55+(frontline.col>=4?5:0);
+   if(context.risks[laneInfo.lane]>0&&frontline.col>=4)
+    score+=Math.min(14,4+context.risks[laneInfo.lane]*1.8);
+   reason='Immobiliser l’avant-garde';}
  }else if(ability==='spell_heal'){
   if(hpLoss||injured){score=1+Math.min(5,hpLoss)*1.15+Math.min(injured,friends.length*2)*1.2+Math.min(25,urgency)*.2;
    if(hero.hp<=8)score+=8;
+   if(context.lethal&&hero.hp+hero.shield+Math.min(5,hpLoss)>context.incoming)score+=20;
    reason='Soigner les blessés';}
  }else if(ability==='spell_buff'){
   if(friends.length){score=1+friends.length*4.2+Math.min(20,urgency)*.18;
@@ -782,13 +805,33 @@ function scoreOption(b,card,laneInfo){
   }
  }else if(ability==='spell_hasten'){
   const target=accelerationTarget(b,'e');
-  if(target){score=5+Math.min(2,target.wait)*2.4;reason='Accélérer une carte en attente';}
+  if(target){
+   const pending=CARDS[target.card.id],slots=Math.max(0,2-(hero.cardsPlayed||0));
+   const canFollow=slots>=2&&target.wait<=2;
+   score=5+Math.min(2,target.wait)*2.4;
+   if(canFollow&&pending){
+    // Le sort prend de la valeur s'il permet de jouer une seconde carte utile.
+    const bestLane=Math.max(0,...context.rows.map(row=>pending.type==='unité'&&row.entryFree
+     ?4.4+pending.attack*.65+pending.hp*.17+Math.min(22,row.urgency)*.75:0));
+    score+=3+Math.min(17,bestLane)*.8;
+    if(pending.type==='sort')score+=4;
+    reason='Préparer une seconde carte';
+   }else if(slots<=1)score-=4;
+   else if(target.wait>2)score-=2;
+   if(context.lethal)score-=Math.min(12,context.incoming*2);
+   reason=canFollow&&pending?'Préparer une seconde carte':'Accélérer une carte en attente';
+  }
  }else if(ability==='spell_slow'){
   // Score fixe : aucune lecture des cartes privées du joueur pour décider.
-  score=6;reason='Ralentir la main adverse';
+  score=context.lethal?-20:6-(context.incoming?Math.min(9,context.incoming*1.5):0);
+  reason='Ralentir la main adverse';
  }else if(ability==='spell_ward'){
   const room=Math.max(0,15-hero.shield);
   if(room>0){score=room>=5?2+Math.min(5,room)*.5+Math.min(25,urgency)*.38 : -Infinity;
+   if(context.incoming>0){
+    score+=Math.min(10,context.incoming*1.4);
+    if(context.lethal&&hero.hp+hero.shield+Math.min(5,room)>context.incoming)score+=22;
+   }
    reason='Protéger la couronne';}
  }
  if(!Number.isFinite(score))return null;
@@ -837,10 +880,13 @@ function rankEnemyMoves(b){
  if(!b||b.status!=='active'||!b.heroes?.e)return [];
  const rows=Array.from({length:3},(_,lane)=>inspectEnemyLane(b,lane));
  const results=[];
+ const risks=rows.map(crownRisk),incoming=risks.reduce((sum,n)=>sum+n,0);
+ const hero=b.heroes.e;
+ const context={rows,risks,incoming,lethal:incoming>=Math.max(1,hero.hp+(hero.shield||0))};
  b.heroes.e.hand.forEach((entry,index)=>{
   const card=CARDS[entry.id];if(!card||entry.wait>0) return;
   rows.forEach(row=>{
-   const rank=scoreOption(b,card,row);
+   const rank=scoreOption(b,card,row,context);
    if(rank&&rank.score+personalityBonus(b,card,row)>0)results.push({index,lane:row.lane,id:entry.id,...rank,score:rank.score+personalityBonus(b,card,row)});
   });
  });
