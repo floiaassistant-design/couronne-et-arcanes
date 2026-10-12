@@ -3,6 +3,8 @@ import {CARDS,CLASSES,TOWER_MAX} from '../data.js';
 import {dungeonById} from '../dungeons.js';
 import {TALENT_LEVELS,talentInfo,normalizeTalentChoices} from '../talents.js';
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+const safeCount=(n,fallback=0,max=1000000000)=>Number.isSafeInteger(n)&&n>=0?Math.min(n,max):fallback;
+const objectOf=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{};
 export const ownedCopies=(meta,id)=>meta.collection[id]||0;
 export function freshProfile(){return {
  version:1,name:'Souverain des Couronnes',heroClass:'gardien',gold:110,shards:50,stars:0,heroXp:0,mastery:{},talents:{},
@@ -12,9 +14,24 @@ export function freshProfile(){return {
 };}
 export function normalizeProfile(raw){
  const base=freshProfile();if(!raw||typeof raw!=='object')return base;
- const p={...base,...raw,collection:{...base.collection,...(raw.collection||{})},
-   upgrades:{...(raw.upgrades||{})},buildings:{...base.buildings,...(raw.buildings||{})},
-   reputation:{...base.reputation,...(raw.reputation||{})},equipped:{...base.equipped,...(raw.equipped||{})}};
+ const p={...base,...raw,collection:{...base.collection,...objectOf(raw.collection)},
+   upgrades:{...objectOf(raw.upgrades)},buildings:{...base.buildings,...objectOf(raw.buildings)},
+   reputation:{...base.reputation,...objectOf(raw.reputation)},equipped:{...base.equipped,...objectOf(raw.equipped)}};
+ for(const key of ['gold','shards','stars','wins','losses'])p[key]=safeCount(raw[key],base[key]);
+ for(const [id,qty] of Object.entries(p.collection)){
+  if(!CARDS[id])delete p.collection[id];
+  else p.collection[id]=safeCount(qty,0,100000);
+ }
+ for(const [id,level] of Object.entries(p.upgrades)){
+  if(!CARDS[id]||CARDS[id].type==='sort')delete p.upgrades[id];
+  else p.upgrades[id]=safeCount(level,0,3);
+ }
+ for(const [name,max] of Object.entries({bastion:3,forge:3,bibliotheque:2}))
+  p.buildings[name]=safeCount(p.buildings[name],0,max);
+ for(const faction of Object.keys(base.reputation))p.reputation[faction]=safeCount(p.reputation[faction],0,100000);
+ p.name=typeof raw.name==='string'?raw.name.slice(0,80):base.name;
+ if(typeof raw.lastBattleSettlementId!=='string')delete p.lastBattleSettlementId;
+ else p.lastBattleSettlementId=raw.lastBattleSettlementId.slice(0,256);
  p.heroXp=Number.isFinite(raw.heroXp)?clamp(Math.floor(raw.heroXp),0,1000000):0;
  p.talents=normalizeTalentChoices(raw.talents);
  p.mastery={};
