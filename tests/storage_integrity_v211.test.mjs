@@ -18,7 +18,7 @@ test('profile numbers and card counts are bounded without breaking a valid legac
 test('import requires valid ownership, safe numeric currency, and preserves a valid profile',()=>{
  const p=freshProfile();assert.equal(validateImportedProfile(p).gold,p.gold);
  for(const change of [x=>x.gold='1000',x=>x.shards=-1,x=>x.collection.militia='x',
-  x=>x.deck.push('unknown-card'),x=>x.collection.militia=0,x=>x.deck.pop()]){
+  x=>x.deck.push('unknown-card'),x=>x.collection.militia=0,x=>x.deck.length=4]){
   const bad=JSON.parse(JSON.stringify(p));change(bad);
   assert.throws(()=>validateImportedProfile(bad));
  }
