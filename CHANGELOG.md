@@ -1,3 +1,9 @@
+## Proposition — Décor céleste pixel art (12 octobre 2026, non fusionnée)
+
+- Fond original en WebP optimisé pour le plateau V2.11 et les anciens combats, placé sous la grille interactive.
+- Générateur autonome adapté pour embarquer le fichier graphique ; règles, IA, portraits et sauvegardes inchangés.
+- Provenance, droits d'usage et contrôles : `docs/ARENE_CELESTE.md`, `tests/arena_celeste.test.mjs`. Fusion uniquement avec autorisation spécifique.
+
 ## V2.11 — Arène fantasy lo-fi (2026-10-12, fusionnée sur main)
 
 - Dix cases jouables par ligne ; duels à deux lignes, rencontres avancées à trois et boss solo à quatre. Couronnes hors grille, déploiement aux extrémités.

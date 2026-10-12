@@ -225,3 +225,19 @@ body.animations-off .hand-card .hand-readiness,body.animations-off .hand-card .c
 .animations-off .arena-sky::after{animation:none}
 @media(prefers-reduced-motion:reduce){.arena-sky::after{animation:none}}
 @media(max-width:700px){.arena-lofi{padding:8px}.arena-lofi .battle-grid{padding-inline:5px}.arena-lofi .battle-hud{gap:9px}.arena-lofi .fighter h3{font-size:13px}.arena-caption{font-size:10px;letter-spacing:0}.arena-lofi .enemy-style-tag{font-size:10px}.arena-lofi .battle-mid{min-width:35px}}
+
+/* Arène céleste : décor uniquement, derrière les cases et les unités. */
+.arena-lofi .battle-grid::before{
+ content:"";position:absolute;left:0;top:0;height:100%;
+ width:max(100%,calc(var(--cells)*78px + 152px));
+ background-image:linear-gradient(180deg,#0b1c2c2b,#07152636 52%,#08132252),url("./assets/backgrounds/arena-celeste.webp");
+ background-size:cover;background-position:center center;background-repeat:no-repeat;
+ pointer-events:none;z-index:0
+}
+.arena-lofi .battle-grid>.arena-sky,.arena-lofi .battle-grid>.lane-row{position:relative;z-index:1}
+.arena-lofi .arena-sky{background:linear-gradient(180deg,#10273b09,#10273b2b);border-bottom-color:#d0ad735e}
+.arena-lofi .battle-cell{border-color:#e3d4aa73;background:linear-gradient(180deg,#10263627,#10233754);box-shadow:inset 0 0 0 1px #e1d0ad24,inset 0 -2px 0 #0a152344}
+.arena-lofi .battle-cell:nth-child(even){background-color:transparent}
+.arena-lofi .lane-gate{background:#17456bc7;border-color:#a3c7de99}
+.arena-lofi .lane-gate.enemy{background:#6d2747ba;border-color:#e8a8a077}
+.arena-lofi .battle-cell.available{background-color:#caaa5444}
