@@ -1,4 +1,4 @@
-# Couronnes & Arcanes — V2.10 (branche d'évolution)
+# Couronnes & Arcanes — V2.10
 
 - Base officielle avant évolution : V2.9 sur `main`, commit `91e69ae7acb94d92c67a656c82ec50f8ddd83d36`.
 - Branche de développement : `feat/v2.10-tempo-countdown`.
@@ -8,4 +8,4 @@
 - Limites : aucune nouvelle unité chronomancienne ; IA heuristique ; pas de preuve de test sur téléphone physique.
 - Après V2.10 : donjon tactique original, puis équilibrage en situation.
 
-`main` reste la référence stable tant que la PR n'est pas fusionnée.
+Après validation et fusion de la PR V2.10, `main` devient la référence stable ; conserver l'historique GitHub.
