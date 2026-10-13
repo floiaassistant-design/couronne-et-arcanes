@@ -33,6 +33,8 @@ jobs:
         run: npm run build:test
       - name: Parcours V2.8 ordinateur et téléphone simulé
         run: python3 tests/browser_class_skills_v28.py
+      - name: Nouvelle partie, raretés et reprise sur ordinateur et mobile
+        run: python3 tests/browser_new_game_legibility_v211.py
       - name: Parcours V2.9 et export autonome ordinateur et téléphone simulé
         run: python3 tests/browser_battle_control_v29.py
       - name: Simulations de contrôle reproductibles
