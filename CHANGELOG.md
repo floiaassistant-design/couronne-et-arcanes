@@ -1,3 +1,10 @@
+## Proposition — Arène structurée 4 × 10 (non fusionnée)
+- Quatre pistes de dalles pixel art calées sur les cellules : deux lignes centrales, trois premières ou quatre lignes actives.
+- Les pistes inactives restent visibles mais ne sont ni interactives ni sauvegardées dans le moteur.
+- Grille plus discrète hors sélection ; contour clair pour le déploiement ; couleur de camp, Ordre et rareté de la PR nº 12 préservés.
+- Batailles historiques 3 × 5 inchangées, avec tests DOM et navigateur dédiés.
+- Prototype CSS, sans nouvel asset : validation graphique humaine avant une version artistique définitive.
+
 ## Proposition V2.11.1 — Nouvelle aventure et lisibilité du plateau (branche dédiée, 2026-10-13)
 
 - Depuis la Citadelle : « Nouvelle partie » propose les quatre classes, puis exige une confirmation explicite avant de remplacer le profil actif. Un seul emplacement local « partie précédente » est conservé, y compris le combat en cours, avec une action permettant de passer de l'une à l'autre.
