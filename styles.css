@@ -471,7 +471,7 @@ body:has(.combat-screen) #view{
 }
 .combat-hand-dock .unit-card.hand-card .card-detail,
 .combat-hand-dock .unit-card.hand-card .card-traits{display:none}
-.combat-hand-dock .unit-card.hand-card .hand-readiness{font-size:9px}
+.combat-hand-dock .unit-card.hand-card .hand-readiness{font-size:10px}
 .combat-hand-dock .unit-card.hand-card .card-stats{
  margin-top:3px;gap:3px;flex-wrap:wrap
 }
@@ -532,7 +532,7 @@ body:has(.combat-screen) #view{
  .combat-hand-dock .unit-card.hand-card .card-stats{margin-top:0}
  .combat-hand-dock .unit-card.hand-card .stat{font-size:9px;padding:2px 3px}
  .combat-hand-dock .unit-card.hand-card .card-quality-tag{font-size:8px;margin:1px 0}
- .combat-hand-dock .unit-card.hand-card .hand-readiness{font-size:8px}
+ .combat-hand-dock .unit-card.hand-card .hand-readiness{font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){
  .combat-screen .combat-hand-dock .unit-card,
