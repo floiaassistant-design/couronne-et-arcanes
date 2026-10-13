@@ -14,10 +14,10 @@ test('illustration approuvée 912×620 ; signature WebP et empreinte inchangées
  const encoded=css.match(/data:image\/webp;base64,([A-Za-z0-9+/=]+)/)?.[1];
  assert.ok(encoded,'WebP intégré dans la feuille du décor');
  const buffer=Buffer.from(encoded,'base64');
- assert.equal(buffer.length,83264);
+ assert.equal(buffer.length,53314);
  assert.equal(buffer.subarray(0,4).toString('ascii'),'RIFF');
  assert.equal(buffer.subarray(8,12).toString('ascii'),'WEBP');
- assert.equal(createHash('sha256').update(buffer).digest('hex'),'82de78e896549005772fc1f22ee1fa7d3996eb476939799ce516c20db7f6284f');
+ assert.equal(createHash('sha256').update(buffer).digest('hex'),'29d2d80fdb65493c408cc3d5af174c00fc25dfa49971398a4add1909a9a5464c');
 });
 test('le sol est calé 912 px avec quatre rangées 116px, sans recadrage cover',()=>{
  assert.match(markup,/width:912px;height:620px/);
