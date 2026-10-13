@@ -1,3 +1,5 @@
+> **Proposition en cours au 13/10/2026 (non intégrée)** : branche `feat/nouvelle-partie-lisibilite-cartes` créée depuis `main` `58a028c5` (PR nº 10 déjà fusionnée). Nouvelle partie par choix de classe, emplacement de sauvegarde précédent récupérable, étiquettes camp/Ordre/rareté sur les unités et cadres renforcés sur les cartes. Les règles, l'IA, les statistiques et les identifiants sont inchangés. Attention : la PR nº 11 d'arène céleste est ouverte, avec modifications de `styles.css` et `JOUER.html` ; il faudra réconcilier les styles et régénérer l'export depuis les sources réunies après validation éventuelle. Aucun de ces travaux ne constitue une autorisation de fusion.
+
 # Couronnes & Arcanes — état courant V2.11 (12 octobre 2026)
 
 - **Version officielle : V2.11 sur `main`, commit `51c4d7ab3139a78296059a734f3baea693959e74`**, issu de la PR nº 6 fusionnée sur autorisation explicite du joueur. PR nº 7 (validation manuelle), nº 8 (interface) et nº 9 (IA) sont intégrées.

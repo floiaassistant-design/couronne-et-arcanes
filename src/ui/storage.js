@@ -1,7 +1,7 @@
 // Sauvegardes locales : validation rétrocompatible et clôture récupérable.
 import {freshProfile,normalizeProfile,validateDeck} from '../engine.js';
 import {supportedBoard,lastCell} from '../engine/board.js';
-import {CARDS} from '../data.js';
+import {CARDS,CLASSES} from '../data.js';
 export const SAVE_KEY='couronnes_arcanes_v1';
 export const BATTLE_KEY='couronnes_arcanes_bataille_v1';
 const hasCard=id=>typeof id==='string'&&Object.prototype.hasOwnProperty.call(CARDS,id);
@@ -49,3 +49,48 @@ export function storeBattle(battle){try{
  }else localStorage.removeItem(BATTLE_KEY);
  return true;
 }catch{return false;}}
+
+// Deux emplacements locaux au maximum : partie active et précédente.
+// Le changement est récupérable même si l'écriture de la nouvelle partie échoue.
+export const PREVIOUS_GAME_KEY='couronnes_arcanes_partie_precedente_v1';
+function gameSnapshot(){
+ return {profile:localStorage.getItem(SAVE_KEY)||JSON.stringify(loadProfile()),battle:localStorage.getItem(BATTLE_KEY)};
+}
+function writeGameSnapshot(snapshot){
+ localStorage.setItem(SAVE_KEY,snapshot.profile);
+ if(snapshot.battle===null)localStorage.removeItem(BATTLE_KEY);
+ else localStorage.setItem(BATTLE_KEY,snapshot.battle);
+}
+function switchGame(snapshot){
+ let current,previous;
+ try{
+  current=gameSnapshot();previous=localStorage.getItem(PREVIOUS_GAME_KEY);
+  localStorage.setItem(PREVIOUS_GAME_KEY,JSON.stringify(current));
+  writeGameSnapshot(snapshot);
+  return true;
+ }catch{
+  if(current){try{writeGameSnapshot(current);}catch{}}
+  if(previous!==undefined){try{
+   if(previous===null)localStorage.removeItem(PREVIOUS_GAME_KEY);
+   else localStorage.setItem(PREVIOUS_GAME_KEY,previous);
+  }catch{}}
+  return false;
+ }
+}
+export function startNewAdventure(classId){
+ if(!Object.prototype.hasOwnProperty.call(CLASSES,classId))return false;
+ const profile=freshProfile();profile.heroClass=classId;profile.guideSeen=true;
+ return switchGame({profile:JSON.stringify(profile),battle:null});
+}
+export function hasPreviousAdventure(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(PREVIOUS_GAME_KEY)||'null');
+  if(typeof saved?.profile!=='string'||!(saved.battle===null||typeof saved.battle==='string'))return false;
+  validateImportedProfile(JSON.parse(saved.profile));
+  return saved.battle===null||validStoredBattle(JSON.parse(saved.battle));
+ }catch{return false;}
+}
+export function restorePreviousAdventure(){
+ if(!hasPreviousAdventure())return false;
+ try{return switchGame(JSON.parse(localStorage.getItem(PREVIOUS_GAME_KEY)));}catch{return false;}
+}

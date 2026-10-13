@@ -235,6 +235,45 @@ body.animations-off .hand-card .hand-readiness,body.animations-off .hand-card .c
 @media(prefers-reduced-motion:reduce){.arena-sky::after{animation:none}}
 @media(max-width:700px){.arena-lofi{padding:8px}.arena-lofi .battle-grid{padding-inline:5px}.arena-lofi .battle-hud{gap:9px}.arena-lofi .fighter h3{font-size:13px}.arena-caption{font-size:10px;letter-spacing:0}.arena-lofi .enemy-style-tag{font-size:10px}.arena-lofi .battle-mid{min-width:35px}}
 
+
+/* Lisibilité des cartes : couleur de rareté prioritaire, distincte de l'état de jeu. */
+.unit-card[data-rarity="commun"]{--rarity-border:#c8d8df;--rarity-ink:#172935}
+.unit-card[data-rarity="rare"]{--rarity-border:#69dbf9;--rarity-ink:#092735}
+.unit-card[data-rarity="épique"]{--rarity-border:#d4a2ff;--rarity-ink:#2b1640}
+.unit-card[data-rarity="légendaire"]{--rarity-border:#ffd46b;--rarity-ink:#392602}
+.unit-card[data-rarity]{border:3px solid var(--rarity-border);box-shadow:inset 0 0 0 1px #0d1925,0 4px 14px #0007}
+.unit-card.hand-card.hand-ready,.unit-card.hand-card.hand-waiting{border-color:var(--rarity-border);box-shadow:inset 0 0 0 1px #111a26,0 5px 14px #0008}
+.unit-card.hand-card.selected{border-color:var(--rarity-border);outline:3px solid #fff0c0;outline-offset:2px;box-shadow:0 0 18px #ffdf8955}
+.unit-card .card-quality-tag{margin:4px 0 5px;background:var(--rarity-border);color:var(--rarity-ink);font:900 10px/1.25 ui-monospace,monospace;letter-spacing:.1em;text-align:center;padding:4px 3px;border-radius:3px;text-shadow:none}
+.unit-card.compact .card-quality-tag{font-size:9px;padding:3px 2px}
+.unit-card .card-rarity{font-weight:900;color:var(--rarity-border);font-size:10px;letter-spacing:.04em}
+.unit-card.compact .card-rarity{display:block;font-size:8px}
+.new-game-classes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:16px 0}
+.new-game-classes .btn{white-space:normal;min-height:48px}
+
+/* Plateau : code couleur du propriétaire + Ordre et rareté en toutes lettres. */
+.arena-lofi .unit-on-board{--unit-rarity:#c8d8df;--camp-color:#4dc5ec;outline:2px solid var(--unit-rarity);outline-offset:-3px;box-shadow:inset 0 0 0 3px var(--camp-color);border-radius:3px}
+.arena-lofi .unit-on-board[data-owner="e"]{--camp-color:#fa727b;background:#4c182646}
+.arena-lofi .unit-on-board[data-owner="p"]{background:#16435946}
+.arena-lofi .unit-on-board[data-rarity="rare"]{--unit-rarity:#69dbf9}
+.arena-lofi .unit-on-board[data-rarity="épique"]{--unit-rarity:#d4a2ff}
+.arena-lofi .unit-on-board[data-rarity="légendaire"]{--unit-rarity:#ffd46b}
+.arena-lofi .unit-on-board .board-identification{position:absolute;top:2px;left:3px;right:3px;z-index:6;display:flex;flex-direction:column;gap:1px;pointer-events:none;text-align:center}
+.arena-lofi .board-owner{display:block;background:#075474;color:#fff;border:1px solid #8decff;font:900 9px/1.1 ui-monospace,monospace;letter-spacing:.04em;padding:2px 0}
+.arena-lofi .unit-on-board.enemy .board-owner{background:#8a273c;border-color:#ffa0a7}
+.arena-lofi .board-faction{display:block;background:#0a192bf5;color:#fef5df;font:800 9px/1.15 ui-monospace,monospace;padding:1px 0}
+.arena-lofi .board-quality{display:block;background:#0a192bf5;color:var(--unit-rarity);font:900 8px/1.1 ui-monospace,monospace;text-transform:uppercase;padding:1px 0}
+.arena-lofi .unit-on-board .sprite-stage,.arena-lofi .unit-on-board:has(.formation-badge) .sprite-stage{inset:37px 0 25px}
+.arena-lofi .formation-badge{top:48px;left:2px;right:2px;font-size:7px;z-index:7}
+.arena-lofi .silence-badge{top:61px;z-index:8}
+.arena-lofi .unit-name{font-weight:900;background:#071426f5;color:#fff;font-size:9px;max-height:24px;overflow:hidden}
+.arena-lofi .unit-meta{background:#071426ef;color:#fff1d4;font-size:9px}
+.arena-legend{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font:800 10px/1.3 ui-monospace,monospace;margin:9px 3px;color:#d5e6e7}
+.arena-legend span{padding:5px 7px;background:#112433;border:1px solid #526f80}
+.arena-legend .legend-ally{border-color:#64d4ff;color:#b4ecff}
+.arena-legend .legend-enemy{border-color:#fa8796;color:#ffbcc2}
+@media(max-width:660px){.new-game-classes{grid-template-columns:1fr}.arena-legend{font-size:9px;gap:4px}.unit-card.hand-card .card-quality-tag{font-size:9px}}
+
 </style>
 </head>
 <body>
@@ -259,7 +298,7 @@ const __factories={
 "src/app.js":function(__exports,__load){
 const {createViews}=__load("src/ui/views.js");
 const {createCombatFx}=__load("src/ui/combat-fx.js");
-const {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile}=__load("src/ui/storage.js");
+const {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure}=__load("src/ui/storage.js");
 const {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
 const {AI_STYLES,aiStyle,aiEnraged}=__load("src/ai.js");
 const {TALENT_TREE,TALENT_LEVELS}=__load("src/talents.js");
@@ -273,7 +312,7 @@ const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='all',collectionOwned=false;
 let deferredBattleModal='',battleStorageWarning=false;
 const {stopBattleFx,playBattleFx}=createCombatFx(()=>({animationsEnabled,screen}));
-const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled}));
+const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
 function save(){if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
@@ -302,7 +341,7 @@ function num(n){return Math.round(n).toLocaleString('fr-FR');}
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2900);}
 function showModal(html){$('modal-root').innerHTML=`<div class="modal-backdrop"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;}
 function hideModal(){$('modal-root').innerHTML='';}
-function welcome(){if(profile.guideSeen)return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
+function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
 function render(){
  const arenaScroll=document.querySelector('.battle-grid')?.scrollLeft||0;
  stopBattleFx();document.body.classList.toggle('animations-off',!animationsEnabled);
@@ -370,8 +409,15 @@ function startMission(id){if(battle?.status==='active'){toast('Terminez le comba
  const invalid=validateDeck(profile);if(invalid){toast(invalid);screen='collection';render();return;}
  try{battle=createBattle(profile,mission);persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);}catch(e){toast(e.message);}}
 function navigate(page){if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();if(!['home','campaign','tower','dungeons','collection','alchemy','forge','guide','battle'].includes(page))return;screen=page;selectedCard=-1;render();window.scrollTo(0,0);}
+function switchToSavedAdventure(){stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();window.scrollTo(0,0);}
 function act(action,dataset){const {id,index,lane,page}=dataset;
  switch(action){
+
+  case 'new-game':showModal(`<div class="kicker">NOUVELLE PARTIE</div><h2>Choisir votre classe de départ</h2><p>Commencez une aventure à zéro avec une autre classe. Vous pouvez aussi changer de classe dans l’Atelier sans recommencer votre progression, après un combat.</p><div class="class-options new-game-classes">${Object.entries(CLASSES).map(([classId,c])=>btn(c.symbol+' '+c.name,'new-game-select',`data-id="${classId}"`,'ghost')).join('')}</div><p class="hint">La partie actuelle sera gardée dans un emplacement de sauvegarde précédent sur cet appareil. Exportez-la dans le Guide pour une copie durable.</p><div class="button-row">${btn('Annuler','close-modal','','ghost')}</div>`);break;
+  case 'new-game-select':if(!CLASSES[id])break;showModal(`<div class="kicker">CONFIRMATION</div><h2>Recommencer en ${esc(CLASSES[id].name)} ?</h2><p>Votre progression, votre collection, vos talents et votre combat actuel seront remplacés par une nouvelle aventure. Une copie de la partie précédente sera conservée dans ce navigateur (un seul emplacement).</p><div class="button-row">${btn('Oui, nouvelle partie','confirm-new-game',`data-id="${id}"`,'danger')}${btn('Non, revenir','close-modal','','ghost')}</div>`);break;
+  case 'confirm-new-game':if(!startNewAdventure(id)){toast('Nouvelle partie impossible : stockage local indisponible.');break;}switchToSavedAdventure();toast('Nouvelle aventure commencée en '+CLASSES[id].name+'.');break;
+  case 'restore-previous-game':if(!hasPreviousAdventure()){toast('Aucune partie précédente disponible.');break;}showModal(`<div class="kicker">PARTIE PRÉCÉDENTE</div><h2>Échanger les deux parties ?</h2><p>La partie précédente (y compris son combat sauvegardé) sera rétablie. Votre partie actuelle prendra sa place dans l’emplacement précédent.</p><div class="button-row">${btn('Oui, retrouver la partie','confirm-restore-previous-game','','primary')}${btn('Annuler','close-modal','','ghost')}</div>`);break;
+  case 'confirm-restore-previous-game':if(!restorePreviousAdventure()){toast('Restauration impossible : vérifiez le stockage local.');break;}switchToSavedAdventure();toast('Partie précédente retrouvée.');break;
  case 'home':navigate('home');break;
  case 'nav':navigate(page);break;
  case 'start-next':startMission(CAMPAIGN[Math.min(profile.unlocked-1,11)].id);break;
@@ -465,6 +511,7 @@ function cardUI(id,{compact=false,index=null,select=false,canEdit=false,upgradab
  const inHand=compact&&cooldown!==null&&cooldown!==undefined,waiting=inHand&&cooldown>0,ready=inHand&&!waiting;
  return `<div class="unit-card ${compact?'compact':''} ${waiting?'on-cooldown hand-waiting':''} ${ready?'hand-ready':''} ${inHand?'hand-card':''} ${inHand&&animationsEnabled?'timer-motion':''} ${select?'selected':''}" data-rarity="${c.rarity}" style="--tone:${tone}" ${compact?`data-action="select-card" data-index="${index}" role="button" tabindex="0" ${waiting?'aria-disabled="true"':''} aria-label="${esc(c.name)}${inHand?(waiting?', en attente : '+cooldown+' tour'+(cooldown>1?'s':'')+' avant disponibilité':', prête à être jouée'):''}"`:''}>
  <div class="card-head"><span>${esc(c.heroClass?CLASSES[c.heroClass].name:FACTIONS[c.faction].short)}</span><b>${c.heroClass?'COMPÉTENCE':c.type==='sort'?'SORT':'UNITÉ'}</b></div>
+ <div class="card-quality-tag" aria-label="Rareté : ${esc(c.rarity)}">${esc(c.rarity.toUpperCase())}</div>
  <div class="portrait creature-portrait role-${visual.role}"><img class="creature-image" src="${artSrc(visual.art)}" alt="Illustration de ${esc(c.name)}" loading="lazy" draggable="false" /><span class="portrait-emblem" aria-hidden="true">${c.icon}</span></div>
  ${inHand?`<div class="hand-readiness ${waiting?'waiting':'ready'}" aria-hidden="true">${waiting?'◷ EN ATTENTE':'✓ PRÊTE'}</div>`:''}
  <div class="card-title">${esc(c.name)}${bonus?` <span class="tiny gold">+${bonus}</span>`:''}${rank?` <span class="mastery-seal" title="Maîtrise ${rank}/3">✦${rank}</span>`:''}</div>
@@ -493,10 +540,10 @@ const {visualFor,artSrc}=__load("src/visuals.js");
 const {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission}=__load("src/dungeons.js");
 const {DECK_STYLES,proposeDeck,deckOverview,freshProfile,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,BUILDINGS,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,chooseHeroTalent,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
 function createPages(getState,{btn,cardUI,esc,num,heroProgress}){
- let profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled;
- const bind=fn=>(...args)=>{({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled}=getState());return fn(...args);};
+ let profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable;
+ const bind=fn=>(...args)=>{({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable}=getState());return fn(...args);};
 function homeUI(){const next=CAMPAIGN[Math.min(profile.unlocked-1,11)];const cleared=profile.completed.length;
- return `<section class="hero-banner"><div class="hero-copy"><div class="kicker">UN MONDE À RECONQUÉRIR · CHAPITRE I</div><h1>Forgez votre <em>légende.</em></h1><p>Cinq ordres se disputent les frontières du royaume. Collectionnez des créatures, assemblez votre deck et menez vos troupes à la victoire dans des combats tactiques sur deux à quatre lignes.</p><div class="button-row">${btn('⚔ Continuer la campagne','start-next','','primary')}${btn('Découvrir les règles','nav','data-page="guide"','ghost')}</div></div><div class="hero-crest"><div class="crest-ring"><span>♜</span></div><div class="crest-sub">LE SERMENT DES COURONNES</div></div></section>
+ return `<section class="hero-banner"><div class="hero-copy"><div class="kicker">UN MONDE À RECONQUÉRIR · CHAPITRE I</div><h1>Forgez votre <em>légende.</em></h1><p>Cinq ordres se disputent les frontières du royaume. Collectionnez des créatures, assemblez votre deck et menez vos troupes à la victoire dans des combats tactiques sur deux à quatre lignes.</p><div class="button-row">${btn('⚔ Continuer la campagne','start-next','','primary')}${btn('Découvrir les règles','nav','data-page="guide"','ghost')}${btn('Nouvelle partie · choisir une classe','new-game','','ghost')}${previousGameAvailable?btn('↶ Partie précédente','restore-previous-game','','ghost'):''}</div></div><div class="hero-crest"><div class="crest-ring"><span>♜</span></div><div class="crest-sub">LE SERMENT DES COURONNES</div></div></section>
  <section class="spaced"><div class="card-panel progression-panel"><div class="split-head"><div><div class="section-caption">PROGRESSION DU SOUVERAIN</div><h2 class="section-title">Niveau ${heroLevel(profile)} / ${HERO_MAX_LEVEL}</h2></div><span class="pill">Bouclier de vétéran +${heroShieldBonus(profile)}</span></div><p class="page-sub">${heroLevel(profile)===HERO_MAX_LEVEL?"Maîtrise héroïque maximale atteinte.":`${heroProgress(profile).shown} / ${heroProgress(profile).needed} XP vers le prochain niveau.`} Les niveaux améliorent progressivement la protection, sans ajouter d’attaque aux cartes.</p><div class="progressbar"><span style="width:${heroLevel(profile)===HERO_MAX_LEVEL?100:Math.min(100,heroProgress(profile).percent)}%"></span></div></div></section>
  <section class="spaced stat-row"><div class="stat-box"><strong>${cleared}/12</strong><small>Missions accomplies</small></div><div class="stat-box"><strong>${Object.keys(profile.collection).filter(k=>profile.collection[k]>0).length}/${Object.keys(CARDS).length}</strong><small>Cartes découvertes</small></div><div class="stat-box"><strong>${profile.wins}</strong><small>Victoires</small></div><div class="stat-box"><strong>${profile.deck.length}</strong><small>Cartes du deck</small></div></section>
  <section class="spaced"><div class="split-head"><div><div class="section-caption">Votre prochain défi</div><h2 class="section-title" style="margin-top:8px">${esc(next.name)}</h2></div><span class="pill">Région · ${esc(next.region)}</span></div><div class="card-panel"><p class="page-sub">${esc(next.story)} Affrontez <strong class="gold">${esc(next.enemy)}</strong> et gagnez ${next.reward} pièces d’or et ${next.shards} éclats.</p><div class="progressbar"><span style="width:${cleared/12*100}%"></span></div><div class="button-row">${btn('Jouer cette mission','start-mission',`data-id="${next.id}"`,'primary')}${btn('Voir la campagne','nav','data-page="campaign"','ghost')}</div></div></section>
@@ -570,7 +617,8 @@ function forgeUI(){const own=Object.values(CARDS).filter(c=>profile.collection[c
 }
 function guideUI(){const steps=[
  ['Choisissez une mission','Ouvrez Campagne, puis lancez le Sentier des Brumes. Le combat commence immédiatement.'],
- ['Observez vos cartes','Chaque carte porte un chiffre de délai (◷). Dans votre main, un compte à rebours indique combien de tours avant de pouvoir la jouer.'],
+ ['Observez vos cartes','Chaque carte porte un chiffre de délai (◷). Dans votre main, un compte à rebours indique combien de tours avant de pouvoir la jouer. La couleur et le nom de la rareté sont également visibles sur le cadre.'],
+ ['Distinguez les troupes','Sur le plateau, chaque unité affiche VOUS ou ENNEMI, son Ordre (Aube, Sylve, Ombre, Forge ou Éther) et sa rareté. Les quatre classes de héros se choisissent dans l’Atelier.'],
  ['Déployez sur une ligne','Cliquez une carte disponible de votre main, puis une des lignes dorées du plateau. Vos créatures arrivent à gauche.'],
  ['Terminez votre tour','Cliquez « Terminer le tour ». L’IA joue ses cartes, puis les unités avancent et attaquent automatiquement.'],
  ['Protégez votre couronne','Évitez que les créatures adverses atteignent votre porte. Faites tomber les PV du héros ennemi à zéro pour gagner.'],
@@ -586,7 +634,7 @@ function guideUI(){const steps=[
     ['Choisissez dans les donjons','Entre deux salles, choisissez un seul événement : repos (+10 PV), coffre garanti, ou embuscade bonus risquée. Une défaite met fin à l’expédition.'],
     ['Gagnez des réputations','Chaque victoire apporte de la réputation aux factions de votre deck. Leurs unités gagnent des PV en atteignant les paliers de réputation.']];
  return `<div class="kicker">LES LOIS DU ROYAUME</div><h1 class="page-title">Apprendre à jouer</h1><p class="page-sub">Pas besoin d’avoir déjà joué à un jeu de cartes tactique. Le principe est simple : poser une carte au bon moment, sur la bonne ligne, puis laisser vos troupes agir.</p><div class="guide-list spaced">${steps.map(([title,desc],i)=>`<div class="guide-step"><div class="step-num">${String(i+1).padStart(2,'0')}</div><div><h3>${title}</h3><p>${desc}</p></div></div>`).join('')}</div>
- <div class="card-panel spaced"><div class="section-caption">RÈGLES AVANCÉES</div><div class="two-grid" style="margin-top:17px"><div><h3>Plateau et capacités</h3><p class="page-sub">Chaque ligne contient <b>10 cases jouables</b>, entre les deux couronnes : 2 lignes en duel, 3 pour les rencontres avancées, 4 contre les boss. Les créatures arrivent en case 1, les adversaires en case 10. Les combats déjà sauvegardés conservent leurs 3 lignes de 5 cases.</p><p class="page-sub"><b>Armure</b> réduit les dégâts. <b>Portée</b> touche à deux cases. <b>Rapidité</b> accélère le déplacement. <b>Poison</b> inflige des dégâts différés. <b>Soin</b> restaure un allié. <b>Éclaboussure</b> touche une seconde cible. <b>Charge</b> donne +2 attaque lorsqu’une unité a avancé pendant ce tour. <b>Riposte</b> inflige 2 dégâts avant armure à un adversaire adjacent qui vient d’attaquer au contact, une seule fois par tour.</p></div><div><h3>Composition du deck</h3><p class="page-sub">Vous pouvez jouer au plus <b>deux cartes par tour</b>. Les cartes lentes sont puissantes mais doivent patienter dans votre main. Mélangez unités rapides, défenses, soutiens et sorts. Les cartes utilisées reviennent lorsque le paquet se reforme.</p></div></div></div><div class="card-panel spaced"><div class="section-caption">SAUVEGARDE & TRANSPORT</div><h2 class="section-title" style="margin-top:9px">Conserver votre progression</h2><p class="page-sub">La partie est enregistrée dans ce navigateur. Vous pouvez aussi exporter un fichier de sauvegarde et l’importer sur un autre appareil.</p><div class="button-row">${btn('↓ Exporter ma sauvegarde','export-save','','primary')}${btn('↑ Importer une sauvegarde','import-save','','ghost')}<input id="import-file" type="file" accept="application/json,.json" hidden /></div></div><div class="button-row">${btn('Commencer la première mission','start-mission','data-id="01"','primary')}</div>`;
+ <div class="card-panel spaced"><div class="section-caption">RÈGLES AVANCÉES</div><div class="two-grid" style="margin-top:17px"><div><h3>Plateau et capacités</h3><p class="page-sub">Chaque ligne contient <b>10 cases jouables</b>, entre les deux couronnes : 2 lignes en duel, 3 pour les rencontres avancées, 4 contre les boss. Les créatures arrivent en case 1, les adversaires en case 10. Les combats déjà sauvegardés conservent leurs 3 lignes de 5 cases.</p><p class="page-sub"><b>Armure</b> réduit les dégâts. <b>Portée</b> touche à deux cases. <b>Rapidité</b> accélère le déplacement. <b>Poison</b> inflige des dégâts différés. <b>Soin</b> restaure un allié. <b>Éclaboussure</b> touche une seconde cible. <b>Charge</b> donne +2 attaque lorsqu’une unité a avancé pendant ce tour. <b>Riposte</b> inflige 2 dégâts avant armure à un adversaire adjacent qui vient d’attaquer au contact, une seule fois par tour.</p></div><div><h3>Composition du deck</h3><p class="page-sub">Vous pouvez jouer au plus <b>deux cartes par tour</b>. Les cartes lentes sont puissantes mais doivent patienter dans votre main. Mélangez unités rapides, défenses, soutiens et sorts. Les cartes utilisées reviennent lorsque le paquet se reforme.</p></div></div></div><div class="card-panel spaced"><div class="section-caption">SAUVEGARDE & TRANSPORT</div><h2 class="section-title" style="margin-top:9px">Conserver votre progression</h2><p class="page-sub">La partie est enregistrée dans ce navigateur. Vous pouvez aussi exporter un fichier de sauvegarde et l’importer sur un autre appareil. « Nouvelle partie » conserve seulement un emplacement précédent sur cet appareil : exportez votre profil avant de multiplier les essais.</p><div class="button-row">${btn('↓ Exporter ma sauvegarde','export-save','','primary')}${btn('↑ Importer une sauvegarde','import-save','','ghost')}${previousGameAvailable?btn('↶ Reprendre la partie précédente','restore-previous-game','','ghost'):''}<input id="import-file" type="file" accept="application/json,.json" hidden /></div></div><div class="button-row">${btn('Commencer la première mission','start-mission','data-id="01"','primary')}</div>`;
 }
  return {homeUI:bind(homeUI),campaignUI:bind(campaignUI),towerUI:bind(towerUI),dungeonUI:bind(dungeonUI),collectionUI:bind(collectionUI),alchemyUI:bind(alchemyUI),forgeUI:bind(forgeUI),guideUI:bind(guideUI)};
 }
@@ -2240,7 +2288,7 @@ function battleCell(u,lane,col){
  const card=u?CARDS[u.id]:null;const concord=u?formationBonus(battle,lane,u):0;const rallied=u&&u.rallyUntil>=battle.round?1:0;const attack=u?u.atk+concord+rallied:0;const visual=u?visualFor(card):null;
  return `<div data-col="${col}" class="battle-cell ${selectedCard>=0&&col===1&&(!u||CARDS[battle.heroes.p.hand[selectedCard]?.id]?.type==='sort')?'available':''}" ${col===1?`role="button" tabindex="0" data-action="deploy" data-lane="${lane}" aria-label="Déployer sur la ligne ${lane+1}"`:''}>
  ${traps.map(t=>`<span class="terrain-trap ${t.owner==='e'?'enemy':''}" role="img" aria-label="Piège ${t.owner==='p'?'allié':'adverse'}, ligne ${lane+1}, case ${col}, ${t.expiresRound-battle.round+1} tours" title="${t.kind==='snare'?'1 dégât et immobilisation':'3 dégâts'} avant armure · expire dans ${t.expiresRound-battle.round+1} résolution(s)">⌁ ${t.owner==='p'?'ALLIÉ':'ENNEMI'} · ${t.expiresRound-battle.round+1}</span>`).join('')}
- ${u?`<div class="unit-on-board ${u.side==='e'?'enemy':''} ${silent?'silenced':''}" style="--tone:${FACTIONS[card.faction].tone}" title="${esc(card.name)} · ${esc(cardTraits(u.id).join(', '))} · Attaque ${attack}${concord?' (dont +1 Concorde)':''}${rallied?' (dont +1 Ralliement)':''} · PV ${u.hp}/${u.maxhp}${u.barrier?' · Barrière '+u.barrier:''}${silent?' · Silence : '+remaining+' résolution(s)':''}">${silent?`<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>`:''}${concord?'<div class="formation-badge" aria-label="Concorde de faction active">✦ Concorde</div>':''}<div class="sprite-stage role-${visual.role}" aria-hidden="true"><img class="sprite-figure" src="${arenaSprite(card,visual.role)}" alt="" draggable="false" /><span class="sprite-aura"></span></div><div class="unit-name">${esc(card.name)}</div><div class="unit-meta">⚔ ${attack}${concord?' ✦':''}${rallied?' ⚑':''}${!silent&&CHARGE_IDS.has(u.id)?' ⚡':''}${!silent&&RIPOSTE_IDS.has(u.id)?' ↶':''} &nbsp; ♥ ${u.hp}${u.armor?' ◈':''}${u.barrier?' ⬡ '+u.barrier:''}${u.poisonTurns?' ☣':''}</div></div>`:`<span class="slot-num">${col}</span>`}</div>`;
+ ${u?`<div class="unit-on-board ${u.side==='e'?'enemy':'ally'} ${silent?'silenced':''}" data-owner="${u.side}" data-rarity="${esc(card.rarity)}" style="--tone:${FACTIONS[card.faction].tone}" title="${u.side==='p'?'Votre unité':'Unité adverse'} · ${esc(FACTIONS[card.faction].name)} · ${esc(card.rarity)} · ${esc(card.name)} · ${esc(cardTraits(u.id).join(', '))} · Attaque ${attack}${concord?' (dont +1 Concorde)':''}${rallied?' (dont +1 Ralliement)':''} · PV ${u.hp}/${u.maxhp}${u.barrier?' · Barrière '+u.barrier:''}${silent?' · Silence : '+remaining+' résolution(s)':''}"><div class="board-identification"><span class="board-owner">${u.side==='p'?'VOUS':'ENNEMI'}</span><span class="board-faction">${esc(FACTIONS[card.faction].short)}</span><span class="board-quality">${esc(card.rarity)}</span></div>${silent?`<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>`:''}${concord?'<div class="formation-badge" aria-label="Concorde de faction active">✦ Concorde</div>':''}<div class="sprite-stage role-${visual.role}" aria-hidden="true"><img class="sprite-figure" src="${arenaSprite(card,visual.role)}" alt="" draggable="false" /><span class="sprite-aura"></span></div><div class="unit-name">${esc(card.name)}</div><div class="unit-meta">⚔ ${attack}${concord?' ✦':''}${rallied?' ⚑':''}${!silent&&CHARGE_IDS.has(u.id)?' ⚡':''}${!silent&&RIPOSTE_IDS.has(u.id)?' ↶':''} &nbsp; ♥ ${u.hp}${u.armor?' ◈':''}${u.barrier?' ⬡ '+u.barrier:''}${u.poisonTurns?' ☣':''}</div></div>`:`<span class="slot-num">${col}</span>`}</div>`;
 }
 function battleUI(){const p=battle.heroes.p,e=battle.heroes.e,lanes=laneCount(battle),cells=lastCell(battle);
  const selected=CARDS[p.hand[selectedCard]?.id];
@@ -2250,6 +2298,7 @@ function battleUI(){const p=battle.heroes.p,e=battle.heroes.e,lanes=laneCount(ba
  return `<div class="split-head"><div><div class="kicker">COMBAT TACTIQUE · ${esc(battle.missionName)}</div><h1 class="page-title" style="font-size:31px">Les ruines d’Astravelle</h1></div><span class="pill">2 cartes maximum par tour</span></div>
  <section class="battle-panel arena-lofi"><div class="battle-hud"><div class="fighter"><h3>♜ ${esc(p.name)}</h3><div class="hpbar"><span style="width:${p.hp/p.maxhp*100}%;background:linear-gradient(90deg,#7199a2,#a1d7b8)"></span></div><div class="hp-line">♥ ${p.hp}/${p.maxhp} PV ${p.shield?`· ⬡ ${p.shield} bouclier`:''}</div></div><div class="battle-mid"><div class="turn-n">${battle.round}</div><div class="turn-label">TOUR</div></div><div class="fighter enemy"><h3>${esc(e.name)} ♛</h3><div class="enemy-style-tag">${esc(AI_STYLES[aiStyle(battle)].name)}${aiEnraged(battle)?' · FURIE':battle.aiBoss?' · Boss':''}</div><div class="hpbar"><span style="width:${e.hp/e.maxhp*100}%"></span></div><div class="hp-line">♥ ${e.hp}/${e.maxhp} PV ${e.shield?`· ⬡ ${e.shield} bouclier`:''}</div></div></div>
  <div class="arena-caption"><span>✧ ARÈNE DES SERMENTS</span><span>${lanes} lignes · ${cells} cases par ligne</span></div><div class="battle-grid" tabindex="0" role="region" aria-label="Plateau de combat : ${lanes} lignes de ${cells} cases" style="--cells:${cells};--arena-scene:url('${arenaBackdrop()}')"><div class="arena-sky" aria-hidden="true"></div>${Array.from({length:lanes},(_,lane)=>`<div class="lane-row" data-crown-col="${cells+1}"><div class="lane-label">${['I','II','III','IV'][lane]}</div><div class="lane-gate" aria-label="Votre couronne"><span class="pixel-tower" aria-hidden="true"></span><b>♜</b></div>${Array.from({length:cells},(_,i)=>battleCell(battle.board[lane][i+1],lane,i+1)).join('')}<div class="lane-gate enemy" aria-label="Couronne adverse"><span class="pixel-tower" aria-hidden="true"></span><b>♛</b></div></div>`).join('')}</div>
+ <div class="arena-legend" aria-label="Légende du plateau"><span class="legend-ally">BLEU · VOS UNITÉS</span><span class="legend-enemy">ROUGE · UNITÉS ADVERSES</span><span>Contour : rareté · Étiquette : Ordre</span></div>
  <p class="arena-scroll-hint">Sur petit écran, faites glisser le plateau pour voir toutes les cases. Les couronnes sont hors de la grille.</p><div class="vfx-controls"><span>Effets du combat : attaques, flèches, magie et déplacements.</span><button type="button" class="vfx-toggle" data-action="toggle-animations" aria-pressed="${animationsEnabled}">${animationsEnabled?'✦ Animations activées':'Animations désactivées'}</button></div>
  ${battle.mode==='dungeon'?`<div class="dungeon-battle-banner">♛ DONJON · ${battle.dungeonBonus?'Épreuve bonus':'Salle '+(battle.dungeonStage+1)+'/3'} · Les PV du héros sont conservés entre les combats (+6 PV après victoire).</div>`:''}
  <p class="control-tip">⊘ Silence : capacités déclenchées suspendues, attaques et traits passifs conservés. ✧ Téléportation : autre ligne, même colonne. ⌁ Pièges publics : déclenchés à l’arrivée d’un ennemi, deux par camp. ◷ Tempo : accélérez vos cartes ou ralentissez une carte adverse.</p>${preview?`<p class="teleport-preview" role="status">${preview}</p>`:''}
@@ -2404,7 +2453,7 @@ Object.assign(__exports,{createCombatFx});
 // Sauvegardes locales : validation rétrocompatible et clôture récupérable.
 const {freshProfile,normalizeProfile,validateDeck}=__load("src/engine.js");
 const {supportedBoard,lastCell}=__load("src/engine/board.js");
-const {CARDS}=__load("src/data.js");
+const {CARDS,CLASSES}=__load("src/data.js");
 const SAVE_KEY='couronnes_arcanes_v1';
 const BATTLE_KEY='couronnes_arcanes_bataille_v1';
 const hasCard=id=>typeof id==='string'&&Object.prototype.hasOwnProperty.call(CARDS,id);
@@ -2453,7 +2502,52 @@ function storeBattle(battle){try{
  return true;
 }catch{return false;}}
 
-Object.assign(__exports,{SAVE_KEY,BATTLE_KEY,validStoredBattle,validateImportedProfile,loadProfile,saveProfile,restoreBattle,storeBattle});
+// Deux emplacements locaux au maximum : partie active et précédente.
+// Le changement est récupérable même si l'écriture de la nouvelle partie échoue.
+const PREVIOUS_GAME_KEY='couronnes_arcanes_partie_precedente_v1';
+function gameSnapshot(){
+ return {profile:localStorage.getItem(SAVE_KEY)||JSON.stringify(loadProfile()),battle:localStorage.getItem(BATTLE_KEY)};
+}
+function writeGameSnapshot(snapshot){
+ localStorage.setItem(SAVE_KEY,snapshot.profile);
+ if(snapshot.battle===null)localStorage.removeItem(BATTLE_KEY);
+ else localStorage.setItem(BATTLE_KEY,snapshot.battle);
+}
+function switchGame(snapshot){
+ let current,previous;
+ try{
+  current=gameSnapshot();previous=localStorage.getItem(PREVIOUS_GAME_KEY);
+  localStorage.setItem(PREVIOUS_GAME_KEY,JSON.stringify(current));
+  writeGameSnapshot(snapshot);
+  return true;
+ }catch{
+  if(current){try{writeGameSnapshot(current);}catch{}}
+  if(previous!==undefined){try{
+   if(previous===null)localStorage.removeItem(PREVIOUS_GAME_KEY);
+   else localStorage.setItem(PREVIOUS_GAME_KEY,previous);
+  }catch{}}
+  return false;
+ }
+}
+function startNewAdventure(classId){
+ if(!Object.prototype.hasOwnProperty.call(CLASSES,classId))return false;
+ const profile=freshProfile();profile.heroClass=classId;profile.guideSeen=true;
+ return switchGame({profile:JSON.stringify(profile),battle:null});
+}
+function hasPreviousAdventure(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(PREVIOUS_GAME_KEY)||'null');
+  if(typeof saved?.profile!=='string'||!(saved.battle===null||typeof saved.battle==='string'))return false;
+  validateImportedProfile(JSON.parse(saved.profile));
+  return saved.battle===null||validStoredBattle(JSON.parse(saved.battle));
+ }catch{return false;}
+}
+function restorePreviousAdventure(){
+ if(!hasPreviousAdventure())return false;
+ try{return switchGame(JSON.parse(localStorage.getItem(PREVIOUS_GAME_KEY)));}catch{return false;}
+}
+
+Object.assign(__exports,{SAVE_KEY,BATTLE_KEY,validStoredBattle,validateImportedProfile,loadProfile,saveProfile,restoreBattle,storeBattle,PREVIOUS_GAME_KEY,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure});
 
 }
 };
