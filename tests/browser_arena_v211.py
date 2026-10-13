@@ -20,6 +20,24 @@ async def run(browser,label,viewport):
           render();
         }''',lanes)
         assert await page.locator('.lane-row').count()==lanes
+        # Quatre pistes visuelles fixes ; seules les lignes du moteur sont interactives.
+        assert await page.locator('.arena-structured').count()==1
+        assert await page.locator('.arena-dormant-row').count()==4-lanes
+        expected=[1,2] if lanes==2 else list(range(lanes))
+        active=await page.locator('.lane-row').evaluate_all(
+            "(rows) => rows.map(row=>Number(row.dataset.visualLane))")
+        assert active==expected,(lanes,active)
+        rows=page.locator('.arena-structured > .lane-row, .arena-structured > .arena-dormant-row')
+        assert await rows.count()==4
+        geometry=await rows.evaluate_all("""rows => rows.map(row => {
+            const tile=row.querySelector('.battle-cell,.arena-dormant-cell');
+            const r=tile.getBoundingClientRect();
+            return {x:r.x,w:r.width,height:r.height};
+        })""")
+        assert max(x['x'] for x in geometry)-min(x['x'] for x in geometry)<1,geometry
+        assert max(x['w'] for x in geometry)-min(x['w'] for x in geometry)<1,geometry
+        assert all(x['height']>=90 for x in geometry)
+        assert await page.locator('.arena-dormant-row [data-action],.arena-dormant-row [tabindex]').count()==0
         assert await page.locator('.battle-cell').count()==lanes*10
         assert await page.locator('.lane-gate').count()==lanes*2
         assert f'{lanes} lignes · 10 cases' in await page.locator('.arena-caption').inner_text()
@@ -72,6 +90,7 @@ async def run(browser,label,viewport):
     page=await make_page(browser,viewport,saved,errors)
     assert await page.locator('.lane-row').count()==3
     assert await page.locator('.battle-cell').count()==15
+    assert await page.locator('.arena-dormant-row,.arena-structured').count()==0
     await page.locator('[data-action="end-turn"]').click()
     assert await page.locator('.turn-n').inner_text()=='2'
     assert not errors,errors
