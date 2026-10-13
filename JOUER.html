@@ -548,6 +548,17 @@ body:has(.combat-screen) #view{
  .combat-screen .combat-stage{scroll-behavior:auto;transition:none!important}
 }
 
+/* Sur bureau standard, garder les quatre pistes dans le viewport au-dessus de la main. */
+@media(min-width:960px) and (min-height:650px) and (max-height:960px){
+ .combat-screen .arena-sky{height:58px;background-size:100% 58px}
+ .combat-screen .arena-structured .lane-row,
+ .combat-screen .arena-structured .arena-dormant-row{min-height:98px;margin-top:4px}
+ .combat-screen .arena-structured .battle-cell,
+ .combat-screen .arena-structured .arena-dormant-cell,
+ .combat-screen .arena-structured .arena-dormant-gate{min-height:98px}
+ .combat-screen .arena-structured .unit-on-board{min-height:96px}
+}
+
 </style>
 </head>
 <body>
