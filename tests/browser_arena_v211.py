@@ -111,6 +111,17 @@ async def run(browser,label,viewport):
     x=await impact.evaluate('el=>parseFloat(el.style.left)')
     assert abs(x-(gate['x']+gate['width']/2))<2,(x,gate)
     await page.wait_for_timeout(2000)
+    # Un déplacement utilise le sprite pixel art réel, plutôt qu'un pion générique.
+    await page.evaluate("""() => {
+      battle=createBattle(profile,{id:'01',name:'Test déplacement',enemy:'Sentinelle',hp:80,difficulty:1,deck:[]},212);
+      battle.heroes.e.deck=[];battle.heroes.e.hand=[];
+      battle.heroes.p.deck=[];battle.heroes.p.hand=[];
+      battle.board[0][1]={uid:991,id:'militia',side:'p',atk:3,hp:10,maxhp:10,armor:0,
+        ranged:false,ability:'',stun:0,poison:0,poisonTurns:0};
+      render();
+    }""")
+    await page.locator('[data-action="end-turn"]').click()
+    await page.locator('.vfx-creature-image').first.wait_for(state='attached',timeout=2500)
     assert not errors,errors
     await page.close()
     print(f'Arène {label}: 2/3/4×10, clavier, contrôle, défilement, reprise et 3×5 historique PASS')
