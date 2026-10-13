@@ -62,7 +62,11 @@ async def run(browser,name,viewport):
  assert await page.evaluate('battle.board[0][1]?.id') is not None
  await page.locator('.combat-hand-dock [data-action="end-turn"]').click()
  assert await page.locator('.turn-n').inner_text()=='2'
- await page.reload()
+ # Le harnais teste un document injecté en about:blank : reconstituer la page à partir
+ # de la sauvegarde simulée, plutôt que recharger about:blank sans contenu.
+ saved=await page.evaluate('() => ({...window.__saves})')
+ await page.close()
+ page=await make_page(browser,viewport,saved,errors)
  assert await page.locator('.combat-screen').count()==1
  assert await page.locator('.turn-n').inner_text()=='2'
 
