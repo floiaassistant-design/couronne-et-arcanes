@@ -264,3 +264,84 @@ body.animations-off .hand-card .hand-readiness,body.animations-off .hand-card .c
 .arena-legend .legend-ally{border-color:#64d4ff;color:#b4ecff}
 .arena-legend .legend-enemy{border-color:#fa8796;color:#ffbcc2}
 @media(max-width:660px){.new-game-classes{grid-template-columns:1fr}.arena-legend{font-size:9px;gap:4px}.unit-card.hand-card .card-quality-tag{font-size:9px}}
+
+
+/* Arène structurée : quatre pistes constantes. Le sol épouse les vraies cases,
+   sans redimensionnement de panoramique et sans interaction sur les pistes dormantes. */
+.arena-lofi .battle-grid.arena-structured{
+ background:linear-gradient(180deg,#1b2a43 0,#1b3541 116px,#122735 100%);
+ border-color:#66766f;
+}
+.arena-lofi .arena-structured .arena-dormant-row{
+ display:grid;
+ grid-template-columns:24px 44px repeat(var(--cells),minmax(68px,1fr)) 44px;
+ gap:4px;
+ min-width:calc(var(--cells)*78px + 132px);
+ min-height:114px;
+ margin:8px 0 0;
+ position:relative;
+ align-items:stretch;
+ opacity:.42;
+ filter:saturate(.42) brightness(.7);
+ pointer-events:none;
+ user-select:none;
+}
+.arena-lofi .arena-structured .lane-row{
+ background:linear-gradient(90deg,#b2d6b019,transparent 30%,transparent 70%,#b2d6b019);
+ box-shadow:inset 3px 0 0 #b6d0ad68,inset -3px 0 0 #b6d0ad68;
+}
+.arena-lofi .arena-structured .battle-cell,
+.arena-lofi .arena-structured .arena-dormant-cell{
+ box-sizing:border-box;
+ position:relative;
+ min-height:114px;
+ border:1px solid #c0cbb04d;
+ border-radius:1px;
+ background-color:#405c58;
+ background-image:
+  linear-gradient(180deg,#d7d6af32 0 3px,transparent 3px 100%),
+  linear-gradient(90deg,#d1dbc02d 0 3px,transparent 3px 100%),
+  linear-gradient(90deg,transparent 0 16%,#20353d66 16% 19%,transparent 19% 74%,#21384155 74% 77%,transparent 77%),
+  repeating-linear-gradient(0deg,transparent 0 27px,#1b3b4850 27px 30px,transparent 30px 55px),
+  linear-gradient(155deg,#6d8170,#47635c 55%,#2c4952);
+ box-shadow:inset 0 -4px 0 #122c3899,inset 2px 2px 0 #d3dabc2a;
+ image-rendering:pixelated;
+}
+.arena-lofi .arena-structured .lane-row .battle-cell:nth-child(3n){
+ background-color:#385452;
+}
+.arena-lofi .arena-structured .battle-cell.available{
+ border:2px solid #f5e4a7;
+ background-image:linear-gradient(#e8c87448,#e8c87448),
+  repeating-linear-gradient(90deg,#39524e 0 9px,#49685e 9px 18px);
+ box-shadow:inset 0 0 0 2px #213c40,0 0 0 2px #e4c77d99;
+}
+.arena-lofi .arena-structured .battle-cell.available:hover,
+.arena-lofi .arena-structured .battle-cell:focus-visible{
+ outline:3px solid #ffe4a0;
+ outline-offset:0;
+}
+.arena-lofi .arena-structured .arena-dormant-gate{
+ min-height:114px;
+ display:grid;
+ place-items:center;
+ background:linear-gradient(180deg,#334954,#142934);
+ color:#9da89f;
+ border:1px solid #74858a;
+ font:20px Georgia,serif;
+}
+.arena-lofi .arena-structured .arena-dormant-gate.enemy{
+ background:linear-gradient(180deg,#513946,#211d2d);
+}
+.arena-lofi .arena-structured .arena-dormant-row .lane-label{
+ display:grid;
+ place-items:center;
+}
+.arena-lofi .arena-structured .arena-dormant-cell{
+ background-image:
+  repeating-linear-gradient(90deg,#121f2c35 0 22px,#33434b3a 22px 44px),
+  linear-gradient(155deg,#455752,#263b45);
+}
+@media(prefers-reduced-motion:reduce){
+ .arena-lofi .arena-structured .lane-row,.arena-lofi .arena-structured .arena-dormant-row{transition:none}
+}
