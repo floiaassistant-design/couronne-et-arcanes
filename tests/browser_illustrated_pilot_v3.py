@@ -34,7 +34,14 @@ async def run(browser,label,viewport):
     assert await page.locator('#hand-card-inspection').is_hidden()
 
     # Sélection et déploiement depuis le même élément restent disponibles.
-    await cards.first.click(position={'x':10,'y':90})
+    # Le dock est plus bas en paysage : utiliser une zone visible de la carte,
+    # et vérifier que la main ne recouvre pas le point où l'on clique.
+    click_y=await cards.first.evaluate('(el)=>Math.min(35,Math.floor(el.getBoundingClientRect().height/2))')
+    assert await cards.first.evaluate("""(el)=>{
+      const r=el.getBoundingClientRect(),x=r.left+10,y=r.top+Math.min(35,Math.floor(r.height/2));
+      return el.contains(document.elementFromPoint(x,y));
+    }"""),'Carte masquée par une autre zone de la main'
+    await cards.first.click(position={'x':10,'y':click_y})
     assert await page.evaluate('selectedCard')==0
     target=page.locator('[data-action="deploy"][data-lane="0"]')
     await target.scroll_into_view_if_needed()
