@@ -1,3 +1,12 @@
+## Proposition V2.11.1 — Nouvelle aventure et lisibilité du plateau (branche dédiée, 2026-10-13)
+
+- Depuis la Citadelle : « Nouvelle partie » propose les quatre classes, puis exige une confirmation explicite avant de remplacer le profil actif. Un seul emplacement local « partie précédente » est conservé, y compris le combat en cours, avec une action permettant de passer de l'une à l'autre.
+- Les unités déployées portent maintenant « VOUS » ou « ENNEMI », leur Ordre (faction de la carte) et leur rareté. Couleurs de camp et contours de rareté indépendants ; légende visible.
+- Les cartes dans la main et la collection affichent un bandeau écrit et un contour plus contrasté pour commun, rare, épique et légendaire, y compris en attente.
+- Aucun changement de règles de combat, catalogue, IA, statistiques, récompenses ou ancien profil. La sauvegarde active garde ses clés historiques ; nouvelle clé facultative pour l'emplacement précédent.
+- Développé depuis le main du 12/10/2026 (`58a028c5`). La PR graphique nº 11 est séparée et modifie également styles et export HTML ; réconcilier et reconstruire JOUER.html depuis les sources combinées en cas de fusion ultérieure.
+- Cette entrée décrit une **proposition sur branche** et non une version publiée sur main. Ne pas fusionner sans approbation spécifique.
+
 ## V2.11 — Arène fantasy lo-fi (2026-10-12, fusionnée sur main)
 
 - Dix cases jouables par ligne ; duels à deux lignes, rencontres avancées à trois et boss solo à quatre. Couronnes hors grille, déploiement aux extrémités.
