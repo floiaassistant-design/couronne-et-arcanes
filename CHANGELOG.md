@@ -1,3 +1,9 @@
+## Proposition — Combat plein écran et main de cartes en bas (PR nº 13, non fusionnée)
+- Refonte visuelle : combat plein écran, HUD compact, plateau dominant et dock inférieur contenant main et commandes.
+- Scroll indépendant de l'arène, de la main et des informations de combat, conservé aux rerendus.
+- Bureau et mobile portrait/paysage, sans toucher aux règles, aux cartes, à l'IA ou aux sauvegardes.
+- Tests navigateur et export JOUER.html hors ligne requis avant intégration.
+
 ## Proposition — Arène structurée 4 × 10 (non fusionnée)
 - Quatre pistes de dalles pixel art calées sur les cellules : deux lignes centrales, trois premières ou quatre lignes actives.
 - Les pistes inactives restent visibles mais ne sont ni interactives ni sauvegardées dans le moteur.
