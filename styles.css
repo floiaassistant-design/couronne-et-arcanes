@@ -615,3 +615,43 @@ body:has(.combat-screen) #view{
 @media(prefers-reduced-motion:reduce){
  .arena-lofi .arena-structured .arena-calibrated-art{animation:none;transition:none}
 }
+
+
+/* Pilote Illustrée v3, uniquement archer ; direction artistique PR art nº 8 @ fbbcbe8. */
+.unit-card.illustrated-pilot{border:2px solid var(--rarity-border,#c9ae7c);padding:0;isolation:isolate;overflow:hidden;background:#142334;box-shadow:0 5px 20px #0008}
+.illustrated-pilot .portrait{position:absolute;inset:0;width:100%;height:100%!important;border:0;border-radius:0;z-index:-1}
+.illustrated-pilot .portrait .creature-image{width:100%;height:100%;object-fit:cover;object-position:center}
+.illustrated-pilot .portrait:after{inset:0;height:auto;background:linear-gradient(#1024358c 0%,transparent 30%,transparent 48%,#0a1a28f0 98%);opacity:1;filter:none}
+.illustrated-pilot .portrait:before,.illustrated-pilot .portrait-emblem{display:none}
+.illustrated-pilot .card-head,.illustrated-pilot .card-quality-tag,.illustrated-pilot .hand-readiness,.illustrated-pilot .cooldown-stamp{display:none!important}
+.illustrated-pilot .illustrated-faction,.illustrated-pilot .illustrated-count{position:absolute;top:5px;z-index:2;background:#132b40eb;color:#f9e4ba;border:1px solid #cbb080;border-radius:5px;font:700 10px/1.1 system-ui,sans-serif}
+.illustrated-pilot .illustrated-faction{left:5px;max-width:calc(100% - 49px);padding:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.illustrated-pilot .illustrated-count{right:5px;width:28px;min-height:26px;display:grid;place-items:center}
+.illustrated-pilot .illustrated-count b{font-size:18px;line-height:1}
+.illustrated-pilot .card-title{margin-top:clamp(135px,12vw,200px);padding:5px 5px 2px;min-height:0;position:relative;text-align:center;background:#112438dd}
+.illustrated-pilot .card-detail{position:relative;text-align:center;margin:2px 5px;padding:3px 5px;min-height:0;background:#122a42e3;border:1px solid #bd9d65;border-radius:4px;color:#f5deb2}
+.illustrated-pilot .card-traits{position:relative}
+.illustrated-pilot .card-stats{position:relative;justify-content:space-between;margin:5px}
+.illustrated-pilot .card-stats .stat{background:#152b43eb;border:1px solid #caaf7b;padding:5px;border-radius:7px}
+.illustrated-pilot .card-stats .stat.atk{background:#153b58e8}
+.illustrated-pilot .card-stats .stat.hp{background:#68313ce8}
+.illustrated-pilot .card-stats .stat.cd,.illustrated-pilot .card-stats .card-rarity{display:none}
+.illustrated-pilot .mastery-progress,.illustrated-pilot .card-actions{position:relative;padding:4px;margin:3px 5px;background:#102535e3}
+.illustrated-pilot:not(.compact){min-height:315px}
+.illustrated-pilot:not(.compact) .card-title{margin-top:150px}
+.illustrated-pilot .illustrated-inspect{position:absolute;top:38px;right:5px;z-index:4;background:#10273deb;color:#fff2d7;border:1px solid #d7b984;border-radius:5px;padding:5px;font:700 10px system-ui,sans-serif;min-height:29px}
+.illustrated-pilot.hand-card{opacity:1}
+.illustrated-pilot.hand-card.on-cooldown .portrait img{filter:saturate(.75) brightness(.75)}
+.illustrated-pilot.hand-card .card-title{position:absolute;left:2px;right:2px;bottom:43px;margin:0;padding:4px 2px!important;min-height:0!important;font-size:11px}
+.illustrated-pilot.hand-card .card-detail,.illustrated-pilot.hand-card .card-traits{display:none}
+.illustrated-pilot.hand-card .card-stats{position:absolute;bottom:4px;left:2px;right:2px;margin:0}
+.illustrated-pilot.hand-card .card-stats .stat{font-size:13px;padding:4px 7px}
+.illustrated-pilot.hand-card .card-stats .stat b{font-size:16px}
+.combat-hand-dock .unit-card.illustrated-pilot.hand-card{padding:0;min-height:0;height:100%;flex:0 0 120px;width:120px}
+.combat-hand-dock .unit-card.illustrated-pilot.hand-card.selected{outline:3px solid #ffe8ac;outline-offset:1px;box-shadow:0 0 14px #dca857}
+.hand-card-inspection{font:11px/1.3 system-ui,sans-serif;color:#ffe6b6;background:#152b3d;border:1px solid #c7a875;border-radius:6px;padding:5px 7px;max-height:55px;max-width:440px;overflow:auto;margin:3px 0}
+.hand-card-inspection[hidden]{display:none}
+.hand-card-inspection button{background:#31495b;color:white;border:1px solid #92a6aa;border-radius:3px;margin-left:7px}
+@media(max-width:700px){.hand-card-inspection{font-size:10px;max-height:42px}.illustrated-pilot.hand-card .card-stats .stat{padding:3px 5px}}
+@media(max-height:540px){.illustrated-pilot .illustrated-inspect{top:29px;min-height:24px}.illustrated-pilot.hand-card .card-title{bottom:29px;font-size:10px}.illustrated-pilot.hand-card .card-stats .stat b{font-size:13px}.illustrated-pilot.hand-card .card-stats{bottom:1px}.hand-card-inspection{max-height:34px;font-size:9px}}
+@media(prefers-reduced-motion:reduce){.illustrated-pilot{transition:none!important;animation:none!important}}

@@ -14,6 +14,7 @@ let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}ca
 const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='all',collectionOwned=false;
 let deferredBattleModal='',battleStorageWarning=false;
+let pinnedInspection=-1; // Transitoire, non sauvegardé.
 const {stopBattleFx,playBattleFx}=createCombatFx(()=>({animationsEnabled,screen}));
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
@@ -46,6 +47,7 @@ function showModal(html){$('modal-root').innerHTML=`<div class="modal-backdrop">
 function hideModal(){$('modal-root').innerHTML='';}
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
 function render(){
+ pinnedInspection=-1;
  const arenaScroll=document.querySelector('.battle-grid')?.scrollLeft||0;
  const arenaVertical=document.querySelector('.battle-grid')?.scrollTop||0;
  const handScroll=document.querySelector('.combat-hand-dock .hand')?.scrollLeft||0;
@@ -57,6 +59,27 @@ function render(){
  const arena=document.querySelector('.battle-grid');if(arena){arena.scrollLeft=arenaScroll;arena.scrollTop=arenaVertical;}
  const hand=document.querySelector('.combat-hand-dock .hand');if(hand)hand.scrollLeft=handScroll;
  const stage=document.querySelector('.combat-stage');if(stage)stage.scrollTop=stageScroll;
+}
+
+function inspectCard(index,pin=false){
+ if(!battle||screen!=='battle')return;
+ const i=Number(index),entry=battle.heroes.p.hand[i],c=entry&&CARDS[entry.id],panel=$('hand-card-inspection');
+ if(!panel||!c)return;
+ if(pin&&pinnedInspection===i){closeCardInspection();return;}
+ if(pin)pinnedInspection=i;
+ if(pinnedInspection>=0&&pinnedInspection!==i&&!pin)return;
+ const bonus=profile.upgrades[c.id]||0,rank=masteryRank(profile,c.id);
+ panel.hidden=false;
+ panel.innerHTML='<b>'+esc(c.name)+'</b> · '+esc(FACTIONS[c.faction].name)+' · '+esc(c.rarity)+
+  ' · '+esc(c.description)+(c.type==='unité'?' · ATQ '+(c.attack+bonus)+' / PV '+(c.hp+bonus+(rank===3?1:0)):'')+
+  ' · Attente '+Math.max(0,entry.wait||0)+
+  ' <button type="button" data-action="close-inspection" aria-label="Fermer la fiche">×</button>';
+ document.querySelectorAll('.illustrated-inspect').forEach(el=>el.setAttribute('aria-expanded',String(pinnedInspection===Number(el.dataset.index))));
+}
+function closeCardInspection(){
+ pinnedInspection=-1;const panel=$('hand-card-inspection');
+ if(panel){panel.hidden=true;panel.textContent='';}
+ document.querySelectorAll('.illustrated-inspect').forEach(el=>el.setAttribute('aria-expanded','false'));
 }
 function settle({deferModal=false}={}){
  if(!battle||battle.status==='active'||battle.rewardGiven)return;
@@ -156,6 +179,8 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
  }
  case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}const result=learnClassSkill(profile,id);if(result.ok){save();render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}else toast(result.reason);break;}
  case 'deck-add':case 'deck-remove':if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();render();}else toast('Impossible de modifier ce deck davantage.');break;
+ case 'inspect-card':inspectCard(index,true);break;
+ case 'close-inspection':closeCardInspection();break;
  case 'select-card':if(!battle||battle.status!=='active')break;
   if(battle.heroes.p.cardsPlayed>=2){toast('Vous avez déjà joué deux cartes ce tour.');break;}
   if(battle.heroes.p.hand[Number(index)]?.wait>0){toast('Cette carte est encore en attente.');break;}
@@ -186,6 +211,26 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
  }
 }
 document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();act(el.dataset.action,el.dataset);});
-document.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){const el=event.target.closest('.unit-card.compact,[data-action="deploy"]');if(el){event.preventDefault();act(el.dataset.action,el.dataset);}}});
+document.addEventListener('keydown',event=>{
+ if(event.key==='Escape'){closeCardInspection();return;}
+ if((event.key==='Enter'||event.key===' ')&&!event.target.closest('button')){
+  const el=event.target.closest('.unit-card.compact,[data-action="deploy"]');
+  if(el){event.preventDefault();act(el.dataset.action,el.dataset);}
+ }
+});
+document.addEventListener('mouseover',event=>{
+ const el=event.target.closest('.illustrated-pilot.hand-card');if(el)inspectCard(el.dataset.index);
+});
+document.addEventListener('mouseout',event=>{
+ const el=event.target.closest('.illustrated-pilot.hand-card');
+ if(el&&!el.contains(event.relatedTarget)&&pinnedInspection<0)closeCardInspection();
+});
+document.addEventListener('focusin',event=>{
+ const el=event.target.closest('.illustrated-pilot.hand-card');if(el)inspectCard(el.dataset.index);
+});
+document.addEventListener('focusout',event=>{
+ const el=event.target.closest('.illustrated-pilot.hand-card');
+ if(el&&!el.contains(event.relatedTarget)&&pinnedInspection<0)closeCardInspection();
+});
 document.addEventListener('change',async event=>{if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='faction'){collectionFilter=event.target.value;render();}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
 render();if(battle&&battle.status!=='active')settle();else welcome();
