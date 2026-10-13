@@ -366,6 +366,188 @@ body.animations-off .hand-card .hand-readiness,body.animations-off .hand-card .c
  object-fit:contain;image-rendering:pixelated;
 }
 
+
+/* Combat immersif : HUD compact, arène dominante et main ancrée en bas.
+   Affecte exclusivement l'écran de combat ; les autres écrans restent inchangés. */
+body:has(.combat-screen){overflow:hidden}
+body:has(.combat-screen) .topbar,
+body:has(.combat-screen) .main-nav,
+body:has(.combat-screen) .footer{display:none}
+body:has(.combat-screen) #view{
+ width:100%;max-width:none;margin:0;padding:0;height:100vh;height:100dvh;
+ min-height:0;overflow:hidden
+}
+.combat-screen{
+ width:100%;height:100%;display:flex;flex-direction:column;
+ min-height:0;overflow:hidden;background:#0a1523
+}
+.combat-screen .combat-titlebar{
+ flex:none;min-height:44px;margin:0;padding:6px 14px;
+ align-items:center;justify-content:space-between;
+ border-bottom:1px solid #9f8e6766;
+ background:linear-gradient(90deg,#142638,#213345 60%,#142438);
+ gap:12px
+}
+.combat-mission-name{
+ margin:1px 0 0;font:600 clamp(14px,1.5vw,19px)/1.15 Georgia,serif;
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55vw
+}
+.combat-screen .combat-titlebar .kicker{font-size:8px;letter-spacing:.08em}
+.combat-screen .combat-titlebar .pill{margin-left:auto;white-space:nowrap;padding:5px 9px;font-size:10px}
+.combat-menu-link{
+ flex:none;border:1px solid #a1b7bd88;border-radius:5px;
+ background:#162d3e;color:#f3e2bd;padding:7px 11px;
+ font-size:11px;font-weight:700;white-space:nowrap
+}
+.combat-menu-link:hover,.combat-menu-link:focus-visible{
+ border-color:#f1d48e;outline:2px solid #f1d48e;outline-offset:1px
+}
+.combat-screen .combat-stage{
+ display:block;flex:1 1 auto;min-height:0;max-height:none;overflow:auto;
+ width:100%;border:0;border-radius:0;padding:7px 12px 10px;
+ box-shadow:none;scrollbar-color:#6a8c9a #142538;
+ overscroll-behavior:contain
+}
+.combat-screen .battle-hud{gap:9px;margin:0 0 3px}
+.combat-screen .fighter{
+ max-width:none;min-width:0;padding:5px 12px;border-radius:6px;
+ background:#0b2030c9
+}
+.combat-screen .fighter h3{font-size:clamp(11px,1.4vw,16px);margin:0 0 3px}
+.combat-screen .fighter .hp-line{font-size:11px;margin-top:3px}
+.combat-screen .fighter .hpbar{height:6px}
+.combat-screen .battle-mid .turn-n{font-size:27px;line-height:1}
+.combat-screen .battle-mid .turn-label{font-size:8px}
+.combat-screen .arena-caption{padding:6px 4px 5px;margin:0}
+.combat-screen .arena-lofi .battle-grid{
+ width:100%;padding-bottom:7px;min-width:0;margin:0;
+ overscroll-behavior-x:contain
+}
+.combat-screen .arena-sky{height:68px;background-size:100% 68px}
+.combat-screen .arena-structured .lane-row,
+.combat-screen .arena-structured .arena-dormant-row{
+ min-height:102px;margin-top:5px
+}
+.combat-screen .arena-structured .battle-cell,
+.combat-screen .arena-structured .arena-dormant-cell,
+.combat-screen .arena-structured .arena-dormant-gate{min-height:102px}
+.combat-screen .arena-structured .unit-on-board{min-height:100px}
+.combat-screen .arena-legend{margin:7px 3px}
+.combat-screen .arena-scroll-hint{margin:3px 2px;font-size:10px}
+.combat-screen .vfx-controls{padding:4px 2px;font-size:10px}
+.combat-screen .control-tip,.combat-screen .teleport-preview{
+ margin:6px 0 0;padding:6px 9px;font-size:11px
+}
+.combat-screen .formation-tip,.combat-screen .battle-tip{margin:5px 2px;font-size:10px}
+.combat-hand-dock{
+ flex:0 0 clamp(205px,29dvh,260px);height:clamp(205px,29dvh,260px);
+ min-height:0;position:relative;z-index:9;
+ border-top:2px solid #bea16a;
+ background:linear-gradient(180deg,#203347,#101e2d 14%,#071323 100%);
+ box-shadow:0 -9px 28px #020912b5;
+ padding:6px 12px max(7px,env(safe-area-inset-bottom))
+}
+.combat-hand-dock .hand-panel{
+ height:100%;min-height:0;display:grid;align-items:stretch;
+ grid-template-columns:minmax(0,1fr) clamp(165px,18vw,230px);
+ gap:12px
+}
+.combat-hand-dock .hand-panel>div:first-child{
+ min-width:0;min-height:0;display:flex;flex-direction:column
+}
+.combat-hand-dock .hand-header{flex:none;min-height:31px;gap:5px}
+.combat-hand-dock .hand-header .section-caption{font-size:11px}
+.combat-hand-dock .hand-header .selection-guide{font-size:10px;line-height:1.2}
+.combat-hand-dock .hand-header .pill{padding:4px 6px;font-size:10px;white-space:nowrap}
+.combat-hand-dock .hand{
+ flex:1 1 auto;min-width:0;min-height:0;width:100%;
+ display:flex;align-items:stretch;gap:9px;
+ overflow-x:auto;overflow-y:hidden;
+ scroll-padding:6px;padding:6px 5px 8px;
+ scrollbar-color:#b9a47e #162736;
+ overscroll-behavior-x:contain
+}
+.combat-hand-dock .unit-card.hand-card{
+ flex:0 0 145px;width:145px;height:100%;min-height:0;
+ padding:5px 6px;overflow:hidden
+}
+.combat-hand-dock .unit-card.hand-card .card-head{font-size:9px;padding:2px 1px 4px}
+.combat-hand-dock .unit-card.hand-card .card-quality-tag{margin:2px 0;padding:2px;font-size:9px}
+.combat-hand-dock .unit-card.hand-card .portrait{height:68px}
+.combat-hand-dock .unit-card.hand-card .card-title{
+ font-size:12px;line-height:1.12;min-height:27px;padding:4px 2px 1px;
+ display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden
+}
+.combat-hand-dock .unit-card.hand-card .card-detail,
+.combat-hand-dock .unit-card.hand-card .card-traits{display:none}
+.combat-hand-dock .unit-card.hand-card .hand-readiness{font-size:9px}
+.combat-hand-dock .unit-card.hand-card .card-stats{
+ margin-top:3px;gap:3px;flex-wrap:wrap
+}
+.combat-hand-dock .unit-card.hand-card .stat{font-size:10px;padding:3px 4px}
+.combat-hand-dock .unit-card.hand-card .cooldown-stamp{
+ top:29px;right:6px;width:48px;height:48px
+}
+.combat-hand-dock .unit-card.hand-card .cooldown-stamp b{font-size:23px}
+.combat-hand-dock .actions-side{
+ min-height:0;max-height:100%;overflow-y:auto;
+ display:flex;flex-direction:column;gap:3px;
+ padding:5px 7px;border-radius:6px;align-items:stretch
+}
+.combat-hand-dock .actions-side>.btn{
+ flex-shrink:0;margin:0;padding:9px 6px;
+ line-height:1.1;font-size:12px
+}
+.combat-hand-dock .actions-side>[data-action="end-turn"]{order:-3}
+.combat-hand-dock .actions-side>[data-action="hero-power"]{order:-2}
+.combat-hand-dock .actions-side>[data-action="retreat"]{order:-1}
+.combat-hand-dock .actions-side>.section-caption{font-size:9px;margin-top:3px}
+.combat-hand-dock .actions-side>.power-hint{padding:5px;margin:2px 0;font-size:10px}
+.combat-hand-dock .actions-side>p{margin:2px 0;font-size:10px;line-height:1.25}
+.combat-hand-dock .actions-side .log-list{max-height:86px;font-size:10px}
+.combat-hand-dock .actions-side>.enemy-ai-profile,
+.combat-hand-dock .actions-side>.ai-plan{font-size:10px;line-height:1.2}
+@media(max-width:700px){
+ .combat-screen .combat-titlebar{min-height:39px;padding:5px 7px;gap:5px}
+ .combat-screen .combat-titlebar .kicker{font-size:8px}
+ .combat-mission-name{font-size:13px;max-width:43vw}
+ .combat-screen .combat-titlebar .pill{display:none}
+ .combat-menu-link{padding:6px;font-size:10px}
+ .combat-screen .combat-stage{padding:5px 5px 7px}
+ .combat-screen .fighter{padding:5px}
+ .combat-screen .fighter h3{font-size:11px}
+ .combat-screen .fighter .hp-line{font-size:9px}
+ .combat-screen .battle-mid .turn-n{font-size:22px}
+ .combat-screen .arena-caption{font-size:10px}
+ .combat-hand-dock{padding:4px 5px max(5px,env(safe-area-inset-bottom))}
+ .combat-hand-dock .hand-panel{
+  grid-template-columns:minmax(0,1fr) 132px;gap:5px
+ }
+ .combat-hand-dock .unit-card.hand-card{flex-basis:120px;width:120px}
+ .combat-hand-dock .unit-card.hand-card .portrait{height:60px}
+ .combat-hand-dock .actions-side{padding:3px;gap:2px}
+ .combat-hand-dock .actions-side>.btn{font-size:10px;padding:8px 3px}
+ .combat-hand-dock .hand-header .selection-guide{font-size:9px}
+}
+@media(max-height:540px){
+ .combat-hand-dock{flex-basis:clamp(137px,40dvh,175px);height:clamp(137px,40dvh,175px)}
+ .combat-screen .combat-titlebar{min-height:35px;padding-block:3px}
+ .combat-screen .arena-sky{height:42px;background-size:100% 42px}
+ .combat-hand-dock .hand-header{min-height:21px}
+ .combat-hand-dock .hand-header .selection-guide{display:none}
+ .combat-hand-dock .unit-card.hand-card .portrait{height:43px}
+ .combat-hand-dock .unit-card.hand-card .card-head{padding:1px}
+ .combat-hand-dock .unit-card.hand-card .card-title{min-height:19px;font-size:10px}
+ .combat-hand-dock .unit-card.hand-card .card-stats{margin-top:0}
+ .combat-hand-dock .unit-card.hand-card .stat{font-size:9px;padding:2px 3px}
+ .combat-hand-dock .unit-card.hand-card .card-quality-tag{font-size:8px;margin:1px 0}
+ .combat-hand-dock .unit-card.hand-card .hand-readiness{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){
+ .combat-screen .combat-hand-dock .unit-card,
+ .combat-screen .combat-stage{scroll-behavior:auto;transition:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -436,10 +618,14 @@ function hideModal(){$('modal-root').innerHTML='';}
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
 function render(){
  const arenaScroll=document.querySelector('.battle-grid')?.scrollLeft||0;
+ const handScroll=document.querySelector('.combat-hand-dock .hand')?.scrollLeft||0;
+ const stageScroll=document.querySelector('.combat-stage')?.scrollTop||0;
  stopBattleFx();document.body.classList.toggle('animations-off',!animationsEnabled);
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
  $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='battle'&&battle?battleUI():homeUI();
  const arena=document.querySelector('.battle-grid');if(arena)arena.scrollLeft=arenaScroll;
+ const hand=document.querySelector('.combat-hand-dock .hand');if(hand)hand.scrollLeft=handScroll;
+ const stage=document.querySelector('.combat-stage');if(stage)stage.scrollTop=stageScroll;
 }
 function settle({deferModal=false}={}){
  if(!battle||battle.status==='active'||battle.rewardGiven)return;
@@ -2387,8 +2573,8 @@ function battleUI(){const p=battle.heroes.p,e=battle.heroes.e,lanes=laneCount(ba
  const preview=selected?.ability==='spell_teleport'?Array.from({length:lanes},(_,lane)=>{
   const plan=teleportPlan(battle,'p',lane);return plan?`Ligne ${lane+1} : ${esc(CARDS[plan.u.id].name)}, de ${plan.fromLane+1} vers ${lane+1}, case ${plan.col}`:`Ligne ${lane+1} : ${esc(controlTargetError(battle,'p',selected,lane))}`;
  }).join(' · '):'';
- return `<div class="split-head"><div><div class="kicker">COMBAT TACTIQUE · ${esc(battle.missionName)}</div><h1 class="page-title" style="font-size:31px">Les ruines d’Astravelle</h1></div><span class="pill">2 cartes maximum par tour</span></div>
- <section class="battle-panel arena-lofi"><div class="battle-hud"><div class="fighter"><h3>♜ ${esc(p.name)}</h3><div class="hpbar"><span style="width:${p.hp/p.maxhp*100}%;background:linear-gradient(90deg,#7199a2,#a1d7b8)"></span></div><div class="hp-line">♥ ${p.hp}/${p.maxhp} PV ${p.shield?`· ⬡ ${p.shield} bouclier`:''}</div></div><div class="battle-mid"><div class="turn-n">${battle.round}</div><div class="turn-label">TOUR</div></div><div class="fighter enemy"><h3>${esc(e.name)} ♛</h3><div class="enemy-style-tag">${esc(AI_STYLES[aiStyle(battle)].name)}${aiEnraged(battle)?' · FURIE':battle.aiBoss?' · Boss':''}</div><div class="hpbar"><span style="width:${e.hp/e.maxhp*100}%"></span></div><div class="hp-line">♥ ${e.hp}/${e.maxhp} PV ${e.shield?`· ⬡ ${e.shield} bouclier`:''}</div></div></div>
+ return `<div class="combat-screen"><div class="split-head combat-titlebar"><div><div class="kicker">COMBAT TACTIQUE · ${esc(battle.missionName)}</div><h1 class="combat-mission-name">${esc(battle.missionName)}</h1></div><span class="pill">2 cartes maximum par tour</span><button type="button" class="combat-menu-link" data-action="nav" data-page="home" aria-label="Revenir à la Citadelle sans abandonner la bataille">☷ Citadelle</button></div>
+ <section class="battle-panel arena-lofi combat-stage"><div class="battle-hud"><div class="fighter"><h3>♜ ${esc(p.name)}</h3><div class="hpbar"><span style="width:${p.hp/p.maxhp*100}%;background:linear-gradient(90deg,#7199a2,#a1d7b8)"></span></div><div class="hp-line">♥ ${p.hp}/${p.maxhp} PV ${p.shield?`· ⬡ ${p.shield} bouclier`:''}</div></div><div class="battle-mid"><div class="turn-n">${battle.round}</div><div class="turn-label">TOUR</div></div><div class="fighter enemy"><h3>${esc(e.name)} ♛</h3><div class="enemy-style-tag">${esc(AI_STYLES[aiStyle(battle)].name)}${aiEnraged(battle)?' · FURIE':battle.aiBoss?' · Boss':''}</div><div class="hpbar"><span style="width:${e.hp/e.maxhp*100}%"></span></div><div class="hp-line">♥ ${e.hp}/${e.maxhp} PV ${e.shield?`· ⬡ ${e.shield} bouclier`:''}</div></div></div>
  <div class="arena-caption"><span>✧ ARÈNE DES SERMENTS</span><span>${lanes} lignes · ${cells} cases par ligne</span></div><div class="battle-grid ${cells===10?'arena-structured':''}" tabindex="0" role="region" aria-label="Plateau de combat : ${lanes} lignes de ${cells} cases" style="--cells:${cells};--arena-scene:url('${arenaBackdrop()}')"><div class="arena-sky" aria-hidden="true"></div>${Array.from({length:cells===10?4:lanes},(_,visual)=>{const lane=cells===10&&lanes===2?visual-1:visual;if(lane<0||lane>=lanes)return `<div class="arena-dormant-row" data-visual-lane="${visual}" aria-hidden="true"><div class="lane-label">${['I','II','III','IV'][visual]}</div><div class="arena-dormant-gate">♜</div>${Array.from({length:cells},()=>'<div class="arena-dormant-cell"></div>').join('')}<div class="arena-dormant-gate enemy">♛</div></div>`;return `<div class="lane-row arena-active-row" data-visual-lane="${visual}" data-crown-col="${cells+1}"><div class="lane-label">${['I','II','III','IV'][visual]}</div><div class="lane-gate" aria-label="Votre couronne"><span class="pixel-tower" aria-hidden="true"></span><b>♜</b></div>${Array.from({length:cells},(_,i)=>battleCell(battle.board[lane][i+1],lane,i+1)).join('')}<div class="lane-gate enemy" aria-label="Couronne adverse"><span class="pixel-tower" aria-hidden="true"></span><b>♛</b></div></div>`;}).join('')}</div>
  <div class="arena-legend" aria-label="Légende du plateau"><span class="legend-ally">BLEU · VOS UNITÉS</span><span class="legend-enemy">ROUGE · UNITÉS ADVERSES</span><span>Contour : rareté · Étiquette : Ordre</span></div>
  <p class="arena-scroll-hint">Sur petit écran, faites glisser le plateau pour voir toutes les cases. Les couronnes sont hors de la grille.</p><div class="vfx-controls"><span>Effets du combat : attaques, flèches, magie et déplacements.</span><button type="button" class="vfx-toggle" data-action="toggle-animations" aria-pressed="${animationsEnabled}">${animationsEnabled?'✦ Animations activées':'Animations désactivées'}</button></div>
@@ -2396,8 +2582,8 @@ function battleUI(){const p=battle.heroes.p,e=battle.heroes.e,lanes=laneCount(ba
  <p class="control-tip">⊘ Silence : capacités déclenchées suspendues, attaques et traits passifs conservés. ✧ Téléportation : autre ligne, même colonne. ⌁ Pièges publics : déclenchés à l’arrivée d’un ennemi, deux par camp. ◷ Tempo : accélérez vos cartes ou ralentissez une carte adverse.</p>${preview?`<p class="teleport-preview" role="status">${preview}</p>`:''}
  <p class="formation-tip">✦ CONCORDE : deux alliés du même Ordre gagnent +1 attaque. ⚡ CHARGE : +2 attaque après déplacement. ↶ RIPOSTE : 2 dégâts avant armure, une fois par tour au contact.</p>
  <div class="battle-tip"><span>← VOTRE COURONNE · VOS UNITÉS AVANCENT →</span><span>← L’ENNEMI AVANCE · COURONNE ADVERSE →</span></div>
- <div class="hand-panel"><div><div class="hand-header"><div><div class="section-caption">Votre main · ${p.hand.length} cartes</div><div class="selection-guide">${selectedCard>=0?'✦ Carte sélectionnée : choisissez une ligne sur le plateau.':'Sélectionnez une carte disponible, puis cliquez sur une ligne.'}</div></div><span class="pill">${p.cardsPlayed}/2 jouées</span></div><div class="hand">${p.hand.map((c,i)=>cardUI(c.id,{compact:true,index:i,select:selectedCard===i,cooldown:c.wait})).join('')||'<div class="hint">Votre main est vide. Terminez le tour.</div>'}</div></div>
- <aside class="actions-side"><div class="enemy-ai-profile ai-personality"><b>Style adverse : ${esc(AI_STYLES[aiStyle(battle)].name)}</b><span>${esc(AI_STYLES[aiStyle(battle)].desc)}${battle.aiBoss?(aiEnraged(battle)?' Le boss est entré en furie.':' Le boss devient plus offensif sous 50 % de PV.'):''}</span></div>${battle.aiLastPlan?`<div class="ai-plan"><b>Dernière tactique adverse</b><span>${esc(battle.aiLastPlan)}</span></div>`:''}<div class="section-caption">Actions du souverain</div><div class="power-hint">${battle.heroTalents?.length?`<div class="battle-talents">${battle.heroTalents.map(id=>`✦ ${esc(TALENT_TREE[battle.heroClass].find(t=>t.id===id)?.name||'Talent')}`).join(' · ')}${battle.heroTalents.includes('rodeur_poursuite')?`<span class="talent-once-status"> · Réserve : ${battle.talentDrawUsed?'utilisée':'disponible'}</span>`:''}</div>`:''}${CLASSES[battle.heroClass].symbol} ${CLASSES[battle.heroClass].description}${battle.powerCooldown?` Disponible dans ${battle.powerCooldown} tour(s).`:''}</div>${btn('✦ Utiliser le pouvoir','hero-power',`${battle.powerCooldown>0||battle.status!=='active'?'disabled':''}`)}${btn('Terminer le tour →','end-turn',`${battle.status!=='active'?'disabled':''}`,'primary')}${btn('Abandonner','retreat','','ghost')}<p>Les créatures avancent et combattent automatiquement quand vous terminez le tour.</p><div class="section-caption" style="margin-top:14px">Journal du combat</div><div class="log-list">${battle.log.map(msg=>`<div>${esc(msg)}</div>`).join('')}</div></aside></div></section>`;
+ </section><div class="combat-hand-dock" role="region" aria-label="Main de cartes et actions de combat"><div class="hand-panel"><div><div class="hand-header"><div><div class="section-caption">Votre main · ${p.hand.length} cartes</div><div class="selection-guide">${selectedCard>=0?'✦ Carte sélectionnée : choisissez une ligne sur le plateau.':'Sélectionnez une carte disponible, puis cliquez sur une ligne.'}</div></div><span class="pill">${p.cardsPlayed}/2 jouées</span></div><div class="hand">${p.hand.map((c,i)=>cardUI(c.id,{compact:true,index:i,select:selectedCard===i,cooldown:c.wait})).join('')||'<div class="hint">Votre main est vide. Terminez le tour.</div>'}</div></div>
+ <aside class="actions-side"><div class="enemy-ai-profile ai-personality"><b>Style adverse : ${esc(AI_STYLES[aiStyle(battle)].name)}</b><span>${esc(AI_STYLES[aiStyle(battle)].desc)}${battle.aiBoss?(aiEnraged(battle)?' Le boss est entré en furie.':' Le boss devient plus offensif sous 50 % de PV.'):''}</span></div>${battle.aiLastPlan?`<div class="ai-plan"><b>Dernière tactique adverse</b><span>${esc(battle.aiLastPlan)}</span></div>`:''}<div class="section-caption">Actions du souverain</div><div class="power-hint">${battle.heroTalents?.length?`<div class="battle-talents">${battle.heroTalents.map(id=>`✦ ${esc(TALENT_TREE[battle.heroClass].find(t=>t.id===id)?.name||'Talent')}`).join(' · ')}${battle.heroTalents.includes('rodeur_poursuite')?`<span class="talent-once-status"> · Réserve : ${battle.talentDrawUsed?'utilisée':'disponible'}</span>`:''}</div>`:''}${CLASSES[battle.heroClass].symbol} ${CLASSES[battle.heroClass].description}${battle.powerCooldown?` Disponible dans ${battle.powerCooldown} tour(s).`:''}</div>${btn('✦ Utiliser le pouvoir','hero-power',`${battle.powerCooldown>0||battle.status!=='active'?'disabled':''}`)}${btn('Terminer le tour →','end-turn',`${battle.status!=='active'?'disabled':''}`,'primary')}${btn('Abandonner','retreat','','ghost')}<p>Les créatures avancent et combattent automatiquement quand vous terminez le tour.</p><div class="section-caption" style="margin-top:14px">Journal du combat</div><div class="log-list">${battle.log.map(msg=>`<div>${esc(msg)}</div>`).join('')}</div></aside></div></div></div>`;
 }
 
  return {battleUI:bind(battleUI)};
