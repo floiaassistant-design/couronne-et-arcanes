@@ -1,3 +1,8 @@
+## Proposition — Illustration céleste calibrée sur le plateau 4 × 10 (PR nº 13, non fusionnée)
+- Nouvelle image originale approuvée 912×620, art WebP embarqué et référencé en CSS modulaire, sans dépendance réseau.
+- Quarante dalles HTML superposées aux dalles peintes sans recadrage ni background-size:cover, pistes actives 2/3/4, scènes centrées sur bureau et scrollables sur mobile.
+- Anciens combats sauvegardés 3×5 conservés ; moteur et IA inchangés ; export autonome régénéré depuis les sources.
+
 ## Proposition — Combat plein écran et main de cartes en bas (PR nº 13, non fusionnée)
 - Refonte visuelle : combat plein écran, HUD compact, plateau dominant et dock inférieur contenant main et commandes.
 - Scroll indépendant de l'arène, de la main et des informations de combat, conservé aux rerendus.
