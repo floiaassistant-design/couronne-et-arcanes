@@ -39,3 +39,13 @@ La zone de combat utilise une vue plein écran `.combat-screen`, un HUD supérie
 La géométrie 4 × 10 des pistes est préservée, les 2/3/4 vraies lignes restent dans le moteur et les combats historiques 3 × 5 ne sont pas modifiés. Les défilements horizontaux de l'arène et de la main, ainsi que le défilement vertical du panneau, survivent au `render()`. Le dock se compacte en paysage mobile ; aucun élément interactif n'est masqué par une ligne décorative inactive.
 
 Les illustrations calibrées définitives ne font pas partie de cette modification : étape graphique séparée dans la PR nº 13, sans délégation au dépôt d'art.
+
+## Illustration céleste approuvée — calibrage 4 × 10
+
+La maquette créée dans la conversation le 13 octobre 2026 et approuvée par l'utilisateur est utilisée ici. **Il ne s'agit pas du fond panoramique de la PR nº 11.** Art original `arene_celeste_maquette_exacte_912x620.png` (912 × 620) ; version WebP qualité 65, 83 264 octets, SHA-256 `82de78e896549005772fc1f22ee1fa7d3996eb476939799ce516c20db7f6284f`. Aucun tiers ni droits externes. La ressource approuvée est stockée dans `assets/backgrounds/arena-celeste-calibree.css` sous forme d'URI WebP base64 : cela évite toute dépendance réseau et permet la version web modulaire et l'export `JOUER.html` autonome.
+
+**Repères exacts en pixels** : largeur de plan 912 ; scène haute 118 ; quatre rangées de 116 séparées par 6 pixels ; premières coordonnées X = 76 px, puis dix cellules de 75,2 px séparées de 4 px. Pistes I à IV commencent aux Y = 124, 246, 368 et 490 px. Aucune image n'est agrandie par `cover` : les cellules HTML restent en superposition sur le décor statique à taille native. Les pistes inactives sont masquées par une voile sombre semi-transparente mais restent non interactives.
+
+Sur les grands écrans, le plan fixe de 912 px est centré dans la scène plein écran ; sur mobile, il défile horizontalement sans changer l'échelle ni les hitboxes. Les anciennes batailles 3 × 5 n'utilisent pas ce décor et conservent leurs géométries et sauvegardes existantes. Le ciel animé ancien est neutralisé uniquement sur le plateau calibré ; le réglage de mouvement réduit et l'arrêt des animations restent respectés.
+
+**Tests** : un contrôle géométrique navigateur mesure les décalages entre les centres des cases et les positions de l'image, pour 2/3/4 lignes et bureau/mobile. Le test source valide l'empreinte du WebP décodé. La génération hors ligne inclut la feuille de style du décor à partir des sources (jamais par modification directe du fichier `JOUER.html`).
