@@ -79,7 +79,7 @@ function switchGame(snapshot){
 }
 export function startNewAdventure(classId){
  if(!Object.prototype.hasOwnProperty.call(CLASSES,classId))return false;
- const profile=freshProfile();profile.heroClass=classId;
+ const profile=freshProfile();profile.heroClass=classId;profile.guideSeen=true;
  return switchGame({profile:JSON.stringify(profile),battle:null});
 }
 export function hasPreviousAdventure(){
