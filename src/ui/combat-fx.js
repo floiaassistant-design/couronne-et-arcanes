@@ -1,4 +1,5 @@
 // Effets visuels synchronisés avec les événements du moteur ; aucun changement aux dégâts.
+import {paintedFootPoint} from './painted-arena.js';
 export function createCombatFx(getContext){
  let fxTimers=[],fxOverlay=null,fxSequence=0;
 function stopBattleFx(){
@@ -12,6 +13,7 @@ function fxPoint(lane,col){
  if(!row)return null;
  const el=col===0?row.querySelector('.lane-gate:not(.enemy)'):col===Number(row.dataset.crownCol)?row.querySelector('.lane-gate.enemy'):row.querySelectorAll('.battle-cell')[col-1];
  if(!el)return null;
+ const anchor=paintedFootPoint(el);if(anchor)return anchor;
  const r=el.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,el};
 }
 function fxNode(cls,x,y,text=''){
@@ -51,7 +53,17 @@ function fxOne(event){
  }
  if(event.type==='move'){
   if(!start)return;
-  const unit=fxNode('vfx-moving',start.x,start.y,event.icon||'♞');
+  // Utiliser l'apparence du véritable sprite lorsque la case d'arrivée le contient.
+  // Aucun changement de coordonnées ou de calcul ; repli sur le symbole historique.
+  const occupant=end.el.querySelector('.unit-on-board');
+  const graphic=occupant?.dataset.owner===event.side?occupant.querySelector('.sprite-figure'):null;
+  const unit=fxNode('vfx-moving'+(graphic?' vfx-creature':''),start.x,start.y,graphic?'':event.icon||'♞');
+  if(graphic&&unit){
+   const figure=document.createElement('img');
+   figure.src=graphic.src;figure.alt='';figure.draggable=false;
+   figure.className='vfx-creature-image';
+   unit.append(figure);
+  }
   animateFx(unit,[{opacity:.8,transform:'translate(-50%,-50%) scale(.8)'},{opacity:1,transform:`translate(calc(-50% + ${end.x-start.x}px),calc(-50% + ${end.y-start.y}px)) scale(1.03)`}],450);return;
  }
  if(event.type==='attack'||event.type==='spell'||event.type==='power'){
@@ -87,7 +99,7 @@ function fxOne(event){
 function playBattleFx(events,onDone){
  stopBattleFx();
  const {animationsEnabled,screen}=getContext();
- if(!animationsEnabled||!events?.length||screen!=='battle'||!document.querySelector('.battle-grid')||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){onDone?.();return;}
+ if(document.querySelector('.arena-painted-frame[data-render-mode="static"]')||!animationsEnabled||!events?.length||screen!=='battle'||!document.querySelector('.battle-grid')||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){onDone?.();return;}
  const seq=fxSequence;
  fxOverlay=document.createElement('div');fxOverlay.className='battle-vfx-overlay';fxOverlay.setAttribute('aria-hidden','true');document.body.append(fxOverlay);
  const selected=events.slice(0,30);

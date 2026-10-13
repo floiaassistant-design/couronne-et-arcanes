@@ -41,6 +41,21 @@ jobs:
         run: npm run control-balance
       - name: Arène 2/3/4 lignes, mobile et reprise historique
         run: python3 tests/browser_arena_v211.py
+      - name: Combat immersif, main fixe en bas, bureau et mobile
+        run: python3 tests/browser_combat_fullscreen_v211.py
+      - name: Arène peinte fixe, ancrages et statistiques des cartes
+        run: python3 tests/browser_painted_arena.py
+      - name: Captures des arènes et version jouable pour revue
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: apercu-arene-structuree
+          path: |
+            /tmp/ca-arena-*.png
+            /tmp/ca-combat-*.png
+            JOUER.html
+          if-no-files-found: warn
+          retention-days: 14
       - name: Clôture du combat, stockage et reprise après coupure
         run: python3 tests/browser_save_integrity_v211.py
       - name: Comparaison de géométrie et reproductibilité

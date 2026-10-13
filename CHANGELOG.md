@@ -1,3 +1,28 @@
+## Proposition — Arène céleste peinte et personnages fixes (13/10/2026, non fusionnée)
+- Première illustration choisie par le joueur, scène complète et plateformes réservées aux héros.
+- Grille projetée 2/3/4×10, déploiement conservé, ancrages des pieds et orientation prêts pour les futures animations.
+- Personnages SVG fixes, anciennes batailles 3×5 conservées, portraits et règles inchangés.
+- Main avec statistiques visibles, défilements indépendants, export autonome sans réseau régénéré.
+- Branche dédiée dépendant de la PR nº 13 ; aucun changement des branches existantes et aucune fusion.
+
+## Proposition — Illustration céleste calibrée sur le plateau 4 × 10 (PR nº 13, non fusionnée)
+- Nouvelle image originale approuvée 912×620, art WebP embarqué et référencé en CSS modulaire, sans dépendance réseau.
+- Quarante dalles HTML superposées aux dalles peintes sans recadrage ni background-size:cover, pistes actives 2/3/4, scènes centrées sur bureau et scrollables sur mobile.
+- Anciens combats sauvegardés 3×5 conservés ; moteur et IA inchangés ; export autonome régénéré depuis les sources.
+
+## Proposition — Combat plein écran et main de cartes en bas (PR nº 13, non fusionnée)
+- Refonte visuelle : combat plein écran, HUD compact, plateau dominant et dock inférieur contenant main et commandes.
+- Scroll indépendant de l'arène, de la main et des informations de combat, conservé aux rerendus.
+- Bureau et mobile portrait/paysage, sans toucher aux règles, aux cartes, à l'IA ou aux sauvegardes.
+- Tests navigateur et export JOUER.html hors ligne requis avant intégration.
+
+## Proposition — Arène structurée 4 × 10 (non fusionnée)
+- Quatre pistes de dalles pixel art calées sur les cellules : deux lignes centrales, trois premières ou quatre lignes actives.
+- Les pistes inactives restent visibles mais ne sont ni interactives ni sauvegardées dans le moteur.
+- Grille plus discrète hors sélection ; contour clair pour le déploiement ; couleur de camp, Ordre et rareté de la PR nº 12 préservés.
+- Batailles historiques 3 × 5 inchangées, avec tests DOM et navigateur dédiés.
+- Prototype CSS, sans nouvel asset : validation graphique humaine avant une version artistique définitive.
+
 ## Proposition V2.11.1 — Nouvelle aventure et lisibilité du plateau (branche dédiée, 2026-10-13)
 
 - Depuis la Citadelle : « Nouvelle partie » propose les quatre classes, puis exige une confirmation explicite avant de remplacer le profil actif. Un seul emplacement local « partie précédente » est conservé, y compris le combat en cours, avec une action permettant de passer de l'une à l'autre.
