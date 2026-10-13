@@ -31,3 +31,11 @@ La vue du ciel et les sprites SVG intégrés sont conservés. **Aucun nouvel ass
 - Essai **visuel humain** de l'alignement et de la lisibilité sur un smartphone physique avant validation graphique.
 
 Aucune modification du moteur, du combat, de l'IA, des statistiques, des identifiants, des sauvegardes ou des ressources graphiques approuvées. Aucun merge autorisé sans validation spécifique.
+
+## Affichage immersif V2.11 proposé
+
+La zone de combat utilise une vue plein écran `.combat-screen`, un HUD supérieur compact, une arène défilante dominante et un dock de cartes fixé **dans la zone basse du viewport**. Le dock contient les mêmes cartes (avec rareté, état d'attente et statistiques) et les mêmes boutons d'action ; les informations adverses restent accessibles dans le panneau d'actions, qui défile séparément. Un bouton `Citadelle` conserve l'accès à la navigation sans abandonner le combat.
+
+La géométrie 4 × 10 des pistes est préservée, les 2/3/4 vraies lignes restent dans le moteur et les combats historiques 3 × 5 ne sont pas modifiés. Les défilements horizontaux de l'arène et de la main, ainsi que le défilement vertical du panneau, survivent au `render()`. Le dock se compacte en paysage mobile ; aucun élément interactif n'est masqué par une ligne décorative inactive.
+
+Les illustrations calibrées définitives ne font pas partie de cette modification : étape graphique séparée dans la PR nº 13, sans délégation au dépôt d'art.
