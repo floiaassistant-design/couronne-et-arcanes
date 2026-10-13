@@ -24,6 +24,7 @@ test('nouvelle aventure : quatre classes, progression sauvegardée et reprise po
   assert.equal(storeBattle(battle),true);
   assert.equal(startNewAdventure(classId),true);
   assert.equal(loadProfile().heroClass,classId);
+  assert.equal(loadProfile().guideSeen,true);
   assert.equal(loadProfile().gold,110);
   assert.equal(restoreBattle(),null);
   assert.equal(hasPreviousAdventure(),true);
