@@ -345,3 +345,14 @@ body.animations-off .hand-card .hand-readiness,body.animations-off .hand-card .c
 @media(prefers-reduced-motion:reduce){
  .arena-lofi .arena-structured .lane-row,.arena-lofi .arena-structured .arena-dormant-row{transition:none}
 }
+
+/* Traduction du vrai sprite pixel art lors des déplacements, si disponible. */
+.vfx-moving.vfx-creature{
+ width:60px;height:62px;
+ color:inherit;text-shadow:none;
+ filter:drop-shadow(0 3px 2px #0d1a28b8);
+}
+.vfx-moving .vfx-creature-image{
+ display:block;width:56px;height:56px;
+ object-fit:contain;image-rendering:pixelated;
+}
