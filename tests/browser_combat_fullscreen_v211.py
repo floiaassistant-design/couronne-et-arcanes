@@ -56,7 +56,12 @@ async def run(browser,name,viewport):
  assert await page.locator('.combat-screen').count()==1
  assert await page.locator('.battle-cell').count()==20
 
- # La main reste jouable et la pose se fait uniquement sur une ligne active.
+ # Forcer une unité de référence : le premier élément d'une main aléatoire peut être un sort.
+ await page.evaluate("""() => {
+  battle.heroes.p.hand=[{id:'militia',wait:0}];
+  battle.heroes.p.cardsPlayed=0;
+  render();
+ }""")
  await page.locator('.combat-hand-dock .hand [data-action="select-card"]:not(.on-cooldown)').first.click()
  await page.locator('[data-action="deploy"][data-lane="0"]').click()
  assert await page.evaluate('battle.board[0][1]?.id') is not None
