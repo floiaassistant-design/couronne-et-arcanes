@@ -38,6 +38,19 @@ async def run(browser,label,viewport):
         assert max(x['w'] for x in geometry)-min(x['w'] for x in geometry)<1,geometry
         assert all(x['height']>=90 for x in geometry)
         assert await page.locator('.arena-dormant-row [data-action],.arena-dormant-row [tabindex]').count()==0
+        # Le dessin natif 912x620 et les centres des cases partagent le meme repere.
+        calibrated=page.locator('.arena-calibrated-art')
+        assert await calibrated.count()==1
+        frame=await calibrated.bounding_box()
+        assert frame and abs(frame['width']-912)<1 and abs(frame['height']-620)<1,frame
+        first=await page.locator('.lane-row .battle-cell').first.bounding_box()
+        assert first and abs(first['x']-frame['x']-76)<1,(lanes,first,frame)
+        expected_y={2:246,3:124,4:124}[lanes]
+        assert abs(first['y']-frame['y']-expected_y)<1,(lanes,first,frame)
+        sky=await page.locator('.arena-structured .arena-sky').bounding_box()
+        assert abs(sky['height']-118)<1,sky
+        img_source=await calibrated.evaluate('(el)=>getComputedStyle(el).backgroundImage')
+        assert img_source.startswith('url("data:image/webp;base64,'),img_source[:90]
         assert await page.locator('.battle-cell').count()==lanes*10
         assert await page.locator('.lane-gate').count()==lanes*2
         assert f'{lanes} lignes · 10 cases' in await page.locator('.arena-caption').inner_text()
@@ -91,6 +104,7 @@ async def run(browser,label,viewport):
     assert await page.locator('.lane-row').count()==3
     assert await page.locator('.battle-cell').count()==15
     assert await page.locator('.arena-dormant-row,.arena-structured').count()==0
+    assert await page.locator('.arena-calibrated-art').count()==0
     await page.locator('[data-action="end-turn"]').click()
     assert await page.locator('.turn-n').inner_text()=='2'
     assert not errors,errors
