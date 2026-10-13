@@ -8,7 +8,7 @@ async def run(browser,label,viewport):
     page=await make_page(browser,viewport,{},errors)
     await page.locator('[data-action="welcome-start"]').click()
     await page.evaluate("""() => {profile.gold=789;profile.wins=3;save();persistBattle();}""")
-    await page.locator('#nav [data-action="nav"][data-page="home"]').click()
+    await page.locator('.combat-menu-link').click()
     await page.locator('[data-action="new-game"]').click()
     assert await page.locator('[data-action="new-game-select"]').count()==4
     await page.locator('[data-action="new-game-select"][data-id="arcaniste"]').click()
@@ -46,7 +46,7 @@ async def run(browser,label,viewport):
     page=await make_page(browser,viewport,saved,errors)
     assert await page.evaluate('profile.heroClass')=='arcaniste'
     assert await page.locator('.unit-on-board.enemy .board-owner').inner_text()=='ENNEMI'
-    await page.locator('#nav [data-action="nav"][data-page="home"]').click()
+    await page.locator('.combat-menu-link').click()
     await page.locator('[data-action="restore-previous-game"]').click()
     await page.locator('[data-action="confirm-restore-previous-game"]').click()
     restored=await page.evaluate("() => ({hero:profile.heroClass,gold:profile.gold,wins:profile.wins,active:!!battle,mission:battle?.missionId})")
