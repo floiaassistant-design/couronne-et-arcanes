@@ -30,7 +30,7 @@ function cardUI(id,{compact=false,index=null,select=false,canEdit=false,upgradab
  <div class="card-quality-tag" aria-label="Rareté : ${esc(c.rarity)}">${esc(c.rarity.toUpperCase())}</div>
  <div class="portrait creature-portrait role-${visual.role}"><img class="creature-image" src="${artSrc(visual.art)}" alt="Illustration de ${esc(c.name)}" loading="lazy" draggable="false" /><span class="portrait-emblem" aria-hidden="true">${c.icon}</span></div>
  ${pilot&&inHand?`<button type="button" class="illustrated-inspect" data-action="inspect-card" data-index="${index}" aria-controls="hand-card-inspection" aria-expanded="false" aria-label="Lire la fiche de ${esc(c.name)}">ⓘ Fiche</button>`:''}
- ${inHand&&!pilot?`<div class="hand-readiness ${waiting?'waiting':'ready'}" aria-hidden="true">${waiting?'◷ EN ATTENTE':'✓ PRÊTE'}</div>`:''}
+ ${inHand?`<div class="hand-readiness ${waiting?'waiting':'ready'}" aria-hidden="true">${waiting?'◷ EN ATTENTE':'✓ PRÊTE'}</div>`:''}
  <div class="card-title">${esc(c.name)}${bonus?` <span class="tiny gold">+${bonus}</span>`:''}${rank?` <span class="mastery-seal" title="Maîtrise ${rank}/3">✦${rank}</span>`:''}</div>
  <div class="card-detail" title="${esc(c.description)}">${pilot?'Portée 2':esc(c.description)}</div>
  ${cardTraits(c.id).length?`<div class="card-traits">${cardTraits(c.id).map(t=>`<span class="trait-pill">${esc(t)}</span>`).join('')}</div>`:''}
@@ -38,7 +38,7 @@ function cardUI(id,{compact=false,index=null,select=false,canEdit=false,upgradab
  ${(canEdit||upgradable)&&owned?`<div class="mastery-progress" title="Maîtrise gagnée en jouant cette carte"><span>Maîtrise ${rank}/3 · ${masteryXp}${rank===3?" (MAX)":" / "+MASTERY_THRESHOLDS[rank+1]} XP</span><div class="mastery-track"><i style="width:${rank===3?100:Math.min(100,masteryXp/MASTERY_THRESHOLDS[rank+1]*100)}%"></i></div></div>`:""}
  ${canEdit?`<div class="card-actions"><span class="tiny muted">Possédées : ${owned}</span><span>${btn('+','deck-add',`data-id="${id}" aria-label="Ajouter ${esc(c.name)}"`,'small')}${btn('−','deck-remove',`data-id="${id}" aria-label="Retirer ${esc(c.name)}"`,'small ghost')}</span></div>`:''}
  ${upgradable&&c.type==='unité'?`<div class="card-actions"><span class="tiny muted">Niv. ${bonus}/3</span>${btn(bonus===3?'MAX':`+1 · ${(bonus+1)*35} ✧`,'card-upgrade',`data-id="${id}" ${(!owned||bonus===3)?'disabled':''}`,'small')}</div>`:''}
- ${waiting&&!pilot?`<div class="cooldown-stamp" aria-hidden="true"><b>${cooldown}</b><small>${cooldown===1?'TOUR':'TOURS'}</small></div>`:''}</div>`;
+ ${waiting?`<div class="cooldown-stamp" aria-hidden="true"><b>${cooldown}</b><small>${cooldown===1?'TOUR':'TOURS'}</small></div>`:''}</div>`;
 }
  const pages=createPages(getState,{btn,cardUI:bind(cardUI),esc,num,heroProgress});
  const battlefield=createBattleView(getState,{btn,cardUI:bind(cardUI),esc,num});
