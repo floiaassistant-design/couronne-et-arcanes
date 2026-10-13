@@ -51,7 +51,17 @@ function fxOne(event){
  }
  if(event.type==='move'){
   if(!start)return;
-  const unit=fxNode('vfx-moving',start.x,start.y,event.icon||'♞');
+  // Utiliser l'apparence du véritable sprite lorsque la case d'arrivée le contient.
+  // Aucun changement de coordonnées ou de calcul ; repli sur le symbole historique.
+  const occupant=end.el.querySelector('.unit-on-board');
+  const graphic=occupant?.dataset.owner===event.side?occupant.querySelector('.sprite-figure'):null;
+  const unit=fxNode('vfx-moving'+(graphic?' vfx-creature':''),start.x,start.y,graphic?'':event.icon||'♞');
+  if(graphic&&unit){
+   const figure=document.createElement('img');
+   figure.src=graphic.src;figure.alt='';figure.draggable=false;
+   figure.className='vfx-creature-image';
+   unit.append(figure);
+  }
   animateFx(unit,[{opacity:.8,transform:'translate(-50%,-50%) scale(.8)'},{opacity:1,transform:`translate(calc(-50% + ${end.x-start.x}px),calc(-50% + ${end.y-start.y}px)) scale(1.03)`}],450);return;
  }
  if(event.type==='attack'||event.type==='spell'||event.type==='power'){
