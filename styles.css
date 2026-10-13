@@ -549,3 +549,69 @@ body:has(.combat-screen) #view{
  .combat-screen .arena-structured .arena-dormant-gate{min-height:98px}
  .combat-screen .arena-structured .unit-on-board{min-height:96px}
 }
+
+/* Arène céleste calibrée — source graphique distincte, grille UI 4×10 ancrée.
+ * Plan 912 × 620 : ciel jusqu'à y=118, 4 rangées de 116px avec écart de 6px.
+ * Colonne 1 commence à x=76 : 24 + 44 + 2*4. Pas d'étirement de l'image. */
+.arena-lofi .battle-grid.arena-structured{
+ padding:0 0 14px;
+ min-height:634px;
+ position:relative;
+ background:linear-gradient(90deg,#12283a,#1a2f45 50%,#12283a);
+}
+.arena-lofi .arena-structured .arena-calibrated-art{
+ position:absolute;top:0;left:max(0px,calc((100% - 912px)/2));
+ width:912px;height:620px;z-index:0;
+ background-color:#132739;background-repeat:no-repeat;
+ background-size:912px 620px;
+ pointer-events:none;user-select:none
+}
+.arena-lofi .arena-structured .arena-sky{
+ position:relative;z-index:1;
+ width:912px;min-width:912px;height:118px;min-height:118px;
+ margin-left:max(0px,calc((100% - 912px)/2));
+ background:none;border:0;box-shadow:none
+}
+.arena-lofi .arena-structured .arena-sky::after{display:none!important}
+.arena-lofi .arena-structured .lane-row,
+.arena-lofi .arena-structured .arena-dormant-row,
+.combat-screen .arena-structured .lane-row,
+.combat-screen .arena-structured .arena-dormant-row{
+ width:912px;min-width:912px;max-width:912px;
+ height:116px;min-height:116px;max-height:116px;
+ margin:6px 0 0 max(0px,calc((100% - 912px)/2));
+ grid-template-columns:24px 44px repeat(10,minmax(0,1fr)) 44px;
+ gap:4px;position:relative;z-index:1;
+ background:none;box-shadow:none;
+}
+.arena-lofi .arena-structured .battle-cell,
+.arena-lofi .arena-structured .arena-dormant-cell,
+.combat-screen .arena-structured .battle-cell,
+.combat-screen .arena-structured .arena-dormant-cell{
+ min-height:116px;height:116px;box-shadow:none;
+ border:1px solid #e6e0b328;background:transparent;
+}
+.arena-lofi .arena-structured .lane-row .battle-cell:nth-child(3n){background:transparent}
+.arena-lofi .arena-structured .battle-cell.available,
+.combat-screen .arena-structured .battle-cell.available{
+ background:#ffe7a226;border:2px solid #ffe1a3;
+ box-shadow:inset 0 0 0 2px #ffe7ae77,0 0 10px #ffe1a866;
+}
+.arena-lofi .arena-structured .lane-row .lane-gate{
+ min-height:116px;background:#06132220;border-color:#edd6a02b;
+}
+.arena-lofi .arena-structured .arena-dormant-row{
+ opacity:1;filter:none;pointer-events:none;user-select:none;
+}
+.arena-lofi .arena-structured .arena-dormant-cell{
+ background:#0715239e;border:1px solid #b3b5a51a;
+}
+.arena-lofi .arena-structured .arena-dormant-gate{
+ min-height:116px;background:#061526a9;color:#b9c1bf;
+}
+.arena-lofi .arena-structured .arena-dormant-gate.enemy{background:#1c0d22ad}
+.arena-lofi .arena-structured .unit-on-board,
+.combat-screen .arena-structured .unit-on-board{min-height:114px}
+@media(prefers-reduced-motion:reduce){
+ .arena-lofi .arena-structured .arena-calibrated-art{animation:none;transition:none}
+}
