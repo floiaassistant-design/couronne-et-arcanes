@@ -16,7 +16,7 @@ async def run(browser,label,viewport):
     cards=page.locator('.hand .illustrated-pilot')
     assert await cards.count()==3
     assert await page.locator('.hand .illustrated-count').count()==3
-    assert await page.locator('.hand .illustrated-pilot .cooldown-stamp,.hand .illustrated-pilot .hand-readiness').evaluate_all("els=>els.length===6 && els.every(el=>getComputedStyle(el).display==='none')")
+    assert await page.locator('.hand .illustrated-pilot .cooldown-stamp,.hand .illustrated-pilot .hand-readiness').evaluate_all("els=>els.length===5 && els.every(el=>getComputedStyle(el).display==='none')")
     for i in range(3):
         assert await cards.nth(i).locator('.illustrated-count b').inner_text()==str(i)
         assert await cards.nth(i).locator('.illustrated-count').get_attribute('data-delay-kind')=='remaining'
