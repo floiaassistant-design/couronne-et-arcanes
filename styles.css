@@ -639,7 +639,6 @@ body:has(.combat-screen) #view{
 .illustrated-pilot .mastery-progress,.illustrated-pilot .card-actions{position:relative;padding:4px;margin:3px 5px;background:#102535e3}
 .illustrated-pilot:not(.compact){min-height:315px}
 .illustrated-pilot:not(.compact) .card-title{margin-top:150px}
-.illustrated-pilot .illustrated-inspect{position:absolute;top:38px;right:5px;z-index:4;background:#10273deb;color:#fff2d7;border:1px solid #d7b984;border-radius:5px;padding:5px;font:700 10px system-ui,sans-serif;min-height:29px}
 .illustrated-pilot.hand-card{opacity:1}
 .illustrated-pilot.hand-card.on-cooldown .portrait img{filter:saturate(.75) brightness(.75)}
 .illustrated-pilot.hand-card .card-title{position:absolute;left:2px;right:2px;bottom:43px;margin:0;padding:4px 2px!important;min-height:0!important;font-size:11px}
@@ -653,7 +652,7 @@ body:has(.combat-screen) #view{
 .hand-card-inspection[hidden]{display:none}
 .hand-card-inspection button{background:#31495b;color:white;border:1px solid #92a6aa;border-radius:3px;margin-left:7px}
 @media(max-width:700px){.hand-card-inspection{font-size:10px;max-height:42px}.illustrated-pilot.hand-card .card-stats .stat{padding:3px 5px}}
-@media(max-height:540px){.illustrated-pilot .illustrated-inspect{top:29px;min-height:24px}.illustrated-pilot.hand-card .card-title{bottom:29px;font-size:10px}.illustrated-pilot.hand-card .card-stats .stat b{font-size:13px}.illustrated-pilot.hand-card .card-stats{bottom:1px}.hand-card-inspection{max-height:34px;font-size:9px}}
+@media(max-height:540px){.illustrated-pilot.hand-card .card-title{bottom:29px;font-size:10px}.illustrated-pilot.hand-card .card-stats .stat b{font-size:13px}.illustrated-pilot.hand-card .card-stats{bottom:1px}.hand-card-inspection{max-height:34px;font-size:9px}}
 @media(prefers-reduced-motion:reduce){.illustrated-pilot{transition:none!important;animation:none!important}}
 
 /* Fiche du pilote : calée dans le bandeau existant pour ne jamais déplacer la main au survol. */

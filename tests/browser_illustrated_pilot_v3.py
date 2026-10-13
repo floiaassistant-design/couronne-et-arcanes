@@ -25,11 +25,20 @@ async def run(browser,label,viewport):
     assert await image.evaluate('(el)=>el.complete && el.naturalWidth===512 && el.naturalHeight===768')
     assert await page.evaluate('selectedCard')==-1
 
-    info=cards.first.locator('[data-action="inspect-card"]')
-    await info.click()
+    # Aucun bouton n'encombre le portrait : survol ou focus pour consulter.
+    assert await page.locator('.hand .illustrated-inspect,[data-action="inspect-card"]').count()==0
+    await cards.first.focus()
     assert not await page.locator('#hand-card-inspection').is_hidden()
     assert 'Peut attaquer à deux cases' in await page.locator('#hand-card-inspection').inner_text()
-    assert await page.evaluate('selectedCard')==-1  # Inspecter ne joue ni ne choisit.
+    assert await page.evaluate('selectedCard')==-1
+    await cards.first.press('Escape')
+    assert await page.locator('#hand-card-inspection').is_hidden()
+
+    # Toucher/cliquer une carte en attente ouvre la description sans la sélectionner.
+    wait_click_y=await cards.nth(1).evaluate('(el)=>Math.min(35,Math.floor(el.getBoundingClientRect().height/2))')
+    await cards.nth(1).click(position={'x':10,'y':wait_click_y})
+    assert await page.evaluate('selectedCard')==-1
+    assert not await page.locator('#hand-card-inspection').is_hidden()
     await page.locator('[data-action="close-inspection"]').click()
     assert await page.locator('#hand-card-inspection').is_hidden()
 
@@ -42,6 +51,9 @@ async def run(browser,label,viewport):
       return el.contains(document.elementFromPoint(x,y));
     }"""),'Carte masquée par une autre zone de la main'
     await cards.first.click(position={'x':10,'y':click_y})
+    assert await page.evaluate('selectedCard')==0
+    assert not await page.locator('#hand-card-inspection').is_hidden()
+    await page.locator('[data-action="close-inspection"]').click()
     assert await page.evaluate('selectedCard')==0
     target=page.locator('[data-action="deploy"][data-lane="0"]')
     await target.scroll_into_view_if_needed()

@@ -74,12 +74,10 @@ function inspectCard(index,pin=false){
   ' · '+esc(c.description)+(c.type==='unité'?' · ATQ '+(c.attack+bonus)+' / PV '+(c.hp+bonus+(rank===3?1:0)):'')+
   ' · Attente '+Math.max(0,entry.wait||0)+
   ' <button type="button" data-action="close-inspection" aria-label="Fermer la fiche">×</button>';
- document.querySelectorAll('.illustrated-inspect').forEach(el=>el.setAttribute('aria-expanded',String(pinnedInspection===Number(el.dataset.index))));
 }
 function closeCardInspection(){
  pinnedInspection=-1;const panel=$('hand-card-inspection');
  if(panel){panel.hidden=true;panel.textContent='';}
- document.querySelectorAll('.illustrated-inspect').forEach(el=>el.setAttribute('aria-expanded','false'));
 }
 function settle({deferModal=false}={}){
  if(!battle||battle.status==='active'||battle.rewardGiven)return;
@@ -179,12 +177,16 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
  }
  case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}const result=learnClassSkill(profile,id);if(result.ok){save();render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}else toast(result.reason);break;}
  case 'deck-add':case 'deck-remove':if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();render();}else toast('Impossible de modifier ce deck davantage.');break;
- case 'inspect-card':inspectCard(index,true);break;
  case 'close-inspection':closeCardInspection();break;
- case 'select-card':if(!battle||battle.status!=='active')break;
-  if(battle.heroes.p.cardsPlayed>=2){toast('Vous avez déjà joué deux cartes ce tour.');break;}
-  if(battle.heroes.p.hand[Number(index)]?.wait>0){toast('Cette carte est encore en attente.');break;}
-  selectedCard=selectedCard===Number(index)?-1:Number(index);render();break;
+ case 'select-card':{
+  if(!battle||battle.status!=='active')break;
+  const i=Number(index),pilot=battle.heroes.p.hand[i]?.id==='archer';
+  if(battle.heroes.p.cardsPlayed>=2){if(pilot)inspectCard(i,true);else toast('Vous avez déjà joué deux cartes ce tour.');break;}
+  if(battle.heroes.p.hand[i]?.wait>0){if(pilot)inspectCard(i,true);else toast('Cette carte est encore en attente.');break;}
+  selectedCard=selectedCard===i?-1:i;render();
+  if(pilot&&selectedCard===i)inspectCard(i,true);
+  break;
+ }
  case 'deploy':if(!battle||selectedCard<0)return;withBattleFx(()=>playPlayerCard(battle,selectedCard,Number(lane)));break;
  case 'end-turn':if(!battle)return;withBattleFx(()=>endPlayerTurn(battle));break;
  case 'hero-power':if(!battle)return;withBattleFx(()=>usePower(battle));break;

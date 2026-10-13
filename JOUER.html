@@ -648,7 +648,6 @@ body:has(.combat-screen) #view{
 .illustrated-pilot .mastery-progress,.illustrated-pilot .card-actions{position:relative;padding:4px;margin:3px 5px;background:#102535e3}
 .illustrated-pilot:not(.compact){min-height:315px}
 .illustrated-pilot:not(.compact) .card-title{margin-top:150px}
-.illustrated-pilot .illustrated-inspect{position:absolute;top:38px;right:5px;z-index:4;background:#10273deb;color:#fff2d7;border:1px solid #d7b984;border-radius:5px;padding:5px;font:700 10px system-ui,sans-serif;min-height:29px}
 .illustrated-pilot.hand-card{opacity:1}
 .illustrated-pilot.hand-card.on-cooldown .portrait img{filter:saturate(.75) brightness(.75)}
 .illustrated-pilot.hand-card .card-title{position:absolute;left:2px;right:2px;bottom:43px;margin:0;padding:4px 2px!important;min-height:0!important;font-size:11px}
@@ -662,7 +661,7 @@ body:has(.combat-screen) #view{
 .hand-card-inspection[hidden]{display:none}
 .hand-card-inspection button{background:#31495b;color:white;border:1px solid #92a6aa;border-radius:3px;margin-left:7px}
 @media(max-width:700px){.hand-card-inspection{font-size:10px;max-height:42px}.illustrated-pilot.hand-card .card-stats .stat{padding:3px 5px}}
-@media(max-height:540px){.illustrated-pilot .illustrated-inspect{top:29px;min-height:24px}.illustrated-pilot.hand-card .card-title{bottom:29px;font-size:10px}.illustrated-pilot.hand-card .card-stats .stat b{font-size:13px}.illustrated-pilot.hand-card .card-stats{bottom:1px}.hand-card-inspection{max-height:34px;font-size:9px}}
+@media(max-height:540px){.illustrated-pilot.hand-card .card-title{bottom:29px;font-size:10px}.illustrated-pilot.hand-card .card-stats .stat b{font-size:13px}.illustrated-pilot.hand-card .card-stats{bottom:1px}.hand-card-inspection{max-height:34px;font-size:9px}}
 @media(prefers-reduced-motion:reduce){.illustrated-pilot{transition:none!important;animation:none!important}}
 
 /* Fiche du pilote : calée dans le bandeau existant pour ne jamais déplacer la main au survol. */
@@ -857,12 +856,10 @@ function inspectCard(index,pin=false){
   ' · '+esc(c.description)+(c.type==='unité'?' · ATQ '+(c.attack+bonus)+' / PV '+(c.hp+bonus+(rank===3?1:0)):'')+
   ' · Attente '+Math.max(0,entry.wait||0)+
   ' <button type="button" data-action="close-inspection" aria-label="Fermer la fiche">×</button>';
- document.querySelectorAll('.illustrated-inspect').forEach(el=>el.setAttribute('aria-expanded',String(pinnedInspection===Number(el.dataset.index))));
 }
 function closeCardInspection(){
  pinnedInspection=-1;const panel=$('hand-card-inspection');
  if(panel){panel.hidden=true;panel.textContent='';}
- document.querySelectorAll('.illustrated-inspect').forEach(el=>el.setAttribute('aria-expanded','false'));
 }
 function settle({deferModal=false}={}){
  if(!battle||battle.status==='active'||battle.rewardGiven)return;
@@ -962,12 +959,16 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
  }
  case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}const result=learnClassSkill(profile,id);if(result.ok){save();render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}else toast(result.reason);break;}
  case 'deck-add':case 'deck-remove':if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();render();}else toast('Impossible de modifier ce deck davantage.');break;
- case 'inspect-card':inspectCard(index,true);break;
  case 'close-inspection':closeCardInspection();break;
- case 'select-card':if(!battle||battle.status!=='active')break;
-  if(battle.heroes.p.cardsPlayed>=2){toast('Vous avez déjà joué deux cartes ce tour.');break;}
-  if(battle.heroes.p.hand[Number(index)]?.wait>0){toast('Cette carte est encore en attente.');break;}
-  selectedCard=selectedCard===Number(index)?-1:Number(index);render();break;
+ case 'select-card':{
+  if(!battle||battle.status!=='active')break;
+  const i=Number(index),pilot=battle.heroes.p.hand[i]?.id==='archer';
+  if(battle.heroes.p.cardsPlayed>=2){if(pilot)inspectCard(i,true);else toast('Vous avez déjà joué deux cartes ce tour.');break;}
+  if(battle.heroes.p.hand[i]?.wait>0){if(pilot)inspectCard(i,true);else toast('Cette carte est encore en attente.');break;}
+  selectedCard=selectedCard===i?-1:i;render();
+  if(pilot&&selectedCard===i)inspectCard(i,true);
+  break;
+ }
  case 'deploy':if(!battle||selectedCard<0)return;withBattleFx(()=>playPlayerCard(battle,selectedCard,Number(lane)));break;
  case 'end-turn':if(!battle)return;withBattleFx(()=>endPlayerTurn(battle));break;
  case 'hero-power':if(!battle)return;withBattleFx(()=>usePower(battle));break;
@@ -1047,12 +1048,11 @@ function cardUI(id,{compact=false,index=null,select=false,canEdit=false,upgradab
  const c=CARDS[id];if(!c)return '';const tone=FACTIONS[c.faction].tone,bonus=profile.upgrades[id]||0,owned=profile.collection[id]||0,visual=visualFor(c),rank=masteryRank(profile,id),masteryXp=profile.mastery?.[id]||0;
  const inHand=compact&&cooldown!==null&&cooldown!==undefined,waiting=inHand&&cooldown>0,ready=inHand&&!waiting;
  const pilot=id==='archer'; // Pilote Illustrée v3, les autres cartes conservent leur habillage.
- return `<div class="unit-card ${pilot?'illustrated-pilot':''} ${compact?'compact':''} ${waiting?'on-cooldown hand-waiting':''} ${ready?'hand-ready':''} ${inHand?'hand-card':''} ${inHand&&animationsEnabled?'timer-motion':''} ${select?'selected':''}" data-rarity="${c.rarity}" style="--tone:${tone}" ${compact?`data-action="select-card" data-index="${index}" role="button" tabindex="0" ${waiting?'aria-disabled="true"':''} aria-label="${esc(c.name)}${inHand?(waiting?', en attente : '+cooldown+' tour'+(cooldown>1?'s':'')+' avant disponibilité':', prête à être jouée'):''}"`:''}>
+ return `<div class="unit-card ${pilot?'illustrated-pilot':''} ${compact?'compact':''} ${waiting?'on-cooldown hand-waiting':''} ${ready?'hand-ready':''} ${inHand?'hand-card':''} ${inHand&&animationsEnabled?'timer-motion':''} ${select?'selected':''}" data-rarity="${c.rarity}" style="--tone:${tone}" ${compact?`data-action="select-card" data-index="${index}" role="button" tabindex="0" ${waiting&&!pilot?'aria-disabled="true"':''} aria-label="${esc(c.name)}${inHand?(waiting?', en attente : '+cooldown+' tour'+(cooldown>1?'s':'')+' avant disponibilité':', prête à être jouée'):''}"`:''}>
  ${pilot?`<span class="illustrated-faction">${esc(FACTIONS[c.faction].short)}</span><span class="illustrated-count" data-delay-kind="${inHand?'remaining':'base'}" aria-label="${inHand?'Attente restante':'Délai de base'} : ${inHand?cooldown:c.delay}"><b>${inHand?cooldown:c.delay}</b></span>`:''}
  <div class="card-head"><span>${esc(c.heroClass?CLASSES[c.heroClass].name:FACTIONS[c.faction].short)}</span><b>${c.heroClass?'COMPÉTENCE':c.type==='sort'?'SORT':'UNITÉ'}</b></div>
  <div class="card-quality-tag" aria-label="Rareté : ${esc(c.rarity)}">${esc(c.rarity.toUpperCase())}</div>
  <div class="portrait creature-portrait role-${visual.role}"><img class="creature-image" src="${artSrc(visual.art)}" alt="Illustration de ${esc(c.name)}" loading="lazy" draggable="false" /><span class="portrait-emblem" aria-hidden="true">${c.icon}</span></div>
- ${pilot&&inHand?`<button type="button" class="illustrated-inspect" data-action="inspect-card" data-index="${index}" aria-controls="hand-card-inspection" aria-expanded="false" aria-label="Lire la fiche de ${esc(c.name)}">ⓘ Fiche</button>`:''}
  ${inHand?`<div class="hand-readiness ${waiting?'waiting':'ready'}" aria-hidden="true">${waiting?'◷ EN ATTENTE':'✓ PRÊTE'}</div>`:''}
  <div class="card-title">${esc(c.name)}${bonus?` <span class="tiny gold">+${bonus}</span>`:''}${rank?` <span class="mastery-seal" title="Maîtrise ${rank}/3">✦${rank}</span>`:''}</div>
  <div class="card-detail" title="${esc(c.description)}">${pilot?'Portée 2':esc(c.description)}</div>
