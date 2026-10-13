@@ -1,6 +1,6 @@
 import {createViews} from './ui/views.js';
 import {createCombatFx} from './ui/combat-fx.js';
-import {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile} from './ui/storage.js';
+import {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure} from './ui/storage.js';
 import {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS} from './data.js';
 import {AI_STYLES,aiStyle,aiEnraged} from './ai.js';
 import {TALENT_TREE,TALENT_LEVELS} from './talents.js';
@@ -14,7 +14,7 @@ const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='all',collectionOwned=false;
 let deferredBattleModal='',battleStorageWarning=false;
 const {stopBattleFx,playBattleFx}=createCombatFx(()=>({animationsEnabled,screen}));
-const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled}));
+const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
 function save(){if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
@@ -111,8 +111,15 @@ function startMission(id){if(battle?.status==='active'){toast('Terminez le comba
  const invalid=validateDeck(profile);if(invalid){toast(invalid);screen='collection';render();return;}
  try{battle=createBattle(profile,mission);persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);}catch(e){toast(e.message);}}
 function navigate(page){if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();if(!['home','campaign','tower','dungeons','collection','alchemy','forge','guide','battle'].includes(page))return;screen=page;selectedCard=-1;render();window.scrollTo(0,0);}
+function switchToSavedAdventure(){stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();window.scrollTo(0,0);}
 function act(action,dataset){const {id,index,lane,page}=dataset;
  switch(action){
+
+  case 'new-game':showModal(`<div class="kicker">NOUVELLE PARTIE</div><h2>Choisir votre classe de départ</h2><p>Commencez une aventure à zéro avec une autre classe. Vous pouvez aussi changer de classe dans l’Atelier sans recommencer votre progression, après un combat.</p><div class="class-options new-game-classes">${Object.entries(CLASSES).map(([classId,c])=>btn(c.symbol+' '+c.name,'new-game-select',`data-id="${classId}"`,'ghost')).join('')}</div><p class="hint">La partie actuelle sera gardée dans un emplacement de sauvegarde précédent sur cet appareil. Exportez-la dans le Guide pour une copie durable.</p><div class="button-row">${btn('Annuler','close-modal','','ghost')}</div>`);break;
+  case 'new-game-select':if(!CLASSES[id])break;showModal(`<div class="kicker">CONFIRMATION</div><h2>Recommencer en ${esc(CLASSES[id].name)} ?</h2><p>Votre progression, votre collection, vos talents et votre combat actuel seront remplacés par une nouvelle aventure. Une copie de la partie précédente sera conservée dans ce navigateur (un seul emplacement).</p><div class="button-row">${btn('Oui, nouvelle partie','confirm-new-game',`data-id="${id}"`,'danger')}${btn('Non, revenir','close-modal','','ghost')}</div>`);break;
+  case 'confirm-new-game':if(!startNewAdventure(id)){toast('Nouvelle partie impossible : stockage local indisponible.');break;}switchToSavedAdventure();toast('Nouvelle aventure commencée en '+CLASSES[id].name+'.');break;
+  case 'restore-previous-game':if(!hasPreviousAdventure()){toast('Aucune partie précédente disponible.');break;}showModal(`<div class="kicker">PARTIE PRÉCÉDENTE</div><h2>Échanger les deux parties ?</h2><p>La partie précédente (y compris son combat sauvegardé) sera rétablie. Votre partie actuelle prendra sa place dans l’emplacement précédent.</p><div class="button-row">${btn('Oui, retrouver la partie','confirm-restore-previous-game','','primary')}${btn('Annuler','close-modal','','ghost')}</div>`);break;
+  case 'confirm-restore-previous-game':if(!restorePreviousAdventure()){toast('Restauration impossible : vérifiez le stockage local.');break;}switchToSavedAdventure();toast('Partie précédente retrouvée.');break;
  case 'home':navigate('home');break;
  case 'nav':navigate(page);break;
  case 'start-next':startMission(CAMPAIGN[Math.min(profile.unlocked-1,11)].id);break;
