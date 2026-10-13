@@ -27,28 +27,22 @@ async def run(browser,label,viewport):
         active=await page.locator('.lane-row').evaluate_all(
             "(rows) => rows.map(row=>Number(row.dataset.visualLane))")
         assert active==expected,(lanes,active)
-        rows=page.locator('.arena-structured > .lane-row, .arena-structured > .arena-dormant-row')
+        rows=page.locator('.arena-painted-frame > .lane-row, .arena-painted-frame > .arena-dormant-row')
         assert await rows.count()==4
-        geometry=await rows.evaluate_all("""rows => rows.map(row => {
-            const tile=row.querySelector('.battle-cell,.arena-dormant-cell');
-            const r=tile.getBoundingClientRect();
-            return {x:r.x,w:r.width,height:r.height};
-        })""")
-        assert max(x['x'] for x in geometry)-min(x['x'] for x in geometry)<1,geometry
-        assert max(x['w'] for x in geometry)-min(x['w'] for x in geometry)<1,geometry
-        assert all(x['height']>=90 for x in geometry)
         assert await page.locator('.arena-dormant-row [data-action],.arena-dormant-row [tabindex]').count()==0
-        # Le dessin natif 912x620 et les centres des cases partagent le meme repere.
         calibrated=page.locator('.arena-calibrated-art')
         assert await calibrated.count()==1
         frame=await calibrated.bounding_box()
-        assert frame and abs(frame['width']-912)<1 and abs(frame['height']-620)<1,frame
+        scale=frame['width']/1672
+        assert abs(frame['height']-941*scale)<1,frame
+        assert frame['width']>=959,frame
         first=await page.locator('.lane-row .battle-cell').first.bounding_box()
-        assert first and abs(first['x']-frame['x']-76)<1,(lanes,first,frame)
-        expected_y={2:246,3:124,4:124}[lanes]
-        assert abs(first['y']-frame['y']-expected_y)<1,(lanes,first,frame)
-        sky=await page.locator('.arena-structured .arena-sky').bounding_box()
-        assert abs(sky['height']-118)<1,sky
+        expected_y={2:421,3:344,4:344}[lanes]
+        assert abs(first['y']-frame['y']-expected_y*scale)<1,(lanes,first,frame)
+        assert first['height']>=40,first
+        assert await page.locator('.arena-hero-slot').count()==2
+        mode=await page.locator('.arena-painted-frame').get_attribute('data-render-mode')
+        assert mode=='static'
         img_source=await calibrated.evaluate('(el)=>getComputedStyle(el).backgroundImage')
         assert img_source.startswith('url("data:image/webp;base64,'),img_source[:90]
         assert await page.locator('.battle-cell').count()==lanes*10
@@ -80,7 +74,7 @@ async def run(browser,label,viewport):
         grid=await page.locator('.battle-grid').bounding_box()
         assert last['x']+last['width']<=grid['x']+grid['width']+2
         pos=await page.evaluate("document.querySelector('.battle-grid').scrollLeft")
-        await page.locator('[data-action="toggle-animations"]').click()
+        await page.evaluate('render()')
         assert await page.evaluate("document.querySelector('.battle-grid').scrollLeft")==pos
         assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
         # Reprise exacte des trois formats, effets compris.
@@ -108,34 +102,18 @@ async def run(browser,label,viewport):
     await page.locator('[data-action="end-turn"]').click()
     assert await page.locator('.turn-n').inner_text()=='2'
     assert not errors,errors
-    # Projectile vers la vraie couronne en colonne 11, et non l'ancienne colonne 6.
+    # La nouvelle arène est fixe ; les mouvements du moteur restent actifs.
     await page.emulate_media(reduced_motion='no-preference')
-    await page.evaluate('''()=>{
-      localStorage.setItem('couronnes_arcanes_animations_v13','on');
-      battle=createBattle(profile,{id:'01',name:'Test couronne',enemy:'Sentinelle',hp:80,difficulty:1,deck:[]},211);
-      battle.heroes.e.hand=[];battle.board[0][10]={uid:88,id:'archer',side:'p',atk:2,hp:12,maxhp:12,armor:0,ranged:true,ability:'ranged',stun:0,poison:0,poisonTurns:0};render();
-    }''')
-    if await page.locator('[data-action="toggle-animations"]').get_attribute('aria-pressed')!='true':
-        await page.locator('[data-action="toggle-animations"]').click()
-    await page.evaluate("document.querySelector('.battle-grid').scrollLeft=9999")
-    await page.locator('[data-action="end-turn"]').click()
-    impact=page.locator('.combat-fx.vfx-impact').first
-    await impact.wait_for(state='attached',timeout=2000)
-    gate=await page.locator('.lane-row').first.locator('.lane-gate.enemy').bounding_box()
-    x=await impact.evaluate('el=>parseFloat(el.style.left)')
-    assert abs(x-(gate['x']+gate['width']/2))<2,(x,gate)
-    await page.wait_for_timeout(2000)
-    # Un déplacement utilise le sprite pixel art réel, plutôt qu'un pion générique.
     await page.evaluate("""() => {
-      battle=createBattle(profile,{id:'01',name:'Test déplacement',enemy:'Sentinelle',hp:80,difficulty:1,deck:[]},212);
+      battle=createBattle(profile,{id:'01',name:'Test déplacement fixe',enemy:'Sentinelle',hp:80,difficulty:1,deck:[]},212);
       battle.heroes.e.deck=[];battle.heroes.e.hand=[];
       battle.heroes.p.deck=[];battle.heroes.p.hand=[];
-      battle.board[0][1]={uid:991,id:'militia',side:'p',atk:3,hp:10,maxhp:10,armor:0,
-        ranged:false,ability:'',stun:0,poison:0,poisonTurns:0};
+      battle.board[0][1]={uid:991,id:'militia',side:'p',atk:3,hp:10,maxhp:10,armor:0,ranged:false,ability:'',stun:0,poison:0,poisonTurns:0};
       render();
     }""")
     await page.locator('[data-action="end-turn"]').click()
-    await page.locator('.vfx-creature-image').first.wait_for(state='attached',timeout=2500)
+    assert await page.evaluate('battle.board[0][2]?.uid')==991
+    assert await page.locator('.battle-vfx-overlay').count()==0
     assert not errors,errors
     await page.close()
     print(f'Arène {label}: 2/3/4×10, clavier, contrôle, défilement, reprise et 3×5 historique PASS')

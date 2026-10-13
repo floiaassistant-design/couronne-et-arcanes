@@ -19,7 +19,7 @@ for(const lanes of [2,3,4]){
   const main=html.indexOf('class="combat-screen"'),
     title=html.indexOf('class="split-head combat-titlebar"'),
     stage=html.indexOf('class="battle-panel arena-lofi combat-stage"'),
-    grid=html.indexOf('class="battle-grid arena-structured"'),
+    grid=html.indexOf('class="battle-grid arena-structured'),
     endStage=html.indexOf('</section><div class="combat-hand-dock"'),
     hand=html.indexOf('class="hand-panel"');
   assert.ok(main===5||main>=0);

@@ -1,4 +1,5 @@
 // Effets visuels synchronisés avec les événements du moteur ; aucun changement aux dégâts.
+import {paintedFootPoint} from './painted-arena.js';
 export function createCombatFx(getContext){
  let fxTimers=[],fxOverlay=null,fxSequence=0;
 function stopBattleFx(){
@@ -12,6 +13,7 @@ function fxPoint(lane,col){
  if(!row)return null;
  const el=col===0?row.querySelector('.lane-gate:not(.enemy)'):col===Number(row.dataset.crownCol)?row.querySelector('.lane-gate.enemy'):row.querySelectorAll('.battle-cell')[col-1];
  if(!el)return null;
+ const anchor=paintedFootPoint(el);if(anchor)return anchor;
  const r=el.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,el};
 }
 function fxNode(cls,x,y,text=''){
@@ -97,7 +99,7 @@ function fxOne(event){
 function playBattleFx(events,onDone){
  stopBattleFx();
  const {animationsEnabled,screen}=getContext();
- if(!animationsEnabled||!events?.length||screen!=='battle'||!document.querySelector('.battle-grid')||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){onDone?.();return;}
+ if(document.querySelector('.arena-painted-frame[data-render-mode="static"]')||!animationsEnabled||!events?.length||screen!=='battle'||!document.querySelector('.battle-grid')||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){onDone?.();return;}
  const seq=fxSequence;
  fxOverlay=document.createElement('div');fxOverlay.className='battle-vfx-overlay';fxOverlay.setAttribute('aria-hidden','true');document.body.append(fxOverlay);
  const selected=events.slice(0,30);

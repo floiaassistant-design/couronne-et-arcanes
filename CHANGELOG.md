@@ -1,3 +1,10 @@
+## Proposition — Arène céleste peinte et personnages fixes (13/10/2026, non fusionnée)
+- Première illustration choisie par le joueur, scène complète et plateformes réservées aux héros.
+- Grille projetée 2/3/4×10, déploiement conservé, ancrages des pieds et orientation prêts pour les futures animations.
+- Personnages SVG fixes, anciennes batailles 3×5 conservées, portraits et règles inchangés.
+- Main avec statistiques visibles, défilements indépendants, export autonome sans réseau régénéré.
+- Branche dédiée dépendant de la PR nº 13 ; aucun changement des branches existantes et aucune fusion.
+
 ## Proposition — Illustration céleste calibrée sur le plateau 4 × 10 (PR nº 13, non fusionnée)
 - Nouvelle image originale approuvée 912×620, art WebP embarqué et référencé en CSS modulaire, sans dépendance réseau.
 - Quarante dalles HTML superposées aux dalles peintes sans recadrage ni background-size:cover, pistes actives 2/3/4, scènes centrées sur bureau et scrollables sur mobile.

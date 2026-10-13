@@ -43,6 +43,8 @@ jobs:
         run: python3 tests/browser_arena_v211.py
       - name: Combat immersif, main fixe en bas, bureau et mobile
         run: python3 tests/browser_combat_fullscreen_v211.py
+      - name: Arène peinte fixe, ancrages et statistiques des cartes
+        run: python3 tests/browser_painted_arena.py
       - name: Captures des arènes et version jouable pour revue
         if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4

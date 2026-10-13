@@ -1,0 +1,21 @@
+{
+  "version": "celeste-peinte-v1",
+  "width": 1672,
+  "height": 941,
+  "source_sha256": "c7f14410e255880bf3e6a06d9b00dee93783350786509162f496ab24ed8fb754",
+  "webp_sha256": "f38d9f1756ee78f546b62e3a6215cea470ba8f1eb2545fd1a14f2be3e72fff68",
+  "webp_bytes": 369534,
+  "encoding": {
+    "format": "webp",
+    "quality": 88,
+    "resize": false
+  },
+  "approval": {
+    "date": "2026-10-13",
+    "conversation": "01a1356c-8ca4-7860-be7b-838e8a806a4d",
+    "selected": "première image",
+    "instruction": "donc pour linstant essais de faire au mieux sans les animation est prévoit quel y seront"
+  },
+  "provenance": "Image originale générée dans cette conversation avec ImageGen ; aucune ressource tierce ni copie de jeu existant.",
+  "source_name": "exec-a77e1593-0a95-48fc-830b-1639427f7fe0.png"
+}

@@ -54,9 +54,13 @@ const js=`(function(){\n'use strict';\nconst __factories={\n${factoriesJs}\n};\n
 let html=read('index.html');
 const css=read('styles.css');
 const arenaArtCss=read('assets/backgrounds/arena-celeste-calibree.css');
+const paintedArtCss=read('assets/backgrounds/arena-celeste-peinte.css');
+const paintedLayoutCss=read('assets/backgrounds/arena-peinte-layout.css');
 if(!html.includes('<link rel="stylesheet" href="./styles.css" />')||!html.includes('<script type="module" src="./src/app.js"></script>'))throw Error('Points d’entrée HTML non reconnus');
 html=html.replace('<link rel="stylesheet" href="./styles.css" />','<style>\n'+css+'\n</style>');
 html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-celeste-calibree.css" />','<style>\n'+arenaArtCss+'\n</style>');
+html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-celeste-peinte.css" />','<style>\n'+paintedArtCss+'\n</style>');
+html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-peinte-layout.css" />','<style>\n'+paintedLayoutCss+'\n</style>');
 html=html.replace('<script type="module" src="./src/app.js"></script>','<script>\n'+js.replace(/<\/script/gi,'<\\/script')+'\n</script>');
 fs.writeFileSync(path.join(root,isTest?'tests/JOUER.test.html':'JOUER.html'),html);
 console.log(`${isTest?'JOUER.test.html':'JOUER.html'} généré (${Buffer.byteLength(html)} octets, ${factories.size} modules, ${Object.keys(art).length} illustrations intégrées)`);

@@ -42,7 +42,7 @@ async def run(browser,name,viewport):
   board:document.querySelector('.battle-grid').scrollLeft,
   hand:document.querySelector('.combat-hand-dock .hand').scrollLeft
  })""")
- await page.locator('[data-action="toggle-animations"]').click()
+ await page.evaluate('render()')
  after=await page.evaluate("""() => ({
   board:document.querySelector('.battle-grid').scrollLeft,
   hand:document.querySelector('.combat-hand-dock .hand').scrollLeft
