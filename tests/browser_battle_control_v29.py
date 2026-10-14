@@ -22,14 +22,18 @@ async def check_hand_countdowns(page,label):
     assert await hand.nth(0).locator('.hand-readiness').inner_text()=='✓ PRÊTE'
     assert await hand.nth(1).locator('.hand-readiness').inner_text()=='◷ EN ATTENTE'
     assert await hand.nth(1).locator('.cooldown-stamp b').inner_text()=='3'
-    assert await hand.nth(2).locator('.cooldown-stamp b').inner_text()=='1'
+    # Le pilote Illustrée remplace les deux badges historiques par un seul compteur visible.
+    assert await hand.nth(2).locator('.illustrated-count b').inner_text()=='1'
+    assert await hand.nth(2).locator('.cooldown-stamp,.hand-readiness').evaluate_all("els=>els.length===2 && els.every(el=>getComputedStyle(el).display==='none')")
     assert await hand.nth(1).get_attribute('aria-disabled')=='true'
     assert '3 tours' in await hand.nth(1).get_attribute('aria-label')
     # Les chiffres tiennent dans les cartes et les étiquettes ne sont pas tronquées.
     measures=await page.evaluate('''()=>{
       const cards=[...document.querySelectorAll('.hand .hand-card')];
       return cards.map(c=>{
-        const badge=c.querySelector('.hand-readiness'),stamp=c.querySelector('.cooldown-stamp');
+        const pilot=c.classList.contains('illustrated-pilot');
+        const badge=c.querySelector(pilot?'.illustrated-count':'.hand-readiness');
+        const stamp=pilot?null:c.querySelector('.cooldown-stamp');
         const b=badge.getBoundingClientRect(),r=c.getBoundingClientRect(),s=stamp?.getBoundingClientRect();
         return {readable:parseFloat(getComputedStyle(badge).fontSize)>=10,
           fits:b.left>=r.left&&b.right<=r.right&&(!s||(s.left>=r.left&&s.right<=r.right)),
