@@ -68,3 +68,35 @@ jobs:
         run: python3 tests/browser_save_integrity_v211.py
       - name: Comparaison de géométrie et reproductibilité
         run: npm run arena-balance
+      - name: Sources exactes de la PR des cinq portraits pour le contrôle combiné
+        uses: actions/checkout@v4
+        with:
+          ref: 2e7391669843a96a848104c88e0164234b612453
+          path: .ci-portraits
+      - name: Aperçu combiné, parité et deux parcours graphiques
+        run: |
+          rsync -a --exclude=.git --exclude=.ci-portraits --exclude=node_modules ./ "$RUNNER_TEMP/ca-preview/"
+          cp .ci-portraits/src/visuals.js "$RUNNER_TEMP/ca-preview/src/visuals.js"
+          cp .ci-portraits/assets/creatures/*.webp "$RUNNER_TEMP/ca-preview/assets/creatures/"
+          cp .ci-portraits/assets/creatures/portraits-aube.json "$RUNNER_TEMP/ca-preview/assets/creatures/"
+          cp .ci-portraits/docs/art-approvals/*.json "$RUNNER_TEMP/ca-preview/docs/art-approvals/"
+          cp .ci-portraits/tests/portraits_aube.test.mjs .ci-portraits/tests/browser_portraits_aube.py "$RUNNER_TEMP/ca-preview/tests/"
+          cp .ci-portraits/tests/fixtures/portraits_main_pr16.json "$RUNNER_TEMP/ca-preview/tests/fixtures/"
+          cd "$RUNNER_TEMP/ca-preview"
+          npm run build
+          npm run build:test
+          npm test
+          npm run test:parity
+          python3 tests/browser_portraits_aube.py
+          python3 tests/browser_unit_animation.py
+      - name: Version jouable combinée et captures pour le propriétaire
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: apercu-combine-portraits-et-animation
+          path: |
+            ${{ runner.temp }}/ca-preview/JOUER.html
+            /tmp/ca-aube-*.png
+            /tmp/ca-unit-*.png
+          if-no-files-found: warn
+          retention-days: 14

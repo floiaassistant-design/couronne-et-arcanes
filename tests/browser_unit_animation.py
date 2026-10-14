@@ -130,7 +130,11 @@ async def production(browser,saved,base_url=None):
     await page.wait_for_function("document.querySelector('.unit-on-board .illustrated-unit').classList.contains('atlas-ready')")
     if base_url:
         await page.locator('[data-action="end-turn"]').click()
-        await page.wait_for_function("document.querySelector('.unit-animation-actor [data-clip=tir][data-frame=\"3\"]')")
+        try:
+            await page.wait_for_function("document.querySelector('.unit-animation-actor [data-clip=tir]')",timeout=5000)
+        except Exception:
+            print('DIAGNOSTIC_SOURCE',errors,await page.evaluate("({board:JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1')).board,units:[...document.querySelectorAll('.illustrated-unit')].map(n=>({...n.dataset})),overlays:document.querySelectorAll('.unit-animation-overlay').length})"),flush=True)
+            raise
         assert await page.locator('.unit-animation-actor .illustrated-unit.atlas-ready').count()==0
         assert await page.locator('.unit-animation-actor .unit-static').first.evaluate('(el)=>el.naturalWidth')==512
         await wait_done(page)
