@@ -99,7 +99,7 @@ async def run(browser,label,viewport):
     # Navigation et changement du réglage arrêtent immédiatement un mouvement.
     await page.locator('[data-action="toggle-animations"]').click()
     await page.locator('[data-action="end-turn"]').click()
-    await page.locator('[data-action="nav"][data-page="home"]').click()
+    await page.locator('.combat-menu-link[data-page="home"]').click()
     assert await page.locator('.unit-animation-overlay').count()==0
     await page.locator('[data-action="nav"][data-page="battle"]').click()
     await page.emulate_media(reduced_motion='reduce')

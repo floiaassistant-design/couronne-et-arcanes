@@ -10,7 +10,7 @@ Le propriétaire a demandé le raccord des animations illustrées au vrai combat
 
 - WebP avec alpha, octets originaux conservés ; atlas horizontaux d’une ligne, cadres **512×512**. Pas de recompression, de retouche ou de nouvelles images.
 - Ancrage source **(256,461)**, orientation droite pour le joueur ; miroir horizontal complet pour l’adversaire. Cadre affiché 176 px dans le plan peint, redimensionné avec lui ; 96 px sur le plateau historique.
-- Six textures, **2 328 136 octets** au total, budget brut **2,4 Mo**. Liste, dimensions et SHA-256 : `assets/units/arbaletriere_aube/manifest.json`. L’export autonome de cette branche est plafonné à 4,6 Mo ; tout élargissement exige un nouveau budget.
+- Six textures, **2 328 136 octets** au total, budget brut **2,4 Mo**. Liste, dimensions et SHA-256 : `assets/units/arbaletriere_aube/manifest.json`. L’export autonome réserve un budget de 5,1 Mo, incluant les cinq portraits déjà proposés par la PR nº 17 ; cette branche seule reste autour de 4,31 Mo. Tout autre élargissement exige un nouveau budget.
 
 | Séquence | Durées des images (ms) | Boucle |
 | --- | --- | --- |

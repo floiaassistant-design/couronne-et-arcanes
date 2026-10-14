@@ -17,7 +17,7 @@ test('Arbalétrière : seuls les atlas et la vue statique approuvés sont import
   assert.equal(createHash('sha256').update(bytes).digest('hex'),receipt.sha256);
   assert.equal(asset.sha256,receipt.sha256);assert.equal(receipt.hasAlpha,true);
  }
- assert.ok(total<=manifest.budgetBytes);assert.ok(read('JOUER.html').length<4_600_000);
+ assert.ok(total<=manifest.budgetBytes);assert.ok(read('JOUER.html').length<5_100_000);
  assert.equal(approval.evidence.exactMessage,'ok je valide tous');
 });
 test('Arbalétrière : cadence variable, boucles et arrêt sur la dernière pose',()=>{
