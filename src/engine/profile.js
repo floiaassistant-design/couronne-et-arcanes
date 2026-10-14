@@ -149,4 +149,4 @@ export function equipEquipment(p,id){
  p.equipped[item.slot]=id;return {ok:true};
 }
 export function reputationLevel(p,faction){return Math.min(3,Math.floor((p.reputation?.[faction]||0)/15));}
-function gearBonus(p,bonus){return Object.values(p.equipped||{}).reduce((n,id)=>n+(EQUIPMENT[id]?.bonus===bonus?EQUIPMENT[id].value:0),0);}
+export function gearBonus(p,bonus){return Object.values(p.equipped||{}).reduce((n,id)=>n+(EQUIPMENT[id]?.bonus===bonus?EQUIPMENT[id].value:0),0);}

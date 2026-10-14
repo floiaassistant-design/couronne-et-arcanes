@@ -9,7 +9,7 @@ test('V2.5 stable engine facade preserves all core entrypoints',async()=>{
  for(const name of ['freshProfile','normalizeProfile','createBattle','playPlayerCard','endPlayerTurn','formationBonus','settleDungeonBattle','completeBattle','chooseHeroTalent','fuseCard','upgradeCard','heroLevel'])assert.equal(typeof api[name],'function',name);
 });
 test('V2.5 pure core has no DOM/storage dependencies',()=>{
- for(const f of ['src/engine/profile.js','src/engine/battle.js','src/engine/battle-control.js','src/engine/dungeon-run.js','src/engine/economy.js','src/ai.js']){
+ for(const f of ['src/engine/profile.js','src/engine/battle.js','src/engine/unit-stats.js','src/engine/battle-control.js','src/engine/dungeon-run.js','src/engine/economy.js','src/ai.js']){
   assert.ok(existsSync(root+f));
   assert.doesNotMatch(read(f),/\b(?:document|window|localStorage)\s*[.\[]/,f);
  }

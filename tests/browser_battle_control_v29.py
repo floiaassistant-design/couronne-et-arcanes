@@ -25,7 +25,7 @@ async def check_hand_countdowns(page,label):
     # Le pilote Illustrée remplace les deux badges historiques par un seul compteur visible.
     assert await hand.nth(2).locator('.illustrated-count b').inner_text()=='1'
     assert await hand.nth(2).locator('.cooldown-stamp,.hand-readiness').evaluate_all("els=>els.length===2 && els.every(el=>getComputedStyle(el).display==='none')")
-    assert await hand.nth(1).get_attribute('aria-disabled')=='true'
+    assert await hand.nth(1).get_attribute('aria-disabled') is None # Consultable, sans autoriser la pose.
     assert '3 tours' in await hand.nth(1).get_attribute('aria-label')
     # Les chiffres tiennent dans les cartes et les étiquettes ne sont pas tronquées.
     measures=await page.evaluate('''()=>{
