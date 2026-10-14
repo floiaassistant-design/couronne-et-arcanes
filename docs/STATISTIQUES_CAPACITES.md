@@ -1,6 +1,6 @@
-# Statistiques affichées et capacités — proposition du 14 octobre 2026
+# Statistiques affichées et capacités — PR nº 16 intégrée le 14 octobre 2026
 
-Base : main `f896a0c3aca0a6496d9a9832cbfca8bd4be9c222`, après fusion autorisée de la PR nº 15. Branche `fix/stats-capacites-combat` ; vérifier sa PR pour son état courant. La PR nº 11 reste indépendante.
+Base : main `f896a0c3aca0a6496d9a9832cbfca8bd4be9c222`, après fusion autorisée de la PR nº 15. PR nº 16 fusionnée ; main vérifié `0310fa677947e34a02bd877f5adc6104267f87ba`, CI [#38531495638](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/38531495638) réussie. La PR nº 11 reste indépendante.
 
 ## Comportement
 

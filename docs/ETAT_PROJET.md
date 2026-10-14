@@ -1,22 +1,22 @@
 # Couronnes & Arcanes — état de reprise, 14 octobre 2026
 
-- **Main officiel : V2.11, commit `f896a0c3aca0a6496d9a9832cbfca8bd4be9c222`.** PR nº 15 fusionnée sur autorisation spécifique du propriétaire. PR nº 14 (arène peinte et plein écran) déjà intégrée ; PR nº 10 (sauvegardes) et nº 12 (nouvelle aventure/classes/rareté) conservées.
-- **76 cartes, quatre classes, 12 missions, 20 étages, trois donjons.** Règles et statistiques de combat inchangées. Dix cases par ligne, deux/trois/quatre lignes ; anciennes batailles 3×5 préservées.
-- **Graphismes officiels :** 13 portraits, dont Arbalétrière approuvée SHA-256 `31186adc9ea55c4d34777f70f8b5fe2969a1ea0386a74d1cf44183e931c391a3`. Seul `archer` utilise `arbaletriere_aube` ; `skill_ranger_pierce` conserve `archer.webp`. Arène peinte fixe, huit silhouettes SVG, aucun personnage animé image par image intégré.
-- **PR nº 15 vérifiée avant fusion :** tête `da251bc`, CI #38453860186 réussie, 253 tests, 60 parités, build et parcours bureau/mobile. La fiche n'a aucun bouton sur le portrait.
-- **PR nº 11 :** ancienne arène pixel art toujours ouverte et en conflit ; distincte du rendu peint courant. Ne pas l'intégrer sans décision spécifique.
+## Main vérifié avant cette reprise
 
-## Proposition courante — statistiques et capacités
+- **V2.11, commit `0310fa677947e34a02bd877f5adc6104267f87ba` : PR nº 16 fusionnée le 14/10/2026.** Statistiques d'invocation partagées et fiche des capacités pour toutes les cartes déjà intégrées. Les PR nº 10, 12, 14 et 15 sont aussi fusionnées.
+- **CI du main vérifiée :** [Actions #38531495638](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/38531495638), succès. Contrôle local indépendant de cette base : 258 tests, 60 parités et reconstruction de `JOUER.html` identique octet par octet.
+- 76 cartes, quatre classes, 12 missions, 20 étages, trois donjons ; 25 modules, 13 portraits embarqués. Arène peinte, huit silhouettes SVG fixes ; anciens combats 3×5 conservés.
+- **PR nº 11 :** ancienne arène pixel art, ouverte et en conflit. Elle ne constitue pas un composant manquant de l'arène peinte actuelle. Ne pas intégrer sans décision spécifique.
 
-- Branche **`fix/stats-capacites-combat`**, depuis le main `f896a0c3` ; vérifier sa PR pour son statut réel. Aucune fusion autorisée pour ces nouvelles corrections.
-- Statistiques d'invocation partagées entre moteur, main, collection et fiche ; équipement, forge, réputation et maîtrise inclus. La main respecte l'instantané du combat sauvegardé.
-- Consultation de toutes les cartes, sorts et compétences en attente : texte de 14 px, détails des bonus, croix/Échap, sélection et pose conservées. Zone réservée au-dessus des cartes, sans bouton sur le portrait.
-- Deux modules ajoutés : `engine/unit-stats.js` et `ui/card-inspection.js`. 25 modules et 13 portraits dans `JOUER.html`, régénéré depuis les sources. Clés et schéma de sauvegarde conservés ; état de lecture transitoire.
-- **Contrôles locaux exécutés :** 258 tests Node, 60 parités, builds, neuf suites Chromium bureau/mobile, vrai toucher simulé, mission 01 terminée, reprise et production hors réseau/mouvement réduit. Simulations : 20 480 contrôles et 6 144 comparatifs d'arène, reproductibles et sans état invalide. CI distante à vérifier sur la PR, aucun téléphone physique testé.
-- Contrat et résultats : [STATISTIQUES_CAPACITES.md](STATISTIQUES_CAPACITES.md). Provenance du pilote : [INTEGRATION_GRAPHISMES.md](INTEGRATION_GRAPHISMES.md).
+## Proposition de reprise — cinq portraits Aube
+
+- Branche **`fix/checkup-integration-20261014`** depuis le main ci-dessus. Les cinq portraits approuvés de la PR art nº 10, commit exact `a6dd52096ada21d5eaf07234c632ada05cf710df`, sont importés avec leurs reçus et empreintes.
+- Mapping dédié : `militia` → `milicien_aube` v2 ; `shield` → `porte_egide` v1 ; `cleric` → `soeur_aurore` v1 ; `paladin` → `paladin_solaire` v1 ; `banner` → `porte_etendard` v2. Aucun archétype partagé remplacé.
+- 25 modules et **18 portraits** dans l'export régénéré. Les 71 autres mappings, les 76 rôles/silhouettes de combat, le cadre pilote Arbalétrière, les statistiques, règles, IA, progression et sauvegardes sont conservés.
+- **Contrôles locaux exécutés :** 261 tests Node, 60 parités, builds normal/test, empreintes des cinq fichiers approuvés et reçus concordants. Simulations locales : 20 480 contrôles et 6 144 comparaisons reproductibles, aucun état invalide. Parcours Chromium complets prévus dans la CI de cette PR ; consulter son résultat exact. Le navigateur local Work n'a pas démarré ; aucun parcours local ni téléphone physique revendiqué.
+- Résultats et limites : [CHECKUP_INTEGRATION_2026_10_14.md](CHECKUP_INTEGRATION_2026_10_14.md). Provenance : [INTEGRATION_GRAPHISMES.md](INTEGRATION_GRAPHISMES.md) et `assets/creatures/portraits-aube.json`.
 
 ## Suite
 
-Faire examiner la lecture du pilote en partie avant la généralisation artistique aux cinq portraits Aube restants. Puis contrat d'animations pour les séquences approuvées ; audit séparé du rythme/attrition avant tout nouvel équilibrage ou donjon.
+Faire examiner les cinq portraits dans le vrai combat et la collection. Le cadre Illustrée v3 reste limité à l'Arbalétrière ; les nouvelles cartes gardent leurs cadres actuels. Les animations du chevalier/Arbalétrière et le carreau corrigé attendent une mission avec contrat d'animation ; le prototype Blender reste en review. Audit du rythme/attrition séparé avant un nouvel équilibrage ou donjon.
 
 GitHub et le dernier `main` sont la référence. Une branche et une PR par évolution ; accord explicite et spécifique requis avant chaque fusion, aucun auto-merge.

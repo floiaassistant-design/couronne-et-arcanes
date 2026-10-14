@@ -1,9 +1,16 @@
-## Proposition — Statistiques effectives et lecture des capacités (14/10/2026)
+## Proposition — Check-up et raccord des cinq portraits Aube (14/10/2026)
+- Reprise depuis le main exact `0310fa6` : PR nº 16 déjà intégrée ; correction des documents périmés. PR nº 11 historique toujours distincte et ouverte.
+- Cinq portraits approuvés de la PR art nº 10, commit `a6dd52096ada21d5eaf07234c632ada05cf710df` : Milicien/Porte-étendard v2, Porte-égide/Sœur de l’Aurore/Paladin solaire v1. Reçus et empreintes conservés ; mappings dédiés seulement.
+- 71 autres portraits et 76 silhouettes/rôles inchangés, aucun changement de moteur, IA, cartes ou stockage. Cadre pilote Arbalétrière conservé. Export régénéré : 18 portraits, 25 modules, 1 867 019 octets.
+- 261 tests Node, 60 parités, builds et simulations locaux réussis ; nouveau parcours navigateur dans la CI. Rapport `docs/CHECKUP_INTEGRATION_2026_10_14.md`. Aucun navigateur local ou smartphone physique revendiqué.
+- Branche `fix/checkup-integration-20261014`, proposition en attente de son accord spécifique de fusion.
+
+## Intégré — PR nº 16, statistiques effectives et lecture des capacités (14/10/2026)
 - Branche `fix/stats-capacites-combat` depuis le main `f896a0c3`, après la fusion autorisée de la PR nº 15.
 - Calcul d'invocation partagé entre moteur, main et collection ; bonus d'équipement, forge, réputation et maîtrise visibles. Exemple reproduit : Milicien 2/5 affiché auparavant, désormais 3/7 avec épée, forge 1 et réputation Aube 15, comme l'unité déployée.
 - Fiche accessible sur toutes les cartes, sorts et compétences en attente ; description de 14 px, bonus détaillés, espace réservé dans le dock et gestes de sélection/pose préservés. Compteur historique supplémentaire masqué dans la main.
 - 258 tests Node, 60 parités, builds, Chromium bureau/mobile portrait/paysage, stockage réel hors réseau et une mission de campagne terminée par parcours ; simulations de contrôle/arène réussies. Aucun changement de règles, données des cartes, IA ou clés de sauvegarde.
-- Proposition non fusionnée : accord spécifique attendu sur sa propre PR.
+- PR nº 16 fusionnée sur accord spécifique, main `0310fa6` ; CI du main #38531495638 réussie.
 
 ## Intégré — PR nº 15, pilote Arbalétrière Illustrée v3 (14/10/2026)
 - Fusion autorisée explicitement par le propriétaire, commit `f896a0c3`. Portrait approuvé, nouvelle clé seulement pour `archer`, cadre et fiche sans bouton sur le portrait.

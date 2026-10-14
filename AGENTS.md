@@ -2,7 +2,7 @@
 
 ## Version stable et coordination multi-sessions — PRIORITAIRE
 
-- **Base courante : V2.11, `main` `f896a0c3`, PR nº 15 fusionnée le 14/10/2026 après autorisation spécifique.** PR nº 14 (arène peinte) déjà intégrée ; la PR nº 11 reste distincte et ouverte. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
+- **Base vérifiée de la reprise : V2.11, `main` `0310fa6`, PR nº 16 fusionnée le 14/10/2026 après autorisation spécifique.** PR nº 14 (arène peinte) déjà intégrée ; la PR nº 11 reste distincte et ouverte. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
 - **Ne jamais copier une ancienne version par-dessus la dernière version.** La copie V1.2 avait écrasé huit fichiers de V2.7 le 11/10/2026 ; les fichiers ont été récupérés depuis le commit local `145a2e8`.
 - **Une branche par agent/session** lorsque plusieurs agents développent en parallèle. Un seul intégrateur prépare la fusion après comparaison des modifications et exécution des tests, **sans jamais fusionner avant l'accord explicite de l'utilisateur**.
 - **Anti-écrasement :** vérifier l'état GitHub avant chaque publication ; si la branche cible a avancé, réconcilier les changements utiles sur la branche de travail et ne jamais forcer la réécriture de l'historique. Ce travail ne constitue jamais une autorisation de fusionner sur `main`.
@@ -38,10 +38,11 @@
 
 ## V2.11 — arène et géométrie (intégrée sur main)
 
-- **Branche de corrections après PR nº 15 :** `src/engine/unit-stats.js` partage le calcul pur des statistiques d'invocation entre `battle.js` et les vues. La main utilise les bonus capturés dans le combat, la collection ceux du profil courant. `gearBonus` est réutilisé depuis `profile.js` ; aucune nouvelle propriété de sauvegarde. Préserver la parité et l'ordre historique des champs lors d'une refonte du constructeur de bataille.
-- `src/ui/card-inspection.js` porte la consultation des capacités de toutes les cartes de la main, les bonus affichés et l'état de lecture transitoire. Lire une carte en attente n'autorise pas sa pose ; la fermeture ne désélectionne pas une carte prête. Ce module n'écrit ni profil, ni bataille, ni stockage. La branche empaquette 25 modules et 13 portraits. Voir `docs/STATISTIQUES_CAPACITES.md` et les tests ciblés.
+- **Statistiques intégrées par la PR nº 16 :** `src/engine/unit-stats.js` partage le calcul pur des statistiques d'invocation entre `battle.js` et les vues. La main utilise les bonus capturés dans le combat, la collection ceux du profil courant. `gearBonus` est réutilisé depuis `profile.js` ; aucune nouvelle propriété de sauvegarde. Préserver la parité et l'ordre historique des champs lors d'une refonte du constructeur de bataille.
+- `src/ui/card-inspection.js` porte la consultation des capacités de toutes les cartes de la main, les bonus affichés et l'état de lecture transitoire. Lire une carte en attente n'autorise pas sa pose ; la fermeture ne désélectionne pas une carte prête. Ce module n'écrit ni profil, ni bataille, ni stockage. Le main vérifié empaquette 25 modules et 13 portraits. Voir `docs/STATISTIQUES_CAPACITES.md` et les tests ciblés.
 
-- La mission arène impose une PR **sans fusion automatique** ; elle prévaut ici sur la politique générale. Ne pas intégrer cette branche sans instruction ultérieure.
+- La PR nº 14 a intégré l’arène peinte ; la PR nº 11 concerne une ancienne proposition pixel art, toujours distincte. Vérifier les états réels avant de reprendre une branche historique.
+- **Proposition de reprise :** `fix/checkup-integration-20261014` raccorde cinq portraits approuvés de la PR art nº 10 au commit `a6dd52096ada21d5eaf07234c632ada05cf710df`, avec clés dédiées. Lire `assets/creatures/portraits-aube.json` et les reçus ; préserver les 71 autres mappings et les 76 silhouettes/rôles. 18 portraits sur cette branche ; cadre v3 encore limité à `archer`, aucune animation ajoutée. Fusion uniquement après accord spécifique.
 - `src/engine/board.js` est le propriétaire des dimensions. Les tableaux sauvegardés déterminent les cases et lignes ; ne jamais utiliser `LANES`/`WIDTH` comme limites d’un combat déjà créé.
 - Nouveaux combats : dix cases (colonnes 1–10), couronnes en 0/11 ; 2 lignes difficulté 1–2, 3 lignes difficulté ≥3, 4 pour un boss. Anciens combats 3×5 : garder exactement le tableau, couronnes 0/6.
 - `src/ui/arena-art.js` fournit l’art SVG en pixels partagé par rôle, sans règles métier. L’export doit embarquer ce module et rester sans réseau.

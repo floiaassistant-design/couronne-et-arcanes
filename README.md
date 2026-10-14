@@ -18,11 +18,17 @@ Mouvement, portée, IA, compétences et contrôles utilisent la géométrie rée
 
 La géométrie V2.11 est intégrée depuis la PR nº 6 ; rapport historique : [docs/ARENE_V2_11.md](docs/ARENE_V2_11.md). Le dernier commit GitHub et [l'état du projet](docs/ETAT_PROJET.md) priment sur les anciennes propositions.
 
-## Proposition après la PR nº 15 — statistiques et capacités
+## Intégré par la PR nº 16 — statistiques et capacités
 
-Branche `fix/stats-capacites-combat`, depuis `main` `f896a0c3`. Les cartes montrent les statistiques d'invocation réelles (amélioration, équipement, forge, réputation et maîtrise). La fiche est accessible sur toutes les cartes de la main, dont les sorts et compétences en attente ; texte de capacité de 14 px, bonus expliqués, fermeture par croix ou Échap. Le dock réserve de la place à la lecture sans recouvrir les cases ou les commandes. Les descriptions longues et les bonus défilent dans la fiche.
+PR nº 16 fusionnée le 14/10/2026, main vérifié `0310fa6`. Les cartes montrent les statistiques d'invocation réelles (amélioration, équipement, forge, réputation et maîtrise). La fiche est accessible sur toutes les cartes de la main, dont les sorts et compétences en attente ; texte de capacité de 14 px, bonus expliqués, fermeture par croix ou Échap. Le dock réserve de la place à la lecture sans recouvrir les cases ou les commandes. Les descriptions longues et les bonus défilent dans la fiche.
 
-258 tests Node, 60 parités, builds, parcours Chromium bureau/tactile portrait/paysage, reprise et export hors réseau validés localement. Cette proposition reste sur sa branche jusqu'à un accord spécifique pour sa PR. Détails : [statistiques et capacités](docs/STATISTIQUES_CAPACITES.md).
+258 tests Node, 60 parités, builds, parcours Chromium bureau/tactile portrait/paysage, reprise et export hors réseau validés localement. La CI du main [#38531495638](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/38531495638) est réussie. Détails : [statistiques et capacités](docs/STATISTIQUES_CAPACITES.md).
+
+## Proposition de reprise — cinq portraits Aube approuvés
+
+La branche `fix/checkup-integration-20261014` importe les versions approuvées du Milicien (v2), du Porte-égide, de la Sœur de l’Aurore, du Paladin solaire et du Porte-étendard (v2), depuis le commit art `a6dd52096ada21d5eaf07234c632ada05cf710df`. Les clés sont dédiées aux cinq cartes ; anciens archétypes et unités de combat conservés. Le cadre Illustrée v3 reste limité à l’Arbalétrière.
+
+L’export de cette proposition embarque **18 portraits**, toujours 25 modules, pour 1 867 019 octets. 261 tests Node et 60 parités passent localement ; les parcours Chromium sont exécutés par la CI de la PR. Reprise complète et limites : [check-up du 14 octobre](docs/CHECKUP_INTEGRATION_2026_10_14.md). **Aucune fusion sans accord spécifique.**
 
 ## V2.10 — Manipulation des comptes à rebours
 
@@ -87,7 +93,7 @@ GitHub Actions exécute tests, parité, build et identité de `JOUER.html`, parc
 
 ## Architecture et continuité
 
-Les règles sont dans `src/engine/`, les données dans `src/data.js`, l'IA dans `src/ai.js`, les vues et sauvegardes dans `src/ui/`. La façade `src/engine.js` conserve les anciennes API. `src/engine/board.js` centralise les dimensions à partir des tableaux sauvegardés ; `src/ui/arena-art.js` dessine les sprites SVG en pixels. Le module pur `src/engine/battle-control.js` centralise les contrôles et leurs plans pour le moteur, l'IA et les aperçus. Le générateur suit automatiquement les imports ; la branche de corrections ajoute `engine/unit-stats.js` et `ui/card-inspection.js` (25 modules et 13 portraits embarqués).
+Les règles sont dans `src/engine/`, les données dans `src/data.js`, l'IA dans `src/ai.js`, les vues et sauvegardes dans `src/ui/`. La façade `src/engine.js` conserve les anciennes API. `src/engine/board.js` centralise les dimensions à partir des tableaux sauvegardés ; `src/ui/arena-art.js` dessine les sprites SVG en pixels. Le module pur `src/engine/battle-control.js` centralise les contrôles et leurs plans pour le moteur, l'IA et les aperçus. Le générateur suit automatiquement les imports ; la PR nº 16 a ajouté `engine/unit-stats.js` et `ui/card-inspection.js` (25 modules et 13 portraits embarqués).
 
 GitHub est la référence. Avant de développer, vérifier le dernier commit et lire `AGENTS.md`, ce fichier, `CHANGELOG.md` et `docs/ETAT_PROJET.md`. Une branche et une PR par évolution, revue et contrôles verts, puis **attente de l'accord explicite de l'utilisateur pour chaque fusion sur `main`**. Aucune fusion autonome ni GitHub Auto-merge, y compris pour les correctifs ; jamais de réécriture forcée de `main` ni de restauration depuis une vieille archive.
 
@@ -100,7 +106,7 @@ Clés conservées : `couronnes_arcanes_v1`, `couronnes_arcanes_bataille_v1` et l
 - Aucun test sur smartphone physique ni équilibrage humain exhaustif ; le plateau se parcourt horizontalement sur petit écran.
 - IA heuristique déterministe, sans apprentissage ni recherche profonde. Les pièges sont visibles ; aucune information cachée n'est consultée.
 - Les six cartes sont utilisables et obtenables ; leur introduction dans de nouvelles rencontres officielles reste une prochaine étape, les anciens decks n'étant pas réécrits.
-- Treize portraits, dont un unique pour l'Arbalétrière et douze historiques partagés ; huit silhouettes SVG fixes dans l'arène peinte. Les séquences de personnages approuvées côté art attendent leur intégration.
+- Treize portraits dans le main vérifié, dont un unique pour l'Arbalétrière et douze historiques partagés ; huit silhouettes SVG fixes dans l'arène peinte. Les séquences de personnages approuvées côté art attendent leur intégration.
 - Pas de PvP, coop, guildes, backend ou monétisation réelle.
 
 Prochaine piste après V2.11 — proposition V3.0 : **un donjon tactique inédit**, avec trois boss utilisant progressivement silence, portails et pièges, et des récompenses acquises uniquement en jeu.

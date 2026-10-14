@@ -1,8 +1,8 @@
 // Art original issu des illustrations créées pour Couronnes & Arcanes.
 // Un archétype partagé ne prétend pas être une illustration unique pour chacune des 60 cartes.
-export const ART_NAMES=['paladin','ranger','treant','dragon','healer','griffin','golem','shade','blizzard','knight','archer','sunlight','arbaletriere_aube'];
+export const ART_NAMES=['paladin','ranger','treant','dragon','healer','griffin','golem','shade','blizzard','knight','archer','sunlight','arbaletriere_aube','milicien_aube','porte_egide','soeur_aurore','paladin_solaire','porte_etendard'];
 const direct={
- militia:'knight',shield:'paladin',archer:'arbaletriere_aube',cleric:'healer',paladin:'paladin',banner:'knight',
+ militia:'milicien_aube',shield:'porte_egide',archer:'arbaletriere_aube',cleric:'soeur_aurore',paladin:'paladin_solaire',banner:'porte_etendard',
  ranger:'ranger',wolf:'griffin',treant:'treant',dryad:'healer',stag:'griffin',thorn:'ranger',
  bone:'knight',shade:'shade',crypt:'paladin',plague:'shade',lich:'shade',banshee:'shade',
  smith:'knight',golem:'golem',bomb:'golem',drill:'golem',colossus:'golem',engineer:'knight',

@@ -1,0 +1,382 @@
+{
+  "militia": {
+    "art": "knight",
+    "role": "fighter",
+    "spriteSha256": "93e2ccb18dcf1ae3ed8147ffe126c10eed92660724f109d344577705523640c0"
+  },
+  "shield": {
+    "art": "paladin",
+    "role": "heavy",
+    "spriteSha256": "d7ecf34bdd85cbe97129107e7cb84fe3a900caf086cd40ff4529d23e57ecd56f"
+  },
+  "archer": {
+    "art": "arbaletriere_aube",
+    "role": "ranged",
+    "spriteSha256": "cb5829d38306509c3749dc7fe593fb9aab6a398425defb07473e76ba6cd2e8f8"
+  },
+  "cleric": {
+    "art": "healer",
+    "role": "support",
+    "spriteSha256": "a3ef3474ea29b6e1abae369754c3582afa66e724a4ff0fce5f9b80bd306bd3e5"
+  },
+  "paladin": {
+    "art": "paladin",
+    "role": "heavy",
+    "spriteSha256": "d7ecf34bdd85cbe97129107e7cb84fe3a900caf086cd40ff4529d23e57ecd56f"
+  },
+  "banner": {
+    "art": "knight",
+    "role": "fighter",
+    "spriteSha256": "93e2ccb18dcf1ae3ed8147ffe126c10eed92660724f109d344577705523640c0"
+  },
+  "ranger": {
+    "art": "ranger",
+    "role": "ranged",
+    "spriteSha256": "0a35f0ba17102803928638028ee90aa94c52a872192bef017c804cda00051a81"
+  },
+  "wolf": {
+    "art": "griffin",
+    "role": "beast",
+    "spriteSha256": "02966c0e91e6c0d6fb74aa1819cc53b6e1b11be92eb8fbe61485987b02e96afc"
+  },
+  "treant": {
+    "art": "treant",
+    "role": "heavy",
+    "spriteSha256": "e57f9cc2b3ffb79084666a43a6426ca74918c0f3c1add3a7397aa21f0057f90f"
+  },
+  "dryad": {
+    "art": "healer",
+    "role": "support",
+    "spriteSha256": "9e85e356b4fa39f41b3dfd0a17b0beef6c6efec38e3ef9d5b8ce72b61ae46af3"
+  },
+  "stag": {
+    "art": "griffin",
+    "role": "beast",
+    "spriteSha256": "02966c0e91e6c0d6fb74aa1819cc53b6e1b11be92eb8fbe61485987b02e96afc"
+  },
+  "thorn": {
+    "art": "ranger",
+    "role": "fighter",
+    "spriteSha256": "3c04aff23fd18ff44cb90c9924bacf056900de8d082a2c14669b91b95bc13c26"
+  },
+  "bone": {
+    "art": "knight",
+    "role": "undead",
+    "spriteSha256": "4a4aa7c39265e23cfaa594416e5f1dbc07f64bceb6cb8876d64123a539a1abc2"
+  },
+  "shade": {
+    "art": "shade",
+    "role": "undead",
+    "spriteSha256": "4a4aa7c39265e23cfaa594416e5f1dbc07f64bceb6cb8876d64123a539a1abc2"
+  },
+  "crypt": {
+    "art": "paladin",
+    "role": "undead",
+    "spriteSha256": "4a4aa7c39265e23cfaa594416e5f1dbc07f64bceb6cb8876d64123a539a1abc2"
+  },
+  "plague": {
+    "art": "shade",
+    "role": "undead",
+    "spriteSha256": "4a4aa7c39265e23cfaa594416e5f1dbc07f64bceb6cb8876d64123a539a1abc2"
+  },
+  "lich": {
+    "art": "shade",
+    "role": "caster",
+    "spriteSha256": "05b4e66c9d06ce8689e365562f51168ea61c3a78b94f55d4f3f05f765fd75347"
+  },
+  "banshee": {
+    "art": "shade",
+    "role": "caster",
+    "spriteSha256": "05b4e66c9d06ce8689e365562f51168ea61c3a78b94f55d4f3f05f765fd75347"
+  },
+  "smith": {
+    "art": "knight",
+    "role": "fighter",
+    "spriteSha256": "3a2acf97f928966adc1e28f058648b0c4f777a1cf0347f7f6fd1a96d74b8d245"
+  },
+  "golem": {
+    "art": "golem",
+    "role": "heavy",
+    "spriteSha256": "d52fef7932609d6f1daa01a68725e3733c8c36561a6948553e9252ce6e30286e"
+  },
+  "bomb": {
+    "art": "golem",
+    "role": "caster",
+    "spriteSha256": "3d304942bb713943877877625e515c373e6f57af930890cba58c6fcfc35e7b2d"
+  },
+  "drill": {
+    "art": "golem",
+    "role": "heavy",
+    "spriteSha256": "d52fef7932609d6f1daa01a68725e3733c8c36561a6948553e9252ce6e30286e"
+  },
+  "colossus": {
+    "art": "golem",
+    "role": "heavy",
+    "spriteSha256": "d52fef7932609d6f1daa01a68725e3733c8c36561a6948553e9252ce6e30286e"
+  },
+  "engineer": {
+    "art": "knight",
+    "role": "heavy",
+    "spriteSha256": "d52fef7932609d6f1daa01a68725e3733c8c36561a6948553e9252ce6e30286e"
+  },
+  "spark": {
+    "art": "blizzard",
+    "role": "caster",
+    "spriteSha256": "640cf648d7c65ea3f13afc48b0cdcfe883a7ca9634d4d02d9074c8874d4ba206"
+  },
+  "mystic": {
+    "art": "blizzard",
+    "role": "caster",
+    "spriteSha256": "640cf648d7c65ea3f13afc48b0cdcfe883a7ca9634d4d02d9074c8874d4ba206"
+  },
+  "elemental": {
+    "art": "blizzard",
+    "role": "caster",
+    "spriteSha256": "640cf648d7c65ea3f13afc48b0cdcfe883a7ca9634d4d02d9074c8874d4ba206"
+  },
+  "griffin": {
+    "art": "griffin",
+    "role": "flying",
+    "spriteSha256": "435e80da0c129d8657675373d3316415f0af0dfec122b07929345e6f9c246d7e"
+  },
+  "sentinel": {
+    "art": "golem",
+    "role": "heavy",
+    "spriteSha256": "5d527d40237c39a7874212745dc0bc11a7d3ded2cbb6574df1042cdd53ffb5df"
+  },
+  "dragon": {
+    "art": "dragon",
+    "role": "flying",
+    "spriteSha256": "435e80da0c129d8657675373d3316415f0af0dfec122b07929345e6f9c246d7e"
+  },
+  "firebolt": {
+    "art": "sunlight",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "healing": {
+    "art": "healer",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "warcry": {
+    "art": "paladin",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "storm": {
+    "art": "blizzard",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "entangle": {
+    "art": "treant",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "sanctuary": {
+    "art": "sunlight",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "scoutcaptain": {
+    "art": "knight",
+    "role": "fighter",
+    "spriteSha256": "93e2ccb18dcf1ae3ed8147ffe126c10eed92660724f109d344577705523640c0"
+  },
+  "sunpriest": {
+    "art": "healer",
+    "role": "support",
+    "spriteSha256": "a3ef3474ea29b6e1abae369754c3582afa66e724a4ff0fce5f9b80bd306bd3e5"
+  },
+  "lancer": {
+    "art": "paladin",
+    "role": "fighter",
+    "spriteSha256": "93e2ccb18dcf1ae3ed8147ffe126c10eed92660724f109d344577705523640c0"
+  },
+  "dawnbastion": {
+    "art": "healer",
+    "role": "flying",
+    "spriteSha256": "58e9879b40f8a34cc636260ad2ff923c5b13e6bdb16dc27c0f390595353732be"
+  },
+  "pixie": {
+    "art": "sunlight",
+    "role": "flying",
+    "spriteSha256": "a8b5675722a2175c6a49b7e185e304cf1c7ac61b660ceabd1b3faf1c639504ef"
+  },
+  "bear": {
+    "art": "griffin",
+    "role": "beast",
+    "spriteSha256": "02966c0e91e6c0d6fb74aa1819cc53b6e1b11be92eb8fbe61485987b02e96afc"
+  },
+  "archdruid": {
+    "art": "treant",
+    "role": "caster",
+    "spriteSha256": "9ca3da95fdcde1554a2e93ce5b77526368efd75eb6c54d80c2e232abc4476e67"
+  },
+  "owl": {
+    "art": "griffin",
+    "role": "flying",
+    "spriteSha256": "a8b5675722a2175c6a49b7e185e304cf1c7ac61b660ceabd1b3faf1c639504ef"
+  },
+  "vampire": {
+    "art": "shade",
+    "role": "undead",
+    "spriteSha256": "4a4aa7c39265e23cfaa594416e5f1dbc07f64bceb6cb8876d64123a539a1abc2"
+  },
+  "graveknight": {
+    "art": "paladin",
+    "role": "undead",
+    "spriteSha256": "4a4aa7c39265e23cfaa594416e5f1dbc07f64bceb6cb8876d64123a539a1abc2"
+  },
+  "nightblade": {
+    "art": "shade",
+    "role": "undead",
+    "spriteSha256": "4a4aa7c39265e23cfaa594416e5f1dbc07f64bceb6cb8876d64123a539a1abc2"
+  },
+  "spectre": {
+    "art": "shade",
+    "role": "undead",
+    "spriteSha256": "4a4aa7c39265e23cfaa594416e5f1dbc07f64bceb6cb8876d64123a539a1abc2"
+  },
+  "cannon": {
+    "art": "golem",
+    "role": "heavy",
+    "spriteSha256": "d52fef7932609d6f1daa01a68725e3733c8c36561a6948553e9252ce6e30286e"
+  },
+  "mechanist": {
+    "art": "knight",
+    "role": "heavy",
+    "spriteSha256": "d52fef7932609d6f1daa01a68725e3733c8c36561a6948553e9252ce6e30286e"
+  },
+  "ironwraith": {
+    "art": "golem",
+    "role": "heavy",
+    "spriteSha256": "d52fef7932609d6f1daa01a68725e3733c8c36561a6948553e9252ce6e30286e"
+  },
+  "alchemist": {
+    "art": "shade",
+    "role": "caster",
+    "spriteSha256": "3d304942bb713943877877625e515c373e6f57af930890cba58c6fcfc35e7b2d"
+  },
+  "tempest": {
+    "art": "blizzard",
+    "role": "caster",
+    "spriteSha256": "640cf648d7c65ea3f13afc48b0cdcfe883a7ca9634d4d02d9074c8874d4ba206"
+  },
+  "seer": {
+    "art": "blizzard",
+    "role": "caster",
+    "spriteSha256": "640cf648d7c65ea3f13afc48b0cdcfe883a7ca9634d4d02d9074c8874d4ba206"
+  },
+  "aetherknight": {
+    "art": "paladin",
+    "role": "fighter",
+    "spriteSha256": "192732e49d2dadfab2fdb62f0578229399144d9b9d2bd1da231c6ee70b5db226"
+  },
+  "seraph": {
+    "art": "healer",
+    "role": "flying",
+    "spriteSha256": "435e80da0c129d8657675373d3316415f0af0dfec122b07929345e6f9c246d7e"
+  },
+  "sundawn": {
+    "art": "sunlight",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "bloodpact": {
+    "art": "healer",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "arcflare": {
+    "art": "blizzard",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "vines": {
+    "art": "treant",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "skill_guard_wall": {
+    "art": "paladin",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "skill_guard_rally": {
+    "art": "knight",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "skill_arc_freeze": {
+    "art": "blizzard",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "skill_arc_chain": {
+    "art": "blizzard",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "skill_ranger_pierce": {
+    "art": "archer",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "skill_ranger_draw": {
+    "art": "ranger",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "skill_cleric_light": {
+    "art": "healer",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "skill_cleric_bless": {
+    "art": "sunlight",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "seal_silence": {
+    "art": "shade",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "mist_inquisitor": {
+    "art": "shade",
+    "role": "fighter",
+    "spriteSha256": "3794aab1968b402c6800b2dfa1f34b3e6b752f16a66c4684052cfee78e6ac28b"
+  },
+  "transposition": {
+    "art": "blizzard",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "portal_walker": {
+    "art": "blizzard",
+    "role": "fighter",
+    "spriteSha256": "192732e49d2dadfab2fdb62f0578229399144d9b9d2bd1da231c6ee70b5db226"
+  },
+  "rune_trap": {
+    "art": "sunlight",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "sylvan_trapper": {
+    "art": "ranger",
+    "role": "fighter",
+    "spriteSha256": "3c04aff23fd18ff44cb90c9924bacf056900de8d082a2c14669b91b95bc13c26"
+  },
+  "hourglass_surge": {
+    "art": "knight",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  },
+  "time_bind": {
+    "art": "knight",
+    "role": "spell",
+    "spriteSha256": "f227f50f692c500b6774d63ae42724f52a8e0d47a9e73f15a35535f01aafc88e"
+  }
+}
