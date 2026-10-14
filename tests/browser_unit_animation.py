@@ -1,5 +1,6 @@
 """Pilote illustré sur des événements réels, puis reprise/offline et assets indisponibles."""
 import asyncio
+import base64
 import functools
 import json
 import threading
@@ -62,6 +63,9 @@ async def run(browser,label,viewport):
     assert abs(origin[1]-(rect['y']+141/512*rect['height']))<2,(origin,rect)
     model=await page.evaluate('JSON.stringify(battle)')
     await page.screenshot(path=f'/tmp/ca-unit-shot-{label}.png',full_page=True)
+    if label=='desktop':
+        review=await page.screenshot(path='/tmp/ca-unit-review.jpg',type='jpeg',quality=82)
+        print('CA_REVIEW_JPEG:'+base64.b64encode(review).decode(),flush=True)
     await page.wait_for_function("document.querySelector('.unit-animation-actor[data-animation-state=hit]')")
     await wait_done(page)
     assert await page.evaluate('JSON.stringify(battle)')==model
@@ -87,6 +91,7 @@ async def run(browser,label,viewport):
     }''')
     assert await page.locator('.arena-painted-frame').count()==0
     assert await page.locator('.unit-on-board.enemy .unit-facing').evaluate("el=>getComputedStyle(el).transform")== 'matrix(-1, 0, 0, 1, 0, 0)'
+    assert await page.locator('.unit-on-board.enemy .illustrated-stage').evaluate("el=>new DOMMatrix(getComputedStyle(el).transform).a")==1
     await page.locator('[data-action="toggle-animations"]').click()
     assert await page.locator('.unit-on-board .illustrated-unit.atlas-ready').count()==0
     assert (await page.locator('.unit-on-board .unit-static').first.get_attribute('src')).startswith('data:image/webp;base64,')
@@ -117,6 +122,11 @@ async def production(browser,saved,base_url=None):
     for row in fixture['board']:
         for unit in row:
             if unit:unit['hp']=12;unit['maxhp']=12
+    if base_url:
+        units=[u for row in fixture['board'] for u in row if u]
+        fixture['board']=[[None]*len(row) for row in fixture['board']]
+        fixture['board'][0][2]=next(u for u in units if u['side']=='p')
+        fixture['board'][0][3]=next(u for u in units if u['side']=='e')
     saved['couronnes_arcanes_bataille_v1']=json.dumps(fixture)
     context=await browser.new_context(viewport={'width':844,'height':390},offline=base_url is None)
     await context.add_init_script('''(()=>{const saves=%s;for(const [k,v] of Object.entries(saves))if(localStorage.getItem(k)===null)localStorage.setItem(k,v);})()'''%json.dumps(saved))
@@ -136,6 +146,7 @@ async def production(browser,saved,base_url=None):
             print('DIAGNOSTIC_SOURCE',errors,await page.evaluate("({board:JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1')).board,units:[...document.querySelectorAll('.illustrated-unit')].map(n=>({...n.dataset})),overlays:document.querySelectorAll('.unit-animation-overlay').length})"),flush=True)
             raise
         assert await page.locator('.unit-animation-actor .illustrated-unit.atlas-ready').count()==0
+        await page.locator('.unit-animation-actor .unit-static').first.evaluate('(el)=>el.decode()')
         assert await page.locator('.unit-animation-actor .unit-static').first.evaluate('(el)=>el.naturalWidth')==512
         await wait_done(page)
     turn=await page.locator('.turn-n').inner_text()

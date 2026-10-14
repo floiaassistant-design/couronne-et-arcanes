@@ -703,7 +703,7 @@ body:has(.combat-screen) #view{
 }
 
 /* Pilote illustré : atlas approuvés, ancrage source (256,461), aucun pixel art. */
-.unit-on-board .sprite-stage.illustrated-stage{position:absolute;left:50%;top:82%;width:96px;height:96px;min-height:0;margin:0;padding:0;transform:translate(-50%,-90.0390625%);overflow:visible;background:none}
+.unit-on-board .sprite-stage.illustrated-stage{position:absolute;left:50%;top:82%;width:96px;height:96px;min-height:0;margin:0;padding:0;transform:translate(-50%,-90.0390625%)!important;overflow:visible;background:none}
 .combat-screen[data-painted-arena="true"] .arena-painted .sprite-stage.illustrated-stage{left:var(--foot-x);top:var(--foot-y);width:176px;height:176px;transform:translate(-50%,-90.0390625%)}
 .illustrated-stage .illustrated-unit.sprite-figure,.unit-animation-actor .illustrated-unit.sprite-figure{display:block;position:relative;width:100%!important;height:100%!important;transform:none!important;animation:none!important;image-rendering:auto;filter:drop-shadow(0 4px 2px #10182c99)}
 .illustrated-unit .unit-facing{position:absolute;inset:0;transform-origin:50% 50%}

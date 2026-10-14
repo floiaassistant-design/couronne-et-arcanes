@@ -61,6 +61,7 @@ jobs:
             /tmp/ca-combat-*.png
             /tmp/ca-capacites-*.png
             /tmp/ca-unit-*.png
+            /tmp/ca-unit-*.jpg
             JOUER.html
           if-no-files-found: warn
           retention-days: 14
@@ -98,5 +99,6 @@ jobs:
             ${{ runner.temp }}/ca-preview/JOUER.html
             /tmp/ca-aube-*.png
             /tmp/ca-unit-*.png
+            /tmp/ca-unit-*.jpg
           if-no-files-found: warn
           retention-days: 14
