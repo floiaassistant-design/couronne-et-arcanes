@@ -28,6 +28,9 @@ async def run(browser,label,viewport):
     await page.wait_for_function("document.querySelector('.unit-on-board .illustrated-unit').classList.contains('atlas-ready')")
     await page.wait_for_function("Number(document.querySelector('.unit-on-board .illustrated-unit').dataset.frame)>0")
     assert await unit.locator('.sprite-figure').evaluate("el=>getComputedStyle(el).imageRendering")=='auto'
+    figure=await unit.locator('.sprite-figure').bounding_box()
+    stage=await unit.locator('.illustrated-stage').bounding_box()
+    assert abs(figure['width']-stage['width'])<1 and abs(figure['height']-stage['height'])<1,(figure,stage)
     assert await page.locator('.arena-painted-frame').get_attribute('data-render-mode')=='hybrid'
 
     # Le tour est résolu et sauvegardé avant la fin du déplacement cosmétique.
@@ -48,7 +51,7 @@ async def run(browser,label,viewport):
     }''')
     await unit.scroll_into_view_if_needed()
     await page.locator('[data-action="end-turn"]').click()
-    await page.wait_for_function("document.querySelector('.unit-animation-actor [data-clip=tir][data-frame=3]')")
+    await page.wait_for_function("document.querySelector('.unit-animation-actor [data-clip=tir][data-frame=\"3\"]')")
     bolt=page.locator('.unit-crossbow-bolt').first
     assert await bolt.count()==1
     ghost=page.locator('.unit-animation-actor[data-owner=p]')
@@ -127,7 +130,7 @@ async def production(browser,saved,base_url=None):
     await page.wait_for_function("document.querySelector('.unit-on-board .illustrated-unit').classList.contains('atlas-ready')")
     if base_url:
         await page.locator('[data-action="end-turn"]').click()
-        await page.wait_for_function("document.querySelector('.unit-animation-actor [data-clip=tir][data-frame=3]')")
+        await page.wait_for_function("document.querySelector('.unit-animation-actor [data-clip=tir][data-frame=\"3\"]')")
         assert await page.locator('.unit-animation-actor .illustrated-unit.atlas-ready').count()==0
         assert await page.locator('.unit-animation-actor .unit-static').first.evaluate('(el)=>el.naturalWidth')==512
         await wait_done(page)
