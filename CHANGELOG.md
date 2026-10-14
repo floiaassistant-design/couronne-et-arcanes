@@ -1,3 +1,9 @@
+## Proposition — Arbalétrière illustrée animée (14/10/2026)
+- Repos, marche, tir, impact et défaite approuvés raccordés aux événements réels ; unité peinte distincte du portrait, miroir adverse et carreau à l’arme.
+- Six textures WebP originales exactes, 2 328 136 octets, contrat et reçus conservés ; 27 modules. Vue fixe et mouvement réduit, repli d’asset, navigation/interruption et reprise au repos.
+- UID publics seulement dans la trace visuelle transitoire, aucune règle, statistique, IA ou clé de sauvegarde changée. 263 tests Node et 60 parités locaux passent ; parcours Chromium et simulations à vérifier sur la PR.
+- Branche `feat/arbaletriere-animations-evenements`, main `0310fa6` préservé. PR nº 17 distincte ; aucune fusion ou auto-merge.
+
 ## Proposition — Statistiques effectives et lecture des capacités (14/10/2026)
 - Branche `fix/stats-capacites-combat` depuis le main `f896a0c3`, après la fusion autorisée de la PR nº 15.
 - Calcul d'invocation partagé entre moteur, main et collection ; bonus d'équipement, forge, réputation et maîtrise visibles. Exemple reproduit : Milicien 2/5 affiché auparavant, désormais 3/7 avec épée, forge 1 et réputation Aube 15, comme l'unité déployée.

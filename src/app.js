@@ -16,7 +16,7 @@ const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='all',collectionOwned=false;
 let deferredBattleModal='',battleStorageWarning=false;
 const {inspectCard,closeCardInspection,dismissCardInspection}=createCardInspection(()=>({battle,screen}),esc);
-const {stopBattleFx,playBattleFx}=createCombatFx(()=>({animationsEnabled,screen}));
+const {stopBattleFx,playBattleFx,mountUnitAnimations}=createCombatFx(()=>({animationsEnabled,screen}));
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
 function save(){if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
@@ -60,6 +60,7 @@ function render(){
  const arena=document.querySelector('.battle-grid');if(arena){arena.scrollLeft=arenaScroll;arena.scrollTop=arenaVertical;}
  const hand=document.querySelector('.combat-hand-dock .hand');if(hand)hand.scrollLeft=handScroll;
  const stage=document.querySelector('.combat-stage');if(stage)stage.scrollTop=stageScroll;
+ mountUnitAnimations();
 }
 
 function settle({deferModal=false}={}){

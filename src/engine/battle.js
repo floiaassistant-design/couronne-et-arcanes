@@ -12,7 +12,16 @@ export * from './board.js';
 function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed/4294967296;}
 function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand(b)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 export function note(b,message){b.log.unshift(message);b.log=b.log.slice(0,12);}
-function fx(b,event){if(Array.isArray(b.vfx)&&b.vfx.length<80)b.vfx.push(event);}
+function fx(b,event){
+ if(!Array.isArray(b.vfx)||b.vfx.length>=80)return;
+ const trace=u=>u?{uid:u.uid,cardId:u.id,side:u.side}:null;
+ const col=['move','teleport'].includes(event.type)?event.to:event.type==='attack'?event.from:event.col;
+ const actor=b.board[event.lane]?.[col];
+ if(actor&&actor.side===event.side)event.actor=trace(actor);
+ if(event.type==='attack')event.target=trace(b.board[event.lane]?.[event.to]);
+ if(['poison','trap-trigger'].includes(event.type))event.target=trace(b.board[event.lane]?.[event.col]);
+ b.vfx.push(event);
+}
 function enterCell(b,u,lane,col){triggerTrap(b,u,lane,col,hit,fx,note);sweepDead(b);}
 const controlHooks={emit:fx,note,enter:enterCell};
 

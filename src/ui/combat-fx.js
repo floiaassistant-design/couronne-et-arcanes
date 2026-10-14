@@ -1,8 +1,15 @@
 // Effets visuels synchronisés avec les événements du moteur ; aucun changement aux dégâts.
 import {paintedFootPoint} from './painted-arena.js';
+import {createUnitAnimation} from './unit-animation.js';
 export function createCombatFx(getContext){
  let fxTimers=[],fxOverlay=null,fxSequence=0;
+ const units=createUnitAnimation(getContext,(lane,col)=>{
+  const point=fxPoint(lane,col);if(!point||point.el.hasAttribute('data-foot-x'))return point;
+  const box=point.el.getBoundingClientRect();
+  return {...point,y:point.el.classList.contains('battle-cell')?box.top+box.height*.82:point.y};
+ });
 function stopBattleFx(){
+ units.stop();
  fxSequence++;
  for(const timer of fxTimers)clearTimeout(timer);
  fxTimers=[];
@@ -34,6 +41,7 @@ function fxImpact(point,kind,damage){
  if(damage>0){const dmg=fxNode('vfx-damage',point.x,point.y-12,`−${damage}`);animateFx(dmg,[{opacity:0,transform:'translate(-50%,-50%) translateY(8px)'},{opacity:1,offset:.2},{opacity:0,transform:'translate(-50%,-50%) translateY(-35px)'}],660);}
 }
 function fxOne(event){
+ if(event.actor?.cardId==='archer'&&['spawn','move','teleport','attack','death'].includes(event.type))return;
  const start=fxPoint(event.fromLane??event.lane,event.from??event.col??1),end=fxPoint(event.lane,event.to??event.col??1);
  if(!end)return;
  if(event.type==='teleport'){
@@ -98,13 +106,16 @@ function fxOne(event){
 }
 function playBattleFx(events,onDone){
  stopBattleFx();
+ units.mount();
  const {animationsEnabled,screen}=getContext();
- if(document.querySelector('.arena-painted-frame[data-render-mode="static"]')||!animationsEnabled||!events?.length||screen!=='battle'||!document.querySelector('.battle-grid')||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){onDone?.();return;}
+ if(!animationsEnabled||!events?.length||screen!=='battle'||!document.querySelector('.battle-grid')||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){onDone?.();return;}
+ if(document.querySelector('.arena-painted-frame')){units.play(events,onDone);return;}
+ const unitDuration=units.play(events);
  const seq=fxSequence;
  fxOverlay=document.createElement('div');fxOverlay.className='battle-vfx-overlay';fxOverlay.setAttribute('aria-hidden','true');document.body.append(fxOverlay);
  const selected=events.slice(0,30);
  selected.forEach((event,i)=>fxTimers.push(setTimeout(()=>{if(seq===fxSequence)fxOne(event);},i*135)));
- fxTimers.push(setTimeout(()=>{if(seq!==fxSequence)return;stopBattleFx();onDone?.();},selected.length*135+800));
+ fxTimers.push(setTimeout(()=>{if(seq!==fxSequence)return;stopBattleFx();units.mount();onDone?.();},Math.max(selected.length*135+800,unitDuration)));
 }
-return {stopBattleFx,playBattleFx};
+return {stopBattleFx,playBattleFx,mountUnitAnimations:units.mount};
 }

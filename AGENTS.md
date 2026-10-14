@@ -2,7 +2,7 @@
 
 ## Version stable et coordination multi-sessions — PRIORITAIRE
 
-- **Base courante : V2.11, `main` `f896a0c3`, PR nº 15 fusionnée le 14/10/2026 après autorisation spécifique.** PR nº 14 (arène peinte) déjà intégrée ; la PR nº 11 reste distincte et ouverte. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
+- **Base vérifiée : V2.11, `main` `0310fa6`, PR nº 16 fusionnée le 14/10/2026 après autorisation spécifique.** PR nº 14 (arène peinte) déjà intégrée ; la PR nº 11 reste distincte et ouverte. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
 - **Ne jamais copier une ancienne version par-dessus la dernière version.** La copie V1.2 avait écrasé huit fichiers de V2.7 le 11/10/2026 ; les fichiers ont été récupérés depuis le commit local `145a2e8`.
 - **Une branche par agent/session** lorsque plusieurs agents développent en parallèle. Un seul intégrateur prépare la fusion après comparaison des modifications et exécution des tests, **sans jamais fusionner avant l'accord explicite de l'utilisateur**.
 - **Anti-écrasement :** vérifier l'état GitHub avant chaque publication ; si la branche cible a avancé, réconcilier les changements utiles sur la branche de travail et ne jamais forcer la réécriture de l'historique. Ce travail ne constitue jamais une autorisation de fusionner sur `main`.
@@ -207,3 +207,10 @@ Univers de fantasy médiévale peinte, cartes détaillées originales, héros ex
 - Campagne 01/03/11, Tour 1–4, boss du donjon Ysara ajustés ; autres paliers préservés pour permettre une progression via améliorations.
 - `dungeonBonusMission` est la source unique des récompenses d'embuscade. L'UI ne doit pas les coder en dur. Bonus obtenu uniquement sur victoire et une seule fois.
 - Version stable à cette étape : V2.1 ; les mentions anciennes sont conservées ici uniquement à titre historique.
+
+## Proposition — pilote animé Arbalétrière
+
+- Lire `docs/ANIMATIONS_ARBALETRIERE_MOTEUR.md` et le manifeste `assets/units/arbaletriere_aube/manifest.json`. Seule l’unité `archer` utilise ces textures ; les portraits restent distincts.
+- `ui/unit-sprites.js` porte cadence et plan pur ; `ui/unit-animation.js` lit la trace publique. Les champs actor/target du helper fx sont transitoires : ne pas les sauvegarder ni modifier les règles pour une animation.
+- Six WebP approuvés exacts, budget 2,4 Mo brut ; 27 modules. Garder le mode fixe illustré, le repli d’asset, mouvement réduit, miroir et reprises 3×5. Contrôler le parcours `browser_unit_animation.py`.
+- La PR nº 17 des portraits reste indépendante ; préserver son contenu lors de l’intégration et régénérer JOUER depuis les sources combinées. Chaque fusion demande son accord spécifique.

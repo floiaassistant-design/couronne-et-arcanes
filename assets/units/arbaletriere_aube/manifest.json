@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "cardId": "archer",
+  "assetId": "arbaletriere_aube",
+  "sourceCommit": "234988e2960451e5ed31ed6226175694b92da880",
+  "sourceRepository": "floiaassistant-design/couronne-et-arcanes-art",
+  "approvalRef": "docs/art-approvals/arbaletriere_aube_2026-10-12.json",
+  "license": "original",
+  "frameWidth": 512,
+  "frameHeight": 512,
+  "anchor": {
+    "x": 256,
+    "y": 461
+  },
+  "sourceFacing": "right",
+  "displayFramePx": 176,
+  "budgetBytes": 2400000,
+  "clips": [
+    {
+      "id": "repos",
+      "loop": true,
+      "durations": [
+        650,
+        650,
+        800,
+        650
+      ],
+      "columns": 4,
+      "source": "exports/units/arbaletriere_aube/animations_v3/repos/atlas.webp",
+      "target": "assets/units/arbaletriere_aube/repos.webp",
+      "sha256": "2cfb72065f37b17709c87d7553546b1a2a6f800b84726a51ca6521aeaa1dead8",
+      "bytes": 408346
+    },
+    {
+      "id": "marche",
+      "loop": true,
+      "durations": [
+        180,
+        150,
+        180,
+        150
+      ],
+      "columns": 4,
+      "source": "exports/units/arbaletriere_aube/animations_v2/marche/atlas.webp",
+      "target": "assets/units/arbaletriere_aube/marche.webp",
+      "sha256": "a811002489f65975e023d08742a923f53c7808291d91383769749c31ceb6f6b5",
+      "bytes": 424126
+    },
+    {
+      "id": "tir",
+      "loop": false,
+      "durations": [
+        200,
+        140,
+        260,
+        110,
+        160,
+        230
+      ],
+      "columns": 6,
+      "source": "exports/units/arbaletriere_aube/animations_v2/tir/atlas.webp",
+      "target": "assets/units/arbaletriere_aube/tir.webp",
+      "sha256": "f2f4fce5631405a0aa1494b88ec363290729157d9cb0066fe0e52a982f68a0d7",
+      "bytes": 688064
+    },
+    {
+      "id": "impact",
+      "loop": false,
+      "durations": [
+        110,
+        160,
+        200
+      ],
+      "columns": 3,
+      "source": "exports/units/arbaletriere_aube/animations_v2/impact/atlas.webp",
+      "target": "assets/units/arbaletriere_aube/impact.webp",
+      "sha256": "a1f6f8d0b3cab3f29abd928bf53f3edfd7b5219375bf8012459cf3afcef7d731",
+      "bytes": 337694
+    },
+    {
+      "id": "defaite",
+      "loop": false,
+      "durations": [
+        150,
+        230,
+        250,
+        450
+      ],
+      "columns": 4,
+      "source": "exports/units/arbaletriere_aube/animations_v2/defaite/atlas.webp",
+      "target": "assets/units/arbaletriere_aube/defaite.webp",
+      "sha256": "1a2b9eb28718f528e6775cd60d5236f6dd66a41a7e91d783d5f4d0f7044cc433",
+      "bytes": 378310
+    }
+  ],
+  "static": {
+    "key": "static",
+    "source": "exports/units/arbaletriere_aube/reference_v1.webp",
+    "target": "assets/units/arbaletriere_aube/static.webp",
+    "id": "arbaletriere_aube_reference",
+    "version": 1,
+    "type": "unit",
+    "export": "exports/units/arbaletriere_aube/reference_v1.webp",
+    "sha256": "1824a2ded79aef0a26e87b469cad1b6a1ccecdd5c396471719958d2b4bb307bf",
+    "width": 512,
+    "height": 512,
+    "bytes": 91596,
+    "previousStatus": "review",
+    "hasAlpha": true,
+    "transparentPixels": 216910,
+    "visiblePixels": 45234,
+    "edgeVisiblePixels": 0
+  },
+  "projectile": {
+    "releaseMs": 600,
+    "travelMs": 440,
+    "anchor": {
+      "x": 469,
+      "y": 141
+    },
+    "reference": "tir frame 04",
+    "sourceReferenceCommit": "d193b762c662fbaad4bb32db6e5d9d83b1938a7b",
+    "assetType": "original vector drawn in code"
+  },
+  "knownLimitations": [
+    "Short painted key-pose animations without continuous interpolation.",
+    "Walk contact poses and leg alternation have known imperfections.",
+    "Shooting has no projectile or mechanical reload; defeat settles on one knee.",
+    "Fine face, weapon and boot contour variations persist."
+  ]
+}

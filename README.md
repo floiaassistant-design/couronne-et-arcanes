@@ -18,11 +18,11 @@ Mouvement, portée, IA, compétences et contrôles utilisent la géométrie rée
 
 La géométrie V2.11 est intégrée depuis la PR nº 6 ; rapport historique : [docs/ARENE_V2_11.md](docs/ARENE_V2_11.md). Le dernier commit GitHub et [l'état du projet](docs/ETAT_PROJET.md) priment sur les anciennes propositions.
 
-## Proposition après la PR nº 15 — statistiques et capacités
+## Intégré par la PR nº 16 — statistiques et capacités
 
-Branche `fix/stats-capacites-combat`, depuis `main` `f896a0c3`. Les cartes montrent les statistiques d'invocation réelles (amélioration, équipement, forge, réputation et maîtrise). La fiche est accessible sur toutes les cartes de la main, dont les sorts et compétences en attente ; texte de capacité de 14 px, bonus expliqués, fermeture par croix ou Échap. Le dock réserve de la place à la lecture sans recouvrir les cases ou les commandes. Les descriptions longues et les bonus défilent dans la fiche.
+PR nº 16 fusionnée, main vérifié `0310fa6`. Les cartes montrent les statistiques d'invocation réelles (amélioration, équipement, forge, réputation et maîtrise). La fiche est accessible sur toutes les cartes de la main, dont les sorts et compétences en attente ; texte de capacité de 14 px, bonus expliqués, fermeture par croix ou Échap. Le dock réserve de la place à la lecture sans recouvrir les cases ou les commandes. Les descriptions longues et les bonus défilent dans la fiche.
 
-258 tests Node, 60 parités, builds, parcours Chromium bureau/tactile portrait/paysage, reprise et export hors réseau validés localement. Cette proposition reste sur sa branche jusqu'à un accord spécifique pour sa PR. Détails : [statistiques et capacités](docs/STATISTIQUES_CAPACITES.md).
+258 tests Node, 60 parités, builds, parcours Chromium bureau/tactile portrait/paysage, reprise et export hors réseau validés localement. CI du main #38531495638 réussie. Détails : [statistiques et capacités](docs/STATISTIQUES_CAPACITES.md).
 
 ## V2.10 — Manipulation des comptes à rebours
 
@@ -106,3 +106,9 @@ Clés conservées : `couronnes_arcanes_v1`, `couronnes_arcanes_bataille_v1` et l
 Prochaine piste après V2.11 — proposition V3.0 : **un donjon tactique inédit**, avec trois boss utilisant progressivement silence, portails et pièges, et des récompenses acquises uniquement en jeu.
 
 Historique : `CHANGELOG.md`. État de reprise : `docs/ETAT_PROJET.md`. Vision à long terme : `docs/BIBLE_DU_JEU.md`.
+
+## Proposition — Arbalétrière illustrée animée
+
+Sur `feat/arbaletriere-animations-evenements`, le personnage peint approuvé remplace la silhouette pixel de la seule Arbalétrière : repos, marche, tir, impact et défaite suivent les événements du combat, avec carreau attaché à l’arme. Les animations coupées et le mouvement réduit gardent une vue illustrée fixe. Reprise, identité portrait/unité et autres cartes conservées.
+
+Six textures approuvées, 27 modules ; le HTML autonome contient tous les atlas. Contrat, poids, tests et limites : [animations Arbalétrière moteur](docs/ANIMATIONS_ARBALETRIERE_MOTEUR.md). La PR nº 17 des cinq portraits est distincte. Cette proposition attend un accord spécifique pour sa propre fusion.

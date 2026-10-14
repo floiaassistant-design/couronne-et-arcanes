@@ -41,9 +41,13 @@ src/
 
 **État actualisé le 14/10/2026 :** arène peinte intégrée par la PR nº 14 ; pilote Arbalétrière intégré par la PR nº 15, main `f896a0c3`, avec 13 portraits.
 
-## Proposition — statistiques et capacités après la PR nº 15
+## Intégré — statistiques et capacités, PR nº 16
 
 - `src/engine/unit-stats.js` dépend des données et du profil, sans DOM. Il expose le contexte de bonus du profil et les statistiques d'invocation, consommés par `battle.js`, `ui/views.js` et `ui/card-inspection.js`. `profile.js` exporte son calcul existant `gearBonus` ; la copie de `battle.js` est supprimée.
 - `src/ui/card-inspection.js` gère le contenu et l'état de lecture éphémère de la main. `app.js` conserve les actions de jeu et appelle le lecteur ; aucune dépendance du moteur vers l'interface.
 - La main utilise l'instantané de la bataille (y compris une sauvegarde historique) ; la collection utilise le profil actuel. Aucun champ ajouté au stockage. Le constructeur garde l'ordre des propriétés pour préserver la parité sérialisée.
 - 25 modules empaquetés automatiquement, 13 portraits inchangés. `battle.js` reste à 371 lignes et `app.js` à 221 ; les deux nouveaux modules font moins de 40 lignes chacun.
+
+## Proposition — animations illustrées de l’Arbalétrière
+
+`ui/unit-sprites.js` définit textures, ancrage, cadence et plan pur des événements publics. `ui/unit-animation.js` porte le lecteur transitoire, les copies des acteurs, les projectiles et interruptions ; aucune référence au profil ou mutation du combat. `combat-fx.js` coordonne les deux rendus et `app.js` monte le lecteur après projection. Le helper fx du moteur annote seulement les UID publics ; aucune dépendance vers l’UI. Le builder embarque six textures unitaires distinctes des 13 portraits ; 27 modules. Contrat : `ANIMATIONS_ARBALETRIERE_MOTEUR.md`. Les sources restent sous 400 lignes par module ; CSS historique non refondu.

@@ -10,6 +10,9 @@ const art=Object.fromEntries(fs.readdirSync(path.join(root,'assets/creatures'))
  .filter(n=>n.endsWith('.webp'))
  .map(n=>[n.slice(0,-5),'data:image/webp;base64,'+fs.readFileSync(path.join(root,'assets/creatures',n)).toString('base64')]));
 const factories=new Map();
+const unitTextures=Object.fromEntries(fs.readdirSync(path.join(root,'assets/units/arbaletriere_aube'))
+ .filter(n=>n.endsWith('.webp')).map(n=>['arbaletriere_aube/'+n.slice(0,-5),
+  'data:image/webp;base64,'+fs.readFileSync(path.join(root,'assets/units/arbaletriere_aube',n)).toString('base64')]));
 function resolve(origin,request){
  if(!request.startsWith('.'))throw Error('Import externe non pris en charge : '+request);
  const target=path.posix.normalize(path.posix.join(path.posix.dirname(origin),request));
@@ -20,6 +23,7 @@ function convert(filename, testing=false){
  if(factories.has(filename))return;
  let text=read(filename),deps=[];
  if(filename==='src/visuals.js')text=text.replace('export const INLINE_CREATURES={};','export const INLINE_CREATURES='+JSON.stringify(art)+';');
+ if(filename==='src/ui/unit-sprites.js')text=text.replace('export const INLINE_UNIT_TEXTURES={};','export const INLINE_UNIT_TEXTURES='+JSON.stringify(unitTextures)+';');
  text=text.replace(/^import\s*\{([^}]+)\}\s*from\s*['"]([^'"]+)['"];?\s*$/gm,(_all,items,request)=>{
   const dep=resolve(filename,request);deps.push(dep);
   return `const {${items}}=__load(${JSON.stringify(dep)});`;
