@@ -1,6 +1,7 @@
 import {createViews} from './ui/views.js';
 import {createCombatFx} from './ui/combat-fx.js';
 import {mountPaintedArena} from './ui/painted-arena.js';
+import {createCardInspection} from './ui/card-inspection.js';
 import {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure} from './ui/storage.js';
 import {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS} from './data.js';
 import {AI_STYLES,aiStyle,aiEnraged} from './ai.js';
@@ -14,7 +15,7 @@ let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}ca
 const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='all',collectionOwned=false;
 let deferredBattleModal='',battleStorageWarning=false;
-let pinnedInspection=-1; // Transitoire, non sauvegardé.
+const {inspectCard,closeCardInspection,dismissCardInspection}=createCardInspection(()=>({battle,screen}),esc);
 const {stopBattleFx,playBattleFx}=createCombatFx(()=>({animationsEnabled,screen}));
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
@@ -47,11 +48,11 @@ function showModal(html){$('modal-root').innerHTML=`<div class="modal-backdrop">
 function hideModal(){$('modal-root').innerHTML='';}
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
 function render(){
- pinnedInspection=-1;
  const arenaScroll=document.querySelector('.battle-grid')?.scrollLeft||0;
  const arenaVertical=document.querySelector('.battle-grid')?.scrollTop||0;
  const handScroll=document.querySelector('.combat-hand-dock .hand')?.scrollLeft||0;
  const stageScroll=document.querySelector('.combat-stage')?.scrollTop||0;
+ closeCardInspection();
  stopBattleFx();document.body.classList.toggle('animations-off',!animationsEnabled);
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
  $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='battle'&&battle?battleUI():homeUI();
@@ -61,24 +62,6 @@ function render(){
  const stage=document.querySelector('.combat-stage');if(stage)stage.scrollTop=stageScroll;
 }
 
-function inspectCard(index,pin=false){
- if(!battle||screen!=='battle')return;
- const i=Number(index),entry=battle.heroes.p.hand[i],c=entry&&CARDS[entry.id],panel=$('hand-card-inspection');
- if(!panel||!c)return;
- if(pin&&pinnedInspection===i){closeCardInspection();return;}
- if(pin)pinnedInspection=i;
- if(pinnedInspection>=0&&pinnedInspection!==i&&!pin)return;
- const bonus=profile.upgrades[c.id]||0,rank=masteryRank(profile,c.id);
- panel.hidden=false;
- panel.innerHTML='<b>'+esc(c.name)+'</b> · '+esc(FACTIONS[c.faction].name)+' · '+esc(c.rarity)+
-  ' · '+esc(c.description)+(c.type==='unité'?' · ATQ '+(c.attack+bonus)+' / PV '+(c.hp+bonus+(rank===3?1:0)):'')+
-  ' · Attente '+Math.max(0,entry.wait||0)+
-  ' <button type="button" data-action="close-inspection" aria-label="Fermer la fiche">×</button>';
-}
-function closeCardInspection(){
- pinnedInspection=-1;const panel=$('hand-card-inspection');
- if(panel){panel.hidden=true;panel.textContent='';}
-}
 function settle({deferModal=false}={}){
  if(!battle||battle.status==='active'||battle.rewardGiven)return;
  // The pending finished battle survives a reload until its profile receipt is saved.
@@ -180,11 +163,11 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
  case 'close-inspection':closeCardInspection();break;
  case 'select-card':{
   if(!battle||battle.status!=='active')break;
-  const i=Number(index),pilot=battle.heroes.p.hand[i]?.id==='archer';
-  if(battle.heroes.p.cardsPlayed>=2){if(pilot)inspectCard(i,true);else toast('Vous avez déjà joué deux cartes ce tour.');break;}
-  if(battle.heroes.p.hand[i]?.wait>0){if(pilot)inspectCard(i,true);else toast('Cette carte est encore en attente.');break;}
+  const i=Number(index),entry=battle.heroes.p.hand[i];
+  if(!Number.isInteger(i)||!entry)break;
+  if(battle.heroes.p.cardsPlayed>=2||entry.wait>0){inspectCard(i,true);break;}
   selectedCard=selectedCard===i?-1:i;render();
-  if(pilot&&selectedCard===i)inspectCard(i,true);
+  if(selectedCard===i)inspectCard(i,true);
   break;
  }
  case 'deploy':if(!battle||selectedCard<0)return;withBattleFx(()=>playPlayerCard(battle,selectedCard,Number(lane)));break;
@@ -221,18 +204,18 @@ document.addEventListener('keydown',event=>{
  }
 });
 document.addEventListener('mouseover',event=>{
- const el=event.target.closest('.illustrated-pilot.hand-card');if(el)inspectCard(el.dataset.index);
+ const el=event.target.closest('.hand-card');if(el)inspectCard(el.dataset.index);
 });
 document.addEventListener('mouseout',event=>{
- const el=event.target.closest('.illustrated-pilot.hand-card');
- if(el&&!el.contains(event.relatedTarget)&&pinnedInspection<0)closeCardInspection();
+ const el=event.target.closest('.hand-card');
+ if(el&&!el.contains(event.relatedTarget))dismissCardInspection();
 });
 document.addEventListener('focusin',event=>{
- const el=event.target.closest('.illustrated-pilot.hand-card');if(el)inspectCard(el.dataset.index);
+ const el=event.target.closest('.hand-card');if(el)inspectCard(el.dataset.index);
 });
 document.addEventListener('focusout',event=>{
- const el=event.target.closest('.illustrated-pilot.hand-card');
- if(el&&!el.contains(event.relatedTarget)&&pinnedInspection<0)closeCardInspection();
+ const el=event.target.closest('.hand-card');
+ if(el&&!el.contains(event.relatedTarget))dismissCardInspection();
 });
 document.addEventListener('change',async event=>{if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='faction'){collectionFilter=event.target.value;render();}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
 render();if(battle&&battle.status!=='active')settle();else welcome();

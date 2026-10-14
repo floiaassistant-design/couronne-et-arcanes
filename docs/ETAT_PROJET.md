@@ -1,18 +1,22 @@
-> **13/10/2026 — pilote Illustrée v3 en branche, non fusionné** : `feat/integration-carte-illustree-arbaletriere-v3` basé sur `b8aafa29`, source art PR nº 8 `fbbcbe8d`. Carte `archer` : portrait approuvé SHA-256 `31186adc9ea55c4d34777f70f8b5fe2969a1ea0386a74d1cf44183e931c391a3`, compteur unique, fiche consultable depuis la main. L'ancien `archer.webp` et `skill_ranger_pierce` sont préservés. Retour joueur : bouton « Fiche » sur le portrait retiré ; description conservée au survol/focus et au toucher de la carte, sans pose involontaire. Position fiche à valider en combat réel ; contrôle navigateur pilote ajouté en CI ; règles, IA, sauvegardes inchangées. Voir `docs/INTEGRATION_GRAPHISMES.md` ; aucune fusion autorisée.
+# Couronnes & Arcanes — état de reprise, 14 octobre 2026
 
-> **Proposition peinte fixe — 13/10/2026, non fusionnée** : branche `feat/arene-peinte-heros-statiques` issue de la tête de la PR nº 13 `b2ec6b7b`. Première illustration peinte choisie par le joueur, scène entière avec emplacements pour héros, projection des 2/3/4 pistes, unités fixes et ancrages prêts pour les futures séquences. Main et commandes basses, repli historique 3×5, moteur/IA/progression inchangés. 23 modules dans l'export. Voir `docs/ARENE_PEINTE.md` et la PR dédiée pour les résultats réellement exécutés. PR nº 11/nº 13 intactes ; main de référence `0b0af7fe`, aucune fusion autorisée.
+- **Main officiel : V2.11, commit `f896a0c3aca0a6496d9a9832cbfca8bd4be9c222`.** PR nº 15 fusionnée sur autorisation spécifique du propriétaire. PR nº 14 (arène peinte et plein écran) déjà intégrée ; PR nº 10 (sauvegardes) et nº 12 (nouvelle aventure/classes/rareté) conservées.
+- **76 cartes, quatre classes, 12 missions, 20 étages, trois donjons.** Règles et statistiques de combat inchangées. Dix cases par ligne, deux/trois/quatre lignes ; anciennes batailles 3×5 préservées.
+- **Graphismes officiels :** 13 portraits, dont Arbalétrière approuvée SHA-256 `31186adc9ea55c4d34777f70f8b5fe2969a1ea0386a74d1cf44183e931c391a3`. Seul `archer` utilise `arbaletriere_aube` ; `skill_ranger_pierce` conserve `archer.webp`. Arène peinte fixe, huit silhouettes SVG, aucun personnage animé image par image intégré.
+- **PR nº 15 vérifiée avant fusion :** tête `da251bc`, CI #38453860186 réussie, 253 tests, 60 parités, build et parcours bureau/mobile. La fiche n'a aucun bouton sur le portrait.
+- **PR nº 11 :** ancienne arène pixel art toujours ouverte et en conflit ; distincte du rendu peint courant. Ne pas l'intégrer sans décision spécifique.
 
-> **13/10/2026 — branche en proposition (non fusionnée)** : `feat/arene-structuree-4x10` créée depuis `main` `0b0af7fe`, après fusion de la PR nº 12. Arène visuelle de quatre pistes pour les combats 2/3/4 × 10, avec écran de combat immersif : HUD compact, arène dominante et main de cartes en bas ; seules les vraies lignes du moteur sont interactives. Nouvelle image céleste 912×620 calibrée sur les 40 cases, sans changement des règles ni des sauvegardes. Les anciennes batailles 3 × 5 conservent leur rendu. Validation graphique humaine encore nécessaire ; la PR nº 11 reste distincte, en conflit avec `main`. Voir `docs/ARENE_STRUCTUREE.md`.
+## Proposition courante — statistiques et capacités
 
-# Couronnes & Arcanes — état courant V2.11 (12 octobre 2026)
+- Branche **`fix/stats-capacites-combat`**, depuis le main `f896a0c3` ; vérifier sa PR pour son statut réel. Aucune fusion autorisée pour ces nouvelles corrections.
+- Statistiques d'invocation partagées entre moteur, main, collection et fiche ; équipement, forge, réputation et maîtrise inclus. La main respecte l'instantané du combat sauvegardé.
+- Consultation de toutes les cartes, sorts et compétences en attente : texte de 14 px, détails des bonus, croix/Échap, sélection et pose conservées. Zone réservée au-dessus des cartes, sans bouton sur le portrait.
+- Deux modules ajoutés : `engine/unit-stats.js` et `ui/card-inspection.js`. 25 modules et 13 portraits dans `JOUER.html`, régénéré depuis les sources. Clés et schéma de sauvegarde conservés ; état de lecture transitoire.
+- **Contrôles locaux exécutés :** 258 tests Node, 60 parités, builds, neuf suites Chromium bureau/mobile, vrai toucher simulé, mission 01 terminée, reprise et production hors réseau/mouvement réduit. Simulations : 20 480 contrôles et 6 144 comparatifs d'arène, reproductibles et sans état invalide. CI distante à vérifier sur la PR, aucun téléphone physique testé.
+- Contrat et résultats : [STATISTIQUES_CAPACITES.md](STATISTIQUES_CAPACITES.md). Provenance du pilote : [INTEGRATION_GRAPHISMES.md](INTEGRATION_GRAPHISMES.md).
 
-- **Version officielle : V2.11 sur `main`, commit `0b0af7feaf3aaac8882cecc44a724ee0e84e3016`**, issu de la PR nº 6 fusionnée sur autorisation explicite du joueur. Les PR nº 7, nº 8, nº 9, nº 10 (sauvegardes) et nº 12 (classes et lisibilité) sont intégrées.
-- **76 cartes** ; règles et statistiques conservées depuis V2.10. Compte à rebours, actions de deux cartes par tour, IA tactique et protections de la couronne en place.
-- **Arène V2.11** : 10 cases par ligne, 2 lignes en duel, 3 pour difficulté ≥3, 4 pour boss solo. Anciens combats 3×5 préservés sur reprise, sans migration destructive. Modules purs `src/engine/board.js` et `src/ui/arena-art.js`, 22 modules dans l'export autonome.
-- **Graphismes** : 12 portraits partagés pour la collection, huit silhouettes SVG de combat, effets CSS accessibles ; aucune spritesheet image par image intégrée.
-- **Validation vérifiée pour la PR nº 6** : GitHub Actions #38235681138 — 219 tests Node, 60 parités V2.4, build autonome synchronisé, Chromium bureau/mobile simulé, 20 480 simulations de contrôle et 6 144 combats comparatifs. Ce n'est pas un test sur smartphone physique.
-- **Rythme mesuré** : 12,7 → 19,4 tours moyens entre 3×5 et les plateaux V2.11 ; attrition plus fréquente. Pas de décision d'équilibrage sans essai humain.
-- **Correctifs historiques (PR nº 10 fusionnée)** : branche `fix/fiabilite-sauvegardes-v211` — clôture de bataille récupérable, validation des imports et sauvegardes, signalement d'échec du stockage, tests ciblés ; aucun changement des règles, des cartes ou des récompenses.
-- Prochaines pistes indépendantes : audit du ressenti des combats, lisibilité du code UI et contrat d'animations pour le dépôt de ressources graphiques.
+## Suite
 
-GitHub et le dernier `main` sont la référence. Toute évolution doit être proposée par branche et PR, sans fusion ni auto-merge sans accord spécifique de l'utilisateur. L'export `JOUER.html` est régénéré uniquement depuis les sources.
+Faire examiner la lecture du pilote en partie avant la généralisation artistique aux cinq portraits Aube restants. Puis contrat d'animations pour les séquences approuvées ; audit séparé du rythme/attrition avant tout nouvel équilibrage ou donjon.
+
+GitHub et le dernier `main` sont la référence. Une branche et une PR par évolution ; accord explicite et spécifique requis avant chaque fusion, aucun auto-merge.

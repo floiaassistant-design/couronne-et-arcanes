@@ -1,4 +1,18 @@
-## Proposition — Arène céleste peinte et personnages fixes (13/10/2026, non fusionnée)
+## Proposition — Statistiques effectives et lecture des capacités (14/10/2026)
+- Branche `fix/stats-capacites-combat` depuis le main `f896a0c3`, après la fusion autorisée de la PR nº 15.
+- Calcul d'invocation partagé entre moteur, main et collection ; bonus d'équipement, forge, réputation et maîtrise visibles. Exemple reproduit : Milicien 2/5 affiché auparavant, désormais 3/7 avec épée, forge 1 et réputation Aube 15, comme l'unité déployée.
+- Fiche accessible sur toutes les cartes, sorts et compétences en attente ; description de 14 px, bonus détaillés, espace réservé dans le dock et gestes de sélection/pose préservés. Compteur historique supplémentaire masqué dans la main.
+- 258 tests Node, 60 parités, builds, Chromium bureau/mobile portrait/paysage, stockage réel hors réseau et une mission de campagne terminée par parcours ; simulations de contrôle/arène réussies. Aucun changement de règles, données des cartes, IA ou clés de sauvegarde.
+- Proposition non fusionnée : accord spécifique attendu sur sa propre PR.
+
+## Intégré — PR nº 15, pilote Arbalétrière Illustrée v3 (14/10/2026)
+- Fusion autorisée explicitement par le propriétaire, commit `f896a0c3`. Portrait approuvé, nouvelle clé seulement pour `archer`, cadre et fiche sans bouton sur le portrait.
+- CI validée sur `da251bc` avant fusion : 253 tests, parité, build et parcours bureau/mobile. Les animations restent une mission distincte.
+
+## Intégré — PR nº 14, arène peinte et combat plein écran (13/10/2026)
+- Fusion `b8aafa29`. Les propositions historiques ci-dessous décrivent les étapes de conception, pas des travaux encore en attente d'intégration.
+
+## Historique de proposition — Arène céleste peinte et personnages fixes (13/10/2026, intégrée par PR nº 14)
 - Première illustration choisie par le joueur, scène complète et plateformes réservées aux héros.
 - Grille projetée 2/3/4×10, déploiement conservé, ancrages des pieds et orientation prêts pour les futures animations.
 - Personnages SVG fixes, anciennes batailles 3×5 conservées, portraits et règles inchangés.

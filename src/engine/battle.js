@@ -5,7 +5,8 @@ import {classSkillTargetError,resolveClassSkill} from './class-skills.js';
 import {silenced,activeAbility,controlTargetError,resolveControlSpell,prepareControlUnits,triggerTrap,expireControl} from './battle-control.js';
 import {chosenTalents} from '../talents.js';
 import {tempoTargetError,resolveTempoSpell} from './tempo.js';
-import {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,masteryRank,EQUIPMENT,reputationLevel} from './profile.js';
+import {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,gearBonus} from './profile.js';
+import {unitStatContext,unitStats} from './unit-stats.js';
 import {laneCount,lastCell,crownColumn,entryColumn,validLane,missionLayout} from './board.js';
 export * from './board.js';
 function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed/4294967296;}
@@ -27,17 +28,17 @@ function draw(b,side,n=1){
  }
 }
 
-function gearBonus(p,bonus){return Object.values(p.equipped||{}).reduce((n,id)=>n+(EQUIPMENT[id]?.bonus===bonus?EQUIPMENT[id].value:0),0);}
 export function createBattle(profile,mission,seed=Date.now(),options={}){
  const p=normalizeProfile(profile);if(validateDeck(p))throw Error(validateDeck(p));
  const layout=missionLayout(mission,options);
+ const bonuses=unitStatContext(p);
  const b={seed:seed>>>0,missionId:mission.id,missionName:mission.name,round:1,phase:'player',status:'active',
  board:Array.from({length:layout.lanes},()=>Array(layout.cells+2).fill(null)),nextUnitId:1,log:[],powerCooldown:0,talentDrawUsed:false,cardUses:{},progressionGranted:false,heroTalents:chosenTalents(p,heroLevel(p)),
  heroes:{p:{name:p.name,hp:26+p.buildings.bastion*4+gearBonus(p,'hp'),maxhp:26+p.buildings.bastion*4+gearBonus(p,'hp'),shield:gearBonus(p,'shield')+heroShieldBonus(p)+(chosenTalents(p,heroLevel(p)).includes('gardien_rempart')?3:0),deck:[],discard:[],hand:[],cardsPlayed:0},
  e:{name:mission.enemy,hp:mission.hp,maxhp:mission.hp,shield:0,deck:[],discard:[],hand:[],cardsPlayed:0}},
- heroClass:p.heroClass,forgeBonus:p.buildings.forge||0,libraryBonus:(p.buildings.bibliotheque||0)+gearBonus(p,'hand'),unitAtkBonus:gearBonus(p,'unitAtk'),powerBonus:gearBonus(p,'power'),reputationBonus:Object.fromEntries(Object.keys(FACTIONS).map(k=>[k,reputationLevel(p,k)])),
+ heroClass:p.heroClass,forgeBonus:bonuses.forgeBonus,libraryBonus:(p.buildings.bibliotheque||0)+gearBonus(p,'hand'),unitAtkBonus:bonuses.unitAtkBonus,powerBonus:gearBonus(p,'power'),reputationBonus:bonuses.reputationBonus,
  aiStyle:mission.aiStyle||'equilibre',aiBoss:!!mission.boss,aiPhaseAnnounced:false,
- upgrades:{...p.upgrades},mastery:{...p.mastery},enemyDifficulty:mission.difficulty,mode:mission.mode||'campaign',stats:{playerKills:0,enemyKills:0}};
+ upgrades:bonuses.upgrades,mastery:bonuses.mastery,enemyDifficulty:mission.difficulty,mode:mission.mode||'campaign',stats:{playerKills:0,enemyKills:0}};
  b.heroes.p.deck=shuffle(b,p.deck);
  b.heroes.e.deck=shuffle(b,mission.deck);
  draw(b,'p',5+b.libraryBonus);draw(b,'e',5);
@@ -78,11 +79,9 @@ function findTarget(b,lane,col,unit){
 function spawn(b,side,id,lane){
  const c=CARDS[id];if(!c||c.type==='sort')return false;
  const col=entryColumn(b,side);if(b.board[lane][col])return false;
- const level=side==='p'?(b.upgrades[id]||0):Math.max(0,b.enemyDifficulty-3);
- const extraHP=side==='p'?b.forgeBonus:0;
- const factionBonus=side==='p'?(b.reputationBonus?.[c.faction]||0):0;
- const u={uid:b.nextUnitId++,id,side,atk:c.attack+level+(side==='p'?(b.unitAtkBonus||0):0),maxhp:c.hp+level+extraHP+factionBonus+(side==='p'&&masteryRank({mastery:b.mastery},id)===3?1:0),
-  hp:c.hp+level+extraHP+factionBonus+(side==='p'&&masteryRank({mastery:b.mastery},id)===3?1:0),armor:c.ability==='armor'?2:0,ranged:c.ability==='ranged',
+ const stats=unitStats(b,id,side);
+ const u={uid:b.nextUnitId++,id,side,atk:stats.atk,maxhp:stats.maxhp,
+  hp:stats.maxhp,armor:c.ability==='armor'?2:0,ranged:c.ability==='ranged',
   ability:c.ability,stun:0,poison:0,poisonTurns:0};
  b.board[lane][col]=u;
  fx(b,{type:'spawn',side,lane,col,icon:c.icon});

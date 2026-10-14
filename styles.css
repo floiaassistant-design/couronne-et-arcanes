@@ -665,3 +665,39 @@ body:has(.combat-screen) #view{
  margin:0;padding:3px 6px;overflow:auto;line-height:1.25;
  box-shadow:0 2px 10px #0009
 }
+
+/* Lecture des capacités : espace réservé, cartes et commandes restent accessibles. */
+.combat-screen .combat-hand-dock:has(.hand-card-inspection:not([hidden])){
+ --inspection-extra:96px;
+ height:calc(clamp(205px,29dvh,260px) + var(--inspection-extra));
+ flex-basis:calc(clamp(205px,29dvh,260px) + var(--inspection-extra))
+}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock:has(.hand-card-inspection:not([hidden])){
+ height:calc(clamp(240px,29dvh,260px) + var(--inspection-extra));
+ flex-basis:calc(clamp(240px,29dvh,260px) + var(--inspection-extra))
+}
+.combat-hand-dock .hand-header:has(.hand-card-inspection:not([hidden])){min-height:calc(var(--inspection-header-height,31px) + var(--inspection-extra))}
+.combat-hand-dock .hand-header .hand-card-inspection:not([hidden]){
+ display:flex;flex-direction:column;padding:6px 8px;overflow:hidden;font-size:13px;line-height:1.35
+}
+.inspection-heading{display:flex;align-items:center;justify-content:space-between;gap:6px;flex:none;min-height:28px}
+.inspection-heading b{font-size:14px;line-height:1.2}
+.hand-card-inspection .inspection-heading button{flex:none;min-width:44px;min-height:32px;font-size:23px;line-height:1;margin:0}
+.inspection-body{min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.inspection-summary,.inspection-traits,.inspection-bonuses{font-size:12px;line-height:1.4}
+.inspection-stats{flex:none;font-size:13px;margin-top:3px;color:#fff0cf}
+.inspection-stats b{white-space:nowrap}
+.inspection-description{font-size:14px;line-height:1.4;margin:5px 0;color:#fff7e5}
+.inspection-traits,.inspection-bonuses{color:#d9e4e9;margin-top:4px}
+.combat-hand-dock .hand-card:not(.illustrated-pilot) .stat.cd{display:none}
+@media(max-height:540px){
+ .combat-screen .combat-hand-dock:has(.hand-card-inspection:not([hidden])){
+  --inspection-extra:70px;height:calc(clamp(137px,40dvh,175px) + var(--inspection-extra));
+  flex-basis:calc(clamp(137px,40dvh,175px) + var(--inspection-extra))
+ }
+ .combat-screen[data-painted-arena="true"] .combat-hand-dock:has(.hand-card-inspection:not([hidden])){
+  height:calc(137px + var(--inspection-extra));flex-basis:calc(137px + var(--inspection-extra))
+ }
+ .combat-hand-dock .hand-header:has(.hand-card-inspection:not([hidden])){min-height:calc(var(--inspection-header-height,21px) + var(--inspection-extra))}
+ .combat-hand-dock .hand-header .hand-card-inspection:not([hidden]){padding-block:3px}
+}

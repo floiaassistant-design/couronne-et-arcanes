@@ -22,7 +22,8 @@ test('La main distingue une carte prête de deux comptes à rebours sans changer
  assert.match(waiting,/hand-waiting/);
  assert.match(waiting,/EN ATTENTE/);
  assert.match(waiting,/<b>3<\/b><small>TOURS<\/small>/);
- assert.match(waiting,/aria-disabled="true"/);
+ assert.doesNotMatch(waiting,/aria-disabled="true"/); // La consultation reste active même si la pose est interdite.
+ assert.match(waiting,/consulter les capacités/);
  assert.match(almost,/<b>1<\/b><small>TOUR<\/small>/);
  assert.equal(JSON.stringify(profile),unchanged);
 });

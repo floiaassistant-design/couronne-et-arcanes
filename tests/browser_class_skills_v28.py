@@ -6,8 +6,8 @@ from playwright.async_api import async_playwright
 ROOT=Path(__file__).resolve().parents[1]
 HTML=(ROOT/'tests/JOUER.test.html').read_text()
 
-async def make_page(browser,viewport,store,errors):
-    page=await browser.new_page(viewport=viewport)
+async def make_page(browser,viewport,store,errors,*,touch=False):
+    page=await browser.new_page(viewport=viewport,has_touch=touch,is_mobile=touch)
     page.on('pageerror',lambda error:errors.append(str(error)))
     await page.evaluate('''saved=>{
       const cache={...saved};window.__saves=cache;
