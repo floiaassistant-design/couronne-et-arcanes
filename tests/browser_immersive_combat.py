@@ -2,6 +2,7 @@
 import asyncio,base64
 from playwright.async_api import async_playwright
 from browser_class_skills_v28 import make_page
+from browser_card_capabilities import touch_or_click
 
 async def run(browser,label,viewport):
     errors=[]
@@ -34,9 +35,15 @@ async def run(browser,label,viewport):
     await page.screenshot(path=f'/tmp/ca-immersive-{label}.png',full_page=True)
     review=await page.screenshot(path=f'/tmp/ca-immersive-{label}.jpg',type='jpeg',quality=82)
     print('CA_IMMERSIVE_'+label.upper()+':'+base64.b64encode(review).decode(),flush=True)
-    await page.locator('.hand .hand-card').nth(1).click(position={'x':10,'y':20})
+    card=page.locator('.hand .hand-card').nth(1)
+    await page.mouse.move(0,0)
+    before=await card.bounding_box()
+    await touch_or_click(page,card,label!='desktop')
     inspection=page.locator('.hand-card-inspection')
     assert await inspection.is_visible()
+    assert 'Arbalétrière' in await inspection.inner_text()
+    after=await card.bounding_box()
+    assert abs(after['x']-before['x'])<2 and abs(after['y']-before['y'])<2,(label,before,after)
     inspection_box=await inspection.bounding_box()
     hand=await page.locator('.hand').bounding_box()
     assert inspection_box['y']+inspection_box['height']<=hand['y']+2,(inspection_box,hand)

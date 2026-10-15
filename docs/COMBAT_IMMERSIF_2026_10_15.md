@@ -12,6 +12,7 @@ Le propriétaire demande un essai plus soigné, avec une arène occupant l’éc
 - La main flotte en bas : 188 px sur bureau, 185 px en portrait et 130 px en paysage court, avec un espace supplémentaire pour lire une fiche. Le plateau interactif s’arrête au-dessus et reste défilable dans les deux directions.
 - HUD dans les coins, tour central et trois commandes conservées. Le journal, le profil adverse et les explications de pouvoir sont regroupés dans un volet `<details>` accessible au clavier, au-dessus de la main. Son état n’est pas sauvegardé.
 - La fiche conserve son texte de 14 px, sa fermeture et la séparation entre inspection, sélection et pose.
+- Les cartes de la main montrent leur illustration sur toute leur surface, avec titre, statistiques, rareté et petit compteur d'attente. Le portrait du pilote conserve son identité. L'ouverture d'une fiche garde les coordonnées des cartes, y compris lors d'un toucher mobile.
 
 ## Taille et effet du carreau
 
