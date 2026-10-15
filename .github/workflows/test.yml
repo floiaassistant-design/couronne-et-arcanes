@@ -43,6 +43,8 @@ jobs:
         run: python3 tests/browser_card_capabilities.py
       - name: Arbalétrière illustrée, événements réels et reprise sans réseau
         run: python3 tests/browser_unit_animation.py
+      - name: Composition immersive, journal et main bureau/mobile
+        run: python3 tests/browser_immersive_combat.py
       - name: Simulations de contrôle reproductibles
         run: npm run control-balance
       - name: Arène 2/3/4 lignes, mobile et reprise historique
@@ -62,6 +64,8 @@ jobs:
             /tmp/ca-capacites-*.png
             /tmp/ca-unit-*.png
             /tmp/ca-unit-*.jpg
+            /tmp/ca-immersive-*.png
+            /tmp/ca-immersive-*.jpg
             JOUER.html
           if-no-files-found: warn
           retention-days: 14
@@ -90,10 +94,11 @@ jobs:
           npm run test:parity
           python3 tests/browser_portraits_aube.py
           python3 tests/browser_unit_animation.py
+          python3 tests/browser_immersive_combat.py
           sha256sum JOUER.html > JOUER.sha256
           mkdir -p "$RUNNER_TEMP/ca-review/captures"
           cp JOUER.html JOUER.sha256 "$RUNNER_TEMP/ca-review/"
-          cp /tmp/ca-aube-*.png /tmp/ca-unit-*.png /tmp/ca-unit-*.jpg "$RUNNER_TEMP/ca-review/captures/"
+          cp /tmp/ca-aube-*.png /tmp/ca-unit-*.png /tmp/ca-unit-*.jpg /tmp/ca-immersive-*.png /tmp/ca-immersive-*.jpg "$RUNNER_TEMP/ca-review/captures/"
       - name: Version jouable combinée et captures pour le propriétaire
         if: success()
         uses: actions/upload-artifact@v4

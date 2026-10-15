@@ -50,9 +50,9 @@ export function createUnitAnimation(getContext,pointFor){
   if(!allowed())mounted.forEach(node=>node.classList.remove('atlas-ready'));
   if(allowed()&&mounted.length)raf=requestAnimationFrame(tick);
  }
- function sizeAt(point){
+ function sizeAt(point,id){
   const frame=point.el.closest('.arena-painted-frame');
-  return frame?176*frame.getBoundingClientRect().width/1672:96;
+  return frame?unitSpriteFor(id).displaySize*frame.getBoundingClientRect().width/1672:96;
  }
  function createGhost(actor,position){
   const point=pointFor(position.lane,position.col);if(!point)return null;
@@ -62,32 +62,44 @@ export function createUnitAnimation(getContext,pointFor){
   el.innerHTML=unitSpriteHTML(actor.cardId,actor.side,real?.querySelector('.illustrated-unit')?.dataset.fallback||'');overlay.append(el);
   const node=el.querySelector('.illustrated-unit');warm(node);
   if(real)real.dataset.visualReplaying='true';
-  return {actor,el,node,position,actions:[],bolts:new Map()};
+  return {actor,el,node,position,actions:[],bolts:new Map(),impacts:new Map()};
  }
  function place(ghost,position,opacity=1){
   const point=pointFor(position.lane,position.col);if(!point)return null;
-  const size=sizeAt(point);ghost.el.style.left=point.x+'px';ghost.el.style.top=point.y+'px';
+  const size=sizeAt(point,ghost.actor.cardId);ghost.el.style.left=point.x+'px';ghost.el.style.top=point.y+'px';
   ghost.el.style.width=size+'px';ghost.el.style.height=size+'px';ghost.el.style.opacity=String(opacity);
   return {...point,size};
  }
  function projectile(ghost,action,time){
   const sprite=unitSpriteFor(ghost.actor.cardId),p=sprite.projectile;
-  if(time<p.releaseMs||time>=p.releaseMs+p.travelMs)return;
+  if(time<p.releaseMs||time>=p.releaseMs+p.travelMs+p.impactMs)return;
   let bolt=ghost.bolts.get(action);
-  if(!bolt){
+  if(!bolt&&time<p.releaseMs+p.travelMs){
    bolt=document.createElement('span');bolt.className='unit-crossbow-bolt';
    bolt.innerHTML='<svg viewBox="0 0 40 8" width="40" height="8"><path d="M0 1l8 2v2L0 7l3-3z" fill="#e9dfc5"/><path d="M3 3h27v2H3z" fill="#9c754d"/><path d="M29 1l11 3-11 3z" fill="#d9e6ee"/><path d="M4 3l4-2v2z" fill="#243a5b"/></svg>';
    overlay.append(bolt);ghost.bolts.set(action,bolt);
   }
   const start=pointFor(action.from.lane,action.from.col),end=pointFor(action.event.lane,action.event.to);
-  if(!start||!end)return;const size=sizeAt(start),sign=ghost.actor.side==='p'?1:-1;
+  if(!start||!end)return;const size=sizeAt(start,ghost.actor.cardId),sign=ghost.actor.side==='p'?1:-1;
   const x=start.x+sign*(p.x-sprite.anchor.x)/sprite.frame*size;
   const y=start.y+(p.y-sprite.anchor.y)/sprite.frame*size;
   const targetY=end.y-(end.el.classList.contains('battle-cell')?size*.45:0);
-  const progress=(time-p.releaseMs)/p.travelMs,angle=Math.atan2(targetY-y,end.x-x)*180/Math.PI;
+  const progress=Math.min(1,(time-p.releaseMs)/p.travelMs),angle=Math.atan2(targetY-y,end.x-x)*180/Math.PI;
+  if(bolt){
   bolt.style.left=(x+(end.x-x)*progress)+'px';bolt.style.top=(y+(targetY-y)*progress)+'px';
   bolt.style.transform=`translate(-50%,-50%) rotate(${angle}deg)`;
   bolt.dataset.sourceX=String(x);bolt.dataset.sourceY=String(y);bolt.dataset.actorId=String(ghost.actor.uid);
+  }
+  const impactAge=time-p.releaseMs-p.travelMs;
+  if(impactAge>=0){
+   let impact=ghost.impacts.get(action);
+   if(!impact){impact=document.createElement('span');impact.className='unit-crossbow-impact';impact.dataset.actorId=String(ghost.actor.uid);overlay.append(impact);ghost.impacts.set(action,impact);}
+   const progress=impactAge/p.impactMs,radius=7+31*progress;
+   const rays=Array.from({length:9},(_,n)=>{const a=n*Math.PI*2/9;return `<line x1="${Math.cos(a)*radius}" y1="${Math.sin(a)*radius}" x2="${Math.cos(a)*(radius+9)}" y2="${Math.sin(a)*(radius+9)}"/>`;}).join('');
+   impact.innerHTML=`<svg viewBox="-50 -50 100 100" aria-hidden="true"><g stroke="#f3dc99" stroke-width="2">${rays}</g><circle r="${6+21*progress}" fill="none" stroke="#b9daee" stroke-width="2"/></svg>`;
+   impact.style.left=end.x+'px';impact.style.top=targetY+'px';impact.style.width=size*100/220+'px';impact.style.height=size*100/220+'px';impact.style.opacity=String(1-progress);
+   impact.dataset.targetX=String(end.x);impact.dataset.targetY=String(targetY);
+  }
  }
  function drawGhost(ghost,elapsed){
   const active=ghost.actions.find(a=>elapsed>=a.start&&elapsed<a.start+a.duration);
@@ -106,11 +118,12 @@ export function createUnitAnimation(getContext,pointFor){
    }
    if(active.event.type==='spawn')opacity=Math.min(1,time/180);
    if(clip==='defaite')opacity=Math.min(1,(active.duration-time)/160);
-   if(clip==='tir')projectile(ghost,active,time);
   }
   if(clip!=='marche')place(ghost,position,opacity);
   ghost.el.style.opacity=String(opacity);ghost.el.dataset.animationState=stateFor(clip);
   setPose(ghost.node,clip,time);
+  for(const action of ghost.actions)if(action.clip==='tir')projectile(ghost,action,elapsed-action.start);
+  for(const [action,impact] of ghost.impacts){const p=unitSpriteFor(ghost.actor.cardId).projectile;if(elapsed>=action.start+p.releaseMs+p.travelMs+p.impactMs){impact.remove();ghost.impacts.delete(action);}}
   for(const [action,bolt] of ghost.bolts){if(elapsed>=action.start+1040){bolt.remove();ghost.bolts.delete(action);}}
  }
  function tick(now){

@@ -1,3 +1,9 @@
+## Proposition — combat immersif et impact du carreau (15/10/2026)
+- Décor pleine surface, largeur du plateau libérée, main flottante compacte, HUD et commandes allégés ; journal/tactique accessibles dans un volet repliable. Fiches des cartes, sélection/pose et défilements conservés.
+- Arbalétrière peinte réduite de 176 à 140 px autour du même point des pieds ; ancien format à 96 px conservé. Éclat doré et cercle bleuté de l’atelier affichés à l’arrivée du carreau, puis supprimés à la fin ou sur interruption.
+- Aucun changement des images, règles, statistiques, IA, progression ou sauvegardes. Export régénéré depuis les sources. 264 tests Node, 60 parités, builds et contrôles Chromium locaux bureau/portrait/paysage réussis.
+- Branche `feat/arene-immersive-effets` empilée sur la PR nº 18 ; aperçu combiné avec les cinq portraits de la PR nº 17 dans la CI. Main inchangé ; aucune fusion autorisée ou automatique.
+
 ## Reprise — validation de l’intégration graphique (15/10/2026)
 - Corrige le test de repli d’atlas : contrôle du tireur seulement, requête de tir réellement bloquée, image fixe 512×512 visible et atlas masqué. L’autre acteur peut conserver son animation de repos/impact. Aucun changement du moteur, du lecteur ou des images.
 - [CI #38697938861](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/38697938861) réussie sur `304f740` : 263 tests, 60 parités, builds, dix suites Chromium, sauvegardes, hors réseau, mouvement réduit, 20 480 simulations de contrôle et 6 144 comparaisons d’arène.

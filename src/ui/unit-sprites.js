@@ -1,6 +1,6 @@
 // Contrat visuel du pilote : atlas approuvés, aucun calcul de combat.
 export const UNIT_SPRITES=Object.freeze({archer:{
- id:'arbaletriere_aube',frame:512,anchor:{x:256,y:461},displaySize:176,
+ id:'arbaletriere_aube',frame:512,anchor:{x:256,y:461},displaySize:140,
  static:'arbaletriere_aube/static',
  clips:{
   repos:{texture:'arbaletriere_aube/repos',durations:[650,650,800,650],loop:true},
@@ -8,7 +8,7 @@ export const UNIT_SPRITES=Object.freeze({archer:{
   tir:{texture:'arbaletriere_aube/tir',durations:[200,140,260,110,160,230],loop:false},
   impact:{texture:'arbaletriere_aube/impact',durations:[110,160,200],loop:false},
   defaite:{texture:'arbaletriere_aube/defaite',durations:[150,230,250,450],loop:false}
- },projectile:{releaseMs:600,travelMs:440,x:469,y:141}
+ },projectile:{releaseMs:600,travelMs:440,impactMs:380,x:469,y:141}
 }});
 export const INLINE_UNIT_TEXTURES={};
 export function unitTexture(key){return INLINE_UNIT_TEXTURES[key]||`./assets/units/${key}.webp`;}
@@ -58,5 +58,6 @@ export function unitAnimationPlan(events){
    add(target,'impact',event,Math.max(clocks.get(target.uid)||0,arrival),{lane:event.lane,col},{lane:event.lane,col});
   }
  }
- return {actions,duration:Math.max(0,...actions.map(a=>a.start+a.duration))+80};
+ const projectileEnds=actions.filter(a=>a.clip==='tir').map(a=>{const p=UNIT_SPRITES[a.actor.cardId].projectile;return a.start+p.releaseMs+p.travelMs+p.impactMs;});
+ return {actions,duration:Math.max(0,...actions.map(a=>a.start+a.duration),...projectileEnds)+80};
 }

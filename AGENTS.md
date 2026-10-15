@@ -214,3 +214,9 @@ Univers de fantasy médiévale peinte, cartes détaillées originales, héros ex
 - `ui/unit-sprites.js` porte cadence et plan pur ; `ui/unit-animation.js` lit la trace publique. Les champs actor/target du helper fx sont transitoires : ne pas les sauvegarder ni modifier les règles pour une animation.
 - Six WebP approuvés exacts, budget 2,4 Mo brut ; 27 modules. Garder le mode fixe illustré, le repli d’asset, mouvement réduit, miroir et reprises 3×5. Contrôler le parcours `browser_unit_animation.py`.
 - La PR nº 17 des portraits reste indépendante ; préserver son contenu lors de l’intégration et régénérer JOUER depuis les sources combinées. Chaque fusion demande son accord spécifique.
+
+## Proposition — composition immersive du combat (15/10/2026)
+- Branche `feat/arene-immersive-effets` empilée sur la PR nº 18 au commit `3a6f928`. Main reste à `0310fa6` ; aucune de ces propositions n’est fusionnée.
+- `assets/backgrounds/combat-immersif.css` porte la composition superposée, liée dans index et embarquée par le builder. Le journal natif `<details>` reste transitoire. Préserver les défilements, les fiches et les anciennes batailles.
+- Arbalétrière : cadre peint 140 px au lieu de 176, cadre historique 96 px conservé ; même ancrage. Le lecteur termine l’éclat doré et le cercle bleuté (380 ms) après l’arrivée du carreau. Aucun événement ou dégât n’est déduit de cet effet.
+- Lire `docs/COMBAT_IMMERSIF_2026_10_15.md`. Vérifier le nouveau parcours `browser_immersive_combat.py` et les contrôles d’impact de `browser_unit_animation.py`. Les cinq portraits de la PR nº 17 sont ajoutés uniquement à la copie d’aperçu CI.

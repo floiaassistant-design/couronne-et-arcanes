@@ -62,3 +62,10 @@ test('La marche précède le tir et le projectile, puis impact et défaite reste
  for(let i=1;i<plan.actions.length;i++)assert.ok(plan.actions[i].start>=plan.actions[i-1].start+plan.actions[i-1].duration);
  assert.equal(unitAnimationPlan([{type:'attack',actor:enemy,lane:0,from:1,to:2}]).actions.length,0);
 });
+
+test('Le lecteur reste actif jusqu’à la fin de l’impact du carreau',()=>{
+ const actor={uid:1,cardId:'archer',side:'p'},sprite=unitSpriteFor('archer');
+ const plan=unitAnimationPlan([{type:'attack',actor,lane:0,from:2,to:4,damage:2,ranged:true}]);
+ assert.equal(sprite.displaySize,140);
+ assert.ok(plan.duration>=sprite.projectile.releaseMs+sprite.projectile.travelMs+sprite.projectile.impactMs);
+});

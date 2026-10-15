@@ -1,3 +1,13 @@
+# Proposition en cours — combat immersif, 15 octobre 2026
+
+- Main officiel vérifié : `0310fa677947e34a02bd877f5adc6104267f87ba` ; PR nº 17 et nº 18 ouvertes, non fusionnées, PR nº 11 distincte. Le reste du document conserve le checkpoint de la PR nº 18.
+- Branche `feat/arene-immersive-effets` depuis la PR nº 18 `3a6f928a25caf45604965bcddf1e6181d31c31ad`. Nouvelle proposition de composition à examiner : décor pleine surface, main flottante, HUD compact et journal repliable.
+- Arbalétrière peinte 140 px (au lieu de 176), pieds inchangés ; ancien 3×5 à 96 px conservé. Carreau : neuf rayons dorés et cercle bleuté à l’impact, 380 ms, référence art `d193b762c662fbaad4bb32db6e5d9d83b1938a7b`. Aucune image, règle, IA ou sauvegarde modifiée.
+- Contrôles locaux : 264 tests Node, 60 parités historiques, builds normal/test ; Chromium sur bureau 1366×900, portrait 390×844 et paysage 844×390 pour composition, journal, fiche, vrai tir/impact et interruption. CI complète et copie combinée avec les cinq portraits de la PR nº 17 à vérifier sur la nouvelle PR.
+- Contrat, périmètre et limites : `COMBAT_IMMERSIF_2026_10_15.md`. Aucun téléphone physique testé. Une autorisation spécifique reste nécessaire pour chaque fusion.
+
+---
+
 # Couronnes & Arcanes — reprise du 15 octobre 2026
 
 ## Main et propositions distinctes

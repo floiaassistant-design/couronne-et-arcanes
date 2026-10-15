@@ -33,6 +33,9 @@ async def run(browser,label,viewport):
     stage=await unit.locator('.illustrated-stage').bounding_box()
     assert abs(figure['width']-stage['width'])<1 and abs(figure['height']-stage['height'])<1,(figure,stage)
     assert await page.locator('.arena-painted-frame').get_attribute('data-render-mode')=='hybrid'
+    frame=await page.locator('.arena-painted-frame').bounding_box()
+    assert abs(stage['width']/frame['width']*1672-140)<1,(stage,frame)
+
 
     # Le tour est résolu et sauvegardé avant la fin du déplacement cosmétique.
     await page.locator('[data-action="end-turn"]').click()
@@ -66,6 +69,15 @@ async def run(browser,label,viewport):
     if label=='desktop':
         review=await page.screenshot(path='/tmp/ca-unit-review.jpg',type='jpeg',quality=82)
         print('CA_REVIEW_JPEG:'+base64.b64encode(review).decode(),flush=True)
+    await page.wait_for_function("document.querySelector('.unit-crossbow-impact svg circle')")
+    impact=page.locator('.unit-crossbow-impact').first
+    assert await impact.locator('line').count()==9
+    assert await impact.locator('g').get_attribute('stroke')=='#f3dc99'
+    assert await impact.locator('circle').get_attribute('stroke')=='#b9daee'
+    await page.screenshot(path=f'/tmp/ca-unit-impact-{label}.png',full_page=True)
+    if label=='desktop':
+        review=await page.screenshot(type='jpeg',quality=82)
+        print('CA_IMPACT_JPEG:'+base64.b64encode(review).decode(),flush=True)
     await page.wait_for_function("document.querySelector('.unit-animation-actor[data-animation-state=hit]')")
     await wait_done(page)
     assert await page.evaluate('JSON.stringify(battle)')==model

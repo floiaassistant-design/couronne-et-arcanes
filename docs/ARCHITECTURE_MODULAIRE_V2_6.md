@@ -51,3 +51,9 @@ src/
 ## Proposition — animations illustrées de l’Arbalétrière
 
 `ui/unit-sprites.js` définit textures, ancrage, cadence et plan pur des événements publics. `ui/unit-animation.js` porte le lecteur transitoire, les copies des acteurs, les projectiles et interruptions ; aucune référence au profil ou mutation du combat. `combat-fx.js` coordonne les deux rendus et `app.js` monte le lecteur après projection. Le helper fx du moteur annote seulement les UID publics ; aucune dépendance vers l’UI. Le builder embarque six textures unitaires distinctes des 13 portraits ; 27 modules. Contrat : `ANIMATIONS_ARBALETRIERE_MOTEUR.md`. Les sources restent sous 400 lignes par module ; CSS historique non refondu.
+
+## Proposition — composition immersive et finition du carreau, 15/10/2026
+
+La branche `feat/arene-immersive-effets` dépend de la PR nº 18. Aucun nouveau module JavaScript : toujours 27 modules. `assets/backgrounds/combat-immersif.css` isole le décor pleine surface, la main flottante, les commandes compactes et le journal repliable ; index et builder le chargent respectivement en modulaire et en ligne. `painted-arena.js` remplit la largeur disponible tout en gardant le minimum mobile et la projection intacte. La zone interactive finit au-dessus de la main.
+
+`unit-sprites.js` fixe une taille peinte de 140 px et prolonge le plan jusqu’à la fin de l’impact. `unit-animation.js` dessine les neuf rayons dorés et le cercle bleuté du prototype art V2 dans sa couche transitoire ; cette couche est supprimée sur interruption. Aucune dépendance vers l’interface depuis le moteur, ni fichier d’image changé. La taille historique reste à 96 px. Voir `COMBAT_IMMERSIF_2026_10_15.md` pour les validations et limites.

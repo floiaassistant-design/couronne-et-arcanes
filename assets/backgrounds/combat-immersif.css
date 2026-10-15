@@ -1,0 +1,63 @@
+/* Composition de combat : décor continu, main flottante et commandes compactes. */
+.combat-screen[data-painted-arena="true"]{position:relative;display:block;isolation:isolate;--dock-height:188px;--inspection-extra:0px;background:#081523}
+.combat-screen[data-painted-arena="true"]:has(.hand-card-inspection:not([hidden])){--inspection-extra:112px}
+.combat-screen[data-painted-arena="true"] .combat-stage{position:absolute;inset:0;width:100%;height:100%;min-height:0;margin:0;background:#0b1b2d}
+.combat-screen[data-painted-arena="true"] .combat-stage::before{filter:blur(9px) brightness(.5);background-position:center}
+.combat-screen[data-painted-arena="true"] .combat-titlebar{position:absolute;inset:0 0 auto;z-index:6;min-height:52px;padding:10px 20px;border:0;background:linear-gradient(#06111eee,#06111e70,transparent);text-shadow:0 2px 6px #000}
+.combat-screen[data-painted-arena="true"] .combat-mission-name{font-size:20px;letter-spacing:.02em}
+.combat-screen[data-painted-arena="true"] .combat-menu-link{min-height:36px;border-color:#c7b27e70;background:#0b1d2bd9;border-radius:8px}
+.combat-screen[data-painted-arena="true"] .arena-painted{inset:0 0 calc(var(--dock-height) + var(--inspection-extra) + 12px);width:100%;height:auto;scroll-padding:94px 8px 12px;scrollbar-width:thin}
+.combat-screen[data-painted-arena="true"] .battle-hud{top:65px;left:20px;right:20px;gap:12px}
+.combat-screen[data-painted-arena="true"] .fighter{width:clamp(180px,19vw,280px);max-width:280px;flex:none;padding:9px 12px;border-radius:10px;background:linear-gradient(120deg,#0b2134ef,#0b2134a8);border:1px solid #a9bfc354;box-shadow:0 5px 22px #0005}
+.combat-screen[data-painted-arena="true"] .fighter.enemy{border-color:#c99b9b70;background:linear-gradient(240deg,#321b2aeb,#161c30a8)}
+.combat-screen[data-painted-arena="true"] .fighter h3{font-size:14px;margin:0 0 5px}
+.combat-screen[data-painted-arena="true"] .fighter .hpbar{height:5px;border-radius:4px}
+.combat-screen[data-painted-arena="true"] .fighter .hp-line{font-size:11px}
+.combat-screen[data-painted-arena="true"] .enemy-style-tag{font-size:10px}
+.combat-screen[data-painted-arena="true"] .battle-mid{align-self:flex-start;flex:none;min-width:64px;padding:7px 10px;border:1px solid #d5bd7c7a;border-radius:50%;background:#0b1d2bd6;box-shadow:0 0 24px #a98b4b23}
+.combat-screen[data-painted-arena="true"] .battle-mid .turn-n{font-size:30px}
+.combat-screen[data-painted-arena="true"] .arena-caption{top:147px;left:22px;right:22px;font-size:9px;letter-spacing:.14em;opacity:.8}
+.combat-screen[data-painted-arena="true"] .arena-scroll-hint{display:none}
+.combat-screen[data-painted-arena="true"] .arena-legend{bottom:calc(var(--dock-height) + var(--inspection-extra) + 18px);left:18px;font-size:9px;opacity:.88}
+.combat-screen[data-painted-arena="true"] .vfx-controls{bottom:calc(var(--dock-height) + var(--inspection-extra) + 17px);right:18px;border:1px solid #bda57050;border-radius:7px}
+.combat-screen[data-painted-arena="true"] .vfx-toggle{min-height:28px;padding:5px 8px;font-size:10px}
+.combat-screen[data-painted-arena="true"] .teleport-preview,.combat-screen[data-painted-arena="true"] .dungeon-battle-banner{bottom:calc(var(--dock-height) + var(--inspection-extra) + 50px)}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock,.combat-screen[data-painted-arena="true"] .combat-hand-dock:has(.hand-card-inspection:not([hidden])){position:absolute;z-index:8;left:12px;right:12px;bottom:max(8px,env(safe-area-inset-bottom));width:auto;height:calc(var(--dock-height) + var(--inspection-extra));flex-basis:auto;min-height:0;padding:7px 10px;background:linear-gradient(135deg,#0d2138e8,#071526f5);border:1px solid #c6ae797a;border-radius:15px;box-shadow:0 -8px 35px #0005,inset 0 1px #e5d5a91f;backdrop-filter:blur(12px);overflow:visible}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock .hand-panel{height:100%;grid-template-columns:minmax(0,1fr) 218px;gap:12px}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock .hand-header{min-height:calc(23px + var(--inspection-extra));gap:6px}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock .hand-header .section-caption{font-size:10px;letter-spacing:.13em}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock .selection-guide{display:none}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock .hand{gap:8px;padding:5px 3px 4px;align-items:stretch}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.hand-card{flex:0 0 112px;width:112px;height:100%;max-height:149px;grid-template-rows:11px 10px minmax(0,1fr) 13px 23px 18px;gap:1px;border-radius:9px;transition:filter .15s,border-color .15s}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.hand-card .card-head{font-size:8px;line-height:11px}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.hand-card .card-quality-tag{font-size:8px;line-height:10px}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.hand-card .card-title{font-size:10px;line-height:11px}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.illustrated-pilot.hand-card .card-title{bottom:35px}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.illustrated-pilot.hand-card .card-stats .stat{padding:3px 5px;font-size:11px}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.illustrated-pilot.hand-card .card-stats .stat b{font-size:14px}
+.combat-screen[data-painted-arena="true"] .combat-hand-dock .actions-side{position:static;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:46px 38px 34px;align-content:center;gap:6px;padding:0;background:none;border:0;overflow:visible}
+.combat-screen[data-painted-arena="true"] .actions-side>[data-action="end-turn"]{grid-column:1/-1;grid-row:1;order:0;border-radius:9px;border:1px solid #f5dea0;background:linear-gradient(135deg,#f5e2b4,#cba562);box-shadow:0 3px 14px #d7b47425;color:#2f2414;font-size:14px;font-weight:800;min-height:44px}
+.combat-screen[data-painted-arena="true"] .actions-side>[data-action="hero-power"]{grid-column:1;grid-row:2;order:0;border-radius:8px;font-size:11px}
+.combat-screen[data-painted-arena="true"] .actions-side>[data-action="retreat"]{grid-column:2;grid-row:2;order:0;border-radius:8px;font-size:11px}
+.combat-notes{grid-column:1/-1;grid-row:3;min-width:0}
+.combat-notes>summary{list-style:none;cursor:pointer;min-height:32px;padding:7px 9px;text-align:center;font:11px/1.4 system-ui,sans-serif;color:#d0dbe4;background:#ffffff07;border:1px solid #a6b9c333;border-radius:7px}
+.combat-notes>summary::before{content:'≡ ';color:#dfc48d}.combat-notes>summary::-webkit-details-marker{display:none}
+.combat-notes>summary:focus-visible{outline:2px solid #ffe1a3;outline-offset:2px}
+.combat-notes-body{position:absolute;right:0;bottom:calc(100% + 18px);width:min(390px,85vw);max-height:40dvh;overflow:auto;padding:14px;background:#0b1c2ff5;border:1px solid #bfa46e99;border-radius:12px;box-shadow:0 12px 45px #000b;color:#e7e2d3;font:12px/1.45 system-ui,sans-serif}
+.combat-notes-body .log-list{max-height:140px}.combat-notes-body .section-caption{margin-top:10px}.combat-notes-body .power-hint{font-size:12px}.combat-notes-body .enemy-ai-profile,.combat-notes-body .ai-plan{margin-bottom:8px}
+@media(max-width:700px){
+ .combat-screen[data-painted-arena="true"]{--dock-height:185px}
+ .combat-screen[data-painted-arena="true"] .combat-titlebar{padding:8px 10px;min-height:48px}.combat-screen[data-painted-arena="true"] .combat-mission-name{font-size:15px}
+ .combat-screen[data-painted-arena="true"] .battle-hud{top:60px;left:8px;right:8px;gap:6px}.combat-screen[data-painted-arena="true"] .fighter{width:calc((100% - 58px)/2);max-width:none;padding:7px}.combat-screen[data-painted-arena="true"] .fighter h3{font-size:11px}.combat-screen[data-painted-arena="true"] .fighter .hp-line{font-size:10px}.combat-screen[data-painted-arena="true"] .battle-mid{min-width:46px;padding:5px}.combat-screen[data-painted-arena="true"] .battle-mid .turn-n{font-size:24px}
+ .combat-screen[data-painted-arena="true"] .arena-caption{top:133px;left:10px;right:10px;font-size:8px}.combat-screen[data-painted-arena="true"] .arena-scroll-hint{display:block;top:159px;bottom:auto;left:10px;max-width:calc(100% - 20px);font-size:9px}
+ .combat-screen[data-painted-arena="true"] .combat-hand-dock{left:5px;right:5px;bottom:5px;padding:6px;border-radius:11px}.combat-screen[data-painted-arena="true"] .combat-hand-dock .hand-panel{grid-template-columns:minmax(0,1fr) 126px;gap:5px}.combat-screen[data-painted-arena="true"] .actions-side>[data-action="end-turn"]{font-size:12px}.combat-screen[data-painted-arena="true"] .actions-side>[data-action="hero-power"],.combat-screen[data-painted-arena="true"] .actions-side>[data-action="retreat"]{font-size:9px;padding:3px}.combat-notes>summary{font-size:10px;padding:7px 2px}
+ .combat-screen[data-painted-arena="true"] .arena-legend{left:8px;font-size:8px}.combat-screen[data-painted-arena="true"] .arena-legend span{padding:2px 3px}.combat-screen[data-painted-arena="true"] .vfx-controls{right:8px}.combat-screen[data-painted-arena="true"] .vfx-toggle{font-size:8px;padding:4px}
+}
+@media(max-height:540px){
+ .combat-screen[data-painted-arena="true"]{--dock-height:130px}.combat-screen[data-painted-arena="true"]:has(.hand-card-inspection:not([hidden])){--inspection-extra:85px}
+ .combat-screen[data-painted-arena="true"] .combat-titlebar{min-height:32px;padding:3px 10px}.combat-screen[data-painted-arena="true"] .combat-mission-name{font-size:13px}.combat-screen[data-painted-arena="true"] .combat-titlebar .kicker{display:none}.combat-screen[data-painted-arena="true"] .combat-menu-link{min-height:28px;padding:4px 7px}
+ .combat-screen[data-painted-arena="true"] .battle-hud{top:40px;left:10px;right:10px}.combat-screen[data-painted-arena="true"] .fighter{padding:4px 8px;max-width:210px}.combat-screen[data-painted-arena="true"] .fighter h3{font-size:11px;margin-bottom:2px}.combat-screen[data-painted-arena="true"] .fighter .hp-line{font-size:9px;margin-top:2px}.combat-screen[data-painted-arena="true"] .battle-mid{padding:3px 7px;min-width:43px}.combat-screen[data-painted-arena="true"] .battle-mid .turn-n{font-size:20px}.combat-screen[data-painted-arena="true"] .arena-caption{top:87px;padding-block:1px;font-size:8px}.combat-screen[data-painted-arena="true"] .arena-scroll-hint{display:none}
+ .combat-screen[data-painted-arena="true"] .combat-hand-dock .hand-panel{grid-template-columns:minmax(0,1fr) 180px;gap:8px}.combat-screen[data-painted-arena="true"] .combat-hand-dock .hand-header{min-height:calc(18px + var(--inspection-extra))}.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.hand-card{flex-basis:94px;width:94px;max-height:96px;grid-template-rows:9px 8px minmax(0,1fr) 11px 16px 13px;gap:0}.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.hand-card .card-head,.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.hand-card .card-quality-tag{font-size:7px;line-height:8px}.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.hand-card .card-title{font-size:9px;line-height:8px}.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.hand-card .stat{padding:0 3px;font-size:8px}.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.illustrated-pilot.hand-card .card-title{bottom:24px}.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.illustrated-pilot.hand-card .card-stats .stat{padding:1px 3px;font-size:10px}.combat-screen[data-painted-arena="true"] .combat-hand-dock .unit-card.illustrated-pilot.hand-card .card-stats .stat b{font-size:12px}
+ .combat-screen[data-painted-arena="true"] .combat-hand-dock .actions-side{grid-template-rows:40px 30px 25px;gap:3px}.combat-screen[data-painted-arena="true"] .actions-side>[data-action="end-turn"]{min-height:40px;font-size:12px}.combat-notes>summary{min-height:25px;padding:3px;font-size:10px}.combat-notes-body{max-height:47dvh}
+}
+@media(prefers-reduced-motion:reduce){.combat-screen .combat-hand-dock .unit-card.hand-card{transition:none!important}}

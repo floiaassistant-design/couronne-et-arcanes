@@ -112,3 +112,9 @@ Historique : `CHANGELOG.md`. État de reprise : `docs/ETAT_PROJET.md`. Vision à
 Sur `feat/arbaletriere-animations-evenements`, le personnage peint approuvé remplace la silhouette pixel de la seule Arbalétrière : repos, marche, tir, impact et défaite suivent les événements du combat, avec carreau attaché à l’arme. Les animations coupées et le mouvement réduit gardent une vue illustrée fixe. Reprise, identité portrait/unité et autres cartes conservées.
 
 Six textures approuvées, 27 modules ; le HTML autonome contient tous les atlas. Contrat, poids, tests et limites : [animations Arbalétrière moteur](docs/ANIMATIONS_ARBALETRIERE_MOTEUR.md). La PR nº 17 des cinq portraits est distincte. Cette proposition attend un accord spécifique pour sa propre fusion.
+
+## Proposition à essayer — combat immersif (15/10/2026)
+
+La branche `feat/arene-immersive-effets`, empilée sur la PR nº 18, propose le décor sur tout l’écran, une main flottante compacte, les informations de combat repliables et une Arbalétrière mieux proportionnée. Son carreau retrouve l’éclat doré et le cercle bleuté du prototype de l’atelier. Règles, progression et sauvegardes conservées. L’export reste autonome ; les cinq portraits de la PR nº 17 sont contrôlés dans l’aperçu combiné de la CI.
+
+Cette proposition ne remplace pas le main officiel et attend sa propre revue. Détails et limites : `docs/COMBAT_IMMERSIF_2026_10_15.md`.
