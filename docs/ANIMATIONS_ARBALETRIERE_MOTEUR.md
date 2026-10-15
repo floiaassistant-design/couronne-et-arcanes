@@ -40,3 +40,9 @@ Désactivation, mouvement réduit, navigation ou nouveau rendu annulent les copi
 - Limites acceptées du reçu : poses peintes courtes, appuis de marche imparfaits, petites variations du visage/arme/contours, défaite sur un genou. Aucune animation du reste du catalogue ajoutée.
 
 En intégrant aussi la PR nº 17, régénérer `JOUER.html` depuis les sources combinées et conserver ses cinq nouveaux portraits et métadonnées. La fusion de chaque PR nécessite son propre accord spécifique.
+
+## Reprise vérifiée — 15 octobre 2026
+
+La [CI #38697938861](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/38697938861) a terminé avec succès sur `304f74045291cb8bdd16073fbcf2fa29c26b620e`. Les 263 tests, 60 parités, builds synchronisés, dix parcours Chromium, simulations de contrôle et comparaisons d’arène sont exécutés. Le scénario HTTP bloque réellement `tir.webp` et confirme que le tireur conserve son image fixe visible pendant qu’un autre acteur peut utiliser le repos ou l’impact. L’ancienne assertion globale rejetait à tort cet autre atlas disponible ; seul le test a été corrigé.
+
+L’aperçu combiné avec les sources exactes de la PR nº 17 `2e7391669843a96a848104c88e0164234b612453` passe 266 tests et 60 parités, puis les parcours des cinq portraits et du pilote animé sur bureau et mobile portrait/paysage, ainsi que la production hors réseau et le repli d’atlas. Export : 4 986 888 octets, sous le budget de 5,1 Mo. Le workflow est ajusté pour ne proposer cet artefact qu’après validation et pour joindre l’empreinte SHA-256 du HTML. Aucune fusion, changement de règle ou nouvelle validation artistique n’en découle.

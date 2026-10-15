@@ -1,3 +1,9 @@
+## Reprise — validation de l’intégration graphique (15/10/2026)
+- Corrige le test de repli d’atlas : contrôle du tireur seulement, requête de tir réellement bloquée, image fixe 512×512 visible et atlas masqué. L’autre acteur peut conserver son animation de repos/impact. Aucun changement du moteur, du lecteur ou des images.
+- [CI #38697938861](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/38697938861) réussie sur `304f740` : 263 tests, 60 parités, builds, dix suites Chromium, sauvegardes, hors réseau, mouvement réduit, 20 480 simulations de contrôle et 6 144 comparaisons d’arène.
+- Aperçu PR nº 17 + nº 18 construit depuis les sources exactes : 266 tests, 60 parités et les deux parcours graphiques réussis. Export de 4 986 888 octets, 27 modules, 18 portraits et six textures unitaires.
+- L’artefact combiné n’est livré qu’après succès et reçoit une empreinte SHA-256. Main `0310fa6` (PR nº 16 intégrée) conservé ; PR nº 17/18 ouvertes, PR nº 11 distincte. Aucun accord de fusion déduit de la reprise.
+
 ## Proposition — Arbalétrière illustrée animée (14/10/2026)
 - Repos, marche, tir, impact et défaite approuvés raccordés aux événements réels ; unité peinte distincte du portrait, miroir adverse et carreau à l’arme.
 - Six textures WebP originales exactes, 2 328 136 octets, contrat et reçus conservés ; 27 modules. Vue fixe et mouvement réduit, repli d’asset, navigation/interruption et reprise au repos.

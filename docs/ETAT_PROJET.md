@@ -1,4 +1,4 @@
-# Couronnes & Arcanes — reprise du 14 octobre 2026
+# Couronnes & Arcanes — reprise du 15 octobre 2026
 
 ## Main et propositions distinctes
 
@@ -13,11 +13,14 @@
 - Six WebP originaux de la PR art nº 2 au commit exact `234988e2960451e5ed31ed6226175694b92da880`, 2 328 136 octets. Repos/marche/tir/impact/défaite, cadres 512×512, durées et boucles conservées, ancrage (256,461), miroir adverse, carreau à l’arme à 600 ms.
 - Le lecteur suit les traces publiques des événements et annule horloges/projectiles sur navigation, nouveau rendu ou mouvement réduit. Vue illustrée fixe lorsque désactivé, repli statique d’asset, reprise au repos. Les traces gardent les UID après disparition d’une unité et ne sont jamais sauvegardées.
 - **27 modules, 13 portraits**, plus six textures unitaires dans l’export autonome régénéré. L’évolution de la PR nº 17 reste séparée ; préserver ses cinq portraits lors d’une future intégration combinée et reconstruire JOUER depuis les sources.
-- **Contrôles locaux :** 263 tests Node, 60 parités historiques, builds normal/test, empreintes exactes. Parcours Chromium bureau/mobile/hors réseau et simulations à vérifier sur la CI de cette PR ; aucun navigateur local ou téléphone physique revendiqué.
+- **CI confirmée le 15/10/2026 :** [#38697938861](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/38697938861), réussie sur `304f74045291cb8bdd16073fbcf2fa29c26b620e` : 263 tests Node, 60 parités historiques identiques, builds normal/test et export synchronisé ; dix suites Chromium, 20 480 simulations de contrôle et 6 144 comparaisons d’arène. Aucun navigateur local ni téléphone physique testé dans cette reprise.
+- **Blocage résolu :** le test du tir indisponible comptait aussi l’acteur au repos, dont l’atlas était disponible. Le contrôle cible désormais les acteurs en tir et vérifie une requête réellement bloquée, l’image fixe décodée et visible, et l’atlas masqué. Le moteur, le lecteur et les textures n’ont pas été modifiés par ce correctif.
+- **Aperçu combiné vérifié avec PR nº 17 `2e7391669843a96a848104c88e0164234b612453` :** 266 tests, 60 parités, parcours des cinq portraits et du pilote animé sur bureau/mobile portrait/paysage, production hors réseau/reprise/mouvement réduit et atlas de tir indisponible réussis. `JOUER.html` régénéré : 4 986 888 octets, 27 modules, 18 portraits et six textures unitaires. Cette copie de contrôle ne fusionne aucune branche.
+- Le workflow ne livre désormais l’artefact combiné qu’après le succès des contrôles et y joint `JOUER.sha256`. Les documents des deux PR et l’export devront être réconciliés lors d’une intégration autorisée.
 - Contrat, provenance et limites : [ANIMATIONS_ARBALETRIERE_MOTEUR.md](ANIMATIONS_ARBALETRIERE_MOTEUR.md). Manifeste : `assets/units/arbaletriere_aube/manifest.json` ; reçu humain conservé dans `docs/art-approvals/`.
 
 ## Suite
 
-Faire examiner le pilote animé dans la vraie bataille sur bureau/mobile. Les séquences restent des poses peintes approuvées, avec leurs limites de marche/contours et une défaite sur un genou. Le chevalier, le reste du catalogue et le prototype Blender restent distincts. Audit du rythme/attrition avant tout nouvel équilibrage ou donjon.
+Les PR nº 17 et nº 18 restent ouvertes et non fusionnées. Faire examiner l’aperçu combiné et le pilote animé dans la vraie bataille sur bureau/mobile avant une décision spécifique pour chacune. Les séquences restent des poses peintes approuvées, avec leurs limites de marche/contours et une défaite sur un genou. Le chevalier, le reste du catalogue et le prototype Blender restent distincts. Audit du rythme/attrition avant tout nouvel équilibrage ou donjon.
 
 Une branche et une PR par évolution ; accord explicite et spécifique avant chaque fusion, aucun auto-merge.
