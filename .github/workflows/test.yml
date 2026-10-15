@@ -91,16 +91,14 @@ jobs:
           python3 tests/browser_portraits_aube.py
           python3 tests/browser_unit_animation.py
           sha256sum JOUER.html > JOUER.sha256
+          mkdir -p "$RUNNER_TEMP/ca-review/captures"
+          cp JOUER.html JOUER.sha256 "$RUNNER_TEMP/ca-review/"
+          cp /tmp/ca-aube-*.png /tmp/ca-unit-*.png /tmp/ca-unit-*.jpg "$RUNNER_TEMP/ca-review/captures/"
       - name: Version jouable combinée et captures pour le propriétaire
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: apercu-combine-portraits-et-animation
-          path: |
-            ${{ runner.temp }}/ca-preview/JOUER.html
-            ${{ runner.temp }}/ca-preview/JOUER.sha256
-            /tmp/ca-aube-*.png
-            /tmp/ca-unit-*.png
-            /tmp/ca-unit-*.jpg
-          if-no-files-found: warn
+          path: ${{ runner.temp }}/ca-review/
+          if-no-files-found: error
           retention-days: 14
