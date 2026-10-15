@@ -90,13 +90,15 @@ jobs:
           npm run test:parity
           python3 tests/browser_portraits_aube.py
           python3 tests/browser_unit_animation.py
+          sha256sum JOUER.html > JOUER.sha256
       - name: Version jouable combinée et captures pour le propriétaire
-        if: always()
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: apercu-combine-portraits-et-animation
           path: |
             ${{ runner.temp }}/ca-preview/JOUER.html
+            ${{ runner.temp }}/ca-preview/JOUER.sha256
             /tmp/ca-aube-*.png
             /tmp/ca-unit-*.png
             /tmp/ca-unit-*.jpg
