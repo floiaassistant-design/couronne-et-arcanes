@@ -130,11 +130,14 @@ async def production(browser,saved,base_url=None):
     saved['couronnes_arcanes_bataille_v1']=json.dumps(fixture)
     context=await browser.new_context(viewport={'width':844,'height':390},offline=base_url is None)
     await context.add_init_script('''(()=>{const saves=%s;for(const [k,v] of Object.entries(saves))if(localStorage.getItem(k)===null)localStorage.setItem(k,v);})()'''%json.dumps(saved))
-    page=await context.new_page();errors=[];requests=[]
+    page=await context.new_page();errors=[];requests=[];blocked_atlases=[]
     page.on('pageerror',lambda error:errors.append(str(error)))
     page.on('request',lambda request:requests.append(request.url))
     if base_url:
-        await page.route('**/assets/units/arbaletriere_aube/tir.webp',lambda route:route.abort())
+        async def block_shot_atlas(route):
+            blocked_atlases.append(route.request.url)
+            await route.abort()
+        await page.route('**/assets/units/arbaletriere_aube/tir.webp',block_shot_atlas)
     await page.goto(base_url+'/index.html' if base_url else (ROOT/'JOUER.html').as_uri())
     await page.locator('[data-action="toggle-animations"]').click()
     await page.wait_for_function("document.querySelector('.unit-on-board .illustrated-unit').classList.contains('atlas-ready')")
@@ -145,9 +148,22 @@ async def production(browser,saved,base_url=None):
         except Exception:
             print('DIAGNOSTIC_SOURCE',errors,await page.evaluate("({board:JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1')).board,units:[...document.querySelectorAll('.illustrated-unit')].map(n=>({...n.dataset})),overlays:document.querySelectorAll('.unit-animation-overlay').length})"),flush=True)
             raise
-        assert await page.locator('.unit-animation-actor .illustrated-unit.atlas-ready').count()==0
-        await page.locator('.unit-animation-actor .unit-static').first.evaluate('(el)=>el.decode()')
-        assert await page.locator('.unit-animation-actor .unit-static').first.evaluate('(el)=>el.naturalWidth')==512
+        # Seul l'atlas de tir est bloqué : l'autre acteur peut rester au repos
+        # ou jouer un impact avec un atlas disponible.
+        shot=page.locator('.unit-animation-actor [data-clip="tir"]')
+        await shot.locator('.unit-static').first.evaluate('(el)=>el.decode()')
+        shot_states=await shot.evaluate_all('''nodes=>nodes.map(node=>{
+          const image=node.querySelector('.unit-static'),atlas=node.querySelector('.unit-atlas');
+          return {ready:node.classList.contains('atlas-ready'),width:image.naturalWidth,
+            height:image.naturalHeight,visibility:getComputedStyle(image).visibility,
+            atlasDisplay:getComputedStyle(atlas).display};
+        })''')
+        assert blocked_atlases,'Le scénario doit réellement bloquer la requête de tir'
+        assert shot_states,'Un vrai tir doit être en cours pendant le contrôle du repli'
+        assert all(s=={'ready':False,'width':512,'height':512,'visibility':'visible',
+                      'atlasDisplay':'none'} for s in shot_states),shot_states
+        other_ready=await page.locator('.unit-animation-actor .illustrated-unit.atlas-ready:not([data-clip="tir"])').count()
+        print('Repli du tir bloqué confirmé ; autres séquences disponibles :',other_ready,flush=True)
         await wait_done(page)
     turn=await page.locator('.turn-n').inner_text()
     await page.reload()
