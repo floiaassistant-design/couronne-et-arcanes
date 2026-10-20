@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
+const isCardStudy=process.argv.includes('--cards');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 const art=Object.fromEntries(fs.readdirSync(path.join(root,'assets/creatures'))
@@ -53,6 +54,8 @@ const factoriesJs=[...factories].map(([file,body])=>`${JSON.stringify(file)}:fun
 const js=`(function(){\n'use strict';\nconst __factories={\n${factoriesJs}\n};\nconst __cache=Object.create(null);\nfunction __load(name){\n if(Object.prototype.hasOwnProperty.call(__cache,name))return __cache[name];\n const factory=__factories[name];if(!factory)throw Error('Module non trouvé : '+name);\n const exports={};__cache[name]=exports;factory(exports,__load);return exports;\n}\n__load('src/app.js');\n})();`;
 let html=read('index.html');
 const css=read('styles.css');
+const cardCss=read('assets/card-arena.css');
+const previewCss=read('assets/card-preview.css');
 const arenaArtCss=read('assets/backgrounds/arena-celeste-calibree.css');
 const paintedArtCss=read('assets/backgrounds/arena-celeste-peinte.css');
 const paintedLayoutCss=read('assets/backgrounds/arena-peinte-layout.css');
@@ -61,6 +64,10 @@ html=html.replace('<link rel="stylesheet" href="./styles.css" />','<style>\n'+cs
 html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-celeste-calibree.css" />','<style>\n'+arenaArtCss+'\n</style>');
 html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-celeste-peinte.css" />','<style>\n'+paintedArtCss+'\n</style>');
 html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-peinte-layout.css" />','<style>\n'+paintedLayoutCss+'\n</style>');
+html=html.replace('<link rel="stylesheet" href="./assets/card-arena.css" />',()=>'<style>\n'+cardCss+'\n</style>');
+html=html.replace('<link rel="stylesheet" href="./assets/card-preview.css" />',()=>'<style>\n'+previewCss+'\n</style>');
+if(isCardStudy)html=html.replace('<body>','<body data-card-combat="true">');
 html=html.replace('<script type="module" src="./src/app.js"></script>','<script>\n'+js.replace(/<\/script/gi,'<\\/script')+'\n</script>');
-fs.writeFileSync(path.join(root,isTest?'tests/JOUER.test.html':'JOUER.html'),html);
-console.log(`${isTest?'JOUER.test.html':'JOUER.html'} généré (${Buffer.byteLength(html)} octets, ${factories.size} modules, ${Object.keys(art).length} illustrations intégrées)`);
+const output=isTest?(isCardStudy?'tests/ESSAI_CARTES.test.html':'tests/JOUER.test.html'):(isCardStudy?'ESSAI_CARTES.html':'JOUER.html');
+fs.writeFileSync(path.join(root,output),html);
+console.log(`${output} généré (${Buffer.byteLength(html)} octets, ${factories.size} modules, ${Object.keys(art).length} illustrations intégrées)`);

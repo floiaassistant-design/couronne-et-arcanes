@@ -1,3 +1,28 @@
+## Proposition — cartes sur le plateau existant (20/10/2026)
+
+## 20/10/2026 — PR nº 20 : survol seul et pose sur trois cases
+
+- La sélection et le toucher ferment la fiche ; suppression de l’épinglage qui masquait la pose. Survol/focus pour lire, clic pour jouer.
+- Pose au choix en 1/2/3 sur chaque ligne des arènes à dix cases ; miroir 10/9/8 pour l’IA, même règle dans les simulations.
+- Colonne validée par le moteur, cases libres surlignées, pièges à l’entrée, attente et quota inchangés. API sans colonne et anciens 3×5 compatibles.
+
+## 20/10/2026 — PR nº 20 : aperçu illustré commun
+
+- Même cadre au survol des unités du plateau et des cartes en main : portrait, capacités, statistiques et états réels.
+- Consultation au clavier et au toucher, fiche lisible sous la souris, épinglage et fermeture, sans déploiement involontaire.
+- Placement borné à l'écran et sans déplacement de la scène ; VFX inertes et aucune donnée de lecture sauvegardée.
+
+## 20/10/2026 — PR nº 20 : main intégrée au plateau plein écran
+
+- Vue cartes du même jeu : scène couvrant le viewport, main sur la terrasse basse, HUD en haut, actions à droite.
+- Cadre illustré partagé dans la main, états et délais réels, fiche flottante sans déplacement du plateau.
+- Journal et informations dans un panneau repliable ; adaptation des quatre pistes au bureau et mobile.
+- Règles, IA, profils et combats historiques préservés. Tests navigateur de géométrie et parcours de jeu ajoutés ; résultats de la tête à consulter dans la CI.
+- Même jeu, décor, grille, lignes, main, délais, déploiement, avancée, IA, couronnes et progression.
+- Cartes illustrées à l'emplacement des unités ; cadres bleus/rouges, portraits non retournés et taille ajustée au plateau. Vue réversible sur le même combat.
+- Cinq portraits Aube approuvés à clés dédiées opt-in, reçus et empreintes conservés. JOUER.html et ESSAI_CARTES.html issus du même app.js.
+- Le premier essai indépendant à trois duels est retiré de cette PR. Aucune fusion autorisée.
+
 ## Proposition — Statistiques effectives et lecture des capacités (14/10/2026)
 - Branche `fix/stats-capacites-combat` depuis le main `f896a0c3`, après la fusion autorisée de la PR nº 15.
 - Calcul d'invocation partagé entre moteur, main et collection ; bonus d'équipement, forge, réputation et maîtrise visibles. Exemple reproduit : Milicien 2/5 affiché auparavant, désormais 3/7 avec épée, forge 1 et réputation Aube 15, comme l'unité déployée.

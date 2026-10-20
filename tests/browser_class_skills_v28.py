@@ -57,7 +57,7 @@ async def run(browser,label,viewport):
       persistBattle();render();
     }''')
     await page.locator('.hand [data-action="select-card"]').first.click()
-    await page.locator('[data-action="deploy"][data-lane="0"]').click()
+    await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
     assert await page.evaluate('battle.board[0][3].hp')==4
     assert await page.evaluate('battle.board[0][3].stun')==2
     saved=await page.evaluate('window.__saves')

@@ -1,6 +1,8 @@
 // Art original issu des illustrations créées pour Couronnes & Arcanes.
 // Un archétype partagé ne prétend pas être une illustration unique pour chacune des 60 cartes.
-export const ART_NAMES=['paladin','ranger','treant','dragon','healer','griffin','golem','shade','blizzard','knight','archer','sunlight','arbaletriere_aube'];
+export const ART_NAMES=['paladin','ranger','treant','dragon','healer','griffin','golem','shade','blizzard','knight','archer','sunlight','arbaletriere_aube','milicien_aube','porte_egide','soeur_aurore','paladin_solaire','porte_etendard'];
+// Essai opt-in : clés dédiées, aucun remplacement d'archétype partagé.
+export const CARD_ARENA_ART={militia:'milicien_aube',shield:'porte_egide',cleric:'soeur_aurore',paladin:'paladin_solaire',banner:'porte_etendard'};
 const direct={
  militia:'knight',shield:'paladin',archer:'arbaletriere_aube',cleric:'healer',paladin:'paladin',banner:'knight',
  ranger:'ranger',wolf:'griffin',treant:'treant',dryad:'healer',stag:'griffin',thorn:'ranger',
@@ -27,11 +29,11 @@ const roles={
  cleric:'support',dryad:'support',sunpriest:'support',seraph:'flying',
  alchemist:'caster',archdruid:'caster',engineer:'heavy',mechanist:'heavy'
 };
-export function visualFor(card){
+export function visualFor(card,{cards=false}={}){
  if(!card)return {art:'knight',role:'heavy'};
  const art=direct[card.id] || (card.faction==='ombre'?'shade':card.faction==='forge'?'golem':card.faction==='sylve'?'ranger':card.faction==='ether'?'blizzard':'knight');
  const role=card.type==='sort'?'spell':roles[card.id]||(card.ability==='ranged'?'ranged':card.ability==='heal'?'support':card.ability==='armor'?'heavy':card.ability==='splash'?'caster':'fighter');
- return {art,role};
+ return {art:cards?(CARD_ARENA_ART[card.id]||art):art,role};
 }
 
 // In the standalone HTML, the build embeds image bytes in this map.

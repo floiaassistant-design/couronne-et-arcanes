@@ -7,7 +7,7 @@ import {chosenTalents} from '../talents.js';
 import {tempoTargetError,resolveTempoSpell} from './tempo.js';
 import {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,gearBonus} from './profile.js';
 import {unitStatContext,unitStats} from './unit-stats.js';
-import {laneCount,lastCell,crownColumn,entryColumn,validLane,missionLayout} from './board.js';
+import {laneCount,lastCell,crownColumn,entryColumn,validDeploymentColumn,validLane,missionLayout} from './board.js';
 export * from './board.js';
 function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed/4294967296;}
 function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand(b)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -76,9 +76,9 @@ function findTarget(b,lane,col,unit){
  const heroDist=unit.side==='p'?crownColumn(b,'e')-col:col;
  return heroDist<=range?{type:'hero',side:unit.side==='p'?'e':'p'}:null;
 }
-function spawn(b,side,id,lane){
+function spawn(b,side,id,lane,col=entryColumn(b,side)){
  const c=CARDS[id];if(!c||c.type==='sort')return false;
- const col=entryColumn(b,side);if(b.board[lane][col])return false;
+ if(!validDeploymentColumn(b,side,col)||b.board[lane][col])return false;
  const stats=unitStats(b,id,side);
  const u={uid:b.nextUnitId++,id,side,atk:stats.atk,maxhp:stats.maxhp,
   hp:stats.maxhp,armor:c.ability==='armor'?2:0,ranged:c.ability==='ranged',
@@ -88,6 +88,7 @@ function spawn(b,side,id,lane){
  if(formationBonus(b,lane,u))note(b,`Concorde de ${FACTIONS[c.faction].short} : +1 attaque aux alliés de cet ordre sur la ligne ${lane+1}.`);
  if(c.ability==='ward')b.heroes[side].shield=Math.min(20,b.heroes[side].shield+3);
  note(b,`${side==='p'?'Vous invoquez': 'L’ennemi invoque'} ${c.name} (ligne ${lane+1}).`);
+ enterCell(b,u,lane,col);
  return true;
 }
 function damageHero(b,side,amount){
@@ -129,8 +130,9 @@ function cast(b,side,id,lane){
  checkOutcome(b);
  return drawAfter;
 }
-function play(b,side,index,lane){
+function play(b,side,index,lane,col=entryColumn(b,side)){
  if(b.status!=='active'||!Number.isInteger(lane)||!validLane(b,lane))return {ok:false,reason:'Combat terminé ou ligne invalide.'};
+ if(!validDeploymentColumn(b,side,col))return {ok:false,reason:'Choisissez une case de votre zone de déploiement.'};
  const hero=b.heroes[side],hand=hero.hand[index];
  if(!hand)return {ok:false,reason:'Carte introuvable.'};
  if(hand.wait>0)return {ok:false,reason:`Cette carte sera disponible dans ${hand.wait} tour(s).`};
@@ -140,14 +142,14 @@ function play(b,side,index,lane){
  if(c.heroClass&&(side!=='p'||c.heroClass!==b.heroClass))return {ok:false,reason:'Compétence réservée à une autre classe.'};
  const targetError=classSkillTargetError(b,side,c,lane)||controlTargetError(b,side,c,lane)||tempoTargetError(b,side,c);
  if(targetError)return {ok:false,reason:targetError};
- if(c.type==='unité'&&!spawn(b,side,hand.id,lane))return {ok:false,reason:'La case de déploiement est occupée.'};
+ if(c.type==='unité'&&!spawn(b,side,hand.id,lane,col))return {ok:false,reason:'La case de déploiement est occupée.'};
  const drawAfter=c.type==='sort'?cast(b,side,hand.id,lane):0;
  if(side==='p'){if(!b.cardUses)b.cardUses={};b.cardUses[hand.id]=(b.cardUses[hand.id]||0)+1;}
  hero.discard.push(hand.id);hero.hand.splice(index,1);hero.cardsPlayed++;
  if(drawAfter)draw(b,side,drawAfter);
  return {ok:true};
 }
-export function playPlayerCard(b,index,lane){return b.phase==='player'?play(b,'p',index,lane):{ok:false,reason:'Ce n’est pas votre tour.'};}
+export function playPlayerCard(b,index,lane,col=entryColumn(b,'p')){return b.phase==='player'?play(b,'p',index,lane,col):{ok:false,reason:'Ce n’est pas votre tour.'};}
 function hit(b,u,raw,bySide,ignoreArmor=false){
  // Une attaque sur une unité déjà vaincue ne doit pas créer un second kill.
  if(!u||u.hp<=0)return 0;
@@ -181,7 +183,7 @@ function enemyAct(b){
   if(!choices.length)break; // Il vaut parfois mieux garder ses sorts qu'en gaspiller un.
   let moved=false;
   for(const choice of choices){
-   const result=play(b,'e',choice.index,choice.lane);
+   const result=play(b,'e',choice.index,choice.lane,choice.col);
    if(!result.ok)continue;
    b.aiLastPlan=`${choice.reason} · ligne ${choice.lane+1}`;
    note(b,`Tactique adverse : ${b.aiLastPlan}.`);

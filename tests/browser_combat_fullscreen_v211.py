@@ -63,7 +63,7 @@ async def run(browser,name,viewport):
   render();
  }""")
  await page.locator('.combat-hand-dock .hand [data-action="select-card"]:not(.on-cooldown)').first.click()
- await page.locator('[data-action="deploy"][data-lane="0"]').click()
+ await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
  assert await page.evaluate('battle.board[0][1]?.id') is not None
  await page.locator('.combat-hand-dock [data-action="end-turn"]').click()
  assert await page.locator('.turn-n').inner_text()=='2'

@@ -35,7 +35,7 @@ async def run(browser,label,viewport):
     await page.mouse.move(0,0)
     before=await cards.nth(1).bounding_box()
     model=await page.evaluate('JSON.stringify(battle)')
-    await touch_or_click(page,cards.nth(1),touch)
+    await cards.nth(1).hover()
     assert await page.evaluate('selectedCard')==-1
     assert await page.evaluate('JSON.stringify(battle)')==model
     assert 'ATQ 5 / PV 8' in await panel.inner_text()
@@ -56,23 +56,24 @@ async def run(browser,label,viewport):
     assert await panel.is_hidden()
 
     # Sort et compétence de classe : règles accessibles même pendant leur attente.
-    await touch_or_click(page,cards.nth(3),touch)
+    await cards.nth(3).hover()
     assert 'Gardien' in await panel.inner_text()
     assert 'Attente 2 tours' in await panel.inner_text()
     assert await page.evaluate('selectedCard')==-1
     await close.click()
-    await touch_or_click(page,cards.nth(2),touch)
-    assert await page.evaluate('selectedCard')==2
+    await cards.nth(2).hover()
     assert 'Lame de feu' in await panel.inner_text()
     assert await panel.locator('.inspection-stats').count()==0
     await close.click()
+    await touch_or_click(page,cards.nth(2),touch)
+    assert await page.evaluate('selectedCard')==2
+    assert await panel.is_hidden()
 
     # Sélection d'une unité, fermeture sans perdre le choix, puis pose dans le vrai moteur.
     await touch_or_click(page,cards.nth(0),touch)
     assert await page.evaluate('selectedCard')==0
-    await close.click()
-    assert await page.evaluate('selectedCard')==0
-    target=page.locator('[data-action="deploy"][data-lane="0"]')
+    assert await panel.is_hidden()
+    target=page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]')
     await target.scroll_into_view_if_needed();await target.click()
     assert await page.evaluate('({atk:battle.board[0][1].atk,hp:battle.board[0][1].maxhp})')=={'atk':3,'hp':7}
     await page.locator('[data-action="end-turn"]').click()

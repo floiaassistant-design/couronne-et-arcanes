@@ -47,3 +47,17 @@ src/
 - `src/ui/card-inspection.js` gère le contenu et l'état de lecture éphémère de la main. `app.js` conserve les actions de jeu et appelle le lecteur ; aucune dépendance du moteur vers l'interface.
 - La main utilise l'instantané de la bataille (y compris une sauvegarde historique) ; la collection utilise le profil actuel. Aucun champ ajouté au stockage. Le constructeur garde l'ordre des propriétés pour préserver la parité sérialisée.
 - 25 modules empaquetés automatiquement, 13 portraits inchangés. `battle.js` reste à 371 lignes et `app.js` à 221 ; les deux nouveaux modules font moins de 40 lignes chacun.
+
+## Vue cartes optionnelle — PR nº 20, 20 octobre
+
+`ui/card-arena.js` rend les vraies unités comme cartes sur les cases existantes. Il dépend des données et du mapping graphique, sans règle ni sauvegarde de bataille. Un bouton de présentation réversible conserve uniquement une préférence graphique ; la même application et le même moteur sont empaquetés pour JOUER et ESSAI_CARTES. 26 modules, 18 portraits. Aucun changement d'API du moteur ou de schéma de profil/combat. Voir `ESSAI_CARTES_2026_10_20.md`.
+
+La présentation plein écran de la vue cartes reste dans `assets/card-arena.css` ; `battle-view.js` place la main dans la scène et replie les informations dans un élément `details` natif. `painted-arena.js` réserve l'espace entre HUD et main par une seule transformation décor/cases/VFX. `views.js` réutilise le cadre illustré pour toutes les cartes de la main en vue cartes. Aucun module ni dépendance métier ajouté.
+
+`ui/card-inspection.js` réunit désormais modèle de lecture du plateau (uid, statistiques et états actuels), contenu commun main/plateau, placement et événements de consultation. Il reste sans écriture métier ni stockage ; `formationBonus` est réutilisé depuis le moteur. `assets/card-preview.css` porte le cadre partagé et est embarqué par le générateur. `app.js` garde seulement l'activation/fermeture et les actions du jeu ; les clones de combat sont inertes. Toujours 26 modules et 18 portraits.
+
+## Pose sur trois cases — PR nº 20
+
+`engine/board.js` définit `deploymentColumns`, `validDeploymentColumn` et `freeDeploymentColumn` d’après le tableau réel (trois cases pour dix colonnes, une pour les anciens 3×5). `battle.js` valide la colonne optionnelle avant toute consommation, invoque exactement sur cette case et réutilise le hook d’entrée des pièges. L’appel sans colonne garde l’entrée historique. `ai.js` choisit une place libre dans la zone miroir ; le robot partagé `scripts/lib/battle_runner.mjs` emploie la même règle. Les sorts restent ciblés par ligne.
+
+`battle-view.js` rend les trois cibles de pose et transmet `data-col` à `app.js`. Le contrôleur d’aperçu ne contient plus d’état épinglé ; pointerdown/clic et sélection ferment la fiche et bloquent sa réouverture sur le même élément jusqu’à sa sortie. Focus clavier et survol restent disponibles. Aucun nouveau module, champ de sauvegarde ou mapping graphique.

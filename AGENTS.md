@@ -1,6 +1,11 @@
 # AGENTS.md — Couronnes & Arcanes
 
+**Pose sur trois cases, PR nº 20 :** sur le plateau à dix cases, unités déployables en 1/2/3, zone adverse miroir 10/9/8. `playPlayerCard(b,index,lane,col)` accepte une colonne optionnelle (défaut 1). `engine/board.js` porte la zone ; IA et robot d’audit la partagent. Anciens combats 3×5 : entrée unique conservée. Clic de sélection sans fiche persistante. Règle nouvelle demandée par le joueur, sans changement des délais ni du quota 2/tour.
+**Aperçu partagé, PR nº 20 :** `ui/card-inspection.js` et `assets/card-preview.css` affichent le même cadre illustré pour la main et le plateau. Survol/focus pour lire ; clic/toucher ferme la fiche sans épinglage ; statistiques actuelles par uid, sans action de jeu ni sauvegarde de lecture. Tests `card_preview` dédiés.
+**Affinage plein écran, PR nº 20 :** vue cartes avec main sur la terrasse du plateau, HUD supérieur fixe, cadre commun de la main et journal repliable. Adaptation graphique aux quatre pistes sans changement des règles. Voir `docs/ESSAI_CARTES_2026_10_20.md`.
 ## Version stable et coordination multi-sessions — PRIORITAIRE
+
+- **Vue cartes du 20/10/2026 — PR nº 20 corrigée** : même jeu et même plateau peint, cartes sur les cases. Le premier essai indépendant à trois duels a été refusé et retiré. `ui/card-arena.js` est une vue sans règles ; `npm run build:cards` génère le même `app.js` avec vue cartes activée. Bouton réversible ; projections, main, délais, mouvement et sauvegardes historiques préservés. Cinq clés dédiées opt-in dans `visuals.js`, 18 portraits, 26 modules. Lire `docs/ESSAI_CARTES_2026_10_20.md`. PR nº 17–19 distinctes, aucune fusion autorisée.
 
 - **Base courante : V2.11, `main` `f896a0c3`, PR nº 15 fusionnée le 14/10/2026 après autorisation spécifique.** PR nº 14 (arène peinte) déjà intégrée ; la PR nº 11 reste distincte et ouverte. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
 - **Ne jamais copier une ancienne version par-dessus la dernière version.** La copie V1.2 avait écrasé huit fichiers de V2.7 le 11/10/2026 ; les fichiers ont été récupérés depuis le commit local `145a2e8`.

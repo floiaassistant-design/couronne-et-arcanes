@@ -16,7 +16,7 @@ async def run(browser,label,viewport):
             await page.evaluate('''()=>{battle.heroes.p.hand=[{id:'militia',wait:0}];battle.heroes.p.cardsPlayed=0;render();}''')
             card=page.locator('.hand [data-action="select-card"]').first
             await card.click()
-            target=page.locator(f'[data-action="deploy"][data-lane="{lane}"]')
+            target=page.locator(f'[data-action="deploy"][data-col="1"][data-lane="{lane}"]')
             await target.scroll_into_view_if_needed()
             await target.click()
             assert await page.evaluate('(l)=>battle.board[l][1]?.id',lane)=='militia'

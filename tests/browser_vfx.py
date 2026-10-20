@@ -26,7 +26,7 @@ async def run():
   # Magic from real spell. Close combat remains active after one round.
   await page.evaluate('''() => { battle.heroes.p.hand=[{id:'firebolt',wait:0}];battle.heroes.p.cardsPlayed=0;render(); }''')
   await page.locator('.hand .unit-card').first.click()
-  await page.locator('.lane-row').first.locator('[data-action="deploy"]').click()
+  await page.locator('.lane-row').first.locator('[data-action="deploy"][data-col="1"]').click()
   await page.wait_for_selector('.vfx-projectile.arcane',state='attached',timeout=2000)
   await page.wait_for_timeout(1350)
   await page.locator('[data-action="toggle-animations"]').click()

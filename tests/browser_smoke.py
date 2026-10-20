@@ -15,7 +15,7 @@ async def main():
   await page.screenshot(path=str(ROOT/'apercu_citadelle.png'),full_page=True)
   await page.locator('[data-action="start-next"]').click()
   await page.locator('.hand .unit-card:not(.on-cooldown)').first.click()
-  await page.locator('.lane-row').nth(1).locator('[data-action="deploy"]').click()
+  await page.locator('.lane-row').nth(1).locator('[data-action="deploy"][data-col="1"]').click()
   await page.screenshot(path=str(ROOT/'apercu_bataille.png'),full_page=True)
   await page.locator('[data-action="end-turn"]').click()
   assert await page.locator('.turn-n').inner_text()=='2'
