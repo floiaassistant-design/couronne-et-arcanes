@@ -1,5 +1,6 @@
 # Couronnes & Arcanes — état de reprise, 14 octobre 2026
 
+**Affinage plein écran, PR nº 20 :** vue cartes avec main sur la terrasse du plateau, HUD supérieur fixe, cadre commun de la main et journal repliable. Adaptation graphique aux quatre pistes sans changement des règles. Voir `docs/ESSAI_CARTES_2026_10_20.md`.
 ## Actualisation du 20 octobre — PR nº 20 corrigée
 
 Main vérifié : `0310fa677947e34a02bd877f5adc6104267f87ba` (PR nº 16 intégrée). La PR nº 20 reprend désormais le vrai jeu et son plateau peint avec des cartes dans les cases. Le premier essai à six unités préplacées est retiré. Main, délais, pose, avancée, couronnes, IA, modes et progression conservés ; vue réversible par un bouton. Cinq portraits approuvés à clés dédiées opt-in ; aucun archétype partagé remplacé. Local : 262 tests, 60 parités, builds normal/essai. Nouvelle CI navigateur à vérifier sur cette correction. Les PR nº 17–19 restent distinctes ; aucune fusion autorisée. Voir [ESSAI_CARTES_2026_10_20.md](ESSAI_CARTES_2026_10_20.md).

@@ -51,3 +51,5 @@ src/
 ## Vue cartes optionnelle — PR nº 20, 20 octobre
 
 `ui/card-arena.js` rend les vraies unités comme cartes sur les cases existantes. Il dépend des données et du mapping graphique, sans règle ni sauvegarde de bataille. Un bouton de présentation réversible conserve uniquement une préférence graphique ; la même application et le même moteur sont empaquetés pour JOUER et ESSAI_CARTES. 26 modules, 18 portraits. Aucun changement d'API du moteur ou de schéma de profil/combat. Voir `ESSAI_CARTES_2026_10_20.md`.
+
+La présentation plein écran de la vue cartes reste dans `assets/card-arena.css` ; `battle-view.js` place la main dans la scène et replie les informations dans un élément `details` natif. `painted-arena.js` réserve l'espace entre HUD et main par une seule transformation décor/cases/VFX. `views.js` réutilise le cadre illustré pour toutes les cartes de la main en vue cartes. Aucun module ni dépendance métier ajouté.

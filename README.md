@@ -1,5 +1,6 @@
 # Couronnes & Arcanes — V2.11
 
+**Affinage plein écran, PR nº 20 :** vue cartes avec main sur la terrasse du plateau, HUD supérieur fixe, cadre commun de la main et journal repliable. Adaptation graphique aux quatre pistes sans changement des règles. Voir `docs/ESSAI_CARTES_2026_10_20.md`.
 **Essai du 20/10/2026 corrigé :** `ESSAI_CARTES.html` est le vrai jeu avec ses cartes illustrées sur les cases du plateau existant. Main, délais, déploiement, déplacements, IA, couronnes et progression conservés. Le bouton « Vue : cartes/personnages » permet de comparer sur le même combat. `npm run build:cards` régénère cet aperçu ; [périmètre](docs/ESSAI_CARTES_2026_10_20.md).
 
 Jeu original de cartes tactiques solo, inspiré du genre de Kings and Legends / Rise of Mythos, avec son propre univers et ses propres cartes. Jouable hors ligne, sur ordinateur et navigateur mobile.

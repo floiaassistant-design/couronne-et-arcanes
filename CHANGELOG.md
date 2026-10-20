@@ -1,4 +1,11 @@
 ## Proposition — cartes sur le plateau existant (20/10/2026)
+
+## 20/10/2026 — PR nº 20 : main intégrée au plateau plein écran
+
+- Vue cartes du même jeu : scène couvrant le viewport, main sur la terrasse basse, HUD en haut, actions à droite.
+- Cadre illustré partagé dans la main, états et délais réels, fiche flottante sans déplacement du plateau.
+- Journal et informations dans un panneau repliable ; adaptation des quatre pistes au bureau et mobile.
+- Règles, IA, profils et combats historiques préservés. Tests navigateur de géométrie et parcours de jeu ajoutés ; résultats de la tête à consulter dans la CI.
 - Même jeu, décor, grille, lignes, main, délais, déploiement, avancée, IA, couronnes et progression.
 - Cartes illustrées à l'emplacement des unités ; cadres bleus/rouges, portraits non retournés et taille ajustée au plateau. Vue réversible sur le même combat.
 - Cinq portraits Aube approuvés à clés dédiées opt-in, reçus et empreintes conservés. JOUER.html et ESSAI_CARTES.html issus du même app.js.

@@ -48,11 +48,27 @@ export function mountPaintedArena(){
  const grid=document.querySelector('.arena-painted');if(!grid)return;
  const canvas=grid.querySelector('.arena-painted-canvas'),frame=grid.querySelector('.arena-painted-frame');
  const fit=()=>{
-  const width=Math.max(cardArenaEnabled()?1280:960,Math.min(grid.clientWidth,grid.clientHeight*PAINTED_ARENA.width/PAINTED_ARENA.height));
-  const scale=width/PAINTED_ARENA.width,height=PAINTED_ARENA.height*scale;
-  canvas.style.width=width+'px';canvas.style.height=height+'px';
-  canvas.style.marginTop=Math.max(0,(grid.clientHeight-height)/2)+'px';
-  frame.style.transform=`scale(${scale})`;
+  if(grid.closest('[data-card-layout="true"]')){
+   // Le plan des pistes tient entre le HUD et la main, même avec quatre lignes.
+   // Une seule transformation pour le décor, les cases et les points des VFX.
+   const stage=grid.closest('.combat-stage'),dock=stage.querySelector('.combat-hand-dock');
+   const hud=stage.querySelector('.battle-hud'),caption=stage.querySelector('.arena-caption');
+   const box=grid.getBoundingClientRect();
+   const first=PAINTED_ARENA.rows[0],last=PAINTED_ARENA.rows.at(-1);
+   const top=Math.max(hud.getBoundingClientRect().bottom,caption.getBoundingClientRect().bottom)-box.top+12;
+   const bottom=dock.getBoundingClientRect().top-box.top-14;
+   const scale=Math.min(Math.max(grid.clientWidth/PAINTED_ARENA.width,grid.clientHeight/PAINTED_ARENA.height),Math.max(120,bottom-top)/(last-first));
+   const width=PAINTED_ARENA.width*scale,height=PAINTED_ARENA.height*scale;
+   const offset=Math.min(bottom-last*scale,Math.max(top-first*scale,(grid.clientHeight-height)/2));
+   canvas.style.width=Math.max(width,grid.clientWidth)+'px';canvas.style.height=grid.clientHeight+'px';canvas.style.marginTop='0px';
+   frame.style.left=Math.max(0,(grid.clientWidth-width)/2)+'px';frame.style.top=offset+'px';
+   frame.style.transform=`scale(${scale})`;
+  }else{
+   const width=Math.max(cardArenaEnabled()?1280:960,Math.min(grid.clientWidth,grid.clientHeight*PAINTED_ARENA.width/PAINTED_ARENA.height));
+   const scale=width/PAINTED_ARENA.width,height=PAINTED_ARENA.height*scale;
+   canvas.style.width=width+'px';canvas.style.height=height+'px';canvas.style.marginTop=Math.max(0,(grid.clientHeight-height)/2)+'px';
+   frame.style.transform=`scale(${scale})`;
+  }
  };
  fit();observer=new ResizeObserver(fit);observer.observe(grid);
 }

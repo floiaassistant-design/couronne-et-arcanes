@@ -6,9 +6,17 @@
 
 `ESSAI_CARTES.html` utilise exactement le même `src/app.js`, le même moteur, les mêmes écrans, missions, decks et modes que `JOUER.html`. Pas de cartes préplacées, de formation d'essai, de scénario alternatif ni de nouvelle règle. La main, l'attente réelle, la limite de deux cartes, la pose par ligne, les mouvements, les portées, la Concorde, les sorts, l'IA, les couronnes et la progression restent ceux du jeu.
 
-L'arène peinte et ses coordonnées restent identiques : 10 cases, 2/3/4 lignes selon la rencontre ; reprise 3×5 inchangée. `boardCard` remplace le contenu graphique de la véritable unité sur sa case. Les portraits ne sont pas retournés pour le camp adverse. Les cartes de 56×82 px en coordonnées de l'image gardent une marge entre les ancrages des lignes ; le zoom minimal de revue passe de 960 à 1280 px pour rendre les cartes plus visibles. Le plateau garde ses défilements. Les statistiques affichent les vraies valeurs, bonus de formation/ralliement et PV courants inclus.
+L'arène peinte et ses coordonnées restent identiques : 10 cases, 2/3/4 lignes selon la rencontre ; reprise 3×5 inchangée. `boardCard` remplace le contenu graphique de la véritable unité sur sa case. Les portraits ne sont pas retournés pour le camp adverse. Les cartes de 56×82 px en coordonnées de l'image gardent une marge entre les ancrages des lignes ; la scène de combat couvre désormais le viewport, avec HUD supérieur, main intégrée sur la terrasse inférieure et actions à droite. Une seule échelle conserve la calibration du décor et des cases et réserve une zone aux quatre pistes entre le HUD et la main. Le défilement horizontal reste disponible en portrait. La lecture d'une fiche ne redimensionne ni la main ni la scène. Les statistiques affichent les vraies valeurs, bonus de formation/ralliement et PV courants inclus.
 
 Le bouton « Vue : cartes/personnages » change uniquement l'affichage du même combat et conserve une préférence graphique séparée. Le jeu normal garde son rendu initial par défaut ; l'aperçu démarre directement en vue cartes. Les cinq portraits approuvés sont également utilisés dans la main/collection lorsque la vue cartes est active.
+
+## Présentation fixe
+
+Contrat unique dans `assets/card-arena.css` pour la vue cartes du plateau peint : décor plein écran ; mission/Citadelle en haut ; PV et tour juste dessous ; main sur la terrasse du bas ; fin de tour et pouvoir à droite. Journal, informations d'IA, talents, pouvoir détaillé et abandon sont accessibles via « Journal & détails ». Fiche de capacité flottante avec fermeture, sans agrandir le dock. Aucun bouton de sortie ne perd le combat.
+
+Toutes les cartes de la main utilisent le cadre illustré existant : illustration verticale, Ordre et compteur restant en haut, état prêt/attente, nom et statistiques en bas. Même taille pour unités et sorts ; tous les compteurs et statistiques viennent du jeu. Les portraits approuvés sont inchangés. L'ancien rendu personnages et les combats sauvegardés 3×5 gardent leur présentation.
+
+`mountPaintedArena` ajuste une seule transformation graphique ; les limites 344/716 proviennent des pistes peintes. Il ne modifie pas la géométrie logique du moteur. Les styles d'inspection historiques sont neutralisés uniquement dans cette présentation afin de garder des positions fixes. Contrôles en bureau 1366×900, portrait 390×844 et paysage 844×390 ; quatre lignes et lecture sans déplacement de la main font l'objet d'assertions navigateur.
 
 ## Portraits
 

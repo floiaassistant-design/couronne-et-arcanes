@@ -1,5 +1,6 @@
 # AGENTS.md — Couronnes & Arcanes
 
+**Affinage plein écran, PR nº 20 :** vue cartes avec main sur la terrasse du plateau, HUD supérieur fixe, cadre commun de la main et journal repliable. Adaptation graphique aux quatre pistes sans changement des règles. Voir `docs/ESSAI_CARTES_2026_10_20.md`.
 ## Version stable et coordination multi-sessions — PRIORITAIRE
 
 - **Vue cartes du 20/10/2026 — PR nº 20 corrigée** : même jeu et même plateau peint, cartes sur les cases. Le premier essai indépendant à trois duels a été refusé et retiré. `ui/card-arena.js` est une vue sans règles ; `npm run build:cards` génère le même `app.js` avec vue cartes activée. Bouton réversible ; projections, main, délais, mouvement et sauvegardes historiques préservés. Cinq clés dédiées opt-in dans `visuals.js`, 18 portraits, 26 modules. Lire `docs/ESSAI_CARTES_2026_10_20.md`. PR nº 17–19 distinctes, aucune fusion autorisée.
