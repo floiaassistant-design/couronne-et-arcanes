@@ -107,8 +107,8 @@ async def run(browser,label,viewport):
     await page.locator('[data-action="deploy"][data-col="1"][data-lane="2"]').click()
     assert await page.evaluate('battle.board[2][2].uid')==91
     assert await page.evaluate('battle.board[1][2]') is None
-    await page.locator('.combat-fx.vfx-moving').wait_for(state='visible',timeout=1500)
-    await page.wait_for_timeout(700)
+    # Remise à zéro : la téléportation s'applique immédiatement sans ancien effet.
+    assert await page.locator('.combat-fx,.battle-vfx-overlay').count()==0
     await play(page,'rune_trap',2)
     assert await page.locator('.terrain-trap').count()==1
     assert 'ALLIÉ' in await page.locator('.terrain-trap').inner_text()
