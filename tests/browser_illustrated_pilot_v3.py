@@ -22,6 +22,7 @@ async def run(browser,label,viewport):
         assert await cards.nth(i).locator('.illustrated-count').get_attribute('data-delay-kind')=='remaining'
         assert await cards.nth(i).locator('.illustrated-faction').inner_text()
     image=cards.first.locator('.creature-image')
+    await image.evaluate('(el)=>el.decode()')
     assert await image.evaluate('(el)=>el.complete && el.naturalWidth===512 && el.naturalHeight===768')
     assert await page.evaluate('selectedCard')==-1
 

@@ -3,9 +3,9 @@ import {CARDS,FACTIONS} from '../data.js';
 import {visualFor,artSrc} from '../visuals.js';
 export function cardArenaEnabled(){
  if(typeof document==='undefined')return false;
+ if(document.body?.dataset.cardCombat)return document.body.dataset.cardCombat==='true';
  const query=new URLSearchParams(globalThis.location?.search||'');
  if(query.has('cartes'))return query.get('cartes')!=='0';
- if(document.body?.dataset.cardCombat)return document.body.dataset.cardCombat==='true';
  try{return localStorage.getItem('couronnes_arcanes_vue_cartes_v1')==='on';}catch{return false;}
 }
 export function setCardArenaMode(enabled){
