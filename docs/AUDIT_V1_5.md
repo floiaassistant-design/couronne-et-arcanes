@@ -1,5 +1,10 @@
 # Audit de Couronnes & Arcanes V1.5 — 2026-10-11
 
+> Rapport historique. Les chiffres, commandes et livraisons ci-dessous décrivent
+> la V1.5 ; certains tests graphiques ont été retirés avec les anciens visuels.
+> Aucune action de synchronisation n'est à reprendre. Pour travailler, lire
+> [l'état actuel](ETAT_PROJET.md) et `../AGENTS.md` sur le dernier main GitHub.
+
 ## Contrôles
 - `npm test` : 31/31 tests réussis, y compris 2 nouvelles vérifications des limites de Vol et Garde.
 - `python3 tests/browser_smoke.py` : contrôle navigation, campagne, deck, tour, forge et affichage mobile.
@@ -12,7 +17,7 @@
 1. **AGENTS.md et ETAT_PROJET.md restés à V1.4** alors que la V1.5 était livrée. Corrigés en V1.5.1.
 2. **Vol ambigu dans les descriptions** : saute par-dessus une unité alliée quand la prochaine case est libre ; ne traverse pas les ennemis, que la créature combat au contact. Description clarifiée, moteur inchangé.
 3. **Garde limité** : intercepte les coups visant directement la couronne sur sa ligne, mais ne protège pas automatiquement d’autres unités. Portée documentée ; n’en pas déduire une mécanique générale de provocation.
-4. **Drive resté sur la V1.4 au moment de l’audit** : cette divergence exige l’archivage V1.4 et le dépôt du paquet audité pour le corriger.
+4. **Ancien paquet externe resté sur la V1.4 au moment de l’audit** : constat historique de divergence. Ce paquet n'est plus une source officielle ni un point de reprise ; aucune synchronisation externe n'est à effectuer.
 
 ## Limites
 - Les portraits des cartes restent partagés entre 60 cartes, et leurs animations sont basées sur CSS, non sur sprites image par image.

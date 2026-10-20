@@ -14,16 +14,18 @@ historiques et n'autorisent aucun réemploi dans la nouvelle série.
 Le décor peint du plateau est conservé : il fait partie du plateau explicitement
 retenu. L'ancien décor calibré de remplacement n'est plus chargé.
 
-## Branche et dépendance
+## Intégration et sources officielles
 
-Cette évolution est empilée sur la PR nº 20, tête exacte
-`30379a08b5493b1d219703f6f1fa8258afc8e5c9`, pour conserver la présentation des
-cartes déjà développée. Le main vérifié après fusion autorisée de la PR nº 21 est
-`f505a8b607b2aa08ce55567063635fcd2ebc9660`.
+La présentation de la PR nº 20, tête `30379a08`, a été fusionnée sur main à
+`33b83906`, puis la remise à zéro de la PR nº 22 à
+`50b32e4ad5c41da8c99f190d4ca300ce9fec988a`, sur accord humain spécifique.
+L'atelier est remis à zéro par sa PR nº 18 à `e5986465`. La PR nº 21 (rapport)
+avait déjà été intégrée. Vérifier le dernier main avant toute nouvelle mission.
 
-La PR nº 20 contient déjà la pose en 1/2/3 et son miroir adverse. Cette remise à
-zéro ne change aucun module de règles, aucune IA, aucun catalogue de cartes ni
-aucune sauvegarde par rapport à cette base. Elle ne fusionne pas la nº 20.
+GitHub est l'unique source officielle du code, des documents et des nouvelles
+images ; aucune ancienne archive externe n'est une source de reprise.
+La nº 20 porte la pose en 1/2/3 et son miroir adverse. La nº 22 ne change aucun
+module de règles, IA, catalogue ou stockage par rapport à cette base.
 
 ## Retraits et conservation
 
@@ -58,10 +60,10 @@ Un emplacement SVG n'est pas une illustration finale approuvée.
 
 ## Anciennes PR
 
-Les PR jeu nº 11, 17, 18 et 19 concernent les anciens visuels. Elles ne doivent
-plus être intégrées telles quelles. La nº 20 reste la dépendance de présentation.
-Les PR graphiques antérieures ne constituent plus un lot à fusionner. Leur
-clôture et les suppressions sur main sont distinctes de cette proposition.
+Les PR jeu nº 11, 17, 18 et 19 sont fermées sans fusion comme historiques,
+ainsi que les treize anciennes PR art. Leurs branches et commits sont conservés.
+Les PR nº 20 et nº 22 sont intégrées ; les anciennes PR graphiques ne sont plus
+des lots à fusionner ou à réimporter.
 
 ## Vérification et livraison
 
@@ -72,4 +74,5 @@ hors réseau. Les tests d'anciens portraits sont remplacés par des contrôles d
 retrait effectif et de validité des emplacements ; les assertions du moteur et la
 référence de parité restent conservées.
 
-La nouvelle PR de nettoyage attend un accord spécifique avant fusion.
+Les contrôles du jalon fusionné sont consignés dans [l’état du projet](ETAT_PROJET.md).
+Chaque future PR demande son propre accord spécifique avant fusion.

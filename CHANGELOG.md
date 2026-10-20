@@ -1,15 +1,27 @@
-## Proposition — nouvelle base graphique, 20 octobre 2026
+## Nettoyage documentaire — 20 octobre 2026
+
+- GitHub seul point de reprise ; retrait de l'ancienne destination d'archives.
+- AGENTS et mission alignés sur la base neutre, commandes et contrats actuels.
+- Fusions nº 20, nº 22 et art nº 18 consignées ; audits antérieurs identifiés
+  comme historiques, sans import d'ancien lot ou synchronisation à reprendre.
+- Aucun changement aux sources jouables, assets, HTML générés ou sauvegardes.
+
+## Intégré — nouvelle base graphique, PR nº 22 (20 octobre 2026)
 
 - Décision humaine : refaire les illustrations et animations, conserver plateau
-  et présentation des cartes. Proposition empilée sur la PR nº 20.
+  et présentation des cartes. Intégrée après la PR nº 20 sur accord spécifique.
 - Retrait des 18 portraits de la base, silhouettes pixel, anciens effets de
   combat et ancien décor calibré ; emplacements SVG neutres et plateau peint.
 - Catalogue actif vide ; futures images soumises à reçu, provenance et SHA-256.
 - Aucun changement au moteur, à l'IA ou aux sauvegardes par rapport à la base.
-- La PR nº 21 (rapport) a été fusionnée sur accord spécifique ; aucune autre
-  fusion n'est autorisée par cette préparation.
+- Fusion nº 22 à `50b32e4a` après la nº 20 à `33b83906` ; atelier nº 18 à
+  `e5986465`. Les contrôles après fusion sont verts. Le rapport nº 21 était intégré.
 
-## Proposition — cartes sur le plateau existant (20/10/2026)
+## Intégré — cartes sur le plateau existant, PR nº 20 (20/10/2026)
+
+Les entrées suivantes conservent les étapes de conception dans leur contexte.
+Les états de proposition et anciens assets décrits ne sont pas l'état actuel ;
+la remise à zéro nº 22 et `docs/ETAT_PROJET.md` priment.
 
 ## 20/10/2026 — PR nº 20 : survol seul et pose sur trois cases
 
@@ -32,14 +44,14 @@
 - Même jeu, décor, grille, lignes, main, délais, déploiement, avancée, IA, couronnes et progression.
 - Cartes illustrées à l'emplacement des unités ; cadres bleus/rouges, portraits non retournés et taille ajustée au plateau. Vue réversible sur le même combat.
 - Cinq portraits Aube approuvés à clés dédiées opt-in, reçus et empreintes conservés. JOUER.html et ESSAI_CARTES.html issus du même app.js.
-- Le premier essai indépendant à trois duels est retiré de cette PR. Aucune fusion autorisée.
+- Le premier essai indépendant à trois duels a été retiré ; la version finale a été intégrée par la PR nº 20 après accord spécifique.
 
-## Proposition — Statistiques effectives et lecture des capacités (14/10/2026)
+## Intégré — Statistiques effectives et lecture des capacités, PR nº 16 (14/10/2026)
 - Branche `fix/stats-capacites-combat` depuis le main `f896a0c3`, après la fusion autorisée de la PR nº 15.
 - Calcul d'invocation partagé entre moteur, main et collection ; bonus d'équipement, forge, réputation et maîtrise visibles. Exemple reproduit : Milicien 2/5 affiché auparavant, désormais 3/7 avec épée, forge 1 et réputation Aube 15, comme l'unité déployée.
 - Fiche accessible sur toutes les cartes, sorts et compétences en attente ; description de 14 px, bonus détaillés, espace réservé dans le dock et gestes de sélection/pose préservés. Compteur historique supplémentaire masqué dans la main.
 - 258 tests Node, 60 parités, builds, Chromium bureau/mobile portrait/paysage, stockage réel hors réseau et une mission de campagne terminée par parcours ; simulations de contrôle/arène réussies. Aucun changement de règles, données des cartes, IA ou clés de sauvegarde.
-- Proposition non fusionnée : accord spécifique attendu sur sa propre PR.
+- Intégré par la PR nº 16 ; les étapes de conception ci-dessous restent historiques.
 
 ## Intégré — PR nº 15, pilote Arbalétrière Illustrée v3 (14/10/2026)
 - Fusion autorisée explicitement par le propriétaire, commit `f896a0c3`. Portrait approuvé, nouvelle clé seulement pour `archer`, cadre et fiche sans bouton sur le portrait.

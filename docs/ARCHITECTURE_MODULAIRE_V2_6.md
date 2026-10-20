@@ -2,7 +2,8 @@
 
 ## État de la remise à zéro graphique du 20/10/2026
 
-La base PR nº 20 conserve 26 modules. Les anciennes illustrations sont retirées ;
+Les PR nº 20 et nº 22 sont intégrées sur main ; le jalon conserve 26 modules.
+Voir [l’état actuel](ETAT_PROJET.md) et `../AGENTS.md` avant toute reprise. Les anciennes illustrations sont retirées ;
 `assets/artwork.json` est vide et `visuals.js` fournit un SVG neutre. Le builder
 contrôle les futurs reçus et empreintes et refuse les WebP non catalogués.
 `ui/arena-art.js` garde le décor du plateau historique et remplace les silhouettes
