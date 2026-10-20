@@ -60,8 +60,10 @@ export function mountPaintedArena(){
    const scale=Math.min(Math.max(grid.clientWidth/PAINTED_ARENA.width,grid.clientHeight/PAINTED_ARENA.height),Math.max(120,bottom-top)/(last-first));
    const width=PAINTED_ARENA.width*scale,height=PAINTED_ARENA.height*scale;
    const offset=Math.min(bottom-last*scale,Math.max(top-first*scale,(grid.clientHeight-height)/2));
-   canvas.style.width=Math.max(width,grid.clientWidth)+'px';canvas.style.height=grid.clientHeight+'px';canvas.style.marginTop='0px';
-   frame.style.left=Math.max(0,(grid.clientWidth-width)/2)+'px';frame.style.top=offset+'px';
+   // Recadrer seulement les marges décoratives ; toutes les cases/couronnes restent accessibles.
+   const trim=Math.min(Math.max(0,(width-grid.clientWidth)/2),(Math.min(...PAINTED_ARENA.left)-70)*scale);
+   canvas.style.width=Math.max(width-2*trim,grid.clientWidth)+'px';canvas.style.height=grid.clientHeight+'px';canvas.style.marginTop='0px';
+   frame.style.left=(Math.max(0,(grid.clientWidth-width)/2)-trim)+'px';frame.style.top=offset+'px';
    frame.style.transform=`scale(${scale})`;
   }else{
    const width=Math.max(cardArenaEnabled()?1280:960,Math.min(grid.clientWidth,grid.clientHeight*PAINTED_ARENA.width/PAINTED_ARENA.height));

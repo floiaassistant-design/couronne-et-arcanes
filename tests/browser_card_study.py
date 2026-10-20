@@ -25,6 +25,11 @@ async def layout(page,label):
     assert len(set(tuple(c) for c in geometry['cards']))==1,(label,geometry)
     assert geometry['first']['h']>geometry['first']['w']>40,(label,geometry)
     assert geometry['end']['x']>=geometry['hand']['x']+geometry['hand']['w'],(label,geometry)
+    # Le recadrage coupe uniquement du décor : les cases extrêmes restent atteignables.
+    await page.locator('.battle-grid').evaluate('(el)=>el.scrollLeft=el.scrollWidth')
+    last=await page.locator('.lane-row').first.locator('[data-col="10"]').bounding_box()
+    assert last['x']+last['width']<=w+1,(label,last)
+    await page.locator('.battle-grid').evaluate('(el)=>el.scrollLeft=0')
     return geometry
 
 async def run(browser,label,viewport):
@@ -63,6 +68,8 @@ async def run(browser,label,viewport):
     unit=before['board'][0][1];assert unit is not None
     portrait=page.locator('.lane-row .board-card').first
     assert await portrait.locator('img').evaluate('(el)=>el.complete&&el.naturalWidth>0')
+    # Mesurer l'emplacement final, après l'animation d'invocation (520 ms).
+    await portrait.evaluate("el=>Promise.all(el.closest('.unit-on-board').getAnimations({subtree:true}).map(a=>a.finished.catch(()=>{})))")
     # Le rectangle conserve le format portrait et ne déborde pas sur la ligne suivante.
     bounds=await portrait.bounding_box();assert bounds['height']>bounds['width']>20,(label,bounds)
     await layout(page,label)
