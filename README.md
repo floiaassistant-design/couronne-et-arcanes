@@ -4,15 +4,20 @@ Jeu de cartes tactiques solo, web et hors ligne : 76 cartes, quatre classes,
 12 missions, 20 étages de Tour et trois donjons. Collection, progression, IA,
 statistiques et sauvegardes sont conservées.
 
-## État de cette proposition
+## État intégré
 
 Le propriétaire a demandé le 20 octobre 2026 de refaire les illustrations et
 animations en conservant le plateau et la présentation des cartes.
 [Décision et périmètre](docs/REMISE_A_ZERO_GRAPHIQUE_2026_10_20.md).
 
-Cette branche dépend de la PR nº 20 à `30379a08`. Le main vérifié après la
-fusion autorisée du rapport nº 21 est `f505a8b6`. Aucune fusion supplémentaire
-n'est déduite de cette demande de travail.
+Les PR jeu nº 20 puis nº 22 ont été fusionnées sur accord explicite ; le jalon
+fonctionnel est `50b32e4ad5c41da8c99f190d4ca300ce9fec988a`. La remise à zéro de
+l'atelier est intégrée par sa PR nº 18 à `e5986465`. Vérifier le dernier main
+GitHub avant toute nouvelle mission.
+
+GitHub est l'unique source officielle du code, des documents et de la nouvelle
+production graphique. Les anciennes archives externes ne sont ni une source
+de reprise ni une destination de synchronisation.
 
 Les anciennes illustrations de personnages, silhouettes pixel et animations
 de combat sont retirées. Les cartes affichent des emplacements neutres avec
@@ -26,7 +31,7 @@ au survol et les interactions restent en place.
 - `npm run dev` : serveur local ; `index.html?cartes=1` active cette vue.
 
 Le plateau comporte dix cases par ligne, deux/trois/quatre lignes suivant la
-rencontre. La base nº 20 permet la pose sur les trois premières cases, avec
+rencontre. La PR nº 20 intégrée permet la pose sur les trois premières cases, avec
 zone miroir pour l'IA. Les anciennes batailles 3×5 restent compatibles.
 L'équilibrage de cette pose élargie reste distinct des anciens benchmarks.
 

@@ -1,5 +1,13 @@
 # Check-up avant nettoyage — 20 octobre 2026
 
+> Rapport historique établi avant la décision de refaire les graphismes.
+> Les recommandations de consolider ou d'importer les anciens portraits,
+> animations et modèles sont remplacées par la [remise à zéro](REMISE_A_ZERO_GRAPHIQUE_2026_10_20.md).
+> Depuis : PR jeu nº 20 et nº 22 et PR art nº 18 fusionnées sur accord spécifique ;
+> les 17 anciennes PR graphiques sont fermées sans fusion. Les tableaux ci-dessous
+> restent l'inventaire au moment de l'audit, pas des tâches ou états de PR actuels.
+> Reprendre depuis [l'état actuel](ETAT_PROJET.md) et le dernier main GitHub.
+
 ## Conclusion
 
 Le socle jouable passe les contrôles exécutés. Le besoin prioritaire est de

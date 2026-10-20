@@ -6,8 +6,9 @@ planches de la production active. Voir
 
 ## Conserver la structure
 
-Le plateau peint, la géométrie, les cadres et les interactions de la base PR nº 20
-restent la référence technique. Le moteur fournit noms, attentes, descriptions,
+Le plateau peint, la géométrie, les cadres et les interactions de la PR nº 20
+intégrée et de la remise à zéro nº 22 restent la référence technique. Les sources
+et reçus sont versionnés dans les dépôts GitHub du jeu et de l’atelier. Le moteur fournit noms, attentes, descriptions,
 statistiques et états. Ne pas peindre ces valeurs dans l'image.
 
 ## Importer un nouveau visuel

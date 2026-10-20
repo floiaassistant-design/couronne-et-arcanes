@@ -1,6 +1,7 @@
 # Présentation cartes — base conservée pour la refonte
 
-Le code de présentation vient de la PR nº 20 à `30379a08`. Cette remise à zéro
+Le code de présentation vient de la PR nº 20 à `30379a08`, intégrée sur main.
+La remise à zéro nº 22 est également intégrée ; voir [l’état actuel](ETAT_PROJET.md). Cette remise à zéro
 conserve son plateau peint, ses vrais emplacements, la main intégrée, les cadres
 HTML/CSS et l'aperçu partagé au survol/focus. Clic ou toucher ferme la fiche
 pendant la sélection et la pose. Les vraies statistiques viennent du moteur.
