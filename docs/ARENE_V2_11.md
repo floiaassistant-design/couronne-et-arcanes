@@ -15,7 +15,7 @@ Le nombre historique de lignes dépend du mode. Références consultées le 12 o
 
 Dans notre jeu **solo**, la transposition choisie est : dix cases réelles sur chaque ligne ; deux lignes pour les missions de difficulté 1–2, trois à difficulté ≥3, quatre pour les boss. Le tutoriel à une ligne et les véritables modes multijoueurs ne sont pas ajoutés. Les couronnes sont hors des dix cases. Les règles existantes d'invocation à une extrémité et de deux cartes par tour sont conservées.
 
-![Aperçu de l’arène V2.11](images/arena-v211.png)
+Capture de l’ancienne arène retirée de la production active ; consulter l’historique Git.
 
 ## Règles et sauvegardes
 

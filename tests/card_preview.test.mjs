@@ -15,7 +15,7 @@ test('Aperçu plateau : PV blessés, camp adverse, Concorde et états réels san
  assert.equal(model.stats.atk,u.atk+2);assert.equal(model.stats.hp,2);assert.equal(model.stats.maxhp,7);
  assert.ok(model.board.statuses.includes('Concorde +1 ATQ'));assert.ok(model.board.statuses.some(s=>s.startsWith('Silence')));
  const html=cardInspectionContent(model.card,model.entry,model.stats,esc,{illustrated:true,board:model.board});
- assert.match(html,/En combat/);assert.match(html,/PV 2\/7/);assert.match(html,/Armure 1/);assert.match(html,/milicien_aube.webp/);
+ assert.match(html,/En combat/);assert.match(html,/PV 2\/7/);assert.match(html,/Armure 1/);assert.match(html,/data:image\/svg\+xml,/);
  assert.equal(JSON.stringify(b),before);
  u.side='e';const enemy=boardInspectionData(b,u.uid);
  assert.equal(enemy.stats.atk,u.atk+1);assert.equal(enemy.board.side,'e');
@@ -27,7 +27,7 @@ test('Le même cadre sert aux unités et sorts de la main avec délai et statist
  const unit=cardInspectionContent(CARDS.archer,{wait:2},unitStats(b,'archer'),esc,{illustrated:true});
  const spell=cardInspectionContent(CARDS.firebolt,{wait:0},null,esc,{illustrated:true});
  for(const html of [unit,spell])assert.match(html,/class="card-preview" data-preview-kind="hand"/);
- assert.match(unit,/À l’invocation/);assert.match(unit,/Attente 2 tours/);assert.match(unit,/arbaletriere_aube.webp/);
+ assert.match(unit,/À l’invocation/);assert.match(unit,/Attente 2 tours/);assert.match(unit,/data:image\/svg\+xml,/);
  assert.match(spell,/Prête à jouer/);assert.doesNotMatch(spell,/inspection-stats/);
  assert.equal(JSON.stringify(b),before);
 });

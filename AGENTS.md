@@ -1,5 +1,26 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## PRIORITÉ — nouvelle production graphique du 20 octobre 2026
+
+- Le propriétaire conserve plateau et présentation des cartes et demande de
+  refaire toutes les illustrations et animations de personnages. Les anciennes
+  images, planches, mappings et validations graphiques ci-dessous sont
+  historiques. Ne pas les réintroduire dans la nouvelle production.
+- Base de travail : PR nº 20 à `30379a08`, distincte de main. Main vérifié après
+  fusion autorisée de la PR nº 21 : `f505a8b6`. La nº 20 n'est pas fusionnée.
+- Lire `docs/REMISE_A_ZERO_GRAPHIQUE_2026_10_20.md` et `docs/ETAT_PROJET.md`.
+  `assets/artwork.json` est le registre actif ; il commence vide. Emplacements
+  neutres uniquement, décor peint et cadres conservés. Aucune ancienne animation
+  de combat active. Les gestes des compteurs sont des interactions d'interface.
+- Les 26 modules, moteur, IA, progression et sauvegardes sont conservés par
+  rapport à cette base. Ne pas intégrer d'ancienne PR d'assets automatiquement.
+- Chaque nouveau visuel demande source, droits, reçu humain exact et empreinte ;
+  adapter explicitement `src/visuals.js`. Aucun actif implicite par famille.
+- La demande autorise cette préparation sur branche et uniquement la fusion
+  déjà effectuée de la nº 21. Les nouvelles propositions et la nº 20 attendent
+  un accord spécifique. Les anciennes références graphiques plus bas sont des
+  archives ; cette priorité et les commits réels priment sur ces anciens états.
+
 **Pose sur trois cases, PR nº 20 :** sur le plateau à dix cases, unités déployables en 1/2/3, zone adverse miroir 10/9/8. `playPlayerCard(b,index,lane,col)` accepte une colonne optionnelle (défaut 1). `engine/board.js` porte la zone ; IA et robot d’audit la partagent. Anciens combats 3×5 : entrée unique conservée. Clic de sélection sans fiche persistante. Règle nouvelle demandée par le joueur, sans changement des délais ni du quota 2/tour.
 **Aperçu partagé, PR nº 20 :** `ui/card-inspection.js` et `assets/card-preview.css` affichent le même cadre illustré pour la main et le plateau. Survol/focus pour lire ; clic/toucher ferme la fiche sans épinglage ; statistiques actuelles par uid, sans action de jeu ni sauvegarde de lecture. Tests `card_preview` dédiés.
 **Affinage plein écran, PR nº 20 :** vue cartes avec main sur la terrasse du plateau, HUD supérieur fixe, cadre commun de la main et journal repliable. Adaptation graphique aux quatre pistes sans changement des règles. Voir `docs/ESSAI_CARTES_2026_10_20.md`.

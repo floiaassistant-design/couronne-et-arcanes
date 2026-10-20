@@ -32,7 +32,7 @@ function cardUI(id,{compact=false,index=null,select=false,canEdit=false,upgradab
  ${illustrated?`<span class="illustrated-faction">${esc(FACTIONS[c.faction].short)}</span><span class="illustrated-count" data-delay-kind="${inHand?'remaining':'base'}" aria-label="${inHand?'Attente restante':'Délai de base'} : ${inHand?cooldown:c.delay}"><b>${inHand?cooldown:c.delay}</b></span>`:''}
  <div class="card-head"><span>${esc(c.heroClass?CLASSES[c.heroClass].name:FACTIONS[c.faction].short)}</span><b>${c.heroClass?'COMPÉTENCE':c.type==='sort'?'SORT':'UNITÉ'}</b></div>
  <div class="card-quality-tag" aria-label="Rareté : ${esc(c.rarity)}">${esc(c.rarity.toUpperCase())}</div>
- <div class="portrait creature-portrait role-${visual.role}"><img class="creature-image" src="${artSrc(visual.art)}" alt="Illustration de ${esc(c.name)}" loading="lazy" draggable="false" /><span class="portrait-emblem" aria-hidden="true">${c.icon}</span></div>
+ <div class="portrait creature-portrait role-${visual.role}"><img class="creature-image" src="${artSrc(visual.art)}" alt="" data-artwork-status="placeholder" loading="lazy" draggable="false" /><span class="portrait-emblem" aria-hidden="true">${c.icon}</span></div>
  ${inHand?`<div class="hand-readiness ${waiting?'waiting':'ready'}" aria-hidden="true">${waiting?'◷ EN ATTENTE':'✓ PRÊTE'}</div>`:''}
  <div class="card-title">${esc(c.name)}${bonus?` <span class="tiny gold">+${bonus}</span>`:''}${rank?` <span class="mastery-seal" title="Maîtrise ${rank}/3">✦${rank}</span>`:''}</div>
  <div class="card-detail" title="${esc(c.description)}">${pilot?'Portée 2':esc(c.description)}</div>

@@ -20,25 +20,9 @@
 .vfx-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:11px;color:#c4b69e;padding:10px 4px 4px;flex-wrap:wrap}
 .vfx-toggle{cursor:pointer;font:inherit;font-size:11px;letter-spacing:.03em;color:#f4d99a;padding:8px 12px;border-radius:8px;border:1px solid #c4aa7555;background:#1e3541}
 .vfx-toggle:hover,.vfx-toggle:focus-visible{border-color:#efce8e;background:#2d4953}
-.battle-vfx-overlay{position:fixed;inset:0;z-index:40;pointer-events:none;overflow:hidden;contain:layout style}
-.combat-fx{position:absolute;display:grid;place-items:center;transform:translate(-50%,-50%);pointer-events:none;white-space:nowrap;will-change:transform,opacity;font-family:Georgia,serif;text-shadow:0 0 15px #0b0a17,0 1px 3px #000}
-.vfx-moving{font-size:39px;color:#f7d79d;filter:drop-shadow(0 0 11px #d4a850)}
-.vfx-projectile.arrow{font-size:36px;color:#f7e6a5;filter:drop-shadow(0 0 9px #eaa35f)}
-.vfx-projectile.arcane{font-size:39px;color:#afcfff;filter:drop-shadow(0 0 12px #5eabff)}
-.vfx-slash{font-size:70px;color:#fff0b9;filter:drop-shadow(0 0 8px #ff8f65)}
-.vfx-impact{font-size:55px;opacity:0;filter:drop-shadow(0 0 12px #f6bd7d)}
-.vfx-impact.magical{color:#90c8ff;filter:drop-shadow(0 0 15px #6c65ff)}
-.vfx-impact.healing{color:#b2f7ac;filter:drop-shadow(0 0 15px #36df85)}
-.vfx-impact.toxic{color:#c1ed86;filter:drop-shadow(0 0 15px #7be85e)}
-.vfx-impact.physical{color:#f4c77d}
-.vfx-damage{font:bold 21px system-ui,sans-serif;color:#ffe5b5;text-shadow:0 0 9px #ca483c,0 2px 4px #000}
-@media(prefers-reduced-motion:reduce){.battle-vfx-overlay{display:none}}
 
-.vfx-projectile.arcane.restorative{color:#b6ffcf;filter:drop-shadow(0 0 13px #32db94)}
 
-/* V1.4 — Bestiaire illustré et animations différenciées par type d'unité.
-   Les illustrations sont originales et regroupées en 12 archétypes visuels ; elles
-   ne représentent PAS 60 images uniques ni des sprites dessinés image par image. */
+/* Présentation des emplacements d’illustration, sans ancien personnage animé. */
 .creature-portrait{background:#142330;isolation:isolate}
 .creature-portrait .creature-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 43%;filter:contrast(1.08) saturate(1.1);transition:transform .24s ease,filter .22s ease}
 .creature-portrait::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 48%,#07131d9b 100%),linear-gradient(90deg,#06132155,transparent 37%,transparent 75%,#06132144);pointer-events:none}
@@ -49,28 +33,14 @@
 .unit-on-board{gap:1px}
 .sprite-stage{position:relative;flex:none;width:calc(100% - 6px);max-width:93px;height:48px;margin-top:4px;display:flex;align-items:center;justify-content:center;isolation:isolate;border-radius:4px;overflow:hidden;background:linear-gradient(0deg,#0d203e42,#ffffff0b);border-bottom:1px solid #ffffff20}
 .unit-on-board:has(.formation-badge) .sprite-stage{margin-top:13px;height:39px}
-.sprite-figure{height:100%;width:100%;object-fit:cover;object-position:center 45%;filter:drop-shadow(0 3px 2px #001e30bb);transform-origin:center 80%;animation:creature-idle 2.7s ease-in-out infinite;will-change:transform}
+.sprite-figure{height:100%;width:100%;object-fit:cover;object-position:center 45%;filter:drop-shadow(0 3px 2px #001e30bb);transform-origin:center 80%;}
 .sprite-aura{position:absolute;bottom:0;left:24%;right:24%;height:7px;border-radius:50%;border:1px solid #e9cf8b7d;box-shadow:0 0 10px #fad08460;background:#d7d7f533;pointer-events:none}
 .unit-on-board.enemy .sprite-figure{filter:sepia(.18) saturate(.85) hue-rotate(300deg) drop-shadow(0 3px 3px #29040c)}
-.sprite-stage.role-heavy .sprite-figure{animation:creature-heavy 3.2s ease-in-out infinite}
-.sprite-stage.role-ranged .sprite-figure{animation:creature-aim 3s ease-in-out infinite}
-.sprite-stage.role-beast .sprite-figure{animation:creature-beast 1.8s ease-in-out infinite}
-.sprite-stage.role-flying .sprite-figure{animation:creature-fly 2.3s ease-in-out infinite}
-.sprite-stage.role-caster .sprite-figure,.sprite-stage.role-support .sprite-figure,.sprite-stage.role-spell .sprite-figure{animation:creature-cast 2.8s ease-in-out infinite}
-.sprite-stage.role-undead .sprite-figure{animation:creature-undead 2.6s ease-in-out infinite}
-.sprite-stage.role-caster .sprite-aura,.sprite-stage.role-support .sprite-aura{box-shadow:0 0 15px #bd97f8b0;background:#a8a8f565;animation:aura-pulse 2.1s ease-in-out infinite}
-.sprite-stage.role-flying .sprite-aura{height:5px;animation:aura-pulse 2.2s ease-in-out infinite}
+.sprite-stage.role-caster .sprite-aura,.sprite-stage.role-support .sprite-aura{box-shadow:0 0 15px #bd97f8b0;background:#a8a8f565;}
+.sprite-stage.role-flying .sprite-aura{height:5px;}
 .sprite-stage.role-beast .sprite-aura{background:#8cd09057}
 .unit-on-board .unit-name{position:relative;z-index:1;font-weight:700}
 .unit-on-board .unit-meta{position:relative;z-index:1}
-@keyframes creature-idle{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2px) scale(1.02)}}
-@keyframes creature-heavy{0%,100%{transform:translateY(0) rotate(0)}45%{transform:translateY(-1px) rotate(-1deg)}55%{transform:translateY(1px) rotate(1deg)}}
-@keyframes creature-aim{0%,100%{transform:translateX(0) rotate(0)}48%{transform:translateX(-2px) rotate(-2deg)}65%{transform:translateX(1px) rotate(1deg)}}
-@keyframes creature-beast{0%,100%{transform:translateY(1px) scaleX(1.02)}50%{transform:translateY(-4px) scale(.98)}}
-@keyframes creature-fly{0%,100%{transform:translateY(2px) rotate(1deg)}50%{transform:translateY(-6px) rotate(-1deg)}}
-@keyframes creature-cast{0%,100%{transform:translateY(1px) scale(1);filter:brightness(1)}50%{transform:translateY(-3px) scale(1.035);filter:brightness(1.25)}}
-@keyframes creature-undead{0%,100%{transform:translateX(0);filter:brightness(.9)}40%{transform:translateX(-1px);filter:brightness(1.2)}65%{transform:translateX(1px);filter:brightness(.95)}}
-@keyframes aura-pulse{0%,100%{opacity:.45;transform:scaleX(.8)}50%{opacity:1;transform:scaleX(1.15)}}
 .animations-off .sprite-figure,.animations-off .sprite-aura{animation:none!important}
 @media(prefers-reduced-motion:reduce){.sprite-figure,.sprite-aura,.creature-portrait .creature-image{animation:none!important;transition:none!important}}
 /* Art portraits occupy the whole tactical tile, not only a small icon. */
@@ -85,7 +55,6 @@
 .card-traits{display:flex;flex-wrap:wrap;gap:6px;margin:.35rem 0 .2rem}
 .trait-pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:.72rem;color:#f2ead8}
 
-.vfx-tactic{font:800 12px system-ui,sans-serif;color:#ffdd91;background:#122a36dd;border:1px solid #dfb97899;border-radius:12px;padding:3px 8px}
 
 /* V1.7 — affiche uniquement la dernière décision effectivement prise par l’adversaire. */
 .ai-plan{display:flex;flex-direction:column;gap:5px;padding:12px;border:1px solid rgba(211,174,110,.35);border-radius:12px;background:rgba(211,174,110,.07);margin-bottom:15px;font-size:.82rem}
@@ -193,7 +162,7 @@ body.animations-off .hand-card .hand-readiness,body.animations-off .hand-card .c
 .arena-caption{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#a9c7ca;font:700 11px ui-monospace,monospace;letter-spacing:.08em;padding:15px 5px 10px}
 .arena-lofi .battle-grid{position:relative;padding:0 10px 15px;background:linear-gradient(0deg,#273d43 0%,#1e343e 60%,#242d48 100%);border:2px solid #5b6b75;border-radius:2px;overflow-x:auto;scrollbar-color:#8696a5 #161e32;overscroll-behavior-x:contain}
 .arena-sky{height:116px;min-width:calc(var(--cells)*78px + 132px);background-image:var(--arena-scene);background-size:100% 116px;background-position:center bottom;background-repeat:no-repeat;border-bottom:3px solid #3b5260;image-rendering:pixelated;position:relative}
-.arena-sky::after{content:'';position:absolute;bottom:0;left:0;right:0;height:16px;background:repeating-linear-gradient(90deg,#263c4c 0 70px,#354859 70px 76px);opacity:.6;animation:arena-mist 8s steps(12) infinite alternate}
+.arena-sky::after{content:'';position:absolute;bottom:0;left:0;right:0;height:16px;background:repeating-linear-gradient(90deg,#263c4c 0 70px,#354859 70px 76px);opacity:.6;}
 .arena-lofi .lane-row{grid-template-columns:24px 44px repeat(var(--cells),minmax(68px,1fr)) 44px;gap:4px;min-width:calc(var(--cells)*78px + 132px);min-height:114px;margin:8px 0 0;position:relative}
 .arena-lofi .lane-label{font:700 15px ui-monospace,monospace;color:#a5bac3}
 .arena-lofi .battle-cell{min-height:114px;border:1px solid #64797b;border-radius:1px;background:repeating-linear-gradient(0deg,transparent 0 27px,#40535c55 27px 29px),repeating-linear-gradient(90deg,#354e5366 0 25px,#66808022 25px 27px);box-shadow:inset 0 2px 0 #83979b30,inset 0 -4px 0 #142d3880}
@@ -211,7 +180,7 @@ body.animations-off .hand-card .hand-readiness,body.animations-off .hand-card .c
 .arena-lofi .unit-on-board,.arena-lofi .unit-on-board.enemy{min-height:112px;justify-content:flex-end;padding:2px 2px 5px;border-radius:0;background:transparent;border:0;overflow:hidden}
 .arena-lofi .unit-on-board .sprite-stage,.arena-lofi .unit-on-board:has(.formation-badge) .sprite-stage{inset:9px 0 26px;width:100%;height:auto;border-radius:0;overflow:visible;align-items:flex-end}
 .arena-lofi .unit-on-board .sprite-stage::after{display:none}
-.arena-lofi .unit-on-board .sprite-figure{width:52px;height:56px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 4px 0 #122334aa);animation-timing-function:steps(3)}
+.arena-lofi .unit-on-board .sprite-figure{width:52px;height:56px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 4px 0 #122334aa);}
 .arena-lofi .unit-on-board.enemy .sprite-stage{transform:scaleX(-1)}
 .arena-lofi .unit-on-board.silenced .sprite-figure{filter:saturate(.3) brightness(.8)}
 .arena-lofi .sprite-aura{bottom:0;height:5px;border-radius:0;left:22%;right:22%;background:#8ac9c633;border-color:#9ec9c9;box-shadow:none}
@@ -221,7 +190,6 @@ body.animations-off .hand-card .hand-readiness,body.animations-off .hand-card .c
 .arena-lofi .silence-badge{top:18px;font-size:9px;border-radius:0;padding:2px}
 .arena-lofi .terrain-trap{bottom:3px;font-size:8px;border-radius:0;padding:2px;box-shadow:0 2px 0 #0b1f27}
 .arena-scroll-hint{font-size:11px;color:#a9bbc6;margin:8px 3px 0}
-@keyframes arena-mist{from{opacity:.2}to{opacity:.55}}
 .animations-off .arena-sky::after{animation:none}
 @media(prefers-reduced-motion:reduce){.arena-sky::after{animation:none}}
 @media(max-width:700px){.arena-lofi{padding:8px}.arena-lofi .battle-grid{padding-inline:5px}.arena-lofi .battle-hud{gap:9px}.arena-lofi .fighter h3{font-size:13px}.arena-caption{font-size:10px;letter-spacing:0}.arena-lofi .enemy-style-tag{font-size:10px}.arena-lofi .battle-mid{min-width:35px}}
@@ -346,16 +314,6 @@ body.animations-off .hand-card .hand-readiness,body.animations-off .hand-card .c
  .arena-lofi .arena-structured .lane-row,.arena-lofi .arena-structured .arena-dormant-row{transition:none}
 }
 
-/* Traduction du vrai sprite pixel art lors des déplacements, si disponible. */
-.vfx-moving.vfx-creature{
- width:60px;height:62px;
- color:inherit;text-shadow:none;
- filter:drop-shadow(0 3px 2px #0d1a28b8);
-}
-.vfx-moving .vfx-creature-image{
- display:block;width:56px;height:56px;
- object-fit:contain;image-rendering:pixelated;
-}
 
 
 /* Combat immersif : HUD compact, arène dominante et main ancrée en bas.

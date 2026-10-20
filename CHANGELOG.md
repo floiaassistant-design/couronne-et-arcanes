@@ -1,3 +1,14 @@
+## Proposition — nouvelle base graphique, 20 octobre 2026
+
+- Décision humaine : refaire les illustrations et animations, conserver plateau
+  et présentation des cartes. Proposition empilée sur la PR nº 20.
+- Retrait des 18 portraits de la base, silhouettes pixel, anciens effets de
+  combat et ancien décor calibré ; emplacements SVG neutres et plateau peint.
+- Catalogue actif vide ; futures images soumises à reçu, provenance et SHA-256.
+- Aucun changement au moteur, à l'IA ou aux sauvegardes par rapport à la base.
+- La PR nº 21 (rapport) a été fusionnée sur accord spécifique ; aucune autre
+  fusion n'est autorisée par cette préparation.
+
 ## Proposition — cartes sur le plateau existant (20/10/2026)
 
 ## 20/10/2026 — PR nº 20 : survol seul et pose sur trois cases

@@ -3,6 +3,12 @@
 > **Mise à jour de géométrie V2.11 (fusionnée sur main le 12/10/2026)** : 10 cases par ligne, 2 lignes en duel, 3 dans les rencontres avancées et 4 pour les boss solo ; anciens combats 3×5 conservés. Style de l’arène : fantasy lo-fi en pixels originaux. La présente bible contient des sections V1 historiques ; le README et `ETAT_PROJET.md` décrivent l’état courant.
 
 # COURONNES & ARCANES
+
+> **Nouvelle production graphique, décision du 20/10/2026 :** plateau et
+> présentation des cartes conservés, anciens personnages, images et animations
+> retirés de la production active. Les anciennes planches et accords ne sont
+> plus des modèles à réemployer. Les sections graphiques antérieures sont
+> historiques ; lire `REMISE_A_ZERO_GRAPHIQUE_2026_10_20.md` et l'état courant.
 ## Bible du jeu et cahier de production — Édition 1.0
 
 > Jeu indépendant original, inspiré par le **genre** des jeux de cartes tactiques en lignes, notamment *Kings and Legends / Rise of Mythos*. Il ne reprend ni son code, ni ses illustrations, ni ses noms propres, ni ses cartes originales, ni ses marques. Cette bible est à la fois le descriptif de la version jouable présente et le projet complet à viser.
