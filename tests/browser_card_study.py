@@ -10,6 +10,8 @@ async def run(browser,label,viewport):
     page=await context.new_page();errors=[];requests=[]
     page.on('pageerror',lambda e:errors.append(str(e)))
     page.on('request',lambda r:requests.append(r.url))
+    # Graine de mission stable : mêmes pioches et décisions IA à chaque parcours.
+    await page.add_init_script('Date.now=()=>12345')
     await page.goto((ROOT/'ESSAI_CARTES.html').as_uri())
     await page.evaluate('localStorage.clear()');await page.reload()
     await page.locator('[data-action="welcome-start"]').click()
