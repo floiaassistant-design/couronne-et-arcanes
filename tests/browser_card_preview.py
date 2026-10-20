@@ -65,7 +65,8 @@ async def run(browser,label,viewport):
     await page.keyboard.press('Escape');assert await page.evaluate('selectedCard')==1
     # Unité adverse à l'autre extrémité : clamp du cadre et PV de l'instance réelle.
     enemy=page.locator('.board-card[data-unit-id="999"]')
-    await enemy.hover();assert 'Unité adverse' in await panel.inner_text()
+    await enemy.hover()
+    assert 'Unité adverse' in await panel.inner_text(),(label,await panel.inner_text(),await panel.is_hidden())
     assert 'ATQ 5 / PV 2/6' in await panel.inner_text()
     await contained(page,panel)
     await page.screenshot(path=f'/tmp/ca-card-preview-{label}-enemy.png',full_page=False)

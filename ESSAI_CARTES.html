@@ -3488,8 +3488,12 @@ function createCardInspection(getContext,esc){
   };
   document.addEventListener('mouseover',enter);document.addEventListener('focusin',enter);
   document.addEventListener('mouseout',leave);document.addEventListener('focusout',leave);
-  document.addEventListener('click',event=>{if(cardArenaEnabled()&&!source(event.target)&&!inPanel(event.target))closeCardInspection();});
-  document.addEventListener('scroll',event=>{if(cardArenaEnabled()&&event.target instanceof Element&&event.target.matches('.battle-grid,.hand,.combat-stage'))closeCardInspection();},true);
+  document.addEventListener('click',event=>{if(cardArenaEnabled()&&!source(event.target)&&!inPanel(event.target)&&!event.target.closest('[data-action="close-inspection"]'))closeCardInspection();});
+  document.addEventListener('scroll',event=>{
+   if(!cardArenaEnabled()||!(event.target instanceof Element)||!event.target.matches('.battle-grid,.hand,.combat-stage'))return;
+   // Le scroll automatique du focus/survol ne doit pas fermer sa propre fiche.
+   if(trigger?.matches(':hover,:focus'))position();else closeCardInspection();
+  },true);
   window.addEventListener('resize',position);
  }
  return {inspectCard,inspectUnit,closeCardInspection,dismissCardInspection,bindCardInspection};
