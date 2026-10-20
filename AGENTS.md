@@ -2,6 +2,8 @@
 
 ## Version stable et coordination multi-sessions — PRIORITAIRE
 
+- **Essai de cartes du 20/10/2026** : branche `feat/card-combat-study-20261020`, depuis le main réel `0310fa6` (PR nº 16 intégrée). `src/experiments/card-study-*.js` et `experiments/card-duel/` portent une vue indépendante à six cartes préplacées ; `npm run build:cards` régénère `ESSAI_CARTES.html`. Mapping et stockage propres à cet essai, aucune intégration des PR nº 17–19. Lire `docs/ESSAI_CARTES_2026_10_20.md`. Aucune fusion sans accord spécifique.
+
 - **Base courante : V2.11, `main` `f896a0c3`, PR nº 15 fusionnée le 14/10/2026 après autorisation spécifique.** PR nº 14 (arène peinte) déjà intégrée ; la PR nº 11 reste distincte et ouverte. Avant tout travail, lire `AGENTS.md`, `docs/ETAT_PROJET.md`, consulter la branche et son dernier commit, et vérifier les sources de `src/`.
 - **Ne jamais copier une ancienne version par-dessus la dernière version.** La copie V1.2 avait écrasé huit fichiers de V2.7 le 11/10/2026 ; les fichiers ont été récupérés depuis le commit local `145a2e8`.
 - **Une branche par agent/session** lorsque plusieurs agents développent en parallèle. Un seul intégrateur prépare la fusion après comparaison des modifications et exécution des tests, **sans jamais fusionner avant l'accord explicite de l'utilisateur**.

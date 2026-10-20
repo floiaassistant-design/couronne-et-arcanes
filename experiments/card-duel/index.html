@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#111d29"><title>Couronnes & Arcanes — Duel de cartes</title><link rel="stylesheet" href="./study.css" /></head>
+<body><main class="study">
+ <header class="masthead"><div class="brand-seal" aria-hidden="true">♛</div><div><p class="eyebrow">LES CHRONIQUES DES CINQ ORDRES</p><h1>Couronnes <em>&</em> Arcanes</h1></div><span class="study-label">ESSAI DE COMBAT</span></header>
+ <section class="table" aria-label="Champ de bataille">
+  <div class="table-heading"><div><p class="eyebrow">LE DUEL DES SERMENTS</p><h2>Que les cartes combattent.</h2></div><div class="round">TOUR <strong id="turn">1</strong></div></div>
+  <div class="hero enemy-hero" data-hero="e"><span class="hero-icon" aria-hidden="true">♜</span><div><span class="hero-name">Les Échos de l’Aube</span><span class="hero-track"><i></i></span></div><b class="hero-health">26 / 26</b></div>
+  <div class="team enemy-team" data-team="e"></div>
+  <div class="divide"><span>LIGNE I</span><span>LIGNE II</span><span>LIGNE III</span></div>
+  <div class="team ally-team" data-team="p"></div>
+  <div class="hero ally-hero" data-hero="p"><span class="hero-icon" aria-hidden="true">♛</span><div><span class="hero-name">Votre couronne</span><span class="hero-track"><i></i></span></div><b class="hero-health">26 / 26</b></div>
+  <div class="activity" id="activity" role="status">Six cartes. Trois lignes. Un affrontement.</div><div id="result" role="status"></div>
+ </section>
+ <section class="console" aria-label="Commandes du combat"><div class="main-controls"><button class="primary" id="auto" aria-pressed="false">▶ Lancer le combat</button><button id="next">Tour suivant</button><button id="reset" title="Recommencer avec la formation choisie">↻ Rejouer</button></div><div class="options"><label>Formation <select id="formation"><option value="balanced">Équilibre</option><option value="assault">Assaut</option><option value="support">Soutien</option></select></label><button id="toggle-fx" aria-pressed="true">Effets : activés</button></div></section>
+ <p id="card-description" class="description">Touchez une carte pour lire sa capacité. Les trois colonnes représentent trois lignes indépendantes.</p>
+ <footer>Étude visuelle · Portraits approuvés de l’atelier · Cartes préplacées, règles actuelles · Reprise automatique de cet essai</footer>
+</main><div id="effects" aria-hidden="true"></div><script type="module" src="../../src/experiments/card-study.js"></script></body></html>

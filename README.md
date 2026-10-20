@@ -1,5 +1,7 @@
 # Couronnes & Arcanes — V2.11
 
+**Essai du 20/10/2026 :** ouvrir `ESSAI_CARTES.html` pour comparer une présentation en six cartes illustrées avec tir, frappe et soin. Trois formations préplacées, commandes de lecture et reprise isolée. Construire avec `npm run build:cards`. Proposition indépendante des PR graphiques en attente ; [périmètre et limites](docs/ESSAI_CARTES_2026_10_20.md).
+
 Jeu original de cartes tactiques solo, inspiré du genre de Kings and Legends / Rise of Mythos, avec son propre univers et ses propres cartes. Jouable hors ligne, sur ordinateur et navigateur mobile.
 
 ## Jouer

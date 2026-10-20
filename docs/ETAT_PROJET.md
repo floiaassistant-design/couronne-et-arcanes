@@ -1,5 +1,9 @@
 # Couronnes & Arcanes — état de reprise, 14 octobre 2026
 
+## Actualisation du 20 octobre — essai cartes en proposition
+
+Main réel vérifié : `0310fa677947e34a02bd877f5adc6104267f87ba`, PR nº 16 déjà intégrée ; les mentions de proposition ci-dessous sont historiques. Nouvel essai indépendant `ESSAI_CARTES.html`, six portraits approuvés, trois formations, effets de frappe/tir/soin et vrais tours du moteur. Branche `feat/card-combat-study-20261020`, aucune fusion autorisée. PR nº 17, nº 18 et nº 19 restent distinctes. Local : 264 tests, 60 parités, builds normal/essai ; résultats Chromium à vérifier en CI. Voir [ESSAI_CARTES_2026_10_20.md](ESSAI_CARTES_2026_10_20.md).
+
 - **Main officiel : V2.11, commit `f896a0c3aca0a6496d9a9832cbfca8bd4be9c222`.** PR nº 15 fusionnée sur autorisation spécifique du propriétaire. PR nº 14 (arène peinte et plein écran) déjà intégrée ; PR nº 10 (sauvegardes) et nº 12 (nouvelle aventure/classes/rareté) conservées.
 - **76 cartes, quatre classes, 12 missions, 20 étages, trois donjons.** Règles et statistiques de combat inchangées. Dix cases par ligne, deux/trois/quatre lignes ; anciennes batailles 3×5 préservées.
 - **Graphismes officiels :** 13 portraits, dont Arbalétrière approuvée SHA-256 `31186adc9ea55c4d34777f70f8b5fe2969a1ea0386a74d1cf44183e931c391a3`. Seul `archer` utilise `arbaletriere_aube` ; `skill_ranger_pierce` conserve `archer.webp`. Arène peinte fixe, huit silhouettes SVG, aucun personnage animé image par image intégré.

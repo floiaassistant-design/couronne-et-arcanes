@@ -254,3 +254,9 @@
 - Les illustrations et mouvements CSS restent provisoires ; il faut encore produire des sprites par créature et des animations image par image.
 - Tour de 20 étages : génération de decks à partir de compositions prédéfinies, non 20 environnements entièrement uniques.
 - Simulation d'équilibrage à grande échelle et tests manuels sur appareils réels encore à faire.
+# 20 octobre 2026 — essai de combat par cartes (proposition)
+
+- `ESSAI_CARTES.html` autonome : six portraits approuvés de l'atelier, trois formations préplacées, coups, carreaux, soins, pause et tours manuels.
+- Moteur officiel réutilisé, PV après armure et riposte, préférences d'effets et mouvement réduit, sauvegarde propre à l'essai.
+- Générateur partagé étendu par `--cards`, production officielle et PR nº 17–19 préservées. Aucun changement des règles ou fusion sur main.
+
