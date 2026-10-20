@@ -8,3 +8,5 @@ tests/JOUER.test.html
 
 __pycache__/
 *.pyc
+
+tests/ESSAI_CARTES.test.html

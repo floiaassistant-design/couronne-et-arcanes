@@ -1,6 +1,7 @@
 import {createViews} from './ui/views.js';
 import {createCombatFx} from './ui/combat-fx.js';
 import {mountPaintedArena} from './ui/painted-arena.js';
+import {cardArenaEnabled,setCardArenaMode} from './ui/card-arena.js';
 import {createCardInspection} from './ui/card-inspection.js';
 import {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure} from './ui/storage.js';
 import {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS} from './data.js';
@@ -48,6 +49,7 @@ function showModal(html){$('modal-root').innerHTML=`<div class="modal-backdrop">
 function hideModal(){$('modal-root').innerHTML='';}
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
 function render(){
+ document.body.classList.toggle('card-combat-mode',cardArenaEnabled());
  const arenaScroll=document.querySelector('.battle-grid')?.scrollLeft||0;
  const arenaVertical=document.querySelector('.battle-grid')?.scrollTop||0;
  const handScroll=document.querySelector('.combat-hand-dock .hand')?.scrollLeft||0;
@@ -173,6 +175,7 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
  case 'deploy':if(!battle||selectedCard<0)return;withBattleFx(()=>playPlayerCard(battle,selectedCard,Number(lane)));break;
  case 'end-turn':if(!battle)return;withBattleFx(()=>endPlayerTurn(battle));break;
  case 'hero-power':if(!battle)return;withBattleFx(()=>usePower(battle));break;
+ case 'toggle-card-arena':setCardArenaMode(!cardArenaEnabled());render();break;
  case 'toggle-animations':animationsEnabled=!animationsEnabled;try{localStorage.setItem(VFX_KEY,animationsEnabled?'on':'off');}catch{}render();break;
  case 'retreat':showModal(`<div class="kicker">RETRAITE</div><h2>Abandonner la bataille ?</h2><p>Cette décision compte comme une défaite. Dans un donjon, elle met fin à l’expédition.</p><div class="button-row">${btn('Oui, battre en retraite','confirm-retreat','','danger')}${btn('Rester au combat','close-modal','','ghost')}</div>`);break;
  case 'confirm-retreat':if(battle?.status==='active'){battle.status='defeat';battle.phase='finished';hideModal();persistBattle();settle();}break;

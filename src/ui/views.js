@@ -6,6 +6,7 @@ import {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE
 import {AI_STYLES,aiStyle,aiEnraged} from '../ai.js';
 import {TALENT_TREE,TALENT_LEVELS} from '../talents.js';
 import {visualFor,artSrc} from '../visuals.js';
+import {cardArenaEnabled} from './card-arena.js';
 import {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission} from '../dungeons.js';
 import {freshProfile,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,BUILDINGS,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,chooseHeroTalent,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon} from '../engine.js';
 
@@ -22,7 +23,7 @@ function resourceUI(){return `<div class="res-pill">♛ Niv. <b>${heroLevel(prof
 function navUI(){const pages=[['home','Citadelle','♜'],['campaign','Campagne','⚑'],['tower','Tour','♛'],['dungeons','Donjons','⚔'],['collection','Collection','✦'],['alchemy','Alchimie','⚗'],['forge','Atelier','⚒'],['guide','Guide','☷']];if(battle?.status==='active')pages.push(['battle','Combat en cours','⚔']);return pages.map(([id,label,icon])=>`<button type="button" class="nav-btn ${screen===id?'active':''}" data-action="nav" data-page="${id}">${icon}&nbsp; ${label}</button>`).join('');}
 function btn(label,action,extra='',cls=''){return `<button type="button" class="btn ${cls}" data-action="${action}" ${extra}>${label}</button>`;}
 function cardUI(id,{compact=false,index=null,select=false,canEdit=false,upgradable=false,cooldown=null}={}){
- const c=CARDS[id];if(!c)return '';const tone=FACTIONS[c.faction].tone,owned=profile.collection[id]||0,visual=visualFor(c),masteryXp=profile.mastery?.[id]||0;
+ const c=CARDS[id];if(!c)return '';const tone=FACTIONS[c.faction].tone,owned=profile.collection[id]||0,visual=visualFor(c,{cards:cardArenaEnabled()}),masteryXp=profile.mastery?.[id]||0;
  const inHand=compact&&cooldown!==null&&cooldown!==undefined,waiting=inHand&&cooldown>0,ready=inHand&&!waiting;
  const context=inHand&&battle?battle:unitStatContext(profile),stats=unitStats(context,id);
  const bonus=context.upgrades?.[id]||0,rank=masteryRank({mastery:context.mastery},id);

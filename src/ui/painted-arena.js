@@ -1,4 +1,5 @@
 // Projection graphique de l'illustration approuvée ; aucune règle du moteur.
+import {cardArenaEnabled} from './card-arena.js';
 export const PAINTED_ARENA = Object.freeze({
  width:1672,height:941,version:'celeste-peinte-v1',
  // Limites des quatre pistes relevées sur l'image originale, de haut en bas.
@@ -47,7 +48,7 @@ export function mountPaintedArena(){
  const grid=document.querySelector('.arena-painted');if(!grid)return;
  const canvas=grid.querySelector('.arena-painted-canvas'),frame=grid.querySelector('.arena-painted-frame');
  const fit=()=>{
-  const width=Math.max(960,Math.min(grid.clientWidth,grid.clientHeight*PAINTED_ARENA.width/PAINTED_ARENA.height));
+  const width=Math.max(cardArenaEnabled()?1280:960,Math.min(grid.clientWidth,grid.clientHeight*PAINTED_ARENA.width/PAINTED_ARENA.height));
   const scale=width/PAINTED_ARENA.width,height=PAINTED_ARENA.height*scale;
   canvas.style.width=width+'px';canvas.style.height=height+'px';
   canvas.style.marginTop=Math.max(0,(grid.clientHeight-height)/2)+'px';

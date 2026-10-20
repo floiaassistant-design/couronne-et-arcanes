@@ -1,5 +1,6 @@
 // Effets visuels synchronisés avec les événements du moteur ; aucun changement aux dégâts.
 import {paintedFootPoint} from './painted-arena.js';
+import {cardArenaEnabled} from './card-arena.js';
 export function createCombatFx(getContext){
  let fxTimers=[],fxOverlay=null,fxSequence=0;
 function stopBattleFx(){
@@ -13,6 +14,10 @@ function fxPoint(lane,col){
  if(!row)return null;
  const el=col===0?row.querySelector('.lane-gate:not(.enemy)'):col===Number(row.dataset.crownCol)?row.querySelector('.lane-gate.enemy'):row.querySelectorAll('.battle-cell')[col-1];
  if(!el)return null;
+ if(cardArenaEnabled()){
+  const card=el.querySelector('.board-card');
+  if(card){const r=card.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,el};}
+ }
  const anchor=paintedFootPoint(el);if(anchor)return anchor;
  const r=el.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,el};
 }
@@ -56,9 +61,11 @@ function fxOne(event){
   // Utiliser l'apparence du véritable sprite lorsque la case d'arrivée le contient.
   // Aucun changement de coordonnées ou de calcul ; repli sur le symbole historique.
   const occupant=end.el.querySelector('.unit-on-board');
-  const graphic=occupant?.dataset.owner===event.side?occupant.querySelector('.sprite-figure'):null;
+  const graphic=occupant?.dataset.owner===event.side?occupant.querySelector('.board-card,.sprite-figure'):null;
   const unit=fxNode('vfx-moving'+(graphic?' vfx-creature':''),start.x,start.y,graphic?'':event.icon||'♞');
-  if(graphic&&unit){
+  if(graphic?.classList.contains('board-card')&&unit){
+   const copy=graphic.cloneNode(true);copy.style.width='58px';copy.style.height='84px';copy.style.position='relative';copy.style.left='0';copy.style.top='0';copy.style.transform='none';unit.append(copy);
+  }else if(graphic&&unit){
    const figure=document.createElement('img');
    figure.src=graphic.src;figure.alt='';figure.draggable=false;
    figure.className='vfx-creature-image';
@@ -72,8 +79,8 @@ function fxOne(event){
    const tactic=fxNode('vfx-tactic',start.x,start.y-24,event.charged?'⚡ CHARGE':'↶ RIPOSTE');
    animateFx(tactic,[{opacity:0,transform:'translate(-50%,-50%) translateY(8px)'},{opacity:1,offset:.25},{opacity:0,transform:'translate(-50%,-50%) translateY(-23px)'}],720);
   }
-  const attacker=start.el?.querySelector('.sprite-figure');
-  const defender=end.el?.querySelector('.sprite-figure');
+ const attacker=start.el?.querySelector('.board-card-art,.sprite-figure');
+ const defender=end.el?.querySelector('.board-card-art,.sprite-figure');
   if(attacker){
    const swing=Math.sign(end.x-start.x)||1;
    attacker.animate([{transform:'translateX(0) scale(1)'},{transform:`translateX(${swing*13}px) scale(1.16)`,offset:.45},{transform:'translateX(0) scale(1)'}],{duration:420,easing:'ease-in-out'});
@@ -87,19 +94,19 @@ function fxOne(event){
   if(!ranged){
    const pulse=fxNode('vfx-slash',end.x,end.y,'╱');
    animateFx(pulse,[{opacity:0,transform:'translate(-50%,-50%) rotate(-35deg) scale(.4)'},{opacity:1,offset:.4,transform:'translate(-50%,-50%) rotate(15deg) scale(1.5)'},{opacity:0,transform:'translate(-50%,-50%) rotate(40deg) scale(1.8)'}],350);
-   fxImpact(end,'physical',event.damage||0);return;
+   fxImpact(end,'physical',cardArenaEnabled()?0:event.damage||0);return;
   }
   const bolt=fxNode(`vfx-projectile ${magical?'arcane':'arrow'} ${restorative?'restorative':''}`,start.x,start.y,restorative?'✚':magical?(event.type==='power'?'✵':'✦'):'➶');
   animateFx(bolt,[{opacity:0,transform:'translate(-50%,-50%) scale(.6)'},{opacity:1,offset:.15},{opacity:1,transform:`translate(calc(-50% + ${end.x-start.x}px),calc(-50% + ${end.y-start.y}px)) scale(1.15)`}],500);
   const seq=fxSequence;
-  fxTimers.push(setTimeout(()=>{if(seq===fxSequence)fxImpact(end,restorative?'heal':magical?'magic':'physical',event.damage||0);},490));return;
+  fxTimers.push(setTimeout(()=>{if(seq===fxSequence)fxImpact(end,restorative?'heal':magical?'magic':'physical',cardArenaEnabled()?0:event.damage||0);},490));return;
  }
  if(event.type==='heal'||event.type==='poison'||event.type==='death')fxImpact(end,event.type==='heal'?'heal':event.type==='poison'?'poison':'physical',event.damage||0);
 }
 function playBattleFx(events,onDone){
  stopBattleFx();
  const {animationsEnabled,screen}=getContext();
- if(document.querySelector('.arena-painted-frame[data-render-mode="static"]')||!animationsEnabled||!events?.length||screen!=='battle'||!document.querySelector('.battle-grid')||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){onDone?.();return;}
+ if((document.querySelector('.arena-painted-frame[data-render-mode="static"]')&&!cardArenaEnabled())||!animationsEnabled||!events?.length||screen!=='battle'||!document.querySelector('.battle-grid')||typeof Element.prototype.animate!=='function'||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){onDone?.();return;}
  const seq=fxSequence;
  fxOverlay=document.createElement('div');fxOverlay.className='battle-vfx-overlay';fxOverlay.setAttribute('aria-hidden','true');document.body.append(fxOverlay);
  const selected=events.slice(0,30);

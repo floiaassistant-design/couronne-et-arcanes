@@ -47,3 +47,7 @@ src/
 - `src/ui/card-inspection.js` gère le contenu et l'état de lecture éphémère de la main. `app.js` conserve les actions de jeu et appelle le lecteur ; aucune dépendance du moteur vers l'interface.
 - La main utilise l'instantané de la bataille (y compris une sauvegarde historique) ; la collection utilise le profil actuel. Aucun champ ajouté au stockage. Le constructeur garde l'ordre des propriétés pour préserver la parité sérialisée.
 - 25 modules empaquetés automatiquement, 13 portraits inchangés. `battle.js` reste à 371 lignes et `app.js` à 221 ; les deux nouveaux modules font moins de 40 lignes chacun.
+
+## Vue cartes optionnelle — PR nº 20, 20 octobre
+
+`ui/card-arena.js` rend les vraies unités comme cartes sur les cases existantes. Il dépend des données et du mapping graphique, sans règle ni sauvegarde de bataille. Un bouton de présentation réversible conserve uniquement une préférence graphique ; la même application et le même moteur sont empaquetés pour JOUER et ESSAI_CARTES. 26 modules, 18 portraits. Aucun changement d'API du moteur ou de schéma de profil/combat. Voir `ESSAI_CARTES_2026_10_20.md`.

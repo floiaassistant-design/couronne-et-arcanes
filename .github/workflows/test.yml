@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: '22'
       - run: npm run build:cards
+      - run: node scripts/build_standalone.mjs --cards --test
       - run: git diff --exit-code -- ESSAI_CARTES.html
       - name: Installer Chromium pour l’essai
         run: |

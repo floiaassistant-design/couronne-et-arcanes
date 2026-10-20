@@ -1,3 +1,9 @@
+## Proposition — cartes sur le plateau existant (20/10/2026)
+- Même jeu, décor, grille, lignes, main, délais, déploiement, avancée, IA, couronnes et progression.
+- Cartes illustrées à l'emplacement des unités ; cadres bleus/rouges, portraits non retournés et taille ajustée au plateau. Vue réversible sur le même combat.
+- Cinq portraits Aube approuvés à clés dédiées opt-in, reçus et empreintes conservés. JOUER.html et ESSAI_CARTES.html issus du même app.js.
+- Le premier essai indépendant à trois duels est retiré de cette PR. Aucune fusion autorisée.
+
 ## Proposition — Statistiques effectives et lecture des capacités (14/10/2026)
 - Branche `fix/stats-capacites-combat` depuis le main `f896a0c3`, après la fusion autorisée de la PR nº 15.
 - Calcul d'invocation partagé entre moteur, main et collection ; bonus d'équipement, forge, réputation et maîtrise visibles. Exemple reproduit : Milicien 2/5 affiché auparavant, désormais 3/7 avec épée, forge 1 et réputation Aube 15, comme l'unité déployée.
@@ -254,9 +260,3 @@
 - Les illustrations et mouvements CSS restent provisoires ; il faut encore produire des sprites par créature et des animations image par image.
 - Tour de 20 étages : génération de decks à partir de compositions prédéfinies, non 20 environnements entièrement uniques.
 - Simulation d'équilibrage à grande échelle et tests manuels sur appareils réels encore à faire.
-# 20 octobre 2026 — essai de combat par cartes (proposition)
-
-- `ESSAI_CARTES.html` autonome : six portraits approuvés de l'atelier, trois formations préplacées, coups, carreaux, soins, pause et tours manuels.
-- Moteur officiel réutilisé, PV après armure et riposte, préférences d'effets et mouvement réduit, sauvegarde propre à l'essai.
-- Générateur partagé étendu par `--cards`, production officielle et PR nº 17–19 préservées. Aucun changement des règles ou fusion sur main.
-

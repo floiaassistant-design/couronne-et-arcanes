@@ -1,32 +1,33 @@
-# Combat de cartes — essai indépendant du 20 octobre 2026
+# Vue cartes sur le plateau — PR nº 20 corrigée
 
-Demande : essayer de grandes cartes illustrées et des effets selon leurs attaques. Le dernier main vérifié est `0310fa677947e34a02bd877f5adc6104267f87ba` ; les notes antérieures mentionnant encore la PR nº 16 en attente sont historiques.
+**Périmètre final demandé :** réutiliser le jeu existant avec son plateau et remplacer la présentation des personnages par des cartes à la bonne taille. Le premier essai à trois duels indépendants a été refusé et retiré de cette branche. Main de référence vérifié : `0310fa677947e34a02bd877f5adc6104267f87ba`.
 
-## Périmètre
+## Jeu et plateau conservés
 
-Ouvrir `ESSAI_CARTES.html` sans installation ni réseau, ou servir `experiments/card-duel/index.html` depuis la racine du dépôt. Six cartes préplacées sur trois lignes, trois formations d'essai, lecture automatique/pause, tour suivant, inspection et reprise automatique. Les cartes représentent les unités ; aucune silhouette ni sprite de personnage. Les cases courantes sont indiquées sur chaque carte ; cette vue transposée ne permet pas de poser ou déplacer manuellement des cartes. Ce n'est pas le remplacement de l'arène officielle ou une nouvelle campagne.
+`ESSAI_CARTES.html` utilise exactement le même `src/app.js`, le même moteur, les mêmes écrans, missions, decks et modes que `JOUER.html`. Pas de cartes préplacées, de formation d'essai, de scénario alternatif ni de nouvelle règle. La main, l'attente réelle, la limite de deux cartes, la pose par ligne, les mouvements, les portées, la Concorde, les sorts, l'IA, les couronnes et la progression restent ceux du jeu.
 
-Le moteur actuel résout réellement mouvements, attaques simultanées, ripostes, armure, soins et victoire à la couronne. Une lecture séquentielle rend les événements compréhensibles ; son ordre visuel ne change pas l'ordre des calculs. `studySteps` construit un état de présentation à partir d'une copie ; il est limité aux six unités sans sorts de cette fixture. Les PV affichés sont comparés au résultat du moteur sur les trois formations jusqu'à leur terme. Aucune modification des règles, de l'IA, des récompenses ou des cartes officielles.
+L'arène peinte et ses coordonnées restent identiques : 10 cases, 2/3/4 lignes selon la rencontre ; reprise 3×5 inchangée. `boardCard` remplace le contenu graphique de la véritable unité sur sa case. Les portraits ne sont pas retournés pour le camp adverse. Les cartes de 56×82 px en coordonnées de l'image gardent une marge entre les ancrages des lignes ; le zoom minimal de revue passe de 960 à 1280 px pour rendre les cartes plus visibles. Le plateau garde ses défilements. Les statistiques affichent les vraies valeurs, bonus de formation/ralliement et PV courants inclus.
 
-## Portraits et coordination
+Le bouton « Vue : cartes/personnages » change uniquement l'affichage du même combat et conserve une préférence graphique séparée. Le jeu normal garde son rendu initial par défaut ; l'aperçu démarre directement en vue cartes. Les cinq portraits approuvés sont également utilisés dans la main/collection lorsque la vue cartes est active.
 
-Les cinq portraits proviennent de la PR art nº 10, commit `a6dd52096ada21d5eaf07234c632ada05cf710df` : Milicien v2, Porte-étendard v2, Porte-égide v1, Sœur de l'Aurore v1, Paladin solaire v1. Fichiers inchangés, droits originaux et validations humaines recopiées dans `experiments/card-duel/portraits.json` et `approvals/`. Le portrait Arbalétrière provient du main jeu, SHA-256 `31186adc9ea55c4d34777f70f8b5fe2969a1ea0386a74d1cf44183e931c391a3`.
+## Portraits
 
-Le mapping est propre à cet essai dans `src/experiments/card-study-view.js`. Aucune nouvelle clé n'est ajoutée au mapping de production `src/visuals.js` ; aucun archétype partagé n'est remplacé. L'intégration des cinq portraits au jeu complet reste dans la PR nº 17. Les PR nº 18/19 d'animations et d'interface et la nº 11 d'ancienne arène restent indépendantes et non fusionnées. Le dépôt art n'est pas modifié.
+Dépôt art `floiaassistant-design/couronne-et-arcanes-art`, PR nº 10, commit `a6dd52096ada21d5eaf07234c632ada05cf710df` : Milicien v2, Porte-étendard v2, Porte-égide v1, Sœur de l'Aurore v1, Paladin solaire v1. Arbalétrière déjà sur main : SHA-256 `31186adc9ea55c4d34777f70f8b5fe2969a1ea0386a74d1cf44183e931c391a3`. Images inchangées, droits originaux, dimensions, versions, reçus et empreintes dans `CARD_ARENA_ASSETS.json` et `art-approvals/`.
+
+Les clés dédiées sont explicitement déclarées dans `src/visuals.js` via `CARD_ARENA_ART`, activées par l'option `visualFor(card,{cards:true})`. Le mapping normal et les archétypes partagés ne sont pas remplacés : `skill_ranger_pierce` conserve `archer.webp`. Cette branche chevauche la PR nº 17 sur les cinq assets : ne pas importer deux fois, réconcilier le mapping lors d'une intégration future. Les PR nº 18/19 d'animations restent distinctes, non fusionnées ; aucune modification du dépôt art.
 
 ## Architecture et export
 
-- `card-study-model.js` : fixture explicite, appels au moteur, lecture des événements et validation de reprise.
-- `card-study-view.js` : cartes de l'essai et correspondance dédiée des portraits.
-- `card-study-fx.js` : effets de frappe, carreau, impact, soin et défaite ; aucune animation raster à produire ou contrat de sprites à modifier.
-- `card-study.js` : contrôleur, annulation, préférences de mouvement réduit et sauvegarde dédiée.
-- `experiments/card-duel/` : HTML/CSS sources, reçus et portraits de l'atelier.
-- Le générateur existant accepte `--cards` (`npm run build:cards`) et embarque le même graphe de modules. L'export normal `npm run build` reste reproductible.
+Un module ajouté : `src/ui/card-arena.js`, vue HTML et choix de présentation uniquement. `battle-view.js` réutilise les cellules et le plateau actuels ; `views.js` applique le mapping opt-in aux cartes consultées. `painted-arena.js` garde ses projections et adapte seulement le zoom de cette vue. `combat-fx.js` réutilise les événements existants, ancre les effets au centre des cartes et copie une carte pour son déplacement. Les dégâts bruts des événements ne sont pas présentés comme des PV perdus dans cette vue ; les cartes affichent les PV autoritaires calculés par le moteur.
 
-Clé isolée `couronnes_arcanes_essai_cartes_v1`. Les clés officielles ne sont ni lues ni écrites. Le résultat autoritaire est sauvegardé avant sa lecture animée : recharger pendant une attaque reprend le tour résolu. Aucun VFX ou minuteur sérialisé. Pause, désactivation, mouvement réduit et changement de taille interrompent les effets et affichent l'état final.
+Le générateur existant embarque 26 modules et 18 portraits. `npm run build` régénère JOUER.html ; `npm run build:cards` régénère ESSAI_CARTES.html à partir du même HTML et du même app.js, avec la vue cartes activée. Sur le serveur de développement : `index.html?cartes=1`.
+
+Aucune modification dans les modules du moteur, des données ou de l'IA. Clés et schéma des profils/combats conservés. Les VFX restent transitoires ; animations désactivées, mouvement réduit ou API d'animation absente donnent des cartes statiques.
 
 ## Vérification
 
-Localement : 264 tests Node, 60 scénarios de parité, exports jeu/essai construits. Les six tests ajoutés contrôlent les trois formations jusqu'à victoire/défaite, les PV après armure et soins, la sauvegarde isolée et les cinq reçus/empreintes. Le parcours Chromium ajouté couvre bureau 1366×900, portrait 390×844, 320×740 et paysage 844×390 : décodage des portraits, tir/frappe/soin, PV, reprise, interruption, mouvement réduit et export production sans réseau.
+Local : 262 tests Node, 60 parités historiques, builds normal/essai/test. Tests nouveaux : mapping opt-in et archétypes partagés, rendu des vrais PV sans mutation, export du vrai jeu sans fixture et vérification des cinq approbations/empreintes.
 
-Les résultats navigateur seront consignés après exécution de la CI. Aucun navigateur Chromium local ni téléphone physique n'est disponible dans cette session. Les durées et les effets sont des choix de revue esthétique, pas une validation du plaisir de jeu ou d'un nouvel équilibrage. Une branche/PR dédiée ; aucune fusion autorisée.
+Le nouveau parcours Chromium contrôle sur bureau/portrait/paysage : vraie mission initiale, main et délais, sélection et pose sur la grille, avancée du même identifiant d'unité, couronnes, sauvegarde/reprise, défilement, changement de vue sans mutation du combat, animations désactivées, mouvement réduit et production hors réseau. Un parcours de diagnostic termine la vraie mission 01 avec les actions autorisées et vérifie une récompense unique. Captures dans l'artefact CI `essai-cartes` ; vérifier le résultat de la nouvelle tête. Les preuves de l'ancien prototype ne valident pas cette correction. Aucun téléphone physique ou navigateur Chromium local revendiqué.
+
+Une PR intégrable dans le dépôt du jeu ; accord explicite spécifique requis avant fusion.
