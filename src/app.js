@@ -16,7 +16,7 @@ let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}ca
 const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='all',collectionOwned=false;
 let deferredBattleModal='',battleStorageWarning=false;
-const {inspectCard,closeCardInspection,dismissCardInspection}=createCardInspection(()=>({battle,screen}),esc);
+const {inspectCard,inspectUnit,closeCardInspection,bindCardInspection}=createCardInspection(()=>({battle,screen}),esc);
 const {stopBattleFx,playBattleFx}=createCombatFx(()=>({animationsEnabled,screen}));
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
@@ -162,7 +162,8 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
  }
  case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}const result=learnClassSkill(profile,id);if(result.ok){save();render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}else toast(result.reason);break;}
  case 'deck-add':case 'deck-remove':if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();render();}else toast('Impossible de modifier ce deck davantage.');break;
- case 'close-inspection':closeCardInspection();break;
+ case 'inspect-unit':inspectUnit(id,true);break;
+ case 'close-inspection':closeCardInspection(true);break;
  case 'select-card':{
   if(!battle||battle.status!=='active')break;
   const i=Number(index),entry=battle.heroes.p.hand[i];
@@ -200,25 +201,12 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
 }
 document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();act(el.dataset.action,el.dataset);});
 document.addEventListener('keydown',event=>{
- if(event.key==='Escape'){closeCardInspection();return;}
+ if(event.key==='Escape'){closeCardInspection(true);return;}
  if((event.key==='Enter'||event.key===' ')&&!event.target.closest('button')){
   const el=event.target.closest('.unit-card.compact,[data-action="deploy"]');
   if(el){event.preventDefault();act(el.dataset.action,el.dataset);}
  }
 });
-document.addEventListener('mouseover',event=>{
- const el=event.target.closest('.hand-card');if(el)inspectCard(el.dataset.index);
-});
-document.addEventListener('mouseout',event=>{
- const el=event.target.closest('.hand-card');
- if(el&&!el.contains(event.relatedTarget))dismissCardInspection();
-});
-document.addEventListener('focusin',event=>{
- const el=event.target.closest('.hand-card');if(el)inspectCard(el.dataset.index);
-});
-document.addEventListener('focusout',event=>{
- const el=event.target.closest('.hand-card');
- if(el&&!el.contains(event.relatedTarget))dismissCardInspection();
-});
+bindCardInspection();
 document.addEventListener('change',async event=>{if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='faction'){collectionFilter=event.target.value;render();}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
 render();if(battle&&battle.status!=='active')settle();else welcome();

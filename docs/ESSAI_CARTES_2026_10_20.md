@@ -18,6 +18,16 @@ Toutes les cartes de la main utilisent le cadre illustré existant : illustratio
 
 `mountPaintedArena` ajuste une seule transformation graphique ; les limites 344/716 proviennent des pistes peintes. Il ne modifie pas la géométrie logique du moteur. Les styles d'inspection historiques sont neutralisés uniquement dans cette présentation afin de garder des positions fixes. Contrôles en bureau 1366×900, portrait 390×844 et paysage 844×390 ; quatre lignes et lecture sans déplacement de la main font l'objet d'assertions navigateur.
 
+## Aperçu commun au survol — plateau et main
+
+`ui/card-inspection.js` porte désormais la fiche commune : portrait approuvé, titre, Ordre, rareté, description et traits. La main affiche les statistiques d'invocation et l'attente restante ; le plateau retrouve l'unité par son uid et affiche ses PV blessés, son attaque incluant Concorde/Ralliement, armure, barrière, poison, immobilisation et silence. Aucun accès à la main privée adverse ni mutation du combat. Le calcul de formation est réutilisé depuis le moteur.
+
+Survol et focus ouvrent l'aperçu ; la souris peut entrer dans la fiche pour lire ou faire défiler. Clic/toucher sur une carte du plateau épingle la lecture sans déclencher le déploiement de sa case. Une carte sélectionnée de la main reste sélectionnée pendant la consultation du plateau. La croix et Échap ferment la fiche ; une carte en attente reste consultable et injouable. La lecture se ferme au rendu, à la navigation et au déplacement du plateau/de la main, sans être sauvegardée.
+
+`assets/card-preview.css` définit un seul cadre or patiné/bleu nuit, partagé par main et plateau. Le placement est borné au viewport ; en paysage court la fiche de main se place latéralement pour garder sa source cliquable. La fiche est une couche sœur de la scène et du HUD pour ne pas être masquée par leur empilement. Aucune modification des dimensions de la scène ou du dock. Le mode personnages conserve la fiche texte historique. Les clones des VFX sont inertes, hors navigation clavier.
+
+Tests dédiés : `card_preview.test.mjs` (données de l'instance, états, adverse, absence de mutation, échappement et placement) et `browser_card_preview.py` (survol persistant, clavier, toucher, cadre partagé, bords, sélection conservée et production hors ligne). Captures `/tmp/ca-card-preview-*.png` dans l'artefact CI `essai-cartes`. Résultat de la tête à consulter dans la PR.
+
 ## Portraits
 
 Dépôt art `floiaassistant-design/couronne-et-arcanes-art`, PR nº 10, commit `a6dd52096ada21d5eaf07234c632ada05cf710df` : Milicien v2, Porte-étendard v2, Porte-égide v1, Sœur de l'Aurore v1, Paladin solaire v1. Arbalétrière déjà sur main : SHA-256 `31186adc9ea55c4d34777f70f8b5fe2969a1ea0386a74d1cf44183e931c391a3`. Images inchangées, droits originaux, dimensions, versions, reçus et empreintes dans `CARD_ARENA_ASSETS.json` et `art-approvals/`.

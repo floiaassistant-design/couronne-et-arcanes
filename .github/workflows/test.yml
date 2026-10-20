@@ -24,6 +24,8 @@ jobs:
           python3 -m playwright install --with-deps chromium
       - name: Essai cartes bureau, mobile et hors ligne
         run: python3 tests/browser_card_study.py
+      - name: Aperçus partagés, survol, clavier et toucher
+        run: python3 tests/browser_card_preview.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -31,6 +33,7 @@ jobs:
           path: |
             ESSAI_CARTES.html
             /tmp/ca-card-study-*.png
+            /tmp/ca-card-preview-*.png
           retention-days: 14
   validation:
     runs-on: ubuntu-latest

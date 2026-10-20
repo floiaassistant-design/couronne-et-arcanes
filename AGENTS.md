@@ -1,5 +1,6 @@
 # AGENTS.md — Couronnes & Arcanes
 
+**Aperçu partagé, PR nº 20 :** `ui/card-inspection.js` et `assets/card-preview.css` affichent le même cadre illustré pour la main et le plateau. Survol/focus pour lire, clic/toucher pour épingler ; statistiques actuelles par uid, sans action de jeu ni sauvegarde de lecture. Tests `card_preview` dédiés.
 **Affinage plein écran, PR nº 20 :** vue cartes avec main sur la terrasse du plateau, HUD supérieur fixe, cadre commun de la main et journal repliable. Adaptation graphique aux quatre pistes sans changement des règles. Voir `docs/ESSAI_CARTES_2026_10_20.md`.
 ## Version stable et coordination multi-sessions — PRIORITAIRE
 

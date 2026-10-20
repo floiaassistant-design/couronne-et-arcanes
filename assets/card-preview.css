@@ -1,0 +1,47 @@
+/* Cadre commun des aperçus de la main et des unités : or patiné, bleu nuit,
+   illustration approuvée. Aucun changement de taille du plateau ou de la main. */
+.card-combat-mode .battle-cell .board-card{pointer-events:auto;cursor:help;padding:0;text-align:left;appearance:none}
+.card-combat-mode .battle-cell .board-card>*{pointer-events:none}
+.card-combat-mode .battle-cell .board-card:focus-visible{outline:3px solid #ffe4a2;outline-offset:3px}
+.card-combat-mode .battle-cell .board-card:hover{box-shadow:0 0 0 2px #ffe4a299,0 4px 12px #07111bc9}
+body.card-combat-mode #hand-card-inspection.illustrated-inspection:not([hidden]){
+ position:fixed;inset:auto;z-index:30;display:flex;flex-direction:column;
+ width:min(312px,calc(100vw - 24px));height:auto;min-height:0;
+ max-width:none;max-height:calc(100dvh - 24px);margin:0;padding:0;
+ overflow:hidden;border:1px solid #cfb47b;border-radius:12px;
+ background:linear-gradient(135deg,#234154,#102737 44%,#0a1a2b);
+ box-shadow:0 12px 38px #020711b8,0 0 0 3px #07121dcc,inset 0 0 0 3px #cfb47b19;
+ color:#fff0d2;font:12px/1.4 system-ui,sans-serif;
+}
+.illustrated-inspection::before{content:'';position:absolute;inset:3px;pointer-events:none;border:1px solid #e6c78b30;border-radius:9px;z-index:1}
+.illustrated-inspection .card-preview{display:flex;flex-direction:column;min-height:0;max-height:calc(100dvh - 26px);width:100%;text-align:left}
+.illustrated-inspection .inspection-heading{min-height:39px;flex:none;padding:4px 9px 3px 13px;gap:8px}
+.illustrated-inspection .inspection-context{color:#dfc28c;font-size:9px;letter-spacing:.14em;font-weight:700}
+.illustrated-inspection [data-side="e"] .inspection-context{color:#f1b2a5}
+.illustrated-inspection .inspection-heading button{display:grid;place-items:center;width:32px;min-width:32px;height:30px;min-height:30px;padding:0;margin:0;border:1px solid #b79f6b66;border-radius:6px;background:#0b2032;color:#f2d8a5;font:22px/1 Georgia;cursor:pointer}
+.illustrated-inspection .inspection-heading button:hover{background:#294658}
+.illustrated-inspection .inspection-heading button:focus-visible{outline:2px solid #ffe4a2;outline-offset:2px}
+.illustrated-inspection .inspection-feature{display:grid;grid-template-columns:104px minmax(0,1fr);gap:12px;align-items:start;padding:0 13px 12px;flex:none}
+.illustrated-inspection .inspection-art{display:block;width:104px;height:156px;object-fit:cover;object-position:50% 16%;border:1px solid #d8bc82;border-radius:6px;box-shadow:0 4px 12px #0008}
+.illustrated-inspection .inspection-identity{min-width:0;padding-top:3px;display:flex;flex-direction:column;align-items:flex-start;gap:7px}
+.illustrated-inspection .inspection-identity h2{font:19px/1.08 Georgia,serif;font-weight:normal;color:#fff0d2;margin:0;overflow-wrap:anywhere;text-shadow:0 2px 4px #0008}
+.illustrated-inspection .inspection-order{color:#d4c9a9;font-size:11px;line-height:1.3}
+.illustrated-inspection .inspection-rarity{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:#e0c18d}
+.illustrated-inspection .inspection-readiness{border-left:2px solid var(--preview-tone,#d6b67a);padding-left:6px;color:#cadcde;font-size:11px}
+.illustrated-inspection .inspection-stats{margin:0;padding:5px 7px;border:1px solid #c5a66b55;border-radius:5px;background:#081b2b9c;font-size:10px;line-height:1.35;color:#bdd5dc}
+.illustrated-inspection .inspection-stats b{display:block;white-space:normal;color:#fff0cc;font-size:13px}
+.illustrated-inspection .inspection-body{flex:1 1 auto;min-height:0;padding:10px 13px 14px;border-top:1px solid #d0ae6a55;background:#06172360;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#b39a6d #102737}
+.illustrated-inspection .inspection-description{font-size:14px;line-height:1.45;margin:0 0 9px;color:#f5f0e4}
+.illustrated-inspection .inspection-summary{font-size:10px;line-height:1.4;color:#b9cbd0}
+.illustrated-inspection .inspection-traits{font-size:11px;line-height:1.8;margin-top:8px;color:#edd7a7}
+.illustrated-inspection .inspection-traits span{border:1px solid #b99f6555;border-radius:4px;padding:2px 5px;background:#bb995313}
+.illustrated-inspection .inspection-statuses{font-size:11px;line-height:1.5;margin-top:8px;color:#ffd39d}
+.illustrated-inspection .inspection-bonuses{font-size:11px;line-height:1.4;margin-top:8px;color:#b8decf}
+@media(max-height:540px){
+ .illustrated-inspection .inspection-feature{grid-template-columns:80px minmax(0,1fr);gap:10px;padding-bottom:9px}
+ .illustrated-inspection .inspection-art{width:80px;height:120px}
+ .illustrated-inspection .inspection-identity{gap:4px;padding-top:0}
+ .illustrated-inspection .inspection-identity h2{font-size:17px}
+ .illustrated-inspection .inspection-heading{min-height:34px}
+}
+@media(prefers-reduced-motion:reduce){.illustrated-inspection{animation:none!important;transition:none!important}}

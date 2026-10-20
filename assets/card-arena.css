@@ -97,7 +97,6 @@ body.card-combat-mode [data-card-layout="true"] .combat-intel-panel{position:fix
 body.card-combat-mode [data-card-layout="true"] .combat-intel-panel .power-hint{font-size:12px}
 body.card-combat-mode [data-card-layout="true"] .combat-intel-panel .section-caption{font-size:10px;margin-block:10px 5px}
 body.card-combat-mode [data-card-layout="true"] .combat-intel-panel .log-list{max-height:160px}
-body.card-combat-mode [data-card-layout="true"] .hand-header .hand-card-inspection:not([hidden]){position:fixed;top:auto;bottom:calc(var(--tray-height) + 24px);left:var(--scene-edge);right:auto;width:min(430px,calc(100vw - 36px));height:190px;max-height:45dvh;z-index:20;padding:10px;background:#102637f5;border:1px solid #c1a679;border-radius:8px;box-shadow:0 8px 30px #0008}
 body.card-combat-mode [data-card-layout="true"] .teleport-preview,
 body.card-combat-mode [data-card-layout="true"] .dungeon-battle-banner{bottom:calc(var(--tray-height) + 46px)}
 @media(max-width:700px){

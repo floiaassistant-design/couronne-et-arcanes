@@ -64,7 +64,7 @@ function fxOne(event){
   const graphic=occupant?.dataset.owner===event.side?occupant.querySelector('.board-card,.sprite-figure'):null;
   const unit=fxNode('vfx-moving'+(graphic?' vfx-creature':''),start.x,start.y,graphic?'':event.icon||'♞');
   if(graphic?.classList.contains('board-card')&&unit){
-   const copy=graphic.cloneNode(true);copy.style.width='58px';copy.style.height='84px';copy.style.position='relative';copy.style.left='0';copy.style.top='0';copy.style.transform='none';unit.append(copy);
+   const copy=graphic.cloneNode(true);copy.inert=true;copy.tabIndex=-1;copy.removeAttribute('data-action');copy.setAttribute('aria-hidden','true');copy.style.width='58px';copy.style.height='84px';copy.style.position='relative';copy.style.left='0';copy.style.top='0';copy.style.transform='none';unit.append(copy);
   }else if(graphic&&unit){
    const figure=document.createElement('img');
    figure.src=graphic.src;figure.alt='';figure.draggable=false;

@@ -1,5 +1,11 @@
 ## Proposition — cartes sur le plateau existant (20/10/2026)
 
+## 20/10/2026 — PR nº 20 : aperçu illustré commun
+
+- Même cadre au survol des unités du plateau et des cartes en main : portrait, capacités, statistiques et états réels.
+- Consultation au clavier et au toucher, fiche lisible sous la souris, épinglage et fermeture, sans déploiement involontaire.
+- Placement borné à l'écran et sans déplacement de la scène ; VFX inertes et aucune donnée de lecture sauvegardée.
+
 ## 20/10/2026 — PR nº 20 : main intégrée au plateau plein écran
 
 - Vue cartes du même jeu : scène couvrant le viewport, main sur la terrasse basse, HUD en haut, actions à droite.
