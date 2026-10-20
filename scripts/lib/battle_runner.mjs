@@ -5,14 +5,14 @@ import {createBattle,playPlayerCard,endPlayerTurn,usePower} from '../../src/engi
 import {classSkillTargetError} from '../../src/engine/class-skills.js';
 import {controlTargetError,silenceTarget,silenceValue,teleportPlan,teleportGain,trapPlan,activeAbility} from '../../src/engine/battle-control.js';
 
-import {laneCount} from '../../src/engine/board.js';
+import {laneCount,freeDeploymentColumn} from '../../src/engine/board.js';
 export function chooseSimulatedMove(b){
  const moves=[];
  for(let i=0;i<b.heroes.p.hand.length;i++){
   const entry=b.heroes.p.hand[i],c=CARDS[entry.id];
   if(!c||entry.wait>0)continue;
   for(let lane=0;lane<laneCount(b);lane++){
-   const row=b.board[lane];if(c.type==='unité'&&row[1])continue;
+   const row=b.board[lane],col=c.type==='unité'?freeDeploymentColumn(b,'p',lane):1;if(col===undefined)continue;
    if(classSkillTargetError(b,'p',c,lane)||controlTargetError(b,'p',c,lane))continue;
    const friends=row.filter(u=>u&&u.side==='p'),foes=row.filter(u=>u&&u.side==='e');
    const threat=foes.reduce((sum,u)=>sum+u.atk+(u.hp>=8?3:0),0);
@@ -35,7 +35,7 @@ export function chooseSimulatedMove(b){
     ['spell_guard_wall','spell_cleric_bless'].includes(c.ability)?friends.length*2+threat*.2:foes.length*4+threat*.25;
    if((c.heroClass||['spell_silence','spell_teleport','spell_trap'].includes(c.ability))&&score<=0)continue;
    if(lane===1)score+=.15;
-   moves.push({i,lane,score});
+   moves.push({i,lane,col,score});
   }
  }
  moves.sort((a,b)=>b.score-a.score||a.i-b.i||a.lane-b.lane);
@@ -47,7 +47,7 @@ export function simulateBattle(profile,mission,seed,{turnLimit=40,observe,legacy
   if(b.powerCooldown===0){const result=usePower(b);if(result.ok)powers++;}
   for(let i=0;i<2&&b.status==='active';i++){
    const best=chooseSimulatedMove(b);if(!best)break;
-   const result=playPlayerCard(b,best.i,best.lane);if(!result.ok)throw Error(result.reason);
+   const result=playPlayerCard(b,best.i,best.lane,best.col);if(!result.ok)throw Error(result.reason);
   }
   if(b.status==='active')endPlayerTurn(b);
   observe?.(b);

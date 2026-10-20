@@ -1,6 +1,7 @@
 # AGENTS.md — Couronnes & Arcanes
 
-**Aperçu partagé, PR nº 20 :** `ui/card-inspection.js` et `assets/card-preview.css` affichent le même cadre illustré pour la main et le plateau. Survol/focus pour lire, clic/toucher pour épingler ; statistiques actuelles par uid, sans action de jeu ni sauvegarde de lecture. Tests `card_preview` dédiés.
+**Pose sur trois cases, PR nº 20 :** sur le plateau à dix cases, unités déployables en 1/2/3, zone adverse miroir 10/9/8. `playPlayerCard(b,index,lane,col)` accepte une colonne optionnelle (défaut 1). `engine/board.js` porte la zone ; IA et robot d’audit la partagent. Anciens combats 3×5 : entrée unique conservée. Clic de sélection sans fiche persistante. Règle nouvelle demandée par le joueur, sans changement des délais ni du quota 2/tour.
+**Aperçu partagé, PR nº 20 :** `ui/card-inspection.js` et `assets/card-preview.css` affichent le même cadre illustré pour la main et le plateau. Survol/focus pour lire ; clic/toucher ferme la fiche sans épinglage ; statistiques actuelles par uid, sans action de jeu ni sauvegarde de lecture. Tests `card_preview` dédiés.
 **Affinage plein écran, PR nº 20 :** vue cartes avec main sur la terrasse du plateau, HUD supérieur fixe, cadre commun de la main et journal repliable. Adaptation graphique aux quatre pistes sans changement des règles. Voir `docs/ESSAI_CARTES_2026_10_20.md`.
 ## Version stable et coordination multi-sessions — PRIORITAIRE
 

@@ -12,7 +12,7 @@ export const AI_STYLES = Object.freeze({
 });
 export const aiStyle = b => AI_STYLES[b?.aiStyle] ? b.aiStyle : 'equilibre';
 export const aiEnraged = b => Boolean(b?.aiBoss && b?.heroes?.e && b.heroes.e.hp>0 && b.heroes.e.hp*2<=b.heroes.e.maxhp);
-import {laneCount,lastCell,crownColumn,entryColumn} from './engine/board.js';
+import {laneCount,lastCell,crownColumn,entryColumn,freeDeploymentColumn} from './engine/board.js';
 const finite=(n)=>Number.isFinite(n)?n:0;
 const alive=(u)=>!!u && u.hp>0;
 
@@ -32,7 +32,7 @@ export function inspectEnemyLane(b,lane){
  },0);
  const frontline=threats.sort((a,z)=>z.col-a.col)[0]||null;
  const guard=friends.some(({u})=>GUARD_IDS.has(u.id));
- return {lane,threats,friends,frontline,urgency,guard,entryFree:!alive(row[entryColumn(b,'e')])};
+ return {lane,threats,friends,frontline,urgency,guard,entryFree:!alive(row[entryColumn(b,'e')]),deploymentCol:freeDeploymentColumn(b,'e',lane)};
 }
 
 // Estimation limitée au plateau public : une unité interposée ou un gardien
@@ -52,7 +52,7 @@ function scoreOption(b,card,laneInfo,context){
  const {urgency,threats,friends,frontline,guard}=laneInfo;
  const hero=b.heroes.e,enemyHero=b.heroes.p;
  if(card.type==='unité'){
-  if(!laneInfo.entryFree)return null;
+  if(laneInfo.deploymentCol===undefined)return null;
   const synergy=friends.filter(({u})=>CARDS[u.id]?.faction===card.faction).length;
   let score=4.4+card.attack*.65+card.hp*.17;
   score+=Math.min(22,urgency)*.75;
@@ -121,7 +121,7 @@ function scoreOption(b,card,laneInfo,context){
    score=5+Math.min(2,target.wait)*2.4;
    if(canFollow&&pending){
     // Le sort prend de la valeur s'il permet de jouer une seconde carte utile.
-    const bestLane=Math.max(0,...context.rows.map(row=>pending.type==='unité'&&row.entryFree
+    const bestLane=Math.max(0,...context.rows.map(row=>pending.type==='unité'&&row.deploymentCol!==undefined
      ?4.4+pending.attack*.65+pending.hp*.17+Math.min(22,row.urgency)*.75:0));
     score+=3+Math.min(17,bestLane)*.8;
     if(pending.type==='sort')score+=4;
@@ -200,7 +200,7 @@ export function rankEnemyMoves(b){
   const card=CARDS[entry.id];if(!card||entry.wait>0) return;
   rows.forEach(row=>{
    const rank=scoreOption(b,card,row,context);
-   if(rank&&rank.score+personalityBonus(b,card,row)>0)results.push({index,lane:row.lane,id:entry.id,...rank,score:rank.score+personalityBonus(b,card,row)});
+   if(rank&&rank.score+personalityBonus(b,card,row)>0)results.push({index,lane:row.lane,...(lastCell(b)===10&&card.type==='unité'?{col:row.deploymentCol}:{}),id:entry.id,...rank,score:rank.score+personalityBonus(b,card,row)});
   });
  });
  return results.sort((a,z)=>z.score-a.score||a.index-z.index||a.lane-z.lane);

@@ -4,7 +4,7 @@
 
 ## Jeu et plateau conservés
 
-`ESSAI_CARTES.html` utilise exactement le même `src/app.js`, le même moteur, les mêmes écrans, missions, decks et modes que `JOUER.html`. Pas de cartes préplacées, de formation d'essai, de scénario alternatif ni de nouvelle règle. La main, l'attente réelle, la limite de deux cartes, la pose par ligne, les mouvements, les portées, la Concorde, les sorts, l'IA, les couronnes et la progression restent ceux du jeu.
+`ESSAI_CARTES.html` utilise exactement le même `src/app.js`, le même moteur, les mêmes écrans, missions, decks et modes que `JOUER.html`. Pas de cartes préplacées, de formation d'essai, de scénario alternatif. La seule nouvelle règle demandée ici est la pose au choix sur trois cases de départ du plateau à dix cases. La main, l'attente réelle, la limite de deux cartes, la pose par ligne, les mouvements, les portées, la Concorde, les sorts, l'IA, les couronnes et la progression restent ceux du jeu.
 
 L'arène peinte et ses coordonnées restent identiques : 10 cases, 2/3/4 lignes selon la rencontre ; reprise 3×5 inchangée. `boardCard` remplace le contenu graphique de la véritable unité sur sa case. Les portraits ne sont pas retournés pour le camp adverse. Les cartes de 56×82 px en coordonnées de l'image gardent une marge entre les ancrages des lignes ; la scène de combat couvre désormais le viewport, avec HUD supérieur, main intégrée sur la terrasse inférieure et actions à droite. Une seule échelle conserve la calibration du décor et des cases et réserve une zone aux quatre pistes entre le HUD et la main. Le défilement horizontal reste disponible en portrait. La lecture d'une fiche ne redimensionne ni la main ni la scène. Les statistiques affichent les vraies valeurs, bonus de formation/ralliement et PV courants inclus.
 
@@ -20,13 +20,17 @@ Toutes les cartes de la main utilisent le cadre illustré existant : illustratio
 
 ## Aperçu commun au survol — plateau et main
 
-`ui/card-inspection.js` porte désormais la fiche commune : portrait approuvé, titre, Ordre, rareté, description et traits. La main affiche les statistiques d'invocation et l'attente restante ; le plateau retrouve l'unité par son uid et affiche ses PV blessés, son attaque incluant Concorde/Ralliement, armure, barrière, poison, immobilisation et silence. Aucun accès à la main privée adverse ni mutation du combat. Le calcul de formation est réutilisé depuis le moteur.
+`ui/card-inspection.js` et `assets/card-preview.css` partagent la fiche illustrée : capacités, traits, statistiques d’invocation dans la main, attaque/PV/états actuels par uid sur le plateau. Survol et focus clavier servent à lire ; clic ou toucher ferme immédiatement la fiche. Aucun épinglage ni réouverture automatique après sélection. Sortir de la source permet un nouveau survol. La souris peut entrer dans la fiche pour lire et défiler ; Échap et la croix ferment aussi la lecture. La fiche n’est jamais sauvegardée.
 
-Survol et focus ouvrent l'aperçu ; la souris peut entrer dans la fiche pour lire ou faire défiler. Clic/toucher sur une carte du plateau épingle la lecture sans déclencher le déploiement de sa case. Une carte sélectionnée de la main reste sélectionnée pendant la consultation du plateau. La croix et Échap ferment la fiche ; une carte en attente reste consultable et injouable. La lecture se ferme au rendu et à la navigation, sans être sauvegardée. Lors du défilement, elle suit la source encore survolée ou focalisée ; elle se ferme sinon.
+Le cadre reste dans le viewport, en couche sœur du HUD et de la scène, sans déplacer la main. Les clones VFX sont inertes.
 
-`assets/card-preview.css` définit un seul cadre or patiné/bleu nuit, partagé par main et plateau. Le placement est borné au viewport ; en paysage court la fiche de main se place latéralement pour garder sa source cliquable. La fiche est une couche sœur de la scène et du HUD pour ne pas être masquée par leur empilement. Aucune modification des dimensions de la scène ou du dock. Le mode personnages conserve la fiche texte historique. Les clones des VFX sont inertes, hors navigation clavier.
+## Pose sur trois cases — nouvelle règle demandée
 
-Tests dédiés : `card_preview.test.mjs` (données de l'instance, états, adverse, absence de mutation, échappement et placement) et `browser_card_preview.py` (survol persistant, clavier, toucher, cadre partagé, bords, sélection conservée et production hors ligne). Captures `/tmp/ca-card-preview-*.png` dans l'artefact CI `essai-cartes`. Résultat de la tête à consulter dans la PR.
+Sur les arènes à dix cases, une unité peut être posée sur une case libre 1, 2 ou 3 de la ligne choisie. L’IA peut employer 10, 9 ou 8, dans cet ordre de préférence ; le robot d’audit utilise la même zone libre côté joueur. Les cases possibles sont surlignées après sélection et le bandeau invite à choisir une case de départ. Le choix exact est envoyé au moteur ; hors zone, case occupée, attente et quota refusent le coup sans consommer la carte. Deux cartes par tour et délais inchangés. Les sorts gardent leur cible par ligne ; la case cliquée ne redéfinit pas leurs effets. Les pièges adverses se déclenchent si une unité entre directement sur leur case de départ.
+
+L’API accepte une quatrième valeur optionnelle `playPlayerCard(b,index,lane,col)` ; l’appel historique sans colonne reste en 1. Les batailles 3×5 sauvegardées restent à une seule entrée et conservent les 60 parités historiques. Aucun nouveau champ à migrer. Cette évolution modifie volontairement le placement et le rythme du plateau à dix cases ; les anciens résultats d’équilibrage ne prouvent pas l’équilibre de cette nouvelle règle.
+
+Tests : `deployment_zone.test.mjs` (zones, colonnes exactes, miroirs, cas refusés sans mutation, pièges, quota, attente, déplacement et compatibilité), `browser_deployment.py` (vraie production hors ligne, pose en 3/2/1, souris/toucher/clavier, sélection sans fiche, reprise) et `browser_card_preview.py` (survol/focus, pas d’épinglage, sélection et case 3). Les anciens parcours désignent explicitement leur case 1 et gardent leurs contrôles de stats et progression.
 
 ## Portraits
 
@@ -40,11 +44,11 @@ Un module ajouté : `src/ui/card-arena.js`, vue HTML et choix de présentation u
 
 Le générateur existant embarque 26 modules et 18 portraits. `npm run build` régénère JOUER.html ; `npm run build:cards` régénère ESSAI_CARTES.html à partir du même HTML et du même app.js, avec la vue cartes activée. Sur le serveur de développement : `index.html?cartes=1`.
 
-Aucune modification dans les modules du moteur, des données ou de l'IA. Clés et schéma des profils/combats conservés. Les VFX restent transitoires ; animations désactivées, mouvement réduit ou API d'animation absente donnent des cartes statiques.
+Catalogue et statistiques inchangés ; moteur et IA adaptés à la zone de pose demandée. Clés et schéma des profils/combats conservés. Les VFX restent transitoires ; animations désactivées, mouvement réduit ou API d'animation absente donnent des cartes statiques.
 
 ## Vérification
 
-Local : 262 tests Node, 60 parités historiques, builds normal/essai/test. Tests nouveaux : mapping opt-in et archétypes partagés, rendu des vrais PV sans mutation, export du vrai jeu sans fixture et vérification des cinq approbations/empreintes.
+Local : 273 tests Node, 60 parités historiques des combats 3×5, builds normal/essai/test. Tests nouveaux : mapping opt-in et archétypes partagés, rendu des vrais PV sans mutation, export du vrai jeu sans fixture et vérification des cinq approbations/empreintes.
 
 Le nouveau parcours Chromium contrôle sur bureau/portrait/paysage : vraie mission initiale, main et délais, sélection et pose sur la grille, avancée du même identifiant d'unité, couronnes, sauvegarde/reprise, défilement, changement de vue sans mutation du combat, animations désactivées, mouvement réduit et production hors réseau. Un parcours de diagnostic termine la vraie mission 01 avec les actions autorisées et vérifie une récompense unique. Captures dans l'artefact CI `essai-cartes` ; vérifier le résultat de la nouvelle tête. Les preuves de l'ancien prototype ne valident pas cette correction. Aucun téléphone physique ou navigateur Chromium local revendiqué.
 

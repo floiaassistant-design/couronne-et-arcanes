@@ -1,5 +1,11 @@
 ## Proposition — cartes sur le plateau existant (20/10/2026)
 
+## 20/10/2026 — PR nº 20 : survol seul et pose sur trois cases
+
+- La sélection et le toucher ferment la fiche ; suppression de l’épinglage qui masquait la pose. Survol/focus pour lire, clic pour jouer.
+- Pose au choix en 1/2/3 sur chaque ligne des arènes à dix cases ; miroir 10/9/8 pour l’IA, même règle dans les simulations.
+- Colonne validée par le moteur, cases libres surlignées, pièges à l’entrée, attente et quota inchangés. API sans colonne et anciens 3×5 compatibles.
+
 ## 20/10/2026 — PR nº 20 : aperçu illustré commun
 
 - Même cadre au survol des unités du plateau et des cartes en main : portrait, capacités, statistiques et états réels.

@@ -6,6 +6,14 @@ export const laneCount=b=>b.board.length;
 export const lastCell=b=>b.board[0].length-2;
 export const crownColumn=(b,side)=>side==='p'?0:lastCell(b)+1;
 export const entryColumn=(b,side)=>side==='p'?1:lastCell(b);
+// Les arènes à dix cases permettent trois positions de départ par camp.
+// Les sauvegardes historiques 3×5 conservent leur unique entrée.
+export function deploymentColumns(b,side){
+ const first=entryColumn(b,side),direction=side==='p'?1:-1;
+ return Array.from({length:lastCell(b)===10?3:1},(_,i)=>first+i*direction);
+}
+export const validDeploymentColumn=(b,side,col)=>Number.isInteger(col)&&deploymentColumns(b,side).includes(col);
+export const freeDeploymentColumn=(b,side,lane)=>deploymentColumns(b,side).find(col=>!b.board[lane]?.[col]);
 export const validLane=(b,lane)=>Number.isInteger(lane)&&lane>=0&&lane<laneCount(b);
 export function missionLayout(mission,{legacy=false}={}){
  if(legacy)return {lanes:3,cells:5};

@@ -20,7 +20,7 @@ async def finish_page(browser,animated):
       persistBattle();render();
     }""")
     await page.locator('.hand [data-action="select-card"]').first.click()
-    await page.locator('[data-action="deploy"][data-lane="0"]').click()
+    await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
     saved=await page.evaluate("() => JSON.parse(JSON.stringify(window.__saves))")
     assert json.loads(saved[SAVE])['wins']==1,saved[SAVE]
     assert BATTLE not in saved,saved

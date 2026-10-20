@@ -54,7 +54,7 @@ async def run(browser,label,viewport):
     # La vraie main contient de l'attente ; lire une carte n'en permet pas la pose.
     waiting=page.locator('.hand-card.hand-waiting')
     if await waiting.count():
-        await waiting.first.click();assert not await page.locator('#hand-card-inspection').is_hidden()
+        await waiting.first.hover();assert not await page.locator('#hand-card-inspection').is_hidden()
         assert await page.locator('.battle-cell.available').count()==0
         inspected=await layout(page,label)
         assert initial['dock']==inspected['dock'] and initial['hand']==inspected['hand']
@@ -63,8 +63,8 @@ async def run(browser,label,viewport):
         await page.locator('[data-action="end-turn"]').click()
         ready=page.locator('.hand-card.hand-ready:has(.stat.atk)').first
     await ready.click()
-    await page.locator('[data-action="close-inspection"]').click()
-    await page.locator('[data-action="deploy"][data-lane="0"]').click()
+    assert await page.locator('#hand-card-inspection').is_hidden()
+    await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
     await page.wait_for_selector('.lane-row .board-card')
     before=json.loads(await page.evaluate('(key)=>localStorage.getItem(key)',BATTLE))
     unit=before['board'][0][1];assert unit is not None

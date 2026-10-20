@@ -1,3 +1,5 @@
+> **20/10/2026 — branche PR nº 20, non fusionnée :** pose libre dans les trois premières cases alliées des arènes à dix cases, zone miroir pour l’adversaire. Clic = sélection/pose ; survol ou focus = lecture, sans fiche épinglée. Les anciennes batailles 3×5 gardent une entrée. Les descriptions historiques d’invocation à une extrémité ci-dessous ne décrivent pas cette nouvelle option.
+
 > **Mise à jour de géométrie V2.11 (fusionnée sur main le 12/10/2026)** : 10 cases par ligne, 2 lignes en duel, 3 dans les rencontres avancées et 4 pour les boss solo ; anciens combats 3×5 conservés. Style de l’arène : fantasy lo-fi en pixels originaux. La présente bible contient des sections V1 historiques ; le README et `ETAT_PROJET.md` décrivent l’état courant.
 
 # COURONNES & ARCANES

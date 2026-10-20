@@ -1,5 +1,6 @@
 # Couronnes & Arcanes — V2.11
 
+**PR nº 20 — pose et survol :** sélectionnez une carte puis une case libre parmi les trois premières de sa ligne (1/2/3 ; 10/9/8 pour l’IA). La fiche sert uniquement au survol/focus et se ferme au clic pour libérer le plateau. Deux cartes par tour, attente et statistiques conservées. Les anciennes sauvegardes 3×5 gardent une seule entrée.
 **Affinage plein écran, PR nº 20 :** vue cartes avec main sur la terrasse du plateau, HUD supérieur fixe, cadre commun de la main et journal repliable. Adaptation graphique aux quatre pistes sans changement des règles. Voir `docs/ESSAI_CARTES_2026_10_20.md`.
 **Essai du 20/10/2026 corrigé :** `ESSAI_CARTES.html` est le vrai jeu avec ses cartes illustrées sur les cases du plateau existant. Main, délais, déploiement, déplacements, IA, couronnes et progression conservés. Le bouton « Vue : cartes/personnages » permet de comparer sur le même combat. `npm run build:cards` régénère cet aperçu ; [périmètre](docs/ESSAI_CARTES_2026_10_20.md).
 

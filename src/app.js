@@ -16,7 +16,7 @@ let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}ca
 const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='all',collectionOwned=false;
 let deferredBattleModal='',battleStorageWarning=false;
-const {inspectCard,inspectUnit,closeCardInspection,bindCardInspection}=createCardInspection(()=>({battle,screen}),esc);
+const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({battle,screen}),esc);
 const {stopBattleFx,playBattleFx}=createCombatFx(()=>({animationsEnabled,screen}));
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
@@ -125,7 +125,7 @@ function startMission(id){if(battle?.status==='active'){toast('Terminez le comba
  try{battle=createBattle(profile,mission);persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);}catch(e){toast(e.message);}}
 function navigate(page){if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();if(!['home','campaign','tower','dungeons','collection','alchemy','forge','guide','battle'].includes(page))return;screen=page;selectedCard=-1;render();window.scrollTo(0,0);}
 function switchToSavedAdventure(){stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();window.scrollTo(0,0);}
-function act(action,dataset){const {id,index,lane,page}=dataset;
+function act(action,dataset){const {id,index,lane,col,page}=dataset;
  switch(action){
 
   case 'new-game':showModal(`<div class="kicker">NOUVELLE PARTIE</div><h2>Choisir votre classe de départ</h2><p>Commencez une aventure à zéro avec une autre classe. Vous pouvez aussi changer de classe dans l’Atelier sans recommencer votre progression, après un combat.</p><div class="class-options new-game-classes">${Object.entries(CLASSES).map(([classId,c])=>btn(c.symbol+' '+c.name,'new-game-select',`data-id="${classId}"`,'ghost')).join('')}</div><p class="hint">La partie actuelle sera gardée dans un emplacement de sauvegarde précédent sur cet appareil. Exportez-la dans le Guide pour une copie durable.</p><div class="button-row">${btn('Annuler','close-modal','','ghost')}</div>`);break;
@@ -162,18 +162,17 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
  }
  case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}const result=learnClassSkill(profile,id);if(result.ok){save();render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}else toast(result.reason);break;}
  case 'deck-add':case 'deck-remove':if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();render();}else toast('Impossible de modifier ce deck davantage.');break;
- case 'inspect-unit':inspectUnit(id,true);break;
  case 'close-inspection':closeCardInspection(true);break;
  case 'select-card':{
   if(!battle||battle.status!=='active')break;
   const i=Number(index),entry=battle.heroes.p.hand[i];
   if(!Number.isInteger(i)||!entry)break;
-  if(battle.heroes.p.cardsPlayed>=2||entry.wait>0){inspectCard(i,true);break;}
+  if(battle.heroes.p.cardsPlayed>=2||entry.wait>0){suppressCardInspection(i);break;}
   selectedCard=selectedCard===i?-1:i;render();
-  if(selectedCard===i)inspectCard(i,true);
+  suppressCardInspection(i);
   break;
  }
- case 'deploy':if(!battle||selectedCard<0)return;withBattleFx(()=>playPlayerCard(battle,selectedCard,Number(lane)));break;
+ case 'deploy':if(!battle||selectedCard<0)return;withBattleFx(()=>playPlayerCard(battle,selectedCard,Number(lane),Number(col)));break;
  case 'end-turn':if(!battle)return;withBattleFx(()=>endPlayerTurn(battle));break;
  case 'hero-power':if(!battle)return;withBattleFx(()=>usePower(battle));break;
  case 'toggle-card-arena':setCardArenaMode(!cardArenaEnabled());render();break;

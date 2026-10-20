@@ -1039,7 +1039,7 @@ let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}ca
 const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='all',collectionOwned=false;
 let deferredBattleModal='',battleStorageWarning=false;
-const {inspectCard,inspectUnit,closeCardInspection,bindCardInspection}=createCardInspection(()=>({battle,screen}),esc);
+const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({battle,screen}),esc);
 const {stopBattleFx,playBattleFx}=createCombatFx(()=>({animationsEnabled,screen}));
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
@@ -1148,7 +1148,7 @@ function startMission(id){if(battle?.status==='active'){toast('Terminez le comba
  try{battle=createBattle(profile,mission);persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);}catch(e){toast(e.message);}}
 function navigate(page){if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();if(!['home','campaign','tower','dungeons','collection','alchemy','forge','guide','battle'].includes(page))return;screen=page;selectedCard=-1;render();window.scrollTo(0,0);}
 function switchToSavedAdventure(){stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();window.scrollTo(0,0);}
-function act(action,dataset){const {id,index,lane,page}=dataset;
+function act(action,dataset){const {id,index,lane,col,page}=dataset;
  switch(action){
 
   case 'new-game':showModal(`<div class="kicker">NOUVELLE PARTIE</div><h2>Choisir votre classe de départ</h2><p>Commencez une aventure à zéro avec une autre classe. Vous pouvez aussi changer de classe dans l’Atelier sans recommencer votre progression, après un combat.</p><div class="class-options new-game-classes">${Object.entries(CLASSES).map(([classId,c])=>btn(c.symbol+' '+c.name,'new-game-select',`data-id="${classId}"`,'ghost')).join('')}</div><p class="hint">La partie actuelle sera gardée dans un emplacement de sauvegarde précédent sur cet appareil. Exportez-la dans le Guide pour une copie durable.</p><div class="button-row">${btn('Annuler','close-modal','','ghost')}</div>`);break;
@@ -1185,18 +1185,17 @@ function act(action,dataset){const {id,index,lane,page}=dataset;
  }
  case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}const result=learnClassSkill(profile,id);if(result.ok){save();render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}else toast(result.reason);break;}
  case 'deck-add':case 'deck-remove':if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();render();}else toast('Impossible de modifier ce deck davantage.');break;
- case 'inspect-unit':inspectUnit(id,true);break;
  case 'close-inspection':closeCardInspection(true);break;
  case 'select-card':{
   if(!battle||battle.status!=='active')break;
   const i=Number(index),entry=battle.heroes.p.hand[i];
   if(!Number.isInteger(i)||!entry)break;
-  if(battle.heroes.p.cardsPlayed>=2||entry.wait>0){inspectCard(i,true);break;}
+  if(battle.heroes.p.cardsPlayed>=2||entry.wait>0){suppressCardInspection(i);break;}
   selectedCard=selectedCard===i?-1:i;render();
-  if(selectedCard===i)inspectCard(i,true);
+  suppressCardInspection(i);
   break;
  }
- case 'deploy':if(!battle||selectedCard<0)return;withBattleFx(()=>playPlayerCard(battle,selectedCard,Number(lane)));break;
+ case 'deploy':if(!battle||selectedCard<0)return;withBattleFx(()=>playPlayerCard(battle,selectedCard,Number(lane),Number(col)));break;
  case 'end-turn':if(!battle)return;withBattleFx(()=>endPlayerTurn(battle));break;
  case 'hero-power':if(!battle)return;withBattleFx(()=>usePower(battle));break;
  case 'toggle-card-arena':setCardArenaMode(!cardArenaEnabled());render();break;
@@ -1602,7 +1601,7 @@ const AI_STYLES = Object.freeze({
 });
 const aiStyle = b => AI_STYLES[b?.aiStyle] ? b.aiStyle : 'equilibre';
 const aiEnraged = b => Boolean(b?.aiBoss && b?.heroes?.e && b.heroes.e.hp>0 && b.heroes.e.hp*2<=b.heroes.e.maxhp);
-const {laneCount,lastCell,crownColumn,entryColumn}=__load("src/engine/board.js");
+const {laneCount,lastCell,crownColumn,entryColumn,freeDeploymentColumn}=__load("src/engine/board.js");
 const finite=(n)=>Number.isFinite(n)?n:0;
 const alive=(u)=>!!u && u.hp>0;
 
@@ -1622,7 +1621,7 @@ function inspectEnemyLane(b,lane){
  },0);
  const frontline=threats.sort((a,z)=>z.col-a.col)[0]||null;
  const guard=friends.some(({u})=>GUARD_IDS.has(u.id));
- return {lane,threats,friends,frontline,urgency,guard,entryFree:!alive(row[entryColumn(b,'e')])};
+ return {lane,threats,friends,frontline,urgency,guard,entryFree:!alive(row[entryColumn(b,'e')]),deploymentCol:freeDeploymentColumn(b,'e',lane)};
 }
 
 // Estimation limitée au plateau public : une unité interposée ou un gardien
@@ -1642,7 +1641,7 @@ function scoreOption(b,card,laneInfo,context){
  const {urgency,threats,friends,frontline,guard}=laneInfo;
  const hero=b.heroes.e,enemyHero=b.heroes.p;
  if(card.type==='unité'){
-  if(!laneInfo.entryFree)return null;
+  if(laneInfo.deploymentCol===undefined)return null;
   const synergy=friends.filter(({u})=>CARDS[u.id]?.faction===card.faction).length;
   let score=4.4+card.attack*.65+card.hp*.17;
   score+=Math.min(22,urgency)*.75;
@@ -1711,7 +1710,7 @@ function scoreOption(b,card,laneInfo,context){
    score=5+Math.min(2,target.wait)*2.4;
    if(canFollow&&pending){
     // Le sort prend de la valeur s'il permet de jouer une seconde carte utile.
-    const bestLane=Math.max(0,...context.rows.map(row=>pending.type==='unité'&&row.entryFree
+    const bestLane=Math.max(0,...context.rows.map(row=>pending.type==='unité'&&row.deploymentCol!==undefined
      ?4.4+pending.attack*.65+pending.hp*.17+Math.min(22,row.urgency)*.75:0));
     score+=3+Math.min(17,bestLane)*.8;
     if(pending.type==='sort')score+=4;
@@ -1790,7 +1789,7 @@ function rankEnemyMoves(b){
   const card=CARDS[entry.id];if(!card||entry.wait>0) return;
   rows.forEach(row=>{
    const rank=scoreOption(b,card,row,context);
-   if(rank&&rank.score+personalityBonus(b,card,row)>0)results.push({index,lane:row.lane,id:entry.id,...rank,score:rank.score+personalityBonus(b,card,row)});
+   if(rank&&rank.score+personalityBonus(b,card,row)>0)results.push({index,lane:row.lane,...(lastCell(b)===10&&card.type==='unité'?{col:row.deploymentCol}:{}),id:entry.id,...rank,score:rank.score+personalityBonus(b,card,row)});
   });
  });
  return results.sort((a,z)=>z.score-a.score||a.index-z.index||a.lane-z.lane);
@@ -1960,6 +1959,14 @@ const laneCount=b=>b.board.length;
 const lastCell=b=>b.board[0].length-2;
 const crownColumn=(b,side)=>side==='p'?0:lastCell(b)+1;
 const entryColumn=(b,side)=>side==='p'?1:lastCell(b);
+// Les arènes à dix cases permettent trois positions de départ par camp.
+// Les sauvegardes historiques 3×5 conservent leur unique entrée.
+function deploymentColumns(b,side){
+ const first=entryColumn(b,side),direction=side==='p'?1:-1;
+ return Array.from({length:lastCell(b)===10?3:1},(_,i)=>first+i*direction);
+}
+const validDeploymentColumn=(b,side,col)=>Number.isInteger(col)&&deploymentColumns(b,side).includes(col);
+const freeDeploymentColumn=(b,side,lane)=>deploymentColumns(b,side).find(col=>!b.board[lane]?.[col]);
 const validLane=(b,lane)=>Number.isInteger(lane)&&lane>=0&&lane<laneCount(b);
 function missionLayout(mission,{legacy=false}={}){
  if(legacy)return {lanes:3,cells:5};
@@ -1977,7 +1984,7 @@ function supportedBoard(board){
   board.every(row=>Array.isArray(row)&&row.length===width&&row[0]===null&&row[width-1]===null);
 }
 
-Object.assign(__exports,{LANES,WIDTH,laneCount,lastCell,crownColumn,entryColumn,validLane,missionLayout,trapColumns,supportedBoard});
+Object.assign(__exports,{LANES,WIDTH,laneCount,lastCell,crownColumn,entryColumn,deploymentColumns,validDeploymentColumn,freeDeploymentColumn,validLane,missionLayout,trapColumns,supportedBoard});
 
 },
 "src/engine/tempo.js":function(__exports,__load){
@@ -2350,7 +2357,7 @@ const {chosenTalents}=__load("src/talents.js");
 const {tempoTargetError,resolveTempoSpell}=__load("src/engine/tempo.js");
 const {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,gearBonus}=__load("src/engine/profile.js");
 const {unitStatContext,unitStats}=__load("src/engine/unit-stats.js");
-const {laneCount,lastCell,crownColumn,entryColumn,validLane,missionLayout}=__load("src/engine/board.js");
+const {laneCount,lastCell,crownColumn,entryColumn,validDeploymentColumn,validLane,missionLayout}=__load("src/engine/board.js");
 Object.assign(__exports,__load("src/engine/board.js"));
 function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed/4294967296;}
 function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand(b)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -2419,9 +2426,9 @@ function findTarget(b,lane,col,unit){
  const heroDist=unit.side==='p'?crownColumn(b,'e')-col:col;
  return heroDist<=range?{type:'hero',side:unit.side==='p'?'e':'p'}:null;
 }
-function spawn(b,side,id,lane){
+function spawn(b,side,id,lane,col=entryColumn(b,side)){
  const c=CARDS[id];if(!c||c.type==='sort')return false;
- const col=entryColumn(b,side);if(b.board[lane][col])return false;
+ if(!validDeploymentColumn(b,side,col)||b.board[lane][col])return false;
  const stats=unitStats(b,id,side);
  const u={uid:b.nextUnitId++,id,side,atk:stats.atk,maxhp:stats.maxhp,
   hp:stats.maxhp,armor:c.ability==='armor'?2:0,ranged:c.ability==='ranged',
@@ -2431,6 +2438,7 @@ function spawn(b,side,id,lane){
  if(formationBonus(b,lane,u))note(b,`Concorde de ${FACTIONS[c.faction].short} : +1 attaque aux alliés de cet ordre sur la ligne ${lane+1}.`);
  if(c.ability==='ward')b.heroes[side].shield=Math.min(20,b.heroes[side].shield+3);
  note(b,`${side==='p'?'Vous invoquez': 'L’ennemi invoque'} ${c.name} (ligne ${lane+1}).`);
+ enterCell(b,u,lane,col);
  return true;
 }
 function damageHero(b,side,amount){
@@ -2472,8 +2480,9 @@ function cast(b,side,id,lane){
  checkOutcome(b);
  return drawAfter;
 }
-function play(b,side,index,lane){
+function play(b,side,index,lane,col=entryColumn(b,side)){
  if(b.status!=='active'||!Number.isInteger(lane)||!validLane(b,lane))return {ok:false,reason:'Combat terminé ou ligne invalide.'};
+ if(!validDeploymentColumn(b,side,col))return {ok:false,reason:'Choisissez une case de votre zone de déploiement.'};
  const hero=b.heroes[side],hand=hero.hand[index];
  if(!hand)return {ok:false,reason:'Carte introuvable.'};
  if(hand.wait>0)return {ok:false,reason:`Cette carte sera disponible dans ${hand.wait} tour(s).`};
@@ -2483,14 +2492,14 @@ function play(b,side,index,lane){
  if(c.heroClass&&(side!=='p'||c.heroClass!==b.heroClass))return {ok:false,reason:'Compétence réservée à une autre classe.'};
  const targetError=classSkillTargetError(b,side,c,lane)||controlTargetError(b,side,c,lane)||tempoTargetError(b,side,c);
  if(targetError)return {ok:false,reason:targetError};
- if(c.type==='unité'&&!spawn(b,side,hand.id,lane))return {ok:false,reason:'La case de déploiement est occupée.'};
+ if(c.type==='unité'&&!spawn(b,side,hand.id,lane,col))return {ok:false,reason:'La case de déploiement est occupée.'};
  const drawAfter=c.type==='sort'?cast(b,side,hand.id,lane):0;
  if(side==='p'){if(!b.cardUses)b.cardUses={};b.cardUses[hand.id]=(b.cardUses[hand.id]||0)+1;}
  hero.discard.push(hand.id);hero.hand.splice(index,1);hero.cardsPlayed++;
  if(drawAfter)draw(b,side,drawAfter);
  return {ok:true};
 }
-function playPlayerCard(b,index,lane){return b.phase==='player'?play(b,'p',index,lane):{ok:false,reason:'Ce n’est pas votre tour.'};}
+function playPlayerCard(b,index,lane,col=entryColumn(b,'p')){return b.phase==='player'?play(b,'p',index,lane,col):{ok:false,reason:'Ce n’est pas votre tour.'};}
 function hit(b,u,raw,bySide,ignoreArmor=false){
  // Une attaque sur une unité déjà vaincue ne doit pas créer un second kill.
  if(!u||u.hp<=0)return 0;
@@ -2524,7 +2533,7 @@ function enemyAct(b){
   if(!choices.length)break; // Il vaut parfois mieux garder ses sorts qu'en gaspiller un.
   let moved=false;
   for(const choice of choices){
-   const result=play(b,'e',choice.index,choice.lane);
+   const result=play(b,'e',choice.index,choice.lane,choice.col);
    if(!result.ok)continue;
    b.aiLastPlan=`${choice.reason} · ligne ${choice.lane+1}`;
    note(b,`Tactique adverse : ${b.aiLastPlan}.`);
@@ -3067,7 +3076,7 @@ const {silenced,teleportPlan,controlTargetError}=__load("src/engine/battle-contr
 const {TALENT_TREE,TALENT_LEVELS}=__load("src/talents.js");
 const {visualFor}=__load("src/visuals.js");
 const {cardArenaEnabled,boardCard}=__load("src/ui/card-arena.js");
-const {laneCount,lastCell}=__load("src/engine/board.js");
+const {laneCount,lastCell,validDeploymentColumn}=__load("src/engine/board.js");
 const {arenaSprite,arenaBackdrop}=__load("src/ui/arena-art.js");
 const {paintedArena,paintedTile}=__load("src/ui/painted-arena.js");
 const {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission}=__load("src/dungeons.js");
@@ -3079,8 +3088,9 @@ function battleCell(u,lane,col,visualLane=null){
  const tile=visualLane===null?null:paintedTile(visualLane,col);
  const silent=silenced(battle,u),remaining=silent?u.silenceUntil-battle.round+1:0;
  const traps=(battle.traps||[]).filter(t=>t.lane===lane&&t.col===col&&t.expiresRound>=battle.round);
+ const deployable=validDeploymentColumn(battle,'p',col);
  const card=u?CARDS[u.id]:null;const concord=u?formationBonus(battle,lane,u):0;const rallied=u&&u.rallyUntil>=battle.round?1:0;const attack=u?u.atk+concord+rallied:0;const visual=u?visualFor(card):null;
- return `<div ${tile?`style="${tile.style}" data-foot-x="${tile.footX}" data-foot-y="${tile.footY}"`:''} data-col="${col}" class="battle-cell ${selectedCard>=0&&col===1&&(!u||CARDS[battle.heroes.p.hand[selectedCard]?.id]?.type==='sort')?'available':''}" ${col===1?`role="${u&&cardArenaEnabled()?'group':'button'}" tabindex="0" data-action="deploy" data-lane="${lane}" aria-label="Déployer sur la ligne ${lane+1}"`:''}>
+ return `<div ${tile?`style="${tile.style}" data-foot-x="${tile.footX}" data-foot-y="${tile.footY}"`:''} data-col="${col}" class="battle-cell ${selectedCard>=0&&deployable&&(!u||CARDS[battle.heroes.p.hand[selectedCard]?.id]?.type==='sort')?'available':''}" ${deployable?`role="${u&&cardArenaEnabled()?'group':'button'}" tabindex="0" data-action="deploy" data-lane="${lane}" aria-label="Déployer sur la ligne ${lane+1}, case ${col}"`:''}>
  ${traps.map(t=>`<span class="terrain-trap ${t.owner==='e'?'enemy':''}" role="img" aria-label="Piège ${t.owner==='p'?'allié':'adverse'}, ligne ${lane+1}, case ${col}, ${t.expiresRound-battle.round+1} tours" title="${t.kind==='snare'?'1 dégât et immobilisation':'3 dégâts'} avant armure · expire dans ${t.expiresRound-battle.round+1} résolution(s)">⌁ ${t.owner==='p'?'ALLIÉ':'ENNEMI'} · ${t.expiresRound-battle.round+1}</span>`).join('')}
  ${u?`<div class="unit-on-board ${u.side==='e'?'enemy':'ally'} ${silent?'silenced':''}" data-actor-id="${u.uid}" data-facing="${u.side==='p'?'right':'left'}" data-animation-state="idle" data-owner="${u.side}" data-rarity="${esc(card.rarity)}" style="--tone:${FACTIONS[card.faction].tone}" ${cardArenaEnabled()?'data-unit-summary':'title'}="${u.side==='p'?'Votre unité':'Unité adverse'} · ${esc(FACTIONS[card.faction].name)} · ${esc(card.rarity)} · ${esc(card.name)} · ${esc(cardTraits(u.id).join(', '))} · Attaque ${attack}${concord?' (dont +1 Concorde)':''}${rallied?' (dont +1 Ralliement)':''} · PV ${u.hp}/${u.maxhp}${u.barrier?' · Barrière '+u.barrier:''}${silent?' · Silence : '+remaining+' résolution(s)':''}"><div class="board-identification"><span class="board-owner">${u.side==='p'?'VOUS':'ENNEMI'}</span><span class="board-faction">${esc(FACTIONS[card.faction].short)}</span><span class="board-quality">${esc(card.rarity)}</span></div>${silent?`<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>`:''}${concord?'<div class="formation-badge" aria-label="Concorde de faction active">✦ Concorde</div>':''}${cardArenaEnabled()?boardCard(u,attack):`<div class="sprite-stage role-${visual.role}" aria-hidden="true"><img class="sprite-figure" src="${arenaSprite(card,visual.role)}" alt="" draggable="false" /><span class="sprite-aura"></span></div><div class="unit-name">${esc(card.name)}</div><div class="unit-meta">⚔ ${attack}${concord?' ✦':''}${rallied?' ⚑':''}${!silent&&CHARGE_IDS.has(u.id)?' ⚡':''}${!silent&&RIPOSTE_IDS.has(u.id)?' ↶':''} &nbsp; ♥ ${u.hp}${u.armor?' ◈':''}${u.barrier?' ⬡ '+u.barrier:''}${u.poisonTurns?' ☣':''}</div>`}</div>`:`<span class="slot-num">${col}</span>`}</div>`;
 }
@@ -3093,14 +3103,14 @@ function battleUI(){const p=battle.heroes.p,e=battle.heroes.e,lanes=laneCount(ba
  const arena=cells===10?paintedArena(lanes,(lane,col,visual)=>battleCell(battle.board[lane][col],lane,col,visual)):`<div class="arena-sky" aria-hidden="true"></div>${Array.from({length:lanes},(_,lane)=>`<div class="lane-row" data-crown-col="${cells+1}"><div class="lane-label">${['I','II','III','IV'][lane]}</div><div class="lane-gate" aria-label="Votre couronne"><span class="pixel-tower" aria-hidden="true"></span><b>♜</b></div>${Array.from({length:cells},(_,i)=>battleCell(battle.board[lane][i+1],lane,i+1)).join('')}<div class="lane-gate enemy" aria-label="Couronne adverse"><span class="pixel-tower" aria-hidden="true"></span><b>♛</b></div></div>`).join('')}`;
  return `<div class="combat-screen" data-painted-arena="${cells===10}" data-card-layout="${immersive}"><div class="split-head combat-titlebar"><div><div class="kicker">COMBAT TACTIQUE · ${esc(battle.missionName)}</div><h1 class="combat-mission-name">${esc(battle.missionName)}</h1></div><span class="pill">2 cartes maximum par tour</span><button type="button" class="combat-menu-link" data-action="nav" data-page="home" aria-label="Revenir à la Citadelle sans abandonner la bataille">☷ Citadelle</button></div>
  <section class="battle-panel arena-lofi combat-stage"><div class="battle-hud"><div class="fighter"><h3>♜ ${esc(p.name)}</h3><div class="hpbar"><span style="width:${p.hp/p.maxhp*100}%;background:linear-gradient(90deg,#7199a2,#a1d7b8)"></span></div><div class="hp-line">♥ ${p.hp}/${p.maxhp} PV ${p.shield?`· ⬡ ${p.shield} bouclier`:''}</div></div><div class="battle-mid"><div class="turn-n">${battle.round}</div><div class="turn-label">TOUR</div></div><div class="fighter enemy"><h3>${esc(e.name)} ♛</h3><div class="enemy-style-tag">${esc(AI_STYLES[aiStyle(battle)].name)}${aiEnraged(battle)?' · FURIE':battle.aiBoss?' · Boss':''}</div><div class="hpbar"><span style="width:${e.hp/e.maxhp*100}%"></span></div><div class="hp-line">♥ ${e.hp}/${e.maxhp} PV ${e.shield?`· ⬡ ${e.shield} bouclier`:''}</div></div></div>
- <div class="arena-caption"><span>✧ ARÈNE DES SERMENTS</span><span>${lanes} lignes · ${cells} cases par ligne</span></div><div class="battle-grid ${cells===10?'arena-structured arena-painted':''}" tabindex="0" role="region" aria-label="Plateau de combat : ${lanes} lignes de ${cells} cases" style="--cells:${cells};--arena-scene:url('${arenaBackdrop()}')">${arena}</div>
+ <div class="arena-caption"><span>${selectedCard>=0?'✦ CHOISISSEZ UNE CASE DE DÉPART':'✧ ARÈNE DES SERMENTS'}</span><span>${lanes} lignes · ${cells} cases par ligne</span></div><div class="battle-grid ${cells===10?'arena-structured arena-painted':''}" tabindex="0" role="region" aria-label="Plateau de combat : ${lanes} lignes de ${cells} cases" style="--cells:${cells};--arena-scene:url('${arenaBackdrop()}')">${arena}</div>
  <div class="arena-legend" aria-label="Légende du plateau"><span class="legend-ally">BLEU · VOS UNITÉS</span><span class="legend-enemy">ROUGE · UNITÉS ADVERSES</span><span>Contour : rareté · Étiquette : Ordre</span></div>
  <p class="arena-scroll-hint">Sur petit écran, faites glisser le plateau pour voir toutes les cases. Les couronnes sont hors de la grille.</p><div class="vfx-controls"><button type="button" class="card-view-toggle" data-action="toggle-card-arena" aria-pressed="${cardArenaEnabled()}">${cardArenaEnabled()?'Vue : cartes':'Vue : personnages'}</button><span>Effets du combat : attaques, flèches, magie et déplacements.</span><button type="button" class="vfx-toggle" data-action="toggle-animations" aria-pressed="${animationsEnabled}">${animationsEnabled?'✦ ':''}${cells===10?'Animations d’interface':'Animations'} ${animationsEnabled?'activées':'désactivées'}</button></div>
  ${battle.mode==='dungeon'?`<div class="dungeon-battle-banner">♛ DONJON · ${battle.dungeonBonus?'Épreuve bonus':'Salle '+(battle.dungeonStage+1)+'/3'} · Les PV du héros sont conservés entre les combats (+6 PV après victoire).</div>`:''}
  <p class="control-tip">⊘ Silence : capacités déclenchées suspendues, attaques et traits passifs conservés. ✧ Téléportation : autre ligne, même colonne. ⌁ Pièges publics : déclenchés à l’arrivée d’un ennemi, deux par camp. ◷ Tempo : accélérez vos cartes ou ralentissez une carte adverse.</p>${preview?`<p class="teleport-preview" role="status">${preview}</p>`:''}
  <p class="formation-tip">✦ CONCORDE : deux alliés du même Ordre gagnent +1 attaque. ⚡ CHARGE : +2 attaque après déplacement. ↶ RIPOSTE : 2 dégâts avant armure, une fois par tour au contact.</p>
  <div class="battle-tip"><span>← VOTRE COURONNE · VOS UNITÉS AVANCENT →</span><span>← L’ENNEMI AVANCE · COURONNE ADVERSE →</span></div>
- ${immersive?'':'</section>'}<div class="combat-hand-dock" role="region" aria-label="Main de cartes et actions de combat"><div class="hand-panel"><div class="combat-hand-tray"><div class="hand-header"><div><div class="section-caption">Votre main · ${p.hand.length} cartes</div>${cardArenaEnabled()?'':inspectionPanel}<div class="selection-guide">${selectedCard>=0?'✦ Carte sélectionnée : choisissez une ligne sur le plateau.':'Touchez une carte pour lire ses capacités ; si elle est prête, choisissez une ligne.'}</div></div><span class="pill">${p.cardsPlayed}/2 jouées</span></div><div class="hand">${p.hand.map((c,i)=>cardUI(c.id,{compact:true,index:i,select:selectedCard===i,cooldown:c.wait})).join('')||'<div class="hint">Votre main est vide. Terminez le tour.</div>'}</div></div>
+ ${immersive?'':'</section>'}<div class="combat-hand-dock" role="region" aria-label="Main de cartes et actions de combat"><div class="hand-panel"><div class="combat-hand-tray"><div class="hand-header"><div><div class="section-caption">Votre main · ${p.hand.length} cartes</div>${cardArenaEnabled()?'':inspectionPanel}<div class="selection-guide">${selectedCard>=0?'✦ Carte sélectionnée : choisissez une des trois premières cases libres.':'Survolez pour lire ; cliquez pour sélectionner puis choisissez une case de départ.'}</div></div><span class="pill">${p.cardsPlayed}/2 jouées</span></div><div class="hand">${p.hand.map((c,i)=>cardUI(c.id,{compact:true,index:i,select:selectedCard===i,cooldown:c.wait})).join('')||'<div class="hint">Votre main est vide. Terminez le tour.</div>'}</div></div>
  <aside class="actions-side">${btn('✦ Utiliser le pouvoir','hero-power',`${battle.powerCooldown>0||battle.status!=='active'?'disabled':''}`)}${btn('Terminer le tour →','end-turn',`${battle.status!=='active'?'disabled':''}`,'primary')}${immersive?'':btn('Abandonner','retreat','','ghost')}${immersive?'<details class="combat-intel"><summary>Journal & détails</summary><div class="combat-intel-panel">':''}<div class="enemy-ai-profile ai-personality"><b>Style adverse : ${esc(AI_STYLES[aiStyle(battle)].name)}</b><span>${esc(AI_STYLES[aiStyle(battle)].desc)}${battle.aiBoss?(aiEnraged(battle)?' Le boss est entré en furie.':' Le boss devient plus offensif sous 50 % de PV.'):''}</span></div>${battle.aiLastPlan?`<div class="ai-plan"><b>Dernière tactique adverse</b><span>${esc(battle.aiLastPlan)}</span></div>`:''}<div class="section-caption">Actions du souverain</div><div class="power-hint">${battle.heroTalents?.length?`<div class="battle-talents">${battle.heroTalents.map(id=>`✦ ${esc(TALENT_TREE[battle.heroClass].find(t=>t.id===id)?.name||'Talent')}`).join(' · ')}${battle.heroTalents.includes('rodeur_poursuite')?`<span class="talent-once-status"> · Réserve : ${battle.talentDrawUsed?'utilisée':'disponible'}</span>`:''}</div>`:''}${CLASSES[battle.heroClass].symbol} ${CLASSES[battle.heroClass].description}${battle.powerCooldown?` Disponible dans ${battle.powerCooldown} tour(s).`:''}</div><p>Les créatures avancent et combattent automatiquement quand vous terminez le tour.</p><div class="section-caption" style="margin-top:14px">Journal du combat</div><div class="log-list">${battle.log.map(msg=>`<div>${esc(msg)}</div>`).join('')}</div>${immersive?btn('Abandonner','retreat','','ghost')+'</div></details>':''}</aside></div></div>${immersive?'</section>':''}${cardArenaEnabled()?inspectionPanel:''}</div>`;
 }
 
@@ -3128,7 +3138,7 @@ function setCardArenaMode(enabled){
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function boardCard(u,attack=u.atk){
  const c=CARDS[u.id],v=visualFor(c,{cards:true});
- return `<button type="button" class="board-card" data-action="inspect-unit" data-id="${esc(u.uid)}" data-unit-id="${esc(u.uid)}" aria-controls="hand-card-inspection" aria-expanded="false" data-card-id="${u.id}" data-side="${u.side}" aria-label="${esc(c.name)} : attaque ${attack}, vie ${u.hp} sur ${u.maxhp}">
+ return `<button type="button" class="board-card" data-unit-id="${esc(u.uid)}" aria-controls="hand-card-inspection" aria-expanded="false" data-card-id="${u.id}" data-side="${u.side}" aria-label="${esc(c.name)} : attaque ${attack}, vie ${u.hp} sur ${u.maxhp}">
  <img class="board-card-art" src="${artSrc(v.art)}" alt="" draggable="false"><span class="board-card-order">${esc(FACTIONS[c.faction].short)}</span>
  <span class="board-card-name">${esc(c.name)}</span><span class="board-card-stats"><span>⚔ <b>${attack}</b></span><span>♥ <b>${u.hp}</b></span></span>
  <span class="board-card-health"><i style="width:${Math.max(0,100*u.hp/u.maxhp)}%"></i></span></button>`;
@@ -3424,12 +3434,12 @@ function previewPosition(anchor,size,viewport,kind){
 }
 
 function createCardInspection(getContext,esc){
- let pinned=null,current=null,trigger=null,dismissTimer,dismissedKey=null;
+ let current=null,trigger=null,dismissTimer,dismissedKey=null;
  const panel=()=>document.getElementById('hand-card-inspection');
  const key=r=>r.kind+':'+r.id;
- function closeCardInspection(suppressHover=false){
-  dismissedKey=suppressHover&&current?key(current):null;
-  clearTimeout(dismissTimer);pinned=null;current=null;
+ function closeCardInspection(suppressHover=false,sourceKey=null){
+  dismissedKey=suppressHover?(sourceKey||(current?key(current):dismissedKey)):null;
+  clearTimeout(dismissTimer);current=null;
   trigger?.setAttribute('aria-expanded','false');trigger=null;
   const el=panel();if(!el)return;
   el.hidden=true;el.textContent='';el.classList.remove('illustrated-inspection');
@@ -3441,20 +3451,17 @@ function createCardInspection(getContext,esc){
   const pos=previewPosition(trigger.getBoundingClientRect(),el.getBoundingClientRect(),{width:innerWidth,height:innerHeight},current.kind);
   el.style.left=pos.left+'px';el.style.top=pos.top+'px';
  }
- function show(request,pin=false){
+ function show(request){
   const {battle,screen}=getContext();if(!battle||screen!=='battle')return;
   clearTimeout(dismissTimer);
-  if(!pin&&dismissedKey===key(request))return;
+  if(dismissedKey===key(request))return;
   dismissedKey=null;
-  if(pin&&pinned&&key(pinned)===key(request)){closeCardInspection();return;}
-  if(!pin&&pinned&&!cardArenaEnabled())return;
   const el=panel();if(!el)return;
   const data=request.kind==='board'?boardInspectionData(battle,request.id):(()=>{
    const entry=battle.heroes.p.hand[request.id],card=entry&&CARDS[entry.id];
    return card?{card,entry,stats:unitStats(battle,card.id)}:null;
   })();
   if(!data?.card)return;
-  if(pin)pinned=request;
   if(current&&key(current)===key(request)&&!el.hidden)return;
   if(el.hidden){const header=el.closest('.hand-header');header?.style.setProperty('--inspection-header-height',header.getBoundingClientRect().height+'px');}
   trigger?.setAttribute('aria-expanded','false');
@@ -3464,14 +3471,13 @@ function createCardInspection(getContext,esc){
   el.innerHTML=cardInspectionContent(data.card,data.entry,data.stats,esc,{illustrated:cardArenaEnabled(),board:data.board});
   el.hidden=false;position();
  }
- function inspectCard(index,pin=false){const i=Number(index);if(Number.isInteger(i)&&i>=0)show({kind:'hand',id:i},pin);}
- function inspectUnit(uid,pin=false){if(cardArenaEnabled())show({kind:'board',id:String(uid)},pin);}
- function dismissCardInspection(){
-  clearTimeout(dismissTimer);
-  if(pinned){if(cardArenaEnabled())show(pinned);}else closeCardInspection();
- }
+ function inspectCard(index){const i=Number(index);if(Number.isInteger(i)&&i>=0)show({kind:'hand',id:i});}
+ function inspectUnit(uid){if(cardArenaEnabled())show({kind:'board',id:String(uid)});}
+ function suppressCardInspection(index){closeCardInspection(true,'hand:'+Number(index));}
+ function dismissCardInspection(){closeCardInspection();}
  function bindCardInspection(){
   const source=t=>t instanceof Element?t.closest('.hand-card,.battle-cell .board-card'):null;
+  const sourceKey=el=>el?.matches('.board-card')?'board:'+el.dataset.unitId:el?'hand:'+el.dataset.index:null;
   const inPanel=t=>t instanceof Element&&!!t.closest('#hand-card-inspection');
   const enter=event=>{
    if(event.sourceCapabilities?.firesTouchEvents)return;
@@ -3481,14 +3487,18 @@ function createCardInspection(getContext,esc){
   };
   const leave=event=>{
    const el=source(event.target);if(!el&&!inPanel(event.target))return;
-   if(el&&!el.contains(event.relatedTarget)&&!inPanel(event.relatedTarget))dismissedKey=null;
+   if(el&&sourceKey(el)!==sourceKey(source(event.relatedTarget))&&!inPanel(event.relatedTarget))dismissedKey=null;
    if(el?.contains(event.relatedTarget)||inPanel(event.relatedTarget)||source(event.relatedTarget)){clearTimeout(dismissTimer);return;}
    clearTimeout(dismissTimer);
    if(cardArenaEnabled())dismissTimer=setTimeout(dismissCardInspection,160);else dismissCardInspection();
   };
+  document.addEventListener('pointerdown',event=>{const el=source(event.target);if(el)closeCardInspection(true,sourceKey(el));},true);
   document.addEventListener('mouseover',enter);document.addEventListener('focusin',enter);
   document.addEventListener('mouseout',leave);document.addEventListener('focusout',leave);
-  document.addEventListener('click',event=>{if(cardArenaEnabled()&&!source(event.target)&&!inPanel(event.target)&&!event.target.closest('[data-action="close-inspection"]'))closeCardInspection();});
+  document.addEventListener('click',event=>{
+   const el=source(event.target);
+   if(el)closeCardInspection(true,sourceKey(el));else if(!inPanel(event.target))closeCardInspection();
+  });
   document.addEventListener('scroll',event=>{
    if(!cardArenaEnabled()||!(event.target instanceof Element)||!event.target.matches('.battle-grid,.hand,.combat-stage'))return;
    // Le scroll automatique du focus/survol ne doit pas fermer sa propre fiche.
@@ -3496,7 +3506,7 @@ function createCardInspection(getContext,esc){
   },true);
   window.addEventListener('resize',position);
  }
- return {inspectCard,inspectUnit,closeCardInspection,dismissCardInspection,bindCardInspection};
+ return {inspectCard,inspectUnit,closeCardInspection,suppressCardInspection,bindCardInspection};
 }
 
 Object.assign(__exports,{boardInspectionData,cardInspectionContent,previewPosition,createCardInspection});

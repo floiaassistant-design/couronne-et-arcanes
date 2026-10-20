@@ -1,3 +1,5 @@
+> **20/10/2026 — évolution en PR nº 20 :** pose libre alliée 1/2/3, miroir adverse 10/9/8 pour le plateau à dix cases. API sans colonne et sauvegardes 3×5 inchangées. Les mesures ci-dessous sont historiques, antérieures à cette zone élargie ; les nouveaux audits testent la reproductibilité, sans prouver l’équilibrage humain.
+
 # V2.11 — arène fantasy lo-fi, intégrée sur main
 
 ## Périmètre demandé

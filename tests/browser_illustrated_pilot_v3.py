@@ -35,12 +35,10 @@ async def run(browser,label,viewport):
     await cards.first.press('Escape')
     assert await page.locator('#hand-card-inspection').is_hidden()
 
-    # Toucher/cliquer une carte en attente ouvre la description sans la sélectionner.
+    # Cliquer une carte en attente ne sélectionne rien et ne laisse aucune fiche.
     wait_click_y=await cards.nth(1).evaluate('(el)=>Math.min(35,Math.floor(el.getBoundingClientRect().height/2))')
     await cards.nth(1).click(position={'x':10,'y':wait_click_y})
     assert await page.evaluate('selectedCard')==-1
-    assert not await page.locator('#hand-card-inspection').is_hidden()
-    await page.locator('[data-action="close-inspection"]').click()
     assert await page.locator('#hand-card-inspection').is_hidden()
 
     # Sélection et déploiement depuis le même élément restent disponibles.
@@ -53,10 +51,9 @@ async def run(browser,label,viewport):
     }"""),'Carte masquée par une autre zone de la main'
     await cards.first.click(position={'x':10,'y':click_y})
     assert await page.evaluate('selectedCard')==0
-    assert not await page.locator('#hand-card-inspection').is_hidden()
-    await page.locator('[data-action="close-inspection"]').click()
+    assert await page.locator('#hand-card-inspection').is_hidden()
     assert await page.evaluate('selectedCard')==0
-    target=page.locator('[data-action="deploy"][data-lane="0"]')
+    target=page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]')
     await target.scroll_into_view_if_needed()
     await target.click()
     assert await page.evaluate('battle.board[0][1]?.id')=='archer'

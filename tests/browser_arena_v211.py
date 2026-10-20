@@ -49,7 +49,7 @@ async def run(browser,label,viewport):
         assert await page.locator('.lane-gate').count()==lanes*2
         assert f'{lanes} lignes · 10 cases' in await page.locator('.arena-caption').inner_text()
         await page.locator('.hand [data-action="select-card"]').click()
-        target=page.locator(f'[data-action="deploy"][data-lane="{lanes-1}"]')
+        target=page.locator(f'[data-action="deploy"][data-col="1"][data-lane="{lanes-1}"]')
         await target.focus()
         await page.keyboard.press('Enter')
         assert await page.evaluate('(l)=>battle.board[l-1][1].id',lanes)=='militia'
@@ -62,10 +62,10 @@ async def run(browser,label,viewport):
           battle.heroes.p.hand=[{id:'seal_silence',wait:0},{id:'rune_trap',wait:0},{id:'transposition',wait:0}];battle.heroes.p.cardsPlayed=0;render();
         }''',lanes)
         await page.locator('.hand [data-action="select-card"]').first.click()
-        await page.locator('[data-action="deploy"][data-lane="0"]').click()
+        await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
         assert await page.locator('.silence-badge').count()==1
         await page.locator('.hand [data-action="select-card"]').first.click()
-        await page.locator('[data-action="deploy"][data-lane="0"]').click()
+        await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
         assert await page.locator('.terrain-trap').count()==1
         await page.screenshot(path=f'/tmp/ca-arena-{label}-{lanes}.png',full_page=True)
         # Les dix cases restent accessibles par défilement sans élargir la page.
@@ -128,7 +128,7 @@ async def production(browser,label,viewport):
     await page.locator('[data-action="welcome-start"]').click()
     assert await page.locator('.battle-cell').count()==20
     await page.locator('.hand .unit-card:not(.on-cooldown)').first.click()
-    await page.locator('[data-action="deploy"][data-lane="1"]').click()
+    await page.locator('[data-action="deploy"][data-col="1"][data-lane="1"]').click()
     await page.emulate_media(reduced_motion='reduce')
     await page.locator('[data-action="end-turn"]').click()
     await page.reload()
@@ -159,7 +159,7 @@ async def main():
             await page.locator('[data-action="welcome-start"]').click()
             assert await page.locator('.battle-cell').count()==20
             await page.locator('.hand .unit-card:not(.on-cooldown)').first.click()
-            await page.locator('[data-action="deploy"][data-lane="0"]').click()
+            await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
             await page.emulate_media(reduced_motion='reduce')
             await page.locator('[data-action="end-turn"]').click()
             await page.reload()
