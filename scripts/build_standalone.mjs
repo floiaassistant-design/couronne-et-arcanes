@@ -3,13 +3,28 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
+import {ART_NAMES} from '../src/visuals.js';
 
 const isCardStudy=process.argv.includes('--cards');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=file=>fs.readFileSync(path.join(root,file),'utf8');
-const art=Object.fromEntries(fs.readdirSync(path.join(root,'assets/creatures'))
- .filter(n=>n.endsWith('.webp'))
- .map(n=>[n.slice(0,-5),'data:image/webp;base64,'+fs.readFileSync(path.join(root,'assets/creatures',n)).toString('base64')]));
+const manifest=JSON.parse(read('assets/artwork.json'));
+if(manifest.schemaVersion!==1||!Array.isArray(manifest.assets))throw Error('Registre graphique invalide');
+const art={};
+for(const a of manifest.assets){
+ if(a.status!=='approved'||!a.approvedBy||!a.license||!a.approvalRef||!a.sourceRepo||!a.sourceCommit)throw Error('Approbation/provenance manquante');
+ if(!/^[a-z0-9_-]+$/.test(a.key)||a.target!==`assets/creatures/${a.key}.webp`||!ART_NAMES.includes(a.key)||art[a.key])throw Error('Clé graphique invalide');
+ const receiptPath=path.resolve(root,a.approvalRef);
+ if(!receiptPath.startsWith(root+path.sep))throw Error('Reçu hors du projet');
+ const receipt=JSON.parse(fs.readFileSync(receiptPath,'utf8'));
+ if(!receipt.assets?.some(x=>x.sha256===a.sha256&&x.version===a.version))throw Error('Reçu de version incorrect');
+ const bytes=fs.readFileSync(path.join(root,a.target));
+ if(bytes.length!==a.bytes||createHash('sha256').update(bytes).digest('hex')!==a.sha256)throw Error('Empreinte graphique incorrecte');
+ art[a.key]='data:image/webp;base64,'+bytes.toString('base64');
+}
+const files=fs.readdirSync(path.join(root,'assets/creatures')).filter(n=>n.endsWith('.webp'));
+if(files.length!==manifest.assets.length||ART_NAMES.length!==manifest.assets.length)throw Error('Illustration non cataloguée');
 const factories=new Map();
 function resolve(origin,request){
  if(!request.startsWith('.'))throw Error('Import externe non pris en charge : '+request);
@@ -56,12 +71,10 @@ let html=read('index.html');
 const css=read('styles.css');
 const cardCss=read('assets/card-arena.css');
 const previewCss=read('assets/card-preview.css');
-const arenaArtCss=read('assets/backgrounds/arena-celeste-calibree.css');
 const paintedArtCss=read('assets/backgrounds/arena-celeste-peinte.css');
 const paintedLayoutCss=read('assets/backgrounds/arena-peinte-layout.css');
 if(!html.includes('<link rel="stylesheet" href="./styles.css" />')||!html.includes('<script type="module" src="./src/app.js"></script>'))throw Error('Points d’entrée HTML non reconnus');
 html=html.replace('<link rel="stylesheet" href="./styles.css" />','<style>\n'+css+'\n</style>');
-html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-celeste-calibree.css" />','<style>\n'+arenaArtCss+'\n</style>');
 html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-celeste-peinte.css" />','<style>\n'+paintedArtCss+'\n</style>');
 html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-peinte-layout.css" />','<style>\n'+paintedLayoutCss+'\n</style>');
 html=html.replace('<link rel="stylesheet" href="./assets/card-arena.css" />',()=>'<style>\n'+cardCss+'\n</style>');

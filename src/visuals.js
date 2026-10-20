@@ -1,41 +1,30 @@
-// Art original issu des illustrations créées pour Couronnes & Arcanes.
-// Un archétype partagé ne prétend pas être une illustration unique pour chacune des 60 cartes.
-export const ART_NAMES=['paladin','ranger','treant','dragon','healer','griffin','golem','shade','blizzard','knight','archer','sunlight','arbaletriere_aube','milicien_aube','porte_egide','soeur_aurore','paladin_solaire','porte_etendard'];
-// Essai opt-in : clés dédiées, aucun remplacement d'archétype partagé.
-export const CARD_ARENA_ART={militia:'milicien_aube',shield:'porte_egide',cleric:'soeur_aurore',paladin:'paladin_solaire',banner:'porte_etendard'};
-const direct={
- militia:'knight',shield:'paladin',archer:'arbaletriere_aube',cleric:'healer',paladin:'paladin',banner:'knight',
- ranger:'ranger',wolf:'griffin',treant:'treant',dryad:'healer',stag:'griffin',thorn:'ranger',
- bone:'knight',shade:'shade',crypt:'paladin',plague:'shade',lich:'shade',banshee:'shade',
- smith:'knight',golem:'golem',bomb:'golem',drill:'golem',colossus:'golem',engineer:'knight',
- spark:'blizzard',mystic:'blizzard',elemental:'blizzard',griffin:'griffin',sentinel:'golem',dragon:'dragon',
- scoutcaptain:'knight',sunpriest:'healer',lancer:'paladin',dawnbastion:'healer',
- pixie:'sunlight',bear:'griffin',archdruid:'treant',owl:'griffin',
- vampire:'shade',graveknight:'paladin',nightblade:'shade',spectre:'shade',
- cannon:'golem',mechanist:'knight',ironwraith:'golem',alchemist:'shade',
- tempest:'blizzard',seer:'blizzard',aetherknight:'paladin',seraph:'healer',
- firebolt:'sunlight',healing:'healer',warcry:'paladin',storm:'blizzard',entangle:'treant',sanctuary:'sunlight',
- sundawn:'sunlight',bloodpact:'healer',arcflare:'blizzard',vines:'treant',
- seal_silence:'shade',mist_inquisitor:'shade',transposition:'blizzard',portal_walker:'blizzard',rune_trap:'sunlight',sylvan_trapper:'ranger',
- skill_guard_wall:'paladin',skill_guard_rally:'knight',skill_arc_freeze:'blizzard',skill_arc_chain:'blizzard',
- skill_ranger_pierce:'archer',skill_ranger_draw:'ranger',skill_cleric_light:'healer',skill_cleric_bless:'sunlight'
-};
+// Base graphique neuve : aucune ancienne illustration n'est sélectionnable.
+// Toute future clé doit être déclarée ici et dans assets/artwork.json.
+export const ART_NAMES=[];
+export const CARD_ARENA_ART={};
 const roles={
- wolf:'beast',bear:'beast',stag:'beast',griffin:'flying',dragon:'flying',pixie:'flying',owl:'flying',
- dawnbastion:'flying',seraph:'flying',treant:'heavy',archdruid:'caster',
- golem:'heavy',colossus:'heavy',drill:'heavy',ironwraith:'heavy',cannon:'heavy',sentinel:'heavy',
- shade:'undead',bone:'undead',crypt:'undead',plague:'undead',banshee:'caster',lich:'caster',vampire:'undead',graveknight:'undead',spectre:'undead',nightblade:'undead',
- archer:'ranged',ranger:'ranged',owl:'flying',seer:'caster',mystic:'caster',spark:'caster',elemental:'caster',tempest:'caster',
- cleric:'support',dryad:'support',sunpriest:'support',seraph:'flying',
- alchemist:'caster',archdruid:'caster',engineer:'heavy',mechanist:'heavy'
+ wolf:'beast',bear:'beast',stag:'beast',griffin:'flying',dragon:'flying',
+ pixie:'flying',owl:'flying',dawnbastion:'flying',seraph:'flying',
+ treant:'heavy',golem:'heavy',colossus:'heavy',drill:'heavy',
+ ironwraith:'heavy',cannon:'heavy',sentinel:'heavy',
+ shade:'undead',bone:'undead',crypt:'undead',plague:'undead',
+ vampire:'undead',graveknight:'undead',spectre:'undead',nightblade:'undead',
+ banshee:'caster',lich:'caster',archdruid:'caster',seer:'caster',
+ mystic:'caster',spark:'caster',elemental:'caster',tempest:'caster',
+ alchemist:'caster',engineer:'heavy',mechanist:'heavy',
+ archer:'ranged',ranger:'ranged',cleric:'support',dryad:'support',sunpriest:'support'
 };
-export function visualFor(card,{cards=false}={}){
- if(!card)return {art:'knight',role:'heavy'};
- const art=direct[card.id] || (card.faction==='ombre'?'shade':card.faction==='forge'?'golem':card.faction==='sylve'?'ranger':card.faction==='ether'?'blizzard':'knight');
- const role=card.type==='sort'?'spell':roles[card.id]||(card.ability==='ranged'?'ranged':card.ability==='heal'?'support':card.ability==='armor'?'heavy':card.ability==='splash'?'caster':'fighter');
- return {art:cards?(CARD_ARENA_ART[card.id]||art):art,role};
+export function visualFor(card){
+ const role=!card?'heavy':card.type==='sort'?'spell':roles[card.id]||
+  (card.ability==='ranged'?'ranged':card.ability==='heal'?'support':
+   card.ability==='armor'?'heavy':card.ability==='splash'?'caster':'fighter');
+ return {art:card?CARD_ARENA_ART[card.id]||null:null,role};
 }
-
-// In the standalone HTML, the build embeds image bytes in this map.
+const placeholder='<svg xmlns="http://www.w3.org/2000/svg" width="384" height="576" viewBox="0 0 384 576"><rect width="384" height="576" fill="#142538"/><path d="M192 176l70 112-70 112-70-112z" fill="none" stroke="#9a865e" stroke-width="3"/><circle cx="192" cy="288" r="24" fill="none" stroke="#9a865e" stroke-width="2"/></svg>';
+export const PLACEHOLDER_ART='data:image/svg+xml,'+encodeURIComponent(placeholder);
+// Remplacée par le builder avec les seuls fichiers approuvés du registre actif.
 export const INLINE_CREATURES={};
-export function artSrc(name){return INLINE_CREATURES[name]||`./assets/creatures/${name}.webp`;}
+export function artSrc(name){
+ if(!ART_NAMES.includes(name))return PLACEHOLDER_ART;
+ return INLINE_CREATURES[name]||`./assets/creatures/${name}.webp`;
+}

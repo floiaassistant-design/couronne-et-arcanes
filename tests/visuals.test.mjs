@@ -1,26 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CARDS} from '../src/data.js';
-import {visualFor,artSrc,ART_NAMES} from '../src/visuals.js';
-import {existsSync} from 'node:fs';
+import {visualFor,artSrc,ART_NAMES,CARD_ARENA_ART,PLACEHOLDER_ART} from '../src/visuals.js';
+import {readdirSync} from 'node:fs';
 
- test('V1.4 visual mapping covers 76 cards with valid original assets and roles',()=>{
-   const valid=new Set(['fighter','heavy','ranged','beast','flying','caster','support','undead','spell']);
-   assert.equal(Object.keys(CARDS).length,76);
-   for(const card of Object.values(CARDS)){
-     const {art,role}=visualFor(card);
-     assert.ok(ART_NAMES.includes(art),card.name+' art is missing');
-     assert.ok(valid.has(role),card.name+' role is missing');
-     assert.ok(existsSync(new URL('../assets/creatures/'+art+'.webp',import.meta.url)),card.name+' artwork file is missing');
-     assert.ok(artSrc(art).endsWith(art+'.webp'));
-   }
- });
- test('V1.4 distinctive animation families support flying, armored, ranged and magic units',()=>{
-   assert.equal(visualFor(CARDS.archer).role,'ranged');
-   assert.equal(visualFor(CARDS.dragon).role,'flying');
-   assert.equal(visualFor(CARDS.golem).role,'heavy');
-   assert.equal(visualFor(CARDS.lich).role,'caster');
-   assert.equal(visualFor(CARDS.wolf).role,'beast');
-   assert.equal(visualFor(CARDS.firebolt).role,'spell');
-   assert.notEqual(visualFor(CARDS.archer).art,visualFor(CARDS.golem).art);
- });
+test('Nouvelle base : 76 cartes jouables sans ancien fichier ni image cassée',()=>{
+ assert.equal(Object.keys(CARDS).length,76);
+ assert.deepEqual(ART_NAMES,[]);assert.deepEqual(CARD_ARENA_ART,{});
+ assert.deepEqual(readdirSync(new URL('../assets/creatures/',import.meta.url)).filter(n=>n.endsWith('.webp')),[]);
+ const valid=new Set(['fighter','heavy','ranged','beast','flying','caster','support','undead','spell']);
+ for(const c of Object.values(CARDS)){
+  const v=visualFor(c);assert.equal(v.art,null);assert.ok(valid.has(v.role));
+  assert.equal(artSrc(v.art),PLACEHOLDER_ART);
+  assert.match(decodeURIComponent(artSrc(v.art)),/<svg[^>]+width="384" height="576"/);
+ }
+ for(const old of ['arbaletriere_aube','knight','milicien_aube','inconnu'])assert.equal(artSrc(old),PLACEHOLDER_ART);
+});
+test('Les rôles techniques restent disponibles sans réactiver les anciennes images',()=>{
+ for(const [id,role] of Object.entries({archer:'ranged',dragon:'flying',golem:'heavy',lich:'caster',wolf:'beast',firebolt:'spell'}))assert.equal(visualFor(CARDS[id]).role,role);
+});

@@ -1,15 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createHash} from 'node:crypto';
 import {CARDS} from '../src/data.js';
 import {visualFor} from '../src/visuals.js';
-test('nouveau portrait seulement pour archer',()=>{
- assert.equal(visualFor(CARDS.archer).art,'arbaletriere_aube');
- assert.equal(visualFor(CARDS.skill_ranger_pierce).art,'archer');
- const bytes=readFileSync(new URL('../assets/creatures/arbaletriere_aube.webp',import.meta.url));
- assert.equal(bytes.length,134904);
- assert.equal(createHash('sha256').update(bytes).digest('hex'),'31186adc9ea55c4d34777f70f8b5fe2969a1ea0386a74d1cf44183e931c391a3');
+test('ancienne identité graphique retirée, identifiants de jeu conservés',()=>{
+ assert.equal(visualFor(CARDS.archer).art,null);
+ assert.equal(visualFor(CARDS.skill_ranger_pierce).art,null);
+ assert.equal(CARDS.archer.id,'archer');assert.equal(CARDS.skill_ranger_pierce.id,'skill_ranger_pierce');
 });
 test('compteur unique et fiche indépendante des gestes de pose',()=>{
  const v=readFileSync(new URL('../src/ui/views.js',import.meta.url),'utf8');

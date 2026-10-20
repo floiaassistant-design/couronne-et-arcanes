@@ -37,7 +37,8 @@ async def main():
   assert result['riposteEnemyHp']==9,result
   assert 'Charge' in result['log'] and 'Riposte' in result['log'],result
   assert 'Charge' in result['tooltip'],result
-  await desktop.wait_for_selector('.vfx-tactic',state='attached',timeout=4000)
+  # Les effets historiques sont retirés ; le moteur et ses traits restent actifs.
+  assert await desktop.locator('.vfx-tactic,.battle-vfx-overlay').count()==0
   await desktop.wait_for_timeout(5000)
   assert await desktop.locator('.battle-vfx-overlay').count()==0
   assert not errors,errors

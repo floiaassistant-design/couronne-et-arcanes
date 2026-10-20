@@ -1,4 +1,4 @@
-"""Pilote Illustrée v3 : portrait approuvé, compteur unique, fiche et jeu inchangé."""
+"""Cadre conservé : emplacement neutre, compteur unique, fiche et pose."""
 import asyncio
 from playwright.async_api import async_playwright
 from browser_class_skills_v28 import make_page
@@ -23,7 +23,7 @@ async def run(browser,label,viewport):
         assert await cards.nth(i).locator('.illustrated-faction').inner_text()
     image=cards.first.locator('.creature-image')
     await image.evaluate('(el)=>el.decode()')
-    assert await image.evaluate('(el)=>el.complete && el.naturalWidth===512 && el.naturalHeight===768')
+    assert await image.evaluate('(el)=>el.complete && el.naturalWidth===384 && el.naturalHeight===576 && el.currentSrc.startsWith("data:image/svg+xml,")')
     assert await page.evaluate('selectedCard')==-1
 
     # Aucun bouton n'encombre le portrait : survol ou focus pour consulter.

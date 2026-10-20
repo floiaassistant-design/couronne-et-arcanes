@@ -119,9 +119,9 @@ test('V2.11 authentic old V2.4 save retains its 3×5 board and resumes',()=>{
 test('V2.11 corrupt and ragged boards are rejected without touching the profile',()=>{
  const cache=storage(),b=combat();b.board[1].pop();cache.couronnes_arcanes_v1='profile stays intact';cache[BATTLE_KEY]=JSON.stringify(b);assert.equal(restoreBattle(),null);assert.equal(cache.couronnes_arcanes_v1,'profile stays intact');
 });
-test('V2.11 original pixel sprites and scenery are fully embedded and deterministic',()=>{
+test('V2.11 repère neutre et décor historique sont autonomes et déterministes',()=>{
  const sprites=new Set();for(const role of ['fighter','ranged','heavy','caster','support','undead','beast','flying']){
-  const src=arenaSprite(CARDS.militia,role);assert.equal(arenaSprite(CARDS.militia,role),src);assert.match(decodeURIComponent(src),/crispEdges/);sprites.add(src);
+  const src=arenaSprite(CARDS.militia,role);assert.equal(arenaSprite(CARDS.militia,role),src);assert.match(src,/^data:image\/svg\+xml,/);sprites.add(src);
  }
- assert.equal(sprites.size,8);assert.match(arenaBackdrop(),/^data:image\/svg\+xml,/);
+ assert.equal(sprites.size,1);assert.match(arenaBackdrop(),/^data:image\/svg\+xml,/);
 });

@@ -1,5 +1,17 @@
 # Architecture modulaire — V2.6
 
+## État de la remise à zéro graphique du 20/10/2026
+
+La base PR nº 20 conserve 26 modules. Les anciennes illustrations sont retirées ;
+`assets/artwork.json` est vide et `visuals.js` fournit un SVG neutre. Le builder
+contrôle les futurs reçus et empreintes et refuse les WebP non catalogués.
+`ui/arena-art.js` garde le décor du plateau historique et remplace les silhouettes
+par ce repère neutre. `ui/combat-fx.js` conserve son API avec une fin immédiate,
+sans ancien lecteur d'effets. Aucune règle, IA ou sauvegarde modifiée par rapport
+à la base nº 20. Décor peint, cadres et interactions conservés.
+
+Les comptes de modules, portraits et propositions ci-dessous sont historiques.
+
 Le moteur reste indépendant du DOM, du navigateur et des sauvegardes. Le principe de conception est décrit dans `AGENTS.md` et la refonte initiale dans `ARCHITECTURE_MODULAIRE_V2_5.md`.
 
 ```text
