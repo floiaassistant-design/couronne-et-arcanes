@@ -19,7 +19,7 @@ async def run(browser,label,viewport):
             ready=page.locator('.hand-card.hand-ready:has(.stat.atk)').first
         before=await page.evaluate('(k)=>localStorage.getItem(k)',KEY)
         await ready.click() if label=='desktop' else await ready.tap()
-        assert await panel.is_hidden()
+        assert await panel.is_hidden(),(label,step,await panel.inner_text())
         await page.wait_for_timeout(220);assert await panel.is_hidden()
         assert await page.evaluate('(k)=>localStorage.getItem(k)',KEY)==before
         assert await page.locator('.battle-cell.available').count()>0
