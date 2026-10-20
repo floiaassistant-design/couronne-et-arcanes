@@ -58,7 +58,12 @@ async def run(browser,label,viewport):
     await ready.click();assert await page.evaluate('selectedCard')==1
     assert 'Lame de feu' in await panel.inner_text()
     assert await panel.locator('.inspection-stats').count()==0
-    # Une carte sélectionnée n'empêche pas de lire une unité ; aucune attaque ni pose.
+    # En paysage court, une fiche épinglée peut recouvrir la case à consulter.
+    # Sa fermeture libère cette case et conserve le choix de carte.
+    if label=='landscape':
+        await panel.locator('[data-action="close-inspection"]').click()
+        assert await page.evaluate('selectedCard')==1
+    # Lire l'unité avec une carte sélectionnée ne déclenche aucune pose.
     chosen=await page.evaluate('JSON.stringify({battle,selectedCard})')
     await unit.hover();assert await panel.locator('[data-preview-kind="board"]').count()==1
     await unit.tap();assert await page.evaluate('JSON.stringify({battle,selectedCard})')==chosen
