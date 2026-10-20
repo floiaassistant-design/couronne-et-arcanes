@@ -23,10 +23,11 @@ async def run(browser,label,viewport):
     await page.screenshot(path=f'/tmp/ca-card-study-{label}.png',full_page=True)
     await page.locator('#next').click()
     await page.wait_for_selector('.bolt')
-    await page.screenshot(path=f'/tmp/ca-card-study-tir-{label}.png',full_page=True)
+    # Une capture pleine page peut redimensionner le viewport et interrompre les VFX.
+    await page.screenshot(path=f'/tmp/ca-card-study-tir-{label}.png',full_page=False)
     await page.wait_for_selector('.slash')
     await page.wait_for_selector('.ring.healing',timeout=20000)
-    await page.screenshot(path=f'/tmp/ca-card-study-soin-{label}.png',full_page=True)
+    await page.screenshot(path=f'/tmp/ca-card-study-soin-{label}.png',full_page=False)
     await page.wait_for_function("document.querySelector('#next').disabled===false")
     assert await page.locator('#turn').inner_text()=='2'
     assert await page.locator('.duel-card[data-card="shield"] .hp b').inner_text()=='6'
