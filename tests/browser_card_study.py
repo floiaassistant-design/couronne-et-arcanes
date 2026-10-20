@@ -11,6 +11,7 @@ async def layout(page,label):
       const cells=[...document.querySelectorAll('.arena-active-row .battle-cell')].map(e=>e.getBoundingClientRect());
       return {stage:r('.combat-stage'),dock:r('.combat-hand-dock'),hud:r('.battle-hud'),
         hand:r('.hand'),first:r('.hand-card'),end:r('[data-action="end-turn"]'),
+        turn:r('.battle-mid'),controls:r('.vfx-controls'),
         low:Math.max(...cells.map(c=>c.bottom)),high:Math.min(...cells.map(c=>c.top)),
         inside:!!document.querySelector('.combat-stage > .combat-hand-dock'),
         cards:[...document.querySelectorAll('.hand-card')].map(e=>[e.offsetWidth,e.offsetHeight]),
@@ -19,6 +20,7 @@ async def layout(page,label):
     w,h=geometry['viewport'];stage=geometry['stage'];dock=geometry['dock']
     assert abs(stage['x'])<1 and abs(stage['y'])<1,(label,geometry)
     assert abs(stage['w']-w)<1 and abs(stage['h']-h)<1,(label,geometry)
+    assert geometry['controls']['y']>=geometry['turn']['b'],(label,geometry)
     assert geometry['inside'] and dock['b']<=h and geometry['page']<=w+1,(label,geometry)
     assert geometry['low']<=dock['y']-10,(label,geometry)
     assert geometry['high']>=geometry['hud']['b'],(label,geometry)
@@ -142,9 +144,10 @@ async def four_lanes(browser,label,viewport):
         battle.heroes.p.hand=[{id:['militia','shield','archer','cleric'][l],wait:0}];
         battle.heroes.p.cardsPlayed=0;playPlayerCard(battle,0,l);
       }
-      battle.heroes.p.hand=[{id:'banner',wait:2},{id:'paladin',wait:1},{id:'fireball',wait:0}];render();
+      battle.heroes.p.hand=[{id:'banner',wait:2},{id:'paladin',wait:1},{id:'firebolt',wait:0}];render();
     }""")
     assert await page.locator('.arena-active-row').count()==4
+    assert await page.locator('.hand-card').count()==3
     await layout(page,label)
     await page.screenshot(path=f'/tmp/ca-card-study-{label}-4.png',full_page=False)
     await page.close()
