@@ -49,7 +49,7 @@ async def run(browser,label,viewport):
     assert await page.locator('#turn').inner_text()=='1'
     await page.reload();assert await page.locator('#formation').input_value()=='assault'
     await page.emulate_media(reduced_motion='reduce')
-    assert await page.locator('body').get_attribute('data-effects')=='false'
+    await page.wait_for_function("document.body.dataset.effects==='false'")
     await page.locator('#auto').click();await page.wait_for_timeout(500);await page.locator('#auto').click()
     assert await page.locator('.fx').count()==0
     assert int(await page.locator('#turn').inner_text())>=2
