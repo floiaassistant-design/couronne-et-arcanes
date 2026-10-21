@@ -44,7 +44,7 @@ async def run(browser,label,vp):
     }''')
     hand=page.locator('.hand-card[data-index="0"]')
     await image_exact(hand.locator('.generated-face'))
-    assert await page.locator('.hand .generated-counter b').all_inner_texts()==['0','3']
+    assert await page.locator('.hand .generated-counter b').all_inner_texts()==['0','3','1']
     assert await hand.locator('.stat.atk b').inner_text()=='2';assert await hand.locator('.stat.hp b').inner_text()=='5'
     await page.screenshot(path=f'/tmp/ca-milicien-{label}-main.png')
     await hand.click();assert await page.locator('#hand-card-inspection').is_hidden()

@@ -3,7 +3,7 @@
 .generated-face .generated-card-image{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;filter:none!important;transform:none!important;opacity:1;z-index:0}
 .generated-face [data-card-field]{position:absolute!important;right:auto!important;bottom:auto!important;display:flex!important;align-items:center;justify-content:center;min-height:0!important;min-width:0;margin:0!important;padding:0!important;z-index:1;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:#282115!important;text-align:center!important;text-shadow:none!important;overflow:hidden;line-height:1.16;white-space:normal}
 .generated-face .card-title{font:700 5.8cqw/1.1 Georgia,serif!important}
-.generated-face .card-detail{font:500 5cqw/1.22 Georgia,serif!important}
+.generated-face .card-detail{font:500 4cqw/1.22 Georgia,serif!important}
 .generated-face .generated-counter.illustrated-count{display:flex!important;font:700 14cqw/1 Georgia,serif!important;min-height:0!important}
 .generated-face .generated-counter b{font:inherit!important}
 .generated-face .card-stats{position:absolute!important;inset:0!important;display:block!important;margin:0!important;padding:0!important;pointer-events:none}

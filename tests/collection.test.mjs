@@ -41,8 +41,8 @@ test('Les statistiques de la version actuelle réutilisent les bonus du profil',
  profile.reputation.aube=15;profile.equipmentOwned=['lame'];profile.equipped.arme='lame';profile.mastery.archer=22;
  const html=view(profile).collectionUI();
  const cell=html.match(/<td data-card-id="archer"[^>]+data-current-version="true">([\s\S]*?)<\/td>/)[1];
- assert.match(cell,/class="stat atk">⚔ <b>5<\/b>/);
- assert.match(cell,/class="stat hp">♥ <b>8<\/b>/);
+ assert.match(cell,/class="stat atk"[^>]*>⚔ <b>5<\/b>/);
+ assert.match(cell,/class="stat hp"[^>]*>♥ <b>8<\/b>/);
 });
 
 test('Les rangs futurs se consultent sans permettre une fausse évolution',()=>{

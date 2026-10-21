@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "approvedBy": "Propriétaire du projet, instruction explicite dans ChatGPT",
+  "approvedOn": "2026-10-21",
+  "instruction": "tu peux ajouter l'ai autre carte de l'aube par contre je trouve pas top le trait bleu ou rouge dessous sur le plateau faudrai qu'on trouve autre chose mais tu y a pensé déja merci",
+  "scope": "Import manuel des neuf autres cartes Aube v01 de la PR art nº 22, version exacte épinglée ; aucune nouvelle rareté, aucune carte Sylve, aucune fusion de PR.",
+  "sourceRepo": "floiaassistant-design/couronne-et-arcanes-art",
+  "sourceCommit": "96190c837f79e645777967aaf84decbea0ad33a5",
+  "assets": [
+    {
+      "key": "porte_egide_aube_carte_v01",
+      "cardId": "shield",
+      "version": "01",
+      "sha256": "e3d1921d41458eb2d56ae3e70a5e596205caa662ea755fc21080f50dec1012a1"
+    },
+    {
+      "key": "arbaletriere_aube_carte_v01",
+      "cardId": "archer",
+      "version": "01",
+      "sha256": "d5d2da1f5f6af04f7dfef9003506f6d21dab7670815df1b9e51a577b483aa9c7"
+    },
+    {
+      "key": "lancier_remparts_aube_carte_v01",
+      "cardId": "lancer",
+      "version": "01",
+      "sha256": "64735c528005589ff668a23e11ef37e0aaa8792f9088d1da1a1db84c8f6d3a75"
+    },
+    {
+      "key": "soeur_aurore_aube_carte_v01",
+      "cardId": "cleric",
+      "version": "01",
+      "sha256": "27acfda6f426737d29c0d18adc9ebdd6597c2882fbc4122e4e1937889bc5c3af"
+    },
+    {
+      "key": "porte_etendard_aube_carte_v01",
+      "cardId": "banner",
+      "version": "01",
+      "sha256": "8035ea9691681368d7e9e0a48d0b57bc708f0582a79e82378fbd7fca2fcde84f"
+    },
+    {
+      "key": "capitaine_aube_carte_v01",
+      "cardId": "scoutcaptain",
+      "version": "01",
+      "sha256": "94a13f9b986647904b6301002d4bf753c19ffba1fefda9228ae9f1bf856d7f67"
+    },
+    {
+      "key": "paladin_solaire_aube_carte_v01",
+      "cardId": "paladin",
+      "version": "01",
+      "sha256": "7fd9dbc5e7a038dd975e49e47caa76e9ef98cd19024fe4540b2175c36bdb04bf"
+    },
+    {
+      "key": "prieur_solaire_aube_carte_v01",
+      "cardId": "sunpriest",
+      "version": "01",
+      "sha256": "405401febff6d489ad9cefda095205bf3f83a57e27eb273fce865f8dba8ca61b"
+    },
+    {
+      "key": "ange_bastion_aube_carte_v01",
+      "cardId": "dawnbastion",
+      "version": "01",
+      "sha256": "9553ad0e0bd11014ac093bd7fbbb2594379d39a1f608bfae41bb8649866a0af0"
+    }
+  ],
+  "note": "Les images du snapshot atelier restent en review. La demande ultérieure de les ajouter au jeu autorise ce lot identifiable ; elle ne modifie pas le manifeste atelier et ne vaut pas autorisation de fusion."
+}

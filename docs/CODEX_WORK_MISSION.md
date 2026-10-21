@@ -21,8 +21,9 @@ déjà. Lire leurs modules et tests avant de créer une nouvelle implémentation
 
 Le propriétaire conserve plateau et présentation mais demande des illustrations
 et animations neuves. Les anciens portraits, silhouettes, planches et accords
-sont historiques. La branche du Milicien importe une carte complète v02 autorisée par instruction
-humaine le 21/10/2026 ; les autres personnages gardent des repères neutres. Ne pas réinstaller les anciens lots ni restaurer leur lecteur d'effets.
+sont historiques. La PR Milicien nº 25 importe une carte complète v02 autorisée le 21/10/2026.
+La branche Aube suivante ajoute les neuf v01 de la PR atelier nº 22 et remplace
+le trait de camp par deux sceaux. Les autres ordres gardent des repères neutres. Ne pas réinstaller les anciens lots ni restaurer leur lecteur d'effets.
 
 Commencer par une seule illustration pilote. Source, prompt, provenance, droits,
 version, dimensions, poids, empreinte et accord humain exact restent dans GitHub.

@@ -66,3 +66,13 @@ normalisées. Ne pas redessiner les bordures ni recadrer cette image comme
 un portrait. Noms et descriptions sont échappés ; stats et délai proviennent
 du profil ou du combat via les fonctions existantes. Les futures raretés ne
 créent ni carte ni possession. [Coordonnées et contrôles](MILICIEN_INTEGRATION_2026_10_21.md).
+
+## Neuf autres Aube v01 — import manuel du 21/10/2026
+
+La demande d’ajouter les autres cartes de l’Aube autorise les neuf exports de
+la PR atelier nº 22 au commit `96190c837f79e645777967aaf84decbea0ad33a5`.
+Le reçu `approvals/aube-neuf-cartes-v01.json` identifie chaque ID, clé, version
+et empreinte. Le manifeste atelier garde son statut review ; aucune fusion art
+ni jeu n’est déduite de cette instruction. Même contrat et zones du pilote,
+sources exactes sans retouche ; mappings individuels dans le jeu, aucune Sylve.
+[Périmètre et contrôles](AUBE_INTEGRATION_2026_10_21.md).
