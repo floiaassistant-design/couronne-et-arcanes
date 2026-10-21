@@ -121,9 +121,9 @@ export function resolveControlSpell(b,side,card,lane,hooks){
  else if(card.ability==='spell_trap')placeTrap(b,side,trapPlan(b,side,lane),'rune',hooks.emit,hooks.note);
 }
 // Capacités des nouvelles unités, une fois au plus tous les trois tours.
-export function prepareControlUnits(b,hooks){
+export function prepareControlUnits(b,hooks,sideFilter=null){
  const units=[];
- for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++)if(alive(b.board[lane][col]))units.push({u:b.board[lane][col],lane,col});
+ for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++)if(alive(b.board[lane][col])&&(!sideFilter||b.board[lane][col].side===sideFilter))units.push({u:b.board[lane][col],lane,col});
  // Même alternance d'initiative que le déplacement historique.
  const first=b.round%2?'p':'e';
  units.sort((a,z)=>(a.u.side===first?0:1)-(z.u.side===first?0:1)||a.lane-z.lane||a.col-z.col);
