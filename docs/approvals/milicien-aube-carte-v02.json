@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "approvedBy": "Propriétaire du projet, instruction explicite dans ChatGPT",
+  "approvedOn": "2026-10-21",
+  "instruction": "intégre le mélicien au jeux",
+  "scope": "Import manuel de la carte complète Milicien de l’Aube v02 issue de la PR art nº 20 fusionnée ; aucune autre illustration ni fusion de la nouvelle PR jeu.",
+  "sourceRepo": "floiaassistant-design/couronne-et-arcanes-art",
+  "sourceCommit": "e43c3a877f45bde9a6f99fb1fa1005abdc47bace",
+  "assets": [
+    {
+      "key": "milicien_aube_carte_v02",
+      "cardId": "militia",
+      "version": "02",
+      "sha256": "7900c39aed106d66cf92a31bee39de56135998b32b41160d6ab07f9e50281794"
+    }
+  ],
+  "note": "Le manifeste atelier épinglé indique encore review. La présente instruction d’import, postérieure, autorise cette version exacte dans le jeu ; la fusion art seule ne constituait pas une approbation esthétique."
+}

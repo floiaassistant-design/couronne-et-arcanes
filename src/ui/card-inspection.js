@@ -1,9 +1,10 @@
+import {generatedCardFace} from './generated-card.js';
 // Fiche partagée main/plateau : lecture et état éphémère, aucune action de jeu.
 import {CARDS,FACTIONS,CLASSES,cardTraits} from '../data.js';
 import {unitStats} from '../engine/unit-stats.js';
 import {formationBonus} from '../engine.js';
 import {silenced} from '../engine/battle-control.js';
-import {visualFor,artSrc} from '../visuals.js';
+import {visualFor,artSrc,cardTemplateFor} from '../visuals.js';
 import {cardArenaEnabled} from './card-arena.js';
 
 export function boardInspectionData(battle,uid){
@@ -22,7 +23,7 @@ export function cardInspectionContent(card,entry,stats,esc,{illustrated=false,bo
  const readiness=board?`${board.side==='p'?'Votre unité':'Unité adverse'} · Ligne ${board.lane+1}, case ${board.col}`:entry.wait>0?'Attente '+entry.wait+' tour'+(entry.wait>1?'s':''):'Prête à jouer';
  const heading=`<div class="inspection-heading">${illustrated?`<span class="inspection-context">${board?'SUR LE PLATEAU':'DANS VOTRE MAIN'}</span>`:`<b>${esc(card.name)}</b>`}<button type="button" data-action="close-inspection" aria-label="Fermer la fiche">×</button></div>`;
  const statistics=stats?`<div class="inspection-stats">${board?'En combat':'À l’invocation'} : <b>ATQ ${stats.atk} / PV ${board?stats.hp+'/':''}${stats.maxhp}</b></div>`:'';
- const identity=illustrated?`<div class="inspection-feature"><img class="inspection-art" src="${artSrc(visualFor(card,{cards:true}).art)}" alt="" data-artwork-status="placeholder" draggable="false"><div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span><span class="inspection-rarity">${esc(card.rarity)} · ${esc(card.type)}</span><div class="inspection-readiness">${esc(readiness)}</div>${statistics}</div></div>`:statistics;
+ const identity=illustrated?`<div class="inspection-feature ${cardTemplateFor(card)?'inspection-generated-feature':''}">${cardTemplateFor(card)?generatedCardFace(card,{stats,delay:board?0:entry.wait,kind:board?'deployed':'remaining',esc}):`<img class="inspection-art" src="${artSrc(visualFor(card,{cards:true}).art)}" alt="" data-artwork-status="placeholder" draggable="false">`}<div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span><span class="inspection-rarity">${esc(card.rarity)} · ${esc(card.type)}</span><div class="inspection-readiness">${esc(readiness)}</div>${statistics}</div></div>`:statistics;
  const body=`<div class="inspection-body"><p class="inspection-description">${esc(card.description)}</p>
   <div class="inspection-summary">${esc(faction.name)} · ${esc(card.rarity)}${card.heroClass?' · '+esc(CLASSES[card.heroClass].name):''} · ${esc(readiness)}</div>
   ${traits.length?`<div class="inspection-traits">${traits.map(t=>`<span>${esc(t)}</span>`).join(' · ')}</div>`:''}

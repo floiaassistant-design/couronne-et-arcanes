@@ -1,6 +1,32 @@
 {
   "schemaVersion": 1,
-  "generation": "reset-2026-10-20",
-  "decision": "Repartir sur des illustrations et animations neuves ; conserver plateau et présentation des cartes.",
-  "assets": []
+  "assets": [
+    {
+      "key": "milicien_aube_carte_v02",
+      "kind": "card",
+      "cardId": "militia",
+      "version": "02",
+      "status": "approved",
+      "approvedBy": "Propriétaire du projet, instruction explicite dans ChatGPT",
+      "approvalRef": "docs/approvals/milicien-aube-carte-v02.json",
+      "sourceRepo": "floiaassistant-design/couronne-et-arcanes-art",
+      "sourceCommit": "e43c3a877f45bde9a6f99fb1fa1005abdc47bace",
+      "sourceAsset": "exports/cards/milicien-aube-carte-v02.webp",
+      "sourceOriginal": {
+        "path": "sources/cards/milicien-aube-carte-v02.png",
+        "sha256": "5705ca753bf480c1cf970e46a89c8a2f934676d6da931305b6409feb9a68863f",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 3471038
+      },
+      "license": "Contenu généré pour le projet ; source de référence v01 créée pour le même projet, aucune exclusivité juridique revendiquée.",
+      "provenance": "ImageGen intégré, création du 2026-10-21 à partir de la source originale v01 de ce projet. Export exact de la PR art nº 20 fusionnée, sans recadrage.",
+      "target": "assets/cards/milicien_aube_carte_v02.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 360012,
+      "sha256": "7900c39aed106d66cf92a31bee39de56135998b32b41160d6ab07f9e50281794"
+    }
+  ],
+  "generation": "reset-2026-10-20"
 }

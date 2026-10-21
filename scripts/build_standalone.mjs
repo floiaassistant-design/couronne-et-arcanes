@@ -3,29 +3,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {createHash} from 'node:crypto';
-import {ART_NAMES,UI_ART_NAMES} from '../src/visuals.js';
+import {ART_NAMES,UI_ART_NAMES,CARD_ART_NAMES,CARD_TEMPLATES} from '../src/visuals.js';
+import {readArtwork} from './lib/artwork.mjs';
 import {readUIArtwork} from './lib/ui-artwork.mjs';
 
 const isCardStudy=process.argv.includes('--cards');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=file=>fs.readFileSync(path.join(root,file),'utf8');
-const manifest=JSON.parse(read('assets/artwork.json'));
-if(manifest.schemaVersion!==1||!Array.isArray(manifest.assets))throw Error('Registre graphique invalide');
-const art={};
-for(const a of manifest.assets){
- if(a.status!=='approved'||!a.approvedBy||!a.license||!a.approvalRef||!a.sourceRepo||!a.sourceCommit)throw Error('Approbation/provenance manquante');
- if(!/^[a-z0-9_-]+$/.test(a.key)||a.target!==`assets/creatures/${a.key}.webp`||!ART_NAMES.includes(a.key)||art[a.key])throw Error('Clé graphique invalide');
- const receiptPath=path.resolve(root,a.approvalRef);
- if(!receiptPath.startsWith(root+path.sep))throw Error('Reçu hors du projet');
- const receipt=JSON.parse(fs.readFileSync(receiptPath,'utf8'));
- if(!receipt.assets?.some(x=>x.sha256===a.sha256&&x.version===a.version))throw Error('Reçu de version incorrect');
- const bytes=fs.readFileSync(path.join(root,a.target));
- if(bytes.length!==a.bytes||createHash('sha256').update(bytes).digest('hex')!==a.sha256)throw Error('Empreinte graphique incorrecte');
- art[a.key]='data:image/webp;base64,'+bytes.toString('base64');
-}
-const files=fs.readdirSync(path.join(root,'assets/creatures')).filter(n=>n.endsWith('.webp'));
-if(files.length!==manifest.assets.length||ART_NAMES.length!==manifest.assets.length)throw Error('Illustration non cataloguée');
+const {art,cardArt}=readArtwork(root,{portraits:ART_NAMES,cards:CARD_ART_NAMES,templates:CARD_TEMPLATES});
 const uiArt=readUIArtwork(root,UI_ART_NAMES);
 const factories=new Map();
 function resolve(origin,request){
@@ -37,7 +22,7 @@ function resolve(origin,request){
 function convert(filename, testing=false){
  if(factories.has(filename))return;
  let text=read(filename),deps=[];
- if(filename==='src/visuals.js')text=text.replace('export const INLINE_CREATURES={};','export const INLINE_CREATURES='+JSON.stringify(art)+';');
+ if(filename==='src/visuals.js')text=text.replace('export const INLINE_CREATURES={};','export const INLINE_CREATURES='+JSON.stringify(art)+';').replace('export const INLINE_CARDS={};','export const INLINE_CARDS='+JSON.stringify(cardArt)+';');
  text=text.replace(/^import\s*\{([^}]+)\}\s*from\s*['"]([^'"]+)['"];?\s*$/gm,(_all,items,request)=>{
   const dep=resolve(filename,request);deps.push(dep);
   return `const {${items}}=__load(${JSON.stringify(dep)});`;
@@ -74,6 +59,7 @@ const css=read('styles.css');
 const cardCss=read('assets/card-arena.css');
 const previewCss=read('assets/card-preview.css');
 const collectionCss=read('assets/collection.css');
+const generatedCss=read('assets/generated-card.css');
 const paintedArtCss=read('assets/backgrounds/arena-celeste-peinte.css');
 const paintedLayoutCss=read('assets/backgrounds/arena-peinte-layout.css');
 if(!html.includes('<link rel="stylesheet" href="./styles.css" />')||!html.includes('<script type="module" src="./src/app.js"></script>'))throw Error('Points d’entrée HTML non reconnus');
@@ -83,6 +69,7 @@ html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-peint
 html=html.replace('<link rel="stylesheet" href="./assets/card-arena.css" />',()=>'<style>\n'+cardCss+'\n</style>');
 html=html.replace('<link rel="stylesheet" href="./assets/card-preview.css" />',()=>'<style>\n'+previewCss+'\n</style>');
 html=html.replace('<link rel="stylesheet" href="./assets/collection.css" />',()=>'<style>\n'+collectionCss+'\n</style>');
+html=html.replace('<link rel="stylesheet" href="./assets/generated-card.css" />',()=>'<style>\n'+generatedCss+'\n</style>');
 for(const [target,source] of Object.entries(uiArt)){
  const link=`<link rel="stylesheet" href="./${target}" />`;
  if(!html.includes(link))throw Error('Fond UI non relié à la page : '+target);
@@ -92,4 +79,4 @@ if(isCardStudy)html=html.replace('<body>','<body data-card-combat="true">');
 html=html.replace('<script type="module" src="./src/app.js"></script>','<script>\n'+js.replace(/<\/script/gi,'<\\/script')+'\n</script>');
 const output=isTest?(isCardStudy?'tests/ESSAI_CARTES.test.html':'tests/JOUER.test.html'):(isCardStudy?'ESSAI_CARTES.html':'JOUER.html');
 fs.writeFileSync(path.join(root,output),html);
-console.log(`${output} généré (${Buffer.byteLength(html)} octets, ${factories.size} modules, ${Object.keys(art).length} illustrations intégrées)`);
+console.log(`${output} généré (${Buffer.byteLength(html)} octets, ${factories.size} modules, ${Object.keys(art).length+Object.keys(cardArt).length} illustrations intégrées)`);

@@ -29,7 +29,7 @@ test('Seule la rareté réelle porte la possession et les actions de deck',()=>{
  assert.equal((row.match(/Possédée ×4/g)||[]).length,2); // label accessible + statut visible
  assert.equal((row.match(/data-action="deck-add"/g)||[]).length,1);
  assert.equal((row.match(/data-action="deck-remove"/g)||[]).length,1);
- assert.equal((row.match(/class="unit-card collection-future"/g)||[]).length,5);
+ assert.equal((row.match(/class="unit-card collection-future(?: generated-template)?"/g)||[]).length,5);
  assert.match(row,/À concevoir/);
  const future=row.match(/<td[^>]+data-collection-rarity="divine"([\s\S]*?)<\/td>/)[1];
  assert.doesNotMatch(future,/data-action="deck-(?:add|remove)"/);

@@ -1,6 +1,7 @@
+import {generatedCardFace} from './generated-card.js';
 // Catalogue en lecture : les versions à concevoir ne créent jamais de cartes.
 import {CARDS,FACTIONS} from '../data.js';
-import {visualFor,artSrc,UI_BACKGROUNDS} from '../visuals.js';
+import {visualFor,artSrc,UI_BACKGROUNDS,cardTemplateFor} from '../visuals.js';
 
 export const COLLECTION_RANKS=Object.freeze([
  {id:'commun',name:'Commune'},
@@ -17,6 +18,7 @@ export function collectionEntries(profile,faction='all',ownedOnly=false){
 }
 
 function futureCard(card,rarity,esc){
+ if(cardTemplateFor(card))return `<div class="unit-card collection-future generated-template" data-rarity="${rarity}">${generatedCardFace(card,{delay:'—',description:rarity==='éveillée'?'Forme éveillée à concevoir.':'Évolution à concevoir.',esc})}</div>`;
  const visual=visualFor(card);
  return `<div class="unit-card collection-future" data-rarity="${rarity}">
   <div class="portrait creature-portrait role-${visual.role}"><img class="creature-image" src="${artSrc(visual.art)}" alt="" loading="lazy" draggable="false" /><span class="portrait-emblem" aria-hidden="true">${card.icon}</span></div>
