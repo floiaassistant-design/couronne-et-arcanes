@@ -65,6 +65,8 @@ jobs:
           python3 -m playwright install --with-deps chromium
       - name: Construire le HTML réservé aux tests navigateur
         run: npm run build:test
+      - name: Collection pleine largeur, exemplaires réels et reprise
+        run: python3 tests/browser_collection.py
       - name: Parcours V2.8 ordinateur et téléphone simulé
         run: python3 tests/browser_class_skills_v28.py
       - name: Nouvelle partie, raretés et reprise sur ordinateur et mobile
@@ -92,6 +94,7 @@ jobs:
             /tmp/ca-arena-*.png
             /tmp/ca-combat-*.png
             /tmp/ca-capacites-*.png
+            /tmp/ca-collection-*.png
             JOUER.html
           if-no-files-found: warn
           retention-days: 14

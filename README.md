@@ -24,6 +24,20 @@ de combat sont retirées. Les cartes affichent des emplacements neutres avec
 leurs noms et vraies valeurs. Le décor peint, la main, les cadres, les aperçus
 au survol et les interactions restent en place.
 
+## Collection — proposition du 21 octobre 2026
+
+La page Collection occupe toute la largeur : onglets Aube, Sylve, Ombre, Forge
+et Éther, puis Sorts et Tous. Une ligne par personnage et six colonnes :
+Commune, Rare, Épique, Légendaire, Divine rouge et Éveillée jaune céleste.
+Seule la version du catalogue possède de vraies statistiques et une possession.
+Les autres portent « À concevoir » ; aucune évolution de rareté n’est créée.
+Deck, compositions et compétences de classe restent accessibles en bas de page.
+
+Le fond illustré est embarqué et tracé dans `assets/ui-artwork.json`. Les
+portraits restent neutres ; le Milicien en cours de création sera importé
+après validation de sa version exacte. [Périmètre et vérifications](docs/COLLECTION_2026_10_21.md).
+Cette proposition reste sur une branche et demande une validation avant fusion.
+
 ## Jouer et développer
 
 - `JOUER.html` : jeu autonome, ouvrable sans réseau.
@@ -64,7 +78,7 @@ distants avant de les déclarer réussis. Aucun téléphone physique n'est garan
 
 Les clés `couronnes_arcanes_v1`, `couronnes_arcanes_bataille_v1` et le réglage
 d'animations sont conservés. Les effets transitoires restent exclus du stockage.
-Les sources sont séparées entre moteur, IA, vues et stockage ; 26 modules.
+Les sources sont séparées entre moteur, IA, vues et stockage ; 27 modules dans cette proposition.
 
 [État](docs/ETAT_PROJET.md), [architecture](docs/ARCHITECTURE_MODULAIRE_V2_6.md),
 [rapport avant remise à zéro](docs/CHECKUP_NETTOYAGE_2026_10_20.md),

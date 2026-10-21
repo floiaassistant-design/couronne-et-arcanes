@@ -1,0 +1,72 @@
+/* Collection plein écran ; aucun style de combat n’est modifié. */
+body.collection-mode .topbar,body.collection-mode .main-nav,body.collection-mode .footer{max-width:none}
+body.collection-mode #view{max-width:none;padding:0 0 36px;min-width:0}
+.collection-screen{--collection-bg:#181913;--collection-panel:#25251d;--collection-edge:#594c32;--collection-gold:#e5c080;background:var(--collection-bg);color:#f1e6cf;min-height:70vh}
+.collection-hero{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;min-height:245px;padding:32px clamp(18px,3vw,46px);background-color:#242218;background-image:linear-gradient(90deg,#11110ed9,#11110e44 60%,#11110e22),var(--collection-scene,none);background-size:cover;background-position:center 40%}
+.collection-hero .kicker{color:#edd0a0}.collection-hero .page-title{color:#fff0d4;text-shadow:0 2px 12px #0008}.collection-hero .page-sub{color:#ead6b8;text-shadow:0 1px 6px #000}
+.collection-hero>.btn{align-self:flex-end;background:#171710e6;border-color:#aa8b5266;color:#f3dbb0}
+.collection-content{padding:18px clamp(12px,2vw,30px) 24px}
+.collection-factions{display:flex;flex-wrap:wrap;gap:5px;padding:7px;background:var(--collection-panel);border:1px solid var(--collection-edge);border-radius:8px}
+.collection-factions button{flex:1;min-width:85px;min-height:46px;padding:10px 15px;border:1px solid transparent;border-radius:4px;background:transparent;color:#c9bda3;font:500 18px Georgia,serif}
+.collection-factions button[aria-pressed=true]{background:#ddbb7d;color:#30220f;border-color:#f3d29c}
+.collection-factions button:focus-visible,.collection-table-scroll:focus-visible{outline:3px solid #ffedb4;outline-offset:3px}
+.collection-toolbar{margin:16px 0;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.collection-toolbar label{display:flex;align-items:center;gap:9px;min-height:44px}
+.collection-toolbar input{width:18px;height:18px;accent-color:#ddbb7d}
+.collection-catalogue{padding:18px 13px 6px;background:var(--collection-panel);border:1px solid var(--collection-edge);border-radius:9px;min-width:0}
+.collection-order-heading{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;padding:0 4px 8px}
+.collection-order-heading h2,.collection-spells h2{font:500 25px Georgia,serif;margin:0 0 6px}.collection-order-heading p{font-size:12px;color:#c1b79f;line-height:1.55;margin:0 0 6px;max-width:510px}
+.collection-table-scroll{overflow-x:auto;max-width:100%;padding:4px 3px 12px;scrollbar-color:#a28c61 #1d1e18}
+.collection-table{width:100%;min-width:1080px;table-layout:fixed;border-collapse:separate;border-spacing:0}
+.collection-table th{font-weight:500}.collection-table thead th{padding:12px 6px 16px;font-size:13px;color:var(--collection-rarity,#c8bca1);text-align:center}
+.collection-table thead th:first-child{width:145px;text-align:left}
+.collection-table td{padding:14px 6px 18px;border-top:1px solid #a68a5038;vertical-align:top}
+.collection-table .collection-character{padding:16px 13px 20px 0;border-top:1px solid #a68a5038;vertical-align:middle;text-align:left}
+.collection-character:before{content:'';display:block;width:30px;height:2px;background:#b39555;margin-bottom:14px}
+.collection-character h3{font:500 20px/1.25 Georgia,serif;color:var(--collection-gold);margin:0 0 8px}.collection-character p{font-size:12px;color:#bdb29a;margin:0}
+.collection-version{display:flex;flex-direction:column;height:100%;min-width:0}
+.collection-card-visual{position:relative;min-width:0;flex:1;display:flex}
+.collection-version .unit-card{position:relative;isolation:isolate;display:flex;flex-direction:column;width:100%;min-width:0;min-height:292px;height:100%;padding:6px;background:linear-gradient(135deg,#303026,#24251e);border-radius:8px;border:3px solid var(--rarity-border);box-shadow:inset 0 0 0 1px #b3965733,0 4px 10px #0005}
+.collection-screen [data-rarity=commun],.collection-inspection [data-rarity=commun]{--collection-rarity:#b8b0a1;--rarity-border:#b8b0a1}
+.collection-screen [data-rarity=rare],.collection-inspection [data-rarity=rare]{--collection-rarity:#83b5db;--rarity-border:#83b5db}
+.collection-screen [data-rarity=épique],.collection-inspection [data-rarity=épique]{--collection-rarity:#bc91d2;--rarity-border:#bc91d2}
+.collection-screen [data-rarity=légendaire],.collection-inspection [data-rarity=légendaire]{--collection-rarity:#e5bc6d;--rarity-border:#e5bc6d}
+.collection-screen [data-rarity=divine],.collection-inspection [data-rarity=divine]{--collection-rarity:#f06a5f;--rarity-border:#f06a5f}
+.collection-screen [data-rarity=éveillée],.collection-inspection [data-rarity=éveillée]{--collection-rarity:#fff09a;--rarity-border:#fff09a}
+.collection-version .unit-card .portrait{position:relative;inset:auto;z-index:auto;flex:none;height:116px!important;min-height:116px;width:100%;border:1px solid #9e855044;border-radius:3px;background:#1b211f;margin:0;overflow:hidden}
+.collection-version .unit-card .creature-image{object-fit:cover;object-position:center 35%;filter:none;transition:none}
+.collection-version .unit-card:hover .creature-image{transform:none}
+.collection-version .unit-card .portrait:after{inset:0;height:auto;background:linear-gradient(transparent,#171a1844);opacity:1}
+.collection-version .unit-card .portrait-emblem{display:grid;right:5px;bottom:5px}
+.collection-version .unit-card .card-head,.collection-version .unit-card .card-quality-tag,.collection-version .unit-card .illustrated-count,.collection-version .unit-card .illustrated-faction,.collection-version .unit-card .card-traits{display:none!important}
+.collection-version .unit-card .card-title{position:relative;inset:auto;margin:0!important;padding:8px 2px 6px;min-height:48px;display:flex;align-items:center;justify-content:center;text-align:center;background:none;color:#f1e4c5;font:500 14px/1.25 Georgia,serif}
+.collection-version .unit-card .card-detail{position:relative;inset:auto;display:block;margin:0;min-height:64px;flex:1;padding:8px 6px;border:1px solid #a88e5944;border-radius:3px;background:#171912;color:#d4c9b0;font-size:11px;line-height:1.5;text-align:left;white-space:normal;overflow:visible}
+.collection-version .unit-card .card-stats{position:relative;inset:auto;margin:6px 0 0;display:flex;justify-content:space-between;gap:5px}
+.collection-version .unit-card .card-stats .stat{font-size:12px;padding:4px;background:#20231a;border:1px solid #9a835244;border-radius:4px}
+.collection-version .unit-card .card-stats .stat b{font-size:15px}
+.collection-version .unit-card .stat.cd,.collection-version .unit-card .card-rarity{display:none}
+.collection-future .creature-image{opacity:.5;filter:grayscale(.8)!important}
+.collection-delay{position:absolute;top:9px;left:9px;z-index:3;display:grid;place-items:center;width:29px;height:30px;border:1px solid #cfad69;border-radius:4px 4px 9px 9px;background:#191d14;color:#f6dfb3;font:500 19px Georgia,serif}
+.collection-possession{font-size:12px;line-height:1.5;min-height:27px;margin:9px 0 7px;display:flex;align-items:center;justify-content:center;color:#beb6a4}
+.collection-possession.is-owned{background:#51452b;border-radius:4px;color:#efcc86}
+.collection-card-actions{display:flex;align-items:center;justify-content:space-between;gap:3px;flex-wrap:wrap;min-height:38px}
+.collection-card-actions .btn{min-width:38px;min-height:38px;padding:7px 8px;font-size:11px;margin:0}
+.collection-deck-actions{display:flex;gap:4px}
+.collection-spells{padding:22px 0}.collection-spells .card-grid{margin-top:15px}
+.collection-management{padding:0 clamp(12px,2vw,30px) 26px;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start;scroll-margin-top:20px}
+.collection-management .deck-workshop{grid-column:1}.collection-management .collection-skills{grid-column:1;margin-top:0}
+.collection-management .deck-aside{position:static;grid-column:2;grid-row:1/3;margin:0;min-width:0}
+.collection-management .deck-list{max-height:none}.collection-management .deck-preset-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.collection-inspection-card{max-width:250px;margin:0 auto}.collection-inspection-card .unit-card{max-height:410px;overflow:auto}
+.collection-inspection .collection-future .portrait{height:145px}.collection-inspection .card-detail{font-size:13px}
+.modal:has(.collection-inspection){max-height:calc(100dvh - 28px);overflow-y:auto}
+@media(max-width:760px){
+ .collection-hero{padding:26px 17px;min-height:230px;background-position:62% center}
+ .collection-hero .page-title{font-size:38px}.collection-hero .page-sub{font-size:13px}
+ .collection-factions button{min-width:80px;flex-basis:25%;padding:10px 8px;font-size:17px}
+ .collection-order-heading h2{font-size:23px}.collection-order-heading p{font-size:12px}
+ .collection-management{display:flex;flex-direction:column;gap:18px}.collection-management>section,.collection-management>.deck-aside{width:100%}
+ .collection-management .deck-aside{order:-1}.collection-management .deck-preset-grid{grid-template-columns:1fr}
+}
+@media(pointer:coarse){.collection-card-actions .btn{min-width:44px;min-height:44px}.collection-table-scroll{scroll-snap-type:x proximity}}
+@media(prefers-reduced-motion:reduce){.collection-screen *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
