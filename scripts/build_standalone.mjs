@@ -44,7 +44,7 @@ Object.defineProperties(window,{
  screen:{configurable:true,get:()=>screen,set:v=>screen=v},
  selectedCard:{configurable:true,get:()=>selectedCard,set:v=>selectedCard=v}
 });
-Object.assign(window,{render,save,load,loadBattle,persistBattle,settle,hideModal,showModal,startMission,startTower,startDungeonStage,startDungeon,navigate,act,createBattle,formationBonus,heroLevel,masteryRank,HERO_LEVEL_THRESHOLD,playPlayerCard,endPlayerTurn,usePower,heroShieldBonus,chooseHeroTalent});
+Object.assign(window,{render,save,load,loadBattle,persistBattle,settle,hideModal,showModal,startMission,startTower,startDungeonStage,startDungeon,navigate,act,createBattle,formationBonus,heroLevel,masteryRank,HERO_LEVEL_THRESHOLD,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,heroShieldBonus,chooseHeroTalent});
 `;
  text+='\nObject.assign(__exports,{'+exported.join(',')+'});\n';
  factories.set(filename,text);
