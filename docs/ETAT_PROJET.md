@@ -1,3 +1,10 @@
+## Proposition de tours alternés — PR à valider
+
+- Branche `feat/tours-alternes-ia-visible-20261021`, créée depuis le dernier main GitHub `9e0087ca5503995014aa30f0a31d06bf77cb893e` (Forge nº 29 déjà fusionnée).
+- Nouveaux combats : validation du joueur → mouvement/attaques alliés → pose visible de 0 à 2 cartes par l’IA → mouvement/attaques adverses → pioche. Anciennes sauvegardes maintenues sur l’ancien moteur, sans conversion silencieuse.
+- Effets visuels CSS depuis les événements moteur, sans animation graphique nouvelle ni modification de cartes ; phase adverse sauvegardable. [Règles, périmètre, limites](TOURS_ALTERNES_2026_10_21.md).
+- Équilibrage à refaire sur le nouveau mode ; aucun résultat de benchmark historique ne le valide. Attendre revue des contrôles de la PR, et accord spécifique avant fusion.
+
 # État de reprise — 21 octobre 2026
 
 ## Proposition Légions de la Forge en cours
