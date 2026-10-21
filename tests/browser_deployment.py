@@ -15,7 +15,9 @@ async def run(browser,label,viewport):
     for step,col in enumerate([3,2,1]):
         ready=page.locator('.hand-card.hand-ready:has(.stat.atk)').first
         if not await ready.count():
+            before_round=json.loads(await page.evaluate('(k)=>localStorage.getItem(k)',KEY))['round']
             await page.locator('[data-action="end-turn"]').click()
+            await page.wait_for_function("([key,n])=>JSON.parse(localStorage.getItem(key))?.round>n",[KEY,before_round])
             ready=page.locator('.hand-card.hand-ready:has(.stat.atk)').first
         before=await page.evaluate('(k)=>localStorage.getItem(k)',KEY)
         await ready.click() if label=='desktop' else await ready.tap()
@@ -34,7 +36,10 @@ async def run(browser,label,viewport):
         assert state['board'][0][col] is not None,(label,col,state['board'][0])
         assert state['heroes']['p']['cardsPlayed']<=2
         await page.mouse.move(1,1);await page.wait_for_timeout(220)
-        if step==0:await page.locator('[data-action="end-turn"]').click()
+        if step==0:
+            before_round=state['round']
+            await page.locator('[data-action="end-turn"]').click()
+            await page.wait_for_function("([key,n])=>JSON.parse(localStorage.getItem(key))?.round>n",[KEY,before_round])
     assert state['heroes']['p']['cardsPlayed']==2
     spare=page.locator('.hand-card.hand-ready').first
     if await spare.count():
