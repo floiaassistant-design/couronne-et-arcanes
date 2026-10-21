@@ -16,14 +16,14 @@ function fixture(){
  }
  return {root,registry:JSON.parse(fs.readFileSync(path.join(root,'assets/artwork.json'))),cleanup:()=>fs.rmSync(root,{recursive:true,force:true})};
 }
-test('Les dix cadres complets sont épinglés à leurs octets approuvés et limités aux dix Aube',()=>{
+test('Les 21 cadres complets sont épinglés à leurs octets autorisés et limités à Aube/Sylve',()=>{
  const f=fixture();try{
   const r=readArtwork(f.root,names);assert.deepEqual(r.art,{});
   assert.match(r.cardArt.milicien_aube_carte_v02,/^data:image\/webp;base64,/);
-  const ids=Object.values(CARDS).filter(c=>c.faction==='aube').map(c=>c.id).sort();
-  assert.equal(ids.length,10);assert.deepEqual(Object.keys(CARD_TEMPLATES).sort(),ids);
-  for(const card of Object.values(CARDS))assert.equal(cardTemplateFor(card),card.faction==='aube'?CARD_TEMPLATES[card.id]:null);
-  assert.equal(Object.keys(r.cardArt).length,10);
+  const ids=Object.values(CARDS).filter(c=>['aube','sylve'].includes(c.faction)).map(c=>c.id).sort();
+  assert.equal(ids.length,21);assert.deepEqual(Object.keys(CARD_TEMPLATES).sort(),ids);
+  for(const card of Object.values(CARDS))assert.equal(cardTemplateFor(card),['aube','sylve'].includes(card.faction)?CARD_TEMPLATES[card.id]:null);
+  assert.equal(Object.keys(r.cardArt).length,21);
   for(const key of CARD_ART_NAMES)assert.match(r.cardArt[key],/^data:image\/webp;base64,/);
  }finally{f.cleanup();}
 });

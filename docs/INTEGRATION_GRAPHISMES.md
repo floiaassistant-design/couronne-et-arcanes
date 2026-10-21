@@ -76,3 +76,17 @@ et empreinte. Le manifeste atelier garde son statut review ; aucune fusion art
 ni jeu n’est déduite de cette instruction. Même contrat et zones du pilote,
 sources exactes sans retouche ; mappings individuels dans le jeu, aucune Sylve.
 [Périmètre et contrôles](AUBE_INTEGRATION_2026_10_21.md).
+
+## Onze Sylve v01 — import manuel demandé le 21/10/2026
+
+La demande actuelle « tu peu intégré les carte sylve qui doivent étre préte
+quelque part » autorise le lot exact de la PR atelier nº 23, à
+`c9b8bd8c2ed707f2d266554228f53d4714b95ba4`, dans une nouvelle PR du jeu.
+Reçu : `docs/approvals/sylve-onze-cartes-v01.json`. Le Gardien est approuvé dans
+l’atelier ; les dix autres y restent review. Ce reçu d’import postérieur ne
+modifie pas le manifeste atelier et n’autorise aucune fusion.
+
+Même contrat `kind: card`, mapping individuel et images WebP 768×1152 exactes.
+Les zones Sylve sont celles de la galerie officielle ; textes et valeurs
+viennent toujours du jeu. Le descriptif long du Trappeur est conservé, avec
+lecture en texte normal dans la fiche. [Contrôles](SYLVE_INTEGRATION_2026_10_21.md).

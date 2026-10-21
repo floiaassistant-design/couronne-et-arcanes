@@ -16,7 +16,18 @@ export const CARD_TEMPLATES=Object.freeze({
  scoutcaptain:'capitaine_aube_carte_v01',
  paladin:'paladin_solaire_aube_carte_v01',
  sunpriest:'prieur_solaire_aube_carte_v01',
- dawnbastion:'ange_bastion_aube_carte_v01'
+ dawnbastion:'ange_bastion_aube_carte_v01',
+ treant:'gardien_racines_sylve_carte_v01',
+ ranger:'eclaireuse_sylvestre_carte_v01',
+ wolf:'loup_brumes_sylve_carte_v01',
+ dryad:'dryade_luminescente_sylve_carte_v01',
+ stag:'cerf_astral_sylve_carte_v01',
+ thorn:'traqueur_epines_sylve_carte_v01',
+ pixie:'luciole_epineuses_sylve_carte_v01',
+ bear:'ours_roches_sylve_carte_v01',
+ archdruid:'archidruide_feuillage_sylve_carte_v01',
+ owl:'hibou_crepuscule_sylve_carte_v01',
+ sylvan_trapper:'trappeur_sylvestre_carte_v01'
 });
 export const CARD_ART_NAMES=Object.freeze(Object.values(CARD_TEMPLATES));
 export const INLINE_CARDS={};

@@ -1,9 +1,13 @@
-"""Dix cartes Aube réelles : Collection, cadres exacts, main et sceaux des deux camps."""
+"""Contrôle partagé des cartes complètes : Collection, main et sceaux des deux camps."""
 import asyncio,base64,hashlib,json
 from pathlib import Path
 from playwright.async_api import async_playwright
 ROOT=Path(__file__).resolve().parents[1]
 ASSETS={a['cardId']:a for a in json.loads((ROOT/'assets/artwork.json').read_text())['assets']}
+FACTION_IDS={
+    'aube':{'militia','shield','archer','lancer','cleric','banner','scoutcaptain','paladin','sunpriest','dawnbastion'},
+    'sylve':{'treant','ranger','wolf','dryad','stag','thorn','pixie','bear','archdruid','owl','sylvan_trapper'}
+}
 
 async def exact(face,card_id,readable=True):
     img=face.locator('.generated-card-image');await img.evaluate('(e)=>e.decode()')
@@ -11,13 +15,13 @@ async def exact(face,card_id,readable=True):
     src=await img.get_attribute('src')
     assert hashlib.sha256(base64.b64decode(src.split(',',1)[1])).hexdigest()==ASSETS[card_id]['sha256']
     assert await face.get_attribute('data-card-template')==ASSETS[card_id]['key']
-    if readable:
-        assert await face.locator('[data-card-field]').evaluate_all('''els=>els.every(e=>{
+    fields='[data-card-field]' if readable else '[data-card-field="counter"], [data-card-field="attack"], [data-card-field="health"]'
+    assert await face.locator(fields).evaluate_all('''els=>els.every(e=>{
           const r=e.getBoundingClientRect(),p=e.closest('.generated-face').getBoundingClientRect();
           return r.x>=p.x && r.y>=p.y && r.right<=p.right+1 && r.bottom<=p.bottom+1 && e.scrollWidth<=e.clientWidth+1 && e.scrollHeight<=e.clientHeight+1;
         })'''),card_id
 
-async def run(browser,label,viewport):
+async def run(browser,label,viewport,faction='aube'):
     ctx=await browser.new_context(viewport=viewport,offline=True,reduced_motion='reduce')
     page=await ctx.new_page();errors=[];network=[]
     page.on('pageerror',lambda e:errors.append(str(e)))
@@ -25,9 +29,11 @@ async def run(browser,label,viewport):
     await page.goto((ROOT/'tests/JOUER.test.html').as_uri()+'?cartes=1')
     await page.locator('[data-action="welcome-guide"]').click()
     await page.locator('#nav [data-page="collection"]').click()
+    await page.locator(f'[data-action="collection-faction"][data-id="{faction}"]').click()
     before=await page.evaluate('JSON.stringify(profile)')
-    assert len(ASSETS)==10
-    for card_id in ASSETS:
+    assets={card_id:ASSETS[card_id] for card_id in FACTION_IDS[faction]}
+    assert await page.locator('[data-collection-character]').count()==len(assets)
+    for card_id in assets:
         row=page.locator(f'[data-collection-character="{card_id}"]')
         assert await row.locator('.generated-face').count()==6,card_id
         await exact(row.locator('[data-current-version="true"] .generated-face'),card_id)
@@ -36,13 +42,13 @@ async def run(browser,label,viewport):
         await exact(page.locator('.collection-inspection .generated-face'),card_id)
         await page.keyboard.press('Escape')
     assert await page.evaluate('JSON.stringify(profile)')==before
-    await page.locator('[data-collection-character="shield"]').scroll_into_view_if_needed()
-    await page.screenshot(path=f'/tmp/ca-aube-{label}-collection.png')
+    await page.locator(f'[data-collection-character="{"shield" if faction=="aube" else "treant"}"]').scroll_into_view_if_needed()
+    await page.screenshot(path=f'/tmp/ca-{faction}-{label}-collection.png')
     await page.locator('#nav [data-page="campaign"]').click()
     await page.locator('[data-action="start-mission"][data-id="01"]').click()
     # Contrôle de chaque cadre dans la vraie main puis sur le plateau. Pose par l'API
     # normale ; copie adverse uniquement pour vérifier le rendu des deux camps.
-    for card_id in ASSETS:
+    for card_id in assets:
         await page.evaluate('''id=>{
           battle=createBattle(profile,{id:'01',name:'Revue de l’Aube',enemy:'Bastion',hp:80,difficulty:1,deck:[]},415);
           battle.heroes.p.hand=[{id,wait:0}];render();
@@ -68,7 +74,7 @@ async def run(browser,label,viewport):
             hp=await page.evaluate('battle.board[0][3].hp')
             assert await card.locator('.stat.hp b').inner_text()==str(hp)
         assert await page.locator('.board-card-health').count()==0
-    await page.screenshot(path=f'/tmp/ca-aube-{label}-sceaux.png')
+    await page.screenshot(path=f'/tmp/ca-{faction}-{label}-sceaux.png')
     await page.keyboard.press('Tab')
     await page.locator('.board-card[data-side="e"]').focus()
     assert 'Unité adverse' in await page.locator('#hand-card-inspection').inner_text()
@@ -78,7 +84,7 @@ async def run(browser,label,viewport):
     await page.reload();assert await page.evaluate('JSON.stringify(battle)')==snapshot
     assert await page.locator('.board-camp-seal[data-camp="e"]').count()>=1
     assert not errors,errors;assert not network,network
-    await ctx.close();print(f'Aube {label}: dix exports exacts, 60 projections, champs, poses, deux sceaux et reprise hors réseau PASS',flush=True)
+    await ctx.close();print(f'{faction} {label}: {len(assets)} exports exacts, {len(assets)*6} projections, champs, poses, deux sceaux et reprise hors réseau PASS',flush=True)
 
 async def main():
     async with async_playwright() as p:

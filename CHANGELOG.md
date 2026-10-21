@@ -1,3 +1,12 @@
+## Proposition — Onze cartes Sylve, 21 octobre 2026
+
+- Onze cadres complets issus de la PR atelier nº 23, source exacte `c9b8bd8c`.
+- Mapping par ID, reçu de la demande d’import et contrôles de provenance/empreinte.
+- Textes et vraies valeurs en Collection, main, fiches, plateau et vue classique.
+- Zones du cadre Sylve, chiffres à deux positions et descriptifs longs adaptés.
+- Dix Aube intégrés par nº 25/26 conservés ; rangs, règles et sauvegardes inchangés.
+- Export hors ligne et parcours Sylve bureau/portrait/paysage ; aucune fusion.
+
 ## Proposition — dix cartes Aube et sceaux de camp, 21 octobre 2026
 
 - Neuf cartes complètes v01 rejoignent le Milicien v02, sources atelier nº 22
