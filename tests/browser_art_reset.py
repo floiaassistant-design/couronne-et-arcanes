@@ -15,8 +15,8 @@ async def run(browser,label,viewport):
     await page.locator('[data-action="welcome-start"]').click()
     frame=page.locator('.arena-painted-frame')
     assert await frame.count()==1
-    # Une carte Forge conserve le repli neutre ; Aube, Sylve et Ombre sont illustrés.
-    await page.evaluate("()=>{battle.heroes.p.hand=[{id:'smith',wait:0}];render()}")
+    # Une carte Éther conserve le repli neutre ; les quatre autres ordres sont illustrés.
+    await page.evaluate("()=>{battle.heroes.p.hand=[{id:'spark',wait:0}];render()}")
     image=page.locator('.hand .creature-image').first
     await image.evaluate('(el)=>el.decode()')
     assert await image.evaluate('(el)=>el.naturalWidth===384 && el.naturalHeight===576 && el.currentSrc.startsWith("data:image/svg+xml,")')

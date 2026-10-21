@@ -1,20 +1,27 @@
 # État de reprise — 21 octobre 2026
 
-## Proposition Cour des Ombres en cours
+## Proposition Légions de la Forge en cours
 
-- Branche `feat/ombre-cartes-20261021`, basée sur le dernier main vérifié
-  `3c208df3eb3d5a57953e0c3bd0ee91069895edab`, après la fusion autorisée nº 27.
-- Onze exports v01 de la PR atelier nº 24, commit exact
-  `e1022f20a8ecad8f8843579d0b4af7a1655c69a0`. Le Chevalier est validé artistiquement ;
-  dix images y restent review. La demande actuelle d’intégration est consignée
-  dans `approvals/ombre-onze-cartes-v01.json` avec les onze versions/empreintes.
-- 32 cadres complets, 28 modules. Mapping par ID, images entières non retouchées,
-  vrais noms, attentes et valeurs en Collection, main, fiches et plateau.
-- Même géométrie de champs que la Sylve, description adaptée au cartouche Ombre.
-  Aube/Sylve et leurs zones conservés. Forge/Éther gardent leurs repères neutres.
-- Aucune règle, IA, possession, rareté ni sauvegarde modifiée. Rang futur
+- Branche `feat/forge-cartes-20261021`, depuis le dernier main vérifié
+  `ee8a2482841b722e5fb7e761a1df0c712ac75243`, après la fusion autorisée nº 28.
+- Dix WebP v01 de la PR atelier nº 25, commit exact
+  `ceb0a916959925ad6a41057d11210a3ae84341e5`. Marteau validé artistiquement ;
+  neuf images y restent review. Demande d’import actuelle et dix empreintes
+  dans `approvals/forge-dix-cartes-v01.json` ; manifeste atelier conservé.
+- 42 cartes complètes, 28 modules. Mapping individuel, cadres entiers, zones
+  communes aux galeries Sylve/Ombre/Forge, noms et valeurs dynamiques dans
+  Collection, main, fiches et plateau. Éther garde son repère neutre.
+- Aucune règle, IA, possession, rareté ni sauvegarde modifiée. Rangs futurs
   « À concevoir ». Nouvelle PR séparée, aucune fusion autorisée.
-- [Périmètre, contrôles et limites](OMBRE_INTEGRATION_2026_10_21.md).
+- [Périmètre, contrôles et limites](FORGE_INTEGRATION_2026_10_21.md).
+
+## Cour des Ombres intégrée — PR nº 28
+
+- Fusion à `ee8a2482841b722e5fb7e761a1df0c712ac75243` après « vasy fusionne ».
+- Onze exports exacts de la PR atelier nº 24, à `e1022f20`, ajoutés aux
+  21 Aube/Sylve ; valeurs dynamiques et sources artistiques distinctes.
+- Main vérifié avant la mission Forge ; PR atelier séparée, non fusionnée.
+- [Périmètre et bilan datés](OMBRE_INTEGRATION_2026_10_21.md).
 
 ## Sylve intégrée — PR nº 27
 
@@ -94,6 +101,6 @@ sont historiques. Leurs prochaines tâches, chiffres d'assets et états de PR
 ne remplacent pas le présent état et les commits réels. Aucun ancien paquet
 externe ou conversation ne sert de source de reprise.
 
-Prochaine étape : examiner la PR Cour des Ombres et son aperçu, puis décider
+Prochaine étape : examiner la PR Forge et son aperçu, puis décider
 séparément de sa fusion. Les autres factions et les rangs futurs continuent
 progressivement, avec leurs versions, reçus et mappings exacts.

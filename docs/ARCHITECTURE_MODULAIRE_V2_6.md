@@ -1,6 +1,19 @@
 # Architecture modulaire — V2.6
 
-## Cartes Ombre — proposition du 21/10/2026
+## Cartes Forge — proposition du 21/10/2026
+
+Toujours 28 modules. Dix associations explicites dans `visuals.js`, un reçu
+d’import exact et dix entrées `kind: card` rejoignent les 32 images intégrées.
+La galerie Forge officielle utilise les mêmes cinq zones que Sylve/Ombre ;
+`generated-card.js` partage cette table après résolution du mapping individuel.
+Le sélecteur Forge reprend les tailles de titres et nombres des cadres ornés,
+sans changer les règles Aube/Sylve/Ombre. Pas de nouveau calcul ni module.
+`browser_forge.py` réutilise le parcours commun : 60 projections de collection,
+fiches, vraie pose, deux camps, HP blessés et sauvegarde sur trois formats.
+Le repli neutre reste testé sur Éther. Sources, moteur et stockage inchangés.
+[Contrôles](FORGE_INTEGRATION_2026_10_21.md).
+
+## Cartes Ombre — intégrées par la PR nº 28
 
 Toujours 28 modules. Onze mappings Ombre explicites rejoignent les 21 intégrés.
 `generated-card.js` partage les coordonnées Sylve/Ombre vérifiées dans leurs
@@ -9,7 +22,7 @@ La table de disposition reste pure et ne choisit aucune image par famille.
 Les styles Ombre reçoivent une description à 3,2 cqw pour contenir le texte
 complet de l’Inquisiteur ; Aube et Sylve gardent leurs typographies et zones.
 Le parcours `browser_ombre.py` réutilise les vérifications partagées des cadres,
-champs, vraie pose et reprise sur trois formats. Forge reste testée sans image.
+champs, vraie pose et reprise sur trois formats. Le repli neutre reste testé sur Éther depuis la proposition Forge.
 
 ## Cartes Sylve — intégrées par la PR nº 27
 

@@ -22,8 +22,10 @@ déjà. Lire leurs modules et tests avant de créer une nouvelle implémentation
 Le propriétaire conserve plateau et présentation mais demande des illustrations
 et animations neuves. Les anciens portraits, silhouettes, planches et accords
 sont historiques. La PR Milicien nº 25 importe une carte complète v02 autorisée le 21/10/2026.
-La branche Aube suivante ajoute les neuf v01 de la PR atelier nº 22 et remplace
-le trait de camp par deux sceaux. Les autres ordres gardent des repères neutres. Ne pas réinstaller les anciens lots ni restaurer leur lecteur d'effets.
+Les PR Aube nº 26, Sylve nº 27 et Ombre nº 28 sont désormais fusionnées sur
+accords spécifiques ; les deux sceaux remplacent le trait de camp. La branche
+Forge suivante propose dix v01 de la PR atelier nº 25, épinglées à `ceb0a916`.
+Éther garde ses repères neutres. Lire l’état courant avant toute nouvelle mission. Ne pas réinstaller les anciens lots ni restaurer leur lecteur d'effets.
 
 Commencer par une seule illustration pilote. Source, prompt, provenance, droits,
 version, dimensions, poids, empreinte et accord humain exact restent dans GitHub.

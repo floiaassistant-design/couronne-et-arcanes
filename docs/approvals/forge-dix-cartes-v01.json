@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "approvedBy": "Propriétaire du projet, demande explicite d’intégration dans ChatGPT",
+  "approvedOn": "2026-10-21",
+  "instruction": "tu peuxintégré la classe suivante",
+  "scope": "Import manuel des dix cartes des Légions de la Forge v01 de la PR atelier nº 25 au commit exact ci-dessous. Aucune nouvelle rareté ni possession ; aucune fusion autorisée.",
+  "sourceRepo": "floiaassistant-design/couronne-et-arcanes-art",
+  "sourceCommit": "ceb0a916959925ad6a41057d11210a3ae84341e5",
+  "assets": [
+    {
+      "key": "marteau_monts_forge_carte_v01",
+      "cardId": "smith",
+      "version": "01",
+      "sha256": "8bb58151be97447ece20e46fd9cc6e132bd868a683d3aaa68e4fad52dd803aa6"
+    },
+    {
+      "key": "golem_runique_forge_carte_v01",
+      "cardId": "golem",
+      "version": "01",
+      "sha256": "455273ee8a7887ab2c585630ad84f279cc372188e7939a30e8667d36a2547aae"
+    },
+    {
+      "key": "sapeur_gobelin_forge_carte_v01",
+      "cardId": "bomb",
+      "version": "01",
+      "sha256": "14f3db12e021ebf8cdcb939031c831b1515b43df1180f369aa50101705d16be0"
+    },
+    {
+      "key": "foreur_fer_forge_carte_v01",
+      "cardId": "drill",
+      "version": "01",
+      "sha256": "ef3e00feb6d221476d540e19f854207195f05e0b971ea6eb5dff1a74121d35ef"
+    },
+    {
+      "key": "colosse_braise_forge_carte_v01",
+      "cardId": "colossus",
+      "version": "01",
+      "sha256": "aa327d03a4d5cad36a2706bbcd8a3b0046827f48537438bfee47e6ed8f87acf6"
+    },
+    {
+      "key": "ingenieure_acier_forge_carte_v01",
+      "cardId": "engineer",
+      "version": "01",
+      "sha256": "64cbff9cc177a094b20a2d5fe5e0af371faea22ed62eb9fe07df29b937e04443"
+    },
+    {
+      "key": "canon_terres_rouges_forge_carte_v01",
+      "cardId": "cannon",
+      "version": "01",
+      "sha256": "32f9d352299ddb8d44e8210d24adf3ee16a2cd4a9a601c8138b8de01b07e968d"
+    },
+    {
+      "key": "mecaniste_hauts_fours_forge_carte_v01",
+      "cardId": "mechanist",
+      "version": "01",
+      "sha256": "dd5a9d4652ac5ce37890d2b2fba122cb03eb1f736a9728e5d9be9da517488daf"
+    },
+    {
+      "key": "marchefer_forge_carte_v01",
+      "cardId": "ironwraith",
+      "version": "01",
+      "sha256": "19d7c43e10aa6ad0ab177ab809219356eaf9212e28cb2b42df145ce21c4000d5"
+    },
+    {
+      "key": "alchimiste_braises_forge_carte_v01",
+      "cardId": "alchemist",
+      "version": "01",
+      "sha256": "9bad93da13ef8c742be8e9ff413d0c2e7617027a2c15f716b76e6553210648a3"
+    }
+  ],
+  "note": "Le Marteau des Monts v01 est approuvé artistiquement dans l’atelier ; les neuf autres images y restent review. La demande ultérieure d’intégration autorise ce lot dans une PR du jeu sans modifier le manifeste atelier ni revendiquer une validation artistique distincte."
+}

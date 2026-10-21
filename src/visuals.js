@@ -38,7 +38,17 @@ export const CARD_TEMPLATES=Object.freeze({
  vampire:'vampire_obsidienne_ombre_carte_v01',
  nightblade:'lame_nocturne_ombre_carte_v01',
  spectre:'spectre_caveau_ombre_carte_v01',
- mist_inquisitor:'inquisiteur_brumes_ombre_carte_v01'
+ mist_inquisitor:'inquisiteur_brumes_ombre_carte_v01',
+ smith:'marteau_monts_forge_carte_v01',
+ golem:'golem_runique_forge_carte_v01',
+ bomb:'sapeur_gobelin_forge_carte_v01',
+ drill:'foreur_fer_forge_carte_v01',
+ colossus:'colosse_braise_forge_carte_v01',
+ engineer:'ingenieure_acier_forge_carte_v01',
+ cannon:'canon_terres_rouges_forge_carte_v01',
+ mechanist:'mecaniste_hauts_fours_forge_carte_v01',
+ ironwraith:'marchefer_forge_carte_v01',
+ alchemist:'alchimiste_braises_forge_carte_v01'
 });
 export const CARD_ART_NAMES=Object.freeze(Object.values(CARD_TEMPLATES));
 export const INLINE_CARDS={};

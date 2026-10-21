@@ -1,5 +1,16 @@
 ## Proposition — Onze cartes de la Cour des Ombres, 21 octobre 2026
 
+## Proposition Forge — 21 octobre 2026
+
+- Dix cartes complètes de la Forge depuis la PR atelier nº 25, commit `ceb0a916`.
+  Exports exacts, reçu d’import et mappings individuels ; 42 images au total.
+- Textes et valeurs réels en Collection, main, fiches et plateau ; rangs futurs
+  conservés « À concevoir ». Zones communes vérifiées dans la galerie officielle.
+- Parcours navigateur Forge partagé, repli neutre vérifié sur Éther ; moteur,
+  IA, catalogue et sauvegardes inchangés. Nouvelle PR, aucune fusion autorisée.
+- Ombre nº 28 désormais intégrée sur accord spécifique à `ee8a2482`.
+
+
 - Onze exports exacts de la PR atelier nº 24, commit `e1022f20`, cadres générés conservés.
 - Associations individuelles et reçu humain d’import, sources/droits/empreintes contrôlés.
 - Collection, main, fiches, plateau et vue classique ; valeurs du jeu inchangées.

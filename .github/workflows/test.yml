@@ -75,6 +75,8 @@ jobs:
         run: python3 tests/browser_sylve.py
       - name: Onze cartes Ombre, champs dynamiques et reprise hors réseau
         run: python3 tests/browser_ombre.py
+      - name: Dix cartes Forge, champs dynamiques et reprise hors réseau
+        run: python3 tests/browser_forge.py
       - name: Parcours V2.8 ordinateur et téléphone simulé
         run: python3 tests/browser_class_skills_v28.py
       - name: Nouvelle partie, raretés et reprise sur ordinateur et mobile
@@ -107,6 +109,7 @@ jobs:
             /tmp/ca-aube-*.png
             /tmp/ca-sylve-*.png
             /tmp/ca-ombre-*.png
+            /tmp/ca-forge-*.png
             JOUER.html
           if-no-files-found: warn
           retention-days: 14

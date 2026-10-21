@@ -5,12 +5,12 @@ export const GENERATED_CARD_FIELDS=Object.freeze({
  counter:[6,5,17,11],name:[12,69.6,76,5.6],description:[23,77.3,54,14],
  attack:[3.5,83.5,18,12],health:[78.5,83.5,18,12]
 });
-// Emplacements du cadre Sylve conservé exactement ; aucune image retouchée.
+// Zones communes aux galeries Sylve, Ombre et Forge ; images distinctes, entières.
 export const SYLVE_CARD_FIELDS=Object.freeze({
  counter:[6,4.4,17.3,12.7],name:[12,68.7,76,6.2],description:[23,78.5,54,13.4],
  attack:[6.1,85.1,16.1,10.4],health:[80.7,85.1,16.1,10.4]
 });
-const layouts=Object.freeze({aube:GENERATED_CARD_FIELDS,sylve:SYLVE_CARD_FIELDS,ombre:SYLVE_CARD_FIELDS});
+const layouts=Object.freeze({aube:GENERATED_CARD_FIELDS,sylve:SYLVE_CARD_FIELDS,ombre:SYLVE_CARD_FIELDS,forge:SYLVE_CARD_FIELDS});
 const zone=(fields,name)=>{const [x,y,w,h]=fields[name];return `data-card-field="${name}" style="left:${x}%;top:${y}%;width:${w}%;height:${h}%"`;};
 export function generatedCardFace(card,{stats=null,delay=card.delay,description=card.description,kind='base',board=false,esc}){
  const key=cardTemplateFor(card);if(!key)return '';

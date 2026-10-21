@@ -121,7 +121,7 @@ test('V2.11 corrupt and ragged boards are rejected without touching the profile'
 });
 test('V2.11 repère neutre et décor historique sont autonomes et déterministes',()=>{
  const sprites=new Set();for(const role of ['fighter','ranged','heavy','caster','support','undead','beast','flying']){
-  const src=arenaSprite(CARDS.smith,role);assert.equal(arenaSprite(CARDS.smith,role),src);assert.match(src,/^data:image\/svg\+xml,/);sprites.add(src);
+  const src=arenaSprite(CARDS.spark,role);assert.equal(arenaSprite(CARDS.spark,role),src);assert.match(src,/^data:image\/svg\+xml,/);sprites.add(src);
  }
  assert.equal(sprites.size,1);assert.match(arenaBackdrop(),/^data:image\/svg\+xml,/);
 });

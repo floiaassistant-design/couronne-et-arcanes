@@ -1,0 +1,24 @@
+name: Préparer les exports Forge
+on:
+  push:
+    branches: [feat/forge-cartes-20261021]
+permissions:
+  contents: write
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm run build
+      - run: npm run build:cards
+      - name: Enregistrer les exports puis retirer ce préparateur temporaire
+        run: |
+          git rm .github/workflows/prepare-forge-export.yml
+          git add JOUER.html ESSAI_CARTES.html
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "build: régénérer les exports Forge et retirer le préparateur"
+          git push origin HEAD:refs/heads/feat/forge-cartes-20261021
