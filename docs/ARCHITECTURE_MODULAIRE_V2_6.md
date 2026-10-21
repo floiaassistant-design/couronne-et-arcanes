@@ -1,6 +1,17 @@
 # Architecture modulaire — V2.6
 
-## Cartes Sylve — proposition du 21/10/2026
+## Cartes Ombre — proposition du 21/10/2026
+
+Toujours 28 modules. Onze mappings Ombre explicites rejoignent les 21 intégrés.
+`generated-card.js` partage les coordonnées Sylve/Ombre vérifiées dans leurs
+galeries officielles, après résolution d’un fichier explicitement catalogué.
+La table de disposition reste pure et ne choisit aucune image par famille.
+Les styles Ombre reçoivent une description à 3,2 cqw pour contenir le texte
+complet de l’Inquisiteur ; Aube et Sylve gardent leurs typographies et zones.
+Le parcours `browser_ombre.py` réutilise les vérifications partagées des cadres,
+champs, vraie pose et reprise sur trois formats. Forge reste testée sans image.
+
+## Cartes Sylve — intégrées par la PR nº 27
 
 Toujours 28 modules. Les onze mappings Sylve sont explicites dans `visuals.js`.
 Le même lecteur pur `generated-card.js` choisit les zones du cadre Aube ou Sylve

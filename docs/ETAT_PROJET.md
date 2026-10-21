@@ -1,19 +1,29 @@
 # État de reprise — 21 octobre 2026
 
-## Proposition Sylve en cours
+## Proposition Cour des Ombres en cours
 
-- Branche `feat/sylve-cartes-20261021`, basée sur le dernier main vérifié
-  `4b48b05f524a04814c67a58f0420e7262a31d3e3` après les fusions autorisées nº 25/26.
-- Onze exports v01 de la PR atelier nº 23, commit immuable
-  `c9b8bd8c2ed707f2d266554228f53d4714b95ba4`. Le Gardien est validé artistiquement ;
-  les dix autres y restent en revue. La demande actuelle d’intégration autorise
-  ce lot précis ; reçu des onze versions et empreintes dans le jeu.
-- 21 cartes complètes, mappings individuels et 28 modules. Les images ne sont
-  ni retouchées ni recadrées. Zones et typographie adaptées au cadre Sylve.
-- Vraies possessions, statistiques et attentes ; rangs futurs « À concevoir ».
-  Aucun changement moteur, IA, catalogue ni clé de sauvegarde. Les autres
-  factions gardent leurs repères neutres. Aucune fusion de cette nouvelle PR.
-- [Périmètre, contrôles et limites](SYLVE_INTEGRATION_2026_10_21.md).
+- Branche `feat/ombre-cartes-20261021`, basée sur le dernier main vérifié
+  `3c208df3eb3d5a57953e0c3bd0ee91069895edab`, après la fusion autorisée nº 27.
+- Onze exports v01 de la PR atelier nº 24, commit exact
+  `e1022f20a8ecad8f8843579d0b4af7a1655c69a0`. Le Chevalier est validé artistiquement ;
+  dix images y restent review. La demande actuelle d’intégration est consignée
+  dans `approvals/ombre-onze-cartes-v01.json` avec les onze versions/empreintes.
+- 32 cadres complets, 28 modules. Mapping par ID, images entières non retouchées,
+  vrais noms, attentes et valeurs en Collection, main, fiches et plateau.
+- Même géométrie de champs que la Sylve, description adaptée au cartouche Ombre.
+  Aube/Sylve et leurs zones conservés. Forge/Éther gardent leurs repères neutres.
+- Aucune règle, IA, possession, rareté ni sauvegarde modifiée. Rang futur
+  « À concevoir ». Nouvelle PR séparée, aucune fusion autorisée.
+- [Périmètre, contrôles et limites](OMBRE_INTEGRATION_2026_10_21.md).
+
+## Sylve intégrée — PR nº 27
+
+- Fusion à `3c208df3eb3d5a57953e0c3bd0ee91069895edab` après « vasy fusionne ».
+- Onze sources exactes épinglées à `c9b8bd8c`, images en bois/racines, zones
+  normalisées et valeurs dynamiques. Dix Aube conservés. La PR atelier reste séparée.
+- CI avant fusion réussie sur `9c76d0b7`, 285 tests, 60 parités et parcours navigateur.
+  Main après fusion vérifié identique à cet arbre, sans fichier modifié.
+- [Périmètre et bilan datés](SYLVE_INTEGRATION_2026_10_21.md).
 
 ## Milicien et Aube intégrés — PR nº 25 puis nº 26
 
@@ -84,6 +94,6 @@ sont historiques. Leurs prochaines tâches, chiffres d'assets et états de PR
 ne remplacent pas le présent état et les commits réels. Aucun ancien paquet
 externe ou conversation ne sert de source de reprise.
 
-Prochaine étape : examiner la nouvelle PR Sylve et son aperçu, puis décider
-séparément de sa fusion. Les rangs futurs et les autres factions continuent
-progressivement avec leurs versions, reçus et mappings exacts.
+Prochaine étape : examiner la PR Cour des Ombres et son aperçu, puis décider
+séparément de sa fusion. Les autres factions et les rangs futurs continuent
+progressivement, avec leurs versions, reçus et mappings exacts.

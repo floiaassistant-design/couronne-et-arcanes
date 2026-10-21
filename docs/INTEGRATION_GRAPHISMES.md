@@ -90,3 +90,16 @@ Même contrat `kind: card`, mapping individuel et images WebP 768×1152 exactes.
 Les zones Sylve sont celles de la galerie officielle ; textes et valeurs
 viennent toujours du jeu. Le descriptif long du Trappeur est conservé, avec
 lecture en texte normal dans la fiche. [Contrôles](SYLVE_INTEGRATION_2026_10_21.md).
+
+## Onze Ombre v01 — import manuel demandé le 21/10/2026
+
+La demande de continuer avec la prochaine classe prête autorise les onze cartes
+Cour des Ombres de la PR atelier nº 24, au commit
+`e1022f20a8ecad8f8843579d0b4af7a1655c69a0`. Reçu exact :
+`docs/approvals/ombre-onze-cartes-v01.json`. Le Chevalier était validé ; les dix
+nouvelles images y restent review. Ce reçu d’import postérieur ne change pas
+le manifeste atelier et n’autorise aucune fusion.
+Même contrat `kind: card`, champs vides et associations individuelles. Les
+coordonnées de la galerie Ombre sont identiques à celles de la Sylve et partagées
+par le lecteur pur ; les images restent distinctes et entières.
+[Contrôles et limites](OMBRE_INTEGRATION_2026_10_21.md).

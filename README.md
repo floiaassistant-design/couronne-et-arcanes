@@ -24,7 +24,17 @@ de combat sont retirées. Les cartes non encore illustrées affichent des emplac
 leurs noms et vraies valeurs. Le décor peint, la main, les cadres, les aperçus
 au survol et les interactions restent en place.
 
-## Sylve — proposition du 21 octobre 2026
+## Cour des Ombres — proposition du 21 octobre 2026
+
+Onze cartes Ombre rejoignent les 21 Aube/Sylve : Chevalier du Tombeau,
+Guerrier d’ossements, Ombre vorace, Veilleur, Faucheur, Archiliche, Banshee,
+Vampire, Lame nocturne, Spectre et Inquisiteur des Brumes. Cadres en
+obsidienne/argent/améthyste conservés, valeurs réelles dans les champs vides.
+Les images sont épinglées au commit atelier `e1022f20` de la PR nº 24.
+Aucune rareté, possession ni règle ajoutée. Cette nouvelle PR n’est pas fusionnée.
+[Périmètre et vérifications](docs/OMBRE_INTEGRATION_2026_10_21.md).
+
+## Sylve — intégrée par la PR nº 27
 
 Onze cartes Sylve rejoignent les dix Aube : Gardien des Racines, Éclaireuse,
 Loup des Brumes, Dryade, Cerf astral, Traqueur d’épines, Luciole, Ours,
@@ -33,8 +43,8 @@ noms et vraies valeurs dynamiques, emplacements adaptés au cadre Sylve.
 Le descriptif long du Trappeur reste complet et se lit aussi dans la fiche.
 Les autres rangs restent « À concevoir », sans exemplaire ni règle ajoutés.
 
-Source exacte : PR atelier nº 23, commit `c9b8bd8c`. Nouvelle PR jeu basée sur
-le main `4b48b05f`, sans fusion. [Périmètre et vérifications](docs/SYLVE_INTEGRATION_2026_10_21.md).
+Source exacte : PR atelier nº 23, commit `c9b8bd8c`. PR jeu nº 27 fusionnée
+sur accord spécifique à `3c208df3`. [Périmètre et vérifications](docs/SYLVE_INTEGRATION_2026_10_21.md).
 
 ## Aube et sceaux — intégrés par les PR nº 25 et nº 26
 
@@ -70,7 +80,7 @@ Les autres portent « À concevoir » ; aucune évolution de rareté n’est cr�
 Deck, compositions et compétences de classe restent accessibles en bas de page.
 
 Le fond illustré est embarqué et tracé dans `assets/ui-artwork.json`. Les
-autres ordres restent neutres ; les dix Aube sont intégrés et les onze Sylve proposés. [Périmètre et vérifications](docs/COLLECTION_2026_10_21.md).
+autres ordres restent neutres ; les dix Aube et les onze Sylve sont intégrés. [Périmètre et vérifications](docs/COLLECTION_2026_10_21.md).
 La Collection est intégrée à `0896c16e` après validation spécifique.
 
 ## Jouer et développer
@@ -87,7 +97,7 @@ L'équilibrage de cette pose élargie reste distinct des anciens benchmarks.
 ## Nouvelle production d'images
 
 Aucun ancien portrait n'est automatiquement réutilisé. Le catalogue actif
-`assets/artwork.json` contient 21 cartes complètes autorisées pour import et aucun ancien lot. Chaque nouveau visuel passe par une référence,
+`assets/artwork.json` contient 32 cartes complètes autorisées pour import et aucun ancien lot. Chaque nouveau visuel passe par une référence,
 une génération pilote, une validation humaine exacte et un export contrôlé.
 Les nombres, noms et descriptions viennent du jeu.
 

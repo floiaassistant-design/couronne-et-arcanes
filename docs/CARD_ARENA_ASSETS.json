@@ -150,7 +150,84 @@
       "kind": "card",
       "sourceCommit": "c9b8bd8c2ed707f2d266554228f53d4714b95ba4",
       "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "graveknight",
+      "key": "chevalier_tombeau_ombre_carte_v01",
+      "kind": "card",
+      "sourceCommit": "e1022f20a8ecad8f8843579d0b4af7a1655c69a0",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "bone",
+      "key": "guerrier_ossements_ombre_carte_v01",
+      "kind": "card",
+      "sourceCommit": "e1022f20a8ecad8f8843579d0b4af7a1655c69a0",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "shade",
+      "key": "ombre_vorace_carte_v01",
+      "kind": "card",
+      "sourceCommit": "e1022f20a8ecad8f8843579d0b4af7a1655c69a0",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "crypt",
+      "key": "veilleur_tombeau_ombre_carte_v01",
+      "kind": "card",
+      "sourceCommit": "e1022f20a8ecad8f8843579d0b4af7a1655c69a0",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "plague",
+      "key": "faucheur_fievre_ombre_carte_v01",
+      "kind": "card",
+      "sourceCommit": "e1022f20a8ecad8f8843579d0b4af7a1655c69a0",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "lich",
+      "key": "archiliche_minuit_ombre_carte_v01",
+      "kind": "card",
+      "sourceCommit": "e1022f20a8ecad8f8843579d0b4af7a1655c69a0",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "banshee",
+      "key": "banshee_voiles_ombre_carte_v01",
+      "kind": "card",
+      "sourceCommit": "e1022f20a8ecad8f8843579d0b4af7a1655c69a0",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "vampire",
+      "key": "vampire_obsidienne_ombre_carte_v01",
+      "kind": "card",
+      "sourceCommit": "e1022f20a8ecad8f8843579d0b4af7a1655c69a0",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "nightblade",
+      "key": "lame_nocturne_ombre_carte_v01",
+      "kind": "card",
+      "sourceCommit": "e1022f20a8ecad8f8843579d0b4af7a1655c69a0",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "spectre",
+      "key": "spectre_caveau_ombre_carte_v01",
+      "kind": "card",
+      "sourceCommit": "e1022f20a8ecad8f8843579d0b4af7a1655c69a0",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "mist_inquisitor",
+      "key": "inquisiteur_brumes_ombre_carte_v01",
+      "kind": "card",
+      "sourceCommit": "e1022f20a8ecad8f8843579d0b4af7a1655c69a0",
+      "registry": "assets/artwork.json"
     }
   ],
-  "notes": "Dix cartes Aube intégrées et onze Sylve proposées, imports manuels épinglés. Aucun ancien lot réactivé."
+  "notes": "Dix Aube et onze Sylve intégrés ; onze Ombre proposés, imports manuels épinglés. Aucun ancien lot réactivé."
 }
