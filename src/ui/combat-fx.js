@@ -1,12 +1,13 @@
 // Indications transitoires depuis les événements du moteur : jamais de règles ni de sauvegarde.
 export function createCombatFx(getState){
  let timer=null,token=0;
- const clean=()=>document.querySelectorAll('.combat-fx-chip').forEach(node=>node.remove());
+ const clean=()=>{if(typeof document!=='undefined')document.querySelectorAll('.combat-fx-chip').forEach(node=>node.remove());};
  function stopBattleFx(){
   token++;if(timer!==null)clearTimeout(timer);timer=null;clean();
  }
  function playBattleFx(events,onDone){
   stopBattleFx();
+  if(typeof document==='undefined'||typeof window==='undefined'){onDone?.();return;}
   const state=getState(),reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const steps=(events||[]).filter(e=>['spawn','move','attack','spell','death','heal','poison','teleport','power','trap-trigger','trap-place','silence'].includes(e.type)).slice(0,28);
   if(!state.animationsEnabled||state.screen!=='battle'||reduced||!steps.length){onDone?.();return;}
