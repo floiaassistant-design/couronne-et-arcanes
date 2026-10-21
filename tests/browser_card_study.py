@@ -60,7 +60,9 @@ async def run(browser,label,viewport):
         assert initial['dock']==inspected['dock'] and initial['hand']==inspected['hand']
     ready=page.locator('.hand-card.hand-ready:has(.stat.atk)').first
     if not await ready.count():
+        before_round=json.loads(await page.evaluate('(key)=>localStorage.getItem(key)',BATTLE))['round']
         await page.locator('[data-action="end-turn"]').click()
+        await page.wait_for_function("([key,n])=>JSON.parse(localStorage.getItem(key))?.round>n",[BATTLE,before_round])
         ready=page.locator('.hand-card.hand-ready:has(.stat.atk)').first
     await ready.click()
     assert await page.locator('#hand-card-inspection').is_hidden()
@@ -81,6 +83,7 @@ async def run(browser,label,viewport):
     assert await page.locator('[data-action="retreat"]').is_visible()
     await page.locator('.combat-intel summary').click()
     await page.locator('[data-action="end-turn"]').click()
+    await page.wait_for_function("([key,n])=>JSON.parse(localStorage.getItem(key))?.round>n",[BATTLE,before['round']])
     after=json.loads(await page.evaluate('(key)=>localStorage.getItem(key)',BATTLE))
     assert after['round']==before['round']+1
     assert any(u and u['uid']==unit['uid'] for u in after['board'][0][2:]),after['board'][0]
@@ -124,7 +127,13 @@ async def combat(browser):
           for(let i=0;i<battle.heroes.p.hand.length&&!played;i++)for(let l=0;l<battle.board.length&&!played;l++)
             if(playPlayerCard(battle,i,l).ok)played=true;
         }
-        if(battle.status==='active')endPlayerTurn(battle);
+        if(battle.status==='active'){
+          endPlayerTurn(battle);
+          if(battle.phase==='enemy'){
+            for(let n=0;n<2&&battle.status==='active';n++){if(playEnemyCard(battle).done)break;}
+            if(battle.status==='active')finishEnemyTurn(battle);
+          }
+        }
       }
       persistBattle();render();settle();
     }''')
