@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "approvedBy": "Propriétaire du projet, demande explicite d’intégration dans ChatGPT",
+  "approvedOn": "2026-10-21",
+  "instruction": "tu peu intégré les carte sylve qui doivent étre préte quelque part",
+  "scope": "Import manuel des onze cartes Sylve v01 de la PR atelier nº 23 au commit exact ci-dessous ; aucune nouvelle rareté ni possession, aucune autorisation de fusion.",
+  "sourceRepo": "floiaassistant-design/couronne-et-arcanes-art",
+  "sourceCommit": "c9b8bd8c2ed707f2d266554228f53d4714b95ba4",
+  "assets": [
+    {
+      "key": "gardien_racines_sylve_carte_v01",
+      "cardId": "treant",
+      "version": "01",
+      "sha256": "3b9e23df74186b94ccefcb53b9ef06301e32c6a38333980d0b2b16347c541dec"
+    },
+    {
+      "key": "eclaireuse_sylvestre_carte_v01",
+      "cardId": "ranger",
+      "version": "01",
+      "sha256": "9ad7af62ccd5255989119e26417805993427d9ca1a1fe6c0e1cbd68b6e9e35b1"
+    },
+    {
+      "key": "loup_brumes_sylve_carte_v01",
+      "cardId": "wolf",
+      "version": "01",
+      "sha256": "64878b37e1ad6fdd9d24c031d588fe9ff0ce40db1378293a881d3b0e5c8aa67f"
+    },
+    {
+      "key": "dryade_luminescente_sylve_carte_v01",
+      "cardId": "dryad",
+      "version": "01",
+      "sha256": "588251b4e7f324ed44e51cc5672bfae62c8e344ebc6123589f713f6d0b89ba49"
+    },
+    {
+      "key": "cerf_astral_sylve_carte_v01",
+      "cardId": "stag",
+      "version": "01",
+      "sha256": "b64682131e64428d64c17ff568d5dde07436bfaa37cc95a9d388e59abc67d4f0"
+    },
+    {
+      "key": "traqueur_epines_sylve_carte_v01",
+      "cardId": "thorn",
+      "version": "01",
+      "sha256": "0595e8cc48dd84b7be060a356fc29fc8d6e35e968a9349955db7c9106318c79f"
+    },
+    {
+      "key": "luciole_epineuses_sylve_carte_v01",
+      "cardId": "pixie",
+      "version": "01",
+      "sha256": "bf15611e59490e666781a13507ea099450ca4b2d53648307333ba35be245c700"
+    },
+    {
+      "key": "ours_roches_sylve_carte_v01",
+      "cardId": "bear",
+      "version": "01",
+      "sha256": "3d170be611041788dde87ae79275978452b38e2e45028ea8e1406fbc11fb7189"
+    },
+    {
+      "key": "archidruide_feuillage_sylve_carte_v01",
+      "cardId": "archdruid",
+      "version": "01",
+      "sha256": "d49a4192fab87cdb63dbb78c762ebf1769691ae2f3da84e93e6d84bf7078b34e"
+    },
+    {
+      "key": "hibou_crepuscule_sylve_carte_v01",
+      "cardId": "owl",
+      "version": "01",
+      "sha256": "13353bf53e48b1f4c0abc0b0888341fa01890305a5fc57f65f098541d3fc7dec"
+    },
+    {
+      "key": "trappeur_sylvestre_carte_v01",
+      "cardId": "sylvan_trapper",
+      "version": "01",
+      "sha256": "41e4bdc17fed72d4930343d409d050efd2c28554a633c48b6a8fb4c2393436ba"
+    }
+  ],
+  "note": "Le Gardien des Racines v01 est approuvé artistiquement dans l’atelier. Les dix autres images y restent review : cette demande ultérieure autorise leur import dans cette PR du jeu, sans changer le manifeste atelier ni prétendre à une validation artistique distincte. Les variations de la Luciole (quatre ailes) et du Hibou (aile proche du compteur) restent conservées sans retouche."
+}

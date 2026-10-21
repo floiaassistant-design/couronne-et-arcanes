@@ -1,40 +1,32 @@
 # État de reprise — 21 octobre 2026
 
-## Proposition Aube et sceaux en cours de revue
+## Proposition Sylve en cours
 
-- Branche `feat/aube-cartes-sceaux-20261021`, suite de la PR jeu nº 25 encore
-  ouverte (`feat/milicien-carte-v02-20261021`, head `0d2a4d0a`). Le main vérifié
-  reste `0896c16e` ; cette branche ne prétend pas y avoir intégré le Milicien.
-- Neuf autres cartes Aube v01 importées manuellement depuis la PR atelier nº 22,
-  commit `96190c837f79e645777967aaf84decbea0ad33a5`, encore ouverte.
-  Demande humaine d’ajout consignée avec les neuf empreintes dans
-  `approvals/aube-neuf-cartes-v01.json` ; le manifeste atelier reste en review.
-- Dix personnages Aube illustrés, mappings individuels, vraies valeurs et
-  possessions conservées ; rangs futurs toujours « À concevoir ». Sylve et
-  autres factions restent neutres. Sources et images non retouchées.
-- Le trait de vie/camp sous les cartes laisse place à deux petits sceaux :
-  écu à chevron pour vous, losange croisé pour l’adversaire. Vrais PV sur carte,
-  PV actuels/maximum et camp dans la fiche et le nom accessible.
-- 28 modules, dix cartes complètes. Nouvelle PR séparée, ciblant la branche
-  Milicien pour montrer uniquement cette évolution. Aucune fusion autorisée.
-  Voir [périmètre et vérification](AUBE_INTEGRATION_2026_10_21.md).
+- Branche `feat/sylve-cartes-20261021`, basée sur le dernier main vérifié
+  `4b48b05f524a04814c67a58f0420e7262a31d3e3` après les fusions autorisées nº 25/26.
+- Onze exports v01 de la PR atelier nº 23, commit immuable
+  `c9b8bd8c2ed707f2d266554228f53d4714b95ba4`. Le Gardien est validé artistiquement ;
+  les dix autres y restent en revue. La demande actuelle d’intégration autorise
+  ce lot précis ; reçu des onze versions et empreintes dans le jeu.
+- 21 cartes complètes, mappings individuels et 28 modules. Les images ne sont
+  ni retouchées ni recadrées. Zones et typographie adaptées au cadre Sylve.
+- Vraies possessions, statistiques et attentes ; rangs futurs « À concevoir ».
+  Aucun changement moteur, IA, catalogue ni clé de sauvegarde. Les autres
+  factions gardent leurs repères neutres. Aucune fusion de cette nouvelle PR.
+- [Périmètre, contrôles et limites](SYLVE_INTEGRATION_2026_10_21.md).
 
-## Proposition Milicien — PR nº 25, non fusionnée
+## Milicien et Aube intégrés — PR nº 25 puis nº 26
 
-- Branche `feat/milicien-carte-v02-20261021`, basée sur le main du jeu
-  `0896c16e30cff37464b5eb355b3d2b37a2c5651a`, après fusion autorisée de la
-  Collection nº 24. Aucune fusion de cette nouvelle évolution n’est autorisée.
-- Source art : PR nº 20 fusionnée à `e43c3a877f45bde9a6f99fb1fa1005abdc47bace`,
-  carte complète Milicien de l’Aube v02. Export exact WebP 768×1152, 360 012 octets.
-- Instruction humaine « intégre le mélicien au jeux », consignée dans le reçu
-  du jeu. L’ancien statut review du manifeste atelier n’est pas réutilisé comme
-  validation : le reçu d’import est postérieur et désigne l’empreinte exacte.
-- Cadre dessiné conservé, textes et chiffres dynamiques dans ses cinq cases ;
-  même image en Collection, main, fiches et plateau. Seul `militia` est associé
-  à cette image ; les neuf autres personnages sont ajoutés par la proposition
-  suivante ci-dessus. Les futures évolutions restent à concevoir.
-- 28 modules, un nouvel asset complet et aucun ancien portrait réactivé.
-  [Périmètre, contrat et contrôles](MILICIEN_INTEGRATION_2026_10_21.md).
+- PR nº 25 fusionnée à `2787b1667871efe9fb1ae21528a17cd6b7e57e27` et nº 26 à
+  `4b48b05f524a04814c67a58f0420e7262a31d3e3`, après « tu peux fusionner les pr ».
+- Dix cadres complets, textes et valeurs dynamiques. Sceaux de camp en coin
+  remplaçant le trait sous les cartes ; formes et camp accessibles conservés.
+- Sources : Milicien v02 à `e43c3a87`, neuf autres Aube v01 à `96190c83`.
+  Les PR atelier nº 21/22 restent séparées et non fusionnées.
+- CI avant fusion réussie sur les deux heads ; main après fusion identique
+  à la version Aube testée, par comparaison GitHub sans fichier modifié.
+- [Milicien](MILICIEN_INTEGRATION_2026_10_21.md) et [Aube](AUBE_INTEGRATION_2026_10_21.md)
+  conservent les périmètres et contrôles datés des propositions.
 
 ## Collection intégrée — PR nº 24
 
@@ -92,8 +84,6 @@ sont historiques. Leurs prochaines tâches, chiffres d'assets et états de PR
 ne remplacent pas le présent état et les commits réels. Aucun ancien paquet
 externe ou conversation ne sert de source de reprise.
 
-Prochaines étapes : examiner la PR jeu du Milicien, puis poursuivre les cartes
-après validation du gabarit rendu. Les autres cartes seront conçues et
-importées au fur et à mesure, avec leur propre validation.
-Toute nouvelle évolution passe par une branche et une PR avec accord spécifique
-avant fusion. La proposition Collection modifie seulement la présentation et son export.
+Prochaine étape : examiner la nouvelle PR Sylve et son aperçu, puis décider
+séparément de sa fusion. Les rangs futurs et les autres factions continuent
+progressivement avec leurs versions, reçus et mappings exacts.

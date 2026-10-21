@@ -1,6 +1,22 @@
 # Architecture modulaire — V2.6
 
-## Cartes complètes Aube — proposition du 21/10/2026
+## Cartes Sylve — proposition du 21/10/2026
+
+Toujours 28 modules. Les onze mappings Sylve sont explicites dans `visuals.js`.
+Le même lecteur pur `generated-card.js` choisit les zones du cadre Aube ou Sylve
+après résolution d’une image explicitement cataloguée. Aucun dessin par famille
+implicite. Le compteur, le cartouche et les deux cercles Sylve ont leurs propres
+coordonnées ; les textes de plus de 160 caractères utilisent une composition
+plus petite, et restent lisibles en texte normal dans la fiche existante.
+Les dix mappings Aube et leurs zones restent inchangés.
+
+Les 21 exports suivent le même contrôle de provenance, reçu, SHA-256, dimensions
+et poids avant empaquetage dans les quatre builds. La vue classique utilise
+les images entières via `arenaSprite`, sans changer les règles. Les parcours
+`browser_aube.py` et `browser_sylve.py` partagent le contrôle des cadres exacts
+et des champs, puis la pose et la reprise sur trois formats d’écran.
+
+## Cartes complètes Aube — intégrées par les PR nº 25/26
 
 28 modules. `ui/generated-card.js` reçoit texte, attente et statistiques déjà
 calculées ; il rend le cadre complet et ses cinq zones normalisées, sans moteur,

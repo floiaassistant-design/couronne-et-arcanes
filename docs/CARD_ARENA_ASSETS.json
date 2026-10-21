@@ -73,7 +73,84 @@
       "kind": "card",
       "sourceCommit": "96190c837f79e645777967aaf84decbea0ad33a5",
       "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "treant",
+      "key": "gardien_racines_sylve_carte_v01",
+      "kind": "card",
+      "sourceCommit": "c9b8bd8c2ed707f2d266554228f53d4714b95ba4",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "ranger",
+      "key": "eclaireuse_sylvestre_carte_v01",
+      "kind": "card",
+      "sourceCommit": "c9b8bd8c2ed707f2d266554228f53d4714b95ba4",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "wolf",
+      "key": "loup_brumes_sylve_carte_v01",
+      "kind": "card",
+      "sourceCommit": "c9b8bd8c2ed707f2d266554228f53d4714b95ba4",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "dryad",
+      "key": "dryade_luminescente_sylve_carte_v01",
+      "kind": "card",
+      "sourceCommit": "c9b8bd8c2ed707f2d266554228f53d4714b95ba4",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "stag",
+      "key": "cerf_astral_sylve_carte_v01",
+      "kind": "card",
+      "sourceCommit": "c9b8bd8c2ed707f2d266554228f53d4714b95ba4",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "thorn",
+      "key": "traqueur_epines_sylve_carte_v01",
+      "kind": "card",
+      "sourceCommit": "c9b8bd8c2ed707f2d266554228f53d4714b95ba4",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "pixie",
+      "key": "luciole_epineuses_sylve_carte_v01",
+      "kind": "card",
+      "sourceCommit": "c9b8bd8c2ed707f2d266554228f53d4714b95ba4",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "bear",
+      "key": "ours_roches_sylve_carte_v01",
+      "kind": "card",
+      "sourceCommit": "c9b8bd8c2ed707f2d266554228f53d4714b95ba4",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "archdruid",
+      "key": "archidruide_feuillage_sylve_carte_v01",
+      "kind": "card",
+      "sourceCommit": "c9b8bd8c2ed707f2d266554228f53d4714b95ba4",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "owl",
+      "key": "hibou_crepuscule_sylve_carte_v01",
+      "kind": "card",
+      "sourceCommit": "c9b8bd8c2ed707f2d266554228f53d4714b95ba4",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "sylvan_trapper",
+      "key": "trappeur_sylvestre_carte_v01",
+      "kind": "card",
+      "sourceCommit": "c9b8bd8c2ed707f2d266554228f53d4714b95ba4",
+      "registry": "assets/artwork.json"
     }
   ],
-  "notes": "Dix cartes Aube de la nouvelle production, imports manuels épinglés. Aucun ancien lot ni autre faction réactivés."
+  "notes": "Dix cartes Aube intégrées et onze Sylve proposées, imports manuels épinglés. Aucun ancien lot réactivé."
 }
