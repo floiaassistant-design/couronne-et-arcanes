@@ -82,9 +82,11 @@
   à la main, à la pioche ou à la collection privées du joueur.
 - `src/app.js` orchestre les écrans et actions. Rendus dans `src/ui/pages.js`,
   `views.js`, `battle-view.js` et `card-arena.js`, stockage dans `ui/storage.js`.
+  `ui/collection.js` rend le catalogue par personnage et les fiches de rareté,
+  sans mutation du profil : les rangs non définis restent « À concevoir ».
   `ui/painted-arena.js` porte la projection et les ancrages. `ui/arena-art.js`
   fournit le repère neutre ; `ui/combat-fx.js` conserve l'API avec fin immédiate,
-  sans ancien lecteur d'effets. Les 26 modules sont empaquetés par le générateur.
+  sans ancien lecteur d'effets. Les 27 modules sont empaquetés par le générateur.
 - `engine/unit-stats.js` partage les statistiques d'invocation entre moteur,
   main et collection ; réutiliser `gearBonus` du profil. La main lit l'instantané
   du combat, la collection le profil actuel. Préserver la parité et l'ordre des
@@ -93,6 +95,12 @@
   main/plateau. Survol ou focus pour lire ; clic/toucher ferme la fiche pendant
   sélection et pose. Aucun épinglage, aucune action métier ni écriture en stockage
   depuis le lecteur ; valeurs actuelles par uid, bonus et capacités lisibles.
+
+- Fonds d’interface : `UI_BACKGROUNDS`/`UI_ART_NAMES` dans `visuals.js`, registre
+  `assets/ui-artwork.json` et contrôle `scripts/lib/ui-artwork.mjs`. Sources
+  épinglées dans l’atelier, reçu et empreinte exacts ; CSS à image JPEG embarquée.
+  Ce contrat ne remplace pas le registre WebP des portraits. Voir
+  `docs/COLLECTION_2026_10_21.md` avant l’ajout progressif des cartes.
 
 ### Géométrie et combat
 
@@ -149,7 +157,8 @@
   `node scripts/build_standalone.mjs --cards --test`.
 - Si rendu modifié : parcours actuels `browser_card_study.py`,
   `browser_deployment.py`, `browser_card_preview.py`, `browser_art_reset.py`,
-  puis suites pertinentes du workflow. Vérifier bureau, portrait, paysage,
+  `browser_collection.py`, puis suites pertinentes du workflow. Vérifier bureau,
+  portrait, paysage,
   sauvegarde/reprise, mouvement réduit, absence d'images et export hors réseau.
 - Si règles modifiées : tests métier, compatibilité historique et simulations
   pertinentes (`control-balance`, `arena-balance`, comparateurs de decks/talents).

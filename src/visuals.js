@@ -1,3 +1,6 @@
+// Décors d’interface : registre distinct des portraits de personnages.
+export const UI_BACKGROUNDS=Object.freeze({collection:'collection_archives_v01'});
+export const UI_ART_NAMES=Object.freeze(Object.values(UI_BACKGROUNDS));
 // Base graphique neuve : aucune ancienne illustration n'est sélectionnable.
 // Toute future clé doit être déclarée ici et dans assets/artwork.json.
 export const ART_NAMES=[];

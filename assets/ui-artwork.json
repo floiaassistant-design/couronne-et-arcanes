@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "assets": [
+    {
+      "key": "collection_archives_v01",
+      "kind": "background",
+      "version": "v01",
+      "status": "approved",
+      "approvedBy": "Propriétaire du projet, conversation ChatGPT du 21 octobre 2026",
+      "license": "Génération originale réalisée avec OpenAI Imagegen à la demande du propriétaire du projet ; aucune image tierce fournie. Utilisation dans le projet autorisée par la demande d’intégration citée dans le reçu.",
+      "provenance": "Imagegen OpenAI, génération du 21/10/2026 dans la présente conversation ; conversion JPEG qualité 80 sans recadrage.",
+      "sourceRepo": "floiaassistant-design/couronne-et-arcanes-art",
+      "sourceCommit": "c4f5e6871e32db3b646f51ba906c3ea00b7c6eb9",
+      "sourceAsset": "exports/backgrounds/collection-archives-v01.jpg",
+      "sourceOriginal": {
+        "path": "sources/backgrounds/collection-archives-v01.png",
+        "bytes": 2691200,
+        "sha256": "df921cd30b2e617a6a006aa98984ef27c767ad38237afd2a9975f5e9cb886672",
+        "width": 1774,
+        "height": 887
+      },
+      "approvalRef": "docs/approvals/collection-archives-v01.json",
+      "target": "assets/backgrounds/collection-archives.css",
+      "mime": "image/jpeg",
+      "width": 1774,
+      "height": 887,
+      "bytes": 304275,
+      "sha256": "7259ee399f8e44e04880a0a4fb478134daee121c829c524d75758713a1e8ac46"
+    }
+  ]
+}

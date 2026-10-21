@@ -1,3 +1,17 @@
+## Proposition — Collection par personnage, 21 octobre 2026
+
+- Page pleine largeur, onglets des cinq ordres, Sorts et Tous ; une ligne par
+  personnage avec Commune, Rare, Épique, Légendaire, Divine et Éveillée.
+- Divine rouge et Éveillée jaune céleste ; fiches de lecture et filtre de possession.
+- Seule la carte réelle porte stats, exemplaires et actions du deck. Les autres
+  rangs sont à concevoir ; aucune évolution ou migration de profil ajoutée.
+- Deck, quatre compositions et compétences conservés, ajout de carte de classe
+  accessible quel que soit le filtre, sans doublon de commande.
+- Fond des archives avec source, reçu et export épinglés dans l’atelier nº 21 ;
+  registre UI contrôlé par le builder, portraits neutres inchangés.
+- 27 modules, versions web et autonomes synchronisées. Voir
+  `docs/COLLECTION_2026_10_21.md` pour les contrôles et limites. Aucune fusion.
+
 ## Nettoyage documentaire — 20 octobre 2026
 
 - GitHub seul point de reprise ; retrait de l'ancienne destination d'archives.

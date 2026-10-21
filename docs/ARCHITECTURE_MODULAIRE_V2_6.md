@@ -1,5 +1,24 @@
 # Architecture modulaire — V2.6
 
+## Collection — proposition du 21/10/2026
+
+27 modules dans cette branche. `src/ui/collection.js` porte le catalogue par
+personnage, les filtres purs et les fiches des six rangs. Il reçoit `cardUI`,
+`btn` et `esc` des vues existantes ; aucune statistique ni règle n’est recopiée.
+`pages.js` conserve les compositions, le deck et les compétences. `app.js`
+garde les événements, la navigation et la fermeture des fiches. Les filtres
+et fiches restent hors des sauvegardes.
+
+`assets/collection.css` est limité à cet écran. Le fond JPEG embarqué passe
+par `UI_BACKGROUNDS` dans `visuals.js`, `assets/ui-artwork.json` et
+`scripts/lib/ui-artwork.mjs` : clé explicite, reçu de version, octets et SHA-256.
+Le builder remplace les liens CSS et inclut automatiquement le nouveau module
+dans JOUER et ESSAI_CARTES. Le registre des portraits reste vide.
+
+Le moteur, le catalogue, l’IA et le stockage ne changent pas. Les cinq rangs
+qui n’existent pas pour une unité sont des projections sans stats ni propriété.
+[Périmètre et validation](COLLECTION_2026_10_21.md).
+
 ## État de la remise à zéro graphique du 20/10/2026
 
 Les PR nº 20 et nº 22 sont intégrées sur main ; le jalon conserve 26 modules.

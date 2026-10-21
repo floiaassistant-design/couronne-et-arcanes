@@ -60,12 +60,14 @@ async def run(browser,label,viewport):
     await page.evaluate("""()=>{
       screen='collection';profile.collection.archer=1;render();
     }""")
-    pilot=page.locator('.collection-layout .illustrated-pilot').first
+    version=page.locator('[data-collection-character="archer"] [data-current-version="true"]')
+    pilot=version.locator('.illustrated-pilot')
     assert await pilot.count()==1
     assert await pilot.locator('.illustrated-count b').inner_text()=='1'
     assert await pilot.locator('.illustrated-count').get_attribute('data-delay-kind')=='base'
     assert 'Portée 2' in await pilot.locator('.card-detail').inner_text()
-    assert await pilot.locator('[data-action="deck-add"]').count()==1
+    assert await version.locator('.collection-delay').inner_text()=='1'
+    assert await version.locator('[data-action="deck-add"]').count()==1
     assert not errors,errors
     await page.close()
     print('Pilote Illustrée '+label+': portrait, compteurs 0/1/2, fiche, sélection, pose et collection PASS')

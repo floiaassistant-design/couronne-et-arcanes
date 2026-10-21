@@ -80,10 +80,11 @@ async def run(browser,label,viewport):
         await page.locator(f'[data-action="fuse-card"][data-id="{id}"]').click()
         assert await page.evaluate('(id)=>profile.collection[id]',id)==1
     await page.locator('#nav [data-page="collection"]').click()
+    await page.locator('[data-action="collection-faction"][data-id="all"]').click()
     for id in IDS:
         await page.locator(f'[data-action="deck-add"][data-id="{id}"]').click()
         assert await page.evaluate('(id)=>profile.deck.includes(id)',id)
-        card=page.locator('.collection-layout .unit-card').filter(has=page.locator(f'[data-action="deck-add"][data-id="{id}"]'))
+        card=page.locator(f'[data-collection-character="{id}"] [data-current-version="true"] .unit-card, .collection-spells .unit-card:has([data-action="deck-add"][data-id="{id}"])')
         assert len(await card.locator('.card-detail').inner_text())>50
     await page.locator('#nav [data-page="campaign"]').click()
     await page.locator('[data-action="start-mission"][data-id="01"]').click()
@@ -167,7 +168,8 @@ async def production(browser,label,viewport):
     await page.locator('[data-action="retreat"]').click()
     await page.locator('[data-action="confirm-retreat"]').click()
     await page.locator('[data-action="battle-deck"]').click()
-    assert await page.locator('.collection-layout .unit-card').count()==76
+    await page.locator('[data-action="collection-faction"][data-id="all"]').click()
+    assert await page.locator('[data-collection-character] [data-current-version="true"] .unit-card, .collection-spells .unit-card').count()==76
     await page.locator('#nav [data-page="forge"]').click()
     assert await page.locator('.forge-tile').count()>0
     assert not errors,errors

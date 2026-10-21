@@ -4,7 +4,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
-import {ART_NAMES} from '../src/visuals.js';
+import {ART_NAMES,UI_ART_NAMES} from '../src/visuals.js';
+import {readUIArtwork} from './lib/ui-artwork.mjs';
 
 const isCardStudy=process.argv.includes('--cards');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -25,6 +26,7 @@ for(const a of manifest.assets){
 }
 const files=fs.readdirSync(path.join(root,'assets/creatures')).filter(n=>n.endsWith('.webp'));
 if(files.length!==manifest.assets.length||ART_NAMES.length!==manifest.assets.length)throw Error('Illustration non cataloguée');
+const uiArt=readUIArtwork(root,UI_ART_NAMES);
 const factories=new Map();
 function resolve(origin,request){
  if(!request.startsWith('.'))throw Error('Import externe non pris en charge : '+request);
@@ -71,6 +73,7 @@ let html=read('index.html');
 const css=read('styles.css');
 const cardCss=read('assets/card-arena.css');
 const previewCss=read('assets/card-preview.css');
+const collectionCss=read('assets/collection.css');
 const paintedArtCss=read('assets/backgrounds/arena-celeste-peinte.css');
 const paintedLayoutCss=read('assets/backgrounds/arena-peinte-layout.css');
 if(!html.includes('<link rel="stylesheet" href="./styles.css" />')||!html.includes('<script type="module" src="./src/app.js"></script>'))throw Error('Points d’entrée HTML non reconnus');
@@ -79,6 +82,12 @@ html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-celes
 html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-peinte-layout.css" />','<style>\n'+paintedLayoutCss+'\n</style>');
 html=html.replace('<link rel="stylesheet" href="./assets/card-arena.css" />',()=>'<style>\n'+cardCss+'\n</style>');
 html=html.replace('<link rel="stylesheet" href="./assets/card-preview.css" />',()=>'<style>\n'+previewCss+'\n</style>');
+html=html.replace('<link rel="stylesheet" href="./assets/collection.css" />',()=>'<style>\n'+collectionCss+'\n</style>');
+for(const [target,source] of Object.entries(uiArt)){
+ const link=`<link rel="stylesheet" href="./${target}" />`;
+ if(!html.includes(link))throw Error('Fond UI non relié à la page : '+target);
+ html=html.replace(link,()=>'<style>\n'+source+'\n</style>');
+}
 if(isCardStudy)html=html.replace('<body>','<body data-card-combat="true">');
 html=html.replace('<script type="module" src="./src/app.js"></script>','<script>\n'+js.replace(/<\/script/gi,'<\\/script')+'\n</script>');
 const output=isTest?(isCardStudy?'tests/ESSAI_CARTES.test.html':'tests/JOUER.test.html'):(isCardStudy?'ESSAI_CARTES.html':'JOUER.html');

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "approvedBy": "Propriétaire du projet, conversation ChatGPT du 21 octobre 2026",
+  "approvedOn": "2026-10-21",
+  "instruction": "ok donc tu peu intégré ca au jeux faire une pr ? est ensuite in intégragra les carte au fur et a mesure ?",
+  "reviewedArtifact": {
+    "name": "COLLECTION_COURONNES_ARCANES.html",
+    "sha256": "fff19d976406c6150e6bc888b8002fc7678827275943e7cf60165a621f851efa"
+  },
+  "scope": "Fond illustré de la Collection et présentation de la page ; aucun portrait de personnage, aucune animation, aucune fusion sur main.",
+  "assets": [
+    {
+      "key": "collection_archives_v01",
+      "version": "v01",
+      "sha256": "7259ee399f8e44e04880a0a4fb478134daee121c829c524d75758713a1e8ac46"
+    }
+  ]
+}

@@ -1,4 +1,23 @@
-# État de reprise — 20 octobre 2026
+# État de reprise — 21 octobre 2026
+
+## Proposition Collection en cours de revue
+
+- Branche `feat/collection-six-rangs-20261021`, basée sur main
+  `f403f513e85cb247e0a792dd36175f25da984fc6` (nettoyage documentaire nº 23).
+  La nouvelle page est proposée en PR ; aucune fusion autorisée ou effectuée.
+- Pleine largeur, cinq ordres et une ligne par personnage avec six rangs.
+  Seul le rang actuel est jouable ; les autres sont « À concevoir ». Divine
+  rouge, Éveillée jaune céleste. Possession, deck, compositions et compétences
+  conservent les données existantes. 27 modules sur cette branche.
+- Fond original conservé dans la PR atelier nº 21, commit
+  `c4f5e6871e32db3b646f51ba906c3ea00b7c6eb9`, CI atelier réussie
+  [39569759595](https://github.com/floiaassistant-design/couronne-et-arcanes-art/actions/runs/39569759595).
+  Le jeu épingle cet export et son reçu. La PR reste ouverte et non fusionnée.
+- Portrait du Milicien : PR atelier nº 20 en création/validation séparée ; aucun
+  portrait importé. Ajouter ensuite les cartes validées progressivement, sans
+  inventer leurs textes, statistiques ou conditions d’évolution.
+- Contrôles et limites de cette proposition : [Collection](COLLECTION_2026_10_21.md).
+  Les résultats du jalon ci-dessous sont historiques.
 
 ## Jalon fonctionnel intégré
 
@@ -37,7 +56,8 @@ sont historiques. Leurs prochaines tâches, chiffres d'assets et états de PR
 ne remplacent pas le présent état et les commits réels. Aucun ancien paquet
 externe ou conversation ne sert de source de reprise.
 
-Prochaine étape : proposer une seule illustration pilote neuve dans le cadre
-conservé, puis obtenir un accord humain sur sa version exacte avant les lots.
+Prochaines étapes : examiner la PR Collection, puis finaliser et faire valider
+le Milicien avant son import individuel. Les autres cartes seront conçues et
+importées au fur et à mesure, avec leur propre validation.
 Toute nouvelle évolution passe par une branche et une PR avec accord spécifique
-avant fusion. Le nettoyage documentaire en cours ne change aucun fichier jouable.
+avant fusion. La proposition Collection modifie seulement la présentation et son export.
