@@ -6,7 +6,8 @@ ROOT=Path(__file__).resolve().parents[1]
 ASSETS={a['cardId']:a for a in json.loads((ROOT/'assets/artwork.json').read_text())['assets']}
 FACTION_IDS={
     'aube':{'militia','shield','archer','lancer','cleric','banner','scoutcaptain','paladin','sunpriest','dawnbastion'},
-    'sylve':{'treant','ranger','wolf','dryad','stag','thorn','pixie','bear','archdruid','owl','sylvan_trapper'}
+    'sylve':{'treant','ranger','wolf','dryad','stag','thorn','pixie','bear','archdruid','owl','sylvan_trapper'},
+    'ombre':{'graveknight','bone','shade','crypt','plague','lich','banshee','vampire','nightblade','spectre','mist_inquisitor'}
 }
 
 async def exact(face,card_id,readable=True):
@@ -42,7 +43,8 @@ async def run(browser,label,viewport,faction='aube'):
         await exact(page.locator('.collection-inspection .generated-face'),card_id)
         await page.keyboard.press('Escape')
     assert await page.evaluate('JSON.stringify(profile)')==before
-    await page.locator(f'[data-collection-character="{"shield" if faction=="aube" else "treant"}"]').scroll_into_view_if_needed()
+    anchor={'aube':'shield','sylve':'treant','ombre':'graveknight'}[faction]
+    await page.locator(f'[data-collection-character="{anchor}"]').scroll_into_view_if_needed()
     await page.screenshot(path=f'/tmp/ca-{faction}-{label}-collection.png')
     await page.locator('#nav [data-page="campaign"]').click()
     await page.locator('[data-action="start-mission"][data-id="01"]').click()
@@ -50,7 +52,7 @@ async def run(browser,label,viewport,faction='aube'):
     # normale ; copie adverse uniquement pour vérifier le rendu des deux camps.
     for card_id in assets:
         await page.evaluate('''id=>{
-          battle=createBattle(profile,{id:'01',name:'Revue de l’Aube',enemy:'Bastion',hp:80,difficulty:1,deck:[]},415);
+          battle=createBattle(profile,{id:'01',name:'Revue des cadres',enemy:'Bastion',hp:80,difficulty:1,deck:[]},415);
           battle.heroes.p.hand=[{id,wait:0}];render();
         }''',card_id)
         await exact(page.locator('.hand-card .generated-face'),card_id)

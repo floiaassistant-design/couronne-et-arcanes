@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "approvedBy": "Propriétaire du projet, demande explicite d’intégration dans ChatGPT",
+  "approvedOn": "2026-10-21",
+  "instruction": "tu peux continue avec la prochaine classe la pr est préte",
+  "scope": "Import manuel des onze cartes de la Cour des Ombres v01 de la PR atelier nº 24, au commit exact ci-dessous. Aucune nouvelle rareté ni possession ; aucune fusion autorisée.",
+  "sourceRepo": "floiaassistant-design/couronne-et-arcanes-art",
+  "sourceCommit": "e1022f20a8ecad8f8843579d0b4af7a1655c69a0",
+  "assets": [
+    {
+      "key": "chevalier_tombeau_ombre_carte_v01",
+      "cardId": "graveknight",
+      "version": "01",
+      "sha256": "3ffeb7620762a1fd141c4ddf7bc4f5941add009e912fecc15bd0346246ba7dcb"
+    },
+    {
+      "key": "guerrier_ossements_ombre_carte_v01",
+      "cardId": "bone",
+      "version": "01",
+      "sha256": "6483e0f2e1f94a3a2414e532d67055bf8d93be4e9da67a91cc596605075a8708"
+    },
+    {
+      "key": "ombre_vorace_carte_v01",
+      "cardId": "shade",
+      "version": "01",
+      "sha256": "7b42e74f4a913d8e9232b053c82a73ac51bcf9db725530a504457509f8934e7d"
+    },
+    {
+      "key": "veilleur_tombeau_ombre_carte_v01",
+      "cardId": "crypt",
+      "version": "01",
+      "sha256": "915540884d5566b27fadc5896b08fbb15cc9ea7eab1ecd592e04369060f506f7"
+    },
+    {
+      "key": "faucheur_fievre_ombre_carte_v01",
+      "cardId": "plague",
+      "version": "01",
+      "sha256": "d559df8a61438760350e2ef573bb9ef07a0b1c69d02b21b0b9509a86e74b5be9"
+    },
+    {
+      "key": "archiliche_minuit_ombre_carte_v01",
+      "cardId": "lich",
+      "version": "01",
+      "sha256": "828373fe91ea915106948b810caf9995a41853db798057dabd8cca5fe8f8c7c4"
+    },
+    {
+      "key": "banshee_voiles_ombre_carte_v01",
+      "cardId": "banshee",
+      "version": "01",
+      "sha256": "1a9ac06fd209d0d4793ab080d9d9ef6ae2877f9377d03552ae8ab72eb41038f5"
+    },
+    {
+      "key": "vampire_obsidienne_ombre_carte_v01",
+      "cardId": "vampire",
+      "version": "01",
+      "sha256": "54015a0c959312bdfcfb9f98cf0c2f62f4aabe22cdfb15a555d25ff7a508258b"
+    },
+    {
+      "key": "lame_nocturne_ombre_carte_v01",
+      "cardId": "nightblade",
+      "version": "01",
+      "sha256": "b2b201c0d7b87ea874e6c04b2b6a2cb69b1398ee6183992923b7e40febcd3c92"
+    },
+    {
+      "key": "spectre_caveau_ombre_carte_v01",
+      "cardId": "spectre",
+      "version": "01",
+      "sha256": "5c3e013e9817f9e9a7a83ddfe650957d6fe3fd3921663d3a394cdae45eb2fad8"
+    },
+    {
+      "key": "inquisiteur_brumes_ombre_carte_v01",
+      "cardId": "mist_inquisitor",
+      "version": "01",
+      "sha256": "5e3171a532b0ab5a999875bbdcccc97cf77c0447258af3ebdca8728db20ab536"
+    }
+  ],
+  "note": "Le Chevalier du Tombeau v01 est approuvé artistiquement dans l’atelier ; les dix autres images y restent review. La demande ultérieure d’intégration autorise ce lot dans une PR du jeu sans modifier le manifeste atelier ni revendiquer une validation artistique distincte."
+}

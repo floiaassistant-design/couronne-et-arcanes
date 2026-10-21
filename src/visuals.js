@@ -27,7 +27,18 @@ export const CARD_TEMPLATES=Object.freeze({
  bear:'ours_roches_sylve_carte_v01',
  archdruid:'archidruide_feuillage_sylve_carte_v01',
  owl:'hibou_crepuscule_sylve_carte_v01',
- sylvan_trapper:'trappeur_sylvestre_carte_v01'
+ sylvan_trapper:'trappeur_sylvestre_carte_v01',
+ graveknight:'chevalier_tombeau_ombre_carte_v01',
+ bone:'guerrier_ossements_ombre_carte_v01',
+ shade:'ombre_vorace_carte_v01',
+ crypt:'veilleur_tombeau_ombre_carte_v01',
+ plague:'faucheur_fievre_ombre_carte_v01',
+ lich:'archiliche_minuit_ombre_carte_v01',
+ banshee:'banshee_voiles_ombre_carte_v01',
+ vampire:'vampire_obsidienne_ombre_carte_v01',
+ nightblade:'lame_nocturne_ombre_carte_v01',
+ spectre:'spectre_caveau_ombre_carte_v01',
+ mist_inquisitor:'inquisiteur_brumes_ombre_carte_v01'
 });
 export const CARD_ART_NAMES=Object.freeze(Object.values(CARD_TEMPLATES));
 export const INLINE_CARDS={};

@@ -1,3 +1,12 @@
+## Proposition — Onze cartes de la Cour des Ombres, 21 octobre 2026
+
+- Onze exports exacts de la PR atelier nº 24, commit `e1022f20`, cadres générés conservés.
+- Associations individuelles et reçu humain d’import, sources/droits/empreintes contrôlés.
+- Collection, main, fiches, plateau et vue classique ; valeurs du jeu inchangées.
+- Géométrie partagée avec la Sylve, typographie adaptée au cartouche Ombre.
+- 32 cartes illustrées et 28 modules ; sauvegardes, règles et rangs futurs conservés.
+- Nouvelle PR depuis la Sylve intégrée ; aucune fusion ni auto-merge.
+
 ## Proposition — Onze cartes Sylve, 21 octobre 2026
 
 - Onze cadres complets issus de la PR atelier nº 23, source exacte `c9b8bd8c`.

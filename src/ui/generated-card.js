@@ -10,10 +10,11 @@ export const SYLVE_CARD_FIELDS=Object.freeze({
  counter:[6,4.4,17.3,12.7],name:[12,68.7,76,6.2],description:[23,78.5,54,13.4],
  attack:[6.1,85.1,16.1,10.4],health:[80.7,85.1,16.1,10.4]
 });
+const layouts=Object.freeze({aube:GENERATED_CARD_FIELDS,sylve:SYLVE_CARD_FIELDS,ombre:SYLVE_CARD_FIELDS});
 const zone=(fields,name)=>{const [x,y,w,h]=fields[name];return `data-card-field="${name}" style="left:${x}%;top:${y}%;width:${w}%;height:${h}%"`;};
 export function generatedCardFace(card,{stats=null,delay=card.delay,description=card.description,kind='base',board=false,esc}){
  const key=cardTemplateFor(card);if(!key)return '';
- const layout=card.faction==='sylve'?'sylve':'aube',fields=layout==='sylve'?SYLVE_CARD_FIELDS:GENERATED_CARD_FIELDS;
+ const layout=Object.hasOwn(layouts,card.faction)?card.faction:'aube',fields=layouts[layout];
  return `<div class="generated-face" data-card-template="${key}" data-generated-layout="${layout}" data-long-description="${description.length>160}">
   <img class="creature-image generated-card-image ${board?'board-card-art':''}" src="${cardTemplateSrc(key)}" alt="" data-artwork-status="approved" draggable="false" />
   <span class="generated-counter illustrated-count" ${zone(fields,'counter')} data-delay-kind="${kind}" aria-label="${kind==='remaining'?'Attente restante':kind==='deployed'?'Déployée, attente':'Délai de base'} : ${delay}"><b>${delay}</b></span>
