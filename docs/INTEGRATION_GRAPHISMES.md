@@ -103,3 +103,15 @@ Même contrat `kind: card`, champs vides et associations individuelles. Les
 coordonnées de la galerie Ombre sont identiques à celles de la Sylve et partagées
 par le lecteur pur ; les images restent distinctes et entières.
 [Contrôles et limites](OMBRE_INTEGRATION_2026_10_21.md).
+
+## Dix Forge v01 — import manuel demandé le 21/10/2026
+
+« tu peuxintégré la classe suivante » autorise les dix exports des Légions de
+la Forge de la PR atelier nº 25, commit
+`ceb0a916959925ad6a41057d11210a3ae84341e5`. Reçu exact dans
+`docs/approvals/forge-dix-cartes-v01.json`. Marteau artistiquement validé ;
+neuf autres images review dans ce snapshot. Demande d’import postérieure,
+sans modification du manifeste atelier ni autorisation de fusion.
+Même contrat `kind: card`, images entières 768×1152, mappings individuels.
+Coordonnées de la galerie Forge identiques à Sylve/Ombre, sans réemploi de
+leurs images. [Périmètre et contrôles](FORGE_INTEGRATION_2026_10_21.md).

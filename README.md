@@ -24,14 +24,25 @@ de combat sont retirées. Les cartes non encore illustrées affichent des emplac
 leurs noms et vraies valeurs. Le décor peint, la main, les cadres, les aperçus
 au survol et les interactions restent en place.
 
-## Cour des Ombres — proposition du 21 octobre 2026
+## Légions de la Forge — proposition du 21 octobre 2026
+
+Dix cartes Forge rejoignent les 32 Aube/Sylve/Ombre : Marteau des Monts, Golem,
+Sapeur, Foreur, Colosse, Ingénieure, Canon, Mécaniste, Marchefer et Alchimiste.
+Cadres acier/cuivre/braises entiers, noms et valeurs réels dans leurs champs.
+Exports exacts de la PR atelier nº 25, commit `ceb0a916`. Collection, main,
+fiches et plateau partagent ces images ; les rangs futurs restent « À concevoir ».
+Nouvelle PR séparée, aucune fusion autorisée.
+[Périmètre et contrôles](docs/FORGE_INTEGRATION_2026_10_21.md).
+
+## Cour des Ombres — intégrée par la PR nº 28
 
 Onze cartes Ombre rejoignent les 21 Aube/Sylve : Chevalier du Tombeau,
 Guerrier d’ossements, Ombre vorace, Veilleur, Faucheur, Archiliche, Banshee,
 Vampire, Lame nocturne, Spectre et Inquisiteur des Brumes. Cadres en
 obsidienne/argent/améthyste conservés, valeurs réelles dans les champs vides.
 Les images sont épinglées au commit atelier `e1022f20` de la PR nº 24.
-Aucune rareté, possession ni règle ajoutée. Cette nouvelle PR n’est pas fusionnée.
+Aucune rareté, possession ni règle ajoutée. PR nº 28 fusionnée sur accord
+spécifique à `ee8a2482`.
 [Périmètre et vérifications](docs/OMBRE_INTEGRATION_2026_10_21.md).
 
 ## Sylve — intégrée par la PR nº 27
@@ -54,7 +65,7 @@ Milicien v02 et neuf cartes v01 de la PR atelier nº 22, épinglée au commit
 Collection, main, fiches et combat. Aucune nouvelle rareté ni possession créée.
 Le trait bleu/rouge sous les cartes du plateau est remplacé par un petit sceau :
 écu à chevron allié, losange croisé adverse. La vie actuelle reste sur la carte,
-la vie maximum dans la fiche. Les autres ordres restent neutres.
+la vie maximum dans la fiche. Éther garde ses repères neutres.
 
 Les PR nº 25 puis nº 26 ont été fusionnées sur accord spécifique,
 à `2787b166` puis `4b48b05f`.
@@ -79,8 +90,8 @@ Seule la version du catalogue possède de vraies statistiques et une possession.
 Les autres portent « À concevoir » ; aucune évolution de rareté n’est créée.
 Deck, compositions et compétences de classe restent accessibles en bas de page.
 
-Le fond illustré est embarqué et tracé dans `assets/ui-artwork.json`. Les
-autres ordres restent neutres ; les dix Aube et les onze Sylve sont intégrés. [Périmètre et vérifications](docs/COLLECTION_2026_10_21.md).
+Le fond illustré est embarqué et tracé dans `assets/ui-artwork.json`.
+Dix Aube, onze Sylve et onze Ombre sont intégrés ; dix Forge sont proposés. [Périmètre et vérifications](docs/COLLECTION_2026_10_21.md).
 La Collection est intégrée à `0896c16e` après validation spécifique.
 
 ## Jouer et développer
@@ -97,7 +108,7 @@ L'équilibrage de cette pose élargie reste distinct des anciens benchmarks.
 ## Nouvelle production d'images
 
 Aucun ancien portrait n'est automatiquement réutilisé. Le catalogue actif
-`assets/artwork.json` contient 32 cartes complètes autorisées pour import et aucun ancien lot. Chaque nouveau visuel passe par une référence,
+`assets/artwork.json` contient 42 cartes complètes autorisées pour import et aucun ancien lot. Chaque nouveau visuel passe par une référence,
 une génération pilote, une validation humaine exacte et un export contrôlé.
 Les nombres, noms et descriptions viennent du jeu.
 

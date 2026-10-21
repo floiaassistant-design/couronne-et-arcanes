@@ -13,10 +13,11 @@
   `50b32e4ad5c41da8c99f190d4ca300ce9fec988a`. Atelier remis à zéro par la PR
   art nº 18, commit `e598646540bf01d0389de772eed1d7f3539c27cc`. Ces trois fusions
   ont été autorisées explicitement ; cette autorisation ne couvre aucune future PR.
-- Collection nº 24, Milicien nº 25, Aube/sceaux nº 26 et Sylve nº 27 fusionnés
-  sur accords spécifiques. Main vérifié : `3c208df3eb3d5a57953e0c3bd0ee91069895edab`.
-  La branche `feat/ombre-cartes-20261021` part de ce main exact et propose onze
-  Ombre de la PR atelier nº 24, commit `e1022f20`, sans fusion autorisée.
+- Collection nº 24, Milicien nº 25, Aube/sceaux nº 26, Sylve nº 27 et Ombre nº 28
+  fusionnés sur accords spécifiques. Main vérifié :
+  `ee8a2482841b722e5fb7e761a1df0c712ac75243`. La branche
+  `feat/forge-cartes-20261021` part de ce main exact et propose dix Forge
+  de la PR atelier nº 25, commit `ceb0a916`, sans fusion autorisée.
 - Ne jamais reprendre le projet depuis une ancienne archive externe, une copie
   locale non vérifiée, une conversation ou une ancienne branche. Les versions
   antérieures restent consultables dans Git et ne doivent pas écraser le main.
@@ -32,7 +33,7 @@
   Refaire les illustrations et animations de personnages. Aucun ancien portrait,
   sprite, atlas, planche, modèle ou accord artistique n'est une référence active.
 - `assets/artwork.json` est le registre actif. Après la remise à zéro,
-  dix Aube et onze Sylve sont intégrés ; onze Ombre sont proposés, sur demandes
+  dix Aube, onze Sylve et onze Ombre sont intégrés ; dix Forge proposés, sur demandes
   explicites d’import. Voir les reçus exacts du jeu. Les SVG neutres sont des emplacements techniques. Le décor
   peint reste embarqué ; les interactions des compteurs sont conservées.
 - Produire une seule illustration pilote neuve puis obtenir l'accord humain
@@ -107,7 +108,7 @@
   Ce contrat ne remplace pas le registre WebP des portraits. Voir
   `docs/COLLECTION_2026_10_21.md` avant l’ajout progressif des cartes.
 
-- Trente-deux cartes complètes Aube/Sylve/Ombre : `ui/generated-card.js` place seulement les
+- Quarante-deux cartes complètes Aube/Sylve/Ombre/Forge : `ui/generated-card.js` place seulement les
   textes et valeurs dans cinq zones normalisées du cadre dessiné. Mapping
   individuel `CARD_TEMPLATES`, clés `CARD_ART_NAMES`, registre `kind: card`
   dans `assets/artwork.json`. `scripts/lib/artwork.mjs` contrôle source, reçu,
@@ -115,7 +116,8 @@
   Le circuit des portraits reste distinct ; aucun portrait implicite par famille.
   Voir `docs/MILICIEN_INTEGRATION_2026_10_21.md`,
   `docs/AUBE_INTEGRATION_2026_10_21.md`, `docs/SYLVE_INTEGRATION_2026_10_21.md`
-  et `docs/OMBRE_INTEGRATION_2026_10_21.md`. Les sceaux de camp sont rendus par
+  et `docs/OMBRE_INTEGRATION_2026_10_21.md`,
+  `docs/FORGE_INTEGRATION_2026_10_21.md`. Les sceaux de camp sont rendus par
   `card-arena.js`, sans barre de vie sous les cartes ; HP réels et fiche conservés.
 
 ### Géométrie et combat
@@ -173,7 +175,7 @@
   `node scripts/build_standalone.mjs --cards --test`.
 - Si rendu modifié : parcours actuels `browser_card_study.py`,
   `browser_deployment.py`, `browser_card_preview.py`, `browser_art_reset.py`,
-  `browser_collection.py`, `browser_milicien.py`, `browser_aube.py`, `browser_sylve.py`, `browser_ombre.py`, puis suites pertinentes du workflow. Vérifier bureau,
+  `browser_collection.py`, `browser_milicien.py`, `browser_aube.py`, `browser_sylve.py`, `browser_ombre.py`, `browser_forge.py`, puis suites pertinentes du workflow. Vérifier bureau,
   portrait, paysage,
   sauvegarde/reprise, mouvement réduit, absence d'images et export hors réseau.
 - Si règles modifiées : tests métier, compatibilité historique et simulations

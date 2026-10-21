@@ -227,6 +227,76 @@
       "kind": "card",
       "sourceCommit": "e1022f20a8ecad8f8843579d0b4af7a1655c69a0",
       "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "smith",
+      "key": "marteau_monts_forge_carte_v01",
+      "kind": "card",
+      "sourceCommit": "ceb0a916959925ad6a41057d11210a3ae84341e5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "golem",
+      "key": "golem_runique_forge_carte_v01",
+      "kind": "card",
+      "sourceCommit": "ceb0a916959925ad6a41057d11210a3ae84341e5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "bomb",
+      "key": "sapeur_gobelin_forge_carte_v01",
+      "kind": "card",
+      "sourceCommit": "ceb0a916959925ad6a41057d11210a3ae84341e5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "drill",
+      "key": "foreur_fer_forge_carte_v01",
+      "kind": "card",
+      "sourceCommit": "ceb0a916959925ad6a41057d11210a3ae84341e5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "colossus",
+      "key": "colosse_braise_forge_carte_v01",
+      "kind": "card",
+      "sourceCommit": "ceb0a916959925ad6a41057d11210a3ae84341e5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "engineer",
+      "key": "ingenieure_acier_forge_carte_v01",
+      "kind": "card",
+      "sourceCommit": "ceb0a916959925ad6a41057d11210a3ae84341e5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "cannon",
+      "key": "canon_terres_rouges_forge_carte_v01",
+      "kind": "card",
+      "sourceCommit": "ceb0a916959925ad6a41057d11210a3ae84341e5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "mechanist",
+      "key": "mecaniste_hauts_fours_forge_carte_v01",
+      "kind": "card",
+      "sourceCommit": "ceb0a916959925ad6a41057d11210a3ae84341e5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "ironwraith",
+      "key": "marchefer_forge_carte_v01",
+      "kind": "card",
+      "sourceCommit": "ceb0a916959925ad6a41057d11210a3ae84341e5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "alchemist",
+      "key": "alchimiste_braises_forge_carte_v01",
+      "kind": "card",
+      "sourceCommit": "ceb0a916959925ad6a41057d11210a3ae84341e5",
+      "registry": "assets/artwork.json"
     }
   ],
   "notes": "Dix Aube et onze Sylve intégrés ; onze Ombre proposés, imports manuels épinglés. Aucun ancien lot réactivé."
