@@ -94,6 +94,13 @@ Le fond illustré est embarqué et tracé dans `assets/ui-artwork.json`.
 Dix Aube, onze Sylve et onze Ombre sont intégrés ; dix Forge sont proposés. [Périmètre et vérifications](docs/COLLECTION_2026_10_21.md).
 La Collection est intégrée à `0896c16e` après validation spécifique.
 
+## Tours alternés — proposition en PR (non fusionnée)
+
+Pour les **nouveaux** combats, le joueur pose ses cartes et valide ses actions ;
+ses unités se déplacent et attaquent. L’IA pose ensuite ses cartes une par une
+de façon visible, puis ses unités agissent. Les anciennes sauvegardes restent
+sur la résolution commune historique. [Contrat et limites](docs/TOURS_ALTERNES_2026_10_21.md).
+
 ## Jouer et développer
 
 - `JOUER.html` : jeu autonome, ouvrable sans réseau.
