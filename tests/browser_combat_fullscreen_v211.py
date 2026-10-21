@@ -66,6 +66,7 @@ async def run(browser,name,viewport):
  await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
  assert await page.evaluate('battle.board[0][1]?.id') is not None
  await page.locator('.combat-hand-dock [data-action="end-turn"]').click()
+ await page.wait_for_function('()=>battle.round>=2')
  assert await page.locator('.turn-n').inner_text()=='2'
  # Le harnais teste un document injecté en about:blank : reconstituer la page à partir
  # de la sauvegarde simulée, plutôt que recharger about:blank sans contenu.
