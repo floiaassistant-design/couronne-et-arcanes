@@ -164,7 +164,7 @@ async def production(browser,label,viewport):
     await page.locator('.hand .unit-card:not(.on-cooldown)').first.click()
     await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
     await page.locator('[data-action="end-turn"]').click()
-    await page.wait_for_function("()=>battle.phase!=='enemy'")
+    await page.wait_for_function("() => JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'))?.round>=2")
     await page.wait_for_timeout(3000)
     await page.reload()
     assert await page.locator('.turn-n').inner_text()=='2'
