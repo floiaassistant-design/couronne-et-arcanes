@@ -20,11 +20,21 @@ production graphique. Les anciennes archives externes ne sont ni une source
 de reprise ni une destination de synchronisation.
 
 Les anciennes illustrations de personnages, silhouettes pixel et animations
-de combat sont retirées. Les cartes affichent des emplacements neutres avec
+de combat sont retirées. Les cartes non encore illustrées affichent des emplacements neutres avec
 leurs noms et vraies valeurs. Le décor peint, la main, les cadres, les aperçus
 au survol et les interactions restent en place.
 
-## Collection — proposition du 21 octobre 2026
+## Milicien — proposition du 21 octobre 2026
+
+Le Milicien de l’Aube v02 utilise sa carte complète avec cadre généré, issue
+de la PR atelier nº 20 fusionnée. Nom, descriptif, attente, attaque et vie sont
+rendus dans ses cases vides à partir des données réelles. Le même visuel sert
+en Collection, dans la main, les fiches et sur le plateau ; aucune autre carte
+n’est illustrée par association implicite.
+[Périmètre et contrôles](docs/MILICIEN_INTEGRATION_2026_10_21.md). Cette nouvelle
+PR du jeu attend sa validation spécifique avant fusion.
+
+## Collection — intégrée par la PR nº 24
 
 La page Collection occupe toute la largeur : onglets Aube, Sylve, Ombre, Forge
 et Éther, puis Sorts et Tous. Une ligne par personnage et six colonnes :
@@ -34,9 +44,8 @@ Les autres portent « À concevoir » ; aucune évolution de rareté n’est cr�
 Deck, compositions et compétences de classe restent accessibles en bas de page.
 
 Le fond illustré est embarqué et tracé dans `assets/ui-artwork.json`. Les
-portraits restent neutres ; le Milicien en cours de création sera importé
-après validation de sa version exacte. [Périmètre et vérifications](docs/COLLECTION_2026_10_21.md).
-Cette proposition reste sur une branche et demande une validation avant fusion.
+autres personnages restent neutres ; le Milicien est le premier import proposé. [Périmètre et vérifications](docs/COLLECTION_2026_10_21.md).
+La Collection est intégrée à `0896c16e` après validation spécifique.
 
 ## Jouer et développer
 
@@ -52,7 +61,7 @@ L'équilibrage de cette pose élargie reste distinct des anciens benchmarks.
 ## Nouvelle production d'images
 
 Aucun ancien portrait n'est automatiquement réutilisé. Le catalogue actif
-`assets/artwork.json` est vide. Chaque nouveau visuel passe par une référence,
+`assets/artwork.json` contient une carte complète autorisée et aucun ancien lot. Chaque nouveau visuel passe par une référence,
 une génération pilote, une validation humaine exacte et un export contrôlé.
 Les nombres, noms et descriptions viennent du jeu.
 
@@ -78,7 +87,7 @@ distants avant de les déclarer réussis. Aucun téléphone physique n'est garan
 
 Les clés `couronnes_arcanes_v1`, `couronnes_arcanes_bataille_v1` et le réglage
 d'animations sont conservés. Les effets transitoires restent exclus du stockage.
-Les sources sont séparées entre moteur, IA, vues et stockage ; 27 modules dans cette proposition.
+Les sources sont séparées entre moteur, IA, vues et stockage ; 28 modules dans cette proposition.
 
 [État](docs/ETAT_PROJET.md), [architecture](docs/ARCHITECTURE_MODULAIRE_V2_6.md),
 [rapport avant remise à zéro](docs/CHECKUP_NETTOYAGE_2026_10_20.md),

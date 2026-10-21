@@ -15,6 +15,7 @@ async def run(browser,label,viewport):
     await page.locator('[data-action="welcome-start"]').click()
     frame=page.locator('.arena-painted-frame')
     assert await frame.count()==1
+    await page.evaluate("()=>{battle.heroes.p.hand=[{id:'wolf',wait:0}];render()}")
     image=page.locator('.hand .creature-image').first
     await image.evaluate('(el)=>el.decode()')
     assert await image.evaluate('(el)=>el.naturalWidth===384 && el.naturalHeight===576 && el.currentSrc.startsWith("data:image/svg+xml,")')
@@ -26,7 +27,7 @@ async def run(browser,label,viewport):
     await page.locator('[data-action="deploy"][data-lane="0"][data-col="3"]').click()
     card=page.locator('.board-card').first
     art=card.locator('img');await art.evaluate('(el)=>el.decode()')
-    assert await art.evaluate('(el)=>el.naturalWidth===384 && el.currentSrc.startsWith("data:image/svg+xml,")')
+    assert await art.evaluate('(el)=>el.naturalWidth===768 && el.naturalHeight===1152 && el.currentSrc.startsWith("data:image/webp;base64,")')
     assert await page.evaluate('battle.board[0][3].id')=='militia'
     before=await page.evaluate('battle.round')
     await page.locator('[data-action="end-turn"]').click()

@@ -42,6 +42,27 @@ La source PNG, le prompt et l’export exact sont conservés dans la
 [PR atelier nº 21](https://github.com/floiaassistant-design/couronne-et-arcanes-art/pull/21),
 commit `c4f5e6871e32db3b646f51ba906c3ea00b7c6eb9`. L’accord sur la Collection
 autorise ce fond précis et cette présentation. Il ne valide aucun portrait,
-aucune animation ni aucune fusion. Le Milicien de la PR atelier nº 20 reste
-en création et en validation séparée. Les futurs portraits suivent toujours
+aucune animation ni aucune fusion. Lors de cet import du fond, le Milicien de la PR atelier nº 20 était
+en création et en validation séparée ; son import ultérieur autorisé est décrit
+ci-dessous. Les futurs portraits suivent toujours
 le contrat WebP et leur mapping individuel ; aucun portrait par famille implicite.
+
+## Carte complète Milicien v02 — import manuel autorisé le 21/10/2026
+
+La demande « intégre le mélicien au jeux » autorise l’export exact de la v02
+issue de la PR art nº 20 fusionnée. Reçu humain dans le jeu, source épinglée
+à `e43c3a877f45bde9a6f99fb1fa1005abdc47bace`. Le statut review encore présent
+dans ce snapshot atelier est historique par rapport à cette instruction ;
+il ne vaut pas approbation automatique. Aucune autre image ni fusion autorisée.
+
+Contrat adapté aux cadres peints complets : `kind: card` dans `assets/artwork.json`,
+`assets/cards/`, mapping individuel `CARD_TEMPLATES` et liste `CARD_ART_NAMES`.
+`scripts/lib/artwork.mjs` contrôle le reçu (clé, carte, version, SHA-256),
+l’export WebP réel de ratio 2:3, les octets et le mapping. Il refuse les fichiers
+inconnus comme les images modifiées. Le builder injecte `INLINE_CARDS`.
+
+`ui/generated-card.js` rend des valeurs fournies par les vues dans cinq zones
+normalisées. Ne pas redessiner les bordures ni recadrer cette image comme
+un portrait. Noms et descriptions sont échappés ; stats et délai proviennent
+du profil ou du combat via les fonctions existantes. Les futures raretés ne
+créent ni carte ni possession. [Coordonnées et contrôles](MILICIEN_INTEGRATION_2026_10_21.md).

@@ -31,7 +31,7 @@ async def check_hand_countdowns(page,label):
     measures=await page.evaluate('''()=>{
       const cards=[...document.querySelectorAll('.hand .hand-card')];
       return cards.map(c=>{
-        const pilot=c.classList.contains('illustrated-pilot');
+        const pilot=c.classList.contains('illustrated-pilot')||c.classList.contains('generated-template');
         const badge=c.querySelector(pilot?'.illustrated-count':'.hand-readiness');
         const stamp=pilot?null:c.querySelector('.cooldown-stamp');
         const b=badge.getBoundingClientRect(),r=c.getBoundingClientRect(),s=stamp?.getBoundingClientRect();

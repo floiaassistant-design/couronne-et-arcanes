@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[1]
 async def contained(page,panel):
     b=await panel.bounding_box();vp=page.viewport_size
     assert b['x']>=11 and b['y']>=11 and b['x']+b['width']<=vp['width']-11 and b['y']+b['height']<=vp['height']-11,b
-    assert await panel.locator('.inspection-art').evaluate('(e)=>e.complete&&e.naturalWidth>0')
+    assert await panel.locator('.inspection-art,.generated-card-image').first.evaluate('(e)=>e.complete&&e.naturalWidth>0')
 async def run(browser,label,viewport):
     ctx=await browser.new_context(viewport=viewport,has_touch=True,offline=True)
     page=await ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))

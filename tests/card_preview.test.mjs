@@ -15,7 +15,7 @@ test('Aperçu plateau : PV blessés, camp adverse, Concorde et états réels san
  assert.equal(model.stats.atk,u.atk+2);assert.equal(model.stats.hp,2);assert.equal(model.stats.maxhp,7);
  assert.ok(model.board.statuses.includes('Concorde +1 ATQ'));assert.ok(model.board.statuses.some(s=>s.startsWith('Silence')));
  const html=cardInspectionContent(model.card,model.entry,model.stats,esc,{illustrated:true,board:model.board});
- assert.match(html,/En combat/);assert.match(html,/PV 2\/7/);assert.match(html,/Armure 1/);assert.match(html,/data:image\/svg\+xml,/);
+ assert.match(html,/En combat/);assert.match(html,/PV 2\/7/);assert.match(html,/Armure 1/);assert.match(html,/assets\/cards\/milicien_aube_carte_v02.webp/);
  assert.equal(JSON.stringify(b),before);
  u.side='e';const enemy=boardInspectionData(b,u.uid);
  assert.equal(enemy.stats.atk,u.atk+1);assert.equal(enemy.board.side,'e');

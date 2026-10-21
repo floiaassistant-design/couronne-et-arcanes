@@ -13,6 +13,9 @@
   `50b32e4ad5c41da8c99f190d4ca300ce9fec988a`. Atelier remis à zéro par la PR
   art nº 18, commit `e598646540bf01d0389de772eed1d7f3539c27cc`. Ces trois fusions
   ont été autorisées explicitement ; cette autorisation ne couvre aucune future PR.
+- Collection nº 24 fusionnée sur validation spécifique le 21/10/2026 à
+  `0896c16e30cff37464b5eb355b3d2b37a2c5651a`. Le Milicien v02 de la PR art nº 20
+  est importé dans une nouvelle PR jeu, encore à valider avant fusion.
 - Ne jamais reprendre le projet depuis une ancienne archive externe, une copie
   locale non vérifiée, une conversation ou une ancienne branche. Les versions
   antérieures restent consultables dans Git et ne doivent pas écraser le main.
@@ -27,8 +30,8 @@
 - Conserver plateau peint, présentation plein écran, cadres, main et aperçus.
   Refaire les illustrations et animations de personnages. Aucun ancien portrait,
   sprite, atlas, planche, modèle ou accord artistique n'est une référence active.
-- `assets/artwork.json` est le registre actif : zéro image de personnage après
-  la remise à zéro. Les SVG neutres sont des emplacements techniques. Le décor
+- `assets/artwork.json` est le registre actif. Après la remise à zéro,
+  le Milicien v02 est le premier import manuel autorisé le 21/10/2026. Les SVG neutres sont des emplacements techniques. Le décor
   peint reste embarqué ; les interactions des compteurs sont conservées.
 - Produire une seule illustration pilote neuve puis obtenir l'accord humain
   sur sa version exacte. Conserver source, prompt, droits, provenance, version,
@@ -86,7 +89,7 @@
   sans mutation du profil : les rangs non définis restent « À concevoir ».
   `ui/painted-arena.js` porte la projection et les ancrages. `ui/arena-art.js`
   fournit le repère neutre ; `ui/combat-fx.js` conserve l'API avec fin immédiate,
-  sans ancien lecteur d'effets. Les 27 modules sont empaquetés par le générateur.
+  sans ancien lecteur d'effets. Les 28 modules sont empaquetés par le générateur.
 - `engine/unit-stats.js` partage les statistiques d'invocation entre moteur,
   main et collection ; réutiliser `gearBonus` du profil. La main lit l'instantané
   du combat, la collection le profil actuel. Préserver la parité et l'ordre des
@@ -101,6 +104,14 @@
   épinglées dans l’atelier, reçu et empreinte exacts ; CSS à image JPEG embarquée.
   Ce contrat ne remplace pas le registre WebP des portraits. Voir
   `docs/COLLECTION_2026_10_21.md` avant l’ajout progressif des cartes.
+
+- Carte complète Milicien v02 : `ui/generated-card.js` place seulement les
+  textes et valeurs dans cinq zones normalisées du cadre dessiné. Mapping
+  individuel `CARD_TEMPLATES`, clés `CARD_ART_NAMES`, registre `kind: card`
+  dans `assets/artwork.json`. `scripts/lib/artwork.mjs` contrôle source, reçu,
+  octets, SHA-256 et dimensions WebP 2:3, puis le builder embarque l’image.
+  Le circuit des portraits reste distinct ; aucun portrait implicite par famille.
+  Voir `docs/MILICIEN_INTEGRATION_2026_10_21.md`.
 
 ### Géométrie et combat
 
@@ -157,7 +168,7 @@
   `node scripts/build_standalone.mjs --cards --test`.
 - Si rendu modifié : parcours actuels `browser_card_study.py`,
   `browser_deployment.py`, `browser_card_preview.py`, `browser_art_reset.py`,
-  `browser_collection.py`, puis suites pertinentes du workflow. Vérifier bureau,
+  `browser_collection.py`, `browser_milicien.py`, puis suites pertinentes du workflow. Vérifier bureau,
   portrait, paysage,
   sauvegarde/reprise, mouvement réduit, absence d'images et export hors réseau.
 - Si règles modifiées : tests métier, compatibilité historique et simulations

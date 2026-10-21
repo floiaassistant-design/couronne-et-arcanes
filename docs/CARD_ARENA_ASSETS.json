@@ -3,6 +3,14 @@
   "generation": "reset-2026-10-20",
   "activeRegistry": "assets/artwork.json",
   "sourceRepo": "floiaassistant-design/couronne-et-arcanes-art",
-  "assets": [],
+  "assets": [
+    {
+      "cardId": "militia",
+      "key": "milicien_aube_carte_v02",
+      "kind": "card",
+      "registry": "assets/artwork.json",
+      "sourceCommit": "e43c3a877f45bde9a6f99fb1fa1005abdc47bace"
+    }
+  ],
   "notes": "Les anciens lots Aube sont retirés de la production active. Le plateau, les cadres et les interactions de la PR nº 20 sont conservés."
 }

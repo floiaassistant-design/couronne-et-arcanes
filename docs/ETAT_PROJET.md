@@ -1,10 +1,26 @@
 # État de reprise — 21 octobre 2026
 
-## Proposition Collection en cours de revue
+## Proposition Milicien en cours de revue
+
+- Branche `feat/milicien-carte-v02-20261021`, basée sur le main du jeu
+  `0896c16e30cff37464b5eb355b3d2b37a2c5651a`, après fusion autorisée de la
+  Collection nº 24. Aucune fusion de cette nouvelle évolution n’est autorisée.
+- Source art : PR nº 20 fusionnée à `e43c3a877f45bde9a6f99fb1fa1005abdc47bace`,
+  carte complète Milicien de l’Aube v02. Export exact WebP 768×1152, 360 012 octets.
+- Instruction humaine « intégre le mélicien au jeux », consignée dans le reçu
+  du jeu. L’ancien statut review du manifeste atelier n’est pas réutilisé comme
+  validation : le reçu d’import est postérieur et désigne l’empreinte exacte.
+- Cadre dessiné conservé, textes et chiffres dynamiques dans ses cinq cases ;
+  même image en Collection, main, fiches et plateau. Seul `militia` est associé
+  à cette image ; autres cartes et futures évolutions restent à concevoir.
+- 28 modules, un nouvel asset complet et aucun ancien portrait réactivé.
+  [Périmètre, contrat et contrôles](MILICIEN_INTEGRATION_2026_10_21.md).
+
+## Collection intégrée — PR nº 24
 
 - Branche `feat/collection-six-rangs-20261021`, basée sur main
   `f403f513e85cb247e0a792dd36175f25da984fc6` (nettoyage documentaire nº 23).
-  La nouvelle page est proposée en PR ; aucune fusion autorisée ou effectuée.
+  La page a été intégrée après validation explicite, à `0896c16e`.
 - Pleine largeur, cinq ordres et une ligne par personnage avec six rangs.
   Seul le rang actuel est jouable ; les autres sont « À concevoir ». Divine
   rouge, Éveillée jaune céleste. Possession, deck, compositions et compétences
@@ -13,8 +29,8 @@
   `c4f5e6871e32db3b646f51ba906c3ea00b7c6eb9`, CI atelier réussie
   [39569759595](https://github.com/floiaassistant-design/couronne-et-arcanes-art/actions/runs/39569759595).
   Le jeu épingle cet export et son reçu. La PR reste ouverte et non fusionnée.
-- Portrait du Milicien : PR atelier nº 20 en création/validation séparée ; aucun
-  portrait importé. Ajouter ensuite les cartes validées progressivement, sans
+- La PR atelier nº 20 est depuis fusionnée ; son import est décrit ci-dessus.
+  Ajouter ensuite les cartes validées progressivement, sans
   inventer leurs textes, statistiques ou conditions d’évolution.
 - Contrôles et limites de cette proposition : [Collection](COLLECTION_2026_10_21.md).
   Les résultats du jalon ci-dessous sont historiques.
@@ -56,8 +72,8 @@ sont historiques. Leurs prochaines tâches, chiffres d'assets et états de PR
 ne remplacent pas le présent état et les commits réels. Aucun ancien paquet
 externe ou conversation ne sert de source de reprise.
 
-Prochaines étapes : examiner la PR Collection, puis finaliser et faire valider
-le Milicien avant son import individuel. Les autres cartes seront conçues et
+Prochaines étapes : examiner la PR jeu du Milicien, puis poursuivre les cartes
+après validation du gabarit rendu. Les autres cartes seront conçues et
 importées au fur et à mesure, avec leur propre validation.
 Toute nouvelle évolution passe par une branche et une PR avec accord spécifique
 avant fusion. La proposition Collection modifie seulement la présentation et son export.

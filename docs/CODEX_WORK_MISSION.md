@@ -21,8 +21,8 @@ déjà. Lire leurs modules et tests avant de créer une nouvelle implémentation
 
 Le propriétaire conserve plateau et présentation mais demande des illustrations
 et animations neuves. Les anciens portraits, silhouettes, planches et accords
-sont historiques. Le registre actif est vide et le jeu utilise des repères
-neutres. Ne pas réinstaller les anciens lots ni restaurer leur lecteur d'effets.
+sont historiques. La branche du Milicien importe une carte complète v02 autorisée par instruction
+humaine le 21/10/2026 ; les autres personnages gardent des repères neutres. Ne pas réinstaller les anciens lots ni restaurer leur lecteur d'effets.
 
 Commencer par une seule illustration pilote. Source, prompt, provenance, droits,
 version, dimensions, poids, empreinte et accord humain exact restent dans GitHub.

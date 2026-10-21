@@ -54,7 +54,7 @@ async def run(browser,label,viewport):
         await page.keyboard.press('Enter')
         assert await page.evaluate('(l)=>battle.board[l-1][1].id',lanes)=='militia'
         src=await page.locator('.sprite-figure').first.get_attribute('src')
-        assert src.startswith('data:image/svg+xml,'),src
+        assert src.startswith('data:image/webp;base64,'),'Export Milicien v02 non embarqué'
         await page.evaluate('''lanes=>{
           const u=(id,side,uid,ability='',ranged=false)=>({uid,id,side,atk:2,hp:12,maxhp:12,armor:0,ranged,ability,stun:0,poison:0,poisonTurns:0});
           battle.board[0][3]=u('wolf','p',90,'haste');battle.board[0][7]=u('lich','e',91,'splash');

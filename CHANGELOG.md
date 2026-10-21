@@ -1,3 +1,16 @@
+## Proposition — import Milicien v02, 21 octobre 2026
+
+- Premier personnage de la nouvelle série : carte complète et cadre généré v02
+  de la PR art nº 20, import manuel exact autorisé par le propriétaire.
+- Nom, descriptif, compteur haut gauche et valeurs attaque/vie restent dynamiques,
+  avec un rendu partagé entre main, plateau, fiches et Collection.
+- Contrat explicite des cartes complètes : mapping individuel, reçu exact,
+  source épinglée, droits, provenance, poids, empreinte et dimensions contrôlés.
+- 28 modules, un WebP embarqué ; pas de changement de règle ou de sauvegarde.
+- Scène fixe protégée du défilement involontaire à l’ouverture d’un aperçu.
+- JOUER et ESSAI_CARTES régénérés. Contrôles :
+  `docs/MILICIEN_INTEGRATION_2026_10_21.md`. Nouvelle PR, aucune fusion autonome.
+
 ## Proposition — Collection par personnage, 21 octobre 2026
 
 - Page pleine largeur, onglets des cinq ordres, Sorts et Tous ; une ligne par

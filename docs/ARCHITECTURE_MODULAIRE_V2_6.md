@@ -1,6 +1,27 @@
 # Architecture modulaire — V2.6
 
-## Collection — proposition du 21/10/2026
+## Carte complète Milicien — proposition du 21/10/2026
+
+28 modules. `ui/generated-card.js` reçoit texte, attente et statistiques déjà
+calculées ; il rend le cadre complet et ses cinq zones normalisées, sans moteur,
+DOM ou sauvegarde. Il est partagé par `views.js`, `collection.js`, `card-arena.js`
+et `card-inspection.js`. `arena-art.js` utilise aussi cette image dans la vue
+classique, en entier ; nom et statistiques restent ceux du rendu classique.
+
+Le mapping `CARD_TEMPLATES` de `visuals.js` ne contient que `militia`. Les cartes
+complètes et les portraits ont deux listes et deux tables d’images embarquées,
+mais le même registre `assets/artwork.json`. Le lecteur
+`scripts/lib/artwork.mjs` valide métadonnées, mapping, reçu exact, octets,
+empreinte et dimensions réelles avant empaquetage. Les WebP hors registre
+restent refusés dans les deux répertoires. Le builder n’effectue aucun export
+automatique depuis l’atelier. Styles dans `assets/generated-card.css`.
+
+La scène fixe utilise `overflow: clip` pour empêcher son déplacement involontaire
+lors de l’ouverture d’un aperçu ; la grille et la main gardent leurs propres
+défilements. Les calculs, le catalogue et les sauvegardes ne changent pas.
+[Contrat et validation](MILICIEN_INTEGRATION_2026_10_21.md).
+
+## Collection — intégrée par la PR nº 24, 21/10/2026
 
 27 modules dans cette branche. `src/ui/collection.js` porte le catalogue par
 personnage, les filtres purs et les fiches des six rangs. Il reçoit `cardUI`,
