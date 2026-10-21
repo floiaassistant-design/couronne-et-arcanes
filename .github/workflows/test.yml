@@ -69,6 +69,8 @@ jobs:
         run: python3 tests/browser_collection.py
       - name: Milicien v02, champs dynamiques, pose et reprise hors réseau
         run: python3 tests/browser_milicien.py
+      - name: Dix cartes Aube et sceaux des deux camps, bureau et mobile hors réseau
+        run: python3 tests/browser_aube.py
       - name: Parcours V2.8 ordinateur et téléphone simulé
         run: python3 tests/browser_class_skills_v28.py
       - name: Nouvelle partie, raretés et reprise sur ordinateur et mobile
@@ -98,6 +100,7 @@ jobs:
             /tmp/ca-capacites-*.png
             /tmp/ca-collection-*.png
             /tmp/ca-milicien-*.png
+            /tmp/ca-aube-*.png
             JOUER.html
           if-no-files-found: warn
           retention-days: 14

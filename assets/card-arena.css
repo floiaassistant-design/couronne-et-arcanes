@@ -2,7 +2,7 @@
 .card-combat-mode .board-card{
  position:relative;isolation:isolate;display:block;flex:none;
  width:72px;height:104px;border:1px solid #dec38c;border-radius:6px;
- overflow:hidden;background:#142336;box-shadow:0 3px 8px #07111bc9;
+ overflow:visible;background:#142336;box-shadow:0 3px 8px #07111bc9;
  color:#fff5df;pointer-events:none;
 }
 .card-combat-mode .board-card::after{
@@ -14,10 +14,13 @@
 .card-combat-mode .board-card-name{position:absolute;z-index:1;left:3px;right:3px;bottom:25px;font:10px/1.1 Arial;text-align:center;text-shadow:0 1px 3px #000}
 .card-combat-mode .board-card-stats{position:absolute;bottom:8px;left:5px;right:5px;z-index:1;display:flex;justify-content:space-between;font:12px Arial;color:#f3d797}
 .card-combat-mode .board-card-stats b{font-size:14px}.card-combat-mode .board-card-stats>span+span{color:#bbf5d2}
-.card-combat-mode .board-card-health{position:absolute;z-index:2;bottom:0;left:0;right:0;height:3px;background:#0b1c2d}
-.card-combat-mode .board-card-health i{height:100%;display:block;background:#61c5e2}
-.card-combat-mode .board-card[data-side="e"]{border-color:#e49b94}
-.card-combat-mode .board-card[data-side="e"] .board-card-health i{background:#ef9292}
+.board-camp-seal{width:16px;height:19px;flex:none;overflow:visible;color:#f9e8c3;filter:drop-shadow(0 2px 2px #000b)}
+.camp-seal-body{fill:#284958;stroke:#e6c787;stroke-width:1.5;stroke-linejoin:round}
+.camp-seal-mark{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.board-camp-seal[data-camp="e"] .camp-seal-body{fill:#623f48}
+.card-combat-mode .board-card>.board-camp-seal{position:absolute;z-index:3;top:-5px;right:-6px;pointer-events:none}
+.arena-legend .board-camp-seal{width:11px;height:13px;vertical-align:middle;margin-right:4px}
+.card-combat-mode .arena-legend .legend-ally,.card-combat-mode .arena-legend .legend-enemy{color:#eaddc5}
 .card-combat-mode .unit-on-board{justify-content:center}
 .card-combat-mode .unit-on-board .board-identification{display:none!important}
 .card-combat-mode .unit-on-board .formation-badge,.card-combat-mode .unit-on-board .silence-badge{z-index:4}

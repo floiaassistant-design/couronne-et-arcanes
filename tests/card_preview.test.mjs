@@ -27,7 +27,7 @@ test('Le même cadre sert aux unités et sorts de la main avec délai et statist
  const unit=cardInspectionContent(CARDS.archer,{wait:2},unitStats(b,'archer'),esc,{illustrated:true});
  const spell=cardInspectionContent(CARDS.firebolt,{wait:0},null,esc,{illustrated:true});
  for(const html of [unit,spell])assert.match(html,/class="card-preview" data-preview-kind="hand"/);
- assert.match(unit,/À l’invocation/);assert.match(unit,/Attente 2 tours/);assert.match(unit,/data:image\/svg\+xml,/);
+ assert.match(unit,/À l’invocation/);assert.match(unit,/Attente 2 tours/);assert.match(unit,/assets\/cards\/arbaletriere_aube_carte_v01.webp/);
  assert.match(spell,/Prête à jouer/);assert.doesNotMatch(spell,/inspection-stats/);
  assert.equal(JSON.stringify(b),before);
 });

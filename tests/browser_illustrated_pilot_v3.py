@@ -1,4 +1,4 @@
-"""Cadre conservé : emplacement neutre, compteur unique, fiche et pose."""
+"""Arbalétrière complète : image exacte, compteur unique, fiche et pose."""
 import asyncio
 from playwright.async_api import async_playwright
 from browser_class_skills_v28 import make_page
@@ -20,10 +20,10 @@ async def run(browser,label,viewport):
     for i in range(3):
         assert await cards.nth(i).locator('.illustrated-count b').inner_text()==str(i)
         assert await cards.nth(i).locator('.illustrated-count').get_attribute('data-delay-kind')=='remaining'
-        assert await cards.nth(i).locator('.illustrated-faction').inner_text()
+        assert await cards.nth(i).locator('.card-head > span').inner_text()=='Aube'
     image=cards.first.locator('.creature-image')
     await image.evaluate('(el)=>el.decode()')
-    assert await image.evaluate('(el)=>el.complete && el.naturalWidth===384 && el.naturalHeight===576 && el.currentSrc.startsWith("data:image/svg+xml,")')
+    assert await image.evaluate('(el)=>el.complete && el.naturalWidth===768 && el.naturalHeight===1152 && el.currentSrc.startsWith("data:image/webp;base64,")')
     assert await page.evaluate('selectedCard')==-1
 
     # Aucun bouton n'encombre le portrait : survol ou focus pour consulter.
@@ -65,7 +65,7 @@ async def run(browser,label,viewport):
     assert await pilot.count()==1
     assert await pilot.locator('.illustrated-count b').inner_text()=='1'
     assert await pilot.locator('.illustrated-count').get_attribute('data-delay-kind')=='base'
-    assert 'Portée 2' in await pilot.locator('.card-detail').inner_text()
+    assert 'Peut attaquer à deux cases' in await pilot.locator('.card-detail').inner_text()
     assert await version.locator('.collection-delay').inner_text()=='1'
     assert await version.locator('[data-action="deck-add"]').count()==1
     assert not errors,errors

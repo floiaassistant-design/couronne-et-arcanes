@@ -10,16 +10,21 @@ import {generatedCardFace} from '../src/ui/generated-card.js';
 const names={portraits:ART_NAMES,cards:CARD_ART_NAMES,templates:CARD_TEMPLATES};
 function fixture(){
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'ca-complete-card-'));
- for(const file of ['assets/artwork.json','assets/cards/milicien_aube_carte_v02.webp','docs/approvals/milicien-aube-carte-v02.json']){
+ const registry=JSON.parse(fs.readFileSync('assets/artwork.json'));
+ for(const file of new Set(['assets/artwork.json',...registry.assets.flatMap(a=>[a.target,a.approvalRef])])){
   fs.mkdirSync(path.dirname(path.join(root,file)),{recursive:true});fs.copyFileSync(file,path.join(root,file));
  }
  return {root,registry:JSON.parse(fs.readFileSync(path.join(root,'assets/artwork.json'))),cleanup:()=>fs.rmSync(root,{recursive:true,force:true})};
 }
-test('La carte complète est épinglée à ses octets approuvés et reste limitée au Milicien',()=>{
+test('Les dix cadres complets sont épinglés à leurs octets approuvés et limités aux dix Aube',()=>{
  const f=fixture();try{
   const r=readArtwork(f.root,names);assert.deepEqual(r.art,{});
   assert.match(r.cardArt.milicien_aube_carte_v02,/^data:image\/webp;base64,/);
-  for(const card of Object.values(CARDS))assert.equal(cardTemplateFor(card),card.id==='militia'?'milicien_aube_carte_v02':null);
+  const ids=Object.values(CARDS).filter(c=>c.faction==='aube').map(c=>c.id).sort();
+  assert.equal(ids.length,10);assert.deepEqual(Object.keys(CARD_TEMPLATES).sort(),ids);
+  for(const card of Object.values(CARDS))assert.equal(cardTemplateFor(card),card.faction==='aube'?CARD_TEMPLATES[card.id]:null);
+  assert.equal(Object.keys(r.cardArt).length,10);
+  for(const key of CARD_ART_NAMES)assert.match(r.cardArt[key],/^data:image\/webp;base64,/);
  }finally{f.cleanup();}
 });
 test('Une carte altérée, une autre version ou un fichier hors registre bloque le build',()=>{

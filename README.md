@@ -24,13 +24,28 @@ de combat sont retirées. Les cartes non encore illustrées affichent des emplac
 leurs noms et vraies valeurs. Le décor peint, la main, les cadres, les aperçus
 au survol et les interactions restent en place.
 
+## Aube et sceaux — proposition du 21 octobre 2026
+
+Les dix personnages de l’Aube ont leur carte complète dans cette branche :
+Milicien v02 et neuf cartes v01 de la PR atelier nº 22, épinglée au commit
+`96190c83`. Cadres générés conservés, noms et vraies valeurs dynamiques en
+Collection, main, fiches et combat. Aucune nouvelle rareté ni possession créée.
+Le trait bleu/rouge sous les cartes du plateau est remplacé par un petit sceau :
+écu à chevron allié, losange croisé adverse. La vie actuelle reste sur la carte,
+la vie maximum dans la fiche. Les autres ordres restent neutres.
+
+Cette évolution suit la PR Milicien nº 25 encore ouverte, dans une PR séparée.
+Les deux attendent un accord spécifique avant fusion.
+[Périmètre et contrôles](docs/AUBE_INTEGRATION_2026_10_21.md).
+
 ## Milicien — proposition du 21 octobre 2026
 
 Le Milicien de l’Aube v02 utilise sa carte complète avec cadre généré, issue
 de la PR atelier nº 20 fusionnée. Nom, descriptif, attente, attaque et vie sont
 rendus dans ses cases vides à partir des données réelles. Le même visuel sert
 en Collection, dans la main, les fiches et sur le plateau ; aucune autre carte
-n’est illustrée par association implicite.
+n’est illustrée par association implicite. Les neuf autres Aube ont leurs mappings
+propres dans la proposition suivante.
 [Périmètre et contrôles](docs/MILICIEN_INTEGRATION_2026_10_21.md). Cette nouvelle
 PR du jeu attend sa validation spécifique avant fusion.
 
@@ -44,7 +59,7 @@ Les autres portent « À concevoir » ; aucune évolution de rareté n’est cr�
 Deck, compositions et compétences de classe restent accessibles en bas de page.
 
 Le fond illustré est embarqué et tracé dans `assets/ui-artwork.json`. Les
-autres personnages restent neutres ; le Milicien est le premier import proposé. [Périmètre et vérifications](docs/COLLECTION_2026_10_21.md).
+autres ordres restent neutres ; les dix Aube sont proposés progressivement. [Périmètre et vérifications](docs/COLLECTION_2026_10_21.md).
 La Collection est intégrée à `0896c16e` après validation spécifique.
 
 ## Jouer et développer
@@ -61,7 +76,7 @@ L'équilibrage de cette pose élargie reste distinct des anciens benchmarks.
 ## Nouvelle production d'images
 
 Aucun ancien portrait n'est automatiquement réutilisé. Le catalogue actif
-`assets/artwork.json` contient une carte complète autorisée et aucun ancien lot. Chaque nouveau visuel passe par une référence,
+`assets/artwork.json` contient dix cartes complètes autorisées pour import et aucun ancien lot. Chaque nouveau visuel passe par une référence,
 une génération pilote, une validation humaine exacte et un export contrôlé.
 Les nombres, noms et descriptions viennent du jeu.
 

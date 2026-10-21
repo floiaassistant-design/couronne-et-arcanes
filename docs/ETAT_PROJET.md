@@ -1,6 +1,25 @@
 # État de reprise — 21 octobre 2026
 
-## Proposition Milicien en cours de revue
+## Proposition Aube et sceaux en cours de revue
+
+- Branche `feat/aube-cartes-sceaux-20261021`, suite de la PR jeu nº 25 encore
+  ouverte (`feat/milicien-carte-v02-20261021`, head `0d2a4d0a`). Le main vérifié
+  reste `0896c16e` ; cette branche ne prétend pas y avoir intégré le Milicien.
+- Neuf autres cartes Aube v01 importées manuellement depuis la PR atelier nº 22,
+  commit `96190c837f79e645777967aaf84decbea0ad33a5`, encore ouverte.
+  Demande humaine d’ajout consignée avec les neuf empreintes dans
+  `approvals/aube-neuf-cartes-v01.json` ; le manifeste atelier reste en review.
+- Dix personnages Aube illustrés, mappings individuels, vraies valeurs et
+  possessions conservées ; rangs futurs toujours « À concevoir ». Sylve et
+  autres factions restent neutres. Sources et images non retouchées.
+- Le trait de vie/camp sous les cartes laisse place à deux petits sceaux :
+  écu à chevron pour vous, losange croisé pour l’adversaire. Vrais PV sur carte,
+  PV actuels/maximum et camp dans la fiche et le nom accessible.
+- 28 modules, dix cartes complètes. Nouvelle PR séparée, ciblant la branche
+  Milicien pour montrer uniquement cette évolution. Aucune fusion autorisée.
+  Voir [périmètre et vérification](AUBE_INTEGRATION_2026_10_21.md).
+
+## Proposition Milicien — PR nº 25, non fusionnée
 
 - Branche `feat/milicien-carte-v02-20261021`, basée sur le main du jeu
   `0896c16e30cff37464b5eb355b3d2b37a2c5651a`, après fusion autorisée de la
@@ -12,7 +31,8 @@
   validation : le reçu d’import est postérieur et désigne l’empreinte exacte.
 - Cadre dessiné conservé, textes et chiffres dynamiques dans ses cinq cases ;
   même image en Collection, main, fiches et plateau. Seul `militia` est associé
-  à cette image ; autres cartes et futures évolutions restent à concevoir.
+  à cette image ; les neuf autres personnages sont ajoutés par la proposition
+  suivante ci-dessus. Les futures évolutions restent à concevoir.
 - 28 modules, un nouvel asset complet et aucun ancien portrait réactivé.
   [Périmètre, contrat et contrôles](MILICIEN_INTEGRATION_2026_10_21.md).
 

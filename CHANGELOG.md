@@ -1,3 +1,14 @@
+## Proposition — dix cartes Aube et sceaux de camp, 21 octobre 2026
+
+- Neuf cartes complètes v01 rejoignent le Milicien v02, sources atelier nº 22
+  épinglées, reçu exact du lot, mappings par ID.
+- Cadres peints conservés dans Collection/main/fiches/plateau ; mêmes règles,
+  stats, délais, possessions et rangs encore à concevoir.
+- Trait bleu/rouge supprimé sous les cartes, écu allié et losange adverse en
+  coin ; PV actuels et maximum lisibles dans les rendus existants.
+- Suite de la PR jeu nº 25 encore ouverte, sans fusion. Voir
+  `docs/AUBE_INTEGRATION_2026_10_21.md`.
+
 ## Proposition — import Milicien v02, 21 octobre 2026
 
 - Premier personnage de la nouvelle série : carte complète et cadre généré v02

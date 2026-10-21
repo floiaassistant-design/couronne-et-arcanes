@@ -8,9 +8,72 @@
       "cardId": "militia",
       "key": "milicien_aube_carte_v02",
       "kind": "card",
-      "registry": "assets/artwork.json",
-      "sourceCommit": "e43c3a877f45bde9a6f99fb1fa1005abdc47bace"
+      "sourceCommit": "e43c3a877f45bde9a6f99fb1fa1005abdc47bace",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "shield",
+      "key": "porte_egide_aube_carte_v01",
+      "kind": "card",
+      "sourceCommit": "96190c837f79e645777967aaf84decbea0ad33a5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "archer",
+      "key": "arbaletriere_aube_carte_v01",
+      "kind": "card",
+      "sourceCommit": "96190c837f79e645777967aaf84decbea0ad33a5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "lancer",
+      "key": "lancier_remparts_aube_carte_v01",
+      "kind": "card",
+      "sourceCommit": "96190c837f79e645777967aaf84decbea0ad33a5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "cleric",
+      "key": "soeur_aurore_aube_carte_v01",
+      "kind": "card",
+      "sourceCommit": "96190c837f79e645777967aaf84decbea0ad33a5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "banner",
+      "key": "porte_etendard_aube_carte_v01",
+      "kind": "card",
+      "sourceCommit": "96190c837f79e645777967aaf84decbea0ad33a5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "scoutcaptain",
+      "key": "capitaine_aube_carte_v01",
+      "kind": "card",
+      "sourceCommit": "96190c837f79e645777967aaf84decbea0ad33a5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "paladin",
+      "key": "paladin_solaire_aube_carte_v01",
+      "kind": "card",
+      "sourceCommit": "96190c837f79e645777967aaf84decbea0ad33a5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "sunpriest",
+      "key": "prieur_solaire_aube_carte_v01",
+      "kind": "card",
+      "sourceCommit": "96190c837f79e645777967aaf84decbea0ad33a5",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "dawnbastion",
+      "key": "ange_bastion_aube_carte_v01",
+      "kind": "card",
+      "sourceCommit": "96190c837f79e645777967aaf84decbea0ad33a5",
+      "registry": "assets/artwork.json"
     }
   ],
-  "notes": "Les anciens lots Aube sont retirés de la production active. Le plateau, les cadres et les interactions de la PR nº 20 sont conservés."
+  "notes": "Dix cartes Aube de la nouvelle production, imports manuels épinglés. Aucun ancien lot ni autre faction réactivés."
 }

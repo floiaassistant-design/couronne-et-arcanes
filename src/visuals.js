@@ -6,8 +6,19 @@ export const UI_ART_NAMES=Object.freeze(Object.values(UI_BACKGROUNDS));
 export const ART_NAMES=[];
 export const CARD_ARENA_ART={};
 // Cartes complètes : mapping individuel, indépendant des portraits.
-export const CARD_ART_NAMES=Object.freeze(['milicien_aube_carte_v02']);
-export const CARD_TEMPLATES=Object.freeze({militia:'milicien_aube_carte_v02'});
+export const CARD_TEMPLATES=Object.freeze({
+ militia:'milicien_aube_carte_v02',
+ shield:'porte_egide_aube_carte_v01',
+ archer:'arbaletriere_aube_carte_v01',
+ lancer:'lancier_remparts_aube_carte_v01',
+ cleric:'soeur_aurore_aube_carte_v01',
+ banner:'porte_etendard_aube_carte_v01',
+ scoutcaptain:'capitaine_aube_carte_v01',
+ paladin:'paladin_solaire_aube_carte_v01',
+ sunpriest:'prieur_solaire_aube_carte_v01',
+ dawnbastion:'ange_bastion_aube_carte_v01'
+});
+export const CARD_ART_NAMES=Object.freeze(Object.values(CARD_TEMPLATES));
 export const INLINE_CARDS={};
 export function cardTemplateFor(card){return CARD_TEMPLATES[card?.id]||null;}
 export function cardTemplateSrc(key){return CARD_ART_NAMES.includes(key)?INLINE_CARDS[key]||'./assets/cards/'+key+'.webp':null;}
