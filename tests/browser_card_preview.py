@@ -10,7 +10,7 @@ async def contained(page,panel):
 async def run(browser,label,viewport):
     ctx=await browser.new_context(viewport=viewport,has_touch=True,offline=True)
     page=await ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
-    await page.goto((ROOT/'tests/ESSAI_CARTES.test.html').as_uri())
+    await page.goto((ROOT/'tests/JOUER.test.html').as_uri())
     await page.locator('[data-action="welcome-start"]').click()
     await page.evaluate('''()=>{
       battle=createBattle(profile,{id:'01',name:'Aperçu au survol',enemy:'Gardien',hp:90,difficulty:1,boss:true,deck:[]},211);

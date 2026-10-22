@@ -305,9 +305,7 @@
   font-size: 10px;
   text-align: center;
 }
-.unit-on-board.silenced .sprite-figure {
-  filter: saturate(0.4);
-}
+
 .control-tip,
 .teleport-preview {
   font-size: 12px;

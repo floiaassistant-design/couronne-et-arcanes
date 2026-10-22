@@ -1,3 +1,19 @@
+## Proposition — Présentation cartes unique et export unique, 22 octobre 2026
+
+Demande du propriétaire : conserver seulement le jeu avec les cartes sur le
+plateau et un seul fichier jouable `JOUER.html`. La présentation personnages,
+son bouton, sa préférence et ses styles spécifiques sont retirés. Le jeu web
+et l’export démarrent toujours en cartes, même avec l’ancienne préférence off
+ou un ancien lien `?cartes=0`. Les anciens combats 3×5 restent lisibles en cartes,
+sans modifier leur géométrie, leurs règles ni leur sauvegarde.
+
+Branche dédiée depuis la PR nº 33, tête exacte `063c9f61`, elle-même basée sur
+main `9941596d`. Cette proposition dépend de la nº 33 et ne l’autorise pas à
+être fusionnée. Chaque PR attend son accord spécifique. Détails et contrôles :
+[EXPORT_UNIQUE_2026_10_22.md](EXPORT_UNIQUE_2026_10_22.md).
+Les mentions de deux présentations et de quatre builds dans les sections
+datées plus bas décrivent l’historique ; elles ne sont plus la consigne active.
+
 # Modularisation CSS — proposition du 22 octobre 2026
 
 - Main vérifié : `9941596d16e39d7f48fc0b082ee41b77e5d573b7`. Les PR nº 31

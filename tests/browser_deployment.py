@@ -9,7 +9,7 @@ async def run(browser,label,viewport):
     page=await ctx.new_page();errors=[];requests=[]
     page.on('pageerror',lambda e:errors.append(str(e)));page.on('request',lambda r:requests.append(r.url))
     await page.add_init_script('Date.now=()=>12345')
-    await page.goto((ROOT/'ESSAI_CARTES.html').as_uri())
+    await page.goto((ROOT/'JOUER.html').as_uri())
     await page.locator('[data-action="welcome-start"]').click()
     panel=page.locator('#hand-card-inspection')
     for step,col in enumerate([3,2,1]):

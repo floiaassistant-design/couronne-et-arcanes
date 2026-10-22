@@ -6,40 +6,6 @@ on:
   pull_request:
 
 jobs:
-  card-study:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - run: npm run build:cards
-      - run: node scripts/build_standalone.mjs --cards --test
-      - run: git diff --exit-code -- ESSAI_CARTES.html
-      - name: Installer Chromium pour l’essai
-        run: |
-          python3 -m pip install playwright==1.56.0
-          python3 -m playwright install --with-deps chromium
-      - name: Essai cartes bureau, mobile et hors ligne
-        run: python3 tests/browser_card_study.py
-      - name: Déploiement sur trois cases et sélection sans fiche
-        run: python3 tests/browser_deployment.py
-      - name: Aperçus partagés, survol, clavier et toucher
-        run: python3 tests/browser_card_preview.py
-      - name: Base neuve, images neutres et absence d’anciens effets
-        run: python3 tests/browser_art_reset.py
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: essai-cartes
-          path: |
-            ESSAI_CARTES.html
-            /tmp/ca-card-study-*.png
-            /tmp/ca-card-preview-*.png
-            /tmp/ca-deployment-*.png
-          retention-days: 14
   validation:
     runs-on: ubuntu-latest
     permissions:
@@ -65,6 +31,12 @@ jobs:
           python3 -m playwright install --with-deps chromium
       - name: Construire le HTML réservé aux tests navigateur
         run: npm run build:test
+      - name: Cartes sur plateau, vraie pose, aperçus et export hors ligne
+        run: |
+          python3 tests/browser_card_study.py
+          python3 tests/browser_deployment.py
+          python3 tests/browser_card_preview.py
+          python3 tests/browser_art_reset.py
       - name: Jeu web modulaire, navigation et reprise bureau/mobile
         run: python3 tests/browser_maintenance.py
       - name: Collection pleine largeur, exemplaires réels et reprise
@@ -113,6 +85,9 @@ jobs:
             /tmp/ca-sylve-*.png
             /tmp/ca-ombre-*.png
             /tmp/ca-forge-*.png
+            /tmp/ca-card-study-*.png
+            /tmp/ca-card-preview-*.png
+            /tmp/ca-deployment-*.png
             JOUER.html
           if-no-files-found: warn
           retention-days: 14

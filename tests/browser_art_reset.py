@@ -10,7 +10,7 @@ async def run(browser,label,viewport):
     page=await context.new_page();errors=[];external=[]
     page.on('pageerror',lambda e:errors.append(str(e)))
     page.on('request',lambda r:external.append(r.url) if r.url.startswith(('http:','https:')) else None)
-    await page.goto((ROOT/'tests/ESSAI_CARTES.test.html').as_uri())
+    await page.goto((ROOT/'tests/JOUER.test.html').as_uri())
     await page.evaluate('localStorage.clear()');await page.reload()
     await page.locator('[data-action="welcome-start"]').click()
     frame=page.locator('.arena-painted-frame')

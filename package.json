@@ -12,7 +12,6 @@
     "deck-balance": "node scripts/deck_style_balance.mjs",
     "control-balance": "node scripts/battle_control_balance.mjs",
     "build:test": "node scripts/build_standalone.mjs --test",
-    "build:cards": "node scripts/build_standalone.mjs --cards",
     "test:parity": "node scripts/parity_snapshot.mjs --check",
     "arena-balance": "node scripts/arena_balance.mjs"
   },

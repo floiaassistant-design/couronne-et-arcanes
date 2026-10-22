@@ -47,13 +47,13 @@ async def run(browser,label,viewport):
         assert img_source.startswith('url("data:image/webp;base64,'),img_source[:90]
         assert await page.locator('.battle-cell').count()==lanes*10
         assert await page.locator('.lane-gate').count()==lanes*2
-        assert f'{lanes} lignes · 10 cases' in await page.locator('.arena-caption').inner_text()
+        assert f'{lanes} lignes de 10 cases' in await page.locator('.battle-grid').get_attribute('aria-label')
         await page.locator('.hand [data-action="select-card"]').click()
         target=page.locator(f'[data-action="deploy"][data-col="1"][data-lane="{lanes-1}"]')
         await target.focus()
         await page.keyboard.press('Enter')
         assert await page.evaluate('(l)=>battle.board[l-1][1].id',lanes)=='militia'
-        src=await page.locator('.sprite-figure').first.get_attribute('src')
+        src=await page.locator('.board-card img').first.get_attribute('src')
         assert src.startswith('data:image/webp;base64,'),'Export Milicien v02 non embarqué'
         await page.evaluate('''lanes=>{
           const u=(id,side,uid,ability='',ranged=false)=>({uid,id,side,atk:2,hp:12,maxhp:12,armor:0,ranged,ability,stun:0,poison:0,poisonTurns:0});

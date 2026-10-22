@@ -41,8 +41,8 @@ async def run(browser,label,viewport):
     page.on('request',lambda r:requests.append(r.url))
     # Graine de mission stable : mêmes pioches et décisions IA à chaque parcours.
     await page.add_init_script('Date.now=()=>12345')
-    await page.goto((ROOT/'ESSAI_CARTES.html').as_uri())
-    await page.evaluate('localStorage.clear()');await page.reload()
+    await page.goto((ROOT/'JOUER.html').as_uri()+'?cartes=0')
+    await page.evaluate("localStorage.clear();localStorage.setItem('couronnes_arcanes_vue_cartes_v1','off')");await page.reload()
     await page.locator('[data-action="welcome-start"]').click()
     assert await page.locator('.arena-painted-frame').count()==1
     assert await page.locator('.lane-row').count()==2
@@ -96,15 +96,9 @@ async def run(browser,label,viewport):
     assert await page.locator('.battle-grid').evaluate('(el)=>el.scrollLeft')==x
     await page.reload();assert await page.locator('.turn-n').inner_text()==str(after['round'])
     assert await page.locator('.board-card').count()>0
-    # Comparateur du rendu : le même combat, mêmes unités et compteurs.
-    snapshot=await page.evaluate('(key)=>localStorage.getItem(key)',BATTLE)
-    await page.locator('[data-action="toggle-card-arena"]').click()
-    assert await page.locator('.board-card').count()==0
-    assert await page.locator('.lane-row .sprite-figure').count()>0
-    assert await page.evaluate('(key)=>localStorage.getItem(key)',BATTLE)==snapshot
-    await page.locator('[data-action="toggle-card-arena"]').click()
-    assert await page.locator('.board-card').count()>0
-    assert await page.evaluate('(key)=>localStorage.getItem(key)',BATTLE)==snapshot
+    # Une seule présentation, conservée après reprise.
+    assert await page.locator('[data-action="toggle-card-arena"]').count()==0
+    assert await page.locator('.sprite-figure').count()==0
     await page.emulate_media(reduced_motion='reduce')
     await page.locator('[data-action="end-turn"]').click()
     assert await page.locator('.battle-vfx-overlay').count()==0
@@ -112,12 +106,12 @@ async def run(browser,label,viewport):
     assert not errors,errors
     assert not any(u.startswith(('http:','https:')) for u in requests),requests
     await context.close()
-    print(f'Cartes sur plateau {label}: vraie main, délais, pose, avancée, couronnes, vue réversible, reprise et hors ligne PASS')
+    print(f'Cartes sur plateau {label}: vraie main, délais, pose, avancée, couronnes, présentation unique, reprise et hors ligne PASS')
 
 async def combat(browser):
     # Bundle de diagnostic du même jeu ; la mission est jouée avec les API normales.
     page=await browser.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
-    await page.goto((ROOT/'tests/ESSAI_CARTES.test.html').as_uri())
+    await page.goto((ROOT/'tests/JOUER.test.html').as_uri())
     await page.locator('[data-action="welcome-start"]').click()
     await page.evaluate('''()=>{
       for(let turn=0;turn<40&&battle.status==='active';turn++){
@@ -145,7 +139,7 @@ async def combat(browser):
 
 async def four_lanes(browser,label,viewport):
     page=await browser.new_page(viewport=viewport)
-    await page.goto((ROOT/'tests/ESSAI_CARTES.test.html').as_uri())
+    await page.goto((ROOT/'tests/JOUER.test.html').as_uri())
     await page.locator('[data-action="welcome-start"]').click()
     await page.evaluate("""()=>{
       battle=createBattle(profile,{id:'01',name:'Revue des quatre lignes',enemy:'Gardien',hp:90,difficulty:1,boss:true,deck:[]},211);

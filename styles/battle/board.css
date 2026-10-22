@@ -24,56 +24,7 @@
 .arena-lofi .unit-on-board[data-rarity="légendaire"] {
   --unit-rarity: #ffd46b;
 }
-.arena-lofi .unit-on-board .board-identification {
-  position: absolute;
-  top: 2px;
-  left: 3px;
-  right: 3px;
-  z-index: 6;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  pointer-events: none;
-  text-align: center;
-}
-.arena-lofi .board-owner {
-  display: block;
-  background: #075474;
-  color: #fff;
-  border: 1px solid #8decff;
-  font:
-    900 9px/1.1 ui-monospace,
-    monospace;
-  letter-spacing: 0.04em;
-  padding: 2px 0;
-}
-.arena-lofi .unit-on-board.enemy .board-owner {
-  background: #8a273c;
-  border-color: #ffa0a7;
-}
-.arena-lofi .board-faction {
-  display: block;
-  background: #0a192bf5;
-  color: #fef5df;
-  font:
-    800 9px/1.15 ui-monospace,
-    monospace;
-  padding: 1px 0;
-}
-.arena-lofi .board-quality {
-  display: block;
-  background: #0a192bf5;
-  color: var(--unit-rarity);
-  font:
-    900 8px/1.1 ui-monospace,
-    monospace;
-  text-transform: uppercase;
-  padding: 1px 0;
-}
-.arena-lofi .unit-on-board .sprite-stage,
-.arena-lofi .unit-on-board:has(.formation-badge) .sprite-stage {
-  inset: 37px 0 25px;
-}
+
 .arena-lofi .formation-badge {
   top: 48px;
   left: 2px;
@@ -85,19 +36,7 @@
   top: 61px;
   z-index: 8;
 }
-.arena-lofi .unit-name {
-  font-weight: 900;
-  background: #071426f5;
-  color: #fff;
-  font-size: 9px;
-  max-height: 24px;
-  overflow: hidden;
-}
-.arena-lofi .unit-meta {
-  background: #071426ef;
-  color: #fff1d4;
-  font-size: 9px;
-}
+
 .arena-legend {
   display: flex;
   gap: 8px;

@@ -16,29 +16,7 @@
   background: radial-gradient(circle at 55% 35%, color-mix(in srgb, var(--tone), #6a243c 40%), #382034 90%);
   border-color: #ce7d8490;
 }
-.unit-icon {
-  font:
-    normal 30px Georgia,
-    serif;
-  text-shadow: 0 2px 9px #000a;
-}
-.unit-name {
-  max-width: 95%;
-  font-size: 9px;
-  line-height: 1.1;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-shadow: 0 2px 5px #000c;
-}
-.unit-meta {
-  font-size: 10px;
-  background: #0007;
-  border-radius: 4px;
-  padding: 2px 5px;
-  color: #fff;
-}
+
 .unit-stunned:after {
   content: "◈";
   position: absolute;
@@ -78,122 +56,14 @@
   margin: 10px 3px;
   line-height: 1.6;
 }
-.sprite-stage {
-  position: relative;
-  flex: none;
-  width: calc(100% - 6px);
-  max-width: 93px;
-  height: 48px;
-  margin-top: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  isolation: isolate;
-  border-radius: 4px;
-  overflow: hidden;
-  background: linear-gradient(0deg, #0d203e42, #ffffff0b);
-  border-bottom: 1px solid #ffffff20;
-}
-.unit-on-board:has(.formation-badge) .sprite-stage {
-  margin-top: 13px;
-  height: 39px;
-}
-.sprite-figure {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  object-position: center 45%;
-  filter: drop-shadow(0 3px 2px #001e30bb);
-  transform-origin: center 80%;
-}
-.sprite-aura {
-  position: absolute;
-  bottom: 0;
-  left: 24%;
-  right: 24%;
-  height: 7px;
-  border-radius: 50%;
-  border: 1px solid #e9cf8b7d;
-  box-shadow: 0 0 10px #fad08460;
-  background: #d7d7f533;
-  pointer-events: none;
-}
-.unit-on-board.enemy .sprite-figure {
-  filter: sepia(0.18) saturate(0.85) hue-rotate(300deg) drop-shadow(0 3px 3px #29040c);
-}
-.sprite-stage.role-caster .sprite-aura,
-.sprite-stage.role-support .sprite-aura {
-  box-shadow: 0 0 15px #bd97f8b0;
-  background: #a8a8f565;
-}
-.sprite-stage.role-flying .sprite-aura {
-  height: 5px;
-}
-.sprite-stage.role-beast .sprite-aura {
-  background: #8cd09057;
-}
-.unit-on-board .unit-name {
-  position: relative;
-  z-index: 1;
-  font-weight: 700;
-}
-.unit-on-board .unit-meta {
-  position: relative;
-  z-index: 1;
-}
-.animations-off .sprite-figure,
-.animations-off .sprite-aura {
-  animation: none !important;
-}
-@media (prefers-reduced-motion: reduce) {
-  .sprite-figure,
-  .sprite-aura {
-    animation: none !important;
-    transition: none !important;
-  }
-}
+
 /* Art portraits occupy the whole tactical tile, not only a small icon. */
 .unit-on-board {
   justify-content: flex-end;
   gap: 2px;
   padding: 3px 3px 4px;
 }
-.unit-on-board .sprite-stage,
-.unit-on-board:has(.formation-badge) .sprite-stage {
-  position: absolute;
-  inset: 0;
-  max-width: none;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  border: 0;
-  background: transparent;
-  border-radius: 5px;
-}
-.unit-on-board .sprite-stage::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 30%, #0b1527ba 100%);
-  pointer-events: none;
-}
-.unit-on-board .sprite-figure {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 35%;
-}
-.unit-on-board .sprite-aura {
-  bottom: 6px;
-  z-index: 1;
-}
-.unit-on-board .unit-name {
-  background: #102438ac;
-  border-radius: 4px;
-  padding: 2px 4px;
-  white-space: normal;
-  line-height: 1.05;
-}
+
 .unit-on-board .formation-badge {
   z-index: 3;
 }

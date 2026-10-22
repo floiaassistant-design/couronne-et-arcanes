@@ -8,7 +8,6 @@ import {readArtwork} from './lib/artwork.mjs';
 import {readUIArtwork} from './lib/ui-artwork.mjs';
 import {readStylesheets} from './lib/stylesheets.mjs';
 
-const isCardStudy=process.argv.includes('--cards');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 const {art,cardArt}=readArtwork(root,{portraits:ART_NAMES,cards:CARD_ART_NAMES,templates:CARD_TEMPLATES});
@@ -64,8 +63,7 @@ for(const target of Object.keys(uiArt)){
  if(!sheets.some(s=>s.file===target))throw Error('Fond UI non relié à la page : '+target);
 }
 for(const {tag,css} of sheets)html=html.replace(tag,()=>'<style>\n'+css+'\n</style>');
-if(isCardStudy)html=html.replace('<body>','<body data-card-combat="true">');
 html=html.replace('<script type="module" src="./src/app.js"></script>','<script>\n'+js.replace(/<\/script/gi,'<\\/script')+'\n</script>');
-const output=isTest?(isCardStudy?'tests/ESSAI_CARTES.test.html':'tests/JOUER.test.html'):(isCardStudy?'ESSAI_CARTES.html':'JOUER.html');
+const output=isTest?'tests/JOUER.test.html':'JOUER.html';
 fs.writeFileSync(path.join(root,output),html);
 console.log(`${output} généré (${Buffer.byteLength(html)} octets, ${factories.size} modules, ${Object.keys(art).length+Object.keys(cardArt).length} illustrations intégrées)`);

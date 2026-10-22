@@ -18,7 +18,7 @@ body.card-combat-mode #hand-card-inspection.illustrated-inspection:not([hidden])
 .illustrated-inspection .inspection-heading{min-height:39px;flex:none;padding:4px 9px 3px 13px;gap:8px}
 .illustrated-inspection .inspection-context{color:#dfc28c;font-size:9px;letter-spacing:.14em;font-weight:700}
 .illustrated-inspection [data-side="e"] .inspection-context{color:#f1b2a5}
-.illustrated-inspection .inspection-heading button{display:grid;place-items:center;width:32px;min-width:32px;height:30px;min-height:30px;padding:0;margin:0;border:1px solid #b79f6b66;border-radius:6px;background:#0b2032;color:#f2d8a5;font:22px/1 Georgia;cursor:pointer}
+.illustrated-inspection .inspection-heading button{display:grid;place-items:center;width:44px;min-width:44px;height:44px;min-height:44px;padding:0;margin:0;border:1px solid #b79f6b66;border-radius:6px;background:#0b2032;color:#f2d8a5;font:22px/1 Georgia;cursor:pointer}
 .illustrated-inspection .inspection-heading button:hover{background:#294658}
 .illustrated-inspection .inspection-heading button:focus-visible{outline:2px solid #ffe4a2;outline-offset:2px}
 .illustrated-inspection .inspection-feature{display:grid;grid-template-columns:104px minmax(0,1fr);gap:12px;align-items:start;padding:0 13px 12px;flex:none}

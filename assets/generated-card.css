@@ -45,4 +45,3 @@
 body.card-combat-mode [data-card-layout=true] .combat-stage{overflow:clip;overflow-anchor:none}
 
 .unit-card.generated-template>.generated-card-progress{font:11px/1.4 system-ui,sans-serif;text-align:center;padding:5px;color:#ead7a8;background:#142637}
-.unit-on-board .sprite-figure.generated-unit-image{object-fit:contain!important;image-rendering:auto!important;transform:none!important;filter:drop-shadow(0 3px 3px #10182c88)}

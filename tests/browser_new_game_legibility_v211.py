@@ -30,10 +30,10 @@ async def run(browser,label,viewport):
     }""")
     assert await page.locator('.unit-on-board[data-owner="p"][data-rarity="épique"]').count()==1
     assert await page.locator('.unit-on-board[data-owner="e"][data-rarity="légendaire"]').count()==1
-    assert await page.locator('.unit-on-board.ally .board-owner').inner_text()=='VOUS'
-    assert await page.locator('.unit-on-board.enemy .board-owner').inner_text()=='ENNEMI'
-    assert await page.locator('.unit-on-board.ally .board-faction').inner_text()=='Aube'
-    assert await page.locator('.unit-on-board.enemy .board-faction').inner_text()=='Ombre'
+    assert 'Votre unité' in await page.locator('.unit-on-board.ally .board-card').get_attribute('aria-label')
+    assert 'Unité adverse' in await page.locator('.unit-on-board.enemy .board-card').get_attribute('aria-label')
+    assert 'Aube' in await page.locator('.unit-on-board.ally').get_attribute('data-unit-summary')
+    assert 'Ombre' in await page.locator('.unit-on-board.enemy').get_attribute('data-unit-summary')
     assert 'ÉPIQUE' in await page.locator('.hand .card-quality-tag').first.inner_text()
     assert 'LÉGENDAIRE' in await page.locator('.hand .card-quality-tag').last.inner_text()
     colors=await page.evaluate("""() => [...document.querySelectorAll('.hand .unit-card')].map(e=>getComputedStyle(e).borderTopColor)""")
@@ -45,7 +45,7 @@ async def run(browser,label,viewport):
     await page.close()
     page=await make_page(browser,viewport,saved,errors)
     assert await page.evaluate('profile.heroClass')=='arcaniste'
-    assert await page.locator('.unit-on-board.enemy .board-owner').inner_text()=='ENNEMI'
+    assert 'Unité adverse' in await page.locator('.unit-on-board.enemy .board-card').get_attribute('aria-label')
     await page.locator('.combat-menu-link').click()
     await page.locator('[data-action="restore-previous-game"]').click()
     await page.locator('[data-action="confirm-restore-previous-game"]').click()

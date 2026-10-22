@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {CARDS} from '../src/data.js';
 import {visualFor,CARD_ARENA_ART,CARD_TEMPLATES} from '../src/visuals.js';
-import {boardCard,cardArenaEnabled} from '../src/ui/card-arena.js';
+import {boardCard} from '../src/ui/card-arena.js';
 test('Vue cartes : présentation conservée, ancien lot Aube désactivé',()=>{
- assert.equal(cardArenaEnabled(),false);assert.deepEqual(CARD_ARENA_ART,{});
+ assert.deepEqual(CARD_ARENA_ART,{});
  for(const c of Object.values(CARDS)){
   assert.equal(visualFor(c).art,null);assert.equal(visualFor(c,{cards:true}).art,null);
  }
@@ -17,11 +17,13 @@ test('Vue cartes : vrais nombres rendus sans mutation et repère autonome',()=>{
  assert.deepEqual(u,before);
 });
 test('Vue cartes : export du même jeu et même plateau, aucune fixture préplacée',()=>{
- const html=fs.readFileSync('ESSAI_CARTES.html','utf8');
- assert.match(html,/<body data-card-combat="true">/);
+ const html=fs.readFileSync('JOUER.html','utf8');
+ assert.match(html,/<body class="card-combat-mode">/);
  assert.match(html,/src\/app.js/);assert.match(html,/paintedArena/);
  assert.match(html,/data-action="deploy"/);assert.match(html,/data-action="end-turn"/);
- assert.doesNotMatch(html,/createStudy|study-cards|STUDY_PRESETS|Object.defineProperties\(window/);
+ assert.doesNotMatch(html,/createStudy|study-cards|STUDY_PRESETS|Object.defineProperties\(window|toggle-card-arena|cardArenaEnabled|sprite-figure/);
+ assert.equal(fs.existsSync('ESSAI_CARTES.html'),false);
+ assert.equal('build:cards' in JSON.parse(fs.readFileSync('package.json')).scripts,false);
 });
 test('Vue cartes : le registre de la nouvelle génération ne contient aucun ancien lot',()=>{
  const active=JSON.parse(fs.readFileSync('assets/artwork.json'));

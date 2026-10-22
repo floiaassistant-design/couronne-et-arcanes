@@ -26,7 +26,7 @@ for(const lanes of [2,3,4]){
   assert.equal((html.match(/class="arena-dormant-cell"/g)||[]).length,(4-lanes)*10);
   assert.equal((html.match(/data-action="deploy"/g)||[]).length,lanes*3);
   assert.match(html,/battle-grid arena-structured/);
-  assert.match(html,/board-owner/);
+  assert.match(html,/data-camp="p"/);assert.match(html,/data-camp="e"/);
   assert.match(html,/data-rarity/);
  });
 }
