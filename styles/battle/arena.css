@@ -165,54 +165,7 @@
   border: 0;
   overflow: hidden;
 }
-.arena-lofi .unit-on-board .sprite-stage,
-.arena-lofi .unit-on-board:has(.formation-badge) .sprite-stage {
-  width: 100%;
-  height: auto;
-  border-radius: 0;
-  overflow: visible;
-  align-items: flex-end;
-}
-.arena-lofi .unit-on-board .sprite-stage::after {
-  display: none;
-}
-.arena-lofi .unit-on-board .sprite-figure {
-  width: 52px;
-  height: 56px;
-  object-fit: contain;
-  image-rendering: pixelated;
-  filter: drop-shadow(0 4px 0 #122334aa);
-}
-.arena-lofi .unit-on-board.enemy .sprite-stage {
-  transform: scaleX(-1);
-}
-.arena-lofi .unit-on-board.silenced .sprite-figure {
-  filter: saturate(0.3) brightness(0.8);
-}
-.arena-lofi .sprite-aura {
-  bottom: 0;
-  height: 5px;
-  border-radius: 0;
-  left: 22%;
-  right: 22%;
-  background: #8ac9c633;
-  border-color: #9ec9c9;
-  box-shadow: none;
-}
-.arena-lofi .unit-name {
-  border-radius: 0;
-  padding: 2px;
-  max-width: 100%;
-  line-height: 1.1;
-}
-.arena-lofi .unit-meta {
-  font:
-    700 10px ui-monospace,
-    monospace;
-  line-height: 1.2;
-  white-space: normal;
-  text-align: center;
-}
+
 .arena-lofi .formation-badge {
   padding: 2px;
   border-radius: 0;

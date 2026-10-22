@@ -24,7 +24,7 @@ async def check_hand_countdowns(page,label):
     assert await hand.nth(1).locator('.cooldown-stamp b').inner_text()=='3'
     # Le pilote Illustrée remplace les deux badges historiques par un seul compteur visible.
     assert await hand.nth(2).locator('.illustrated-count b').inner_text()=='1'
-    assert await hand.nth(2).locator('.cooldown-stamp,.hand-readiness').evaluate_all("els=>els.length===2 && els.every(el=>getComputedStyle(el).display==='none')")
+    assert await hand.nth(2).locator('.cooldown-stamp').evaluate_all("els=>els.every(el=>getComputedStyle(el).display==='none')")
     assert await hand.nth(1).get_attribute('aria-disabled') is None # Consultable, sans autoriser la pose.
     assert '3 tours' in await hand.nth(1).get_attribute('aria-label')
     # Les chiffres tiennent dans les cartes et les étiquettes ne sont pas tronquées.
@@ -169,6 +169,8 @@ async def production(browser,label,viewport):
     await page.reload()
     assert await page.locator('.turn-n').inner_text()=='2'
     assert await page.evaluate('typeof window.battle')=='undefined'
+    if await page.locator('.combat-intel summary').count():
+        await page.locator('.combat-intel summary').click()
     await page.locator('[data-action="retreat"]').click()
     await page.locator('[data-action="confirm-retreat"]').click()
     await page.locator('[data-action="battle-deck"]').click()

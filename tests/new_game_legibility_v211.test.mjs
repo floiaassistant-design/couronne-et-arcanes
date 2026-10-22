@@ -63,8 +63,8 @@ test('rendu : identité de camp, Ordre, rareté et classe disponibles sans état
  const html=v.battleUI();
  assert.match(html,/data-owner="p" data-rarity="épique"/);
  assert.match(html,/data-owner="e" data-rarity="légendaire"/);
- assert.match(html,/VOUS/);
- assert.match(html,/ENNEMI/);
+ assert.match(html,/aria-label="Votre unité,/);
+ assert.match(html,/aria-label="Unité adverse,/);
  assert.match(html,/Aube/);
  assert.match(html,/Ombre/);
  assert.match(html,/Contour : rareté/);

@@ -4,11 +4,18 @@ Jeu de cartes tactiques solo, web et hors ligne : 76 cartes, quatre classes,
 12 missions, 20 étages de Tour et trois donjons. Collection, progression, IA,
 statistiques et sauvegardes sont conservées.
 
+## Proposition de simplification du 22 octobre
+
+Un seul export `JOUER.html`, toujours en présentation cartes. L’ancienne vue
+personnages et `ESSAI_CARTES.html` sont retirés sur demande du propriétaire.
+Proposition séparée, dépendante de la PR nº 33, sans fusion autorisée.
+[Périmètre et vérification](docs/EXPORT_UNIQUE_2026_10_22.md).
+
 ## État intégré
 
 Les PR de maintenance nº 31 et nº 32 sont fusionnées sur accord spécifique,
 main vérifié `9941596d` le 22 octobre 2026. Une nouvelle proposition organise le
-CSS par responsabilité en conservant les deux exports hors ligne :
+CSS par responsabilité :
 [structure des styles](styles/README.md) et
 [périmètre et contrôles](docs/MODULARISATION_CSS_2026_10_22.md).
 
@@ -109,9 +116,9 @@ sur la résolution commune historique. [Contrat et limites](docs/TOURS_ALTERNES_
 
 ## Jouer et développer
 
-- `JOUER.html` : jeu autonome, ouvrable sans réseau.
-- `ESSAI_CARTES.html` : même jeu, présentation cartes activée au démarrage.
-- `npm run dev` : serveur local ; `index.html?cartes=1` active cette vue.
+- `JOUER.html` : unique jeu autonome, ouvrable sans réseau, cartes sur le plateau.
+- `npm run dev` : même jeu web sur `index.html`, même présentation.
+- `tests/JOUER.test.html` : diagnostic automatisé seulement, jamais distribué.
 
 Le plateau comporte dix cases par ligne, deux/trois/quatre lignes suivant la
 rencontre. La PR nº 20 intégrée permet la pose sur les trois premières cases, avec
@@ -134,9 +141,7 @@ reste l'atelier ; aucune synchronisation automatique.
 
 ```sh
 npm run build
-npm run build:cards
 npm run build:test
-node scripts/build_standalone.mjs --cards --test
 npm test
 npm run test:parity
 ```
@@ -147,10 +152,10 @@ distants avant de les déclarer réussis. Aucun téléphone physique n'est garan
 
 Les clés `couronnes_arcanes_v1`, `couronnes_arcanes_bataille_v1` et le réglage
 d'animations sont conservés. Les effets transitoires restent exclus du stockage.
-Les sources sont séparées entre moteur, IA, vues et stockage ; 28 modules sur main.
-La maintenance proposée par la PR nº 32 ajoute une primitive HTML partagée (29 modules),
-clarifie les sous-rendus et consolide le CSS ; elle dépend de la PR nº 31 corrigée.
-[Rapport et vérifications](docs/MAINTENANCE_CSS_VUES_2026_10_22.md). Aucune fusion de ces deux PR n’est autorisée.
+Les sources sont séparées entre moteur, IA, vues et stockage : 29 modules.
+Les PR nº 31 et nº 32 sont intégrées. La PR nº 33 organise les styles ; la
+proposition d’export unique en dépend et attend son propre accord de fusion.
+[Maintenance intégrée](docs/MAINTENANCE_CSS_VUES_2026_10_22.md).
 
 [État](docs/ETAT_PROJET.md), [architecture](docs/ARCHITECTURE_MODULAIRE_V2_6.md),
 [rapport avant remise à zéro](docs/CHECKUP_NETTOYAGE_2026_10_20.md),

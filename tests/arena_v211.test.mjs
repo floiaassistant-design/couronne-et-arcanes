@@ -7,7 +7,7 @@ import {laneCount,lastCell,crownColumn,entryColumn,supportedBoard} from '../src/
 import {applySilence,teleportPlan,teleportDestinationError,placeTrap,trapPlan} from '../src/engine/battle-control.js';
 import {rankEnemyMoves,inspectEnemyLane} from '../src/ai.js';
 import {storeBattle,restoreBattle,BATTLE_KEY} from '../src/ui/storage.js';
-import {arenaSprite,arenaBackdrop} from '../src/ui/arena-art.js';
+import {arenaBackdrop} from '../src/ui/arena-art.js';
 const unit=(id,side,uid,extra={})=>({uid,id,side,atk:CARDS[id].attack,hp:20,maxhp:20,armor:CARDS[id].ability==='armor'?2:0,ranged:CARDS[id].ability==='ranged',ability:CARDS[id].ability,stun:0,poison:0,poisonTurns:0,...extra});
 function combat(lanes=2){
  const b=createBattle(freshProfile(),{...CAMPAIGN[0],boss:lanes===4,difficulty:lanes===3?3:1},211);
@@ -119,9 +119,6 @@ test('V2.11 authentic old V2.4 save retains its 3×5 board and resumes',()=>{
 test('V2.11 corrupt and ragged boards are rejected without touching the profile',()=>{
  const cache=storage(),b=combat();b.board[1].pop();cache.couronnes_arcanes_v1='profile stays intact';cache[BATTLE_KEY]=JSON.stringify(b);assert.equal(restoreBattle(),null);assert.equal(cache.couronnes_arcanes_v1,'profile stays intact');
 });
-test('V2.11 repère neutre et décor historique sont autonomes et déterministes',()=>{
- const sprites=new Set();for(const role of ['fighter','ranged','heavy','caster','support','undead','beast','flying']){
-  const src=arenaSprite(CARDS.spark,role);assert.equal(arenaSprite(CARDS.spark,role),src);assert.match(src,/^data:image\/svg\+xml,/);sprites.add(src);
- }
- assert.equal(sprites.size,1);assert.match(arenaBackdrop(),/^data:image\/svg\+xml,/);
+test('V2.11 le fond des sauvegardes historiques reste autonome et déterministe',()=>{
+ assert.equal(arenaBackdrop(),arenaBackdrop());assert.match(arenaBackdrop(),/^data:image\/svg\+xml,/);
 });

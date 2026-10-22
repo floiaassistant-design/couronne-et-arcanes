@@ -1,3 +1,12 @@
+## 22/10/2026 — Proposition d’un seul jeu et d’un seul export
+
+- `JOUER.html` devient l’unique livraison, toujours avec les cartes sur le plateau.
+- Retrait de la vue personnages, de son sélecteur et de ses styles spécifiques.
+- Suppression d’`ESSAI_CARTES.html` et de `build:cards` ; diagnostic de test unique.
+- Un seul job CI conserve les parcours fonctionnels, les sauvegardes et le hors ligne.
+- Moteur, IA, catalogue, illustrations et sauvegardes inchangés ; les anciens combats
+  restent jouables sur leur géométrie d’origine. Proposition dépendante de la PR nº 33.
+
 ## 22/10/2026 — Proposition de maintenance CSS et vues
 
 - Complément séparé à la PR nº 31 : 22 déclarations CSS dominées retirées,

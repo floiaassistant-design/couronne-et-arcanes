@@ -1,13 +1,13 @@
 /* Le décor, les cases et les ancrages partagent le même plan et la même échelle. */
 .combat-screen[data-painted-arena="true"] .combat-stage{position:relative;padding:0;overflow:hidden;isolation:isolate;background:#13243b}
-.combat-screen[data-painted-arena="true"] .combat-stage::before{content:'';position:absolute;inset:-8px;background:var(--painted-arena-image) center/cover;filter:blur(6px) brightness(.55);z-index:-1;pointer-events:none}
+.combat-screen[data-painted-arena="true"] .combat-stage::before{content:"";position:absolute;inset:-8px;background:var(--painted-arena-image) center/cover;filter:blur(6px) brightness(.55);z-index:-1;pointer-events:none}
 .combat-screen[data-painted-arena="true"] .arena-painted{position:absolute;inset:0;width:100%;height:100%;min-height:0;padding:0;margin:0;border:0;border-radius:0;overflow:auto;background:transparent;overscroll-behavior:contain}
 .arena-painted-canvas{position:relative;margin-inline:auto;flex:none;overflow:hidden}
 .arena-painted-frame{position:absolute;left:0;top:0;width:1672px;height:941px;transform-origin:0 0}
 .arena-lofi .arena-painted .arena-calibrated-art{position:absolute;inset:0;left:0;width:1672px;height:941px;background:var(--painted-arena-image) center/100% 100% no-repeat;z-index:0}
 .combat-screen[data-painted-arena="true"] .arena-painted .lane-row,.combat-screen[data-painted-arena="true"] .arena-painted .arena-dormant-row{display:block;position:absolute;inset:0;width:1672px;min-width:0;max-width:none;height:941px;min-height:0;max-height:none;margin:0;background:none;box-shadow:none;pointer-events:none}
 .combat-screen[data-painted-arena="true"] .arena-painted .battle-cell,.combat-screen[data-painted-arena="true"] .arena-painted .arena-dormant-cell{position:absolute;min-height:0;max-height:none;box-sizing:border-box;border:0;background:none;box-shadow:none;border-radius:0;padding:0;pointer-events:none}
-.combat-screen[data-painted-arena="true"] .arena-painted .battle-cell::before,.combat-screen[data-painted-arena="true"] .arena-painted .arena-dormant-cell::before{content:'';position:absolute;inset:0;clip-path:var(--tile-shape);pointer-events:auto;background:transparent}
+.combat-screen[data-painted-arena="true"] .arena-painted .battle-cell::before,.combat-screen[data-painted-arena="true"] .arena-painted .arena-dormant-cell::before{content:"";position:absolute;inset:0;clip-path:var(--tile-shape);pointer-events:auto;background:transparent}
 .combat-screen[data-painted-arena="true"] .arena-painted .arena-dormant-cell::before{background:#071323aa;pointer-events:none}
 .combat-screen[data-painted-arena="true"] .arena-painted .battle-cell.available{border:0;background:none;box-shadow:none}
 .combat-screen[data-painted-arena="true"] .arena-painted .battle-cell.available::before{background:#ffe8ae38;box-shadow:inset 0 0 0 3px #ffe1a3}
@@ -19,19 +19,10 @@
 .combat-screen[data-painted-arena="true"] .arena-painted .lane-label{position:absolute;display:block;width:23px;color:#f7e8c6;font:17px Georgia,serif;text-shadow:0 2px 4px #000}
 .combat-screen[data-painted-arena="true"] .arena-painted .slot-num{position:absolute;left:var(--foot-x);top:40%;transform:translateX(-50%);font-size:13px;color:#172c444d}
 .combat-screen[data-painted-arena="true"] .arena-painted .unit-on-board{position:absolute;inset:0;min-height:0;height:100%;padding:0;border:0;outline:none;background:none;box-shadow:none;overflow:visible;pointer-events:none}
-.combat-screen[data-painted-arena="true"] .arena-painted .sprite-stage{position:absolute;left:var(--foot-x);top:var(--foot-y);transform:translate(-50%,-100%);width:62px;height:62px;margin:0;padding:0;min-height:0;background:none;overflow:visible}
-.combat-screen[data-painted-arena="true"] .arena-painted .sprite-figure{width:62px;height:62px;object-fit:contain;filter:drop-shadow(0 4px 2px #10182cc4)}
-.combat-screen[data-painted-arena="true"] .arena-painted .unit-on-board.enemy .sprite-figure{transform:scaleX(-1)}
-.combat-screen[data-painted-arena="true"] .arena-painted .sprite-aura{display:none}
-.combat-screen[data-painted-arena="true"] .arena-painted .sprite-stage::after{display:block;content:'';position:absolute;inset:auto 6px 0;width:48px;height:9px;border:1px solid var(--unit-rarity);border-radius:50%;background:#07132255;box-shadow:0 0 0 1px var(--camp-color);z-index:-1}
-.combat-screen[data-painted-arena="true"] .arena-painted .board-identification{position:absolute;inset:1px 3px auto;flex-direction:row;justify-content:center;gap:2px;max-height:14px;overflow:hidden;opacity:.95}
-.combat-screen[data-painted-arena="true"] .arena-painted .board-identification span{font-size:9px;padding:1px 3px;white-space:nowrap}
-.combat-screen[data-painted-arena="true"] .arena-painted .board-quality{display:none}
-.combat-screen[data-painted-arena="true"] .arena-painted .unit-name{position:absolute;bottom:18px;left:0;width:100%;font-size:12px;line-height:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;color:#fff3d5;text-shadow:0 1px 3px #000,0 0 5px #000}
-.combat-screen[data-painted-arena="true"] .arena-painted .unit-meta{position:absolute;bottom:1px;left:0;width:100%;text-align:center;font-size:15px;line-height:17px;color:#fff;background:#0c1e36a8;border-radius:4px}
+
 .combat-screen[data-painted-arena="true"] .arena-painted .silence-badge,.combat-screen[data-painted-arena="true"] .arena-painted .formation-badge{position:absolute;right:0;top:14px;z-index:2;font-size:10px}
 .combat-screen[data-painted-arena="true"] .arena-painted .terrain-trap{position:absolute;bottom:2px;z-index:2;font-size:11px}
-.combat-screen[data-painted-arena="true"] .arena-painted .sprite-figure,.combat-screen[data-painted-arena="true"] .arena-painted .sprite-stage,.combat-screen[data-painted-arena="true"] .arena-painted .unit-on-board,.combat-screen[data-painted-arena="true"] .arena-painted .sprite-aura{animation:none!important;transition:none!important}
+.combat-screen[data-painted-arena="true"] .arena-painted .unit-on-board {animation:none!important;transition:none!important}
 .arena-hero-slot{position:absolute;width:180px;height:240px;transform:translate(-50%,-100%);pointer-events:none;z-index:2}
 .arena-hero-actor{position:absolute;inset:0;transform-origin:50% 100%}
 .arena-hero-actor img{width:100%;height:100%;object-fit:contain;object-position:50% 100%}

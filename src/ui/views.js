@@ -7,7 +7,6 @@ import { unitStatContext, unitStats } from '../engine/unit-stats.js';
 import { CARDS, FACTIONS, CLASSES, cardTraits } from '../data.js';
 
 import { visualFor, artSrc, cardTemplateFor } from '../visuals.js';
-import { cardArenaEnabled } from './card-arena.js';
 
 import {
   heroLevel,
@@ -80,7 +79,7 @@ export function createViews(getState) {
     if (!c) return '';
     const tone = FACTIONS[c.faction].tone,
       owned = profile.collection[id] || 0,
-      visual = visualFor(c, { cards: cardArenaEnabled() }),
+      visual = visualFor(c, { cards: true }),
       masteryXp = profile.mastery?.[id] || 0;
     const inHand = compact && cooldown !== null && cooldown !== undefined,
       waiting = inHand && cooldown > 0,
@@ -91,7 +90,7 @@ export function createViews(getState) {
       rank = masteryRank({ mastery: context.mastery }, id);
     const fullCard = cardTemplateFor(c),
       pilot = id === 'archer',
-      illustrated = pilot || (inHand && cardArenaEnabled()); // Cadre commun de la main illustrée.
+      illustrated = pilot || inHand; // Cadre commun de la main illustrée.
     return `<div class="unit-card ${fullCard ? 'generated-template' : ''} ${illustrated ? 'illustrated-pilot' : ''} ${compact ? 'compact' : ''} ${waiting ? 'on-cooldown hand-waiting' : ''} ${ready ? 'hand-ready' : ''} ${inHand ? 'hand-card' : ''} ${inHand && animationsEnabled ? 'timer-motion' : ''} ${select ? 'selected' : ''}" data-rarity="${c.rarity}" style="--tone:${tone}" ${compact ? `aria-controls="hand-card-inspection" aria-expanded="false" data-action="select-card" data-index="${index}" role="button" tabindex="0" aria-label="${esc(c.name)}${inHand ? (waiting ? ', en attente : ' + cooldown + ' tour' + (cooldown > 1 ? 's' : '') + ' avant disponibilité' : ', prête à être jouée') : ''}, consulter les capacités"` : ''}>
  ${illustrated && !fullCard ? `<span class="illustrated-faction">${esc(FACTIONS[c.faction].short)}</span><span class="illustrated-count" data-delay-kind="${inHand ? 'remaining' : 'base'}" aria-label="${inHand ? 'Attente restante' : 'Délai de base'} : ${inHand ? cooldown : c.delay}"><b>${inHand ? cooldown : c.delay}</b></span>` : ''}
  <div class="card-head"><span>${esc(c.heroClass ? CLASSES[c.heroClass].name : FACTIONS[c.faction].short)}</span><b>${c.heroClass ? 'COMPÉTENCE' : c.type === 'sort' ? 'SORT' : 'UNITÉ'}</b></div>

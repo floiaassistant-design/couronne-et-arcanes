@@ -62,11 +62,8 @@ async def run(browser,label,vp):
     assert await page.evaluate('battle.round')==2
     await page.reload();assert await page.evaluate('battle.round')==2
     assert await page.locator('.board-card[data-card-id="militia"] .stat.hp b').inner_text()=='12'
-    await page.locator('[data-action="toggle-card-arena"]').click()
-    legacy_image=page.locator('.sprite-figure.generated-unit-image').first
-    await legacy_image.evaluate('(e)=>e.decode()')
-    assert await legacy_image.evaluate('(e)=>e.naturalWidth===768 && getComputedStyle(e).objectFit==="contain"')
-    assert 'Milicien' in await page.locator('.unit-on-board').first.inner_text()
+    assert await page.locator('[data-action="toggle-card-arena"]').count()==0
+    assert await page.locator('.sprite-figure').count()==0
     assert not errors,errors;assert not external,external
     await ctx.close();print(f'Milicien {label}: export exact, champs alignés, valeurs actuelles, vraie pose, tour et reprise PASS',flush=True)
 async def main():

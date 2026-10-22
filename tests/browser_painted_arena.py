@@ -14,6 +14,8 @@ async def run(browser,label,viewport):
         }''',lanes)
         for lane in range(lanes):
             await page.evaluate('''()=>{battle.heroes.p.hand=[{id:'militia',wait:0}];battle.heroes.p.cardsPlayed=0;render();}''')
+            await page.mouse.move(0,0)
+            await page.keyboard.press('Escape')
             card=page.locator('.hand [data-action="select-card"]').first
             await card.click()
             target=page.locator(f'[data-action="deploy"][data-col="1"][data-lane="{lane}"]')
@@ -23,7 +25,7 @@ async def run(browser,label,viewport):
         assert await page.locator('.arena-hero-slot').count()==2
         assert await page.locator('.arena-hero-slot img').count()==0
         assert await page.locator('.unit-on-board[data-animation-state="idle"]').count()==lanes
-        assert await page.locator('.sprite-figure').evaluate_all("els=>els.every(el=>getComputedStyle(el).animationName==='none')")
+        assert await page.locator('.board-card').evaluate_all("els=>els.every(el=>getComputedStyle(el).animationName==='none')")
         assert await page.locator('.battle-vfx-overlay').count()==0
         await page.evaluate('''()=>{const g=document.querySelector('.battle-grid');g.scrollLeft=9999;g.scrollTop=9999;}''')
         before=await page.evaluate("()=>{const g=document.querySelector('.battle-grid');return [g.scrollLeft,g.scrollTop]}")

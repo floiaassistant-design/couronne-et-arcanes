@@ -1,12 +1,11 @@
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
-import { CARDS, FACTIONS, CLASSES, cardTraits, CHARGE_IDS, RIPOSTE_IDS } from '../data.js';
+import { CARDS, FACTIONS, CLASSES, cardTraits } from '../data.js';
 import { AI_STYLES, aiStyle, aiEnraged } from '../ai.js';
 import { silenced, teleportPlan, controlTargetError } from '../engine/battle-control.js';
 import { TALENT_TREE } from '../talents.js';
-import { visualFor, cardTemplateFor } from '../visuals.js';
-import { cardArenaEnabled, boardCard, campSeal } from './card-arena.js';
+import { boardCard, campSeal } from './card-arena.js';
 import { laneCount, lastCell, validDeploymentColumn } from '../engine/board.js';
-import { arenaSprite, arenaBackdrop } from './arena-art.js';
+import { arenaBackdrop } from './arena-art.js';
 import { paintedArena, paintedTile } from './painted-arena.js';
 
 import { formationBonus } from '../engine.js';
@@ -26,8 +25,7 @@ export function createBattleView(getState, { btn, cardUI, esc }) {
     const concord = u ? formationBonus(battle, lane, u) : 0;
     const rallied = u && u.rallyUntil >= battle.round ? 1 : 0;
     const attack = u ? u.atk + concord + rallied : 0;
-    const visual = u ? visualFor(card) : null;
-    return `<div class="unit-on-board ${u.side === 'e' ? 'enemy' : 'ally'} ${silent ? 'silenced' : ''}" data-actor-id="${u.uid}" data-facing="${u.side === 'p' ? 'right' : 'left'}" data-animation-state="idle" data-owner="${u.side}" data-rarity="${esc(card.rarity)}" style="--tone:${FACTIONS[card.faction].tone}" ${cardArenaEnabled() ? 'data-unit-summary' : 'title'}="${u.side === 'p' ? 'Votre unité' : 'Unité adverse'} · ${esc(FACTIONS[card.faction].name)} · ${esc(card.rarity)} · ${esc(card.name)} · ${esc(cardTraits(u.id).join(', '))} · Attaque ${attack}${concord ? ' (dont +1 Concorde)' : ''}${rallied ? ' (dont +1 Ralliement)' : ''} · PV ${u.hp}/${u.maxhp}${u.barrier ? ' · Barrière ' + u.barrier : ''}${silent ? ' · Silence : ' + remaining + ' résolution(s)' : ''}"><div class="board-identification"><span class="board-owner">${u.side === 'p' ? 'VOUS' : 'ENNEMI'}</span><span class="board-faction">${esc(FACTIONS[card.faction].short)}</span><span class="board-quality">${esc(card.rarity)}</span></div>${silent ? `<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>` : ''}${concord ? '<div class="formation-badge" aria-label="Concorde de faction active">✦ Concorde</div>' : ''}${cardArenaEnabled() ? boardCard(u, attack) : `<div class="sprite-stage role-${visual.role}" aria-hidden="true"><img class="sprite-figure ${cardTemplateFor(card) ? 'generated-unit-image' : ''}" src="${arenaSprite(card, visual.role)}" alt="" draggable="false" /><span class="sprite-aura"></span></div><div class="unit-name">${esc(card.name)}</div><div class="unit-meta">⚔ ${attack}${concord ? ' ✦' : ''}${rallied ? ' ⚑' : ''}${!silent && CHARGE_IDS.has(u.id) ? ' ⚡' : ''}${!silent && RIPOSTE_IDS.has(u.id) ? ' ↶' : ''} &nbsp; ♥ ${u.hp}${u.armor ? ' ◈' : ''}${u.barrier ? ' ⬡ ' + u.barrier : ''}${u.poisonTurns ? ' ☣' : ''}</div>`}</div>`;
+    return `<div class="unit-on-board ${u.side === 'e' ? 'enemy' : 'ally'} ${silent ? 'silenced' : ''}" data-actor-id="${u.uid}" data-facing="${u.side === 'p' ? 'right' : 'left'}" data-animation-state="idle" data-owner="${u.side}" data-rarity="${esc(card.rarity)}" style="--tone:${FACTIONS[card.faction].tone}" data-unit-summary="${u.side === 'p' ? 'Votre unité' : 'Unité adverse'} · ${esc(FACTIONS[card.faction].name)} · ${esc(card.rarity)} · ${esc(card.name)} · ${esc(cardTraits(u.id).join(', '))} · Attaque ${attack}${concord ? ' (dont +1 Concorde)' : ''}${rallied ? ' (dont +1 Ralliement)' : ''} · PV ${u.hp}/${u.maxhp}${u.barrier ? ' · Barrière ' + u.barrier : ''}${silent ? ' · Silence : ' + remaining + ' résolution(s)' : ''}">${silent ? `<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>` : ''}${concord ? '<div class="formation-badge" aria-label="Concorde de faction active">✦ Concorde</div>' : ''}${boardCard(u, attack)}</div>`;
   }
 
   function battleCell(u, lane, col, visualLane = null) {
@@ -38,7 +36,7 @@ export function createBattleView(getState, { btn, cardUI, esc }) {
     );
     const deployable = validDeploymentColumn(battle, 'p', col);
 
-    return `<div ${tile ? `style="${tile.style}" data-foot-x="${tile.footX}" data-foot-y="${tile.footY}"` : ''} data-col="${col}" data-lane="${lane}" class="battle-cell ${battle.phase === 'player' && selectedCard >= 0 && deployable && (!u || CARDS[battle.heroes.p.hand[selectedCard]?.id]?.type === 'sort') ? 'available' : ''}" ${deployable && battle.phase === 'player' ? `role="${u && cardArenaEnabled() ? 'group' : 'button'}" tabindex="0" data-action="deploy" data-lane="${lane}" aria-label="Déployer sur la ligne ${lane + 1}, case ${col}"` : ''}>
+    return `<div ${tile ? `style="${tile.style}" data-foot-x="${tile.footX}" data-foot-y="${tile.footY}"` : ''} data-col="${col}" data-lane="${lane}" class="battle-cell ${battle.phase === 'player' && selectedCard >= 0 && deployable && (!u || CARDS[battle.heroes.p.hand[selectedCard]?.id]?.type === 'sort') ? 'available' : ''}" ${deployable && battle.phase === 'player' ? `role="${u ? 'group' : 'button'}" tabindex="0" data-action="deploy" data-lane="${lane}" aria-label="Déployer sur la ligne ${lane + 1}, case ${col}"` : ''}>
  ${traps.map((t) => `<span class="terrain-trap ${t.owner === 'e' ? 'enemy' : ''}" role="img" aria-label="Piège ${t.owner === 'p' ? 'allié' : 'adverse'}, ligne ${lane + 1}, case ${col}, ${t.expiresRound - battle.round + 1} tours" title="${t.kind === 'snare' ? '1 dégât et immobilisation' : '3 dégâts'} avant armure · expire dans ${t.expiresRound - battle.round + 1} résolution(s)">⌁ ${t.owner === 'p' ? 'ALLIÉ' : 'ENNEMI'} · ${t.expiresRound - battle.round + 1}</span>`).join('')}
  ${u ? battleUnit(u, lane) : `<span class="slot-num">${col}</span>`}</div>`;
   }
@@ -56,7 +54,7 @@ export function createBattleView(getState, { btn, cardUI, esc }) {
       lanes = laneCount(battle),
       cells = lastCell(battle);
     const selected = CARDS[p.hand[selectedCard]?.id],
-      immersive = cardArenaEnabled() && cells === 10;
+      immersive = cells === 10;
     const inspectionPanel =
       '<div id="hand-card-inspection" class="hand-card-inspection" role="region" aria-label="Capacités de la carte consultée" hidden></div>';
     const preview =
@@ -76,14 +74,14 @@ export function createBattleView(getState, { btn, cardUI, esc }) {
  <section class="battle-panel arena-lofi combat-stage">${battleHud(p, e)}
  ${battle.turnFlow === 'alternating' ? `<div class="turn-indicator" role="status">${battle.phase === 'enemy' ? 'L’IA choisit et pose ses cartes, puis ses unités agiront.' : 'Placez jusqu’à deux cartes, puis validez pour lancer vos unités.'}</div>` : ''}
  <div class="arena-caption"><span>${selectedCard >= 0 ? '✦ CHOISISSEZ UNE CASE DE DÉPART' : '✧ ARÈNE DES SERMENTS'}</span><span>${lanes} lignes · ${cells} cases par ligne</span></div><div class="battle-grid ${cells === 10 ? 'arena-structured arena-painted' : ''}" tabindex="0" role="region" aria-label="Plateau de combat : ${lanes} lignes de ${cells} cases" style="--cells:${cells};--arena-scene:url('${arenaBackdrop()}')">${arena}</div>
- <div class="arena-legend" aria-label="Légende du plateau">${cardArenaEnabled() ? `<span class="legend-ally">${campSeal('p')} VOS UNITÉS</span><span class="legend-enemy">${campSeal('e')} ADVERSAIRES</span>` : `<span class="legend-ally">BLEU · VOS UNITÉS</span><span class="legend-enemy">ROUGE · UNITÉS ADVERSES</span>`}<span>Contour : rareté · Étiquette : Ordre</span></div>
- <p class="arena-scroll-hint">Sur petit écran, faites glisser le plateau pour voir toutes les cases. Les couronnes sont hors de la grille.</p><div class="vfx-controls"><button type="button" class="card-view-toggle" data-action="toggle-card-arena" aria-pressed="${cardArenaEnabled()}">${cardArenaEnabled() ? 'Vue : cartes' : 'Vue : personnages'}</button><span>Animations des compteurs et de l’interface.</span><button type="button" class="vfx-toggle" data-action="toggle-animations" aria-pressed="${animationsEnabled}">${animationsEnabled ? '✦ ' : ''}${cells === 10 ? 'Animations d’interface' : 'Animations'} ${animationsEnabled ? 'activées' : 'désactivées'}</button></div>
+ <div class="arena-legend" aria-label="Légende du plateau"><span class="legend-ally">${campSeal('p')} VOS UNITÉS</span><span class="legend-enemy">${campSeal('e')} ADVERSAIRES</span><span>Contour : rareté · Étiquette : Ordre</span></div>
+ <p class="arena-scroll-hint">Sur petit écran, faites glisser le plateau pour voir toutes les cases. Les couronnes sont hors de la grille.</p><div class="vfx-controls"><span>Animations des compteurs et de l’interface.</span><button type="button" class="vfx-toggle" data-action="toggle-animations" aria-pressed="${animationsEnabled}">${animationsEnabled ? '✦ ' : ''}${cells === 10 ? 'Animations d’interface' : 'Animations'} ${animationsEnabled ? 'activées' : 'désactivées'}</button></div>
  ${battle.mode === 'dungeon' ? `<div class="dungeon-battle-banner">♛ DONJON · ${battle.dungeonBonus ? 'Épreuve bonus' : 'Salle ' + (battle.dungeonStage + 1) + '/3'} · Les PV du héros sont conservés entre les combats (+6 PV après victoire).</div>` : ''}
  <p class="control-tip">⊘ Silence : capacités déclenchées suspendues, attaques et traits passifs conservés. ✧ Téléportation : autre ligne, même colonne. ⌁ Pièges publics : déclenchés à l’arrivée d’un ennemi, deux par camp. ◷ Tempo : accélérez vos cartes ou ralentissez une carte adverse.</p>${preview ? `<p class="teleport-preview" role="status">${preview}</p>` : ''}
  <p class="formation-tip">✦ CONCORDE : deux alliés du même Ordre gagnent +1 attaque. ⚡ CHARGE : +2 attaque après déplacement. ↶ RIPOSTE : 2 dégâts avant armure, une fois par tour au contact.</p>
  <div class="battle-tip"><span>← VOTRE COURONNE · VOS UNITÉS AVANCENT →</span><span>← L’ENNEMI AVANCE · COURONNE ADVERSE →</span></div>
- ${immersive ? '' : '</section>'}<div class="combat-hand-dock" role="region" aria-label="Main de cartes et actions de combat"><div class="hand-panel"><div class="combat-hand-tray"><div class="hand-header"><div><div class="section-caption">Votre main · ${p.hand.length} cartes</div>${cardArenaEnabled() ? '' : inspectionPanel}<div class="selection-guide">${selectedCard >= 0 ? '✦ Carte sélectionnée : choisissez une des trois premières cases libres.' : 'Survolez pour lire ; cliquez pour sélectionner puis choisissez une case de départ.'}</div></div><span class="pill">${p.cardsPlayed}/2 jouées</span></div><div class="hand">${p.hand.map((c, i) => cardUI(c.id, { compact: true, index: i, select: selectedCard === i, cooldown: c.wait })).join('') || '<div class="hint">Votre main est vide. Terminez le tour.</div>'}</div></div>
- ${battleActions(immersive)}</div></div>${immersive ? '</section>' : ''}${cardArenaEnabled() ? inspectionPanel : ''}</div>`;
+ ${immersive ? '' : '</section>'}<div class="combat-hand-dock" role="region" aria-label="Main de cartes et actions de combat"><div class="hand-panel"><div class="combat-hand-tray"><div class="hand-header"><div><div class="section-caption">Votre main · ${p.hand.length} cartes</div><div class="selection-guide">${selectedCard >= 0 ? '✦ Carte sélectionnée : choisissez une des trois premières cases libres.' : 'Survolez pour lire ; cliquez pour sélectionner puis choisissez une case de départ.'}</div></div><span class="pill">${p.cardsPlayed}/2 jouées</span></div><div class="hand">${p.hand.map((c, i) => cardUI(c.id, { compact: true, index: i, select: selectedCard === i, cooldown: c.wait })).join('') || '<div class="hint">Votre main est vide. Terminez le tour.</div>'}</div></div>
+ ${battleActions(immersive)}</div></div>${immersive ? '</section>' : ''}${inspectionPanel}</div>`;
   }
 
   return { battleUI: bind(battleUI) };

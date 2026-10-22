@@ -33,7 +33,7 @@
 .card-combat-mode [data-card-layout=true] .unit-card.generated-template.hand-card{flex-basis:calc(var(--tray-height)*.55);width:calc(var(--tray-height)*.55)}
 .unit-card.generated-template.hand-card .generated-face{max-height:100%}
 .illustrated-inspection .inspection-feature.inspection-generated-feature{display:block;padding:0 12px 8px}
-.inspection-generated-feature>.generated-face{width:min(220px,calc((100dvh - 230px)*2/3));margin:0 auto 8px}
+.inspection-generated-feature>.generated-face{width:min(220px,calc((var(--preview-max-height,100dvh) - 230px)*2/3));margin:0 auto 8px}
 .inspection-generated-feature .inspection-identity{display:block;padding:0}
 .inspection-generated-feature .inspection-identity h2{font-size:15px;margin-bottom:4px}
 .inspection-generated-feature .inspection-order,.inspection-generated-feature .inspection-rarity,.inspection-generated-feature .inspection-readiness{display:inline;font-size:10px;margin-right:6px}
@@ -45,4 +45,3 @@
 body.card-combat-mode [data-card-layout=true] .combat-stage{overflow:clip;overflow-anchor:none}
 
 .unit-card.generated-template>.generated-card-progress{font:11px/1.4 system-ui,sans-serif;text-align:center;padding:5px;color:#ead7a8;background:#142637}
-.unit-on-board .sprite-figure.generated-unit-image{object-fit:contain!important;image-rendering:auto!important;transform:none!important;filter:drop-shadow(0 3px 3px #10182c88)}

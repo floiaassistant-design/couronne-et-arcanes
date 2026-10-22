@@ -31,7 +31,7 @@ async def run(browser,label,viewport):
     assert await cards.nth(1).locator('.stat.atk b').inner_text()=='5'
     assert await cards.nth(1).locator('.stat.hp b').inner_text()=='8'
 
-    # Les cartes restent à leur place quand la fiche agrandit le dock, sans recouvrir le plateau.
+    # La fiche flottante garde la main immobile et reste dans le viewport.
     await page.mouse.move(0,0)
     before=await cards.nth(1).bounding_box()
     model=await page.evaluate('JSON.stringify(battle)')
@@ -44,7 +44,7 @@ async def run(browser,label,viewport):
     after=await cards.nth(1).bounding_box()
     assert abs(before['y']-after['y'])<2,(label,before,after)
     rect=await panel.bounding_box();dock=await page.locator('.combat-hand-dock').bounding_box()
-    assert rect['y']>=dock['y'] and rect['y']+rect['height']<=after['y']+2,(rect,dock,after)
+    assert rect['x']>=11 and rect['y']>=11 and rect['x']+rect['width']<=viewport['width']-11 and rect['y']+rect['height']<=viewport['height']-11,(rect,dock,after)
     assert await panel.locator('.inspection-description').evaluate('el=>parseFloat(getComputedStyle(el).fontSize)')>=14
     description=await panel.locator('.inspection-description').bounding_box()
     body=await panel.locator('.inspection-body').bounding_box()
@@ -121,6 +121,8 @@ async def offline(browser):
     page.on('request',lambda req:requests.append(req.url));page.on('pageerror',lambda e:errors.append(str(e)))
     await page.goto((ROOT/'JOUER.html').as_uri())
     await page.locator('[data-action="welcome-start"]').click()
+    await page.mouse.move(0,0)
+    await page.keyboard.press('Escape')
     await page.locator('[data-action="toggle-animations"]').click()
     await page.locator('.hand .hand-card').first.focus()
     assert not await page.locator('#hand-card-inspection').is_hidden()

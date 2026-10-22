@@ -22,7 +22,9 @@ async def run(browser,name,viewport):
  assert await page.locator('.combat-menu-link').is_visible()
  assert await page.locator('.combat-hand-dock [data-action="end-turn"]').is_visible()
  assert await page.locator('.combat-hand-dock [data-action="hero-power"]').is_visible()
+ await page.locator('.combat-intel summary').click()
  assert await page.locator('.combat-hand-dock [data-action="retreat"]').is_visible()
+ await page.locator('.combat-intel summary').click()
  assert await page.locator('.combat-hand-dock .hand .unit-card').count()>0
  rect=await dock.bounding_box()
  board=await stage.bounding_box()

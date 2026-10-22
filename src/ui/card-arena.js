@@ -3,17 +3,6 @@ import {generatedCardFace} from './generated-card.js';
 // Présentation des vraies unités sur leurs cases. Ni règles, ni partie préfabriquée.
 import {CARDS,FACTIONS} from '../data.js';
 import {visualFor,artSrc,cardTemplateFor} from '../visuals.js';
-export function cardArenaEnabled(){
- if(typeof document==='undefined')return false;
- if(document.body?.dataset.cardCombat)return document.body.dataset.cardCombat==='true';
- const query=new URLSearchParams(globalThis.location?.search||'');
- if(query.has('cartes'))return query.get('cartes')!=='0';
- try{return localStorage.getItem('couronnes_arcanes_vue_cartes_v1')==='on';}catch{return false;}
-}
-export function setCardArenaMode(enabled){
- document.body.dataset.cardCombat=String(enabled);
- try{localStorage.setItem('couronnes_arcanes_vue_cartes_v1',enabled?'on':'off');}catch{}
-}
 // Deux silhouettes distinctes : le camp reste lisible sans dépendre de la couleur.
 export function campSeal(side){
  const enemy=side==='e';

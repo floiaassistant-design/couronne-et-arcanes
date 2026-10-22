@@ -1757,9 +1757,7 @@ main {
   font-size: 10px;
   text-align: center;
 }
-.unit-on-board.silenced .sprite-figure {
-  filter: saturate(0.4);
-}
+
 .control-tip,
 .teleport-preview {
   font-size: 12px;
@@ -1801,29 +1799,7 @@ main {
   background: radial-gradient(circle at 55% 35%, color-mix(in srgb, var(--tone), #6a243c 40%), #382034 90%);
   border-color: #ce7d8490;
 }
-.unit-icon {
-  font:
-    normal 30px Georgia,
-    serif;
-  text-shadow: 0 2px 9px #000a;
-}
-.unit-name {
-  max-width: 95%;
-  font-size: 9px;
-  line-height: 1.1;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-shadow: 0 2px 5px #000c;
-}
-.unit-meta {
-  font-size: 10px;
-  background: #0007;
-  border-radius: 4px;
-  padding: 2px 5px;
-  color: #fff;
-}
+
 .unit-stunned:after {
   content: "◈";
   position: absolute;
@@ -1863,122 +1839,14 @@ main {
   margin: 10px 3px;
   line-height: 1.6;
 }
-.sprite-stage {
-  position: relative;
-  flex: none;
-  width: calc(100% - 6px);
-  max-width: 93px;
-  height: 48px;
-  margin-top: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  isolation: isolate;
-  border-radius: 4px;
-  overflow: hidden;
-  background: linear-gradient(0deg, #0d203e42, #ffffff0b);
-  border-bottom: 1px solid #ffffff20;
-}
-.unit-on-board:has(.formation-badge) .sprite-stage {
-  margin-top: 13px;
-  height: 39px;
-}
-.sprite-figure {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  object-position: center 45%;
-  filter: drop-shadow(0 3px 2px #001e30bb);
-  transform-origin: center 80%;
-}
-.sprite-aura {
-  position: absolute;
-  bottom: 0;
-  left: 24%;
-  right: 24%;
-  height: 7px;
-  border-radius: 50%;
-  border: 1px solid #e9cf8b7d;
-  box-shadow: 0 0 10px #fad08460;
-  background: #d7d7f533;
-  pointer-events: none;
-}
-.unit-on-board.enemy .sprite-figure {
-  filter: sepia(0.18) saturate(0.85) hue-rotate(300deg) drop-shadow(0 3px 3px #29040c);
-}
-.sprite-stage.role-caster .sprite-aura,
-.sprite-stage.role-support .sprite-aura {
-  box-shadow: 0 0 15px #bd97f8b0;
-  background: #a8a8f565;
-}
-.sprite-stage.role-flying .sprite-aura {
-  height: 5px;
-}
-.sprite-stage.role-beast .sprite-aura {
-  background: #8cd09057;
-}
-.unit-on-board .unit-name {
-  position: relative;
-  z-index: 1;
-  font-weight: 700;
-}
-.unit-on-board .unit-meta {
-  position: relative;
-  z-index: 1;
-}
-.animations-off .sprite-figure,
-.animations-off .sprite-aura {
-  animation: none !important;
-}
-@media (prefers-reduced-motion: reduce) {
-  .sprite-figure,
-  .sprite-aura {
-    animation: none !important;
-    transition: none !important;
-  }
-}
+
 /* Art portraits occupy the whole tactical tile, not only a small icon. */
 .unit-on-board {
   justify-content: flex-end;
   gap: 2px;
   padding: 3px 3px 4px;
 }
-.unit-on-board .sprite-stage,
-.unit-on-board:has(.formation-badge) .sprite-stage {
-  position: absolute;
-  inset: 0;
-  max-width: none;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  border: 0;
-  background: transparent;
-  border-radius: 5px;
-}
-.unit-on-board .sprite-stage::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 30%, #0b1527ba 100%);
-  pointer-events: none;
-}
-.unit-on-board .sprite-figure {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 35%;
-}
-.unit-on-board .sprite-aura {
-  bottom: 6px;
-  z-index: 1;
-}
-.unit-on-board .unit-name {
-  background: #102438ac;
-  border-radius: 4px;
-  padding: 2px 4px;
-  white-space: normal;
-  line-height: 1.05;
-}
+
 .unit-on-board .formation-badge {
   z-index: 3;
 }
@@ -2379,54 +2247,7 @@ body.animations-off .hand-card .cooldown-stamp {
   border: 0;
   overflow: hidden;
 }
-.arena-lofi .unit-on-board .sprite-stage,
-.arena-lofi .unit-on-board:has(.formation-badge) .sprite-stage {
-  width: 100%;
-  height: auto;
-  border-radius: 0;
-  overflow: visible;
-  align-items: flex-end;
-}
-.arena-lofi .unit-on-board .sprite-stage::after {
-  display: none;
-}
-.arena-lofi .unit-on-board .sprite-figure {
-  width: 52px;
-  height: 56px;
-  object-fit: contain;
-  image-rendering: pixelated;
-  filter: drop-shadow(0 4px 0 #122334aa);
-}
-.arena-lofi .unit-on-board.enemy .sprite-stage {
-  transform: scaleX(-1);
-}
-.arena-lofi .unit-on-board.silenced .sprite-figure {
-  filter: saturate(0.3) brightness(0.8);
-}
-.arena-lofi .sprite-aura {
-  bottom: 0;
-  height: 5px;
-  border-radius: 0;
-  left: 22%;
-  right: 22%;
-  background: #8ac9c633;
-  border-color: #9ec9c9;
-  box-shadow: none;
-}
-.arena-lofi .unit-name {
-  border-radius: 0;
-  padding: 2px;
-  max-width: 100%;
-  line-height: 1.1;
-}
-.arena-lofi .unit-meta {
-  font:
-    700 10px ui-monospace,
-    monospace;
-  line-height: 1.2;
-  white-space: normal;
-  text-align: center;
-}
+
 .arena-lofi .formation-badge {
   padding: 2px;
   border-radius: 0;
@@ -3060,56 +2881,7 @@ body:has(.combat-screen) #view {
 .arena-lofi .unit-on-board[data-rarity="légendaire"] {
   --unit-rarity: #ffd46b;
 }
-.arena-lofi .unit-on-board .board-identification {
-  position: absolute;
-  top: 2px;
-  left: 3px;
-  right: 3px;
-  z-index: 6;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  pointer-events: none;
-  text-align: center;
-}
-.arena-lofi .board-owner {
-  display: block;
-  background: #075474;
-  color: #fff;
-  border: 1px solid #8decff;
-  font:
-    900 9px/1.1 ui-monospace,
-    monospace;
-  letter-spacing: 0.04em;
-  padding: 2px 0;
-}
-.arena-lofi .unit-on-board.enemy .board-owner {
-  background: #8a273c;
-  border-color: #ffa0a7;
-}
-.arena-lofi .board-faction {
-  display: block;
-  background: #0a192bf5;
-  color: #fef5df;
-  font:
-    800 9px/1.15 ui-monospace,
-    monospace;
-  padding: 1px 0;
-}
-.arena-lofi .board-quality {
-  display: block;
-  background: #0a192bf5;
-  color: var(--unit-rarity);
-  font:
-    900 8px/1.1 ui-monospace,
-    monospace;
-  text-transform: uppercase;
-  padding: 1px 0;
-}
-.arena-lofi .unit-on-board .sprite-stage,
-.arena-lofi .unit-on-board:has(.formation-badge) .sprite-stage {
-  inset: 37px 0 25px;
-}
+
 .arena-lofi .formation-badge {
   top: 48px;
   left: 2px;
@@ -3121,19 +2893,7 @@ body:has(.combat-screen) #view {
   top: 61px;
   z-index: 8;
 }
-.arena-lofi .unit-name {
-  font-weight: 900;
-  background: #071426f5;
-  color: #fff;
-  font-size: 9px;
-  max-height: 24px;
-  overflow: hidden;
-}
-.arena-lofi .unit-meta {
-  background: #071426ef;
-  color: #fff1d4;
-  font-size: 9px;
-}
+
 .arena-legend {
   display: flex;
   gap: 8px;
@@ -3841,14 +3601,14 @@ body:has(.combat-screen) #view {
 <style>
 /* Le décor, les cases et les ancrages partagent le même plan et la même échelle. */
 .combat-screen[data-painted-arena="true"] .combat-stage{position:relative;padding:0;overflow:hidden;isolation:isolate;background:#13243b}
-.combat-screen[data-painted-arena="true"] .combat-stage::before{content:'';position:absolute;inset:-8px;background:var(--painted-arena-image) center/cover;filter:blur(6px) brightness(.55);z-index:-1;pointer-events:none}
+.combat-screen[data-painted-arena="true"] .combat-stage::before{content:"";position:absolute;inset:-8px;background:var(--painted-arena-image) center/cover;filter:blur(6px) brightness(.55);z-index:-1;pointer-events:none}
 .combat-screen[data-painted-arena="true"] .arena-painted{position:absolute;inset:0;width:100%;height:100%;min-height:0;padding:0;margin:0;border:0;border-radius:0;overflow:auto;background:transparent;overscroll-behavior:contain}
 .arena-painted-canvas{position:relative;margin-inline:auto;flex:none;overflow:hidden}
 .arena-painted-frame{position:absolute;left:0;top:0;width:1672px;height:941px;transform-origin:0 0}
 .arena-lofi .arena-painted .arena-calibrated-art{position:absolute;inset:0;left:0;width:1672px;height:941px;background:var(--painted-arena-image) center/100% 100% no-repeat;z-index:0}
 .combat-screen[data-painted-arena="true"] .arena-painted .lane-row,.combat-screen[data-painted-arena="true"] .arena-painted .arena-dormant-row{display:block;position:absolute;inset:0;width:1672px;min-width:0;max-width:none;height:941px;min-height:0;max-height:none;margin:0;background:none;box-shadow:none;pointer-events:none}
 .combat-screen[data-painted-arena="true"] .arena-painted .battle-cell,.combat-screen[data-painted-arena="true"] .arena-painted .arena-dormant-cell{position:absolute;min-height:0;max-height:none;box-sizing:border-box;border:0;background:none;box-shadow:none;border-radius:0;padding:0;pointer-events:none}
-.combat-screen[data-painted-arena="true"] .arena-painted .battle-cell::before,.combat-screen[data-painted-arena="true"] .arena-painted .arena-dormant-cell::before{content:'';position:absolute;inset:0;clip-path:var(--tile-shape);pointer-events:auto;background:transparent}
+.combat-screen[data-painted-arena="true"] .arena-painted .battle-cell::before,.combat-screen[data-painted-arena="true"] .arena-painted .arena-dormant-cell::before{content:"";position:absolute;inset:0;clip-path:var(--tile-shape);pointer-events:auto;background:transparent}
 .combat-screen[data-painted-arena="true"] .arena-painted .arena-dormant-cell::before{background:#071323aa;pointer-events:none}
 .combat-screen[data-painted-arena="true"] .arena-painted .battle-cell.available{border:0;background:none;box-shadow:none}
 .combat-screen[data-painted-arena="true"] .arena-painted .battle-cell.available::before{background:#ffe8ae38;box-shadow:inset 0 0 0 3px #ffe1a3}
@@ -3860,19 +3620,10 @@ body:has(.combat-screen) #view {
 .combat-screen[data-painted-arena="true"] .arena-painted .lane-label{position:absolute;display:block;width:23px;color:#f7e8c6;font:17px Georgia,serif;text-shadow:0 2px 4px #000}
 .combat-screen[data-painted-arena="true"] .arena-painted .slot-num{position:absolute;left:var(--foot-x);top:40%;transform:translateX(-50%);font-size:13px;color:#172c444d}
 .combat-screen[data-painted-arena="true"] .arena-painted .unit-on-board{position:absolute;inset:0;min-height:0;height:100%;padding:0;border:0;outline:none;background:none;box-shadow:none;overflow:visible;pointer-events:none}
-.combat-screen[data-painted-arena="true"] .arena-painted .sprite-stage{position:absolute;left:var(--foot-x);top:var(--foot-y);transform:translate(-50%,-100%);width:62px;height:62px;margin:0;padding:0;min-height:0;background:none;overflow:visible}
-.combat-screen[data-painted-arena="true"] .arena-painted .sprite-figure{width:62px;height:62px;object-fit:contain;filter:drop-shadow(0 4px 2px #10182cc4)}
-.combat-screen[data-painted-arena="true"] .arena-painted .unit-on-board.enemy .sprite-figure{transform:scaleX(-1)}
-.combat-screen[data-painted-arena="true"] .arena-painted .sprite-aura{display:none}
-.combat-screen[data-painted-arena="true"] .arena-painted .sprite-stage::after{display:block;content:'';position:absolute;inset:auto 6px 0;width:48px;height:9px;border:1px solid var(--unit-rarity);border-radius:50%;background:#07132255;box-shadow:0 0 0 1px var(--camp-color);z-index:-1}
-.combat-screen[data-painted-arena="true"] .arena-painted .board-identification{position:absolute;inset:1px 3px auto;flex-direction:row;justify-content:center;gap:2px;max-height:14px;overflow:hidden;opacity:.95}
-.combat-screen[data-painted-arena="true"] .arena-painted .board-identification span{font-size:9px;padding:1px 3px;white-space:nowrap}
-.combat-screen[data-painted-arena="true"] .arena-painted .board-quality{display:none}
-.combat-screen[data-painted-arena="true"] .arena-painted .unit-name{position:absolute;bottom:18px;left:0;width:100%;font-size:12px;line-height:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;color:#fff3d5;text-shadow:0 1px 3px #000,0 0 5px #000}
-.combat-screen[data-painted-arena="true"] .arena-painted .unit-meta{position:absolute;bottom:1px;left:0;width:100%;text-align:center;font-size:15px;line-height:17px;color:#fff;background:#0c1e36a8;border-radius:4px}
+
 .combat-screen[data-painted-arena="true"] .arena-painted .silence-badge,.combat-screen[data-painted-arena="true"] .arena-painted .formation-badge{position:absolute;right:0;top:14px;z-index:2;font-size:10px}
 .combat-screen[data-painted-arena="true"] .arena-painted .terrain-trap{position:absolute;bottom:2px;z-index:2;font-size:11px}
-.combat-screen[data-painted-arena="true"] .arena-painted .sprite-figure,.combat-screen[data-painted-arena="true"] .arena-painted .sprite-stage,.combat-screen[data-painted-arena="true"] .arena-painted .unit-on-board,.combat-screen[data-painted-arena="true"] .arena-painted .sprite-aura{animation:none!important;transition:none!important}
+.combat-screen[data-painted-arena="true"] .arena-painted .unit-on-board {animation:none!important;transition:none!important}
 .arena-hero-slot{position:absolute;width:180px;height:240px;transform:translate(-50%,-100%);pointer-events:none;z-index:2}
 .arena-hero-actor{position:absolute;inset:0;transform-origin:50% 100%}
 .arena-hero-actor img{width:100%;height:100%;object-fit:contain;object-position:50% 100%}
@@ -3913,7 +3664,7 @@ body:has(.combat-screen) #view {
  color:#fff5df;pointer-events:none;
 }
 .card-combat-mode .board-card::after{
- content:'';position:absolute;inset:0;pointer-events:none;
+ content:"";position:absolute;inset:0;pointer-events:none;
  background:linear-gradient(#09182722,transparent 35%,#081322c9 74%,#07111bf5);
 }
 .card-combat-mode .board-card-art{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block;image-rendering:auto}
@@ -3929,7 +3680,7 @@ body:has(.combat-screen) #view {
 .arena-legend .board-camp-seal{width:11px;height:13px;vertical-align:middle;margin-right:4px}
 .card-combat-mode .arena-legend .legend-ally,.card-combat-mode .arena-legend .legend-enemy{color:#eaddc5}
 .card-combat-mode .unit-on-board{justify-content:center}
-.card-combat-mode .unit-on-board .board-identification{display:none!important}
+
 .card-combat-mode .unit-on-board .formation-badge,.card-combat-mode .unit-on-board .silence-badge{z-index:4}
 /* 82 px en coordonnées d'image : marge verticale entre les quatre rangées.
    Le redimensionnement et le défilement restent ceux du plateau peint. */
@@ -3943,9 +3694,6 @@ body:has(.combat-screen) #view {
 .card-combat-mode .arena-painted .board-card-stats b{font-size:14px}
 .card-combat-mode .arena-painted .unit-on-board .formation-badge,.card-combat-mode .arena-painted .unit-on-board .silence-badge{top:0;right:-2px;font-size:9px}
 @media(prefers-reduced-motion:reduce){.card-combat-mode .board-card,.card-combat-mode .board-card-art{animation:none!important;transition:none!important}}
-
-.card-view-toggle{border:1px solid #a5b7bf77;border-radius:5px;color:#f1d39c;background:#132b3e;padding:4px 8px;font:10px Georgia;cursor:pointer}
-.card-view-toggle:focus-visible{outline:2px solid #ffe1a3;outline-offset:2px}
 
 /* Contrat de présentation : une scène plein écran, HUD en haut, main sur la
    terrasse, actions à droite. Les fiches ne redimensionnent jamais le plateau. */
@@ -3979,9 +3727,9 @@ body.card-combat-mode [data-card-layout="true"] .selection-guide{display:none}
 body.card-combat-mode [data-card-layout="true"] .hand-header:has(.hand-card-inspection:not([hidden])) .section-caption{visibility:visible}
 body.card-combat-mode [data-card-layout="true"] .hand-header .pill{background:#0a1f30d9;border-color:#c7ac7580}
 body.card-combat-mode [data-card-layout="true"] .hand{gap:9px;padding:5px 4px 9px;align-items:stretch;scrollbar-width:thin}
-body.card-combat-mode [data-card-layout="true"] .unit-card.illustrated-pilot.hand-card{display:block;flex:0 0 calc(var(--tray-height) * .55);width:calc(var(--tray-height) * .55);height:100%;border:1px solid #c8ad78;border-radius:7px;padding:0;box-shadow:0 4px 10px #000a;transform:none;transition:border-color .15s}
-body.card-combat-mode [data-card-layout="true"] .unit-card.hand-ready{border-color:#cce9bf}
-body.card-combat-mode [data-card-layout="true"] .unit-card.hand-waiting{border-color:#87939c}
+body.card-combat-mode [data-card-layout="true"] .unit-card.illustrated-pilot.hand-card{display:block;flex:0 0 calc(var(--tray-height) * .55);width:calc(var(--tray-height) * .55);height:100%;border:1px solid var(--rarity-border,#c8ad78);border-radius:7px;padding:0;box-shadow:0 4px 10px #000a;transform:none;transition:border-color .15s}
+body.card-combat-mode [data-card-layout="true"] .unit-card.hand-ready{border-color:var(--rarity-border)}
+body.card-combat-mode [data-card-layout="true"] .unit-card.hand-waiting{border-color:var(--rarity-border)}
 body.card-combat-mode [data-card-layout="true"] .unit-card.selected{outline:2px solid #ffe8ac;outline-offset:1px;box-shadow:0 0 15px #e5bd6f80}
 body.card-combat-mode [data-card-layout="true"] .unit-card:focus-visible{outline:3px solid #ffe8ac;outline-offset:1px}
 body.card-combat-mode [data-card-layout="true"] .unit-card .portrait{border-radius:0}
@@ -4000,7 +3748,7 @@ body.card-combat-mode [data-card-layout="true"] .actions-side>.btn{order:0;min-h
 body.card-combat-mode [data-card-layout="true"] .actions-side>[data-action="end-turn"]{order:-1;background:linear-gradient(135deg,#f4d79a,#b88d4d);color:#142332;border-color:#eac78e;min-height:48px}
 body.card-combat-mode [data-card-layout="true"] .combat-intel{font-size:11px;color:#f5dfb4}
 body.card-combat-mode [data-card-layout="true"] .combat-intel summary{cursor:pointer;min-height:36px;display:flex;align-items:center;justify-content:center;border:1px solid #af986466;border-radius:6px;background:#102536dc;list-style:none}
-body.card-combat-mode [data-card-layout="true"] .combat-intel summary::before{content:'☷';margin-right:7px}
+body.card-combat-mode [data-card-layout="true"] .combat-intel summary::before{content:"☷";margin-right:7px}
 body.card-combat-mode [data-card-layout="true"] .combat-intel summary:focus-visible{outline:2px solid #ffe8ac}
 body.card-combat-mode [data-card-layout="true"] .combat-intel-panel{position:fixed;right:var(--scene-edge);bottom:calc(var(--tray-height) + 24px);width:min(350px,calc(100vw - 36px));max-height:calc(100dvh - var(--tray-height) - 180px);overflow:auto;padding:14px;background:#102637f5;border:1px solid #c1a679;border-radius:8px;box-shadow:0 8px 30px #0008}
 body.card-combat-mode [data-card-layout="true"] .combat-intel-panel .power-hint{font-size:12px}
@@ -4071,18 +3819,18 @@ body.card-combat-mode [data-card-layout="true"] .dungeon-battle-banner{bottom:ca
 body.card-combat-mode #hand-card-inspection.illustrated-inspection:not([hidden]){
  position:fixed;inset:auto;z-index:30;display:flex;flex-direction:column;
  width:min(312px,calc(100vw - 24px));height:auto;min-height:0;
- max-width:none;max-height:calc(100dvh - 24px);margin:0;padding:0;
+ max-width:none;max-height:var(--preview-max-height,calc(100dvh - 24px));margin:0;padding:0;
  overflow:hidden;border:1px solid #cfb47b;border-radius:12px;
  background:linear-gradient(135deg,#234154,#102737 44%,#0a1a2b);
  box-shadow:0 12px 38px #020711b8,0 0 0 3px #07121dcc,inset 0 0 0 3px #cfb47b19;
  color:#fff0d2;font:12px/1.4 system-ui,sans-serif;
 }
 .illustrated-inspection::before{content:'';position:absolute;inset:3px;pointer-events:none;border:1px solid #e6c78b30;border-radius:9px;z-index:1}
-.illustrated-inspection .card-preview{display:flex;flex-direction:column;min-height:0;max-height:calc(100dvh - 26px);width:100%;text-align:left}
+.illustrated-inspection .card-preview{display:flex;flex-direction:column;min-height:0;max-height:var(--preview-max-height,calc(100dvh - 26px));width:100%;text-align:left}
 .illustrated-inspection .inspection-heading{min-height:39px;flex:none;padding:4px 9px 3px 13px;gap:8px}
 .illustrated-inspection .inspection-context{color:#dfc28c;font-size:9px;letter-spacing:.14em;font-weight:700}
 .illustrated-inspection [data-side="e"] .inspection-context{color:#f1b2a5}
-.illustrated-inspection .inspection-heading button{display:grid;place-items:center;width:32px;min-width:32px;height:30px;min-height:30px;padding:0;margin:0;border:1px solid #b79f6b66;border-radius:6px;background:#0b2032;color:#f2d8a5;font:22px/1 Georgia;cursor:pointer}
+.illustrated-inspection .inspection-heading button{display:grid;place-items:center;width:44px;min-width:44px;height:44px;min-height:44px;padding:0;margin:0;border:1px solid #b79f6b66;border-radius:6px;background:#0b2032;color:#f2d8a5;font:22px/1 Georgia;cursor:pointer}
 .illustrated-inspection .inspection-heading button:hover{background:#294658}
 .illustrated-inspection .inspection-heading button:focus-visible{outline:2px solid #ffe4a2;outline-offset:2px}
 .illustrated-inspection .inspection-feature{display:grid;grid-template-columns:104px minmax(0,1fr);gap:12px;align-items:start;padding:0 13px 12px;flex:none}
@@ -4227,7 +3975,7 @@ body.collection-mode #view{max-width:none;padding:0 0 36px;min-width:0}
 .card-combat-mode [data-card-layout=true] .unit-card.generated-template.hand-card{flex-basis:calc(var(--tray-height)*.55);width:calc(var(--tray-height)*.55)}
 .unit-card.generated-template.hand-card .generated-face{max-height:100%}
 .illustrated-inspection .inspection-feature.inspection-generated-feature{display:block;padding:0 12px 8px}
-.inspection-generated-feature>.generated-face{width:min(220px,calc((100dvh - 230px)*2/3));margin:0 auto 8px}
+.inspection-generated-feature>.generated-face{width:min(220px,calc((var(--preview-max-height,100dvh) - 230px)*2/3));margin:0 auto 8px}
 .inspection-generated-feature .inspection-identity{display:block;padding:0}
 .inspection-generated-feature .inspection-identity h2{font-size:15px;margin-bottom:4px}
 .inspection-generated-feature .inspection-order,.inspection-generated-feature .inspection-rarity,.inspection-generated-feature .inspection-readiness{display:inline;font-size:10px;margin-right:6px}
@@ -4239,11 +3987,10 @@ body.collection-mode #view{max-width:none;padding:0 0 36px;min-width:0}
 body.card-combat-mode [data-card-layout=true] .combat-stage{overflow:clip;overflow-anchor:none}
 
 .unit-card.generated-template>.generated-card-progress{font:11px/1.4 system-ui,sans-serif;text-align:center;padding:5px;color:#ead7a8;background:#142637}
-.unit-on-board .sprite-figure.generated-unit-image{object-fit:contain!important;image-rendering:auto!important;transform:none!important;filter:drop-shadow(0 3px 3px #10182c88)}
 
 </style>
 </head>
-<body>
+<body class="card-combat-mode">
 <div class="noise" aria-hidden="true"></div>
 <div id="app">
  <header class="topbar">
@@ -4268,7 +4015,6 @@ const {collectionInspection}=__load("src/ui/collection.js");
 const {createViews}=__load("src/ui/views.js");
 const {createCombatFx}=__load("src/ui/combat-fx.js");
 const {mountPaintedArena}=__load("src/ui/painted-arena.js");
-const {cardArenaEnabled,setCardArenaMode}=__load("src/ui/card-arena.js");
 const {createCardInspection}=__load("src/ui/card-inspection.js");
 const {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure}=__load("src/ui/storage.js");
 const {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission}=__load("src/data.js");
@@ -4329,7 +4075,6 @@ function hideModal(){$('modal-root').innerHTML='';}
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une case de départ sur une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
 function render(){
  document.body.classList.toggle('collection-mode',screen==='collection');
- document.body.classList.toggle('card-combat-mode',cardArenaEnabled());
  const arenaScroll=document.querySelector('.battle-grid')?.scrollLeft||0;
  const arenaVertical=document.querySelector('.battle-grid')?.scrollTop||0;
  const handScroll=document.querySelector('.combat-hand-dock .hand')?.scrollLeft||0;
@@ -4457,7 +4202,6 @@ function act(action,dataset){const {id,index,lane,col,page}=dataset;
  case 'deploy':if(!battle||battle.phase!=='player'||selectedCard<0)return;withBattleFx(()=>playPlayerCard(battle,selectedCard,Number(lane),Number(col)));break;
  case 'end-turn':if(!battle)return;withBattleFx(()=>endPlayerTurn(battle),()=>scheduleEnemyStep());break;
  case 'hero-power':if(!battle)return;withBattleFx(()=>usePower(battle));break;
- case 'toggle-card-arena':setCardArenaMode(!cardArenaEnabled());render();break;
  case 'toggle-animations':animationsEnabled=!animationsEnabled;try{localStorage.setItem(VFX_KEY,animationsEnabled?'on':'off');}catch{}render();scheduleEnemyStep(0);break;
  case 'retreat':showModal(`<div class="kicker">RETRAITE</div><h2>Abandonner la bataille ?</h2><p>Cette décision compte comme une défaite. Dans un donjon, elle met fin à l’expédition.</p><div class="button-row">${btn('Oui, battre en retraite','confirm-retreat','','danger')}${btn('Rester au combat','close-modal','','ghost')}</div>`);break;
  case 'confirm-retreat':if(battle?.status==='active'){cancelEnemyTimer();battle.status='defeat';battle.phase='finished';hideModal();persistBattle();settle();}break;
@@ -4898,7 +4642,6 @@ const { unitStatContext, unitStats }=__load("src/engine/unit-stats.js");
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 const { CARDS, FACTIONS, CLASSES, cardTraits }=__load("src/data.js");
 const { visualFor, artSrc, cardTemplateFor }=__load("src/visuals.js");
-const { cardArenaEnabled }=__load("src/ui/card-arena.js");
 const {
   heroLevel,
   HERO_MAX_LEVEL,
@@ -4969,7 +4712,7 @@ function createViews(getState) {
     if (!c) return '';
     const tone = FACTIONS[c.faction].tone,
       owned = profile.collection[id] || 0,
-      visual = visualFor(c, { cards: cardArenaEnabled() }),
+      visual = visualFor(c, { cards: true }),
       masteryXp = profile.mastery?.[id] || 0;
     const inHand = compact && cooldown !== null && cooldown !== undefined,
       waiting = inHand && cooldown > 0,
@@ -4980,7 +4723,7 @@ function createViews(getState) {
       rank = masteryRank({ mastery: context.mastery }, id);
     const fullCard = cardTemplateFor(c),
       pilot = id === 'archer',
-      illustrated = pilot || (inHand && cardArenaEnabled()); // Cadre commun de la main illustrée.
+      illustrated = pilot || inHand; // Cadre commun de la main illustrée.
     return `<div class="unit-card ${fullCard ? 'generated-template' : ''} ${illustrated ? 'illustrated-pilot' : ''} ${compact ? 'compact' : ''} ${waiting ? 'on-cooldown hand-waiting' : ''} ${ready ? 'hand-ready' : ''} ${inHand ? 'hand-card' : ''} ${inHand && animationsEnabled ? 'timer-motion' : ''} ${select ? 'selected' : ''}" data-rarity="${c.rarity}" style="--tone:${tone}" ${compact ? `aria-controls="hand-card-inspection" aria-expanded="false" data-action="select-card" data-index="${index}" role="button" tabindex="0" aria-label="${esc(c.name)}${inHand ? (waiting ? ', en attente : ' + cooldown + ' tour' + (cooldown > 1 ? 's' : '') + ' avant disponibilité' : ', prête à être jouée') : ''}, consulter les capacités"` : ''}>
  ${illustrated && !fullCard ? `<span class="illustrated-faction">${esc(FACTIONS[c.faction].short)}</span><span class="illustrated-count" data-delay-kind="${inHand ? 'remaining' : 'base'}" aria-label="${inHand ? 'Attente restante' : 'Délai de base'} : ${inHand ? cooldown : c.delay}"><b>${inHand ? cooldown : c.delay}</b></span>` : ''}
  <div class="card-head"><span>${esc(c.heroClass ? CLASSES[c.heroClass].name : FACTIONS[c.faction].short)}</span><b>${c.heroClass ? 'COMPÉTENCE' : c.type === 'sort' ? 'SORT' : 'UNITÉ'}</b></div>
@@ -6831,14 +6574,13 @@ Object.assign(__exports,{DECK_STYLES,deckOverview,proposeDeck,applyDeckStyle});
 },
 "src/ui/battle-view.js":function(__exports,__load){
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
-const { CARDS, FACTIONS, CLASSES, cardTraits, CHARGE_IDS, RIPOSTE_IDS }=__load("src/data.js");
+const { CARDS, FACTIONS, CLASSES, cardTraits }=__load("src/data.js");
 const { AI_STYLES, aiStyle, aiEnraged }=__load("src/ai.js");
 const { silenced, teleportPlan, controlTargetError }=__load("src/engine/battle-control.js");
 const { TALENT_TREE }=__load("src/talents.js");
-const { visualFor, cardTemplateFor }=__load("src/visuals.js");
-const { cardArenaEnabled, boardCard, campSeal }=__load("src/ui/card-arena.js");
+const { boardCard, campSeal }=__load("src/ui/card-arena.js");
 const { laneCount, lastCell, validDeploymentColumn }=__load("src/engine/board.js");
-const { arenaSprite, arenaBackdrop }=__load("src/ui/arena-art.js");
+const { arenaBackdrop }=__load("src/ui/arena-art.js");
 const { paintedArena, paintedTile }=__load("src/ui/painted-arena.js");
 const { formationBonus }=__load("src/engine.js");
 function createBattleView(getState, { btn, cardUI, esc }) {
@@ -6856,8 +6598,7 @@ function createBattleView(getState, { btn, cardUI, esc }) {
     const concord = u ? formationBonus(battle, lane, u) : 0;
     const rallied = u && u.rallyUntil >= battle.round ? 1 : 0;
     const attack = u ? u.atk + concord + rallied : 0;
-    const visual = u ? visualFor(card) : null;
-    return `<div class="unit-on-board ${u.side === 'e' ? 'enemy' : 'ally'} ${silent ? 'silenced' : ''}" data-actor-id="${u.uid}" data-facing="${u.side === 'p' ? 'right' : 'left'}" data-animation-state="idle" data-owner="${u.side}" data-rarity="${esc(card.rarity)}" style="--tone:${FACTIONS[card.faction].tone}" ${cardArenaEnabled() ? 'data-unit-summary' : 'title'}="${u.side === 'p' ? 'Votre unité' : 'Unité adverse'} · ${esc(FACTIONS[card.faction].name)} · ${esc(card.rarity)} · ${esc(card.name)} · ${esc(cardTraits(u.id).join(', '))} · Attaque ${attack}${concord ? ' (dont +1 Concorde)' : ''}${rallied ? ' (dont +1 Ralliement)' : ''} · PV ${u.hp}/${u.maxhp}${u.barrier ? ' · Barrière ' + u.barrier : ''}${silent ? ' · Silence : ' + remaining + ' résolution(s)' : ''}"><div class="board-identification"><span class="board-owner">${u.side === 'p' ? 'VOUS' : 'ENNEMI'}</span><span class="board-faction">${esc(FACTIONS[card.faction].short)}</span><span class="board-quality">${esc(card.rarity)}</span></div>${silent ? `<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>` : ''}${concord ? '<div class="formation-badge" aria-label="Concorde de faction active">✦ Concorde</div>' : ''}${cardArenaEnabled() ? boardCard(u, attack) : `<div class="sprite-stage role-${visual.role}" aria-hidden="true"><img class="sprite-figure ${cardTemplateFor(card) ? 'generated-unit-image' : ''}" src="${arenaSprite(card, visual.role)}" alt="" draggable="false" /><span class="sprite-aura"></span></div><div class="unit-name">${esc(card.name)}</div><div class="unit-meta">⚔ ${attack}${concord ? ' ✦' : ''}${rallied ? ' ⚑' : ''}${!silent && CHARGE_IDS.has(u.id) ? ' ⚡' : ''}${!silent && RIPOSTE_IDS.has(u.id) ? ' ↶' : ''} &nbsp; ♥ ${u.hp}${u.armor ? ' ◈' : ''}${u.barrier ? ' ⬡ ' + u.barrier : ''}${u.poisonTurns ? ' ☣' : ''}</div>`}</div>`;
+    return `<div class="unit-on-board ${u.side === 'e' ? 'enemy' : 'ally'} ${silent ? 'silenced' : ''}" data-actor-id="${u.uid}" data-facing="${u.side === 'p' ? 'right' : 'left'}" data-animation-state="idle" data-owner="${u.side}" data-rarity="${esc(card.rarity)}" style="--tone:${FACTIONS[card.faction].tone}" data-unit-summary="${u.side === 'p' ? 'Votre unité' : 'Unité adverse'} · ${esc(FACTIONS[card.faction].name)} · ${esc(card.rarity)} · ${esc(card.name)} · ${esc(cardTraits(u.id).join(', '))} · Attaque ${attack}${concord ? ' (dont +1 Concorde)' : ''}${rallied ? ' (dont +1 Ralliement)' : ''} · PV ${u.hp}/${u.maxhp}${u.barrier ? ' · Barrière ' + u.barrier : ''}${silent ? ' · Silence : ' + remaining + ' résolution(s)' : ''}">${silent ? `<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>` : ''}${concord ? '<div class="formation-badge" aria-label="Concorde de faction active">✦ Concorde</div>' : ''}${boardCard(u, attack)}</div>`;
   }
 
   function battleCell(u, lane, col, visualLane = null) {
@@ -6868,7 +6609,7 @@ function createBattleView(getState, { btn, cardUI, esc }) {
     );
     const deployable = validDeploymentColumn(battle, 'p', col);
 
-    return `<div ${tile ? `style="${tile.style}" data-foot-x="${tile.footX}" data-foot-y="${tile.footY}"` : ''} data-col="${col}" data-lane="${lane}" class="battle-cell ${battle.phase === 'player' && selectedCard >= 0 && deployable && (!u || CARDS[battle.heroes.p.hand[selectedCard]?.id]?.type === 'sort') ? 'available' : ''}" ${deployable && battle.phase === 'player' ? `role="${u && cardArenaEnabled() ? 'group' : 'button'}" tabindex="0" data-action="deploy" data-lane="${lane}" aria-label="Déployer sur la ligne ${lane + 1}, case ${col}"` : ''}>
+    return `<div ${tile ? `style="${tile.style}" data-foot-x="${tile.footX}" data-foot-y="${tile.footY}"` : ''} data-col="${col}" data-lane="${lane}" class="battle-cell ${battle.phase === 'player' && selectedCard >= 0 && deployable && (!u || CARDS[battle.heroes.p.hand[selectedCard]?.id]?.type === 'sort') ? 'available' : ''}" ${deployable && battle.phase === 'player' ? `role="${u ? 'group' : 'button'}" tabindex="0" data-action="deploy" data-lane="${lane}" aria-label="Déployer sur la ligne ${lane + 1}, case ${col}"` : ''}>
  ${traps.map((t) => `<span class="terrain-trap ${t.owner === 'e' ? 'enemy' : ''}" role="img" aria-label="Piège ${t.owner === 'p' ? 'allié' : 'adverse'}, ligne ${lane + 1}, case ${col}, ${t.expiresRound - battle.round + 1} tours" title="${t.kind === 'snare' ? '1 dégât et immobilisation' : '3 dégâts'} avant armure · expire dans ${t.expiresRound - battle.round + 1} résolution(s)">⌁ ${t.owner === 'p' ? 'ALLIÉ' : 'ENNEMI'} · ${t.expiresRound - battle.round + 1}</span>`).join('')}
  ${u ? battleUnit(u, lane) : `<span class="slot-num">${col}</span>`}</div>`;
   }
@@ -6886,7 +6627,7 @@ function createBattleView(getState, { btn, cardUI, esc }) {
       lanes = laneCount(battle),
       cells = lastCell(battle);
     const selected = CARDS[p.hand[selectedCard]?.id],
-      immersive = cardArenaEnabled() && cells === 10;
+      immersive = cells === 10;
     const inspectionPanel =
       '<div id="hand-card-inspection" class="hand-card-inspection" role="region" aria-label="Capacités de la carte consultée" hidden></div>';
     const preview =
@@ -6906,14 +6647,14 @@ function createBattleView(getState, { btn, cardUI, esc }) {
  <section class="battle-panel arena-lofi combat-stage">${battleHud(p, e)}
  ${battle.turnFlow === 'alternating' ? `<div class="turn-indicator" role="status">${battle.phase === 'enemy' ? 'L’IA choisit et pose ses cartes, puis ses unités agiront.' : 'Placez jusqu’à deux cartes, puis validez pour lancer vos unités.'}</div>` : ''}
  <div class="arena-caption"><span>${selectedCard >= 0 ? '✦ CHOISISSEZ UNE CASE DE DÉPART' : '✧ ARÈNE DES SERMENTS'}</span><span>${lanes} lignes · ${cells} cases par ligne</span></div><div class="battle-grid ${cells === 10 ? 'arena-structured arena-painted' : ''}" tabindex="0" role="region" aria-label="Plateau de combat : ${lanes} lignes de ${cells} cases" style="--cells:${cells};--arena-scene:url('${arenaBackdrop()}')">${arena}</div>
- <div class="arena-legend" aria-label="Légende du plateau">${cardArenaEnabled() ? `<span class="legend-ally">${campSeal('p')} VOS UNITÉS</span><span class="legend-enemy">${campSeal('e')} ADVERSAIRES</span>` : `<span class="legend-ally">BLEU · VOS UNITÉS</span><span class="legend-enemy">ROUGE · UNITÉS ADVERSES</span>`}<span>Contour : rareté · Étiquette : Ordre</span></div>
- <p class="arena-scroll-hint">Sur petit écran, faites glisser le plateau pour voir toutes les cases. Les couronnes sont hors de la grille.</p><div class="vfx-controls"><button type="button" class="card-view-toggle" data-action="toggle-card-arena" aria-pressed="${cardArenaEnabled()}">${cardArenaEnabled() ? 'Vue : cartes' : 'Vue : personnages'}</button><span>Animations des compteurs et de l’interface.</span><button type="button" class="vfx-toggle" data-action="toggle-animations" aria-pressed="${animationsEnabled}">${animationsEnabled ? '✦ ' : ''}${cells === 10 ? 'Animations d’interface' : 'Animations'} ${animationsEnabled ? 'activées' : 'désactivées'}</button></div>
+ <div class="arena-legend" aria-label="Légende du plateau"><span class="legend-ally">${campSeal('p')} VOS UNITÉS</span><span class="legend-enemy">${campSeal('e')} ADVERSAIRES</span><span>Contour : rareté · Étiquette : Ordre</span></div>
+ <p class="arena-scroll-hint">Sur petit écran, faites glisser le plateau pour voir toutes les cases. Les couronnes sont hors de la grille.</p><div class="vfx-controls"><span>Animations des compteurs et de l’interface.</span><button type="button" class="vfx-toggle" data-action="toggle-animations" aria-pressed="${animationsEnabled}">${animationsEnabled ? '✦ ' : ''}${cells === 10 ? 'Animations d’interface' : 'Animations'} ${animationsEnabled ? 'activées' : 'désactivées'}</button></div>
  ${battle.mode === 'dungeon' ? `<div class="dungeon-battle-banner">♛ DONJON · ${battle.dungeonBonus ? 'Épreuve bonus' : 'Salle ' + (battle.dungeonStage + 1) + '/3'} · Les PV du héros sont conservés entre les combats (+6 PV après victoire).</div>` : ''}
  <p class="control-tip">⊘ Silence : capacités déclenchées suspendues, attaques et traits passifs conservés. ✧ Téléportation : autre ligne, même colonne. ⌁ Pièges publics : déclenchés à l’arrivée d’un ennemi, deux par camp. ◷ Tempo : accélérez vos cartes ou ralentissez une carte adverse.</p>${preview ? `<p class="teleport-preview" role="status">${preview}</p>` : ''}
  <p class="formation-tip">✦ CONCORDE : deux alliés du même Ordre gagnent +1 attaque. ⚡ CHARGE : +2 attaque après déplacement. ↶ RIPOSTE : 2 dégâts avant armure, une fois par tour au contact.</p>
  <div class="battle-tip"><span>← VOTRE COURONNE · VOS UNITÉS AVANCENT →</span><span>← L’ENNEMI AVANCE · COURONNE ADVERSE →</span></div>
- ${immersive ? '' : '</section>'}<div class="combat-hand-dock" role="region" aria-label="Main de cartes et actions de combat"><div class="hand-panel"><div class="combat-hand-tray"><div class="hand-header"><div><div class="section-caption">Votre main · ${p.hand.length} cartes</div>${cardArenaEnabled() ? '' : inspectionPanel}<div class="selection-guide">${selectedCard >= 0 ? '✦ Carte sélectionnée : choisissez une des trois premières cases libres.' : 'Survolez pour lire ; cliquez pour sélectionner puis choisissez une case de départ.'}</div></div><span class="pill">${p.cardsPlayed}/2 jouées</span></div><div class="hand">${p.hand.map((c, i) => cardUI(c.id, { compact: true, index: i, select: selectedCard === i, cooldown: c.wait })).join('') || '<div class="hint">Votre main est vide. Terminez le tour.</div>'}</div></div>
- ${battleActions(immersive)}</div></div>${immersive ? '</section>' : ''}${cardArenaEnabled() ? inspectionPanel : ''}</div>`;
+ ${immersive ? '' : '</section>'}<div class="combat-hand-dock" role="region" aria-label="Main de cartes et actions de combat"><div class="hand-panel"><div class="combat-hand-tray"><div class="hand-header"><div><div class="section-caption">Votre main · ${p.hand.length} cartes</div><div class="selection-guide">${selectedCard >= 0 ? '✦ Carte sélectionnée : choisissez une des trois premières cases libres.' : 'Survolez pour lire ; cliquez pour sélectionner puis choisissez une case de départ.'}</div></div><span class="pill">${p.cardsPlayed}/2 jouées</span></div><div class="hand">${p.hand.map((c, i) => cardUI(c.id, { compact: true, index: i, select: selectedCard === i, cooldown: c.wait })).join('') || '<div class="hint">Votre main est vide. Terminez le tour.</div>'}</div></div>
+ ${battleActions(immersive)}</div></div>${immersive ? '</section>' : ''}${inspectionPanel}</div>`;
   }
 
   return { battleUI: bind(battleUI) };
@@ -6928,17 +6669,6 @@ const {generatedCardFace}=__load("src/ui/generated-card.js");
 // Présentation des vraies unités sur leurs cases. Ni règles, ni partie préfabriquée.
 const {CARDS,FACTIONS}=__load("src/data.js");
 const {visualFor,artSrc,cardTemplateFor}=__load("src/visuals.js");
-function cardArenaEnabled(){
- if(typeof document==='undefined')return false;
- if(document.body?.dataset.cardCombat)return document.body.dataset.cardCombat==='true';
- const query=new URLSearchParams(globalThis.location?.search||'');
- if(query.has('cartes'))return query.get('cartes')!=='0';
- try{return localStorage.getItem('couronnes_arcanes_vue_cartes_v1')==='on';}catch{return false;}
-}
-function setCardArenaMode(enabled){
- document.body.dataset.cardCombat=String(enabled);
- try{localStorage.setItem('couronnes_arcanes_vue_cartes_v1',enabled?'on':'off');}catch{}
-}
 // Deux silhouettes distinctes : le camp reste lisible sans dépendre de la couleur.
 function campSeal(side){
  const enemy=side==='e';
@@ -6953,25 +6683,22 @@ function boardCard(u,attack=u.atk){
  ${campSeal(u.side)}</button>`;
 }
 
-Object.assign(__exports,{cardArenaEnabled,setCardArenaMode,campSeal,boardCard});
+Object.assign(__exports,{campSeal,boardCard});
 
 },
 "src/ui/arena-art.js":function(__exports,__load){
-// Plateau historique conservé ; anciennes silhouettes remplacées par un repère neutre.
-const {artSrc,visualFor,cardTemplateFor,cardTemplateSrc}=__load("src/visuals.js");
-function arenaSprite(card){return cardTemplateSrc(cardTemplateFor(card))||artSrc(visualFor(card).art);}
+// Fond compact pour afficher les anciennes sauvegardes 3×5 avec les cartes.
 function arenaBackdrop(){
  // Ruines d'Astravelle : silhouettes à angles droits, ciel indigo et petite lune.
  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="960" height="200" viewBox="0 0 960 200" shape-rendering="crispEdges"><path fill="#161d36" d="M0 120H40V100H60V80H80V60H100V80H120V100H140V120H170V100H190V80H220V100H240V120H280V100H300V70H330V100H350V120H400V100H420V80H450V60H480V80H500V100H530V120H590V90H620V60H650V90H680V120H720V90H760V60H800V90H830V120H870V100H900V120H960V200H0Z"/><path fill="#27304b" d="M0 170H70V140H100V100H110V90H120V100H130V140H160V170H200V120H212V108H224V120H234V170H300V150H340V170H440V140H480V100H490V80H502V100H514V140H550V170H640V150H700V170H760V130H790V90H800V70H812V90H822V130H850V170H920V150H960V200H0Z"/><path fill="#35415a" d="M93 168V135H111V120H126V135H142V168ZM770 170V145H791V119H813V145H834V170Z"/><path fill="#d9cea0" d="M700 15H724V21H730V39H724V45H700V39H694V21H700Z"/><path fill="#26314e" d="M717 15H725V21H731V40H720V35H716V23H717Z"/><g fill="#b1c6cc"><path d="M110 20h3v3h-3zM260 39h3v3h-3zM407 19h3v3h-3zM553 55h3v3h-3zM840 38h3v3h-3zM909 69h3v3h-3z"/></g></svg>`;
  return 'data:image/svg+xml,'+encodeURIComponent(svg);
 }
 
-Object.assign(__exports,{arenaSprite,arenaBackdrop});
+Object.assign(__exports,{arenaBackdrop});
 
 },
 "src/ui/painted-arena.js":function(__exports,__load){
 // Projection graphique de l'illustration approuvée ; aucune règle du moteur.
-const {cardArenaEnabled}=__load("src/ui/card-arena.js");
 const PAINTED_ARENA = Object.freeze({
  width:1672,height:941,version:'celeste-peinte-v1',
  // Limites des quatre pistes relevées sur l'image originale, de haut en bas.
@@ -7020,7 +6747,6 @@ function mountPaintedArena(){
  const grid=document.querySelector('.arena-painted');if(!grid)return;
  const canvas=grid.querySelector('.arena-painted-canvas'),frame=grid.querySelector('.arena-painted-frame');
  const fit=()=>{
-  if(grid.closest('[data-card-layout="true"]')){
    // Le plan des pistes tient entre le HUD et la main, même avec quatre lignes.
    // Une seule transformation pour le décor, les cases et les points des VFX.
    const stage=grid.closest('.combat-stage'),dock=stage.querySelector('.combat-hand-dock');
@@ -7037,12 +6763,7 @@ function mountPaintedArena(){
    canvas.style.width=Math.max(width-2*trim,grid.clientWidth)+'px';canvas.style.height=grid.clientHeight+'px';canvas.style.marginTop='0px';
    frame.style.left=(Math.max(0,(grid.clientWidth-width)/2)-trim)+'px';frame.style.top=offset+'px';
    frame.style.transform=`scale(${scale})`;
-  }else{
-   const width=Math.max(cardArenaEnabled()?1280:960,Math.min(grid.clientWidth,grid.clientHeight*PAINTED_ARENA.width/PAINTED_ARENA.height));
-   const scale=width/PAINTED_ARENA.width,height=PAINTED_ARENA.height*scale;
-   canvas.style.width=width+'px';canvas.style.height=height+'px';canvas.style.marginTop=Math.max(0,(grid.clientHeight-height)/2)+'px';
-   frame.style.transform=`scale(${scale})`;
-  }
+
  };
  fit();observer=new ResizeObserver(fit);observer.observe(grid);
 }
@@ -7100,7 +6821,6 @@ const {unitStats}=__load("src/engine/unit-stats.js");
 const {formationBonus}=__load("src/engine.js");
 const {silenced}=__load("src/engine/battle-control.js");
 const {visualFor,artSrc,cardTemplateFor}=__load("src/visuals.js");
-const {cardArenaEnabled}=__load("src/ui/card-arena.js");
 function boardInspectionData(battle,uid){
  for(let lane=0;lane<(battle?.board?.length||0);lane++)for(let col=1;col<battle.board[lane].length-1;col++){
   const u=battle.board[lane][col];if(!u||String(u.uid)!==String(uid))continue;
@@ -7111,19 +6831,19 @@ function boardInspectionData(battle,uid){
  return null;
 }
 
-function cardInspectionContent(card,entry,stats,esc,{illustrated=false,board=null}={}){
+function cardInspectionContent(card,entry,stats,esc,{board=null}={}){
  const bonusText=stats?.bonuses.map(b=>esc(b.label)+' '+[b.atk?'+'+b.atk+' ATQ':'',b.hp?'+'+b.hp+' PV':''].filter(Boolean).join(' / ')).join(' · ');
  const traits=cardTraits(card.id),faction=FACTIONS[card.faction];
  const readiness=board?`${board.side==='p'?'Votre unité':'Unité adverse'} · Ligne ${board.lane+1}, case ${board.col}`:entry.wait>0?'Attente '+entry.wait+' tour'+(entry.wait>1?'s':''):'Prête à jouer';
- const heading=`<div class="inspection-heading">${illustrated?`<span class="inspection-context">${board?'SUR LE PLATEAU':'DANS VOTRE MAIN'}</span>`:`<b>${esc(card.name)}</b>`}<button type="button" data-action="close-inspection" aria-label="Fermer la fiche">×</button></div>`;
+ const heading=`<div class="inspection-heading"><span class="inspection-context">${board?'SUR LE PLATEAU':'DANS VOTRE MAIN'}</span><button type="button" data-action="close-inspection" aria-label="Fermer la fiche">×</button></div>`;
  const statistics=stats?`<div class="inspection-stats">${board?'En combat':'À l’invocation'} : <b>ATQ ${stats.atk} / PV ${board?stats.hp+'/':''}${stats.maxhp}</b></div>`:'';
- const identity=illustrated?`<div class="inspection-feature ${cardTemplateFor(card)?'inspection-generated-feature':''}">${cardTemplateFor(card)?generatedCardFace(card,{stats,delay:board?0:entry.wait,kind:board?'deployed':'remaining',esc}):`<img class="inspection-art" src="${artSrc(visualFor(card,{cards:true}).art)}" alt="" data-artwork-status="placeholder" draggable="false">`}<div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span><span class="inspection-rarity">${esc(card.rarity)} · ${esc(card.type)}</span><div class="inspection-readiness">${esc(readiness)}</div>${statistics}</div></div>`:statistics;
+ const identity=`<div class="inspection-feature ${cardTemplateFor(card)?'inspection-generated-feature':''}">${cardTemplateFor(card)?generatedCardFace(card,{stats,delay:board?0:entry.wait,kind:board?'deployed':'remaining',esc}):`<img class="inspection-art" src="${artSrc(visualFor(card,{cards:true}).art)}" alt="" data-artwork-status="placeholder" draggable="false">`}<div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span><span class="inspection-rarity">${esc(card.rarity)} · ${esc(card.type)}</span><div class="inspection-readiness">${esc(readiness)}</div>${statistics}</div></div>`;
  const body=`<div class="inspection-body"><p class="inspection-description">${esc(card.description)}</p>
   <div class="inspection-summary">${esc(faction.name)} · ${esc(card.rarity)}${card.heroClass?' · '+esc(CLASSES[card.heroClass].name):''} · ${esc(readiness)}</div>
   ${traits.length?`<div class="inspection-traits">${traits.map(t=>`<span>${esc(t)}</span>`).join(' · ')}</div>`:''}
   ${board?.statuses.length?`<div class="inspection-statuses">${board.statuses.map(esc).join(' · ')}</div>`:''}
   ${bonusText?`<div class="inspection-bonuses">Bonus inclus : ${bonusText}</div>`:''}</div>`;
- return illustrated?`<div class="card-preview" data-preview-kind="${board?'board':'hand'}" data-side="${board?.side||'p'}" data-rarity="${esc(card.rarity)}" style="--preview-tone:${faction.tone}">${heading}${identity}${body}</div>`:heading+identity+body;
+ return `<div class="card-preview" data-preview-kind="${board?'board':'hand'}" data-side="${board?.side||'p'}" data-rarity="${esc(card.rarity)}" style="--preview-tone:${faction.tone}">${heading}${identity}${body}</div>`;
 }
 
 function previewPosition(anchor,size,viewport,kind){
@@ -7155,11 +6875,20 @@ function createCardInspection(getContext,esc){
   const el=panel();if(!el)return;
   el.hidden=true;el.textContent='';el.classList.remove('illustrated-inspection');
   for(const p of ['left','top'])el.style.removeProperty(p);
+  el.style.removeProperty('--preview-max-height');
   el.closest('.hand-header')?.style.removeProperty('--inspection-header-height');
  }
  function position(){
-  const el=panel();if(!cardArenaEnabled()||!el||el.hidden||!trigger?.isConnected)return;
-  const pos=previewPosition(trigger.getBoundingClientRect(),el.getBoundingClientRect(),{width:innerWidth,height:innerHeight},current.kind);
+  const el=panel();if(!el||el.hidden||!trigger?.isConnected)return;
+  const anchor=trigger.getBoundingClientRect();
+  el.style.removeProperty('--preview-max-height');
+  const size=el.getBoundingClientRect();
+  // Sur écran étroit, une grande fiche de main doit tenir au-dessus de la carte
+  // lorsqu'aucun côté n'a assez de place : elle ne doit pas bloquer sa sélection.
+  if(current.kind==='hand'&&anchor.top>=324&&anchor.right+12+size.width>innerWidth-12&&anchor.left-size.width-12<12){
+   el.style.setProperty('--preview-max-height',(anchor.top-24)+'px');
+  }
+  const pos=previewPosition(anchor,el.getBoundingClientRect(),{width:innerWidth,height:innerHeight},current.kind);
   el.style.left=pos.left+'px';el.style.top=pos.top+'px';
  }
  function show(request){
@@ -7178,12 +6907,12 @@ function createCardInspection(getContext,esc){
   trigger?.setAttribute('aria-expanded','false');
   trigger=request.kind==='board'?[...document.querySelectorAll('.battle-cell .board-card')].find(c=>c.dataset.unitId===String(request.id)):document.querySelector(`.hand-card[data-index="${request.id}"]`);
   trigger?.setAttribute('aria-expanded','true');current=request;
-  el.classList.toggle('illustrated-inspection',cardArenaEnabled());
-  el.innerHTML=cardInspectionContent(data.card,data.entry,data.stats,esc,{illustrated:cardArenaEnabled(),board:data.board});
+  el.classList.add('illustrated-inspection');
+  el.innerHTML=cardInspectionContent(data.card,data.entry,data.stats,esc,{board:data.board});
   el.hidden=false;position();
  }
  function inspectCard(index){const i=Number(index);if(Number.isInteger(i)&&i>=0)show({kind:'hand',id:i});}
- function inspectUnit(uid){if(cardArenaEnabled())show({kind:'board',id:String(uid)});}
+ function inspectUnit(uid){show({kind:'board',id:String(uid)});}
  function suppressCardInspection(index){closeCardInspection(true,'hand:'+Number(index));}
  function dismissCardInspection(){const blocked=dismissedKey;closeCardInspection();dismissedKey=blocked;}
  function bindCardInspection(){
@@ -7200,7 +6929,7 @@ function createCardInspection(getContext,esc){
    const el=source(event.target);if(!el&&!inPanel(event.target))return;
    if(el?.contains(event.relatedTarget)||inPanel(event.relatedTarget)||source(event.relatedTarget)){clearTimeout(dismissTimer);return;}
    clearTimeout(dismissTimer);
-   if(cardArenaEnabled())dismissTimer=setTimeout(dismissCardInspection,160);else dismissCardInspection();
+   dismissTimer=setTimeout(dismissCardInspection,160);
   };
   // Une sélection remplace le DOM : ses événements de focus/souris synthétiques
   // ne doivent pas rouvrir une fiche avant un vrai déplacement ou une tabulation.
@@ -7217,7 +6946,7 @@ function createCardInspection(getContext,esc){
    if(el)closeCardInspection(true,sourceKey(el));else if(!inPanel(event.target))closeCardInspection();
   });
   document.addEventListener('scroll',event=>{
-   if(!cardArenaEnabled()||!(event.target instanceof Element)||!event.target.matches('.battle-grid,.hand,.combat-stage'))return;
+   if(!(event.target instanceof Element)||!event.target.matches('.battle-grid,.hand,.combat-stage'))return;
    // Le scroll automatique du focus/survol ne doit pas fermer sa propre fiche.
    if(trigger?.matches(':hover,:focus'))position();else dismissCardInspection();
   },true);

@@ -1,6 +1,4 @@
-// Plateau historique conservé ; anciennes silhouettes remplacées par un repère neutre.
-import {artSrc,visualFor,cardTemplateFor,cardTemplateSrc} from '../visuals.js';
-export function arenaSprite(card){return cardTemplateSrc(cardTemplateFor(card))||artSrc(visualFor(card).art);}
+// Fond compact pour afficher les anciennes sauvegardes 3×5 avec les cartes.
 export function arenaBackdrop(){
  // Ruines d'Astravelle : silhouettes à angles droits, ciel indigo et petite lune.
  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="960" height="200" viewBox="0 0 960 200" shape-rendering="crispEdges"><path fill="#161d36" d="M0 120H40V100H60V80H80V60H100V80H120V100H140V120H170V100H190V80H220V100H240V120H280V100H300V70H330V100H350V120H400V100H420V80H450V60H480V80H500V100H530V120H590V90H620V60H650V90H680V120H720V90H760V60H800V90H830V120H870V100H900V120H960V200H0Z"/><path fill="#27304b" d="M0 170H70V140H100V100H110V90H120V100H130V140H160V170H200V120H212V108H224V120H234V170H300V150H340V170H440V140H480V100H490V80H502V100H514V140H550V170H640V150H700V170H760V130H790V90H800V70H812V90H822V130H850V170H920V150H960V200H0Z"/><path fill="#35415a" d="M93 168V135H111V120H126V135H142V168ZM770 170V145H791V119H813V145H834V170Z"/><path fill="#d9cea0" d="M700 15H724V21H730V39H724V45H700V39H694V21H700Z"/><path fill="#26314e" d="M717 15H725V21H731V40H720V35H716V23H717Z"/><g fill="#b1c6cc"><path d="M110 20h3v3h-3zM260 39h3v3h-3zM407 19h3v3h-3zM553 55h3v3h-3zM840 38h3v3h-3zM909 69h3v3h-3z"/></g></svg>`;

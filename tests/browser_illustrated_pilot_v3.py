@@ -16,7 +16,7 @@ async def run(browser,label,viewport):
     cards=page.locator('.hand .illustrated-pilot')
     assert await cards.count()==3
     assert await page.locator('.hand .illustrated-count').count()==3
-    assert await page.locator('.hand .illustrated-pilot .cooldown-stamp,.hand .illustrated-pilot .hand-readiness').evaluate_all("els=>els.length===5 && els.every(el=>getComputedStyle(el).display==='none')")
+    assert await page.locator('.hand .illustrated-pilot .cooldown-stamp').evaluate_all("els=>els.length===2 && els.every(el=>getComputedStyle(el).display==='none')")
     for i in range(3):
         assert await cards.nth(i).locator('.illustrated-count b').inner_text()==str(i)
         assert await cards.nth(i).locator('.illustrated-count').get_attribute('data-delay-kind')=='remaining'
@@ -66,7 +66,7 @@ async def run(browser,label,viewport):
     assert await pilot.locator('.illustrated-count b').inner_text()=='1'
     assert await pilot.locator('.illustrated-count').get_attribute('data-delay-kind')=='base'
     assert 'Peut attaquer à deux cases' in await pilot.locator('.card-detail').inner_text()
-    assert await version.locator('.collection-delay').inner_text()=='1'
+    assert await version.locator('[data-card-field="counter"] b').inner_text()=='1'
     assert await version.locator('[data-action="deck-add"]').count()==1
     assert not errors,errors
     await page.close()

@@ -1,6 +1,6 @@
 """Comparer deux versions rendues : DOM, styles calculés, géométrie et pixels.
 Usage: python3 tests/browser_maintenance.py --reference /chemin/checkout-reference
-Les deux checkouts doivent avoir leurs quatre exports régénérés. Aucun réseau.
+Les deux checkouts doivent avoir leur export de diagnostic régénéré. Aucun réseau.
 """
 import argparse,asyncio,hashlib,json
 from pathlib import Path
@@ -100,24 +100,23 @@ async def states(page):
  for phase in ['ready','choice','bonus']:
   await page.evaluate("p=>{profile.dungeonRun={id:'ysara',stage:1,phase:p,hp:22,maxhp:30};screen='dungeons';render()}",phase)
   yield 'donjon-'+phase
- # 2/3/4 lignes et ancien 3×5, deux présentations, prête/attente, pièges et silence.
+ # 2/3/4 lignes et ancien 3×5, présentation cartes, prête/attente, pièges et silence.
  for legacy,lanes in [(False,2),(False,3),(False,4),(True,3)]:
-  for cards in [False,True]:
-   await page.evaluate("""({legacy,lanes,cards})=>{
-    battle=createBattle(profile,{id:'01',name:'Audit',enemy:'Adversaire',hp:80,
-     difficulty:lanes===3?3:1,boss:lanes===4,deck:[]},42,{legacy,turnFlow:legacy?undefined:'alternating'});
-    battle.heroes.p.hand=[{id:'militia',wait:0},{id:'archer',wait:2},{id:'wolf',wait:0},{id:'shade',wait:0},{id:'smith',wait:0},{id:'spark',wait:0}];
-    playPlayerCard(battle,0,0,1);battle.heroes.p.cardsPlayed=0;
-    battle.board[0][1].silenceUntil=2;
-    battle.traps=[{lane:1,col:2,owner:'e',kind:'snare',expiresRound:3}];
-    document.body.dataset.cardCombat=String(cards);screen='battle';selectedCard=-1;render();
-   }""",dict(legacy=legacy,lanes=lanes,cards=cards))
-   label=f'battle-{lanes}-legacy{legacy}-cards{cards}'
-   yield label
-   await page.evaluate('selectedCard=1;render()')
-   yield label+'-selection'
-   await page.evaluate("battle.phase='enemy';selectedCard=-1;render()")
-   yield label+'-enemy'
+  await page.evaluate("""({legacy,lanes})=>{
+   battle=createBattle(profile,{id:'01',name:'Audit',enemy:'Adversaire',hp:80,
+    difficulty:lanes===3?3:1,boss:lanes===4,deck:[]},42,{legacy,turnFlow:legacy?undefined:'alternating'});
+   battle.heroes.p.hand=[{id:'militia',wait:0},{id:'archer',wait:2},{id:'wolf',wait:0},{id:'shade',wait:0},{id:'smith',wait:0},{id:'spark',wait:0}];
+   playPlayerCard(battle,0,0,1);battle.heroes.p.cardsPlayed=0;
+   battle.board[0][1].silenceUntil=2;
+   battle.traps=[{lane:1,col:2,owner:'e',kind:'snare',expiresRound:3}];
+   screen='battle';selectedCard=-1;render();
+  }""",dict(legacy=legacy,lanes=lanes))
+  label=f'battle-{lanes}-legacy{legacy}-cartes'
+  yield label
+  await page.evaluate('selectedCard=1;render()')
+  yield label+'-selection'
+  await page.evaluate("battle.phase='enemy';selectedCard=-1;render()")
+  yield label+'-enemy'
 
 async def main(reference,only_case=None,only_viewport=None):
  async with async_playwright() as pw:

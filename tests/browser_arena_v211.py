@@ -35,11 +35,11 @@ async def run(browser,label,viewport):
         frame=await calibrated.bounding_box()
         scale=frame['width']/1672
         assert abs(frame['height']-941*scale)<1,frame
-        assert frame['width']>=959,frame
         first=await page.locator('.lane-row .battle-cell').first.bounding_box()
         expected_y={2:421,3:344,4:344}[lanes]
         assert abs(first['y']-frame['y']-expected_y*scale)<1,(lanes,first,frame)
-        assert first['height']>=40,first
+        expected_height=(88 if lanes==2 else 77)*scale
+        assert abs(first['height']-expected_height)<1,(first,scale)
         assert await page.locator('.arena-hero-slot').count()==2
         mode=await page.locator('.arena-painted-frame').get_attribute('data-render-mode')
         assert mode=='static'
@@ -47,13 +47,13 @@ async def run(browser,label,viewport):
         assert img_source.startswith('url("data:image/webp;base64,'),img_source[:90]
         assert await page.locator('.battle-cell').count()==lanes*10
         assert await page.locator('.lane-gate').count()==lanes*2
-        assert f'{lanes} lignes · 10 cases' in await page.locator('.arena-caption').inner_text()
+        assert f'{lanes} lignes de 10 cases' in await page.locator('.battle-grid').get_attribute('aria-label')
         await page.locator('.hand [data-action="select-card"]').click()
         target=page.locator(f'[data-action="deploy"][data-col="1"][data-lane="{lanes-1}"]')
         await target.focus()
         await page.keyboard.press('Enter')
         assert await page.evaluate('(l)=>battle.board[l-1][1].id',lanes)=='militia'
-        src=await page.locator('.sprite-figure').first.get_attribute('src')
+        src=await page.locator('.board-card img').first.get_attribute('src')
         assert src.startswith('data:image/webp;base64,'),'Export Milicien v02 non embarqué'
         await page.evaluate('''lanes=>{
           const u=(id,side,uid,ability='',ranged=false)=>({uid,id,side,atk:2,hp:12,maxhp:12,armor:0,ranged,ability,stun:0,poison:0,poisonTurns:0});

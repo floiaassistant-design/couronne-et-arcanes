@@ -5,7 +5,6 @@ import {unitStats} from '../engine/unit-stats.js';
 import {formationBonus} from '../engine.js';
 import {silenced} from '../engine/battle-control.js';
 import {visualFor,artSrc,cardTemplateFor} from '../visuals.js';
-import {cardArenaEnabled} from './card-arena.js';
 
 export function boardInspectionData(battle,uid){
  for(let lane=0;lane<(battle?.board?.length||0);lane++)for(let col=1;col<battle.board[lane].length-1;col++){
@@ -17,19 +16,19 @@ export function boardInspectionData(battle,uid){
  return null;
 }
 
-export function cardInspectionContent(card,entry,stats,esc,{illustrated=false,board=null}={}){
+export function cardInspectionContent(card,entry,stats,esc,{board=null}={}){
  const bonusText=stats?.bonuses.map(b=>esc(b.label)+' '+[b.atk?'+'+b.atk+' ATQ':'',b.hp?'+'+b.hp+' PV':''].filter(Boolean).join(' / ')).join(' · ');
  const traits=cardTraits(card.id),faction=FACTIONS[card.faction];
  const readiness=board?`${board.side==='p'?'Votre unité':'Unité adverse'} · Ligne ${board.lane+1}, case ${board.col}`:entry.wait>0?'Attente '+entry.wait+' tour'+(entry.wait>1?'s':''):'Prête à jouer';
- const heading=`<div class="inspection-heading">${illustrated?`<span class="inspection-context">${board?'SUR LE PLATEAU':'DANS VOTRE MAIN'}</span>`:`<b>${esc(card.name)}</b>`}<button type="button" data-action="close-inspection" aria-label="Fermer la fiche">×</button></div>`;
+ const heading=`<div class="inspection-heading"><span class="inspection-context">${board?'SUR LE PLATEAU':'DANS VOTRE MAIN'}</span><button type="button" data-action="close-inspection" aria-label="Fermer la fiche">×</button></div>`;
  const statistics=stats?`<div class="inspection-stats">${board?'En combat':'À l’invocation'} : <b>ATQ ${stats.atk} / PV ${board?stats.hp+'/':''}${stats.maxhp}</b></div>`:'';
- const identity=illustrated?`<div class="inspection-feature ${cardTemplateFor(card)?'inspection-generated-feature':''}">${cardTemplateFor(card)?generatedCardFace(card,{stats,delay:board?0:entry.wait,kind:board?'deployed':'remaining',esc}):`<img class="inspection-art" src="${artSrc(visualFor(card,{cards:true}).art)}" alt="" data-artwork-status="placeholder" draggable="false">`}<div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span><span class="inspection-rarity">${esc(card.rarity)} · ${esc(card.type)}</span><div class="inspection-readiness">${esc(readiness)}</div>${statistics}</div></div>`:statistics;
+ const identity=`<div class="inspection-feature ${cardTemplateFor(card)?'inspection-generated-feature':''}">${cardTemplateFor(card)?generatedCardFace(card,{stats,delay:board?0:entry.wait,kind:board?'deployed':'remaining',esc}):`<img class="inspection-art" src="${artSrc(visualFor(card,{cards:true}).art)}" alt="" data-artwork-status="placeholder" draggable="false">`}<div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span><span class="inspection-rarity">${esc(card.rarity)} · ${esc(card.type)}</span><div class="inspection-readiness">${esc(readiness)}</div>${statistics}</div></div>`;
  const body=`<div class="inspection-body"><p class="inspection-description">${esc(card.description)}</p>
   <div class="inspection-summary">${esc(faction.name)} · ${esc(card.rarity)}${card.heroClass?' · '+esc(CLASSES[card.heroClass].name):''} · ${esc(readiness)}</div>
   ${traits.length?`<div class="inspection-traits">${traits.map(t=>`<span>${esc(t)}</span>`).join(' · ')}</div>`:''}
   ${board?.statuses.length?`<div class="inspection-statuses">${board.statuses.map(esc).join(' · ')}</div>`:''}
   ${bonusText?`<div class="inspection-bonuses">Bonus inclus : ${bonusText}</div>`:''}</div>`;
- return illustrated?`<div class="card-preview" data-preview-kind="${board?'board':'hand'}" data-side="${board?.side||'p'}" data-rarity="${esc(card.rarity)}" style="--preview-tone:${faction.tone}">${heading}${identity}${body}</div>`:heading+identity+body;
+ return `<div class="card-preview" data-preview-kind="${board?'board':'hand'}" data-side="${board?.side||'p'}" data-rarity="${esc(card.rarity)}" style="--preview-tone:${faction.tone}">${heading}${identity}${body}</div>`;
 }
 
 export function previewPosition(anchor,size,viewport,kind){
@@ -61,11 +60,20 @@ export function createCardInspection(getContext,esc){
   const el=panel();if(!el)return;
   el.hidden=true;el.textContent='';el.classList.remove('illustrated-inspection');
   for(const p of ['left','top'])el.style.removeProperty(p);
+  el.style.removeProperty('--preview-max-height');
   el.closest('.hand-header')?.style.removeProperty('--inspection-header-height');
  }
  function position(){
-  const el=panel();if(!cardArenaEnabled()||!el||el.hidden||!trigger?.isConnected)return;
-  const pos=previewPosition(trigger.getBoundingClientRect(),el.getBoundingClientRect(),{width:innerWidth,height:innerHeight},current.kind);
+  const el=panel();if(!el||el.hidden||!trigger?.isConnected)return;
+  const anchor=trigger.getBoundingClientRect();
+  el.style.removeProperty('--preview-max-height');
+  const size=el.getBoundingClientRect();
+  // Sur écran étroit, une grande fiche de main doit tenir au-dessus de la carte
+  // lorsqu'aucun côté n'a assez de place : elle ne doit pas bloquer sa sélection.
+  if(current.kind==='hand'&&anchor.top>=324&&anchor.right+12+size.width>innerWidth-12&&anchor.left-size.width-12<12){
+   el.style.setProperty('--preview-max-height',(anchor.top-24)+'px');
+  }
+  const pos=previewPosition(anchor,el.getBoundingClientRect(),{width:innerWidth,height:innerHeight},current.kind);
   el.style.left=pos.left+'px';el.style.top=pos.top+'px';
  }
  function show(request){
@@ -84,12 +92,12 @@ export function createCardInspection(getContext,esc){
   trigger?.setAttribute('aria-expanded','false');
   trigger=request.kind==='board'?[...document.querySelectorAll('.battle-cell .board-card')].find(c=>c.dataset.unitId===String(request.id)):document.querySelector(`.hand-card[data-index="${request.id}"]`);
   trigger?.setAttribute('aria-expanded','true');current=request;
-  el.classList.toggle('illustrated-inspection',cardArenaEnabled());
-  el.innerHTML=cardInspectionContent(data.card,data.entry,data.stats,esc,{illustrated:cardArenaEnabled(),board:data.board});
+  el.classList.add('illustrated-inspection');
+  el.innerHTML=cardInspectionContent(data.card,data.entry,data.stats,esc,{board:data.board});
   el.hidden=false;position();
  }
  function inspectCard(index){const i=Number(index);if(Number.isInteger(i)&&i>=0)show({kind:'hand',id:i});}
- function inspectUnit(uid){if(cardArenaEnabled())show({kind:'board',id:String(uid)});}
+ function inspectUnit(uid){show({kind:'board',id:String(uid)});}
  function suppressCardInspection(index){closeCardInspection(true,'hand:'+Number(index));}
  function dismissCardInspection(){const blocked=dismissedKey;closeCardInspection();dismissedKey=blocked;}
  function bindCardInspection(){
@@ -106,7 +114,7 @@ export function createCardInspection(getContext,esc){
    const el=source(event.target);if(!el&&!inPanel(event.target))return;
    if(el?.contains(event.relatedTarget)||inPanel(event.relatedTarget)||source(event.relatedTarget)){clearTimeout(dismissTimer);return;}
    clearTimeout(dismissTimer);
-   if(cardArenaEnabled())dismissTimer=setTimeout(dismissCardInspection,160);else dismissCardInspection();
+   dismissTimer=setTimeout(dismissCardInspection,160);
   };
   // Une sélection remplace le DOM : ses événements de focus/souris synthétiques
   // ne doivent pas rouvrir une fiche avant un vrai déplacement ou une tabulation.
@@ -123,7 +131,7 @@ export function createCardInspection(getContext,esc){
    if(el)closeCardInspection(true,sourceKey(el));else if(!inPanel(event.target))closeCardInspection();
   });
   document.addEventListener('scroll',event=>{
-   if(!cardArenaEnabled()||!(event.target instanceof Element)||!event.target.matches('.battle-grid,.hand,.combat-stage'))return;
+   if(!(event.target instanceof Element)||!event.target.matches('.battle-grid,.hand,.combat-stage'))return;
    // Le scroll automatique du focus/survol ne doit pas fermer sa propre fiche.
    if(trigger?.matches(':hover,:focus'))position();else dismissCardInspection();
   },true);

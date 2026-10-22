@@ -20,10 +20,11 @@ for(const lanes of [2,3,4]){
     title=html.indexOf('class="split-head combat-titlebar"'),
     stage=html.indexOf('class="battle-panel arena-lofi combat-stage"'),
     grid=html.indexOf('class="battle-grid arena-structured'),
-    endStage=html.indexOf('</section><div class="combat-hand-dock"'),
+    dock=html.indexOf('<div class="combat-hand-dock"'),
+    endStage=html.lastIndexOf('</section>'),
     hand=html.indexOf('class="hand-panel"');
   assert.ok(main===5||main>=0);
-  assert.ok(main<title&&title<stage&&stage<grid&&grid<endStage&&endStage<hand);
+  assert.ok(main<title&&title<stage&&stage<grid&&grid<dock&&dock<hand&&hand<endStage);
   assert.match(html,/data-action="nav" data-page="home"/);
   assert.match(html,/data-action="end-turn"/);
   assert.match(html,/data-action="hero-power"/);

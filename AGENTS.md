@@ -78,6 +78,17 @@
 
 **Contrôle préalable obligatoire :** identifier les modules concernés, leurs dépendances et tests avant de coder. **Contrôle final obligatoire :** rechercher les doublons, les responsabilités mélangées, les imports circulaires et les fichiers devenus trop volumineux ; les réorganiser si utile, puis documenter les exceptions justifiées.
 
+## Distribution unique — demande du propriétaire du 22/10/2026
+
+- Une seule présentation active : cartes sur le plateau. Ne pas réintroduire
+  la vue personnages, son bouton ni un export d’essai séparé.
+- `JOUER.html` est l’unique export distribué ; `index.html` sert le même jeu web.
+  `tests/JOUER.test.html` est uniquement un paquet diagnostic non distribué.
+- Régénérer avec `npm run build` et `npm run build:test`. Les anciens documents
+  mentionnant `ESSAI_CARTES.html`, `build:cards` ou quatre builds sont historiques.
+- Conserver règles, moteur, profils et sauvegardes historiques, y compris leurs
+  plateaux 3×5 ; ils utilisent désormais les cartes, sans conversion des données.
+
 ## Contrats techniques à conserver
 
 ### Modules et interface
@@ -174,12 +185,11 @@
 
 ## Vérification et livraison
 
-- Régénérer `JOUER.html` et `ESSAI_CARTES.html` depuis les sources ; ne jamais
+- Régénérer `JOUER.html` depuis les sources ; ne jamais
   éditer les HTML produits à la main. Conserver la version HTTP et l'export
   autonome hors réseau. Ne jamais distribuer les HTML réservés aux tests.
 - Contrôles de base : `npm test`, `npm run test:parity`, `npm run build`,
-  `npm run build:cards`, `npm run build:test` et
-  `node scripts/build_standalone.mjs --cards --test`.
+  `npm run build:test`.
 - Si rendu modifié : parcours actuels `browser_card_study.py`,
   `browser_deployment.py`, `browser_card_preview.py`, `browser_art_reset.py`,
   `browser_collection.py`, `browser_milicien.py`, `browser_aube.py`, `browser_sylve.py`, `browser_ombre.py`, `browser_forge.py`, puis suites pertinentes du workflow. Vérifier bureau,

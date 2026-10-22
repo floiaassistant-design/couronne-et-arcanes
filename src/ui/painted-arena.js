@@ -1,5 +1,4 @@
 // Projection graphique de l'illustration approuvée ; aucune règle du moteur.
-import {cardArenaEnabled} from './card-arena.js';
 export const PAINTED_ARENA = Object.freeze({
  width:1672,height:941,version:'celeste-peinte-v1',
  // Limites des quatre pistes relevées sur l'image originale, de haut en bas.
@@ -48,7 +47,6 @@ export function mountPaintedArena(){
  const grid=document.querySelector('.arena-painted');if(!grid)return;
  const canvas=grid.querySelector('.arena-painted-canvas'),frame=grid.querySelector('.arena-painted-frame');
  const fit=()=>{
-  if(grid.closest('[data-card-layout="true"]')){
    // Le plan des pistes tient entre le HUD et la main, même avec quatre lignes.
    // Une seule transformation pour le décor, les cases et les points des VFX.
    const stage=grid.closest('.combat-stage'),dock=stage.querySelector('.combat-hand-dock');
@@ -65,12 +63,7 @@ export function mountPaintedArena(){
    canvas.style.width=Math.max(width-2*trim,grid.clientWidth)+'px';canvas.style.height=grid.clientHeight+'px';canvas.style.marginTop='0px';
    frame.style.left=(Math.max(0,(grid.clientWidth-width)/2)-trim)+'px';frame.style.top=offset+'px';
    frame.style.transform=`scale(${scale})`;
-  }else{
-   const width=Math.max(cardArenaEnabled()?1280:960,Math.min(grid.clientWidth,grid.clientHeight*PAINTED_ARENA.width/PAINTED_ARENA.height));
-   const scale=width/PAINTED_ARENA.width,height=PAINTED_ARENA.height*scale;
-   canvas.style.width=width+'px';canvas.style.height=height+'px';canvas.style.marginTop=Math.max(0,(grid.clientHeight-height)/2)+'px';
-   frame.style.transform=`scale(${scale})`;
-  }
+
  };
  fit();observer=new ResizeObserver(fit);observer.observe(grid);
 }
