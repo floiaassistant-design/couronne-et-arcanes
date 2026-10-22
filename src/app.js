@@ -1,3 +1,4 @@
+import {esc} from './ui/markup.js';
 import {collectionInspection} from './ui/collection.js';
 import {createViews} from './ui/views.js';
 import {createCombatFx} from './ui/combat-fx.js';
@@ -57,7 +58,6 @@ function scheduleEnemyStep(delay=460){
 }
 function cancelEnemyTimer(){if(enemyTimer!==null)clearTimeout(enemyTimer);enemyTimer=null;}
 
-function esc(s){return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));}
 function num(n){return Math.round(n).toLocaleString('fr-FR');}
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2900);}
 function showModal(html){$('modal-root').innerHTML=`<div class="modal-backdrop"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;}

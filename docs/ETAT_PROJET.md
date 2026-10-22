@@ -1,3 +1,17 @@
+# Contre-audit et maintenance — propositions du 22 octobre 2026
+
+- Main vérifié : `dd2aa52`. Forge nº 29 et tours alternés nº 30 sont intégrés.
+- PR nº 31 ouverte : 149 imports supprimés vérifiés indépendamment ; un 150e
+  (`aiStyle` dans pages.js) retiré après détection d’un faux positif du garde.
+  Voir [rapport indépendant](CONTRE_AUDIT_PR31_2026_10_22.md).
+- Branche complémentaire `refactor/css-vues-maintenance-20261022`, basée sur
+  la nº 31 corrigée : CSS consolidé, sous-rendus explicites et échappement partagé.
+  [Périmètre et contrôles réellement exécutés](MAINTENANCE_CSS_VUES_2026_10_22.md).
+- Deux propositions séparées, aucune fusion autorisée. Les paragraphes plus bas
+  gardent leurs dates et décrivent des étapes historiques.
+
+---
+
 # Vérification GitHub — 22 octobre 2026
 
 - Dernier `main` vérifié au démarrage de cet audit : `dd2aa52bf9eb1373073faa2bcb1fb72a4d04a580`. La PR nº 30 (tours alternés, phase de jeu adverse visible) y est **fusionnée** ; les paragraphes datés ci-dessous la présentant comme une proposition à valider décrivent une étape passée.

@@ -12,7 +12,7 @@ test('compteur unique et fiche indépendante des gestes de pose',()=>{
  const v=readFileSync(new URL('../src/ui/views.js',import.meta.url),'utf8');
  const a=readFileSync(new URL('../src/app.js',import.meta.url),'utf8');
  const b=readFileSync(new URL('../src/ui/battle-view.js',import.meta.url),'utf8');
- assert.match(v,/data-delay-kind/);assert.match(v,/inHand\?cooldown:c\.delay/);
+ assert.match(v,/data-delay-kind/);assert.match(v,/inHand\s*\?\s*cooldown\s*:\s*c\.delay/);
  assert.match(v,/Portée 2/);assert.doesNotMatch(v,/data-action="inspect-card"/);
  assert.match(a,/suppressCardInspection\(i\)/);
  assert.doesNotMatch(a,/inspectCard\(i,true\)/);

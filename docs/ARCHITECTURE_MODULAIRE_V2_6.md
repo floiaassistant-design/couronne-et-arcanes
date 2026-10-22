@@ -1,3 +1,13 @@
+## Maintenance des vues et du CSS — proposition du 22/10/2026
+
+29 modules : `ui/markup.js` centralise l’échappement HTML pur (app, vues, cartes).
+Les sous-rendus Collection (compétences/compositions) et plateau (case/unité/HUD/actions)
+restent dans leurs modules existants. Seuls les champs d’état lus sont capturés.
+La cascade CSS conserve son ordre et ses feuilles ; 22 déclarations dominées
+sont retirées et la base reformattée. Aucun moteur, IA, image ou stockage modifié.
+Voir [périmètre, validation et limites](MAINTENANCE_CSS_VUES_2026_10_22.md).
+Cette proposition dépend de la PR nº 31 ; aucune fusion n’est autorisée.
+
 ## Audit de dépendances de l'interface — 22/10/2026
 
 Les imports statiques inutilisés sont retirés des quatre points d'entrée d'interface

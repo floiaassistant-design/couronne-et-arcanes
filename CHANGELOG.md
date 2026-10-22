@@ -1,3 +1,12 @@
+## 22/10/2026 — Proposition de maintenance CSS et vues
+
+- Complément séparé à la PR nº 31 : 22 déclarations CSS dominées retirées,
+  cascade et feuilles conservées ; base CSS et vues rendues lisibles.
+- Sous-rendus Collection et plateau explicites, échappement HTML commun,
+  captures d’état réduites ; aucune règle, IA, image ou sauvegarde modifiée.
+- Nouveau contrôle du jeu modulaire et comparateur de rendus avant/après ;
+  rapport dans `docs/MAINTENANCE_CSS_VUES_2026_10_22.md`. Aucune fusion autorisée.
+
 ## Proposition — Onze cartes de la Cour des Ombres, 21 octobre 2026
 
 ## Proposition Forge — 21 octobre 2026
