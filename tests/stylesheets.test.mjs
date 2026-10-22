@@ -21,7 +21,7 @@ test('CSS : chaque module de présentation est relié à l’entrée web',()=>{
  const root=fileURLToPath(new URL('../',import.meta.url));
  const linked=new Set(readStylesheets(root).map(s=>s.file));
  for(const file of fs.readdirSync(path.join(root,'styles'),{recursive:true}).filter(f=>f.endsWith('.css'))){
-  assert.ok(linked.has('styles/'+file),'Module CSS absent de index.html : '+file);
+  assert.ok(linked.has('styles/'+file.split(path.sep).join('/')),'Module CSS absent de index.html : '+file);
  }
 });
 
