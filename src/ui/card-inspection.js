@@ -60,11 +60,20 @@ export function createCardInspection(getContext,esc){
   const el=panel();if(!el)return;
   el.hidden=true;el.textContent='';el.classList.remove('illustrated-inspection');
   for(const p of ['left','top'])el.style.removeProperty(p);
+  el.style.removeProperty('--preview-max-height');
   el.closest('.hand-header')?.style.removeProperty('--inspection-header-height');
  }
  function position(){
   const el=panel();if(!el||el.hidden||!trigger?.isConnected)return;
-  const pos=previewPosition(trigger.getBoundingClientRect(),el.getBoundingClientRect(),{width:innerWidth,height:innerHeight},current.kind);
+  const anchor=trigger.getBoundingClientRect();
+  el.style.removeProperty('--preview-max-height');
+  const size=el.getBoundingClientRect();
+  // Sur écran étroit, une grande fiche de main doit tenir au-dessus de la carte
+  // lorsqu'aucun côté n'a assez de place : elle ne doit pas bloquer sa sélection.
+  if(current.kind==='hand'&&anchor.top>=324&&anchor.right+12+size.width>innerWidth-12&&anchor.left-size.width-12<12){
+   el.style.setProperty('--preview-max-height',(anchor.top-24)+'px');
+  }
+  const pos=previewPosition(anchor,el.getBoundingClientRect(),{width:innerWidth,height:innerHeight},current.kind);
   el.style.left=pos.left+'px';el.style.top=pos.top+'px';
  }
  function show(request){

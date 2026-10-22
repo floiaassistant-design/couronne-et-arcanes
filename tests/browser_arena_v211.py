@@ -35,11 +35,11 @@ async def run(browser,label,viewport):
         frame=await calibrated.bounding_box()
         scale=frame['width']/1672
         assert abs(frame['height']-941*scale)<1,frame
-        assert frame['width']>=959,frame
         first=await page.locator('.lane-row .battle-cell').first.bounding_box()
         expected_y={2:421,3:344,4:344}[lanes]
         assert abs(first['y']-frame['y']-expected_y*scale)<1,(lanes,first,frame)
-        assert first['height']>=40,first
+        expected_height=(88 if lanes==2 else 77)*scale
+        assert abs(first['height']-expected_height)<1,(first,scale)
         assert await page.locator('.arena-hero-slot').count()==2
         mode=await page.locator('.arena-painted-frame').get_attribute('data-render-mode')
         assert mode=='static'

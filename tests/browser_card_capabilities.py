@@ -121,6 +121,8 @@ async def offline(browser):
     page.on('request',lambda req:requests.append(req.url));page.on('pageerror',lambda e:errors.append(str(e)))
     await page.goto((ROOT/'JOUER.html').as_uri())
     await page.locator('[data-action="welcome-start"]').click()
+    await page.mouse.move(0,0)
+    await page.keyboard.press('Escape')
     await page.locator('[data-action="toggle-animations"]').click()
     await page.locator('.hand .hand-card').first.focus()
     assert not await page.locator('#hand-card-inspection').is_hidden()
