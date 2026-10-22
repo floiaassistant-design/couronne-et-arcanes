@@ -25,7 +25,8 @@ SNAPSHOT=r"""async()=>{
  }};
  for(const sheet of document.styleSheets)inspect(sheet.cssRules);
  const rootValues=new Map(),scopedValues=new Map(),rootStyle=getComputedStyle(document.documentElement);
- const normalize=v=>v.replaceAll(location.href.replace(/[^/]+$/,''),'ROOT/');
+ const pageRoot=location.href.replace(/[^/]+$/,'');
+ const normalize=v=>v.replaceAll(pageRoot,'ROOT/');
  for(const [k,selectors] of definitions){
   if(registered.has(k)||selectors.size!==1||nodes.some(e=>e.style.getPropertyValue(k)))continue;
   const selector=[...selectors][0];
