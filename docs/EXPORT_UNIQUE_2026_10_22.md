@@ -15,6 +15,8 @@ fonctionnement hors réseau. L’entrée web `index.html` utilise la même vue.
 - Suppression d’`ESSAI_CARTES.html` et de `build:cards`. Deux compilations
   restent : production `JOUER.html` et diagnostic `tests/JOUER.test.html`.
   Le diagnostic garde ses points d’accès de test et n’est jamais distribué.
+- Fiche flottante : fermeture tactile de 44 pixels et limitation au-dessus de
+  la carte en main sur écran étroit, pour préserver sa sélection.
 - Une seule tâche CI conserve les 20 parcours navigateur fonctionnels et le
   contrôle de synchronisation du HTML. Le second environnement d’installation
   et les deux compilations redondantes disparaissent.
@@ -34,8 +36,12 @@ Les 29 modules conservent leurs responsabilités, sans nouveau module ni cycle.
 
 - Local : `npm test`, 300 tests réussis ; `npm run test:parity`, 60 instantanés
   historiques identiques ; builds production et diagnostic exécutés.
-- Les parcours Chromium sont exécutés sur bureau, portrait et paysage simulés,
-  dont le vrai export sans réseau et l’entrée web. Résultats détaillés dans la PR.
+- Local : les 20 scripts Chromium du workflow ont réussi après adaptation de
+  leurs attentes à la vue cartes. Ils couvrent bureau, portrait et paysage
+  simulés selon chaque parcours, vrai export sans réseau et entrée web.
+- Export régénéré depuis les sources sur GitHub, empreinte identique à la copie
+  locale. La CI du head final est suivie dans la PR ; aucun résultat de tête
+  antérieure n’est présenté comme celui de la version finale.
 - Les attentes portant sur les étiquettes de l’ancienne vue sont remplacées
   par les vrais labels accessibles des cartes et les sceaux des deux camps.
   Les contrôles métier et la référence de parité ne sont pas relâchés.

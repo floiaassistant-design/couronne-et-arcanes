@@ -152,10 +152,10 @@ distants avant de les déclarer réussis. Aucun téléphone physique n'est garan
 
 Les clés `couronnes_arcanes_v1`, `couronnes_arcanes_bataille_v1` et le réglage
 d'animations sont conservés. Les effets transitoires restent exclus du stockage.
-Les sources sont séparées entre moteur, IA, vues et stockage ; 28 modules sur main.
-La maintenance proposée par la PR nº 32 ajoute une primitive HTML partagée (29 modules),
-clarifie les sous-rendus et consolide le CSS ; elle dépend de la PR nº 31 corrigée.
-[Rapport et vérifications](docs/MAINTENANCE_CSS_VUES_2026_10_22.md). Aucune fusion de ces deux PR n’est autorisée.
+Les sources sont séparées entre moteur, IA, vues et stockage : 29 modules.
+Les PR nº 31 et nº 32 sont intégrées. La PR nº 33 organise les styles ; la
+proposition d’export unique en dépend et attend son propre accord de fusion.
+[Maintenance intégrée](docs/MAINTENANCE_CSS_VUES_2026_10_22.md).
 
 [État](docs/ETAT_PROJET.md), [architecture](docs/ARCHITECTURE_MODULAIRE_V2_6.md),
 [rapport avant remise à zéro](docs/CHECKUP_NETTOYAGE_2026_10_20.md),
