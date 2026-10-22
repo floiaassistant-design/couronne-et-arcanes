@@ -3,13 +3,12 @@ import {createPages} from './pages.js';
 import {createBattleView} from './battle-view.js';
 import {unitStatContext,unitStats} from '../engine/unit-stats.js';
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
-import {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
-import {AI_STYLES,aiStyle,aiEnraged} from '../ai.js';
-import {TALENT_TREE,TALENT_LEVELS} from '../talents.js';
+import {CARDS,FACTIONS,CLASSES,cardTraits} from '../data.js';
+
 import {visualFor,artSrc,cardTemplateFor} from '../visuals.js';
 import {cardArenaEnabled} from './card-arena.js';
-import {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission} from '../dungeons.js';
-import {freshProfile,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,BUILDINGS,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,chooseHeroTalent,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon} from '../engine.js';
+
+import {heroLevel,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS} from '../engine.js';
 
 export function createViews(getState){
  let profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled;

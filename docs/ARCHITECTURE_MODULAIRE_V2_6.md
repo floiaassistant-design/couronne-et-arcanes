@@ -1,3 +1,20 @@
+## Audit de dépendances de l'interface — 22/10/2026
+
+Les imports statiques inutilisés sont retirés des quatre points d'entrée d'interface
+(`app.js`, `ui/views.js`, `ui/pages.js`, `ui/battle-view.js`).
+Ce nettoyage ne déplace aucune fonction et ne modifie aucun calcul, état,
+référence de sauvegarde ou rendu HTML. Le graphe reste orienté moteur → rendu,
+sans import du DOM par le moteur. Deux tests surveillent les dépendances nommées
+de ces écrans et l'absence de cycle sur l'ensemble de `src/`.
+
+`styles.css` concentre encore des strates d'interface anciennes et des
+déclarations au long cours ; le découpage CSS attend une comparaison réelle
+des styles calculés sur desktop/mobile. Les fichiers de fond volumineux
+contiennent les images embarquées indispensables au jeu hors réseau.
+Les modules de rendu compactés attendent un reformatage progressif,
+sans découpage arbitraire. Ce paragraphe décrit la PR de nettoyage, pas une
+refonte du moteur.
+
 # Architecture modulaire — V2.6
 
 ## Proposition du 21/10/2026 — alternance réelle joueur / IA

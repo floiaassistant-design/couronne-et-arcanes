@@ -1,3 +1,12 @@
+# Vérification GitHub — 22 octobre 2026
+
+- Dernier `main` vérifié au démarrage de cet audit : `dd2aa52bf9eb1373073faa2bcb1fb72a4d04a580`. La PR nº 30 (tours alternés, phase de jeu adverse visible) y est **fusionnée** ; les paragraphes datés ci-dessous la présentant comme une proposition à valider décrivent une étape passée.
+- Aucune PR ouverte dans le dépôt jeu lors de la vérification du 22 octobre. La PR de maintenance des imports est distincte, ne change ni les règles, ni l'IA, ni les sauvegardes, ni les graphismes.
+- L'audit constate des listes de dépendances copiées lors du découpage des vues. Retrait ciblé des liaisons inutilisées dans `src/app.js`, `src/ui/views.js`, `src/ui/pages.js` et `src/ui/battle-view.js` ; gardes de tests des dépendances nommées et des cycles. Les gros rendus HTML et la cascade `styles.css` restent à analyser visuellement avant un refactoring distinct.
+- Les exports autonomes sont régénérés depuis les sources et doivent être comparés par CI avant toute fusion. Le rapport de PR distingue contrôles effectués et limites.
+
+---
+
 ## Proposition de tours alternés — PR à valider
 
 - Branche `feat/tours-alternes-ia-visible-20261021`, créée depuis le dernier main GitHub `9e0087ca5503995014aa30f0a31d06bf77cb893e` (Forge nº 29 déjà fusionnée).
