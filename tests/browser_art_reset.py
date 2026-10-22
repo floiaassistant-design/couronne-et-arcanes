@@ -32,6 +32,8 @@ async def run(browser,label,viewport):
     assert await page.evaluate('battle.board[0][3].id')=='militia'
     before=await page.evaluate('battle.round')
     await page.locator('[data-action="end-turn"]').click()
+    # Les nouveaux tours alternés concluent la manche après les poses visibles de l'IA.
+    await page.wait_for_function("([round])=>JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'))?.round>round",arg=[before])
     assert await page.evaluate('battle.round')==before+1
     assert await page.locator('.battle-vfx-overlay,.unit-sprite-player').count()==0
     assert await page.evaluate("document.getAnimations().every(a=>!String(a.animationName||'').startsWith('creature-'))")
