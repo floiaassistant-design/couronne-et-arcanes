@@ -35,6 +35,7 @@ async def stable(page):
  }""")
  await page.mouse.move(0,0)
  await page.evaluate('window.scrollTo(0,0)')
+ await page.evaluate('()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))')
 
 async def capture(page):
  await stable(page)
@@ -77,7 +78,7 @@ async def states(page):
    await page.evaluate("battle.phase='enemy';selectedCard=-1;render()")
    yield label+'-enemy'
 
-async def main(reference):
+async def main(reference,only_case=None):
  async with async_playwright() as pw:
   browser=await pw.chromium.launch(headless=True,args=['--no-sandbox'])
   total=0
@@ -95,6 +96,7 @@ async def main(reference):
     names=await asyncio.gather(*(anext(it,None) for it in iters))
     assert names[0]==names[1],names
     if names[0] is None:break
+    if only_case and names[0]!=only_case:continue
     a,b=await asyncio.gather(*(capture(p) for p in pages))
     if a!=b:
      for suffix,p in zip(['reference','candidate'],pages):
@@ -160,6 +162,6 @@ async def modular():
  finally:server.shutdown();server.server_close()
 
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('--reference',type=Path)
+ parser=argparse.ArgumentParser();parser.add_argument('--reference',type=Path);parser.add_argument('--case')
  args=parser.parse_args()
- asyncio.run(main(args.reference.resolve()) if args.reference else modular())
+ asyncio.run(main(args.reference.resolve(),args.case) if args.reference else modular())
