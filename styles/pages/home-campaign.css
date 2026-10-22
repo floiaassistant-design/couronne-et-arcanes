@@ -1,0 +1,219 @@
+/* Accueil, campagne et présentation publique des adversaires. */
+.hero-banner {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  overflow: hidden;
+  min-height: 380px;
+  border: 1px solid #a28d634c;
+  border-radius: 16px;
+  background: radial-gradient(circle at 78% 40%, #3d4f5b 0%, #243744 23%, #101d2a 66%);
+  position: relative;
+}
+.hero-banner:before {
+  content: "✥";
+  font-family: Georgia, serif;
+  position: absolute;
+  right: 3%;
+  top: -92px;
+  font-size: 510px;
+  line-height: 1;
+  color: #d9bc7b0a;
+  pointer-events: none;
+}
+.hero-copy {
+  padding: 51px 55px;
+  z-index: 1;
+}
+.hero-copy h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(39px, 4.7vw, 70px);
+  font-weight: 500;
+  line-height: 1.03;
+  margin: 15px 0 17px;
+}
+.hero-copy h1 em {
+  font-style: normal;
+  color: var(--gold);
+}
+.hero-copy p {
+  max-width: 500px;
+  font-size: 15px;
+  color: #c1c9cd;
+  line-height: 1.8;
+}
+.hero-crest {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+  overflow: hidden;
+}
+.crest-ring {
+  display: grid;
+  place-items: center;
+  border: 1px solid #d4ad6278;
+  border-radius: 50%;
+  width: min(260px, 80%);
+  aspect-ratio: 1;
+  box-shadow:
+    0 0 0 15px #c8a45a13,
+    0 0 0 47px #dfae4408,
+    inset 0 0 50px #ecc68212;
+  background: radial-gradient(circle, #b69b6040, #18273770 70%);
+}
+.crest-ring span {
+  font-family: Georgia, serif;
+  font-size: clamp(105px, 16vw, 180px);
+  color: #e9c781;
+  text-shadow: 0 8px 32px #e6b96844;
+  line-height: 1;
+}
+.crest-sub {
+  font-size: 10px;
+  letter-spacing: 0.31em;
+  color: #cbb682;
+  margin-top: 17px;
+}
+.mission-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+.mission {
+  border: 1px solid #a6a17d38;
+  background: linear-gradient(155deg, #202f3d, #13212d);
+  border-radius: 12px;
+  padding: 21px;
+  position: relative;
+  overflow: hidden;
+  min-height: 226px;
+  display: flex;
+  flex-direction: column;
+}
+.mission:after {
+  content: "✦";
+  position: absolute;
+  font-family: Georgia, serif;
+  font-size: 185px;
+  right: -15px;
+  top: -55px;
+  opacity: 0.035;
+  pointer-events: none;
+}
+.mission.locked {
+  filter: saturate(0.45);
+  opacity: 0.57;
+}
+.mission.completed {
+  border-color: #85ba9555;
+}
+.mission-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #bca676;
+}
+.mission h3 {
+  font:
+    normal 24px Georgia,
+    serif;
+  margin: 15px 0 7px;
+}
+.mission p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #acb9bc;
+  min-height: 45px;
+  margin: 0 0 16px;
+}
+.mission .btn {
+  margin-top: auto;
+}
+.mission .reward {
+  color: #e1c895;
+  font-size: 12px;
+  margin: 0 0 11px;
+}
+.chapter-heading {
+  margin: 27px 0 13px;
+  font-size: 11px;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 750;
+}
+.chapter-heading:first-child {
+  margin-top: 0;
+}
+@media (max-width: 950px) {
+  .hero-banner {
+    grid-template-columns: 1fr 0.5fr;
+  }
+  .hero-copy {
+    padding: 33px;
+  }
+  .mission-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 660px) {
+  .hero-banner {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .hero-copy {
+    padding: 30px 24px;
+  }
+  .hero-crest {
+    display: none;
+  }
+  .hero-copy h1 {
+    font-size: 40px;
+  }
+  .mission-list {
+    grid-template-columns: 1fr;
+  }
+  .mission {
+    min-height: 200px;
+  }
+}
+.enemy-style-tag {
+  margin: 5px 0 7px;
+  color: #cdb98a;
+  font-size: 0.84rem;
+  letter-spacing: 0.02em;
+}
+.ai-personality {
+  margin-bottom: 12px;
+  border-left: 3px solid #d9a957;
+}
+.enemy-ai-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px;
+  border: 1px solid rgba(211, 174, 110, 0.35);
+  border-radius: 12px;
+  background: rgba(211, 174, 110, 0.07);
+  margin-bottom: 15px;
+  font-size: 0.82rem;
+}
+.enemy-ai-profile b {
+  color: #ead1a2;
+}
+.enemy-ai-profile span {
+  color: #e8e3d9;
+}
+.new-game-classes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin: 16px 0;
+}
+.new-game-classes .btn {
+  white-space: normal;
+  min-height: 48px;
+}

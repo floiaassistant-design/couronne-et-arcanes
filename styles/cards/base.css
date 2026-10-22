@@ -1,0 +1,219 @@
+/* Cadre commun, portrait neutre, statistiques et actions des cartes. */
+.unit-card {
+  border: 1px solid #b5a48266;
+  border-radius: 11px;
+  background: linear-gradient(160deg, #273b4b, #13212c);
+  padding: 8px;
+  min-width: 0;
+  position: relative;
+  box-shadow:
+    inset 0 0 0 2px #0004,
+    0 8px 15px #0002;
+  user-select: none;
+}
+.unit-card[data-rarity="rare"] {
+  border-color: #74b2c5a0;
+}
+.unit-card[data-rarity="épique"] {
+  border-color: #b39dec;
+}
+.unit-card[data-rarity="légendaire"] {
+  border-color: #e5bf69;
+  box-shadow:
+    0 0 20px #d2a64f16,
+    inset 0 0 0 2px #0005;
+}
+.unit-card:not(.compact) {
+  min-height: 263px;
+}
+.card-head {
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 5px 7px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: #d5dce3;
+}
+.card-head b {
+  color: var(--gold);
+}
+.portrait {
+  position: relative;
+  height: 122px;
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(ellipse at 50% 25%, color-mix(in srgb, var(--tone), transparent 52%), transparent 56%),
+    linear-gradient(168deg, #263f51, #111b29);
+  border: 1px solid color-mix(in srgb, var(--tone), transparent 44%);
+  overflow: hidden;
+}
+.portrait:after {
+  content: "";
+  position: absolute;
+  inset: auto -20px -65px;
+  height: 98px;
+  background: radial-gradient(ellipse, var(--tone), transparent 68%);
+  opacity: 0.25;
+  filter: blur(9px);
+}
+.portrait:before {
+  content: "✦ · ✧ · ✦";
+  font-size: 14px;
+  color: var(--tone);
+  opacity: 0.4;
+  position: absolute;
+  top: 9px;
+  letter-spacing: 1.4em;
+}
+.portrait-symbol {
+  font-family: Georgia, serif;
+  font-size: 76px;
+  line-height: 1;
+  color: var(--tone);
+  text-shadow:
+    0 5px 0 #0004,
+    0 0 25px color-mix(in srgb, var(--tone), transparent 15%);
+  position: relative;
+  z-index: 1;
+  transform: rotate(-6deg);
+}
+.card-title {
+  font:
+    normal 14px Georgia,
+    serif;
+  color: #fff0d5;
+  line-height: 1.25;
+  padding: 10px 4px 4px;
+  min-height: 47px;
+}
+.card-detail {
+  font-size: 10.5px;
+  color: #aabdc3;
+  min-height: 37px;
+  line-height: 1.35;
+  padding: 0 4px;
+}
+.card-stats {
+  display: flex;
+  gap: 5px;
+  margin: 7px 3px 2px;
+  align-items: center;
+}
+.stat {
+  font-size: 11px;
+  background: #0e1b29a6;
+  border: 1px solid #7e9caa45;
+  border-radius: 5px;
+  padding: 5px 7px;
+}
+.stat b {
+  color: #fff;
+}
+.stat.atk b {
+  color: #f6b4a0;
+}
+.stat.hp b {
+  color: #9dddb7;
+}
+.stat.cd b {
+  color: var(--gold);
+}
+.card-rarity {
+  margin-left: auto;
+  color: #c5b39e;
+  font-size: 9px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.card-actions {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 7px;
+}
+.card-actions .btn {
+  padding: 6px 8px;
+  font-size: 10px;
+}
+/* Présentation des emplacements d’illustration, sans ancien personnage animé. */
+.creature-portrait {
+  background: #142330;
+  isolation: isolate;
+}
+.creature-portrait .creature-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 43%;
+  filter: contrast(1.08) saturate(1.1);
+  transition:
+    transform 0.24s ease,
+    filter 0.22s ease;
+}
+.creature-portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent 48%, #07131d9b 100%),
+    linear-gradient(90deg, #06132155, transparent 37%, transparent 75%, #06132144);
+  pointer-events: none;
+}
+.unit-card:hover .creature-image {
+  transform: scale(1.08);
+}
+.creature-portrait .portrait-emblem {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  z-index: 2;
+  color: #fff6d7;
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  border: 1px solid var(--tone);
+  background: #0b1928dd;
+  box-shadow: 0 2px 8px #000a;
+  font:
+    normal 15px Georgia,
+    serif;
+}
+.unit-card.compact .portrait-emblem {
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+}
+.creature-portrait.role-spell .creature-image {
+  filter: saturate(1.3) brightness(1.16);
+}
+@media (prefers-reduced-motion: reduce) {
+  .creature-portrait .creature-image {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+.card-traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0.35rem 0 0.2rem;
+}
+.trait-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.72rem;
+  color: #f2ead8;
+}

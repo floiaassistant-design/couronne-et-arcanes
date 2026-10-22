@@ -37,7 +37,7 @@ test('arène structurée : ancienne sauvegarde 3x5 sans pistes décoratives',()=
  assert.equal((html.match(/class="battle-cell /g)||[]).length,15);
 });
 test('arène structurée : dalles calées sur les cellules, sans panoramique étiré',()=>{
- const css=readFileSync(new URL('../styles.css',import.meta.url),'utf8');
+ const css=readFileSync(new URL('../styles/battle/board.css',import.meta.url),'utf8');
  assert.match(css,/\.arena-structured \.battle-cell/);
  assert.match(css,/\.arena-dormant-cell/);
  assert.doesNotMatch(css.slice(css.indexOf('/* Arène structurée')),/background-size:\s*cover/);

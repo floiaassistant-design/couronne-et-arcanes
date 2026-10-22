@@ -1,4 +1,18 @@
-# Contre-audit et maintenance — propositions du 22 octobre 2026
+# Modularisation CSS — proposition du 22 octobre 2026
+
+- Main vérifié : `9941596d16e39d7f48fc0b082ee41b77e5d573b7`. Les PR nº 31
+  et nº 32 sont fusionnées après autorisation explicite et spécifique.
+- Nouvelle branche `refactor/css-modules-20261022` depuis cet arbre exact.
+  `styles.css` devient le socle ; 17 feuilles regroupent les responsabilités.
+  Le builder utilise la même liste de feuilles que le jeu web, dans `index.html`.
+- Aucun moteur, IA, catalogue, image, stockage ou rendu volontairement modifié.
+  [Organisation](../styles/README.md) et
+  [contrôles de cette proposition](MODULARISATION_CSS_2026_10_22.md).
+- Cette nouvelle proposition reste à faire valider ; aucune fusion autorisée.
+
+---
+
+# Contre-audit et maintenance — historique avant fusion du 22 octobre 2026
 
 - Main vérifié : `dd2aa52`. Forge nº 29 et tours alternés nº 30 sont intégrés.
 - PR nº 31 ouverte : 149 imports supprimés vérifiés indépendamment ; un 150e

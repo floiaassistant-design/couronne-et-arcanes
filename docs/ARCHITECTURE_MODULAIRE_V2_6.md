@@ -1,4 +1,16 @@
-## Maintenance des vues et du CSS — proposition du 22/10/2026
+## CSS par responsabilité — proposition du 22/10/2026
+
+Base vérifiée : main `9941596d`, après fusion autorisée des PR nº 31 et nº 32.
+Le socle `styles.css` contient les variables, la navigation et la typographie.
+Dix-sept feuilles dans `styles/` regroupent composants, pages, cartes et combat,
+avec leurs états et points de rupture. Les feuilles spécialisées dans `assets/`
+gardent leur emplacement, leurs octets et leur priorité après le socle.
+`index.html` est l'unique liste ordonnée ; `scripts/lib/stylesheets.mjs` la lit
+pour le builder, qui embarque exactement les mêmes feuilles dans les deux jeux
+autonomes. Aucun nouveau module de jeu ni dépendance npm. Voir
+[la carte des responsabilités](../styles/README.md).
+
+## Maintenance des vues et du CSS — intégrée par la PR nº 32
 
 29 modules : `ui/markup.js` centralise l’échappement HTML pur (app, vues, cartes).
 Les sous-rendus Collection (compétences/compositions) et plateau (case/unité/HUD/actions)
@@ -6,7 +18,8 @@ restent dans leurs modules existants. Seuls les champs d’état lus sont captur
 La cascade CSS conserve son ordre et ses feuilles ; 22 déclarations dominées
 sont retirées et la base reformattée. Aucun moteur, IA, image ou stockage modifié.
 Voir [périmètre, validation et limites](MAINTENANCE_CSS_VUES_2026_10_22.md).
-Cette proposition dépend de la PR nº 31 ; aucune fusion n’est autorisée.
+Les PR nº 31 et nº 32 ont été fusionnées sur accord spécifique le 22/10/2026.
+Le découpage CSS décrit plus haut est une nouvelle proposition, sans accord de fusion.
 
 ## Audit de dépendances de l'interface — 22/10/2026
 

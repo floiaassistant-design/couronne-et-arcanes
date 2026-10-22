@@ -42,7 +42,7 @@ test('combat plein écran : bataille historique 3x5 conserve ses cases',()=>{
  assert.equal((html.match(/class="arena-dormant-row"/g)||[]).length,0);
 });
 test('combat plein écran : styles et restauration indépendante des défilements',()=>{
- const css=readFileSync(new URL('../styles.css',import.meta.url),'utf8'),
+ const css=['fullscreen','hand-dock'].map(name=>readFileSync(new URL('../styles/battle/'+name+'.css',import.meta.url),'utf8')).join('\n'),
        js=readFileSync(new URL('../src/app.js',import.meta.url),'utf8');
  assert.match(css,/body:has\(\.combat-screen\) #view/);
  assert.match(css,/\.combat-hand-dock\s*\{/);

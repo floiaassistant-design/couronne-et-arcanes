@@ -6,6 +6,12 @@ statistiques et sauvegardes sont conservées.
 
 ## État intégré
 
+Les PR de maintenance nº 31 et nº 32 sont fusionnées sur accord spécifique,
+main vérifié `9941596d` le 22 octobre 2026. Une nouvelle proposition organise le
+CSS par responsabilité en conservant les deux exports hors ligne :
+[structure des styles](styles/README.md) et
+[périmètre et contrôles](docs/MODULARISATION_CSS_2026_10_22.md).
+
 Le propriétaire a demandé le 20 octobre 2026 de refaire les illustrations et
 animations en conservant le plateau et la présentation des cartes.
 [Décision et périmètre](docs/REMISE_A_ZERO_GRAPHIQUE_2026_10_20.md).

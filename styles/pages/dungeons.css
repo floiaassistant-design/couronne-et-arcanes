@@ -1,0 +1,103 @@
+/* Expéditions : étapes, reprise et choix entre les combats. */
+/* V1.9 — expeditions */
+.dungeon-cards {
+  margin-top: 20px;
+}
+.dungeon-stages {
+  display: grid;
+  gap: 8px;
+  margin: 15px 0;
+}
+.dungeon-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: rgba(0, 0, 0, 0.16);
+  padding: 10px 12px;
+  border: 1px solid rgba(210, 195, 148, 0.15);
+  border-radius: 9px;
+}
+.dungeon-stage small {
+  color: #bbbec6;
+}
+.dungeon-stage.now {
+  border-color: #d2b777;
+  background: rgba(200, 153, 80, 0.12);
+}
+.dungeon-run {
+  border: 1px solid rgba(218, 178, 106, 0.45);
+}
+.dungeon-battle-banner {
+  text-align: center;
+  margin: 14px 0 5px;
+  padding: 11px;
+  border-radius: 8px;
+  background: rgba(208, 164, 93, 0.12);
+  border: 1px solid rgba(208, 164, 93, 0.34);
+  color: #edd29c;
+  font-size: 0.88rem;
+}
+/* V2.0 — three explicit dungeon choices, fully responsive and keyboard-accessible */
+.dungeon-event {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(91, 70, 39, 0.18);
+  border: 1px solid rgba(220, 185, 115, 0.26);
+}
+.dungeon-event p {
+  margin: 0.4rem 0 1rem;
+  color: var(--muted, #c8bfae);
+}
+.dungeon-event-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+.dungeon-event-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+  text-align: left;
+  padding: 1rem;
+  cursor: pointer;
+  color: inherit;
+  background: rgba(21, 28, 44, 0.84);
+  border: 1px solid rgba(221, 193, 130, 0.35);
+  border-radius: 12px;
+  min-height: 154px;
+  font: inherit;
+  transition:
+    border-color 0.15s,
+    transform 0.15s,
+    background 0.15s;
+}
+.dungeon-event-option:hover,
+.dungeon-event-option:focus-visible {
+  border-color: #e8c276;
+  background: rgba(52, 48, 55, 0.96);
+  transform: translateY(-2px);
+  outline: 2px solid transparent;
+}
+.dungeon-event-option .event-icon {
+  font-size: 2rem;
+  color: #f4d28e;
+}
+.dungeon-event-option b {
+  font-size: 1rem;
+  color: #f8dfaa;
+}
+.dungeon-event-option small {
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: #e3decd;
+}
+@media (max-width: 700px) {
+  .dungeon-event-options {
+    grid-template-columns: 1fr;
+  }
+  .dungeon-event-option {
+    min-height: 0;
+  }
+}

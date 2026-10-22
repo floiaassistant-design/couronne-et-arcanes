@@ -7,20 +7,55 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
-SNAPSHOT="""async()=>{
+SNAPSHOT=r"""async()=>{
  const nodes=[...document.querySelectorAll('body,body *')].filter(e=>!['SCRIPT','STYLE'].includes(e.tagName));
  const longValues=new Map();
  const intern=v=>{if(v.length<512)return v;if(!longValues.has(v))longValues.set(v,longValues.size);return 'LONG:'+longValues.get(v)};
+ // Les images embarquées dans des variables héritées atteignent 900 Ko.
+ // Lire une seule fois celles définies sur :root ou un conteneur d'image unique.
+ // Une déclaration ailleurs (même inline/keyframe) conserve la lecture complète.
+ const definitions=new Map(),registered=new Set();
+ const inspect=rules=>{for(const r of rules){
+  if(r.constructor.name==='CSSPropertyRule')registered.add(r.name);
+  if(r.style)for(const k of r.style)if(k.startsWith('--')){
+   if(!definitions.has(k))definitions.set(k,new Set());
+   definitions.get(k).add(r.selectorText||'non-root');
+  }
+  if(r.cssRules)inspect(r.cssRules);
+ }};
+ for(const sheet of document.styleSheets)inspect(sheet.cssRules);
+ const rootValues=new Map(),scopedValues=new Map(),rootStyle=getComputedStyle(document.documentElement);
+ const pageRoot=location.href.replace(/[^/]+$/,'');
+ const normalize=v=>v.replaceAll(pageRoot,'ROOT/');
+ for(const [k,selectors] of definitions){
+  if(registered.has(k)||selectors.size!==1||nodes.some(e=>e.style.getPropertyValue(k)))continue;
+  const selector=[...selectors][0];
+  if(selector===':root'){
+   const value=rootStyle.getPropertyValue(k);if(value.length>=512)rootValues.set(k,normalize(value));
+  }else if(/^\[data-[\w-]+="[\w-]+"\]$/.test(selector)){
+   scopedValues.set(k,{selector,values:new WeakMap()});
+  }
+ }
  const rows=nodes.map(e=>{
   const rect=e.getBoundingClientRect();
   const styles=['','::before','::after'].map(p=>{
    const s=getComputedStyle(e,p||null);
+   // Sans contenu, ::before/::after ne génère aucune boîte à comparer.
+   if(p&&['none','normal'].includes(s.content))return 'content:'+s.content;
    // CSSOM peut exposer une marge utilisée négative pour un bloc débordant.
    // Typed OM garde la valeur calculée auto ; les rectangles sont comparés à part.
    const typed=!p&&e.computedStyleMap?.();
    return [...s].sort().map(k=>{
+    if(rootValues.has(k))return k+':'+intern(rootValues.get(k));
+    if(scopedValues.has(k)){
+     const {selector,values}=scopedValues.get(k),owner=e.closest(selector);
+     if(owner){
+      if(!values.has(owner))values.set(owner,normalize(getComputedStyle(owner).getPropertyValue(k)));
+      return k+':'+intern(values.get(owner));
+     }
+    }
     const value=typed&&k.startsWith('margin-')?typed.get(k)?.toString()||s.getPropertyValue(k):s.getPropertyValue(k);
-    return k+':'+intern(value.replaceAll(location.href.replace(/[^/]+$/,''),'ROOT/'));
+    return k+':'+intern(normalize(value));
    }).join(';');
   });
   return [e.tagName,[...e.attributes].filter(a=>!['src','style'].includes(a.name)).map(a=>[a.name,a.value]),
@@ -84,11 +119,12 @@ async def states(page):
    await page.evaluate("battle.phase='enemy';selectedCard=-1;render()")
    yield label+'-enemy'
 
-async def main(reference,only_case=None):
+async def main(reference,only_case=None,only_viewport=None):
  async with async_playwright() as pw:
   browser=await pw.chromium.launch(headless=True,args=['--no-sandbox'])
   total=0
   for label,viewport in [('desktop',{'width':1366,'height':900}),('portrait',{'width':390,'height':844}),('landscape',{'width':844,'height':390})]:
+   if only_viewport and label!=only_viewport:continue
    contexts=[];pages=[];errors=[]
    for root in [reference,ROOT]:
     ctx=await browser.new_context(viewport=viewport,offline=True,reduced_motion='reduce')
@@ -137,6 +173,11 @@ async def modular():
     page.on('request',lambda r:requests.append(r.url))
     await page.add_init_script("Date.now=()=>12345;localStorage.setItem('couronnes_arcanes_animations_v13','off')")
     await page.goto(f'http://127.0.0.1:{server.server_port}/index.html?cartes=1')
+    assert await page.evaluate("""()=>{
+     const links=[...document.querySelectorAll('link[rel="stylesheet"]')];
+     return links.length===document.styleSheets.length&&links.every(link=>
+      [...document.styleSheets].some(sheet=>sheet.href===link.href&&sheet.cssRules.length>0));
+    }"""),'Chaque feuille CSS doit être chargée et analysée dans le jeu web'
     await page.locator('[data-action="welcome-start"]').click()
     assert await page.locator('.battle-cell').count()==20
     await page.locator('.combat-menu-link').click()
@@ -169,5 +210,6 @@ async def modular():
 
 if __name__=='__main__':
  parser=argparse.ArgumentParser();parser.add_argument('--reference',type=Path);parser.add_argument('--case')
+ parser.add_argument('--viewport',choices=['desktop','portrait','landscape'])
  args=parser.parse_args()
- asyncio.run(main(args.reference.resolve(),args.case) if args.reference else modular())
+ asyncio.run(main(args.reference.resolve(),args.case,args.viewport) if args.reference else modular())
