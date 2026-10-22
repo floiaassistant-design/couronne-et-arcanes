@@ -63,7 +63,8 @@ Elle couvre 123 états sur trois formats : écrans principaux, sept filtres de
 collection, trois phases de donjon, combats 2/3/4 lignes et historiques 3×5,
 deux vues, sélection et phase adverse. DOM, styles calculés, rectangles et pixels
 sont comparés. Les grandes variables d'image définies exclusivement sur `:root`
-sont lues une fois, après contrôle des déclarations et surcharges ; toute
+ou un conteneur identifié par attribut sont lues une fois par propriétaire,
+après contrôle des déclarations et surcharges ; toute
 surcharge ou propriété enregistrée conserve la lecture par élément.
 
 Les résultats finaux de cette comparaison, des 19 autres suites navigateur

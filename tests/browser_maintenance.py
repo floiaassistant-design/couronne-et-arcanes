@@ -7,12 +7,12 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
-SNAPSHOT="""async()=>{
+SNAPSHOT=r"""async()=>{
  const nodes=[...document.querySelectorAll('body,body *')].filter(e=>!['SCRIPT','STYLE'].includes(e.tagName));
  const longValues=new Map();
  const intern=v=>{if(v.length<512)return v;if(!longValues.has(v))longValues.set(v,longValues.size);return 'LONG:'+longValues.get(v)};
  // Les images embarquées dans des variables héritées atteignent 900 Ko.
- // Lire une seule fois celles définies exclusivement sur :root, sans surcharge.
+ // Lire une seule fois celles définies sur :root ou un conteneur d'image unique.
  // Une déclaration ailleurs (même inline/keyframe) conserve la lecture complète.
  const definitions=new Map(),registered=new Set();
  const inspect=rules=>{for(const r of rules){
@@ -24,11 +24,16 @@ SNAPSHOT="""async()=>{
   if(r.cssRules)inspect(r.cssRules);
  }};
  for(const sheet of document.styleSheets)inspect(sheet.cssRules);
- const rootValues=new Map(),rootStyle=getComputedStyle(document.documentElement);
+ const rootValues=new Map(),scopedValues=new Map(),rootStyle=getComputedStyle(document.documentElement);
  const normalize=v=>v.replaceAll(location.href.replace(/[^/]+$/,''),'ROOT/');
  for(const [k,selectors] of definitions){
-  if(registered.has(k)||selectors.size!==1||!selectors.has(':root')||nodes.some(e=>e.style.getPropertyValue(k)))continue;
-  const value=rootStyle.getPropertyValue(k);if(value.length>=512)rootValues.set(k,normalize(value));
+  if(registered.has(k)||selectors.size!==1||nodes.some(e=>e.style.getPropertyValue(k)))continue;
+  const selector=[...selectors][0];
+  if(selector===':root'){
+   const value=rootStyle.getPropertyValue(k);if(value.length>=512)rootValues.set(k,normalize(value));
+  }else if(/^\[data-[\w-]+="[\w-]+"\]$/.test(selector)){
+   scopedValues.set(k,{selector,values:new WeakMap()});
+  }
  }
  const rows=nodes.map(e=>{
   const rect=e.getBoundingClientRect();
@@ -39,6 +44,13 @@ SNAPSHOT="""async()=>{
    const typed=!p&&e.computedStyleMap?.();
    return [...s].sort().map(k=>{
     if(rootValues.has(k))return k+':'+intern(rootValues.get(k));
+    if(scopedValues.has(k)){
+     const {selector,values}=scopedValues.get(k),owner=e.closest(selector);
+     if(owner){
+      if(!values.has(owner))values.set(owner,normalize(getComputedStyle(owner).getPropertyValue(k)));
+      return k+':'+intern(values.get(owner));
+     }
+    }
     const value=typed&&k.startsWith('margin-')?typed.get(k)?.toString()||s.getPropertyValue(k):s.getPropertyValue(k);
     return k+':'+intern(normalize(value));
    }).join(';');
