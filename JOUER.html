@@ -3819,14 +3819,14 @@ body.card-combat-mode [data-card-layout="true"] .dungeon-battle-banner{bottom:ca
 body.card-combat-mode #hand-card-inspection.illustrated-inspection:not([hidden]){
  position:fixed;inset:auto;z-index:30;display:flex;flex-direction:column;
  width:min(312px,calc(100vw - 24px));height:auto;min-height:0;
- max-width:none;max-height:calc(100dvh - 24px);margin:0;padding:0;
+ max-width:none;max-height:var(--preview-max-height,calc(100dvh - 24px));margin:0;padding:0;
  overflow:hidden;border:1px solid #cfb47b;border-radius:12px;
  background:linear-gradient(135deg,#234154,#102737 44%,#0a1a2b);
  box-shadow:0 12px 38px #020711b8,0 0 0 3px #07121dcc,inset 0 0 0 3px #cfb47b19;
  color:#fff0d2;font:12px/1.4 system-ui,sans-serif;
 }
 .illustrated-inspection::before{content:'';position:absolute;inset:3px;pointer-events:none;border:1px solid #e6c78b30;border-radius:9px;z-index:1}
-.illustrated-inspection .card-preview{display:flex;flex-direction:column;min-height:0;max-height:calc(100dvh - 26px);width:100%;text-align:left}
+.illustrated-inspection .card-preview{display:flex;flex-direction:column;min-height:0;max-height:var(--preview-max-height,calc(100dvh - 26px));width:100%;text-align:left}
 .illustrated-inspection .inspection-heading{min-height:39px;flex:none;padding:4px 9px 3px 13px;gap:8px}
 .illustrated-inspection .inspection-context{color:#dfc28c;font-size:9px;letter-spacing:.14em;font-weight:700}
 .illustrated-inspection [data-side="e"] .inspection-context{color:#f1b2a5}
@@ -3975,7 +3975,7 @@ body.collection-mode #view{max-width:none;padding:0 0 36px;min-width:0}
 .card-combat-mode [data-card-layout=true] .unit-card.generated-template.hand-card{flex-basis:calc(var(--tray-height)*.55);width:calc(var(--tray-height)*.55)}
 .unit-card.generated-template.hand-card .generated-face{max-height:100%}
 .illustrated-inspection .inspection-feature.inspection-generated-feature{display:block;padding:0 12px 8px}
-.inspection-generated-feature>.generated-face{width:min(220px,calc((100dvh - 230px)*2/3));margin:0 auto 8px}
+.inspection-generated-feature>.generated-face{width:min(220px,calc((var(--preview-max-height,100dvh) - 230px)*2/3));margin:0 auto 8px}
 .inspection-generated-feature .inspection-identity{display:block;padding:0}
 .inspection-generated-feature .inspection-identity h2{font-size:15px;margin-bottom:4px}
 .inspection-generated-feature .inspection-order,.inspection-generated-feature .inspection-rarity,.inspection-generated-feature .inspection-readiness{display:inline;font-size:10px;margin-right:6px}
@@ -6875,11 +6875,20 @@ function createCardInspection(getContext,esc){
   const el=panel();if(!el)return;
   el.hidden=true;el.textContent='';el.classList.remove('illustrated-inspection');
   for(const p of ['left','top'])el.style.removeProperty(p);
+  el.style.removeProperty('--preview-max-height');
   el.closest('.hand-header')?.style.removeProperty('--inspection-header-height');
  }
  function position(){
   const el=panel();if(!el||el.hidden||!trigger?.isConnected)return;
-  const pos=previewPosition(trigger.getBoundingClientRect(),el.getBoundingClientRect(),{width:innerWidth,height:innerHeight},current.kind);
+  const anchor=trigger.getBoundingClientRect();
+  el.style.removeProperty('--preview-max-height');
+  const size=el.getBoundingClientRect();
+  // Sur écran étroit, une grande fiche de main doit tenir au-dessus de la carte
+  // lorsqu'aucun côté n'a assez de place : elle ne doit pas bloquer sa sélection.
+  if(current.kind==='hand'&&anchor.top>=324&&anchor.right+12+size.width>innerWidth-12&&anchor.left-size.width-12<12){
+   el.style.setProperty('--preview-max-height',(anchor.top-24)+'px');
+  }
+  const pos=previewPosition(anchor,el.getBoundingClientRect(),{width:innerWidth,height:innerHeight},current.kind);
   el.style.left=pos.left+'px';el.style.top=pos.top+'px';
  }
  function show(request){
