@@ -35,13 +35,13 @@ export function chooseDungeonEvent(profile,choice){
  }
  return {ok:false,reason:'Choix inconnu.'};
 }
-export function nextDungeonBattle(profile,seed=Date.now()){
+export function nextDungeonBattle(profile,seed=Date.now(),options={}){
  const run=profile.dungeonRun;if(!run)throw Error('Aucune expédition en cours');
  if(run.phase==='choice')throw Error('Choisissez un événement avant le prochain combat.');
  if(run.phase!=='ready'&&run.phase!=='bonus')throw Error('État de donjon invalide.');
  const isBonus=run.phase==='bonus';
  const mission=isBonus?dungeonBonusMission(run.id,run.stage):dungeonStageMission(run.id,run.stage);
- const b=createBattle(profile,mission,seed);
+ const b=createBattle(profile,mission,seed,options);
  b.dungeonId=mission.dungeonId;b.dungeonStage=mission.dungeonStage;b.dungeonBonus=isBonus;
  if(run.hp!==null){
   b.heroes.p.hp=clamp(run.hp,1,b.heroes.p.maxhp);

@@ -1,5 +1,22 @@
 # Architecture modulaire — V2.6
 
+## Proposition du 21/10/2026 — alternance réelle joueur / IA
+
+`engine/battle.js` conserve son calcul historique pour les parties sans `turnFlow`.
+Sur les nouveaux combats avec `turnFlow: 'alternating'`, le même moteur résout
+séparément le camp joueur puis adverse. L’IA continue d’utiliser `rankEnemyMoves`,
+mais `playEnemyCard` expose une seule pose réelle par appel ; `finishEnemyTurn`
+déclenche ensuite sa résolution. Les filtres optionnels de `battle-control.js`
+ne changent pas le fonctionnement commun historique.
+
+`app.js` orchestre les délais de présentation **après** application et sauvegarde
+de chaque opération. `ui/combat-fx.js` anime uniquement les événements transitoires
+du moteur en CSS et respecte les préférences de mouvement réduit. L’interface et
+le moteur n’échangent pas de DOM ou d’événements persistants. `ui/storage.js`
+accepte la phase `enemy` lors d’une sauvegarde. Voir
+[le contrat de cette PR](TOURS_ALTERNES_2026_10_21.md).
+
+
 ## Cartes Forge — proposition du 21/10/2026
 
 Toujours 28 modules. Dix associations explicites dans `visuals.js`, un reçu

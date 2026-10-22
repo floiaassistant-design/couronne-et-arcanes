@@ -77,6 +77,7 @@ async def run(browser,label,viewport):
     await target.scroll_into_view_if_needed();await target.click()
     assert await page.evaluate('({atk:battle.board[0][1].atk,hp:battle.board[0][1].maxhp})')=={'atk':3,'hp':7}
     await page.locator('[data-action="end-turn"]').click()
+    await page.wait_for_function('()=>battle.round>=2')
     saved=await page.evaluate('()=>({...window.__saves})')
     round_before=await page.evaluate('battle.round')
     await page.close();page=await make_page(browser,viewport,saved,errors,touch=touch)
@@ -97,7 +98,13 @@ async def run(browser,label,viewport):
             }
           }
         }
-        if(battle.status==='active')endPlayerTurn(battle);
+        if(battle.status==='active'){
+          endPlayerTurn(battle);
+          if(battle.phase==='enemy'){
+            for(let n=0;n<2&&battle.status==='active';n++){if(playEnemyCard(battle).done)break;}
+            if(battle.status==='active')finishEnemyTurn(battle);
+          }
+        }
       }
       persistBattle();render();settle();
     }""")
@@ -119,6 +126,7 @@ async def offline(browser):
     assert not await page.locator('#hand-card-inspection').is_hidden()
     await page.locator('[data-action="close-inspection"]').click()
     await page.locator('[data-action="end-turn"]').click()
+    await page.wait_for_function("() => JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'))?.round>=2")
     turn=await page.locator('.turn-n').inner_text()
     await page.reload()
     assert await page.locator('.turn-n').inner_text()==turn

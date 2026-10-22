@@ -15,8 +15,8 @@ const validUnit=u=>u===null||(u&&typeof u==='object'&&hasCard(u.id)&&CARDS[u.id]
  Number.isFinite(u.atk)&&nonNegative(u.armor||0)&&nonNegative(u.stun||0)&&nonNegative(u.poison||0)&&nonNegative(u.poisonTurns||0));
 export function validStoredBattle(b){
  if(!b||!['active','victory','defeat'].includes(b.status)||b.rewardGiven||
-  !['player','resolving','finished'].includes(b.phase)||!Number.isInteger(b.round)||b.round<1||
-  typeof b.missionId!=='string'||!supportedBoard(b.board)||
+  !['player','enemy','resolving','finished'].includes(b.phase)||!Number.isInteger(b.round)||b.round<1||
+  (b.turnFlow!==undefined&&b.turnFlow!=='alternating')||typeof b.missionId!=='string'||!supportedBoard(b.board)||
   !validHero(b.heroes?.p)||!validHero(b.heroes?.e)||
   !Array.isArray(b.log)||!b.log.every(x=>typeof x==='string'))return false;
  if(!b.board.every(row=>row.every(validUnit)))return false;

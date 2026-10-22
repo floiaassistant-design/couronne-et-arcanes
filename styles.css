@@ -659,3 +659,14 @@ body:has(.combat-screen) #view{
  .combat-hand-dock .hand-header:has(.hand-card-inspection:not([hidden])){min-height:calc(var(--inspection-header-height,21px) + var(--inspection-extra))}
  .combat-hand-dock .hand-header .hand-card-inspection:not([hidden]){padding-block:3px}
 }
+
+/* Tours alternés : signaux d'interface transitoires, sans sprite supplémentaire. */
+.combat-screen .turn-indicator{margin:4px 0 7px;padding:8px 12px;border:1px solid #bcad8270;border-radius:6px;background:#172735d9;color:#f3e5c4;text-align:center;font-size:12px;font-weight:650;letter-spacing:.02em}
+.combat-screen .combat-fx-chip{position:absolute;z-index:25;inset:15% 8%;display:grid;place-items:center;pointer-events:none;border-radius:50%;font-size:clamp(16px,2.5vw,36px);font-weight:800;color:#fff2cf;text-shadow:0 1px 5px #09131d,0 0 12px #f0b75b;background:radial-gradient(circle,#dfad5d77 0%,transparent 67%);animation:combat-card-flash .24s ease-out both}
+.combat-screen .combat-fx-chip.fx-death{color:#ffb0b0;background:radial-gradient(circle,#a8393877,transparent 70%)}
+.combat-screen .combat-fx-chip.fx-heal{color:#cbf1d4;background:radial-gradient(circle,#35996977,transparent 70%)}
+.combat-screen .combat-fx-chip.fx-spawn{color:#ffe3a5}
+.combat-screen .combat-fx-chip.fx-move{animation:combat-card-slide .24s ease-out both}
+@keyframes combat-card-flash{from{transform:scale(.35);opacity:.15}60%{opacity:1}to{transform:scale(1.1);opacity:.85}}
+@keyframes combat-card-slide{from{transform:translateX(-25%) scale(.65);opacity:.1}to{transform:translateX(0) scale(1);opacity:.85}}
+@media(prefers-reduced-motion:reduce){.combat-screen .combat-fx-chip{animation:none!important}}

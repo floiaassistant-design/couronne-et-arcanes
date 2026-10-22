@@ -125,6 +125,7 @@ async def run(browser,label,viewport):
       render();
     }''')
     await page.locator('[data-action="end-turn"]').click()
+    await page.wait_for_function("()=>battle.phase!=='enemy'")
     assert await page.evaluate('battle.traps.length')==0
     assert await page.evaluate('battle.board[2].find(u=>u?.uid===92).hp')==7
     assert 'Piège déclenché' in await page.locator('.log-list').inner_text()
@@ -132,6 +133,7 @@ async def run(browser,label,viewport):
     await page.wait_for_timeout(2600)
     await page.emulate_media(reduced_motion='reduce')
     await page.locator('[data-action="end-turn"]').click()
+    await page.wait_for_function("()=>battle.phase!=='enemy'")
     assert await page.locator('.silence-badge').count()==0
     assert await page.locator('.battle-grid .lane-row').count()==3
     # Chargement d'un combat historique sans aucune propriété V2.9.
@@ -143,6 +145,7 @@ async def run(browser,label,viewport):
     await page.close()
     page=await make_page(browser,viewport,legacy,errors)
     await page.locator('[data-action="end-turn"]').click()
+    await page.wait_for_function("()=>battle.phase!=='enemy'")
     assert await page.locator('.turn-n').inner_text()=='4'
     assert not errors,errors
     assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
@@ -161,6 +164,7 @@ async def production(browser,label,viewport):
     await page.locator('.hand .unit-card:not(.on-cooldown)').first.click()
     await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
     await page.locator('[data-action="end-turn"]').click()
+    await page.wait_for_function("() => JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'))?.round>=2")
     await page.wait_for_timeout(3000)
     await page.reload()
     assert await page.locator('.turn-n').inner_text()=='2'

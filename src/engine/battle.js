@@ -39,6 +39,7 @@ export function createBattle(profile,mission,seed=Date.now(),options={}){
  heroClass:p.heroClass,forgeBonus:bonuses.forgeBonus,libraryBonus:(p.buildings.bibliotheque||0)+gearBonus(p,'hand'),unitAtkBonus:bonuses.unitAtkBonus,powerBonus:gearBonus(p,'power'),reputationBonus:bonuses.reputationBonus,
  aiStyle:mission.aiStyle||'equilibre',aiBoss:!!mission.boss,aiPhaseAnnounced:false,
  upgrades:bonuses.upgrades,mastery:bonuses.mastery,enemyDifficulty:mission.difficulty,mode:mission.mode||'campaign',stats:{playerKills:0,enemyKills:0}};
+ if(options.turnFlow==='alternating')b.turnFlow='alternating';
  b.heroes.p.deck=shuffle(b,p.deck);
  b.heroes.e.deck=shuffle(b,mission.deck);
  draw(b,'p',5+b.libraryBonus);draw(b,'e',5);
@@ -193,15 +194,15 @@ function enemyAct(b){
  }
 }
 
-function resolvePoison(b){
- for(const row of b.board)for(const u of row)if(u&&u.poisonTurns>0){
+function resolvePoison(b,sideFilter=null){
+ for(const row of b.board)for(const u of row)if(u&&u.poisonTurns>0&&(!sideFilter||u.side===sideFilter)){
   u.hp=Math.max(0,u.hp-u.poison);u.poisonTurns--;const pos=b.board.findIndex(row=>row.includes(u));if(pos>=0){const col=b.board[pos].indexOf(u);fx(b,{type:'poison',lane:pos,col,damage:u.poison});}
  }
  sweepDead(b);
 }
-function moveUnits(b){
- // Alternate start side by round to avoid systematic movement advantage.
- for(const side of b.round%2?['p','e']:['e','p'])for(let lane=0;lane<laneCount(b);lane++){
+function moveUnits(b,sideFilter=null){
+ // Legacy combats alternate initiative; the new mode resolves each camp separately.
+ for(const side of sideFilter?[sideFilter]:(b.round%2?['p','e']:['e','p']))for(let lane=0;lane<laneCount(b);lane++){
   const cols=Array.from({length:lastCell(b)},(_,i)=>side==='p'?lastCell(b)-i:i+1);
   for(const original of cols){const u=b.board[lane][original];if(!u||u.side!==side||u.stun>0)continue;
    let col=original;const steps=activeAbility(b,u)==='haste'?2:1;
@@ -246,10 +247,10 @@ function retaliate(b,defender,attacker,lane,defenderCol,attackerCol){
  }
 }
 
-function resolveAttacks(b){
+function resolveAttacks(b,sideFilter=null){
  const intents=[];
  for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
-  const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0)continue;
+  const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0||(sideFilter&&u.side!==sideFilter))continue;
   const target=findTarget(b,lane,col,u);
   const charged=!silenced(b,u)&&CHARGE_IDS.has(u.id)&&!!u.movedThisRound;
   if(target)intents.push({u,lane,col,target,atk:u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?2:0),ability:activeAbility(b,u),charged});
@@ -280,10 +281,10 @@ function resolveAttacks(b){
   }
  }
  // Le bonus de charge ne dure qu'un seul tour et doit survivre aux sauvegardes historiques.
- for(const row of b.board)for(const u of row)if(u)u.movedThisRound=false;
+ for(const row of b.board)for(const u of row)if(u&&(!sideFilter||u.side===sideFilter))u.movedThisRound=false;
  sweepDead(b);
  // Persistent support abilities trigger after combat.
- for(let lane=0;lane<laneCount(b);lane++)for(const u of b.board[lane])if(u&&u.hp>0){
+ for(let lane=0;lane<laneCount(b);lane++)for(const u of b.board[lane])if(u&&u.hp>0&&(!sideFilter||u.side===sideFilter)){
   if(activeAbility(b,u)==='heal'){
    const allies=b.board[lane].filter(v=>v&&v.side===u.side&&v.hp<v.maxhp);
    if(allies.length){allies.sort((a,z)=>(a.hp/a.maxhp)-(z.hp/z.maxhp));allies[0].hp=Math.min(allies[0].maxhp,allies[0].hp+2);const col=b.board[lane].indexOf(allies[0]);fx(b,{type:'heal',lane,col});}
@@ -293,7 +294,7 @@ function resolveAttacks(b){
    if(allies.length&&b.round%3===0){allies[0].atk=Math.min(allies[0].atk+1,12);}
   }
  }
- for(const row of b.board)for(const u of row)if(u&&u.stun>0)u.stun--;
+ for(const row of b.board)for(const u of row)if(u&&u.stun>0&&(!sideFilter||u.side===sideFilter))u.stun--;
  checkOutcome(b);
 }
 const hasBattleTalent=(b,id)=>Array.isArray(b.heroTalents)&&b.heroTalents.includes(id);
@@ -346,8 +347,52 @@ export function usePower(b){
  }
  checkOutcome(b);return {ok:true};
 }
+// Un tour alternatif ne modifie pas les combats déjà sauvegardés sans ce mode.
+export function playEnemyCard(b){
+ if(b.turnFlow!=='alternating'||b.phase!=='enemy'||b.status!=='active')return {ok:false,reason:'Ce n’est pas le tour adverse.'};
+ if(b.heroes.e.cardsPlayed>=2)return {ok:true,done:true};
+ const h=b.heroes.e;
+ if(b.aiBoss&&h.hp>0&&h.hp*2<=h.maxhp&&!b.aiPhaseAnnounced){
+  b.aiPhaseAnnounced=true;note(b,'Le boss entre en phase de furie : son comportement devient plus offensif !');
+ }
+ for(const choice of rankEnemyMoves(b)){
+  const result=play(b,'e',choice.index,choice.lane,choice.col);
+  if(!result.ok)continue;
+  b.aiLastPlan=`${choice.reason} · ligne ${choice.lane+1}`;
+  note(b,`Tactique adverse : ${b.aiLastPlan}.`);
+  return {ok:true,done:false,id:choice.id,lane:choice.lane,col:choice.col??entryColumn(b,'e')};
+ }
+ return {ok:true,done:true};
+}
+export function finishEnemyTurn(b){
+ if(b.turnFlow!=='alternating'||b.phase!=='enemy'||b.status!=='active')return {ok:false,reason:'Ce n’est pas le tour adverse.'};
+ resolvePoison(b,'e');prepareControlUnits(b,controlHooks,'e');moveUnits(b,'e');resolveAttacks(b,'e');expireControl(b,fx);
+ if(b.round>=17&&b.status==='active'){
+  const attrition=1+Math.floor((b.round-17)/6);
+  damageHero(b,'p',attrition);damageHero(b,'e',attrition);
+  if(b.round===17)note(b,'Les flammes de la guerre s’étendent : les deux héros perdent des PV à chaque tour.');
+  checkOutcome(b);
+ }
+ if(b.status==='active'){
+  b.round++;b.phase='player';b.powerCooldown=Math.max(0,b.powerCooldown-1);
+  for(const side of ['p','e']){
+   const h=b.heroes[side];h.cardsPlayed=0;
+   for(const card of h.hand)card.wait=Math.max(0,card.wait-1);
+   draw(b,side,1);
+  }
+  note(b,`Tour ${b.round} : choisissez vos cartes, puis validez.`);
+  checkOutcome(b);
+ }
+ return {ok:true};
+}
 export function endPlayerTurn(b){
  if(b.phase!=='player'||b.status!=='active')return {ok:false,reason:'Le tour est terminé.'};
+ if(b.turnFlow==='alternating'){
+  b.phase='enemy';
+  resolvePoison(b,'p');prepareControlUnits(b,controlHooks,'p');moveUnits(b,'p');resolveAttacks(b,'p');
+  if(b.status==='active')note(b,'L’IA prépare ses cartes.');
+  return {ok:true};
+ }
  b.phase='resolving';enemyAct(b);
  if(b.status==='active'){
   resolvePoison(b);prepareControlUnits(b,controlHooks);moveUnits(b);resolveAttacks(b);expireControl(b,fx);

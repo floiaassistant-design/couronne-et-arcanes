@@ -58,6 +58,7 @@ async def run(browser,label,vp):
     assert 'PV 12/15' in await page.locator('#hand-card-inspection').inner_text()
     await page.screenshot(path=f'/tmp/ca-milicien-{label}-plateau.png')
     await page.keyboard.press('Escape');await page.locator('[data-action="end-turn"]').click()
+    await page.wait_for_function('()=>battle.round>=2')
     assert await page.evaluate('battle.round')==2
     await page.reload();assert await page.evaluate('battle.round')==2
     assert await page.locator('.board-card[data-card-id="militia"] .stat.hp b').inner_text()=='12'

@@ -85,6 +85,7 @@ async def run(browser,label,viewport):
         assert await page.locator('.terrain-trap').count()==1
         await page.emulate_media(reduced_motion='reduce')
         await page.locator('[data-action="end-turn"]').click()
+        await page.wait_for_function("()=>battle.phase!=='enemy'")
         assert await page.locator('.turn-n').inner_text()=='2'
         assert await page.locator('.battle-vfx-overlay').count()==0
     # Ancienne sauvegarde : pas de conversion destructrice du plateau.
@@ -100,6 +101,7 @@ async def run(browser,label,viewport):
     assert await page.locator('.arena-dormant-row,.arena-structured').count()==0
     assert await page.locator('.arena-calibrated-art').count()==0
     await page.locator('[data-action="end-turn"]').click()
+    await page.wait_for_function("()=>battle.phase!=='enemy'")
     assert await page.locator('.turn-n').inner_text()=='2'
     assert not errors,errors
     # La nouvelle arène est fixe ; les mouvements du moteur restent actifs.
@@ -112,6 +114,7 @@ async def run(browser,label,viewport):
       render();
     }""")
     await page.locator('[data-action="end-turn"]').click()
+    await page.wait_for_function("()=>battle.phase!=='enemy'")
     assert await page.evaluate('battle.board[0][2]?.uid')==991
     assert await page.locator('.battle-vfx-overlay').count()==0
     assert not errors,errors
@@ -131,6 +134,7 @@ async def production(browser,label,viewport):
     await page.locator('[data-action="deploy"][data-col="1"][data-lane="1"]').click()
     await page.emulate_media(reduced_motion='reduce')
     await page.locator('[data-action="end-turn"]').click()
+    await page.wait_for_function("() => JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'))?.round>=2")
     await page.reload()
     assert await page.locator('.turn-n').inner_text()=='2'
     assert await page.locator('.battle-cell').count()==20
@@ -162,6 +166,7 @@ async def main():
             await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
             await page.emulate_media(reduced_motion='reduce')
             await page.locator('[data-action="end-turn"]').click()
+            await page.wait_for_function("() => JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'))?.round>=2")
             await page.reload()
             assert await page.locator('.turn-n').inner_text()=='2'
             assert not errors,errors
