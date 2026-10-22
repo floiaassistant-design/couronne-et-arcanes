@@ -3,7 +3,7 @@
 Les imports statiques inutilisés sont retirés des quatre points d'entrée d'interface
 (`app.js`, `ui/views.js`, `ui/pages.js`, `ui/battle-view.js`).
 Ce nettoyage ne déplace aucune fonction et ne modifie aucun calcul, état,
-référence de sauvegarde ou rendu HTML. Le graphe reste orienté moteur → rendu,
+référence de sauvegarde ou rendu HTML. Le graphe conserve les dépendances du rendu vers les API du moteur,
 sans import du DOM par le moteur. Deux tests surveillent les dépendances nommées
 de ces écrans et l'absence de cycle sur l'ensemble de `src/`.
 
