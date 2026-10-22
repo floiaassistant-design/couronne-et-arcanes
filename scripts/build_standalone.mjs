@@ -38,6 +38,8 @@ function convert(filename, testing=false){
  if(/^\s*(?:import|export)\b/m.test(text))throw Error('Syntaxe de module non gérée dans '+filename);
  if(testing && filename==='src/app.js')text+=`
 // Only in the automated test bundle; never included in JOUER.html.
+// Diagnostic entrypoints belong to the engine, not to unused imports in app.js.
+const {formationBonus,heroLevel,masteryRank,HERO_LEVEL_THRESHOLD,heroShieldBonus}=__load('src/engine.js');
 Object.defineProperties(window,{
  profile:{configurable:true,get:()=>profile,set:v=>profile=v},
  battle:{configurable:true,get:()=>battle,set:v=>battle=v},

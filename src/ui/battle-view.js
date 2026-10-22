@@ -1,16 +1,15 @@
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
-import {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
+import {CARDS,FACTIONS,CLASSES,cardTraits,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
 import {AI_STYLES,aiStyle,aiEnraged} from '../ai.js';
 import {silenced,teleportPlan,controlTargetError} from '../engine/battle-control.js';
-import {TALENT_TREE,TALENT_LEVELS} from '../talents.js';
+import {TALENT_TREE} from '../talents.js';
 import {visualFor,cardTemplateFor} from '../visuals.js';
 import {cardArenaEnabled,boardCard,campSeal} from './card-arena.js';
 import {laneCount,lastCell,validDeploymentColumn} from '../engine/board.js';
 import {arenaSprite,arenaBackdrop} from './arena-art.js';
 import {paintedArena,paintedTile} from './painted-arena.js';
-import {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission} from '../dungeons.js';
-import {freshProfile,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,BUILDINGS,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,chooseHeroTalent,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon} from '../engine.js';
 
+import {formationBonus} from '../engine.js';
 
 export function createBattleView(getState,{btn,cardUI,esc,num}){
  let profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled;

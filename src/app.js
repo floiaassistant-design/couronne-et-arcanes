@@ -5,12 +5,10 @@ import {mountPaintedArena} from './ui/painted-arena.js';
 import {cardArenaEnabled,setCardArenaMode} from './ui/card-arena.js';
 import {createCardInspection} from './ui/card-inspection.js';
 import {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure} from './ui/storage.js';
-import {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS} from './data.js';
-import {AI_STYLES,aiStyle,aiEnraged} from './ai.js';
-import {TALENT_TREE,TALENT_LEVELS} from './talents.js';
-import {visualFor,artSrc} from './visuals.js';
-import {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission} from './dungeons.js';
-import {DECK_STYLES,proposeDeck,applyDeckStyle,deckOverview,freshProfile,changeHeroClass,learnClassSkill,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,BUILDINGS,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,chooseHeroTalent,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon} from './engine.js';
+import {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission} from './data.js';
+
+import {dungeonStageMission} from './dungeons.js';
+import {DECK_STYLES,proposeDeck,applyDeckStyle,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,buyPack,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon} from './engine.js';
 const VFX_KEY='couronnes_arcanes_animations_v13';
 let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}catch{return true;}})();
 

@@ -1119,12 +1119,9 @@ const {mountPaintedArena}=__load("src/ui/painted-arena.js");
 const {cardArenaEnabled,setCardArenaMode}=__load("src/ui/card-arena.js");
 const {createCardInspection}=__load("src/ui/card-inspection.js");
 const {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure}=__load("src/ui/storage.js");
-const {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
-const {AI_STYLES,aiStyle,aiEnraged}=__load("src/ai.js");
-const {TALENT_TREE,TALENT_LEVELS}=__load("src/talents.js");
-const {visualFor,artSrc}=__load("src/visuals.js");
-const {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission}=__load("src/dungeons.js");
-const {DECK_STYLES,proposeDeck,applyDeckStyle,deckOverview,freshProfile,changeHeroClass,learnClassSkill,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,BUILDINGS,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,chooseHeroTalent,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
+const {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission}=__load("src/data.js");
+const {dungeonStageMission}=__load("src/dungeons.js");
+const {DECK_STYLES,proposeDeck,applyDeckStyle,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,buyPack,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
 const VFX_KEY='couronnes_arcanes_animations_v13';
 let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}catch{return true;}})();
 
@@ -1735,13 +1732,10 @@ const {createPages}=__load("src/ui/pages.js");
 const {createBattleView}=__load("src/ui/battle-view.js");
 const {unitStatContext,unitStats}=__load("src/engine/unit-stats.js");
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
-const {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
-const {AI_STYLES,aiStyle,aiEnraged}=__load("src/ai.js");
-const {TALENT_TREE,TALENT_LEVELS}=__load("src/talents.js");
+const {CARDS,FACTIONS,CLASSES,cardTraits}=__load("src/data.js");
 const {visualFor,artSrc,cardTemplateFor}=__load("src/visuals.js");
 const {cardArenaEnabled}=__load("src/ui/card-arena.js");
-const {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission}=__load("src/dungeons.js");
-const {freshProfile,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,BUILDINGS,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,chooseHeroTalent,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
+const {heroLevel,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS}=__load("src/engine.js");
 function createViews(getState){
  let profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled;
  const esc=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
@@ -1788,12 +1782,11 @@ Object.assign(__exports,{createViews});
 "src/ui/pages.js":function(__exports,__load){
 const {renderCollectionCatalogue}=__load("src/ui/collection.js");
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
-const {CARDS,CLASS_SKILLS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
-const {AI_STYLES,aiStyle,aiEnraged}=__load("src/ai.js");
+const {CARDS,CLASS_SKILLS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission}=__load("src/data.js");
+const {AI_STYLES}=__load("src/ai.js");
 const {TALENT_TREE,TALENT_LEVELS}=__load("src/talents.js");
-const {visualFor,artSrc}=__load("src/visuals.js");
 const {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission}=__load("src/dungeons.js");
-const {DECK_STYLES,proposeDeck,deckOverview,freshProfile,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,BUILDINGS,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,chooseHeroTalent,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
+const {DECK_STYLES,proposeDeck,deckOverview,validateDeck,BUILDINGS,EQUIPMENT,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,dungeonUnlocked}=__load("src/engine.js");
 function createPages(getState,{btn,cardUI,esc,num,heroProgress}){
  let profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable;
  const bind=fn=>(...args)=>{({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable}=getState());return fn(...args);};
@@ -3381,17 +3374,16 @@ Object.assign(__exports,{DECK_STYLES,deckOverview,proposeDeck,applyDeckStyle});
 },
 "src/ui/battle-view.js":function(__exports,__load){
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
-const {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission,cardTraits,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
+const {CARDS,FACTIONS,CLASSES,cardTraits,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
 const {AI_STYLES,aiStyle,aiEnraged}=__load("src/ai.js");
 const {silenced,teleportPlan,controlTargetError}=__load("src/engine/battle-control.js");
-const {TALENT_TREE,TALENT_LEVELS}=__load("src/talents.js");
+const {TALENT_TREE}=__load("src/talents.js");
 const {visualFor,cardTemplateFor}=__load("src/visuals.js");
 const {cardArenaEnabled,boardCard,campSeal}=__load("src/ui/card-arena.js");
 const {laneCount,lastCell,validDeploymentColumn}=__load("src/engine/board.js");
 const {arenaSprite,arenaBackdrop}=__load("src/ui/arena-art.js");
 const {paintedArena,paintedTile}=__load("src/ui/painted-arena.js");
-const {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission}=__load("src/dungeons.js");
-const {freshProfile,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,usePower,formationBonus,completeBattle,buyPack,upgradeCard,BUILDINGS,upgradeBuilding,EQUIPMENT,craftEquipment,equipEquipment,chooseHeroTalent,reputationLevel,heroLevel,heroShieldBonus,HERO_MAX_LEVEL,HERO_LEVEL_THRESHOLD,masteryRank,MASTERY_THRESHOLDS,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
+const {formationBonus}=__load("src/engine.js");
 function createBattleView(getState,{btn,cardUI,esc,num}){
  let profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled;
  const bind=fn=>(...args)=>{({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled}=getState());return fn(...args);};
