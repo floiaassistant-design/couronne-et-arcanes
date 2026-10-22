@@ -64,7 +64,7 @@ async def states(page):
   for cards in [False,True]:
    await page.evaluate("""({legacy,lanes,cards})=>{
     battle=createBattle(profile,{id:'01',name:'Audit',enemy:'Adversaire',hp:80,
-     difficulty:lanes===3?3:1,boss:lanes===4,deck:[]},42,{legacy});
+     difficulty:lanes===3?3:1,boss:lanes===4,deck:[]},42,{legacy,turnFlow:legacy?undefined:'alternating'});
     battle.heroes.p.hand=[{id:'militia',wait:0},{id:'archer',wait:2},{id:'wolf',wait:0},{id:'shade',wait:0},{id:'smith',wait:0},{id:'spark',wait:0}];
     playPlayerCard(battle,0,0,1);battle.heroes.p.cardsPlayed=0;
     battle.board[0][1].silenceUntil=2;
