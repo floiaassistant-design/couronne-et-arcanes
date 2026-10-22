@@ -68,6 +68,11 @@ Moteur, IA, catalogue, actifs et stockage ne sont pas modifiés.
   compris), rectangles et pixels, dans des contextes hors réseau. La référence
   utilisée pour le contre-audit est f6249f7, avant ce travail CSS ; les changements
   ultérieurs de la PR nº 31 ne modifient pas son rendu.
+  Résultat : **123 états identiques**, géométrie et pixels compris, sur les trois formats.
+  Les marges automatiques sont lues comme valeurs calculées via CSS Typed OM ;
+  leurs rectangles réels sont toujours comparés séparément.
+
+`npm run control-balance` et `npm run arena-balance` ont aussi réussi.
 
 Deux assertions historiques sont adaptées aux espaces de formatage, sans changer
 le comportement attendu. Aucun résultat historique ni référence de parité n'est modifié.

@@ -15,7 +15,13 @@ SNAPSHOT="""async()=>{
   const rect=e.getBoundingClientRect();
   const styles=['','::before','::after'].map(p=>{
    const s=getComputedStyle(e,p||null);
-   return [...s].sort().map(k=>k+':'+intern(s.getPropertyValue(k).replaceAll(location.href.replace(/[^/]+$/,''),'ROOT/'))).join(';');
+   // CSSOM peut exposer une marge utilisée négative pour un bloc débordant.
+   // Typed OM garde la valeur calculée auto ; les rectangles sont comparés à part.
+   const typed=!p&&e.computedStyleMap?.();
+   return [...s].sort().map(k=>{
+    const value=typed&&k.startsWith('margin-')?typed.get(k)?.toString()||s.getPropertyValue(k):s.getPropertyValue(k);
+    return k+':'+intern(value.replaceAll(location.href.replace(/[^/]+$/,''),'ROOT/'));
+   }).join(';');
   });
   return [e.tagName,[...e.attributes].filter(a=>!['src','style'].includes(a.name)).map(a=>[a.name,a.value]),
    [...e.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent),

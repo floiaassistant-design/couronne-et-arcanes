@@ -24,14 +24,14 @@ de combat sont retirées. Les cartes non encore illustrées affichent des emplac
 leurs noms et vraies valeurs. Le décor peint, la main, les cadres, les aperçus
 au survol et les interactions restent en place.
 
-## Légions de la Forge — proposition du 21 octobre 2026
+## Légions de la Forge — intégrées par la PR nº 29
 
 Dix cartes Forge rejoignent les 32 Aube/Sylve/Ombre : Marteau des Monts, Golem,
 Sapeur, Foreur, Colosse, Ingénieure, Canon, Mécaniste, Marchefer et Alchimiste.
 Cadres acier/cuivre/braises entiers, noms et valeurs réels dans leurs champs.
 Exports exacts de la PR atelier nº 25, commit `ceb0a916`. Collection, main,
 fiches et plateau partagent ces images ; les rangs futurs restent « À concevoir ».
-Nouvelle PR séparée, aucune fusion autorisée.
+La PR nº 29 est fusionnée sur main depuis le 21 octobre 2026.
 [Périmètre et contrôles](docs/FORGE_INTEGRATION_2026_10_21.md).
 
 ## Cour des Ombres — intégrée par la PR nº 28
@@ -91,10 +91,10 @@ Les autres portent « À concevoir » ; aucune évolution de rareté n’est cr�
 Deck, compositions et compétences de classe restent accessibles en bas de page.
 
 Le fond illustré est embarqué et tracé dans `assets/ui-artwork.json`.
-Dix Aube, onze Sylve et onze Ombre sont intégrés ; dix Forge sont proposés. [Périmètre et vérifications](docs/COLLECTION_2026_10_21.md).
+Les 42 cartes Aube, Sylve, Ombre et Forge sont intégrées. [Périmètre et vérifications](docs/COLLECTION_2026_10_21.md).
 La Collection est intégrée à `0896c16e` après validation spécifique.
 
-## Tours alternés — proposition en PR (non fusionnée)
+## Tours alternés — intégrés par la PR nº 30
 
 Pour les **nouveaux** combats, le joueur pose ses cartes et valide ses actions ;
 ses unités se déplacent et attaquent. L’IA pose ensuite ses cartes une par une
@@ -141,7 +141,10 @@ distants avant de les déclarer réussis. Aucun téléphone physique n'est garan
 
 Les clés `couronnes_arcanes_v1`, `couronnes_arcanes_bataille_v1` et le réglage
 d'animations sont conservés. Les effets transitoires restent exclus du stockage.
-Les sources sont séparées entre moteur, IA, vues et stockage ; 28 modules dans cette proposition.
+Les sources sont séparées entre moteur, IA, vues et stockage ; 28 modules sur main.
+La maintenance proposée par la PR nº 32 ajoute une primitive HTML partagée (29 modules),
+clarifie les sous-rendus et consolide le CSS ; elle dépend de la PR nº 31 corrigée.
+[Rapport et vérifications](docs/MAINTENANCE_CSS_VUES_2026_10_22.md). Aucune fusion de ces deux PR n’est autorisée.
 
 [État](docs/ETAT_PROJET.md), [architecture](docs/ARCHITECTURE_MODULAIRE_V2_6.md),
 [rapport avant remise à zéro](docs/CHECKUP_NETTOYAGE_2026_10_20.md),
