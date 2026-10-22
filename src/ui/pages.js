@@ -1,7 +1,7 @@
 import {renderCollectionCatalogue} from './collection.js';
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 import {CARDS,CLASS_SKILLS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission} from '../data.js';
-import {AI_STYLES,aiStyle} from '../ai.js';
+import {AI_STYLES} from '../ai.js';
 import {TALENT_TREE,TALENT_LEVELS} from '../talents.js';
 
 import {DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission} from '../dungeons.js';

@@ -7,6 +7,8 @@ import {fileURLToPath} from 'node:url';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const namedImports=/^import\s*\{([^}]+)\}\s*from\s*['"]([^'"]+)['"];?$/gm;
+// Garde lexical léger : une propriété homonyme (m.aiStyle) n'est pas une liaison.
+const referencesName=(body,name)=>new RegExp('(?<![\\w$.])'+name+'(?![\\w$])').test(body);
 const sourcePaths=['src/app.js','src/ui/views.js','src/ui/pages.js','src/ui/battle-view.js'];
 const read=file=>readFileSync(path.join(root,file),'utf8');
 
@@ -15,12 +17,17 @@ test('Les écrans ne conservent pas de noms importés inutilisés',()=>{
   const source=read(file);
   const body=source.replace(namedImports,'');
   for(const match of source.matchAll(namedImports)){
-   for(const imported of match[1].split(',').map(x=>x.trim())){
+   for(const imported of match[1].split(',').map(x=>x.trim()).filter(Boolean)){
     const name=imported.split(/\s+as\s+/).at(-1);
-    assert.match(body,new RegExp('\\b'+name+'\\b'),file+' : '+name+' est importé mais jamais utilisé');
+    assert.ok(referencesName(body,name),file+' : '+name+' est importé mais jamais utilisé');
    }
   }
  }
+});
+
+test('Une propriété homonyme ne masque pas un import mort',()=>{
+ assert.equal(referencesName('m.aiStyle;','aiStyle'),false);
+ assert.equal(referencesName('aiStyle(battle);','aiStyle'),true);
 });
 
 function sourceFiles(dir='src'){
