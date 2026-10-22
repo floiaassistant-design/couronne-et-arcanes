@@ -88,11 +88,11 @@
   à la main, à la pioche ou à la collection privées du joueur.
 - `src/app.js` orchestre les écrans et actions. Rendus dans `src/ui/pages.js`,
   `views.js`, `battle-view.js` et `card-arena.js`, stockage dans `ui/storage.js`.
-  `ui/collection.js` rend le catalogue par personnage et les fiches de rareté,
+  `ui/markup.js` centralise l’échappement HTML pur partagé ; `ui/collection.js` rend le catalogue par personnage et les fiches de rareté,
   sans mutation du profil : les rangs non définis restent « À concevoir ».
   `ui/painted-arena.js` porte la projection et les ancrages. `ui/arena-art.js`
   fournit le repère neutre ; `ui/combat-fx.js` conserve l'API avec fin immédiate,
-  sans ancien lecteur d'effets. Les 28 modules sont empaquetés par le générateur.
+  sans ancien lecteur d'effets. Les 29 modules sont empaquetés par le générateur.
 - `engine/unit-stats.js` partage les statistiques d'invocation entre moteur,
   main et collection ; réutiliser `gearBonus` du profil. La main lit l'instantané
   du combat, la collection le profil actuel. Préserver la parité et l'ordre des

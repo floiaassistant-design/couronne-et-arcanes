@@ -65,6 +65,8 @@ jobs:
           python3 -m playwright install --with-deps chromium
       - name: Construire le HTML réservé aux tests navigateur
         run: npm run build:test
+      - name: Jeu web modulaire, navigation et reprise bureau/mobile
+        run: python3 tests/browser_maintenance.py
       - name: Collection pleine largeur, exemplaires réels et reprise
         run: python3 tests/browser_collection.py
       - name: Milicien v02, champs dynamiques, pose et reprise hors réseau
@@ -101,6 +103,7 @@ jobs:
         with:
           name: apercu-arene-structuree
           path: |
+            /tmp/ca-maintenance-*.png
             /tmp/ca-arena-*.png
             /tmp/ca-combat-*.png
             /tmp/ca-capacites-*.png

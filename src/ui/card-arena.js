@@ -1,3 +1,4 @@
+import {esc} from './markup.js';
 import {generatedCardFace} from './generated-card.js';
 // Présentation des vraies unités sur leurs cases. Ni règles, ni partie préfabriquée.
 import {CARDS,FACTIONS} from '../data.js';
@@ -13,7 +14,6 @@ export function setCardArenaMode(enabled){
  document.body.dataset.cardCombat=String(enabled);
  try{localStorage.setItem('couronnes_arcanes_vue_cartes_v1',enabled?'on':'off');}catch{}
 }
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // Deux silhouettes distinctes : le camp reste lisible sans dépendre de la couleur.
 export function campSeal(side){
  const enemy=side==='e';

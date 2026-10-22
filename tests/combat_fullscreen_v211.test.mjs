@@ -46,7 +46,7 @@ test('combat plein écran : styles et restauration indépendante des défilement
        js=readFileSync(new URL('../src/app.js',import.meta.url),'utf8');
  assert.match(css,/body:has\(\.combat-screen\) #view/);
  assert.match(css,/\.combat-hand-dock\s*\{/);
- assert.match(css,/overflow-x:auto;overflow-y:hidden/);
+ assert.match(css,/overflow-x:\s*auto;\s*overflow-y:\s*hidden/);
  assert.match(js,/const handScroll=document\.querySelector\('\.combat-hand-dock \.hand'\)/);
  assert.match(js,/hand\.scrollLeft=handScroll/);
  assert.match(js,/stage\.scrollTop=stageScroll/);
