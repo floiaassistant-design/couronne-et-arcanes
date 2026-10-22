@@ -82,6 +82,13 @@
 
 ### Modules et interface
 
+- CSS : `index.html` est l'unique liste de feuilles ordonnée, utilisée aussi par
+  le générateur autonome. `styles.css` porte le socle ; `styles/components.css`,
+  `styles/pages/`, `styles/cards/` et `styles/battle/` portent les composants et
+  leurs variantes mobiles. Voir `styles/README.md`. Garder les surcharges peintes,
+  cartes et collection dans `assets/` après ce socle. Ne pas altérer les fonds
+  embarqués ni leurs reçus lors d'une réorganisation de styles.
+
 - `src/engine.js` est la façade publique ; les règles restent dans `src/engine/`,
   sans DOM. `src/data.js`, `talents.js` et `dungeons.js` portent le catalogue et
   les rencontres. `src/ai.js` reste une IA heuristique déterministe, sans accès

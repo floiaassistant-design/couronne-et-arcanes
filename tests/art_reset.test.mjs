@@ -16,7 +16,7 @@ test('Sans anciens effets : fin de lecture immédiate, événements et dégâts 
 test('Builder : aucune ancienne image ajoutée sans registre ni approbation',()=>{
  const root=fileURLToPath(new URL('../',import.meta.url)),dir=fs.mkdtempSync(path.join(os.tmpdir(),'ca-new-art-'));
  try{
-  for(const f of ['package.json','index.html','styles.css','src','scripts','assets'])fs.cpSync(path.join(root,f),path.join(dir,f),{recursive:true});
+  for(const f of ['package.json','index.html','styles.css','styles','src','scripts','assets'])fs.cpSync(path.join(root,f),path.join(dir,f),{recursive:true});
   fs.writeFileSync(path.join(dir,'assets/creatures/ancien.webp'),'not approved');
   let r=spawnSync(process.execPath,['scripts/build_standalone.mjs'],{cwd:dir,encoding:'utf8'});
   assert.notEqual(r.status,0);assert.match(r.stderr,/Illustration non cataloguée/);

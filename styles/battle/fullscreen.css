@@ -1,0 +1,246 @@
+/* Écran de combat : conteneur, titre, HUD et espace du plateau. */
+/* Combat immersif : HUD compact, arène dominante et main ancrée en bas.
+   Affecte exclusivement l'écran de combat ; les autres écrans restent inchangés. */
+body:has(.combat-screen) {
+  overflow: hidden;
+}
+body:has(.combat-screen) .topbar,
+body:has(.combat-screen) .main-nav,
+body:has(.combat-screen) .footer {
+  display: none;
+}
+body:has(.combat-screen) #view {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+.combat-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  background: #0a1523;
+}
+.combat-screen .combat-titlebar {
+  flex: none;
+  min-height: 44px;
+  margin: 0;
+  padding: 6px 14px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #9f8e6766;
+  background: linear-gradient(90deg, #142638, #213345 60%, #142438);
+  gap: 12px;
+}
+.combat-mission-name {
+  margin: 1px 0 0;
+  font:
+    600 clamp(14px, 1.5vw, 19px)/1.15 Georgia,
+    serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 55vw;
+}
+.combat-screen .combat-titlebar .kicker {
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
+.combat-screen .combat-titlebar .pill {
+  margin-left: auto;
+  white-space: nowrap;
+  padding: 5px 9px;
+  font-size: 10px;
+}
+.combat-menu-link {
+  flex: none;
+  border: 1px solid #a1b7bd88;
+  border-radius: 5px;
+  background: #162d3e;
+  color: #f3e2bd;
+  padding: 7px 11px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.combat-menu-link:hover,
+.combat-menu-link:focus-visible {
+  border-color: #f1d48e;
+  outline: 2px solid #f1d48e;
+  outline-offset: 1px;
+}
+.combat-screen .combat-stage {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+  overflow: auto;
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  padding: 7px 12px 10px;
+  box-shadow: none;
+  scrollbar-color: #6a8c9a #142538;
+  overscroll-behavior: contain;
+}
+.combat-screen .battle-hud {
+  gap: 9px;
+  margin: 0 0 3px;
+}
+.combat-screen .fighter {
+  max-width: none;
+  min-width: 0;
+  padding: 5px 12px;
+  border-radius: 6px;
+  background: #0b2030c9;
+}
+.combat-screen .fighter h3 {
+  font-size: clamp(11px, 1.4vw, 16px);
+  margin: 0 0 3px;
+}
+.combat-screen .fighter .hp-line {
+  font-size: 11px;
+  margin-top: 3px;
+}
+.combat-screen .fighter .hpbar {
+  height: 6px;
+}
+.combat-screen .battle-mid .turn-n {
+  font-size: 27px;
+  line-height: 1;
+}
+.combat-screen .battle-mid .turn-label {
+  font-size: 8px;
+}
+.combat-screen .arena-caption {
+  padding: 6px 4px 5px;
+  margin: 0;
+}
+.combat-screen .arena-lofi .battle-grid {
+  width: 100%;
+  padding-bottom: 7px;
+  min-width: 0;
+  margin: 0;
+  overscroll-behavior-x: contain;
+}
+.combat-screen .arena-sky {
+  height: 68px;
+  background-size: 100% 68px;
+}
+.combat-screen .arena-structured .lane-row,
+.combat-screen .arena-structured .arena-dormant-row {
+  min-height: 102px;
+  margin-top: 5px;
+}
+.combat-screen .arena-structured .battle-cell,
+.combat-screen .arena-structured .arena-dormant-cell,
+.combat-screen .arena-structured .arena-dormant-gate {
+  min-height: 102px;
+}
+.combat-screen .arena-structured .unit-on-board {
+  min-height: 100px;
+}
+.combat-screen .arena-legend {
+  margin: 7px 3px;
+}
+.combat-screen .arena-scroll-hint {
+  margin: 3px 2px;
+  font-size: 10px;
+}
+.combat-screen .vfx-controls {
+  padding: 4px 2px;
+  font-size: 10px;
+}
+.combat-screen .control-tip,
+.combat-screen .teleport-preview {
+  margin: 6px 0 0;
+  padding: 6px 9px;
+  font-size: 11px;
+}
+.combat-screen .formation-tip,
+.combat-screen .battle-tip {
+  margin: 5px 2px;
+  font-size: 10px;
+}
+@media (max-width: 700px) {
+  .combat-screen .combat-titlebar {
+    min-height: 39px;
+    padding: 5px 7px;
+    gap: 5px;
+  }
+  .combat-screen .combat-titlebar .kicker {
+    font-size: 8px;
+  }
+  .combat-mission-name {
+    font-size: 13px;
+    max-width: 43vw;
+  }
+  .combat-screen .combat-titlebar .pill {
+    display: none;
+  }
+  .combat-menu-link {
+    padding: 6px;
+    font-size: 10px;
+  }
+  .combat-screen .combat-stage {
+    padding: 5px 5px 7px;
+  }
+  .combat-screen .fighter {
+    padding: 5px;
+  }
+  .combat-screen .fighter h3 {
+    font-size: 11px;
+  }
+  .combat-screen .fighter .hp-line {
+    font-size: 9px;
+  }
+  .combat-screen .battle-mid .turn-n {
+    font-size: 22px;
+  }
+  .combat-screen .arena-caption {
+    font-size: 10px;
+  }
+}
+@media (max-height: 540px) {
+  .combat-screen .combat-titlebar {
+    min-height: 35px;
+    padding-block: 3px;
+  }
+  .combat-screen .arena-sky {
+    height: 42px;
+    background-size: 100% 42px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .combat-screen .combat-stage {
+    scroll-behavior: auto;
+    transition: none !important;
+  }
+}
+/* Sur bureau standard, garder les quatre pistes dans le viewport au-dessus de la main. */
+@media (min-width: 960px) and (min-height: 650px) and (max-height: 960px) {
+  .combat-screen .arena-sky {
+    height: 58px;
+    background-size: 100% 58px;
+  }
+  .combat-screen .arena-structured .lane-row,
+  .combat-screen .arena-structured .arena-dormant-row {
+    min-height: 98px;
+    margin-top: 4px;
+  }
+  .combat-screen .arena-structured .battle-cell,
+  .combat-screen .arena-structured .arena-dormant-cell,
+  .combat-screen .arena-structured .arena-dormant-gate {
+    min-height: 98px;
+  }
+  .combat-screen .arena-structured .unit-on-board {
+    min-height: 96px;
+  }
+}

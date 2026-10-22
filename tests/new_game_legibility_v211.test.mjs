@@ -73,7 +73,7 @@ test('rendu : identité de camp, Ordre, rareté et classe disponibles sans état
  assert.match(v.homeUI(),/data-action="restore-previous-game"/);
 });
 test('quatre contours de rareté déclarés et contrôle séparé du camp',()=>{
- const css=readFileSync(new URL('../styles.css',import.meta.url),'utf8');
+ const css=readFileSync(new URL('../styles/cards/rarity.css',import.meta.url),'utf8')+readFileSync(new URL('../styles/battle/board.css',import.meta.url),'utf8');
  for(const rarity of ['commun','rare','épique','légendaire']){
   assert.ok(css.includes('.unit-card[data-rarity="'+rarity+'"]'));
   if(rarity!=='commun')assert.ok(css.includes('.arena-lofi .unit-on-board[data-rarity="'+rarity+'"]'));

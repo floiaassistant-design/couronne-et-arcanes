@@ -1,0 +1,330 @@
+/* Combat : HUD, cases, journal, formations et états publics de contrôle. */
+.battle-panel {
+  padding: 18px;
+  background: linear-gradient(145deg, #182937, #101d2a);
+  border: 1px solid #b4a0795c;
+  border-radius: 13px;
+}
+.battle-hud {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+.fighter {
+  flex: 1;
+  background: #0d1c29;
+  border: 1px solid #a6936544;
+  padding: 13px;
+  border-radius: 9px;
+  max-width: 350px;
+}
+.fighter.enemy {
+  text-align: right;
+}
+.fighter h3 {
+  margin: 0 0 7px;
+  font:
+    normal 20px Georgia,
+    serif;
+}
+.fighter .hp-line {
+  font-size: 12px;
+  color: #cbb890;
+  margin-top: 6px;
+}
+.hpbar {
+  height: 9px;
+  background: #3a1d26;
+  border-radius: 9px;
+  overflow: hidden;
+  border: 1px solid #934b4f55;
+}
+.hpbar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #ae6c60, #d99b7c);
+}
+.battle-mid {
+  text-align: center;
+  flex: none;
+}
+.battle-mid .turn-n {
+  font:
+    normal 38px Georgia,
+    serif;
+  color: var(--gold);
+}
+.battle-mid .turn-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: #a9b6b8;
+}
+.battle-grid {
+  background:
+    radial-gradient(ellipse 90% 95% at 50% 50%, #34515b62, transparent),
+    repeating-linear-gradient(0deg, transparent 0 59px, #ffffff03 60px), #0c1b25;
+  border: 1px solid #a58a5a70;
+  border-radius: 12px;
+  padding: 12px;
+  overflow-x: auto;
+  box-shadow: inset 0 0 32px #0008;
+}
+.lane-row {
+  display: grid;
+  grid-template-columns: 47px 65px repeat(5, minmax(65px, 1fr)) 65px;
+  gap: 7px;
+  min-width: 680px;
+  align-items: stretch;
+  min-height: 103px;
+  margin: 5px 0;
+}
+.lane-label {
+  font:
+    normal 24px Georgia,
+    serif;
+  color: #b8aa83;
+  display: grid;
+  place-items: center;
+}
+.lane-gate {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 7px;
+  color: #dcbf8e;
+  font:
+    normal 28px Georgia,
+    serif;
+  background: linear-gradient(135deg, #385066, #142536);
+  border: 1px solid #bbac7044;
+}
+.lane-gate.enemy {
+  background: linear-gradient(135deg, #633b4e, #2c1f33);
+  color: #ecb9bc;
+}
+.battle-cell {
+  min-height: 90px;
+  border: 1px solid #70858a40;
+  border-radius: 7px;
+  background: linear-gradient(140deg, #53705e16, #678b6e06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color 0.13s,
+    background 0.13s;
+}
+.battle-cell.available {
+  border-color: #dfc68a88;
+  cursor: pointer;
+  background: #cfaa6020;
+}
+.battle-cell.available:hover {
+  background: #cfaa6040;
+}
+.battle-cell .slot-num {
+  position: absolute;
+  bottom: 4px;
+  right: 5px;
+  color: #879d9960;
+  font-size: 9px;
+}
+.battle-tip {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font-size: 11px;
+  color: #a8b6be;
+  margin: 9px 2px 19px;
+}
+.hand-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 255px;
+  gap: 18px;
+  align-items: start;
+}
+.hand {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 13px 8px 20px;
+  min-height: 236px;
+}
+.hand-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+.actions-side {
+  border: 1px solid var(--line);
+  background: #132333;
+  border-radius: 9px;
+  padding: 17px;
+}
+.actions-side .btn {
+  width: 100%;
+  margin-bottom: 8px;
+}
+.actions-side p {
+  font-size: 12px;
+  line-height: 1.65;
+  color: #a3b5bd;
+}
+.log-list {
+  max-height: 150px;
+  overflow: auto;
+  border-top: 1px solid #b3a17730;
+  padding-top: 10px;
+}
+.log-list div {
+  font-size: 11px;
+  color: #b0bbc0;
+  padding: 5px 0;
+  border-bottom: 1px dashed #ffffff0e;
+}
+.power-hint {
+  border: 1px solid #d5b17855;
+  background: #bca2770f;
+  padding: 11px;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #d8cba8;
+  margin: 7px 0 12px;
+}
+.status-outcome {
+  text-align: center;
+  padding: 40px 25px;
+}
+@media (max-width: 950px) {
+  .hand-panel {
+    grid-template-columns: 1fr;
+  }
+  .actions-side {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .actions-side .log-list {
+    grid-column: 1/-1;
+  }
+}
+@media (max-width: 660px) {
+  .battle-panel {
+    padding: 11px;
+  }
+  .battle-hud {
+    gap: 7px;
+  }
+  .fighter {
+    padding: 10px;
+    min-width: 0;
+  }
+  .fighter h3 {
+    font-size: 13px;
+  }
+  .fighter .hp-line {
+    font-size: 10px;
+  }
+  .battle-mid .turn-n {
+    font-size: 26px;
+  }
+  .battle-mid .turn-label {
+    font-size: 8px;
+  }
+  .battle-grid {
+    padding: 7px;
+  }
+  .lane-row {
+    gap: 4px;
+  }
+  .hand-panel {
+    gap: 7px;
+  }
+  .actions-side {
+    grid-template-columns: 1fr;
+  }
+}
+/* V1.2 — lisibilité des formations tactiques sur le plateau. */
+/* V1.7 — affiche uniquement la dernière décision effectivement prise par l’adversaire. */
+.ai-plan {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px;
+  border: 1px solid rgba(211, 174, 110, 0.35);
+  border-radius: 12px;
+  background: rgba(211, 174, 110, 0.07);
+  margin-bottom: 15px;
+  font-size: 0.82rem;
+}
+.ai-plan b {
+  color: #ead1a2;
+}
+.ai-plan span {
+  color: #e8e3d9;
+}
+/* V2.9 : états publics de contrôle, lisibles sur un plateau défilant sur mobile. */
+.battle-cell {
+  position: relative;
+}
+.terrain-trap {
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+  right: 3px;
+  z-index: 4;
+  padding: 3px 2px;
+  border: 1px solid #8bccb6;
+  border-radius: 4px;
+  background: #102c26;
+  color: #bcf5dd;
+  font-size: 9px;
+  font-weight: 700;
+  text-align: center;
+  pointer-events: none;
+}
+.terrain-trap.enemy {
+  border-color: #e2a080;
+  background: #3d211c;
+  color: #ffd1b6;
+}
+.silence-badge {
+  position: absolute;
+  top: 22px;
+  left: 3px;
+  right: 3px;
+  z-index: 5;
+  background: #291d42;
+  color: #ede0ff;
+  border: 1px solid #baa0e3;
+  border-radius: 4px;
+  padding: 3px;
+  font-size: 10px;
+  text-align: center;
+}
+.unit-on-board.silenced .sprite-figure {
+  filter: saturate(0.4);
+}
+.control-tip,
+.teleport-preview {
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 8px 12px;
+  background: #142536;
+  color: #c9e2e6;
+  border-radius: 6px;
+}
+.teleport-preview {
+  border: 1px solid #789eaf;
+}
+.hand-panel > * {
+  min-width: 0;
+}
+@media (max-width: 760px) {
+  .hand-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

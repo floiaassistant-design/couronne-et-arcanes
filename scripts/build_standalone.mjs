@@ -6,6 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {ART_NAMES,UI_ART_NAMES,CARD_ART_NAMES,CARD_TEMPLATES} from '../src/visuals.js';
 import {readArtwork} from './lib/artwork.mjs';
 import {readUIArtwork} from './lib/ui-artwork.mjs';
+import {readStylesheets} from './lib/stylesheets.mjs';
 
 const isCardStudy=process.argv.includes('--cards');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -57,26 +58,12 @@ convert('src/app.js',isTest);
 const factoriesJs=[...factories].map(([file,body])=>`${JSON.stringify(file)}:function(__exports,__load){\n${body}\n}`).join(',\n');
 const js=`(function(){\n'use strict';\nconst __factories={\n${factoriesJs}\n};\nconst __cache=Object.create(null);\nfunction __load(name){\n if(Object.prototype.hasOwnProperty.call(__cache,name))return __cache[name];\n const factory=__factories[name];if(!factory)throw Error('Module non trouvé : '+name);\n const exports={};__cache[name]=exports;factory(exports,__load);return exports;\n}\n__load('src/app.js');\n})();`;
 let html=read('index.html');
-const css=read('styles.css');
-const cardCss=read('assets/card-arena.css');
-const previewCss=read('assets/card-preview.css');
-const collectionCss=read('assets/collection.css');
-const generatedCss=read('assets/generated-card.css');
-const paintedArtCss=read('assets/backgrounds/arena-celeste-peinte.css');
-const paintedLayoutCss=read('assets/backgrounds/arena-peinte-layout.css');
-if(!html.includes('<link rel="stylesheet" href="./styles.css" />')||!html.includes('<script type="module" src="./src/app.js"></script>'))throw Error('Points d’entrée HTML non reconnus');
-html=html.replace('<link rel="stylesheet" href="./styles.css" />','<style>\n'+css+'\n</style>');
-html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-celeste-peinte.css" />','<style>\n'+paintedArtCss+'\n</style>');
-html=html.replace('<link rel="stylesheet" href="./assets/backgrounds/arena-peinte-layout.css" />','<style>\n'+paintedLayoutCss+'\n</style>');
-html=html.replace('<link rel="stylesheet" href="./assets/card-arena.css" />',()=>'<style>\n'+cardCss+'\n</style>');
-html=html.replace('<link rel="stylesheet" href="./assets/card-preview.css" />',()=>'<style>\n'+previewCss+'\n</style>');
-html=html.replace('<link rel="stylesheet" href="./assets/collection.css" />',()=>'<style>\n'+collectionCss+'\n</style>');
-html=html.replace('<link rel="stylesheet" href="./assets/generated-card.css" />',()=>'<style>\n'+generatedCss+'\n</style>');
-for(const [target,source] of Object.entries(uiArt)){
- const link=`<link rel="stylesheet" href="./${target}" />`;
- if(!html.includes(link))throw Error('Fond UI non relié à la page : '+target);
- html=html.replace(link,()=>'<style>\n'+source+'\n</style>');
+const sheets=readStylesheets(root,html);
+if(!sheets.some(s=>s.file==='styles.css')||!html.includes('<script type="module" src="./src/app.js"></script>'))throw Error('Points d’entrée HTML non reconnus');
+for(const target of Object.keys(uiArt)){
+ if(!sheets.some(s=>s.file===target))throw Error('Fond UI non relié à la page : '+target);
 }
+for(const {tag,css} of sheets)html=html.replace(tag,()=>'<style>\n'+css+'\n</style>');
 if(isCardStudy)html=html.replace('<body>','<body data-card-combat="true">');
 html=html.replace('<script type="module" src="./src/app.js"></script>','<script>\n'+js.replace(/<\/script/gi,'<\\/script')+'\n</script>');
 const output=isTest?(isCardStudy?'tests/ESSAI_CARTES.test.html':'tests/JOUER.test.html'):(isCardStudy?'ESSAI_CARTES.html':'JOUER.html');
