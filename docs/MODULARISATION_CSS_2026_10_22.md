@@ -66,6 +66,10 @@ sont comparés. Les grandes variables d'image définies exclusivement sur `:root
 ou un conteneur identifié par attribut sont lues une fois par propriétaire,
 après contrôle des déclarations et surcharges ; toute
 surcharge ou propriété enregistrée conserve la lecture par élément.
+Les pseudo-éléments sans contenu ne génèrent aucune boîte ; leur contenu reste
+comparé, les pseudo-éléments réellement générés gardent leur comparaison complète.
+L'option `--viewport desktop|portrait|landscape` permet de répartir la même
+comparaison sur trois processus, sans retirer d'état.
 
 Les résultats finaux de cette comparaison, des 19 autres suites navigateur
 et de la CI sur le commit exact figurent dans la description de la PR. Les

@@ -39,6 +39,8 @@ SNAPSHOT=r"""async()=>{
   const rect=e.getBoundingClientRect();
   const styles=['','::before','::after'].map(p=>{
    const s=getComputedStyle(e,p||null);
+   // Sans contenu, ::before/::after ne génère aucune boîte à comparer.
+   if(p&&['none','normal'].includes(s.content))return 'content:'+s.content;
    // CSSOM peut exposer une marge utilisée négative pour un bloc débordant.
    // Typed OM garde la valeur calculée auto ; les rectangles sont comparés à part.
    const typed=!p&&e.computedStyleMap?.();
@@ -116,11 +118,12 @@ async def states(page):
    await page.evaluate("battle.phase='enemy';selectedCard=-1;render()")
    yield label+'-enemy'
 
-async def main(reference,only_case=None):
+async def main(reference,only_case=None,only_viewport=None):
  async with async_playwright() as pw:
   browser=await pw.chromium.launch(headless=True,args=['--no-sandbox'])
   total=0
   for label,viewport in [('desktop',{'width':1366,'height':900}),('portrait',{'width':390,'height':844}),('landscape',{'width':844,'height':390})]:
+   if only_viewport and label!=only_viewport:continue
    contexts=[];pages=[];errors=[]
    for root in [reference,ROOT]:
     ctx=await browser.new_context(viewport=viewport,offline=True,reduced_motion='reduce')
@@ -206,5 +209,6 @@ async def modular():
 
 if __name__=='__main__':
  parser=argparse.ArgumentParser();parser.add_argument('--reference',type=Path);parser.add_argument('--case')
+ parser.add_argument('--viewport',choices=['desktop','portrait','landscape'])
  args=parser.parse_args()
- asyncio.run(main(args.reference.resolve(),args.case) if args.reference else modular())
+ asyncio.run(main(args.reference.resolve(),args.case,args.viewport) if args.reference else modular())
