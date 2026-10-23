@@ -1,3 +1,10 @@
+## 23/10/2026 — Proposition : préparer la publication web
+
+- Assemblage statique du même jeu et téléchargement de l'export unique.
+- Configuration Vercel : tests et parité avant build, revalidation des fichiers.
+- Aucune modification des sources du jeu, images ou sauvegardes.
+- Hébergement et liaison Git non activés ; proposition sur branche, sans fusion.
+
 ## 23/10/2026 — Intégration autorisée des PR nº 35, 36 et 37
 
 - Demande du propriétaire : « fusionne les pr en cours ».

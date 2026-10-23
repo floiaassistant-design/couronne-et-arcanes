@@ -1,3 +1,11 @@
+## Proposition de publication web — 23 octobre 2026
+
+Main vérifié : `ef675bba`, PR 35/36/37 fusionnées. Une branche indépendante
+prépare `dist/` depuis les sources existantes et une configuration Vercel.
+Aucun site ni déploiement automatique encore activés : espace d'hébergement
+à sélectionner/connecter et blocage sur CI à vérifier. Voir
+[publication web](PUBLICATION_WEB_2026_10_23.md). Aucune fusion autorisée.
+
 # Version réunie — 23 octobre 2026
 
 Le propriétaire a demandé explicitement de fusionner les PR ouvertes du jeu :
