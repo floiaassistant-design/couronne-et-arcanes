@@ -37,3 +37,15 @@
  .spell-targeting .spell-confirm {grid-column:2;grid-row:2/4;align-self:center}
  .spell-targeting small {grid-column:1/-1}
 }
+
+.combat-screen .battle-cell.spell-zone {outline:3px dashed #90eed4;outline-offset:-4px;cursor:crosshair;background:#65d9b330}
+.combat-screen .fighter.spell-hero-affected {outline:3px solid #ffe09c;outline-offset:2px}
+/* Les indications décoratives ne doivent pas intercepter le clic d'une carte. */
+.combat-screen .formation-badge,.combat-screen .silence-badge {pointer-events:none}
+/* En paysage bas, garder des cartes assez grandes : aperçu entre main et actions. */
+@media(max-height:540px) and (min-width:650px){
+ .combat-screen .combat-readout:has(.spell-targeting) {right:125px;flex-wrap:nowrap}
+ .combat-readout:has(.spell-targeting)>.combat-readout-copy {display:flex}
+ .spell-targeting {position:fixed;left:174px;right:206px;bottom:8px;width:auto;max-height:102px;padding:5px 8px;border:1px solid #93b4b9;border-radius:8px;background:#071c2df5;z-index:15}
+ .combat-screen:has(.spell-targeting) .combat-hand-tray {max-width:156px}
+}

@@ -64,7 +64,7 @@ async def run(browser,label,vp,touch=False,reduced=False,legacy=False):
   await page.screenshot(path=f'/tmp/ca-targeting-{label}-impact.png')
   await page.evaluate("act('spell-confirm',{});act('spell-target',{lane:'0',unitId:'902'})")
   assert await page.evaluate('battle.heroes.p.cardsPlayed')==1
-  await click('[data-action="fx-skip"]')
+  await page.evaluate("document.querySelector('[data-action=\"fx-skip\"]:not([hidden])')?.click()")
  await idle(page)
  saved=await page.evaluate('(k)=>localStorage.getItem(k)',KEY)
  await page.reload();assert await page.evaluate('(k)=>localStorage.getItem(k)',KEY)==saved
@@ -78,7 +78,7 @@ async def run(browser,label,vp,touch=False,reduced=False,legacy=False):
  if not reduced:
   await page.wait_for_selector('.combat-playing')
   assert await page.locator('.combat-fx-number.damage').count()==2
-  await click('[data-action="fx-skip"]')
+  await page.evaluate("document.querySelector('[data-action=\"fx-skip\"]:not([hidden])')?.click()")
  await idle(page)
  # Soin, protection et immobilisation : états réels persistants.
  for id,uid,expected in [('healing',900,10),('skill_cleric_bless',900,5),('entangle',901,2)]:
@@ -87,7 +87,7 @@ async def run(browser,label,vp,touch=False,reduced=False,legacy=False):
   if not reduced:
    await page.wait_for_selector('.combat-playing')
    assert await page.locator('.combat-fx-aura').count()>0
-   await click('[data-action="fx-skip"]')
+   await page.evaluate("document.querySelector('[data-action=\"fx-skip\"]:not([hidden])')?.click()")
   await idle(page)
   if id=='healing':assert await page.evaluate('battle.board[0][2].hp')==expected
   elif id=='skill_cleric_bless':assert await page.evaluate('battle.board[0][2].barrier')==expected
@@ -111,7 +111,7 @@ async def failure_fallback(browser):
  page=await browser.new_page(viewport={'width':1366,'height':900});errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
  await page.goto((ROOT/'tests/JOUER.test.html').as_uri());await page.locator('[data-action="welcome-start"]').click()
  await page.evaluate(SETUP,{'id':'firebolt','legacy':False})
- await page.evaluate("Element.prototype.animate=function(){throw Error('Animation indisponible pour ce test')}")
+ await page.evaluate("()=>{Element.prototype.animate=function(){throw Error('Animation indisponible pour ce test')}}")
  await page.locator('.hand [data-index="0"]').click();await page.locator('[data-unit-id="901"]').click();await page.locator('[data-action="spell-confirm"]').click()
  await idle(page);assert await page.evaluate('battle.heroes.p.cardsPlayed')==1
  assert await page.locator('.combat-fx-layer').count()==0

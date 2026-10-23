@@ -52,9 +52,10 @@ export function buildCombatSteps(events,before,after) {
  for(let i=0;i<events.length;i++){
   const event=events[i];if(!event.frame)continue;
   let frame=event.frame,armor=event.armor||0;
+  if(event.type==='spell-resolved')continue;
   if(event.type==='spell'){
    const end=events.findIndex((e,n)=>n>i&&e.type==='spell-resolved');
-   if(end>=0){
+   if(end>=0&&!events.slice(i+1,end).some(e=>['teleport','trap-place','trap-trigger','death','silence'].includes(e.type))){
     for(let n=i+1;n<=end;n++)armor+=events[n].armor||0;
     frame=events[end].frame;i=end;
    }

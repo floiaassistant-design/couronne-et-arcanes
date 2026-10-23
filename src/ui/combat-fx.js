@@ -76,7 +76,7 @@ export function createCombatFx(getState){
    }else if(c.hp>0)support(n,'heal');
    if(c.shield>0)support(n,'shield');
    if(c.shield<0&&c.hp>=0)impact(n,'shield','⬡');
-   if(c.effects?.length){support(n,'status');point('combat-fx-tag',n,c.effects.join(' · '));}
+   if(c.effects?.length){if(e.type==='spell')connect(source,n,'magic');support(n,e.variant==='spell_root'?'root':'status');point('combat-fx-tag',n,c.effects.join(' · '));}
    const value=[c.hp?(c.hp>0?'+':'−')+Math.abs(c.hp)+' PV':'',c.shield?(c.shield>0?'+':'−')+Math.abs(c.shield)+' ⬡':''].filter(Boolean).join(' · ');
    if(value)point('combat-fx-number '+(c.hp>0||c.shield>0?'healing':'damage'),n,value);
   }

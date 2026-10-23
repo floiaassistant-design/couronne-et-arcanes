@@ -82,3 +82,16 @@ test('Bibliothèque : contact, tir, magie et cinq identités paramétrables',()=
  assert.equal(combatEffectProfile({type:'spell',sourceId:'sundawn'}).faction,'aube');
  assert.equal(combatEffectProfile({type:'spell',sourceId:'firebolt'}).faction,'forge');
 });
+test('Téléportation sur piège mortel : conserver le déplacement, les dégâts et la disparition dans leur ordre réel',()=>{
+ const b=make('transposition');b.board[0][2].hp=1;b.board[0][2].armor=0;b.board[0][2].barrier=0;
+ b.traps=[{owner:'e',lane:1,col:2,kind:'rune',damage:3,expiresRound:3}];
+ const before=captureCombatFrame(b);b.vfx=[];playPlayerCard(b,0,1);
+ const steps=buildCombatSteps(b.vfx,before,captureCombatFrame(b)),types=steps.map(s=>s.type);
+ assert.ok(types.indexOf('teleport')>types.indexOf('spell'));
+ assert.ok(types.indexOf('damage')>types.indexOf('teleport'));
+ assert.ok(types.indexOf('death')>types.indexOf('damage'));
+ assert.equal(steps.find(s=>s.type==='damage').changes[0].hp,-1);
+ assert.equal(steps.find(s=>s.type==='teleport').frame.board[1][2].uid,1);
+ assert.equal(steps.find(s=>s.type==='death').frame.board[1][2],null);
+ assert.deepEqual(steps.at(-1).frame,captureCombatFrame(b));
+});

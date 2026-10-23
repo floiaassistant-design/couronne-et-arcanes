@@ -135,7 +135,10 @@ async def production(browser,label,viewport):
     await page.locator('[data-action="welcome-start"]').click()
     assert await page.locator('.battle-cell').count()==20
     await page.locator('.hand .unit-card:not(.on-cooldown)').first.click()
-    await page.locator('[data-action="deploy"][data-col="1"][data-lane="1"]').click()
+    if await page.locator('.spell-targeting').count():
+        await target_spell(page,1)
+    else:
+        await page.locator('[data-action="deploy"][data-col="1"][data-lane="1"]').click()
     await page.emulate_media(reduced_motion='reduce')
     await page.locator('[data-action="end-turn"]').click()
     await page.wait_for_function("() => JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'))?.round>=2")

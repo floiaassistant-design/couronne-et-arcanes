@@ -28,7 +28,8 @@ export function spellTargetingUI(selection,target,preview,esc){
  if(!selection)return '';
  const {card,mode,options,option,reason}=selection;
  const hint=mode==='first'?'Cliquez le premier ennemi sur sa ligne.':mode==='blessing'?'Cliquez l’allié le plus blessé de sa ligne.':mode==='silence'?'Cliquez la cible du silence mise en évidence.':mode==='enemy-line'||mode==='chain'?'Cliquez un ennemi autorisé pour choisir sa ligne.':mode==='ally-line'?'Cliquez un allié pour choisir sa ligne.':mode==='destination'?'Choisissez la ligne de destination.':mode==='trap'?'Choisissez la ligne du piège.':'Cibles automatiques : aucune sélection nécessaire.';
- const prediction=predictionText(preview);
+ const movement=option?.cells?.length?option.cells.map(c=>`Case ${c.col}, ligne ${c.lane+1}`).join(' · '):'';
+ const prediction=[predictionText(preview),movement].filter(Boolean).join(' · ');
  const automatic=mode==='automatic',ready=option&&preview?.ok;
  return `<section class="spell-targeting" aria-label="Ciblage du sort"><div class="spell-target-heading"><b>${esc(card.name)}</b><button type="button" data-action="spell-cancel">Annuler</button></div><p>${esc(reason||hint)}</p>
  ${automatic?'':`<div class="spell-lanes" aria-label="Choisir la ligne du sort">${options.map(o=>`<button type="button" data-action="spell-lane" data-lane="${o.lane}" ${o.error?'disabled':''} aria-pressed="${option?.lane===o.lane}" title="${esc(o.error||'Prévisualiser cette ligne')}">Ligne ${o.lane+1}</button>`).join('')}</div>`}

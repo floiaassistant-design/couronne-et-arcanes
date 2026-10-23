@@ -20,3 +20,5 @@
 .combat-statuses>span {font:10px/1.2 system-ui;background:#122c3ff0;color:#e4f7ff;border:1px solid #93c6df;border-radius:4px;padding:2px 4px;white-space:nowrap;text-shadow:none}
 @keyframes combat-aura {from{opacity:0;scale:.65}40%{opacity:.95;scale:1.05}to{opacity:0;scale:1.2}}
 @media(prefers-reduced-motion:reduce){.combat-fx-aura {animation:none}}
+
+.combat-fx-aura.root {border:4px double #7bd593;border-radius:25% 25% 10% 10%;background:repeating-linear-gradient(75deg,transparent 0 12px,#75bd7844 13px 16px)}

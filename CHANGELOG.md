@@ -1,3 +1,13 @@
+## Proposition — ciblage direct et effets de combat, 23 octobre 2026
+
+- Clic sur les cartes autorisées, aperçu exact du moteur, confirmation,
+  annulation, zones et soutien ; aucun changement des règles de ciblage.
+- Frappes avec avancée, projectiles, cinq identités magiques, soins ascendants,
+  boucliers et états actifs dans le lecteur séquentiel existant.
+- Modules dédiés, repli sur erreur d’animation, tests souris/tactile,
+  mouvement réduit, reprise historique et sauvegardes inchangées.
+- Même jeu web et unique JOUER.html généré. Proposition non fusionnée/publiée.
+
 ## 2026-10-23 — Proposition Éther et sorts
 
 - Import manuel des 11 cartes Éther et 23 sorts des PR atelier 26/27, commits immuables et reçus exacts ; 76 illustrations.

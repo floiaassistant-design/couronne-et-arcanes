@@ -298,7 +298,7 @@ document.addEventListener('click',event=>{const el=event.target.closest('[data-a
 document.addEventListener('keydown',event=>{
  if(event.key==='Escape'){if(isBattleFxPlaying())return;if(selectedCard>=0){resetSpell();selectedCard=-1;render();}closeCardInspection(true);if(document.querySelector('.collection-inspection'))hideModal();return;}
  if((event.key==='Enter'||event.key===' ')&&!event.target.closest('button')){
-  const el=event.target.closest('.unit-card.compact,[data-action="deploy"]');
+  const el=event.target.closest('.unit-card.compact,[data-action="deploy"],[data-action="spell-lane"]');
   if(el){event.preventDefault();act(el.dataset.action,el.dataset);}
  }
 });
