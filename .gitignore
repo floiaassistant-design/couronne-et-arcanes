@@ -10,3 +10,5 @@ __pycache__/
 *.pyc
 
 tests/ESSAI_CARTES.test.html
+
+.openai/canonical-build.json

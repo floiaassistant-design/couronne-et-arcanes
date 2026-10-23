@@ -23,6 +23,16 @@
 - Séparer capture publique, plan de lecture et rendu ; aucune règle ni image modifiée.
 - Proposition sur branche dédiée, sans fusion autorisée.
 
+## 23/10/2026 — Publication Sites et proposition de paquet automatique
+
+- Main `ef675bba` publié sur Sites ; export unique disponible dans le paquet.
+- Assemblage statique et reçu de provenance avec empreintes SHA-256.
+- Artifact CI réutilisable après fusion, sans secret ni déploiement dans GitHub.
+- Déclencheur GitHub de fusion activé ; paquet dépendant de la PR nº 38.
+- Premier parcours automatique encore non observé ; aucune fusion autorisée.
+- Aucune modification du jeu, des images ou des sauvegardes.
+- Les cartes Éther et sorts ont été intégrés depuis par la PR nº 39 ; leur publication sur Sites reste à vérifier.
+
 ## 23/10/2026 — Proposition : laboratoire de combat intégré
 
 - Bouton Développeur, configuration de deux decks, niveaux, classe et style IA.
