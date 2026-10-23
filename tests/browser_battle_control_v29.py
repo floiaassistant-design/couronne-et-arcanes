@@ -1,4 +1,4 @@
-from browser_spell_actions import target_spell
+from browser_spell_actions import target_spell,play_selected
 """Parcours V2.9 : fabrication, ciblage, trois effets, animations et reprise."""
 import asyncio
 from pathlib import Path
@@ -168,7 +168,7 @@ async def production(browser,label,viewport):
     await page.goto((ROOT/'JOUER.html').as_uri())
     await page.locator('[data-action="welcome-start"]').click()
     await page.locator('.hand .unit-card:not(.on-cooldown)').first.click()
-    await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
+    await play_selected(page,0)
     await page.locator('[data-action="end-turn"]').click()
     await page.wait_for_function("() => JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'))?.round>=2")
     await page.wait_for_timeout(3000)
