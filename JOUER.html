@@ -3518,78 +3518,66 @@ body:has(.combat-screen) #view {
   border-color: #efce8e;
   background: #2d4953;
 }
-/* Tours alternés : signaux d'interface transitoires, sans sprite supplémentaire. */
-.combat-screen .turn-indicator {
-  margin: 4px 0 7px;
-  padding: 8px 12px;
-  border: 1px solid #bcad8270;
-  border-radius: 6px;
-  background: #172735d9;
-  color: #f3e5c4;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 650;
-  letter-spacing: 0.02em;
+/* Lecture des actions, indépendante du plateau et de ses coordonnées peintes. */
+.combat-screen .combat-readout {
+ position:absolute;z-index:12;left:12px;right:12px;top:150px;
+ display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 12px;
+ border:1px solid #b4cfcb70;border-radius:8px;background:#071c2def;color:#f6edd8;
+ box-shadow:0 4px 18px #0005;
 }
-.combat-screen .combat-fx-chip {
-  position: absolute;
-  z-index: 25;
-  inset: 15% 8%;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-  border-radius: 50%;
-  font-size: clamp(16px, 2.5vw, 36px);
-  font-weight: 800;
-  color: #fff2cf;
-  text-shadow:
-    0 1px 5px #09131d,
-    0 0 12px #f0b75b;
-  background: radial-gradient(circle, #dfad5d77 0%, transparent 67%);
-  animation: combat-card-flash 0.24s ease-out both;
+.combat-readout-copy {display:flex;align-items:center;gap:12px;min-width:0;flex:1;font-size:12px;line-height:1.4}
+.combat-phase {color:#e8c77f;white-space:nowrap;font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+.combat-action {overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.combat-readout button {font:inherit;flex:none;padding:5px 9px;min-height:32px;cursor:pointer;background:#263f50;color:#fff2cd;border:1px solid #b8c4ba80;border-radius:5px}
+.combat-readout button:hover,.combat-readout button:focus-visible {outline:2px solid #f5cc7a;outline-offset:2px}
+.combat-readout button[hidden] {display:none}
+.combat-screen[data-painted-arena="false"] .combat-readout {position:relative;top:auto;left:auto;right:auto;margin:10px 0}
+.combat-recap {margin:12px 0;border:1px solid #94b3b655;border-radius:6px;padding:8px;background:#0e2332}
+.combat-recap summary {cursor:pointer;color:#f3d597}
+.combat-recap ol {max-height:230px;overflow:auto;padding-left:22px;font-size:12px;line-height:1.5}
+.combat-recap li {padding:4px}
+.combat-playing .hand {opacity:.6}
+.combat-screen .fx-source {outline:3px solid #ffe1a0!important;outline-offset:4px;filter:drop-shadow(0 0 10px #f5c35c);z-index:8}
+.combat-screen .fx-target {outline:3px dashed #ffeabf!important;outline-offset:6px;z-index:7}
+.combat-fx-layer {position:fixed;inset:0;z-index:70;pointer-events:none;overflow:hidden;--fx-color:#f9d08a}
+.combat-fx-layer[data-side="e"] {--fx-color:#ffa1bd}
+.combat-fx-path {position:absolute;height:3px;transform-origin:0 50%;background:var(--fx-color);box-shadow:0 0 7px var(--fx-color);opacity:.7}
+.combat-fx-path::after {content:'';position:absolute;right:0;top:-4px;border-left:10px solid var(--fx-color);border-top:5px solid transparent;border-bottom:5px solid transparent}
+.combat-fx-path.travel {height:2px;background:repeating-linear-gradient(90deg,var(--fx-color) 0 7px,transparent 7px 14px)}
+.combat-fx-path.magic {height:4px;background:linear-gradient(90deg,#9de6ff,var(--fx-color),#fff);box-shadow:0 0 14px #9de6ff}
+.combat-fx-projectile {position:absolute;width:13px;height:13px;margin:-6px;border-radius:50%;background:#fff3d3;box-shadow:0 0 8px 4px var(--fx-color)}
+.combat-fx-projectile.ranged {width:22px;height:4px;border-radius:2px;background:#ffe4ae}
+.combat-fx-projectile.travel {width:7px;height:7px;box-shadow:none}
+.combat-fx-impact {position:absolute;display:grid;place-items:center;width:76px;height:76px;border:3px solid var(--fx-color);border-radius:50%;background:radial-gradient(circle,#fff7c090,transparent 70%);color:#fff8da;font-size:44px;transform:translate(-50%,-50%);text-shadow:0 2px 4px #001;animation:combat-impact var(--impact-duration) ease-out var(--impact-delay) both}
+.combat-fx-impact.defeated {color:#ffd8e2;border-color:#ea869b;font-size:28px}
+.combat-fx-number,.combat-fx-tag {position:absolute;transform:translate(-50%,-110%);white-space:nowrap;border-radius:6px;padding:5px 9px;background:#30131ef5;border:1px solid #ffbbca;color:#ffdeea;font:bold 17px/1.3 system-ui;box-shadow:0 3px 9px #0008;animation:combat-number var(--number-duration) ease-out var(--impact-delay) both}
+.combat-fx-number.healing {background:#12392ff5;border-color:#8ef0bc;color:#baffd9}
+.combat-fx-tag {font-size:11px;color:#fff0c8;border-color:#e9cd91;background:#182d3cf2}
+@keyframes combat-impact {from{opacity:0;scale:.5}45%{opacity:1;scale:1.15}to{opacity:.25;scale:1.4}}
+@keyframes combat-number {from{opacity:0;translate:0 8px}25%{opacity:1}to{opacity:1;translate:0 -10px}}
+@media(max-width:700px){
+ .combat-screen .combat-readout {top:169px;left:6px;right:6px;padding:6px;gap:4px;min-height:54px}
+ .combat-readout-copy {display:block;font-size:10px}
+ .combat-phase {display:block;font-size:9px;margin-bottom:2px}
+ .combat-readout button {min-width:40px;min-height:40px;padding:4px;font-size:10px}
+ .combat-fx-number {font-size:14px}
 }
-.combat-screen .combat-fx-chip.fx-death {
-  color: #ffb0b0;
-  background: radial-gradient(circle, #a8393877, transparent 70%);
+@media(max-height:540px){
+ .combat-screen .combat-readout {top:70px;min-height:24px;padding:2px 8px}
+ .combat-readout-copy {display:flex;font-size:9px;gap:6px}
+ .combat-phase {font-size:8px;margin:0}
+ .combat-readout button {min-height:20px;padding:1px 7px;font-size:9px}
 }
-.combat-screen .combat-fx-chip.fx-heal {
-  color: #cbf1d4;
-  background: radial-gradient(circle, #35996977, transparent 70%);
+@media(max-height:540px){
+ .combat-screen .arena-caption {visibility:hidden}
+ .combat-screen .combat-readout {right:125px}
+ .combat-screen[data-painted-arena="true"] .vfx-controls {top:74px!important;right:8px!important}
 }
-.combat-screen .combat-fx-chip.fx-spawn {
-  color: #ffe3a5;
+@media(prefers-reduced-motion:reduce){
+ .combat-fx-layer {display:none}
 }
-.combat-screen .combat-fx-chip.fx-move {
-  animation: combat-card-slide 0.24s ease-out both;
-}
-@keyframes combat-card-flash {
-  from {
-    transform: scale(0.35);
-    opacity: 0.15;
-  }
-  60% {
-    opacity: 1;
-  }
-  to {
-    transform: scale(1.1);
-    opacity: 0.85;
-  }
-}
-@keyframes combat-card-slide {
-  from {
-    transform: translateX(-25%) scale(0.65);
-    opacity: 0.1;
-  }
-  to {
-    transform: translateX(0) scale(1);
-    opacity: 0.85;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .combat-screen .combat-fx-chip {
-    animation: none !important;
-  }
-}
+
+.combat-fx-impact.melee::after {content:"";position:absolute;left:45%;top:0;width:7px;height:75px;border-radius:50%;rotate:38deg;background:#fff8d8;box-shadow:0 0 12px var(--fx-color)}
 
 </style>
 <style>
@@ -4014,6 +4002,8 @@ const {esc}=__load("src/ui/markup.js");
 const {collectionInspection}=__load("src/ui/collection.js");
 const {createViews}=__load("src/ui/views.js");
 const {createCombatFx}=__load("src/ui/combat-fx.js");
+const {buildCombatSteps}=__load("src/ui/combat-steps.js");
+const {captureCombatFrame}=__load("src/engine/combat-events.js");
 const {mountPaintedArena}=__load("src/ui/painted-arena.js");
 const {createCardInspection}=__load("src/ui/card-inspection.js");
 const {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure}=__load("src/ui/storage.js");
@@ -4025,10 +4015,11 @@ let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}ca
 
 const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='aube',collectionOwned=false;
+let displayBattle=null,combatReport=null;
 let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null;
-const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({battle,screen}),esc);
-const {stopBattleFx,playBattleFx}=createCombatFx(()=>({animationsEnabled,screen}));
-const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
+const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({battle:displayBattle||battle,screen:isBattleFxPlaying()?'resolving':screen}),esc);
+const {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying}=createCombatFx(()=>({animationsEnabled,screen}));
+const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
 function save(){if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
@@ -4041,14 +4032,25 @@ function persistBattle(){
 
 // Render combat VFX from actual rules-engine events. These never enter saved battles.
 function withBattleFx(operation,onDone){
- if(!battle)return;
+ if(!battle||isBattleFxPlaying())return;
+ const before=captureCombatFrame(battle),round=battle.round,phase=battle.phase;
  battle.vfx=[];const result=operation();const events=battle.vfx;delete battle.vfx;
+ const after=captureCombatFrame(battle),steps=buildCombatSteps(result?.ok===false?[]:events,before,after);
+ if(combatReport?.battle!==battle||combatReport.round!==round)combatReport={battle,round,lines:[]};
+ combatReport.lines.push(...steps.map(s=>s.label));
  selectedCard=-1;persistBattle();
- // Apply and persist the outcome before waiting for cosmetic animations.
+ // Le résultat réel est sauvé avant toute attente visuelle, y compris les récompenses.
  if(battle.status!=='active')settle({deferModal:true});
  render();
- playBattleFx(result?.ok===false?[]:events,()=>{if(deferredBattleModal){showModal(deferredBattleModal);deferredBattleModal='';}onDone?.(result);});
-
+ playBattleFx(steps,()=>{
+  displayBattle=null;render();closeCardInspection(true,'fx');
+  if(deferredBattleModal){showModal(deferredBattleModal);deferredBattleModal='';}
+  onDone?.(result);
+ },{before,phase:phase==='enemy'?'Actions adverses':'Vos actions',onFrame:frame=>{
+  displayBattle={...battle,round,phase,status:'active',board:frame.board,traps:frame.traps,
+   heroes:{p:{...battle.heroes.p,...frame.heroes.p},e:{...battle.heroes.e,...frame.heroes.e}}};
+  render({frameUpdate:true});
+ }});
  if(result?.ok===false)toast(result.reason);
  return result;
 }
@@ -4073,17 +4075,20 @@ function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('sho
 function showModal(html){$('modal-root').innerHTML=`<div class="modal-backdrop"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;}
 function hideModal(){$('modal-root').innerHTML='';}
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une case de départ sur une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
-function render(){
+function render({frameUpdate=false}={}){
+ if(!frameUpdate){stopBattleFx();displayBattle=null;}
+ const fxFocus=frameUpdate?document.activeElement?.closest('.combat-readout button')?.dataset.action:null;
  document.body.classList.toggle('collection-mode',screen==='collection');
  const arenaScroll=document.querySelector('.battle-grid')?.scrollLeft||0;
  const arenaVertical=document.querySelector('.battle-grid')?.scrollTop||0;
  const handScroll=document.querySelector('.combat-hand-dock .hand')?.scrollLeft||0;
  const stageScroll=document.querySelector('.combat-stage')?.scrollTop||0;
  closeCardInspection();
- stopBattleFx();document.body.classList.toggle('animations-off',!animationsEnabled);
+ document.body.classList.toggle('animations-off',!animationsEnabled);
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
  $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='battle'&&battle?battleUI():homeUI();
- mountPaintedArena();
+ mountPaintedArena();syncFxControls();
+ if(fxFocus)document.querySelector(`[data-action="${fxFocus}"]`)?.focus({preventScroll:true});
  const arena=document.querySelector('.battle-grid');if(arena){arena.scrollLeft=arenaScroll;arena.scrollTop=arenaVertical;}
  const hand=document.querySelector('.combat-hand-dock .hand');if(hand)hand.scrollLeft=handScroll;
  const stage=document.querySelector('.combat-stage');if(stage)stage.scrollTop=stageScroll;
@@ -4151,6 +4156,7 @@ function startMission(id){if(battle?.status==='active'){toast('Terminez le comba
 function navigate(page){if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();if(!['home','campaign','tower','dungeons','collection','alchemy','forge','guide','battle'].includes(page))return;cancelEnemyTimer();screen=page;selectedCard=-1;render();if(page==='battle')scheduleEnemyStep();window.scrollTo(0,0);}
 function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();window.scrollTo(0,0);}
 function act(action,dataset){const {id,index,lane,col,page}=dataset;
+ if(isBattleFxPlaying()&&['select-card','deploy','end-turn','hero-power'].includes(action))return;
  switch(action){
 
   case 'new-game':showModal(`<div class="kicker">NOUVELLE PARTIE</div><h2>Choisir votre classe de départ</h2><p>Commencez une aventure à zéro avec une autre classe. Vous pouvez aussi changer de classe dans l’Atelier sans recommencer votre progression, après un combat.</p><div class="class-options new-game-classes">${Object.entries(CLASSES).map(([classId,c])=>btn(c.symbol+' '+c.name,'new-game-select',`data-id="${classId}"`,'ghost')).join('')}</div><p class="hint">La partie actuelle sera gardée dans un emplacement de sauvegarde précédent sur cet appareil. Exportez-la dans le Guide pour une copie durable.</p><div class="button-row">${btn('Annuler','close-modal','','ghost')}</div>`);break;
@@ -4202,7 +4208,9 @@ function act(action,dataset){const {id,index,lane,col,page}=dataset;
  case 'deploy':if(!battle||battle.phase!=='player'||selectedCard<0)return;withBattleFx(()=>playPlayerCard(battle,selectedCard,Number(lane),Number(col)));break;
  case 'end-turn':if(!battle)return;withBattleFx(()=>endPlayerTurn(battle),()=>scheduleEnemyStep());break;
  case 'hero-power':if(!battle)return;withBattleFx(()=>usePower(battle));break;
- case 'toggle-animations':animationsEnabled=!animationsEnabled;try{localStorage.setItem(VFX_KEY,animationsEnabled?'on':'off');}catch{}render();scheduleEnemyStep(0);break;
+ case 'fx-skip':skipBattleFx();break;
+ case 'fx-speed':changeFxSpeed();break;
+ case 'toggle-animations':skipBattleFx();animationsEnabled=!animationsEnabled;try{localStorage.setItem(VFX_KEY,animationsEnabled?'on':'off');}catch{}render();scheduleEnemyStep(0);break;
  case 'retreat':showModal(`<div class="kicker">RETRAITE</div><h2>Abandonner la bataille ?</h2><p>Cette décision compte comme une défaite. Dans un donjon, elle met fin à l’expédition.</p><div class="button-row">${btn('Oui, battre en retraite','confirm-retreat','','danger')}${btn('Rester au combat','close-modal','','ghost')}</div>`);break;
  case 'confirm-retreat':if(battle?.status==='active'){cancelEnemyTimer();battle.status='defeat';battle.phase='finished';hideModal();persistBattle();settle();}break;
  case 'close-modal':hideModal();break;
@@ -5809,6 +5817,7 @@ Object.assign(__exports,{ownedCopies,freshProfile,normalizeProfile,HERO_MAX_LEVE
 "src/engine/battle.js":function(__exports,__load){
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 const {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
+const {recordCombatEvent}=__load("src/engine/combat-events.js");
 const {rankEnemyMoves}=__load("src/ai.js");
 const {classSkillTargetError,resolveClassSkill}=__load("src/engine/class-skills.js");
 const {silenced,activeAbility,controlTargetError,resolveControlSpell,prepareControlUnits,triggerTrap,expireControl}=__load("src/engine/battle-control.js");
@@ -5821,7 +5830,7 @@ Object.assign(__exports,__load("src/engine/board.js"));
 function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed/4294967296;}
 function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand(b)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function note(b,message){b.log.unshift(message);b.log=b.log.slice(0,12);}
-function fx(b,event){if(Array.isArray(b.vfx)&&b.vfx.length<80)b.vfx.push(event);}
+function fx(b,event){recordCombatEvent(b,event);}
 function enterCell(b,u,lane,col){triggerTrap(b,u,lane,col,hit,fx,note);sweepDead(b);}
 const controlHooks={emit:fx,note,enter:enterCell};
 
@@ -5902,8 +5911,9 @@ function spawn(b,side,id,lane,col=entryColumn(b,side)){
  return true;
 }
 function damageHero(b,side,amount){
- const h=b.heroes[side];const absorbed=Math.min(h.shield,amount);h.shield-=absorbed;
+ const h=b.heroes[side],before=h.hp;const absorbed=Math.min(h.shield,amount);h.shield-=absorbed;
  h.hp=Math.max(0,h.hp-(amount-absorbed));
+ fx(b,{type:'hero-damage',side,damage:before-h.hp,absorbed});
 }
 function locateEnemy(b,side,lane){
  const list=b.board[lane].map((u,i)=>u&&u.side!==side?{u,i}:null).filter(Boolean);
@@ -5914,7 +5924,7 @@ function cast(b,side,id,lane){
  let drawAfter=0;
  const supportSpell=['spell_heal','spell_buff','spell_ward'].includes(c.ability);
  const allied=b.board[lane].findIndex(u=>u&&u.side===side);
- fx(b,{type:'spell',side,lane,from:crownColumn(b,side),to:supportSpell?(allied>=1?allied:crownColumn(b,side)):(foe?foe.i:crownColumn(b,enemy)),variant:c.ability,icon:c.icon});
+ fx(b,{type:'spell',name:c.name,side,lane,from:crownColumn(b,side),to:supportSpell?(allied>=1?allied:crownColumn(b,side)):(foe?foe.i:crownColumn(b,enemy)),variant:c.ability,icon:c.icon});
  if(c.ability==='spell_bolt'){
   if(foe)hit(b,foe.u,4,side);else damageHero(b,enemy,2);
  }else if(c.ability==='spell_heal'){
@@ -5966,8 +5976,12 @@ function hit(b,u,raw,bySide,ignoreArmor=false){
  let dmg=Math.max(1,raw-(ignoreArmor?0:(u.armor||0)));
  const barrier=u.barrier||0;
  if(barrier>0){const absorbed=Math.min(barrier,dmg);u.barrier=barrier-absorbed;dmg-=absorbed;}
- u.hp=Math.max(0,u.hp-dmg);
+ const before=u.hp;u.hp=Math.max(0,u.hp-dmg);
  if(bySide!==u.side&&u.hp<=0)b.stats[bySide==='p'?'playerKills':'enemyKills']++;
+ if(Array.isArray(b.vfx)){
+  const lane=b.board.findIndex(row=>row.includes(u)),col=lane<0?-1:b.board[lane].indexOf(u);
+  fx(b,{type:'damage',side:u.side,lane,col,damage:before-u.hp,absorbed:barrier-(u.barrier||0),armor:ignoreArmor?0:Math.min(raw-1,u.armor||0)});
+ }
  return dmg;
 }
 function sweepDead(b){
@@ -6049,9 +6063,9 @@ function retaliate(b,defender,attacker,lane,defenderCol,attackerCol){
  if(!RIPOSTE_IDS.has(defender.id)||silenced(b,defender)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
     defender.side===attacker.side||Math.abs(defenderCol-attackerCol)!==1||defender.lastRiposteRound===b.round)return;
  defender.lastRiposteRound=b.round;
+ fx(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
  const dealt=hit(b,attacker,2,defender.side);
  if(dealt>0){
-  fx(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,damage:dealt,riposte:true,icon:'↶'});
   note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
  }
 }
@@ -6227,6 +6241,28 @@ function endPlayerTurn(b){
 }
 
 Object.assign(__exports,{note,createBattle,formationBonus,playPlayerCard,usePower,playEnemyCard,finishEnemyTurn,endPlayerTurn});
+
+},
+"src/engine/combat-events.js":function(__exports,__load){
+// Instantanés publics de présentation. Aucun calcul de règle, DOM ou stockage.
+function captureCombatFrame(b) {
+ return {
+  board:b.board.map(row=>row.map(u=>u?{...u}:null)),
+  heroes:Object.fromEntries(['p','e'].map(side=>[side,{hp:b.heroes[side].hp,shield:b.heroes[side].shield}])),
+  traps:(b.traps||[]).map(t=>({...t}))
+ };
+}
+function recordCombatEvent(b,event) {
+ if(!Array.isArray(b.vfx))return;
+ const frame=captureCombatFrame(b);
+ // Le moteur retire la carte juste après l'émission ; le lecteur la retire à la fin de l'effet.
+ if(event.type==='death')frame.board[event.lane][event.col]=null;
+ // Métadonnée locale non énumérable : préserver le contrat des événements historiques.
+ const recorded={...event};Object.defineProperty(recorded,'frame',{value:frame});
+ b.vfx.push(recorded);
+}
+
+Object.assign(__exports,{captureCombatFrame,recordCombatEvent});
 
 },
 "src/engine/class-skills.js":function(__exports,__load){
@@ -6584,11 +6620,11 @@ const { arenaBackdrop }=__load("src/ui/arena-art.js");
 const { paintedArena, paintedTile }=__load("src/ui/painted-arena.js");
 const { formationBonus }=__load("src/engine.js");
 function createBattleView(getState, { btn, cardUI, esc }) {
-  let battle, selectedCard, animationsEnabled;
+  let battle, selectedCard, animationsEnabled, combatReport;
   const bind =
     (fn) =>
     (...args) => {
-      ({ battle, selectedCard, animationsEnabled } = getState());
+      ({ battle, selectedCard, animationsEnabled, combatReport } = getState());
       return fn(...args);
     };
   function battleUnit(u, lane) {
@@ -6618,7 +6654,7 @@ function createBattleView(getState, { btn, cardUI, esc }) {
   }
 
   function battleActions(immersive) {
-    return `<aside class="actions-side">${btn('✦ Utiliser le pouvoir', 'hero-power', `${battle.powerCooldown > 0 || battle.phase !== 'player' || battle.status !== 'active' ? 'disabled' : ''}`)}${btn(battle.turnFlow === 'alternating' ? 'Valider mes actions →' : 'Terminer le tour →', 'end-turn', `${battle.phase !== 'player' || battle.status !== 'active' ? 'disabled' : ''}`, 'primary')}${immersive ? '' : btn('Abandonner', 'retreat', '', 'ghost')}${immersive ? '<details class="combat-intel"><summary>Journal & détails</summary><div class="combat-intel-panel">' : ''}<div class="enemy-ai-profile ai-personality"><b>Style adverse : ${esc(AI_STYLES[aiStyle(battle)].name)}</b><span>${esc(AI_STYLES[aiStyle(battle)].desc)}${battle.aiBoss ? (aiEnraged(battle) ? ' Le boss est entré en furie.' : ' Le boss devient plus offensif sous 50 % de PV.') : ''}</span></div>${battle.aiLastPlan ? `<div class="ai-plan"><b>Dernière tactique adverse</b><span>${esc(battle.aiLastPlan)}</span></div>` : ''}<div class="section-caption">Actions du souverain</div><div class="power-hint">${battle.heroTalents?.length ? `<div class="battle-talents">${battle.heroTalents.map((id) => `✦ ${esc(TALENT_TREE[battle.heroClass].find((t) => t.id === id)?.name || 'Talent')}`).join(' · ')}${battle.heroTalents.includes('rodeur_poursuite') ? `<span class="talent-once-status"> · Réserve : ${battle.talentDrawUsed ? 'utilisée' : 'disponible'}</span>` : ''}</div>` : ''}${CLASSES[battle.heroClass].symbol} ${CLASSES[battle.heroClass].description}${battle.powerCooldown ? ` Disponible dans ${battle.powerCooldown} tour(s).` : ''}</div><p>${battle.turnFlow === 'alternating' ? 'Vos unités agissent après validation, puis l’IA pose ses cartes et fait agir les siennes.' : 'Les créatures avancent et combattent automatiquement quand vous terminez le tour.'}</p><div class="section-caption" style="margin-top:14px">Journal du combat</div><div class="log-list">${battle.log.map((msg) => `<div>${esc(msg)}</div>`).join('')}</div>${immersive ? btn('Abandonner', 'retreat', '', 'ghost') + '</div></details>' : ''}</aside>`;
+    return `<aside class="actions-side">${btn('✦ Utiliser le pouvoir', 'hero-power', `${battle.powerCooldown > 0 || battle.phase !== 'player' || battle.status !== 'active' ? 'disabled' : ''}`)}${btn(battle.turnFlow === 'alternating' ? 'Valider mes actions →' : 'Terminer le tour →', 'end-turn', `${battle.phase !== 'player' || battle.status !== 'active' ? 'disabled' : ''}`, 'primary')}${immersive ? '' : btn('Abandonner', 'retreat', '', 'ghost')}${immersive ? '<details class="combat-intel"><summary>Journal & détails</summary><div class="combat-intel-panel">' : ''}<div class="enemy-ai-profile ai-personality"><b>Style adverse : ${esc(AI_STYLES[aiStyle(battle)].name)}</b><span>${esc(AI_STYLES[aiStyle(battle)].desc)}${battle.aiBoss ? (aiEnraged(battle) ? ' Le boss est entré en furie.' : ' Le boss devient plus offensif sous 50 % de PV.') : ''}</span></div>${battle.aiLastPlan ? `<div class="ai-plan"><b>Dernière tactique adverse</b><span>${esc(battle.aiLastPlan)}</span></div>` : ''}<div class="section-caption">Actions du souverain</div><div class="power-hint">${battle.heroTalents?.length ? `<div class="battle-talents">${battle.heroTalents.map((id) => `✦ ${esc(TALENT_TREE[battle.heroClass].find((t) => t.id === id)?.name || 'Talent')}`).join(' · ')}${battle.heroTalents.includes('rodeur_poursuite') ? `<span class="talent-once-status"> · Réserve : ${battle.talentDrawUsed ? 'utilisée' : 'disponible'}</span>` : ''}</div>` : ''}${CLASSES[battle.heroClass].symbol} ${CLASSES[battle.heroClass].description}${battle.powerCooldown ? ` Disponible dans ${battle.powerCooldown} tour(s).` : ''}</div><p>${battle.turnFlow === 'alternating' ? 'Vos unités agissent après validation, puis l’IA pose ses cartes et fait agir les siennes.' : 'Les créatures avancent et combattent automatiquement quand vous terminez le tour.'}</p>${combatReport?.lines?.length ? `<details class="combat-recap"><summary>Déroulé du tour ${combatReport.round} · ${combatReport.lines.length} actions</summary><ol>${combatReport.lines.map(line => `<li>${esc(line)}</li>`).join('')}</ol></details>` : ''}<div class="section-caption" style="margin-top:14px">Journal du combat</div><div class="log-list">${battle.log.map((msg) => `<div>${esc(msg)}</div>`).join('')}</div>${immersive ? btn('Abandonner', 'retreat', '', 'ghost') + '</div></details>' : ''}</aside>`;
   }
 
   function battleUI() {
@@ -6645,10 +6681,10 @@ function createBattleView(getState, { btn, cardUI, esc }) {
         : `<div class="arena-sky" aria-hidden="true"></div>${Array.from({ length: lanes }, (_, lane) => `<div class="lane-row" data-crown-col="${cells + 1}"><div class="lane-label">${['I', 'II', 'III', 'IV'][lane]}</div><div class="lane-gate" aria-label="Votre couronne"><span class="pixel-tower" aria-hidden="true"></span><b>♜</b></div>${Array.from({ length: cells }, (_, i) => battleCell(battle.board[lane][i + 1], lane, i + 1)).join('')}<div class="lane-gate enemy" aria-label="Couronne adverse"><span class="pixel-tower" aria-hidden="true"></span><b>♛</b></div></div>`).join('')}`;
     return `<div class="combat-screen" data-painted-arena="${cells === 10}" data-card-layout="${immersive}"><div class="split-head combat-titlebar"><div><div class="kicker">COMBAT TACTIQUE · ${esc(battle.missionName)}</div><h1 class="combat-mission-name">${esc(battle.missionName)}</h1></div><span class="pill">2 cartes maximum par tour</span><button type="button" class="combat-menu-link" data-action="nav" data-page="home" aria-label="Revenir à la Citadelle sans abandonner la bataille">☷ Citadelle</button></div>
  <section class="battle-panel arena-lofi combat-stage">${battleHud(p, e)}
- ${battle.turnFlow === 'alternating' ? `<div class="turn-indicator" role="status">${battle.phase === 'enemy' ? 'L’IA choisit et pose ses cartes, puis ses unités agiront.' : 'Placez jusqu’à deux cartes, puis validez pour lancer vos unités.'}</div>` : ''}
+ <div class="combat-readout" aria-label="Lecture des actions du combat"><div class="combat-readout-copy" role="status" aria-live="polite" aria-atomic="true"><b class="combat-phase">${battle.phase === 'enemy' ? 'Tour adverse' : 'À vous de jouer'}</b><span class="combat-action">${battle.phase === 'enemy' ? 'L’IA prépare ses cartes.' : 'Posez vos cartes, puis validez vos actions.'}</span></div><button type="button" data-action="fx-speed" aria-label="Vitesse de lecture des actions">×1</button><button type="button" data-action="fx-skip" hidden>Passer</button></div>
  <div class="arena-caption"><span>${selectedCard >= 0 ? '✦ CHOISISSEZ UNE CASE DE DÉPART' : '✧ ARÈNE DES SERMENTS'}</span><span>${lanes} lignes · ${cells} cases par ligne</span></div><div class="battle-grid ${cells === 10 ? 'arena-structured arena-painted' : ''}" tabindex="0" role="region" aria-label="Plateau de combat : ${lanes} lignes de ${cells} cases" style="--cells:${cells};--arena-scene:url('${arenaBackdrop()}')">${arena}</div>
  <div class="arena-legend" aria-label="Légende du plateau"><span class="legend-ally">${campSeal('p')} VOS UNITÉS</span><span class="legend-enemy">${campSeal('e')} ADVERSAIRES</span><span>Contour : rareté · Étiquette : Ordre</span></div>
- <p class="arena-scroll-hint">Sur petit écran, faites glisser le plateau pour voir toutes les cases. Les couronnes sont hors de la grille.</p><div class="vfx-controls"><span>Animations des compteurs et de l’interface.</span><button type="button" class="vfx-toggle" data-action="toggle-animations" aria-pressed="${animationsEnabled}">${animationsEnabled ? '✦ ' : ''}${cells === 10 ? 'Animations d’interface' : 'Animations'} ${animationsEnabled ? 'activées' : 'désactivées'}</button></div>
+ <p class="arena-scroll-hint">Sur petit écran, faites glisser le plateau pour voir toutes les cases. Les couronnes sont hors de la grille.</p><div class="vfx-controls"><span>Attaques, déplacements et effets du combat.</span><button type="button" class="vfx-toggle" data-action="toggle-animations" aria-pressed="${animationsEnabled}">${animationsEnabled ? '✦ ' : ''}Animations ${animationsEnabled ? 'activées' : 'désactivées'}</button></div>
  ${battle.mode === 'dungeon' ? `<div class="dungeon-battle-banner">♛ DONJON · ${battle.dungeonBonus ? 'Épreuve bonus' : 'Salle ' + (battle.dungeonStage + 1) + '/3'} · Les PV du héros sont conservés entre les combats (+6 PV après victoire).</div>` : ''}
  <p class="control-tip">⊘ Silence : capacités déclenchées suspendues, attaques et traits passifs conservés. ✧ Téléportation : autre ligne, même colonne. ⌁ Pièges publics : déclenchés à l’arrivée d’un ennemi, deux par camp. ◷ Tempo : accélérez vos cartes ou ralentissez une carte adverse.</p>${preview ? `<p class="teleport-preview" role="status">${preview}</p>` : ''}
  <p class="formation-tip">✦ CONCORDE : deux alliés du même Ordre gagnent +1 attaque. ⚡ CHARGE : +2 attaque après déplacement. ↶ RIPOSTE : 2 dégâts avant armure, une fois par tour au contact.</p>
@@ -6753,7 +6789,8 @@ function mountPaintedArena(){
    const hud=stage.querySelector('.battle-hud'),caption=stage.querySelector('.arena-caption');
    const box=grid.getBoundingClientRect();
    const first=PAINTED_ARENA.rows[0],last=PAINTED_ARENA.rows.at(-1);
-   const top=Math.max(hud.getBoundingClientRect().bottom,caption.getBoundingClientRect().bottom)-box.top+12;
+   const readout=stage.querySelector('.combat-readout');
+   const top=Math.max(hud.getBoundingClientRect().bottom,caption.getBoundingClientRect().bottom,readout?.getBoundingClientRect().bottom||0)-box.top+12;
    const bottom=dock.getBoundingClientRect().top-box.top-14;
    const scale=Math.min(Math.max(grid.clientWidth/PAINTED_ARENA.width,grid.clientHeight/PAINTED_ARENA.height),Math.max(120,bottom-top)/(last-first));
    const width=PAINTED_ARENA.width*scale,height=PAINTED_ARENA.height*scale;
@@ -6772,45 +6809,189 @@ Object.assign(__exports,{PAINTED_ARENA,paintedTile,paintedArena,paintedFootPoint
 
 },
 "src/ui/combat-fx.js":function(__exports,__load){
-// Indications transitoires depuis les événements du moteur : jamais de règles ni de sauvegarde.
+// Lecteur DOM des événements publics. Le résultat est déjà calculé et sauvegardé.
 function createCombatFx(getState){
- let timer=null,token=0;
- const clean=()=>{if(typeof document!=='undefined')document.querySelectorAll('.combat-fx-chip').forEach(node=>node.remove());};
- function stopBattleFx(){
-  token++;if(timer!==null)clearTimeout(timer);timer=null;clean();
+ let timer=null,token=0,playing=false,speed=1,finish=null,layer=null;
+ const animations=[];
+ const root=()=>document.querySelector('.combat-screen');
+ function clean(){
+  layer?.remove();layer=null;animations.splice(0).forEach(a=>a.cancel());
+  document.querySelectorAll('.fx-source,.fx-target').forEach(n=>n.classList.remove('fx-source','fx-target'));
  }
- function playBattleFx(events,onDone){
+ function lock(value){
+  root()?.classList.toggle('combat-playing',value);
+  document.querySelectorAll('[data-action="select-card"],[data-action="end-turn"],[data-action="hero-power"]').forEach(n=>{
+   if(value){if(!n.hasAttribute('data-fx-disabled'))n.dataset.fxDisabled=String(n.disabled);n.disabled=true;}
+   else if(n.hasAttribute('data-fx-disabled')){n.disabled=n.dataset.fxDisabled==='true';delete n.dataset.fxDisabled;}
+  });
+  syncFxControls();
+ }
+ function syncFxControls(){
+  if(typeof document==='undefined')return;
+  const pace=document.querySelector('[data-action="fx-speed"]'),skip=document.querySelector('[data-action="fx-skip"]');
+  if(pace){pace.textContent='×'+speed;pace.setAttribute('aria-label','Vitesse de lecture ×'+speed+' ; changer la vitesse');}
+  if(skip)skip.hidden=!playing;
+ }
+ function stopBattleFx(){
+  token++;if(timer!==null)clearTimeout(timer);timer=null;finish=null;playing=false;
+  if(typeof document!=='undefined'){clean();lock(false);}
+ }
+ function skipBattleFx(){finish?.();}
+ function changeFxSpeed(){speed=speed===1?2:1;syncFxControls();}
+ function cell(lane,col){return document.querySelector(`.battle-cell[data-lane="${lane}"][data-col="${col}"]`);}
+ function anchor(lane,col,side){
+  const tile=cell(lane,col);
+  if(tile)return tile.querySelector('.board-card')||tile;
+  const row=document.querySelector(`.battle-cell[data-lane="${lane}"]`)?.closest('.lane-row');
+  return row?.querySelector('.lane-gate'+(col===0?':not(.enemy)':'.enemy'))
+   ||document.querySelector('.fighter'+(side==='p'?':not(.enemy)':'.enemy'));
+ }
+ function center(n){const r=n?.getBoundingClientRect();return r?{x:r.left+r.width/2,y:r.top+r.height/2}:null;}
+ function element(cls,text){const n=document.createElement('span');n.className=cls;if(text)n.textContent=text;layer.appendChild(n);return n;}
+ function point(cls,n,text){const p=center(n);if(!p)return;const mark=element(cls,text);mark.style.left=p.x+'px';mark.style.top=p.y+'px';return mark;}
+ function connect(source,target,kind){
+  const a=center(source),b=center(target);if(!a||!b)return;
+  const dx=b.x-a.x,dy=b.y-a.y,length=Math.hypot(dx,dy);if(length<2)return;
+  const trail=element('combat-fx-path '+kind);trail.style.left=a.x+'px';trail.style.top=a.y+'px';
+  trail.style.width=length+'px';trail.style.transform=`rotate(${Math.atan2(dy,dx)}rad)`;
+  const projectile=element('combat-fx-projectile '+kind);projectile.style.left=a.x+'px';projectile.style.top=a.y+'px';projectile.style.rotate=Math.atan2(dy,dx)+'rad';
+  animations.push(projectile.animate([{translate:'0px 0px',opacity:1},{translate:`${dx}px ${dy}px`,opacity:1}],{duration:300/speed,fill:'forwards',easing:'ease-in'}));
+ }
+ function revealAction(e){
+  const grid=document.querySelector('.battle-grid'),n=anchor(e.lane,e.to??e.col,e.side),source=anchor(e.fromLane??e.lane,e.from,e.side);
+  if(!grid||!n||!grid.contains(n))return;
+  const r=grid.getBoundingClientRect(),b=n.getBoundingClientRect(),a=source?.getBoundingClientRect();
+  const left=a?Math.min(a.left,b.left):b.left,right=a?Math.max(a.right,b.right):b.right;
+  const center=right-left<r.width-40?(left+right)/2:(b.left+b.right)/2;
+  if(left<r.left+12||right>r.right-12)grid.scrollLeft+=center-(r.left+r.right)/2;
+ }
+ function animateStep(step){
+  clean();layer=document.createElement('div');layer.className='combat-fx-layer';layer.setAttribute('aria-hidden','true');document.body.appendChild(layer);
+  const e=step,side=e.side==='e'?'e':'p';layer.dataset.side=side;
+  layer.style.setProperty('--impact-delay',240/speed+'ms');layer.style.setProperty('--impact-duration',500/speed+'ms');layer.style.setProperty('--number-duration',580/speed+'ms');
+  const source=anchor(e.fromLane??e.lane,e.from??e.col,side),target=e.type==='hero-damage'?anchor(null,null,side):anchor(e.lane,e.to??e.col,side);
+  if(['attack','spell','power','move','teleport'].includes(e.type)){
+   source?.classList.add('fx-source');target?.classList.add('fx-target');
+   connect(source,target,e.type==='move'||e.type==='teleport'?'travel':e.magic||e.type!=='attack'?'magic':e.ranged?'ranged':'melee');
+   if(e.type==='attack')point('combat-fx-impact '+(e.ranged?'ranged':e.magic?'magic':'melee'),target,e.riposte?'↶':e.charged?'⚡':'✧');
+   if((e.type==='move'||e.type==='teleport')&&source?.classList.contains('board-card')){
+    const a=center(source),b=center(target);
+    if(a&&b)animations.push(source.animate([{translate:'0px 0px'},{translate:`${b.x-a.x}px ${b.y-a.y}px`}],{duration:420/speed,fill:'forwards',easing:'ease-in-out'}));
+   }
+  }else{
+   target?.classList.add('fx-target');
+   if(e.type==='death'){
+    point('combat-fx-impact defeated',target,'✕');
+    if(target)animations.push(target.animate([{opacity:1,filter:'grayscale(0)'},{opacity:0,filter:'grayscale(1)'}],{duration:420/speed,fill:'forwards'}));
+   }else if(!step.changes.length)point('combat-fx-tag',target,({spawn:'DÉPLOIEMENT',silence:'SILENCE',poison:'POISON','trap-trigger':'PIÈGE','trap-place':'PIÈGE ARMÉ','trap-expire':'EXPIRÉ',damage:'ABSORBÉ','hero-damage':'ABSORBÉ'})[e.type]||'✦');
+  }
+  for(const c of step.changes){
+   const n=c.hero?anchor(null,null,c.side):anchor(c.lane,c.col,c.side);
+   n?.classList.add('fx-target');
+   const value=[c.hp?(c.hp>0?'+':'−')+Math.abs(c.hp)+' PV':'',c.shield?(c.shield>0?'+':'−')+Math.abs(c.shield)+' ⬡':''].filter(Boolean).join(' · ');
+   point('combat-fx-number '+(c.hp>0||c.shield>0?'healing':'damage'),n,value);
+  }
+ }
+ function readout(phase,label){
+  const p=document.querySelector('.combat-phase'),a=document.querySelector('.combat-action');
+  if(p)p.textContent=phase;if(a)a.textContent=label;
+ }
+ function playBattleFx(steps,onDone,{before,onFrame,phase='Résolution'}={}){
   stopBattleFx();
   if(typeof document==='undefined'||typeof window==='undefined'){onDone?.();return;}
   const state=getState(),reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  const steps=(events||[]).filter(e=>['spawn','move','attack','spell','death','heal','poison','teleport','power','trap-trigger','trap-place','silence'].includes(e.type)).slice(0,28);
   if(!state.animationsEnabled||state.screen!=='battle'||reduced||!steps.length){onDone?.();return;}
   const key=token;let cursor=0;
+  playing=true;
+  finish=()=>{
+   if(key!==token)return;
+   const done=onDone;stopBattleFx();done?.();
+  };
+  if(before)onFrame?.(before);lock(true);
   function next(){
    if(key!==token)return;
-   clean();
-   if(cursor>=steps.length){timer=null;onDone?.();return;}
-   const event=steps[cursor++];
-   const col=event.to??event.col??event.from;
-   const cell=document.querySelector(`.battle-cell[data-lane="${event.lane}"][data-col="${col}"]`)
-    ||document.querySelector(`.battle-cell[data-lane="${event.lane}"][data-col="${event.from}"]`);
-   if(cell){
-    const chip=document.createElement('span');
-    chip.className='combat-fx-chip fx-'+event.type;
-    chip.setAttribute('aria-hidden','true');
-    chip.textContent=event.type==='attack'?'⚔':event.type==='move'?'➜':event.type==='spawn'?'✦':
-     event.type==='death'?'✕':event.type==='heal'?'✚':event.type==='poison'?'☣':
-     event.type==='trap-trigger'?'⌁':event.icon||'✧';
-    cell.appendChild(chip);
-   }
-   timer=setTimeout(next,event.type==='attack'||event.type==='spell'?310:250);
+   if(cursor>=steps.length){finish?.();return;}
+   const step=steps[cursor++];
+   // Invoquer avant le halo ; conserver les autres cartes jusqu'à leur impact.
+   if(step.type==='spawn'){onFrame?.(step.frame);lock(true);}
+   revealAction(step);readout(`${phase} · ${cursor}/${steps.length}`,step.label);animateStep(step);
+   const duration=step.type==='attack'||step.type==='spell'?850:step.type==='death'?550:step.type==='state'?450:620;
+   timer=setTimeout(()=>{
+    if(key!==token)return;clean();onFrame?.(step.frame);lock(true);next();
+   },duration/speed);
   }
   next();
  }
- return {stopBattleFx,playBattleFx};
+ return {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying:()=>playing};
 }
 
 Object.assign(__exports,{createCombatFx});
+
+},
+"src/ui/combat-steps.js":function(__exports,__load){
+// Lecture pure des événements publics : aucune règle de combat recalculée.
+const {CARDS}=__load("src/data.js");
+const unitName=u=>CARDS[u?.id]?.name||'Unité';
+const crown=side=>side==='p'?'Votre couronne':'Couronne adverse';
+const at=(frame,lane,col)=>frame.board[lane]?.[col];
+const units=frame=>frame.board.flat().filter(Boolean);
+
+function frameChanges(before,after) {
+ const old=new Map(units(before).map(u=>[u.uid,u])),changes=[];
+ for(let lane=0;lane<after.board.length;lane++)for(let col=1;col<after.board[lane].length-1;col++){
+  const u=at(after,lane,col),prev=old.get(u?.uid);if(!u||!prev)continue;
+  const hp=u.hp-prev.hp,barrier=(u.barrier||0)-(prev.barrier||0);
+  if(hp||barrier)changes.push({lane,col,side:u.side,name:unitName(u),hp,shield:barrier});
+ }
+ for(const side of ['p','e']){
+  const hp=after.heroes[side].hp-before.heroes[side].hp,shield=after.heroes[side].shield-before.heroes[side].shield;
+  if(hp||shield)changes.push({hero:true,side,name:crown(side),hp,shield});
+ }
+ return changes;
+}
+function changeText(c) {
+ return c.name+' : '+[c.hp?`${c.hp>0?'+':'−'}${Math.abs(c.hp)} PV`:'',c.shield?`${c.shield>0?'+':'−'}${Math.abs(c.shield)} protection`:''].filter(Boolean).join(', ');
+}
+function describe(e,before,after,changes) {
+ const source=unitName(at(before,e.fromLane??e.lane,e.from)),target=at(before,e.lane,e.to??e.col);
+ const targetName=target?unitName(target):(e.to===0?crown('p'):crown('e'));
+ const line=Number.isInteger(e.lane)?` · ligne ${e.lane+1}`:'';
+ const titles={spawn:`${e.side==='e'?'L’IA invoque':'Vous invoquez'} ${unitName(at(after,e.lane,e.col))}`,
+  move:`${source} avance de ${e.from} à ${e.to}`,attack:`${e.riposte?'Riposte':e.charged?'Charge':e.magic?'Attaque magique':e.ranged?'Tir à distance':'Attaque'} : ${source} → ${targetName}`,
+  spell:`${e.side==='e'?'Sort adverse':'Votre sort'}${e.name?' : '+e.name:''}`,power:'Pouvoir du souverain',
+  damage:changes.length?'Dégâts subis':'Coup absorbé', 'hero-damage':changes.length?'Couronne touchée':'Coup absorbé par la couronne',
+  death:`${unitName(at(before,e.lane,e.col))} est vaincu`,heal:'Soin',poison:'Poison',
+  teleport:`${source} change de ligne`,silence:'Capacité réduite au silence',
+  'trap-place':'Piège posé','trap-trigger':'Piège déclenché','trap-expire':'Piège expiré',state:'Soutiens et effets de fin d’action'};
+ const protection=e.armor>0?` · armure : ${e.armor}`:'';
+ return (titles[e.type]||'Effet de combat')+line+(changes.length?' — '+changes.map(changeText).join(' · '):'')+protection;
+}
+const damageType=type=>type==='damage'||type==='hero-damage';
+function buildCombatSteps(events,before,after) {
+ const steps=[];let current=before;
+ for(let i=0;i<events.length;i++){
+  const event=events[i];if(!event.frame)continue;
+  let frame=event.frame,armor=event.armor||0;
+  // Une frappe et ses dégâts constituent une seule action lisible, y compris l'éclaboussure.
+  if(['attack','spell','power'].includes(event.type))while(damageType(events[i+1]?.type)){
+   const damage=events[++i];frame=damage.frame;armor+=damage.armor||0;
+  }
+  const changes=frameChanges(current,frame),e={...event,armor};
+  if(e.type==='power'){
+   const c=changes.find(c=>c.hp<0)||changes[0];
+   if(c){e.side='p';e.lane=c.lane??0;e.to=c.hero?(c.side==='p'?0:frame.board[0].length-1):c.col;}
+   else if(['gardien','clerc'].includes(e.variant)){e.side='p';e.to=0;}
+  }
+  steps.push({...e,frame,changes,label:describe(e,current,frame,changes)});current=frame;
+ }
+ if(JSON.stringify(current)!==JSON.stringify(after)){
+  const changes=frameChanges(current,after),e={type:'state'};
+  steps.push({...e,frame:after,changes,label:describe(e,current,after,changes)});
+ }
+ return steps;
+}
+
+Object.assign(__exports,{frameChanges,buildCombatSteps});
 
 },
 "src/ui/card-inspection.js":function(__exports,__load){
