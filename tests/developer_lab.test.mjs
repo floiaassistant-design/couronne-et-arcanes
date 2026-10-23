@@ -34,6 +34,7 @@ test('Les decks de test acceptent les cartes non possédées mais gardent leurs 
  assert.equal(lab.decks.p.length,24);
  assert.equal(editLabDeck(lab,'p',id,1).ok,false);
  assert.equal(editLabDeck(lab,'e','skill_guard_wall',1).ok,false);
+ assert.equal(editLabDeck(lab,'p',id,-1).ok,true);
  assert.equal(editLabDeck(lab,'p','skill_guard_wall',1).ok,true);
  assert.equal(createLabBattle(lab,1).mode,'developer');
 });
