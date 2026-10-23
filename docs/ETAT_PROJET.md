@@ -1,3 +1,16 @@
+## Proposition — Laboratoire de combat intégré, 23 octobre 2026
+
+Une branche indépendante `feat/laboratoire-developpeur-20261023` ajoute un bouton
+Développeur, deux decks configurables et une vraie bataille de test utilisant le
+moteur existant, sans sauvegarde ni récompense. Premier prototype de progression
+Commune→Divine du Milicien, sans nouvelle illustration. Les autres cartes gardent
+leurs règles actuelles. Voir [contrat](LABORATOIRE_2026_10_23.md).
+La PR reste à valider ; aucune fusion autorisée. La PR nº 35 de maintenance du
+Guide est séparée : vérifier les éventuelles mises à jour documentaires lors de
+leur intégration. Les paragraphes datés plus bas sont historiques.
+
+---
+
 ## Proposition — Présentation cartes unique et export unique, 22 octobre 2026
 
 Demande du propriétaire : conserver seulement le jeu avec les cartes sur le
