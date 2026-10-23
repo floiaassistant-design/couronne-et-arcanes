@@ -6,7 +6,7 @@ import {silenced,activeAbility,controlTargetError,resolveControlSpell,prepareCon
 import {chosenTalents} from '../talents.js';
 import {tempoTargetError,resolveTempoSpell} from './tempo.js';
 import {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,gearBonus} from './profile.js';
-import {unitStatContext,unitStats} from './unit-stats.js';
+import {unitStatContext,unitStats,labMilitiaBonus} from './unit-stats.js';
 import {laneCount,lastCell,crownColumn,entryColumn,validDeploymentColumn,validLane,missionLayout} from './board.js';
 export * from './board.js';
 function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed/4294967296;}
@@ -84,6 +84,11 @@ function spawn(b,side,id,lane,col=entryColumn(b,side)){
  const u={uid:b.nextUnitId++,id,side,atk:stats.atk,maxhp:stats.maxhp,
   hp:stats.maxhp,armor:c.ability==='armor'?2:0,ranged:c.ability==='ranged',
   ability:c.ability,stun:0,poison:0,poisonTurns:0};
+ if(b.mode==='developer'&&id==='militia'){
+  const rank=b.labStats?.rarities?.[side]?.[id]||'commun',level=b.labStats?.levels?.[side]?.[id]||0;
+  const bonus=labMilitiaBonus(rank,level);
+  if(bonus.block||bonus.counter)u.labGuard={block:bonus.block,used:false,counter:bonus.counter,counterUsed:false};
+ }
  b.board[lane][col]=u;
  fx(b,{type:'spawn',side,lane,col,icon:c.icon});
  if(formationBonus(b,lane,u))note(b,`Concorde de ${FACTIONS[c.faction].short} : +1 attaque aux alliés de cet ordre sur la ligne ${lane+1}.`);
@@ -155,6 +160,7 @@ function hit(b,u,raw,bySide,ignoreArmor=false){
  // Une attaque sur une unité déjà vaincue ne doit pas créer un second kill.
  if(!u||u.hp<=0)return 0;
  let dmg=Math.max(1,raw-(ignoreArmor?0:(u.armor||0)));
+ if(u.labGuard?.block&&!u.labGuard.used&&bySide!==u.side){u.labGuard.used=true;dmg=Math.max(0,dmg-u.labGuard.block);}
  const barrier=u.barrier||0;
  if(barrier>0){const absorbed=Math.min(barrier,dmg);u.barrier=barrier-absorbed;dmg-=absorbed;}
  u.hp=Math.max(0,u.hp-dmg);
@@ -237,10 +243,12 @@ function findGuardianForHero(b,lane,heroSide){
 function retaliate(b,defender,attacker,lane,defenderCol,attackerCol){
  // Riposte : seulement contre une attaque au contact, si les deux unités vivent.
  // Une seule riposte par tour et aucune contre-riposte en chaîne.
- if(!RIPOSTE_IDS.has(defender.id)||silenced(b,defender)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
+ const experimentalCounter=!!defender.labGuard?.counter&&!defender.labGuard.counterUsed;
+ if((!RIPOSTE_IDS.has(defender.id)&&!experimentalCounter)||silenced(b,defender)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
     defender.side===attacker.side||Math.abs(defenderCol-attackerCol)!==1||defender.lastRiposteRound===b.round)return;
  defender.lastRiposteRound=b.round;
- const dealt=hit(b,attacker,2,defender.side);
+ if(experimentalCounter)defender.labGuard.counterUsed=true;
+ const dealt=hit(b,attacker,experimentalCounter?1:2,defender.side);
  if(dealt>0){
   fx(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,damage:dealt,riposte:true,icon:'↶'});
   note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
