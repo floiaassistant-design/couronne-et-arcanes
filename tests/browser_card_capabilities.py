@@ -124,6 +124,7 @@ async def offline(browser):
     await page.mouse.move(0,0)
     await page.keyboard.press('Escape')
     await page.locator('[data-action="toggle-animations"]').click()
+    await page.keyboard.press('Tab')  # Le réglage a remplacé le DOM de la main.
     await page.locator('.hand .hand-card').first.focus()
     assert not await page.locator('#hand-card-inspection').is_hidden()
     await page.locator('[data-action="close-inspection"]').click()

@@ -28,6 +28,7 @@ async def run(browser,label,viewport):
 
     # Aucun bouton n'encombre le portrait : survol ou focus pour consulter.
     assert await page.locator('.hand .illustrated-inspect,[data-action="inspect-card"]').count()==0
+    await page.keyboard.press('Tab')  # Reprendre la navigation après le rendu.
     await cards.first.focus()
     assert not await page.locator('#hand-card-inspection').is_hidden()
     assert 'Peut attaquer à deux cases' in await page.locator('#hand-card-inspection').inner_text()
