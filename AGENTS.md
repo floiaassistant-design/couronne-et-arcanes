@@ -1,3 +1,7 @@
+## Import Éther et sorts — proposition du 23/10/2026
+
+Base réelle `ef675bba` après fusion des PR 35–37. La branche d’import épingle onze Éther à `53d47b13` et 23 sorts à `2871642c`, avec reçus exacts : 76 cartes, 34 modules. `generated-card.js` rend cinq champs pour les unités, trois pour les sorts ; aucune attaque/PV inventée. Cadres et portraits restent distincts. Même jeu web et unique JOUER régénéré. Voir `docs/ETHER_SORTS_INTEGRATION_2026_10_23.md` ; CI dédiée `browser_ether.py` et `browser_spells.py`. Les snapshots atelier restent review pour les images hors pilote ; la demande d’import postérieure est enregistrée séparément. Aucune fusion autorisée pour cette nouvelle évolution. Les états de PR datés plus bas sont historiques.
+
 ## Lecture des actions — proposition du 23/10/2026
 
 `engine/combat-events.js` capture des instantanés publics transitoires ;

@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "approvedBy": "Propriétaire du projet, demande explicite d’intégration dans ChatGPT",
+  "approvedOn": "2026-10-23",
+  "instruction": "il faudrai ajouter les pr du graphisque au jeux les carte qui on etait creé",
+  "scope": "Import manuel dans une PR du jeu des exports exacts ci-dessous. Aucune nouvelle possession, règle ou rareté ; aucune fusion autorisée.",
+  "sourceRepo": "floiaassistant-design/couronne-et-arcanes-art",
+  "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+  "assets": [
+    {
+      "key": "lame_feu_sort_carte_v01",
+      "cardId": "firebolt",
+      "version": "01",
+      "sha256": "ed8d69bb300357762e4ef9e4b2da7c3385c56a782207d402fd6b6ca22aa6534d"
+    },
+    {
+      "key": "souffle_vital_sort_carte_v01",
+      "cardId": "healing",
+      "version": "01",
+      "sha256": "965ad6c8e46fe8f9a4095b31356cb93375c3b54144506c860d749da56e5ea5b4"
+    },
+    {
+      "key": "cri_anciens_sort_carte_v01",
+      "cardId": "warcry",
+      "version": "01",
+      "sha256": "76a8af1741e17be63cd1f262b61f6e38ebabbab25b52bd8b65da8bd9979d4f19"
+    },
+    {
+      "key": "orage_runique_sort_carte_v01",
+      "cardId": "storm",
+      "version": "01",
+      "sha256": "2b4b22a326124c0b6a6b2cc410bad3d7109c9ce9c90db53af4f117b99cc4aac8"
+    },
+    {
+      "key": "prison_lierre_sort_carte_v01",
+      "cardId": "entangle",
+      "version": "01",
+      "sha256": "5cdf338ab9092095a952b89a9feb02b53ddb1b6f729f1ccc381fbbc1e0a0d98a"
+    },
+    {
+      "key": "sanctuaire_sort_carte_v01",
+      "cardId": "sanctuary",
+      "version": "01",
+      "sha256": "bf99852eeae07e6184c0004f53f6395edf946c411f3ef98659cb39ac200c8957"
+    },
+    {
+      "key": "rayon_couronnes_sort_carte_v01",
+      "cardId": "sundawn",
+      "version": "01",
+      "sha256": "67e4dd7b2e574d0c7819f7f594eaffbb1741377c300da6838179a9b90bbce17f"
+    },
+    {
+      "key": "pacte_vital_sort_carte_v01",
+      "cardId": "bloodpact",
+      "version": "01",
+      "sha256": "e572fa1ce306c19c7eaf1e872869723d6e2953e7dffdb4c06357e6704bf5ea08"
+    },
+    {
+      "key": "eclairs_obsidienne_sort_carte_v01",
+      "cardId": "arcflare",
+      "version": "01",
+      "sha256": "2d871123e030d7740cfa332ed979a5397cbd8af3e1583c858d5f39a86c72149f"
+    },
+    {
+      "key": "racines_monde_sort_carte_v01",
+      "cardId": "vines",
+      "version": "01",
+      "sha256": "27450d8135e8920e94ff82f3e689f5fd6370d46e7f9989115d8db3a52587c03b"
+    },
+    {
+      "key": "mur_serments_sort_carte_v01",
+      "cardId": "skill_guard_wall",
+      "version": "01",
+      "sha256": "d72800d309396930f328d6d9638e288831ea56bb14491b3f3ee28cabbe83eaa4"
+    },
+    {
+      "key": "ralliement_royal_sort_carte_v01",
+      "cardId": "skill_guard_rally",
+      "version": "01",
+      "sha256": "84e12c31ce55f3ba6793a878e25660f1f09986579606edd66aed368c634061f8"
+    },
+    {
+      "key": "gel_astral_sort_carte_v01",
+      "cardId": "skill_arc_freeze",
+      "version": "01",
+      "sha256": "4309d6b636f7040ddc9df3c1c32777e803e92a2488f425cb05d79e48e83c193f"
+    },
+    {
+      "key": "arc_eclairs_sort_carte_v01",
+      "cardId": "skill_arc_chain",
+      "version": "01",
+      "sha256": "f3e92ea7d58a831ec58a5daf550a908b18468e0f4d6c01fc84320353f5f22631"
+    },
+    {
+      "key": "fleche_rupture_sort_carte_v01",
+      "cardId": "skill_ranger_pierce",
+      "version": "01",
+      "sha256": "b7b9c793542cee3d54acb4c2b969d5caf28175e12d7d30574ca17396718e62fa"
+    },
+    {
+      "key": "preparation_pisteur_sort_carte_v01",
+      "cardId": "skill_ranger_draw",
+      "version": "01",
+      "sha256": "0fdacd7bee73e61c6b73d009e414a0c3719b27543568c26087c11f612159d578"
+    },
+    {
+      "key": "lumiere_concorde_sort_carte_v01",
+      "cardId": "skill_cleric_light",
+      "version": "01",
+      "sha256": "6a7b651898c54efde02671c34532432a87425625f29733bab1394d7bfc50d298"
+    },
+    {
+      "key": "benediction_refuge_sort_carte_v01",
+      "cardId": "skill_cleric_bless",
+      "version": "01",
+      "sha256": "18fdd7dad2cab2fe9859aadc9b7399fbbe075d4eb3445103b78a2048141ae958"
+    },
+    {
+      "key": "sceau_mutisme_sort_carte_v01",
+      "cardId": "seal_silence",
+      "version": "01",
+      "sha256": "03398191bddd220c92cf21d614a24a449e9bd54fbc2998b366affe3653376f6f"
+    },
+    {
+      "key": "faille_transposition_sort_carte_v01",
+      "cardId": "transposition",
+      "version": "01",
+      "sha256": "154ff8ae76fe9480fc6e96f13246dfeb243be7b82f343d98d5683320dd4aaf31"
+    },
+    {
+      "key": "piege_runique_sort_carte_v01",
+      "cardId": "rune_trap",
+      "version": "01",
+      "sha256": "4abc769a45f3e3bd63a4706b1bb0b72a84a4e23c49a73bc08e23c9a633c577c0"
+    },
+    {
+      "key": "elan_heures_sort_carte_v01",
+      "cardId": "hourglass_surge",
+      "version": "01",
+      "sha256": "379a9c411ef89e4c81284150db4d041c3335bbf3e0473ece6406026e37778507"
+    },
+    {
+      "key": "noeud_temps_sort_carte_v01",
+      "cardId": "time_bind",
+      "version": "01",
+      "sha256": "332782426b8ddedde19f812faae4008880f879d1edef1e7f8297cb777bcad8b9"
+    }
+  ],
+  "note": "Demande d’import postérieure aux reçus artistiques. Le manifeste atelier reste inchangé : pilote approuvé artistiquement, autres images en review. Cet import ne revendique pas une revue artistique individuelle."
+}

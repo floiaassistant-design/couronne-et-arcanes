@@ -1,3 +1,5 @@
+> **Proposition du 23/10/2026 :** 11 cartes Éther et 23 sorts supplémentaires, soit 76 cartes illustrées. Variante sorts à trois champs, un seul `JOUER.html` autonome. [Périmètre, sources et limites](docs/ETHER_SORTS_INTEGRATION_2026_10_23.md). Nouvelle PR, aucune fusion autorisée. Les étapes datées ci-dessous conservent leur historique.
+
 > **Version réunie du 23/10/2026 :** Guide modulaire, effets séquentiels du
 > combat et bouton Développeur pour le laboratoire. Même jeu et unique export
 > `JOUER.html`, 34 modules. Le laboratoire ne modifie pas la progression.

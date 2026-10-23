@@ -297,6 +297,244 @@
       "kind": "card",
       "sourceCommit": "ceb0a916959925ad6a41057d11210a3ae84341e5",
       "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "spark",
+      "key": "feu_follet_ether_carte_v02",
+      "kind": "card",
+      "sourceCommit": "53d47b136391582dc4fb9755c3c4cad0a5f5df00",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "mystic",
+      "key": "oracle_astres_ether_carte_v01",
+      "kind": "card",
+      "sourceCommit": "53d47b136391582dc4fb9755c3c4cad0a5f5df00",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "elemental",
+      "key": "elementaire_azure_ether_carte_v01",
+      "kind": "card",
+      "sourceCommit": "53d47b136391582dc4fb9755c3c4cad0a5f5df00",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "griffin",
+      "key": "griffon_zenith_ether_carte_v01",
+      "kind": "card",
+      "sourceCommit": "53d47b136391582dc4fb9755c3c4cad0a5f5df00",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "sentinel",
+      "key": "sentinelle_prismatique_ether_carte_v01",
+      "kind": "card",
+      "sourceCommit": "53d47b136391582dc4fb9755c3c4cad0a5f5df00",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "dragon",
+      "key": "dragon_sept_cieux_ether_carte_v01",
+      "kind": "card",
+      "sourceCommit": "53d47b136391582dc4fb9755c3c4cad0a5f5df00",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "tempest",
+      "key": "esprit_tempete_ether_carte_v01",
+      "kind": "card",
+      "sourceCommit": "53d47b136391582dc4fb9755c3c4cad0a5f5df00",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "seer",
+      "key": "voyante_etoiles_ether_carte_v01",
+      "kind": "card",
+      "sourceCommit": "53d47b136391582dc4fb9755c3c4cad0a5f5df00",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "aetherknight",
+      "key": "chevalier_zenith_ether_carte_v01",
+      "kind": "card",
+      "sourceCommit": "53d47b136391582dc4fb9755c3c4cad0a5f5df00",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "seraph",
+      "key": "seraphin_azur_ether_carte_v01",
+      "kind": "card",
+      "sourceCommit": "53d47b136391582dc4fb9755c3c4cad0a5f5df00",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "portal_walker",
+      "key": "marcheur_portails_ether_carte_v01",
+      "kind": "card",
+      "sourceCommit": "53d47b136391582dc4fb9755c3c4cad0a5f5df00",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "firebolt",
+      "key": "lame_feu_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "healing",
+      "key": "souffle_vital_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "warcry",
+      "key": "cri_anciens_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "storm",
+      "key": "orage_runique_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "entangle",
+      "key": "prison_lierre_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "sanctuary",
+      "key": "sanctuaire_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "sundawn",
+      "key": "rayon_couronnes_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "bloodpact",
+      "key": "pacte_vital_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "arcflare",
+      "key": "eclairs_obsidienne_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "vines",
+      "key": "racines_monde_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "skill_guard_wall",
+      "key": "mur_serments_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "skill_guard_rally",
+      "key": "ralliement_royal_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "skill_arc_freeze",
+      "key": "gel_astral_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "skill_arc_chain",
+      "key": "arc_eclairs_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "skill_ranger_pierce",
+      "key": "fleche_rupture_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "skill_ranger_draw",
+      "key": "preparation_pisteur_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "skill_cleric_light",
+      "key": "lumiere_concorde_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "skill_cleric_bless",
+      "key": "benediction_refuge_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "seal_silence",
+      "key": "sceau_mutisme_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "transposition",
+      "key": "faille_transposition_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "rune_trap",
+      "key": "piege_runique_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "hourglass_surge",
+      "key": "elan_heures_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
+    },
+    {
+      "cardId": "time_bind",
+      "key": "noeud_temps_sort_carte_v01",
+      "kind": "card",
+      "sourceCommit": "2871642c54e53568153b2d9f3d69a07a7d5bd169",
+      "registry": "assets/artwork.json"
     }
   ],
   "notes": "Dix Aube et onze Sylve intégrés ; onze Ombre proposés, imports manuels épinglés. Aucun ancien lot réactivé."
