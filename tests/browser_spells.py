@@ -1,7 +1,7 @@
 """23 sorts exacts : trois champs, attente, aperçu et lancement par la vraie UI."""
 import asyncio,json
 from pathlib import Path
-from playwright.async_api import async_playwright
+from playwright.async_api import async_playwright,expect
 from browser_aube import exact,ROOT,ASSETS
 
 IDS=[a['cardId'] for a in json.loads((ROOT/'docs/approvals/sorts-vingt-trois-cartes-20261023.json').read_text())['assets']]
@@ -13,6 +13,9 @@ CLASSES={
 }
 
 async def spell_face(face,card_id):
+    # Attendre l'identité attendue avant de décoder : le focus et le survol
+    # peuvent remplacer le contenu de la fiche entre deux commandes Playwright.
+    await expect(face).to_have_attribute('data-card-template',ASSETS[card_id]['key'])
     await exact(face,card_id)
     assert await face.get_attribute('data-generated-layout')=='sort'
     assert await face.locator('[data-card-field]').count()==3
@@ -38,6 +41,9 @@ async def run(browser,label,viewport):
     await page.locator('[data-action="start-mission"][data-id="01"]').click()
     for card_id in IDS:
         lane=1 if card_id=='transposition' else 0
+        # Le pointeur du clic précédent ne doit pas viser une autre carte
+        # pendant ce parcours au clavier (notamment après un scroll mobile).
+        await page.mouse.move(1,1)
         await page.evaluate('''({id,heroClass})=>{
           battle=createBattle(profile,{id:'01',name:'Revue des sorts',enemy:'Bastion',hp:100,difficulty:1,deck:['militia']},415);
           battle.heroClass=heroClass;
@@ -55,7 +61,8 @@ async def run(browser,label,viewport):
         assert await face.locator('.generated-counter b').inner_text()=='2'
         await page.keyboard.press('Tab');await page.locator('.hand-card[data-index="0"]').focus()
         panel=page.locator('#hand-card-inspection')
-        await spell_face(panel.locator('.generated-face'),card_id)
+        await expect(panel).to_be_visible()
+        await spell_face(panel.locator(f'[data-card-template="{ASSETS[card_id]["key"]}"]'),card_id)
         assert 'Attente 2 tours' in await panel.inner_text()
         assert await panel.locator('.inspection-stats').count()==0
         await page.keyboard.press('Escape')
