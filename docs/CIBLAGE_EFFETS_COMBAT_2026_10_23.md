@@ -56,7 +56,7 @@ Les animations ne sont ni des assets artistiques importés ni une nouvelle règl
 
 ## Vérifications et reprise
 
-Résultats locaux : 324 tests Node et 60 parités identiques ; compilation
+Résultats locaux : 325 tests Node et 60 parités identiques ; compilation
 et diagnostic réussis. Les 23 sorts ont été lancés sur bureau/portrait/paysage
 sans réseau ; aperçu, cadres, reprises et trois champs conservés. Le lecteur
 existant a validé attaques, armure, morts, tirs, magie, soins partiels, poison,
@@ -68,7 +68,9 @@ IA automatique et repli après erreur d’animation. Contrôles de classe, contr
 web modulaire, aperçu, déploiement et intégrité des sauvegardes ont réussi.
 Examen visuel des captures bureau/portrait/paysage ; l’aperçu bas en paysage
 préserve l’espace du plateau. Régression dédiée : téléportation sur piège mortel,
-ordre déplacement → dégâts → disparition conservé. La CI complète de la PR
+ordre déplacement → dégâts → disparition conservé. L’aperçu lit également
+les instantanés publics intermédiaires pour afficher les dégâts plafonnés et
+la disparition sur un coup fatal, même si la cible est déjà absente du résultat. La CI complète de la PR
 reste à constater sur le commit final ; ne pas la déduire de ces résultats. Chaque PR demande sa propre
 autorisation avant fusion. Publication Sites après fusion uniquement.
 

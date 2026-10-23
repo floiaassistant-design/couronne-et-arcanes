@@ -128,12 +128,12 @@ export function playPlayerCard(b,index,lane,col=entryColumn(b,'p')){return b.pha
 // Projection exacte sur une copie isolée : aucune consommation réelle ni règle recopiée.
 export function previewPlayerSpell(b,index,lane){
  if(CARDS[b.heroes.p.hand[index]?.id]?.type!=='sort')return {ok:false,reason:'Sélectionnez un sort.'};
- const copy=JSON.parse(JSON.stringify(b));delete copy.vfx;
+ const copy=JSON.parse(JSON.stringify(b));copy.vfx=[];
  const before=captureCombatFrame(copy),result=playPlayerCard(copy,index,lane);
  if(!result.ok)return result;
  const ability=CARDS[b.heroes.p.hand[index].id].ability;
  const detail=ability==='spell_ranger_draw'?`Pioche : ${copy.heroes.p.hand.length-(b.heroes.p.hand.length-1)} carte(s).`:['spell_hasten','spell_slow'].includes(ability)?copy.log.find(s=>s.startsWith(ability==='spell_hasten'?'Élan des Heures :':'Nœud du Temps :'))||'':'';
- return {ok:true,before,after:captureCombatFrame(copy),detail};
+ return {ok:true,before,after:captureCombatFrame(copy),detail,events:copy.vfx.map(e=>({...e,frame:e.frame}))};
 }
 function hit(b,u,raw,bySide,ignoreArmor=false){
  // Une attaque sur une unité déjà vaincue ne doit pas créer un second kill.

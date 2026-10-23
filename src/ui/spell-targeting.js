@@ -1,7 +1,7 @@
 // Rendu pur du ciblage et de la projection calculée par le moteur.
 import {CARDS} from '../data.js';
 import {spellTargetOptions} from '../engine/spell-targeting.js';
-import {frameChanges} from './combat-steps.js';
+import {buildCombatSteps} from './combat-steps.js';
 
 export function spellSelection(b,index,target){
  const card=CARDS[b.heroes.p.hand[index]?.id];
@@ -17,12 +17,13 @@ export function spellCardState(selection,uid){
 }
 function predictionText(preview){
  if(!preview?.ok)return preview?.reason||'';
- const changes=frameChanges(preview.before,preview.after);
+ const steps=buildCombatSteps(preview.events||[],preview.before,preview.after);
+ const changes=steps.flatMap(s=>s.changes);
  return changes.map(c=>`${c.name} : `+[
   c.hp?`${c.hp>0?'+':'−'}${Math.abs(c.hp)} PV`:'',
   c.shield?`${c.shield>0?'+':'−'}${Math.abs(c.shield)} protection`:'',
   ...(c.effects||[])
- ].filter(Boolean).join(', ')).join(' · ');
+ ].filter(Boolean).join(', ')).concat(steps.filter(s=>s.type==='death').map(s=>s.label)).join(' · ');
 }
 export function spellTargetingUI(selection,target,preview,esc){
  if(!selection)return '';

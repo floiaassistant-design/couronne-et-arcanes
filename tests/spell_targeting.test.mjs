@@ -6,6 +6,7 @@ import {spellTargetOptions,spellTargetAt,SPELL_TARGET_MODES} from '../src/engine
 import {createSpellController} from '../src/ui/spell-controller.js';
 import {captureCombatFrame} from '../src/engine/combat-events.js';
 import {buildCombatSteps} from '../src/ui/combat-steps.js';
+import {spellSelection,spellTargetingUI} from '../src/ui/spell-targeting.js';
 import {combatEffectProfile} from '../src/ui/combat-effects.js';
 const unit=(uid,side,extra={})=>({uid,id:'wolf',side,atk:4,hp:4,maxhp:8,armor:2,barrier:1,ranged:false,ability:'haste',stun:0,poison:0,poisonTurns:0,...extra});
 function make(id,legacy=false){
@@ -94,4 +95,14 @@ test('Téléportation sur piège mortel : conserver le déplacement, les dégât
  assert.equal(steps.find(s=>s.type==='teleport').frame.board[1][2].uid,1);
  assert.equal(steps.find(s=>s.type==='death').frame.board[1][2],null);
  assert.deepEqual(steps.at(-1).frame,captureCombatFrame(b));
+});
+
+test('Un aperçu de coup fatal conserve les dégâts plafonnés, la protection et la disparition sans mutation réelle',()=>{
+ const b=make('firebolt');Object.assign(b.board[0][3],{hp:1,armor:1,barrier:1});
+ const snapshot=JSON.stringify(b),preview=previewPlayerSpell(b,0,0);
+ assert.equal(preview.after.board[0][3],null);
+ const html=spellTargetingUI(spellSelection(b,0,{lane:0}),{lane:0},preview,s=>s);
+ assert.match(html,/−1 PV/);assert.match(html,/−1 protection/);assert.match(html,/est vaincu/);
+ assert.equal(JSON.stringify(b),snapshot);
+ assert.ok(preview.events.every(e=>!e.frame.heroes.e.hand&&!e.frame.heroes.p.hand));
 });

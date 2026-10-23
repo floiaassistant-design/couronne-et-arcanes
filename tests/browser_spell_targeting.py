@@ -93,6 +93,17 @@ async def run(browser,label,vp,touch=False,reduced=False,legacy=False):
   elif id=='skill_cleric_bless':assert await page.evaluate('battle.board[0][2].barrier')==expected
   else:assert await page.evaluate('battle.board[0][3].stun')==expected
   if id!='healing':assert await page.locator('.combat-statuses').count()>0
+ # Coup fatal : l’aperçu doit encore montrer les vrais dégâts après retrait de la cible.
+ await setup('firebolt')
+ await page.evaluate("()=>{battle.board[0][3].hp=1;persistBattle();render()}")
+ await click('[data-unit-id="901"]')
+ assert '−1 PV' in await page.locator('.spell-prediction').inner_text()
+ assert 'est vaincu' in await page.locator('.spell-prediction').inner_text()
+ assert await page.evaluate('battle.board[0][3].hp')==1
+ await click('[data-action="spell-confirm"]')
+ assert await page.evaluate('battle.board[0][3]') is None
+ await page.evaluate("document.querySelector('[data-action=\"fx-skip\"]:not([hidden])')?.click()")
+ await idle(page)
  await setup('sanctuary')
  assert await page.locator('[data-action="spell-lane"]').count()==0
  assert await page.locator('[data-action="spell-confirm"]').count()==1

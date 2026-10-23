@@ -2,7 +2,7 @@
 import {classSkillTargetError,classSkillEnemies,classSkillAllies,blessingTarget} from './class-skills.js';
 import {controlTargetError,silenceTarget,teleportPlan,trapPlan} from './battle-control.js';
 import {tempoTargetError} from './tempo.js';
-import {laneCount,crownColumn} from './board.js';
+import {laneCount} from './board.js';
 
 export const SPELL_TARGET_MODES=Object.freeze({
  spell_bolt:'first',spell_root:'first',spell_storm:'enemy-line',
