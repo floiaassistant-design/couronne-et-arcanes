@@ -27,7 +27,7 @@ async def scenario(browser,label,viewport):
     assert '5 ATQ · 10 PV' in await page.locator('.lab-stats').inner_text()
     await page.locator('[data-action="lab-start"]').click()
     assert await page.locator('.combat-screen').count()==1
-    assert 'TEST SANS RÉCOMPENSE' in await page.locator('.combat-titlebar').inner_text()
+    assert 'TEST SANS RÉCOMPENSE' in await page.locator('.combat-titlebar').text_content()
     assert await page.locator('[data-action="end-turn"]').count()==1
     await page.locator('[data-action="end-turn"]').click()
     await page.locator('[data-action="lab-back"]').first.click()
