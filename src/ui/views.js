@@ -51,7 +51,8 @@ export function createViews(getState) {
       ['collection', 'Collection', '✦'],
       ['alchemy', 'Alchimie', '⚗'],
       ['forge', 'Atelier', '⚒'],
-      ['guide', 'Guide', '☷']
+      ['guide', 'Guide', '☷'],
+       ['developer', 'Développeur', '⚙']
     ];
     if (battle?.status === 'active') pages.push(['battle', 'Combat en cours', '⚔']);
     return pages
