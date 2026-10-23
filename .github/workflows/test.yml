@@ -37,6 +37,8 @@ jobs:
           python3 tests/browser_deployment.py
           python3 tests/browser_card_preview.py
           python3 tests/browser_art_reset.py
+      - name: Laboratoire développeur et non-régression des sauvegardes hors ligne
+        run: python3 tests/browser_developer_lab.py
       - name: Jeu web modulaire, navigation et reprise bureau/mobile
         run: python3 tests/browser_maintenance.py
       - name: Collection pleine largeur, exemplaires réels et reprise
