@@ -31,6 +31,8 @@ jobs:
           python3 -m playwright install --with-deps chromium
       - name: Construire le HTML réservé aux tests navigateur
         run: npm run build:test
+      - name: Ciblage direct, aperçu, souris, tactile et repli du lecteur
+        run: python3 tests/browser_spell_targeting.py
       - name: Lecture des attaques, dégâts réels, interruption et mouvement réduit
         run: python3 tests/browser_combat_fx.py
       - name: Cartes sur plateau, vraie pose, aperçus et export hors ligne
@@ -87,6 +89,7 @@ jobs:
             /tmp/ca-arena-*.png
             /tmp/ca-combat-*.png
             /tmp/ca-combat-fx-*.png
+            /tmp/ca-targeting-*.png
             /tmp/ca-capacites-*.png
             /tmp/ca-collection-*.png
             /tmp/ca-milicien-*.png

@@ -24,6 +24,8 @@ et son paquet diagnostic `tests/JOUER.test.html`.
 | `battle/fullscreen.css` | Conteneur du combat, titre, HUD et plateau |
 | `battle/hand-dock.css` | Main ancrée en bas et commandes |
 | `battle/board.css` | Identité des camps, pistes et géométrie du plateau |
+| `battle/spell-targeting.css` | Sélection, cibles autorisées et aperçu des sorts |
+| `battle/effect-library.css` | Identités des cinq ordres, auras et états des cartes |
 | `battle/effects.css` | Réglage des animations et signaux transitoires |
 | `../assets/*.css` | Vue cartes, aperçu commun, collection et cartes générées |
 | `../assets/backgrounds/*.css` | Fonds approuvés embarqués et projection peinte |

@@ -1,0 +1,51 @@
+/* Sélection et aperçu, partagés par le web et l'export autonome. */
+.combat-screen .board-card.spell-eligible {outline:3px solid #90eed4;outline-offset:4px;cursor:crosshair;filter:drop-shadow(0 0 7px #69f0b8)}
+.combat-screen .board-card.spell-forbidden {opacity:.55;cursor:not-allowed}
+.combat-screen .board-card.spell-affected {outline:4px double #ffe09c;outline-offset:6px;opacity:1}
+.combat-screen .combat-readout:has(.spell-targeting) {flex-wrap:wrap}
+.combat-readout:has(.spell-targeting)>.combat-readout-copy,.combat-readout:has(.spell-targeting)>button {display:none}
+.spell-targeting {width:100%;min-width:0;max-height:160px;overflow:auto;font:12px/1.4 system-ui}
+.spell-target-heading {display:flex;align-items:center;justify-content:space-between;gap:10px;color:#ffe1a2}
+.spell-targeting p {margin:3px 0}
+.spell-targeting small {display:block;font-size:10px;color:#b3c5ce;margin-top:3px}
+.spell-lanes {display:inline-flex;gap:6px;flex-wrap:wrap;margin:4px 6px 4px 0}
+.spell-targeting button {min-height:36px}
+.spell-targeting button[aria-pressed="true"] {background:#426b61;border-color:#a5f2d5}
+.spell-targeting button:disabled {opacity:.45;cursor:not-allowed}
+.spell-prediction {font-size:12px;color:#b4f4db;max-height:42px;overflow:auto;line-height:1.5}
+.spell-targeting .spell-confirm {margin:4px 0;padding:6px 14px;color:#fff0c9;background:#355952;border-color:#b5dcc3}
+@media(max-width:700px){
+ .spell-targeting {font-size:11px;max-height:175px}
+ .spell-targeting button {min-height:40px}
+ .spell-prediction {font-size:11px;max-height:40px}
+}
+@media(max-height:540px){
+ .combat-screen .combat-readout:has(.spell-targeting) {right:8px}
+ .spell-targeting {display:grid;grid-template-columns:1fr auto;column-gap:8px;max-height:94px;font-size:10px}
+ .spell-target-heading {grid-column:1/-1}
+ .spell-targeting p,.spell-targeting small {display:none}
+ .spell-lanes {grid-column:1;grid-row:2;margin:2px 0}
+ .spell-targeting .spell-confirm {grid-column:2;grid-row:2/4;align-self:center;margin:0;min-height:40px}
+ .spell-prediction {grid-column:1;max-height:30px;font-size:10px}
+}
+@media(min-height:541px){
+ .spell-targeting {display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:14px}
+ .spell-target-heading {grid-column:1/-1}
+ .spell-targeting p {grid-column:1;grid-row:2}
+ .spell-lanes {grid-column:1;grid-row:3}
+ .spell-prediction {grid-column:1/-1}
+ .spell-targeting .spell-confirm {grid-column:2;grid-row:2/4;align-self:center}
+ .spell-targeting small {grid-column:1/-1}
+}
+
+.combat-screen .battle-cell.spell-zone {outline:3px dashed #90eed4;outline-offset:-4px;cursor:crosshair;background:#65d9b330}
+.combat-screen .fighter.spell-hero-affected {outline:3px solid #ffe09c;outline-offset:2px}
+/* Les indications décoratives ne doivent pas intercepter le clic d'une carte. */
+.combat-screen .formation-badge,.combat-screen .silence-badge {pointer-events:none}
+/* En paysage bas, garder des cartes assez grandes : aperçu entre main et actions. */
+@media(max-height:540px) and (min-width:650px){
+ .combat-screen .combat-readout:has(.spell-targeting) {right:125px;flex-wrap:nowrap}
+ .combat-readout:has(.spell-targeting)>.combat-readout-copy {display:flex}
+ .spell-targeting {position:fixed;left:174px;right:206px;bottom:8px;width:auto;max-height:102px;padding:5px 8px;border:1px solid #93b4b9;border-radius:8px;background:#071c2df5;z-index:15}
+ .combat-screen:has(.spell-targeting) .combat-hand-tray {max-width:156px}
+}

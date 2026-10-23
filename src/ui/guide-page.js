@@ -14,12 +14,12 @@ export function renderGuidePage({ btn, previousGameAvailable }) {
         'Sur le plateau, chaque unité affiche VOUS ou ENNEMI, son Ordre (Aube, Sylve, Ombre, Forge ou Éther) et sa rareté. Les quatre classes de héros se choisissent dans l’Atelier.'
       ],
       [
-        'Déployez sur une ligne',
-        'Cliquez une carte disponible de votre main, puis une des lignes dorées du plateau. Vos créatures arrivent à gauche.'
+        'Posez une unité ou ciblez un sort',
+        'Pour une unité, sélectionnez sa carte puis une case de départ libre. Pour un sort, cliquez une carte autorisée ou choisissez une ligne, lisez l’aperçu puis confirmez avec Lancer le sort. Annuler ou Échap ne consomme rien. Les sorts sont immédiats ; vos unités agissent après validation du tour.'
       ],
       [
-        'Terminez votre tour',
-        'Cliquez « Terminer le tour ». L’IA joue ses cartes, puis les unités avancent et attaquent automatiquement.'
+        'Validez vos actions',
+        'Cliquez « Valider mes actions ». Vos unités avancent et attaquent, puis l’IA joue ses cartes et fait agir les siennes. Les anciens combats sauvegardés conservent leur résolution commune.'
       ],
       [
         'Protégez votre couronne',

@@ -4,13 +4,24 @@ const unitName=u=>CARDS[u?.id]?.name||'Unité';
 const crown=side=>side==='p'?'Votre couronne':'Couronne adverse';
 const at=(frame,lane,col)=>frame.board[lane]?.[col];
 const units=frame=>frame.board.flat().filter(Boolean);
+export function unitEffectChanges(prev,u){
+ const effects=[];
+ if(u.atk!==prev.atk)effects.push(`${u.atk>prev.atk?'+':''}${u.atk-prev.atk} ATQ`);
+ if(u.stun!==prev.stun)effects.push(u.stun>0?`Immobilisation ${u.stun}`:'Immobilisation terminée');
+ if(u.poisonTurns!==prev.poisonTurns)effects.push(u.poisonTurns>0?`Poison ${u.poisonTurns}`:'Poison terminé');
+ if(u.silenceUntil!==prev.silenceUntil)effects.push(Number.isFinite(u.silenceUntil)?'Silence':'Silence terminé');
+ if(u.rallyUntil!==prev.rallyUntil)effects.push('Ralliement +1 ATQ');
+ return effects;
+}
+
 
 export function frameChanges(before,after) {
  const old=new Map(units(before).map(u=>[u.uid,u])),changes=[];
  for(let lane=0;lane<after.board.length;lane++)for(let col=1;col<after.board[lane].length-1;col++){
   const u=at(after,lane,col),prev=old.get(u?.uid);if(!u||!prev)continue;
   const hp=u.hp-prev.hp,barrier=(u.barrier||0)-(prev.barrier||0);
-  if(hp||barrier)changes.push({lane,col,side:u.side,name:unitName(u),hp,shield:barrier});
+  const effects=unitEffectChanges(prev,u);
+  if(hp||barrier||effects.length)changes.push({lane,col,side:u.side,name:unitName(u),hp,shield:barrier,...(effects.length?{effects}:{} )});
  }
  for(const side of ['p','e']){
   const hp=after.heroes[side].hp-before.heroes[side].hp,shield=after.heroes[side].shield-before.heroes[side].shield;
@@ -19,7 +30,7 @@ export function frameChanges(before,after) {
  return changes;
 }
 function changeText(c) {
- return c.name+' : '+[c.hp?`${c.hp>0?'+':'−'}${Math.abs(c.hp)} PV`:'',c.shield?`${c.shield>0?'+':'−'}${Math.abs(c.shield)} protection`:''].filter(Boolean).join(', ');
+ return c.name+' : '+[c.hp?`${c.hp>0?'+':'−'}${Math.abs(c.hp)} PV`:'',c.shield?`${c.shield>0?'+':'−'}${Math.abs(c.shield)} protection`:'',...(c.effects||[])].filter(Boolean).join(', ');
 }
 function describe(e,before,after,changes) {
  const source=unitName(at(before,e.fromLane??e.lane,e.from)),target=at(before,e.lane,e.to??e.col);
@@ -41,11 +52,23 @@ export function buildCombatSteps(events,before,after) {
  for(let i=0;i<events.length;i++){
   const event=events[i];if(!event.frame)continue;
   let frame=event.frame,armor=event.armor||0;
+  if(event.type==='spell-resolved')continue;
+  if(event.type==='spell'){
+   const end=events.findIndex((e,n)=>n>i&&e.type==='spell-resolved');
+   if(end>=0&&!events.slice(i+1,end).some(e=>['teleport','trap-place','trap-trigger','death','silence'].includes(e.type))){
+    for(let n=i+1;n<=end;n++)armor+=events[n].armor||0;
+    frame=events[end].frame;i=end;
+   }
+  }
+
   // Une frappe et ses dégâts constituent une seule action lisible, y compris l'éclaboussure.
   if(['attack','spell','power'].includes(event.type))while(damageType(events[i+1]?.type)){
    const damage=events[++i];frame=damage.frame;armor+=damage.armor||0;
   }
   const changes=frameChanges(current,frame),e={...event,armor};
+  const source=at(current,e.fromLane??e.lane,e.from);
+  e.faction=CARDS[e.cardId||source?.id]?.faction;
+  e.sourceId=e.cardId||source?.id;
   if(e.type==='power'){
    const c=changes.find(c=>c.hp<0)||changes[0];
    if(c){e.side='p';e.lane=c.lane??0;e.to=c.hero?(c.side==='p'?0:frame.board[0].length-1):c.col;}

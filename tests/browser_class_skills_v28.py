@@ -1,3 +1,4 @@
+from browser_spell_actions import target_spell
 """V2.8 : compétences dans l'UI desktop/mobile, classe, combat et sauvegardes."""
 import asyncio
 from pathlib import Path
@@ -57,7 +58,7 @@ async def run(browser,label,viewport):
       persistBattle();render();
     }''')
     await page.locator('.hand [data-action="select-card"]').first.click()
-    await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
+    await target_spell(page,0)
     assert await page.evaluate('battle.board[0][3].hp')==4
     assert await page.evaluate('battle.board[0][3].stun')==2
     saved=await page.evaluate('window.__saves')

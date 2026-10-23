@@ -1,3 +1,4 @@
+from browser_spell_actions import target_spell,play_selected
 """Parcours V2.9 : fabrication, ciblage, trois effets, animations et reprise."""
 import asyncio
 from pathlib import Path
@@ -68,7 +69,7 @@ async def check_hand_countdowns(page,label):
 async def play(page,id,lane):
     await page.evaluate('(id)=>{battle.heroes.p.hand=[{id,wait:0}];battle.heroes.p.cardsPlayed=0;render()}',id)
     await page.locator('.hand [data-action="select-card"]').click()
-    await page.locator(f'[data-action="deploy"][data-col="1"][data-lane="{lane}"]').click()
+    await target_spell(page,lane)
     await page.wait_for_function("!document.querySelector('.combat-playing')")
 
 async def run(browser,label,viewport):
@@ -107,7 +108,7 @@ async def run(browser,label,viewport):
     await page.evaluate('()=>{battle.heroes.p.hand=[{id:"transposition",wait:0}];battle.heroes.p.cardsPlayed=0;render()}')
     await page.locator('.hand [data-action="select-card"]').click()
     assert 'Ligne 3' in await page.locator('.teleport-preview').inner_text()
-    await page.locator('[data-action="deploy"][data-col="1"][data-lane="2"]').click()
+    await target_spell(page,2)
     assert await page.evaluate('battle.board[2][2].uid')==91
     assert await page.evaluate('battle.board[1][2]') is None
     # Remise à zéro : la téléportation s'applique immédiatement sans ancien effet.
@@ -167,7 +168,7 @@ async def production(browser,label,viewport):
     await page.goto((ROOT/'JOUER.html').as_uri())
     await page.locator('[data-action="welcome-start"]').click()
     await page.locator('.hand .unit-card:not(.on-cooldown)').first.click()
-    await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
+    await play_selected(page,0)
     await page.locator('[data-action="end-turn"]').click()
     await page.wait_for_function("() => JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'))?.round>=2")
     await page.wait_for_timeout(3000)

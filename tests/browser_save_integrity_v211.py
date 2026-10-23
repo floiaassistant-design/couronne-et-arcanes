@@ -1,3 +1,4 @@
+from browser_spell_actions import target_spell
 """V2.11: final reward persistence, interrupted settlement, and storage errors."""
 import asyncio
 import json
@@ -20,7 +21,7 @@ async def finish_page(browser,animated):
       persistBattle();render();
     }""")
     await page.locator('.hand [data-action="select-card"]').first.click()
-    await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
+    await target_spell(page,0)
     saved=await page.evaluate("() => JSON.parse(JSON.stringify(window.__saves))")
     assert json.loads(saved[SAVE])['wins']==1,saved[SAVE]
     assert BATTLE not in saved,saved

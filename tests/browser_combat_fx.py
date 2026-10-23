@@ -1,3 +1,4 @@
+from browser_spell_actions import target_spell
 """Actions réelles, images intermédiaires, exactitude et reprise sans réseau."""
 import asyncio,json
 from pathlib import Path
@@ -80,7 +81,7 @@ async def check_effect_types(browser):
   await page.evaluate(SETUP)
   await page.evaluate("id=>{battle.heroes.p.hand=[{id,wait:0}];if(id==='healing'){battle.board[0][5]=null;battle.board[0][4].hp=7;battle.heroes.p.hp=99}else battle.board[0][4]=null;persistBattle();render()}",card)
   await page.locator('.hand [data-action="select-card"]').click()
-  await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
+  await target_spell(page,0)
   if card=='firebolt':
    await page.wait_for_selector('.combat-fx-projectile.magic');assert 'Lame de feu' in await page.locator('.combat-action').inner_text()
   else:

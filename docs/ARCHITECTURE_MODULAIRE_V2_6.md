@@ -1,3 +1,34 @@
+# Architecture courante — ciblage et effets
+
+Les modules de `engine/` restent sans DOM ni stockage. Le catalogue, l’IA et
+la progression sont inchangés. Les nouvelles responsabilités sont décrites dans
+[le contrat de ciblage et effets](CIBLAGE_EFFETS_COMBAT_2026_10_23.md).
+
+| Propriétaire | Responsabilité |
+| --- | --- |
+| `engine/spell-targeting.js` | Options et priorités légales, sélecteurs partagés |
+| `engine/spell-casting.js` | Résolution existante extraite, dégâts injectés |
+| `engine/battle.js` | Tours, primitives ; projection exacte sur une copie |
+| `ui/spell-controller.js` | Sélection et confirmation éphémères |
+| `ui/spell-targeting.js` | Rendu pur, prévisions publiques |
+| `ui/combat-steps.js` | Ordre et différences des instantanés publics |
+| `ui/combat-fx.js` | Lecture, ancrages, verrou et nettoyage |
+| `ui/combat-effects.js` | Bibliothèque de primitives visuelles paramétrables |
+| `ui/unit-status.js` | Badges des effets réellement actifs |
+
+Le moteur ne dépend pas des vues ; aucune dépendance circulaire. Le séquenceur
+et la bibliothèque ne rappellent aucune action moteur. `battle.js` reste cohérent
+à environ 400 lignes après extraction de la résolution des sorts ; aucun découpage
+artificiel des primitives d’attaque liées. Les autres ajouts sont de petits modules
+par responsabilité. Le builder découvre les imports et embarque les mêmes CSS
+que l’entrée web dans l’unique JOUER.html. Les sauvegardes n’incluent ni sélection,
+ni aperçu, ni étape de lecture.
+
+## Historique architectural
+
+Les sections datées suivantes décrivent les jalons antérieurs ; leurs nombres
+et statuts de propositions ne remplacent pas l’état courant du dépôt.
+
 ## Proposition du 23/10/2026 — 76 cadres complets
 
 `visuals.js` ajoute 34 mappings individuels ; registre, index et reçus exacts concordent. `ui/generated-card.js` reste le lecteur pur commun : cinq zones pour les unités (Éther compris), trois zones grimoire pour les sorts, sans attaque/PV. Aucun nouveau module : 34. Ni règles ni stockage modifiés. Sources épinglées et contrôles inchangés du builder, unique JOUER régénéré. [Périmètre et limites](ETHER_SORTS_INTEGRATION_2026_10_23.md). Nouvelle PR sans autorisation de fusion.

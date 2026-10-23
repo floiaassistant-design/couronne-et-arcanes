@@ -2,15 +2,15 @@
 // Les unités anciennes sans barrier/rallyUntil restent totalement compatibles.
 import {validLane} from './board.js';
 const own=(u,side)=>u&&u.hp>0&&u.side===side;
-function allies(b,side,lane){return b.board[lane].filter(u=>own(u,side));}
-function enemies(b,side,lane){
+export function classSkillAllies(b,side,lane){return b.board[lane].filter(u=>own(u,side));}
+export function classSkillEnemies(b,side,lane){
  const found=b.board[lane].map((u,col)=>u&&u.hp>0&&u.side!==side?{u,col}:null).filter(Boolean);
  return found.sort((a,z)=>side==='p'?a.col-z.col:z.col-a.col);
 }
 export function classSkillTargetError(b,side,card,lane){
  if(!card.heroClass)return '';
  if(!validLane(b,lane))return 'Ligne invalide.';
- const friendly=allies(b,side,lane),foes=enemies(b,side,lane),h=b.heroes[side];
+ const friendly=classSkillAllies(b,side,lane),foes=classSkillEnemies(b,side,lane),h=b.heroes[side];
  switch(card.ability){
   case 'spell_guard_wall':case 'spell_guard_rally':case 'spell_cleric_bless':
    return friendly.length?'':'Cette compétence demande une créature alliée sur la ligne.';
@@ -23,9 +23,12 @@ export function classSkillTargetError(b,side,card,lane){
   default:return 'Compétence inconnue.';
  }
 }
+export function blessingTarget(b,side,lane){
+ return [...classSkillAllies(b,side,lane)].sort((a,z)=>a.hp/a.maxhp-z.hp/z.maxhp||a.uid-z.uid)[0]||null;
+}
 // Les effets sont déterministes ; hit() applique les armures, les barrières et les victimes.
 export function resolveClassSkill(b,side,card,lane,hit){
- const friends=allies(b,side,lane),foes=enemies(b,side,lane),ability=card.ability;
+ const friends=classSkillAllies(b,side,lane),foes=classSkillEnemies(b,side,lane),ability=card.ability;
  if(ability==='spell_guard_wall'){
   for(const u of friends)u.barrier=Math.min(4,(u.barrier||0)+2);
  }else if(ability==='spell_guard_rally'){
@@ -43,7 +46,7 @@ export function resolveClassSkill(b,side,card,lane,hit){
  }else if(ability==='spell_cleric_light'){
   for(const u of friends)u.hp=Math.min(u.maxhp,u.hp+3);
  }else if(ability==='spell_cleric_bless'){
-  const target=[...friends].sort((a,z)=>a.hp/a.maxhp-z.hp/z.maxhp||a.uid-z.uid)[0];
+  const target=blessingTarget(b,side,lane);
   target.barrier=Math.min(6,(target.barrier||0)+4);
  }
  return 0;
