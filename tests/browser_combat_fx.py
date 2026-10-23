@@ -96,11 +96,47 @@ async def check_effect_types(browser):
  await page.locator('[data-action="fx-skip"]').click();await page.wait_for_function('battle.round===2');await idle(page)
  assert not errors,errors
  await ctx.close();print('Effets distincts : tir, magie, sort nommé, soins partiels et poison plafonné PASS')
+async def check_laboratory_integration(browser):
+ ctx=await browser.new_context(viewport={'width':1366,'height':900},offline=True)
+ page=await ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+ await page.goto((ROOT/'tests/JOUER.test.html').as_uri())
+ await page.locator('[data-action="welcome-guide"]').click()
+ snapshot=await page.evaluate("[localStorage.getItem('couronnes_arcanes_v1'),localStorage.getItem('couronnes_arcanes_bataille_v1')]")
+ await page.locator('#nav [data-page="developer"]').click()
+ await page.locator('[data-lab-field="cardId"]').select_option('militia')
+ await page.locator('[data-lab-field="rarity"]').select_option('divine')
+ await page.locator('[data-lab-field="level"]').select_option('2')
+ await page.locator('[data-action="lab-start"]').click()
+ await page.evaluate("()=>{battle.heroes.p.hand=[{id:'militia',wait:0}];battle.heroes.e.hand=[];battle.heroes.e.deck=[];render()}")
+ await page.locator('.hand [data-action="select-card"]').click()
+ await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
+ await page.wait_for_selector('.combat-playing')
+ await page.locator('[data-action="fx-speed"]').click()
+ assert await page.locator('[data-action="fx-speed"]').inner_text()=='×2'
+ await page.locator('[data-action="fx-skip"]').click();await idle(page)
+ assert await page.evaluate("({atk:battle.board[0][1].atk,hp:battle.board[0][1].hp,block:battle.board[0][1].labGuard.block})")=={'atk':5,'hp':10,'block':3}
+ await page.locator('[data-action="end-turn"]').click();await page.wait_for_selector('.combat-playing')
+ await page.locator('[data-action="lab-back"]').first.click()
+ assert await page.locator('.developer-lab').count()==1
+ assert await page.locator('.combat-playing,.combat-fx-layer').count()==0
+ # Une victoire calculée avant sa lecture doit rester sans récompense réelle.
+ await page.locator('[data-action="lab-start"]').click()
+ await page.evaluate("()=>{battle.heroes.p.hand=[{id:'militia',wait:0}];battle.heroes.e.hand=[];battle.heroes.e.deck=[];playPlayerCard(battle,0,0,1);battle.board[0][10]=battle.board[0][1];battle.board[0][1]=null;battle.heroes.e.hp=1;battle.heroes.e.shield=0;render()}")
+ await page.locator('[data-action="end-turn"]').click();await page.wait_for_selector('.combat-playing')
+ await page.locator('[data-action="fx-skip"]').click();await idle(page)
+ await page.locator('.modal').wait_for()
+ assert 'TEST TERMINÉ' in await page.locator('.modal').inner_text()
+ assert await page.evaluate('battle.status')=='victory'
+ await page.locator('.modal [data-action="lab-exit"]').click()
+ assert await page.evaluate("[localStorage.getItem('couronnes_arcanes_v1'),localStorage.getItem('couronnes_arcanes_bataille_v1')]")==snapshot
+ assert not errors,errors
+ await ctx.close();print('Effets + laboratoire : Milicien Divin II, vitesse, passage, sortie pendant lecture et victoire sans sauvegarde PASS')
 async def main():
  async with async_playwright() as pw:
   b=await pw.chromium.launch(headless=True,args=['--no-sandbox'])
   for label,vp,reduce,off in [('desktop',{'width':1366,'height':900},False,False),('portrait',{'width':390,'height':844},False,False),('landscape',{'width':844,'height':390},False,False),('reduced',{'width':390,'height':844},True,False),('off',{'width':1366,'height':900},False,True)]:
    await run(b,label,vp,reduce,off)
   await check_effect_types(b)
+  await check_laboratory_integration(b)
   await b.close()
 if __name__=='__main__':asyncio.run(main())
