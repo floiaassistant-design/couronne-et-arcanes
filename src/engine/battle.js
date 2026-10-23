@@ -1,11 +1,13 @@
+import {castSpell} from './spell-casting.js';
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 import {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
-import {recordCombatEvent} from './combat-events.js';
+import {frontEnemy} from './spell-targeting.js';
+import {captureCombatFrame,recordCombatEvent} from './combat-events.js';
 import {rankEnemyMoves} from '../ai.js';
-import {classSkillTargetError,resolveClassSkill} from './class-skills.js';
-import {silenced,activeAbility,controlTargetError,resolveControlSpell,prepareControlUnits,triggerTrap,expireControl} from './battle-control.js';
+import {classSkillTargetError} from './class-skills.js';
+import {silenced,activeAbility,controlTargetError,prepareControlUnits,triggerTrap,expireControl} from './battle-control.js';
 import {chosenTalents} from '../talents.js';
-import {tempoTargetError,resolveTempoSpell} from './tempo.js';
+import {tempoTargetError} from './tempo.js';
 import {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,gearBonus} from './profile.js';
 import {unitStatContext,unitStats,labMilitiaBonus} from './unit-stats.js';
 import {laneCount,lastCell,crownColumn,entryColumn,validDeploymentColumn,validLane,missionLayout} from './board.js';
@@ -103,41 +105,6 @@ function damageHero(b,side,amount){
  h.hp=Math.max(0,h.hp-(amount-absorbed));
  fx(b,{type:'hero-damage',side,damage:before-h.hp,absorbed});
 }
-function locateEnemy(b,side,lane){
- const list=b.board[lane].map((u,i)=>u&&u.side!==side?{u,i}:null).filter(Boolean);
- return side==='p'?list.sort((a,c)=>a.i-c.i)[0]:list.sort((a,c)=>c.i-a.i)[0];
-}
-function cast(b,side,id,lane){
- const c=CARDS[id],enemy=side==='p'?'e':'p',foe=locateEnemy(b,side,lane);
- let drawAfter=0;
- const supportSpell=['spell_heal','spell_buff','spell_ward'].includes(c.ability);
- const allied=b.board[lane].findIndex(u=>u&&u.side===side);
- fx(b,{type:'spell',name:c.name,side,lane,from:crownColumn(b,side),to:supportSpell?(allied>=1?allied:crownColumn(b,side)):(foe?foe.i:crownColumn(b,enemy)),variant:c.ability,icon:c.icon});
- if(c.ability==='spell_bolt'){
-  if(foe)hit(b,foe.u,4,side);else damageHero(b,enemy,2);
- }else if(c.ability==='spell_heal'){
-  const hero=b.heroes[side];hero.hp=Math.min(hero.maxhp,hero.hp+5);
-  b.board[lane].forEach(u=>{if(u&&u.side===side)u.hp=Math.min(u.maxhp,u.hp+2)});
- }else if(c.ability==='spell_buff'){
-  b.board[lane].forEach(u=>{if(u&&u.side===side)u.atk+=2;});
- }else if(c.ability==='spell_storm'){
-  b.board[lane].filter(u=>u&&u.side===enemy).forEach(u=>hit(b,u,3,side));
- }else if(c.ability==='spell_root'){
-  if(foe)foe.u.stun=2;
- }else if(c.ability==='spell_ward'){
-  b.heroes[side].shield=Math.min(15,b.heroes[side].shield+5);
- }else if(['spell_silence','spell_teleport','spell_trap'].includes(c.ability)){
-  resolveControlSpell(b,side,c,lane,controlHooks);
- }else if(['spell_hasten','spell_slow'].includes(c.ability)){
-  resolveTempoSpell(b,side,c,note);
- }else if(c.heroClass){
-  drawAfter=resolveClassSkill(b,side,c,lane,hit);
- }
- note(b,`${side==='p'?'Vous lancez':'L’ennemi lance'} ${c.name} (ligne ${lane+1}).`);
- sweepDead(b);
- checkOutcome(b);
- return drawAfter;
-}
 function play(b,side,index,lane,col=entryColumn(b,side)){
  if(b.status!=='active'||!Number.isInteger(lane)||!validLane(b,lane))return {ok:false,reason:'Combat terminé ou ligne invalide.'};
  if(!validDeploymentColumn(b,side,col))return {ok:false,reason:'Choisissez une case de votre zone de déploiement.'};
@@ -151,13 +118,20 @@ function play(b,side,index,lane,col=entryColumn(b,side)){
  const targetError=classSkillTargetError(b,side,c,lane)||controlTargetError(b,side,c,lane)||tempoTargetError(b,side,c);
  if(targetError)return {ok:false,reason:targetError};
  if(c.type==='unité'&&!spawn(b,side,hand.id,lane,col))return {ok:false,reason:'La case de déploiement est occupée.'};
- const drawAfter=c.type==='sort'?cast(b,side,hand.id,lane):0;
+ const drawAfter=c.type==='sort'?castSpell(b,side,hand.id,lane,{emit:fx,hit,damageHero,sweepDead,checkOutcome,note,controlHooks}):0;
  if(side==='p'){if(!b.cardUses)b.cardUses={};b.cardUses[hand.id]=(b.cardUses[hand.id]||0)+1;}
  hero.discard.push(hand.id);hero.hand.splice(index,1);hero.cardsPlayed++;
  if(drawAfter)draw(b,side,drawAfter);
  return {ok:true};
 }
 export function playPlayerCard(b,index,lane,col=entryColumn(b,'p')){return b.phase==='player'?play(b,'p',index,lane,col):{ok:false,reason:'Ce n’est pas votre tour.'};}
+// Projection exacte sur une copie isolée : aucune consommation réelle ni règle recopiée.
+export function previewPlayerSpell(b,index,lane){
+ if(CARDS[b.heroes.p.hand[index]?.id]?.type!=='sort')return {ok:false,reason:'Sélectionnez un sort.'};
+ const copy=JSON.parse(JSON.stringify(b));delete copy.vfx;
+ const before=captureCombatFrame(copy),result=playPlayerCard(copy,index,lane);
+ return result.ok?{ok:true,before,after:captureCombatFrame(copy)}:result;
+}
 function hit(b,u,raw,bySide,ignoreArmor=false){
  // Une attaque sur une unité déjà vaincue ne doit pas créer un second kill.
  if(!u||u.hp<=0)return 0;
@@ -326,7 +300,7 @@ export function usePower(b){
   note(b,'Serment protecteur : le héros et ses alliés sont renforcés.');
  }else if(b.heroClass==='arcaniste'){
   let target=null;
-  for(let l=0;l<laneCount(b);l++){const foe=locateEnemy(b,'p',l);if(foe&&(!target||foe.i<target.i))target=foe;}
+  for(let l=0;l<laneCount(b);l++){const foe=frontEnemy(b,'p',l);if(foe&&(!target||foe.i<target.i))target=foe;}
   if(target){
    hit(b,target.u,4+(b.powerBonus||0)+(hasBattleTalent(b,'arcaniste_focus')?1:0),'p');
    if(hasBattleTalent(b,'arcaniste_echos')){
@@ -340,7 +314,7 @@ export function usePower(b){
   note(b,'Éclat astral : l’ennemi subit un sort.');
  }else if(b.heroClass==='rodeur'){
   let hits=0;
-  for(let l=0;l<laneCount(b);l++){const target=locateEnemy(b,'p',l);if(target){hit(b,target.u,2+(hasBattleTalent(b,'rodeur_precision')?2:0),'p');hits++;}}
+  for(let l=0;l<laneCount(b);l++){const target=frontEnemy(b,'p',l);if(target){hit(b,target.u,2+(hasBattleTalent(b,'rodeur_precision')?2:0),'p');hits++;}}
   if(hasBattleTalent(b,'rodeur_couvert'))b.heroes.p.shield=Math.min(15,b.heroes.p.shield+2);
   if(hasBattleTalent(b,'rodeur_poursuite')&&!b.talentDrawUsed&&b.heroes.p.hand.length<7){
    const before=b.heroes.p.hand.length;draw(b,'p',1);

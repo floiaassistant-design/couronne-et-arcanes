@@ -1,3 +1,4 @@
+from browser_spell_actions import target_spell
 """23 sorts exacts : trois champs, attente, aperçu et lancement par la vraie UI."""
 import asyncio,json
 from pathlib import Path
@@ -69,7 +70,7 @@ async def run(browser,label,viewport):
         await page.evaluate('battle.heroes.p.hand[0].wait=0;render()')
         await page.locator('.hand-card[data-index="0"]').click()
         assert await panel.is_hidden()
-        await page.locator(f'[data-action="deploy"][data-col="1"][data-lane="{lane}"]').click()
+        await target_spell(page,lane)
         assert await page.evaluate('(id)=>battle.heroes.p.discard.includes(id)',card_id),card_id
         assert await page.evaluate('(id)=>!battle.heroes.p.hand.some(c=>c.id===id)',card_id),card_id
     await page.screenshot(path=f'/tmp/ca-spells-{label}-combat.png')

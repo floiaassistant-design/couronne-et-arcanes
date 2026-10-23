@@ -1,3 +1,4 @@
+import {createSpellController} from './ui/spell-controller.js';
 import {esc} from './ui/markup.js';
 import {collectionInspection} from './ui/collection.js';
 import {createViews} from './ui/views.js';
@@ -20,9 +21,10 @@ const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='aube',collectionOwned=false;
 let displayBattle=null,combatReport=null;
 let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null,developer=null;
-const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({battle:displayBattle||battle,screen:isBattleFxPlaying()?'resolving':screen}),esc);
+const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({battle:displayBattle||battle,screen:isBattleFxPlaying()||CARDS[battle?.heroes.p.hand[selectedCard]?.id]?.type==='sort'?'resolving':screen}),esc);
 const {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying}=createCombatFx(()=>({animationsEnabled,screen}));
-const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
+const {spellState,handleSpell,resetSpell}=createSpellController(()=>({battle,selectedCard}),{refresh:()=>render(),launch:(index,lane)=>withBattleFx(()=>playPlayerCard(battle,index,lane)),closeInspection:()=>closeCardInspection(true)});
+const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
 function save(){if(developer)return;if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
@@ -203,8 +205,10 @@ function navigate(page){
 function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();window.scrollTo(0,0);}
 function act(action,dataset){const {id,index,lane,col,page}=dataset;
  if(developer&&screen==='developer'&&!['lab-add','lab-remove','lab-start','lab-back','lab-exit','lab-open','nav','home'].includes(action))return;
- if(developer&&screen==='battle'&&!['lab-back','lab-exit','lab-start','nav','home','select-card','deploy','end-turn','hero-power','toggle-animations','fx-skip','fx-speed','retreat','confirm-retreat','close-modal','close-inspection'].includes(action))return;
- if(isBattleFxPlaying()&&['select-card','deploy','end-turn','hero-power'].includes(action))return;
+ if(developer&&screen==='battle'&&!action.startsWith('spell-')&&!['lab-back','lab-exit','lab-start','nav','home','select-card','deploy','end-turn','hero-power','toggle-animations','fx-skip','fx-speed','retreat','confirm-retreat','close-modal','close-inspection'].includes(action))return;
+ if(isBattleFxPlaying()&&(action.startsWith('spell-')||['select-card','deploy','end-turn','hero-power'].includes(action)))return;
+ if(action==='spell-cancel'){resetSpell();selectedCard=-1;render();return;}
+ if(handleSpell(action,dataset))return;
  switch(action){
 
 case 'lab-open':openDeveloper();break;
@@ -259,11 +263,11 @@ case 'lab-open':openDeveloper();break;
   const i=Number(index),entry=battle.heroes.p.hand[i];
   if(!Number.isInteger(i)||!entry)break;
   if(battle.heroes.p.cardsPlayed>=2||entry.wait>0){suppressCardInspection(i);break;}
-  selectedCard=selectedCard===i?-1:i;render();
+  resetSpell();selectedCard=selectedCard===i?-1:i;render();
   suppressCardInspection(i);
   break;
  }
- case 'deploy':if(!battle||battle.phase!=='player'||selectedCard<0)return;withBattleFx(()=>playPlayerCard(battle,selectedCard,Number(lane),Number(col)));break;
+ case 'deploy':if(!battle||battle.phase!=='player'||selectedCard<0||CARDS[battle.heroes.p.hand[selectedCard]?.id]?.type==='sort')return;withBattleFx(()=>playPlayerCard(battle,selectedCard,Number(lane),Number(col)));break;
  case 'end-turn':if(!battle)return;withBattleFx(()=>endPlayerTurn(battle),()=>scheduleEnemyStep());break;
  case 'hero-power':if(!battle)return;withBattleFx(()=>usePower(battle));break;
  case 'fx-skip':skipBattleFx();break;
@@ -292,7 +296,7 @@ case 'lab-open':openDeveloper();break;
 }
 document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();act(el.dataset.action,el.dataset);});
 document.addEventListener('keydown',event=>{
- if(event.key==='Escape'){closeCardInspection(true);if(document.querySelector('.collection-inspection'))hideModal();return;}
+ if(event.key==='Escape'){if(isBattleFxPlaying())return;if(selectedCard>=0){resetSpell();selectedCard=-1;render();}closeCardInspection(true);if(document.querySelector('.collection-inspection'))hideModal();return;}
  if((event.key==='Enter'||event.key===' ')&&!event.target.closest('button')){
   const el=event.target.closest('.unit-card.compact,[data-action="deploy"]');
   if(el){event.preventDefault();act(el.dataset.action,el.dataset);}
