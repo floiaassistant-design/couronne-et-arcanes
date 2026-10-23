@@ -1122,6 +1122,23 @@ main {
 
 </style>
 <style>
+.developer-lab { max-width: 1240px; margin: 0 auto; padding: 18px 16px 40px; }
+.lab-controls { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; margin: 22px 0; }
+.developer-lab .card-panel { padding: 20px; min-width: 0; }
+.developer-lab h2 { margin: 0 0 16px; font: normal 25px Georgia,serif; }
+.developer-lab label { display: grid; gap: 7px; margin: 12px 0; color: #d9dfdf; font-size: 14px; }
+.developer-lab select { width: 100%; max-width: 100%; min-height: 44px; border: 1px solid #baa47188; border-radius: 9px; background: #192733; color: #f2eedf; padding: 9px 12px; font: inherit; }
+.lab-deck-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; }
+.lab-deck-list { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; max-height: 180px; overflow: auto; }
+.lab-deck-card { border: 1px solid #c3b18a45; background: #142532; padding: 5px 9px; border-radius: 8px; font-size: 12px; }
+.lab-stats { border-top: 1px solid #c3b18a40; padding-top: 12px; font-size: 16px; }
+.lab-launch { margin-top: 18px; }
+@media (max-width: 800px) {
+ .lab-controls { grid-template-columns: minmax(0,1fr); }
+ .developer-lab { padding: 12px; }
+}
+</style>
+<style>
 /* Expéditions : étapes, reprise et choix entre les combats. */
 /* V1.9 — expeditions */
 .dungeon-cards {
@@ -4013,6 +4030,8 @@ const __factories={
 const {esc}=__load("src/ui/markup.js");
 const {collectionInspection}=__load("src/ui/collection.js");
 const {createViews}=__load("src/ui/views.js");
+const {developerLabUI}=__load("src/ui/developer-lab.js");
+const {freshLab,editLabDeck,setLabLevel,setLabRarity,createLabBattle}=__load("src/engine/developer-lab.js");
 const {createCombatFx}=__load("src/ui/combat-fx.js");
 const {mountPaintedArena}=__load("src/ui/painted-arena.js");
 const {createCardInspection}=__load("src/ui/card-inspection.js");
@@ -4025,14 +4044,15 @@ let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}ca
 
 const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='aube',collectionOwned=false;
-let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null;
+let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null,developer=null;
 const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({battle,screen}),esc);
 const {stopBattleFx,playBattleFx}=createCombatFx(()=>({animationsEnabled,screen}));
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
-function save(){if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
+function save(){if(developer)return;if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
 function persistBattle(){
+ if(developer)return true;
  const ok=storeBattle(battle);
  if(!ok&&!battleStorageWarning){battleStorageWarning=true;toast('Combat non sauvegardé : vérifiez le stockage local et exportez votre profil.');}
  if(ok)battleStorageWarning=false;
@@ -4082,7 +4102,7 @@ function render(){
  closeCardInspection();
  stopBattleFx();document.body.classList.toggle('animations-off',!animationsEnabled);
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
- $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='battle'&&battle?battleUI():homeUI();
+ $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
  mountPaintedArena();
  const arena=document.querySelector('.battle-grid');if(arena){arena.scrollLeft=arenaScroll;arena.scrollTop=arenaVertical;}
  const hand=document.querySelector('.combat-hand-dock .hand');if(hand)hand.scrollLeft=handScroll;
@@ -4091,6 +4111,13 @@ function render(){
 
 function settle({deferModal=false}={}){
  if(!battle||battle.status==='active'||battle.rewardGiven)return;
+ if(developer){
+  if(developer.resultShown)return;
+  developer.resultShown=true;
+  const text=`<div class="kicker">TEST TERMINÉ · AUCUNE RÉCOMPENSE</div><h2>${battle.status==='victory'?'Victoire en laboratoire':'Défaite en laboratoire'}</h2><p>Les cartes, l’XP, les ressources et la sauvegarde de votre aventure sont inchangées.</p><div class="button-row">${btn('Recommencer le test','lab-start','','primary')}${btn('Modifier les cartes','lab-back','','ghost')}${btn('Quitter le laboratoire','lab-exit','','ghost')}</div>`;
+  if(deferModal)deferredBattleModal=text;else showModal(text);
+  return;
+ }
  // The pending finished battle survives a reload until its profile receipt is saved.
  battle.settlementId ||= [battle.missionId,battle.seed,battle.round,battle.heroes.p.hp,battle.heroes.e.hp].join(':');
  persistBattle();
@@ -4124,6 +4151,35 @@ function settle({deferModal=false}={}){
  }
  showResult(`<div class="kicker">${victory?'VICTOIRE REMPORTÉE':'LE COMBAT EST TERMINÉ'}</div><h2>${victory?'La couronne est vôtre !':'Vos troupes se replient.'}</h2><p>${victory?`Vous avez vaincu <b>${esc(mission.enemy)}</b>. Votre armée gagne en expérience et de nouvelles terres s’ouvrent à vous.`:'Vous recevez quelques ressources pour préparer votre revanche. Modifiez votre deck et réessayez.'}</p><div class="stat-row"><div class="stat-box"><strong>+${reward.gold}</strong><small>Or</small></div>${victory?`<div class="stat-box"><strong>+${reward.shards}</strong><small>Éclats</small></div>`:''}</div>${reward.heroXp?`<p class="gold">♛ +${reward.heroXp} XP de héros${reward.levelAfter>reward.levelBefore?` · Niveau ${reward.levelAfter} atteint !`:''}${reward.mastered?.length?` · ${reward.mastered.length} progression(s) de maîtrise`:''}</p>`:''}${reward.card?`<p class="gold">✦ Nouvelle carte obtenue : ${esc(CARDS[reward.card].name)}</p>`:''}${reward.reputation?.length?`<p class="page-sub">Réputation : ${reward.reputation.map(([f,n])=>esc(FACTIONS[f].short)+' +'+n).join(' · ')}</p>`:''}<div class="button-row">${btn(battle.mode==='tower'?'Retour à la Tour':'Continuer la campagne','battle-exit','','primary')}${btn('Modifier mon deck','battle-deck','','ghost')}</div>`);
 }
+function openDeveloper(){
+ if(developer){screen='developer';render();return;}
+ cancelEnemyTimer();stopBattleFx();hideModal();
+ developer={draft:freshLab(),savedBattle:battle,inCombat:false,resultShown:false};
+ screen='developer';selectedCard=-1;render();window.scrollTo(0,0);
+}
+function backToDeveloper(){
+ if(!developer)return;
+ cancelEnemyTimer();stopBattleFx();hideModal();deferredBattleModal='';
+ battle=developer.savedBattle;developer.inCombat=false;developer.resultShown=false;
+ screen='developer';selectedCard=-1;render();window.scrollTo(0,0);
+}
+function exitDeveloper(page='home'){
+ if(!developer)return;
+ cancelEnemyTimer();stopBattleFx();hideModal();deferredBattleModal='';
+ battle=developer.savedBattle;developer=null;
+ screen=page;selectedCard=-1;render();
+ if(page==='battle')scheduleEnemyStep();
+ window.scrollTo(0,0);
+}
+function startDeveloperBattle(){
+ if(!developer)return;
+ try{
+  const simulated=createLabBattle(developer.draft,Date.now());
+  cancelEnemyTimer();stopBattleFx();hideModal();deferredBattleModal='';
+  battle=simulated;developer.inCombat=true;developer.resultShown=false;
+  screen='battle';selectedCard=-1;render();window.scrollTo(0,0);
+ }catch(e){toast(e.message);}
+}
 function startDungeonStage(){
  if(!profile.dungeonRun){navigate('dungeons');return;}
  if(profile.dungeonRun.phase==='choice'){toast('Choisissez votre événement avant de poursuivre.');navigate('dungeons');return;}
@@ -4148,11 +4204,29 @@ function startTower(floor){
 function startMission(id){if(battle?.status==='active'){toast('Terminez le combat en cours.');navigate('battle');return;}const mission=CAMPAIGN.find(x=>x.id===id);if(!mission||Number(id)>profile.unlocked){toast('Cette mission n’est pas encore débloquée.');return;}
  const invalid=validateDeck(profile);if(invalid){toast(invalid);screen='collection';render();return;}
  try{battle=createBattle(profile,mission,Date.now(),{turnFlow:'alternating'});persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);}catch(e){toast(e.message);}}
-function navigate(page){if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();if(!['home','campaign','tower','dungeons','collection','alchemy','forge','guide','battle'].includes(page))return;cancelEnemyTimer();screen=page;selectedCard=-1;render();if(page==='battle')scheduleEnemyStep();window.scrollTo(0,0);}
+function navigate(page){
+ if(page==='developer'){openDeveloper();return;}
+ if(!['home','campaign','tower','dungeons','collection','alchemy','forge','guide','battle'].includes(page))return;
+ if(developer){exitDeveloper(page);return;}
+ if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();
+ cancelEnemyTimer();screen=page;selectedCard=-1;render();if(page==='battle')scheduleEnemyStep();window.scrollTo(0,0);
+}
 function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();window.scrollTo(0,0);}
 function act(action,dataset){const {id,index,lane,col,page}=dataset;
+ if(developer&&screen==='developer'&&!['lab-add','lab-remove','lab-start','lab-back','lab-exit','lab-open','nav','home'].includes(action))return;
+ if(developer&&screen==='battle'&&!['lab-back','lab-exit','lab-start','nav','home','select-card','deploy','end-turn','hero-power','toggle-animations','retreat','confirm-retreat','close-modal','close-inspection'].includes(action))return;
  switch(action){
 
+case 'lab-open':openDeveloper();break;
+  case 'lab-exit':exitDeveloper();break;
+  case 'lab-back':backToDeveloper();break;
+  case 'lab-start':startDeveloperBattle();break;
+  case 'lab-add':case 'lab-remove':{
+   if(!developer||developer.inCombat)break;
+   const d=developer.draft,r=editLabDeck(d,d.side,d.cardId,action==='lab-add'?1:-1);
+   if(!r.ok)toast(r.reason);else render();
+   break;
+  }
   case 'new-game':showModal(`<div class="kicker">NOUVELLE PARTIE</div><h2>Choisir votre classe de départ</h2><p>Commencez une aventure à zéro avec une autre classe. Vous pouvez aussi changer de classe dans l’Atelier sans recommencer votre progression, après un combat.</p><div class="class-options new-game-classes">${Object.entries(CLASSES).map(([classId,c])=>btn(c.symbol+' '+c.name,'new-game-select',`data-id="${classId}"`,'ghost')).join('')}</div><p class="hint">La partie actuelle sera gardée dans un emplacement de sauvegarde précédent sur cet appareil. Exportez-la dans le Guide pour une copie durable.</p><div class="button-row">${btn('Annuler','close-modal','','ghost')}</div>`);break;
   case 'new-game-select':if(!CLASSES[id])break;showModal(`<div class="kicker">CONFIRMATION</div><h2>Recommencer en ${esc(CLASSES[id].name)} ?</h2><p>Votre progression, votre collection, vos talents et votre combat actuel seront remplacés par une nouvelle aventure. Une copie de la partie précédente sera conservée dans ce navigateur (un seul emplacement).</p><div class="button-row">${btn('Oui, nouvelle partie','confirm-new-game',`data-id="${id}"`,'danger')}${btn('Non, revenir','close-modal','','ghost')}</div>`);break;
   case 'confirm-new-game':if(!startNewAdventure(id)){toast('Nouvelle partie impossible : stockage local indisponible.');break;}switchToSavedAdventure();toast('Nouvelle aventure commencée en '+CLASSES[id].name+'.');break;
@@ -4203,7 +4277,7 @@ function act(action,dataset){const {id,index,lane,col,page}=dataset;
  case 'end-turn':if(!battle)return;withBattleFx(()=>endPlayerTurn(battle),()=>scheduleEnemyStep());break;
  case 'hero-power':if(!battle)return;withBattleFx(()=>usePower(battle));break;
  case 'toggle-animations':animationsEnabled=!animationsEnabled;try{localStorage.setItem(VFX_KEY,animationsEnabled?'on':'off');}catch{}render();scheduleEnemyStep(0);break;
- case 'retreat':showModal(`<div class="kicker">RETRAITE</div><h2>Abandonner la bataille ?</h2><p>Cette décision compte comme une défaite. Dans un donjon, elle met fin à l’expédition.</p><div class="button-row">${btn('Oui, battre en retraite','confirm-retreat','','danger')}${btn('Rester au combat','close-modal','','ghost')}</div>`);break;
+ case 'retreat':if(developer){showModal(`<h2>Quitter ce test ?</h2><p>Aucune pénalité et aucune récompense.</p><div class="button-row">${btn('Retour au laboratoire','lab-back','','primary')}${btn('Continuer','close-modal','','ghost')}</div>`);break;}showModal(`<div class="kicker">RETRAITE</div><h2>Abandonner la bataille ?</h2><p>Cette décision compte comme une défaite. Dans un donjon, elle met fin à l’expédition.</p><div class="button-row">${btn('Oui, battre en retraite','confirm-retreat','','danger')}${btn('Rester au combat','close-modal','','ghost')}</div>`);break;
  case 'confirm-retreat':if(battle?.status==='active'){cancelEnemyTimer();battle.status='defeat';battle.phase='finished';hideModal();persistBattle();settle();}break;
  case 'close-modal':hideModal();break;
  case 'battle-exit':const previousMode=battle?.mode;hideModal();battle=null;persistBattle();navigate(previousMode==='tower'?'tower':previousMode==='dungeon'?'dungeons':'campaign');break;
@@ -4233,7 +4307,18 @@ document.addEventListener('keydown',event=>{
  }
 });
 bindCardInspection();
-document.addEventListener('change',async event=>{if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
+document.addEventListener('change',async event=>{
+ if(developer&&event.target.dataset.labField){
+  const d=developer.draft,key=event.target.dataset.labField,value=event.target.value;
+  if(key==='side'&&['p','e'].includes(value))d.side=value;
+  else if(key==='cardId'&&CARDS[value])d.cardId=value;
+  else if(key==='heroClass'&&CLASSES[value]){d.heroClass=value;if(CARDS[d.cardId]?.heroClass&&CARDS[d.cardId].heroClass!==value)d.cardId='militia';}
+  else if(key==='rarity'){const r=setLabRarity(d,d.side,d.cardId,value);if(!r.ok)toast(r.reason);}
+  else if(key==='level'){const r=setLabLevel(d,d.side,d.cardId,Number(value));if(!r.ok)toast(r.reason);}
+  else if(key==='aiStyle')d.aiStyle=value;
+  render();return;
+ }
+ if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
 render();if(battle&&battle.status!=='active')settle();else {welcome();scheduleEnemyStep();}
 
 Object.assign(__exports,{});
@@ -4684,7 +4769,8 @@ function createViews(getState) {
       ['collection', 'Collection', '✦'],
       ['alchemy', 'Alchimie', '⚗'],
       ['forge', 'Atelier', '⚒'],
-      ['guide', 'Guide', '☷']
+      ['guide', 'Guide', '☷'],
+       ['developer', 'Développeur', '⚙']
     ];
     if (battle?.status === 'active') pages.push(['battle', 'Combat en cours', '⚔']);
     return pages
@@ -5815,7 +5901,7 @@ const {silenced,activeAbility,controlTargetError,resolveControlSpell,prepareCont
 const {chosenTalents}=__load("src/talents.js");
 const {tempoTargetError,resolveTempoSpell}=__load("src/engine/tempo.js");
 const {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,gearBonus}=__load("src/engine/profile.js");
-const {unitStatContext,unitStats}=__load("src/engine/unit-stats.js");
+const {unitStatContext,unitStats,labMilitiaBonus}=__load("src/engine/unit-stats.js");
 const {laneCount,lastCell,crownColumn,entryColumn,validDeploymentColumn,validLane,missionLayout}=__load("src/engine/board.js");
 Object.assign(__exports,__load("src/engine/board.js"));
 function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed/4294967296;}
@@ -5893,6 +5979,11 @@ function spawn(b,side,id,lane,col=entryColumn(b,side)){
  const u={uid:b.nextUnitId++,id,side,atk:stats.atk,maxhp:stats.maxhp,
   hp:stats.maxhp,armor:c.ability==='armor'?2:0,ranged:c.ability==='ranged',
   ability:c.ability,stun:0,poison:0,poisonTurns:0};
+ if(b.mode==='developer'&&id==='militia'){
+  const rank=b.labStats?.rarities?.[side]?.[id]||'commun',level=b.labStats?.levels?.[side]?.[id]||0;
+  const bonus=labMilitiaBonus(rank,level);
+  if(bonus.block||bonus.counter)u.labGuard={block:bonus.block,used:false,counter:bonus.counter,counterUsed:false};
+ }
  b.board[lane][col]=u;
  fx(b,{type:'spawn',side,lane,col,icon:c.icon});
  if(formationBonus(b,lane,u))note(b,`Concorde de ${FACTIONS[c.faction].short} : +1 attaque aux alliés de cet ordre sur la ligne ${lane+1}.`);
@@ -5964,6 +6055,7 @@ function hit(b,u,raw,bySide,ignoreArmor=false){
  // Une attaque sur une unité déjà vaincue ne doit pas créer un second kill.
  if(!u||u.hp<=0)return 0;
  let dmg=Math.max(1,raw-(ignoreArmor?0:(u.armor||0)));
+ if(u.labGuard?.block&&!u.labGuard.used&&bySide!==u.side){u.labGuard.used=true;dmg=Math.max(0,dmg-u.labGuard.block);}
  const barrier=u.barrier||0;
  if(barrier>0){const absorbed=Math.min(barrier,dmg);u.barrier=barrier-absorbed;dmg-=absorbed;}
  u.hp=Math.max(0,u.hp-dmg);
@@ -6046,10 +6138,12 @@ function findGuardianForHero(b,lane,heroSide){
 function retaliate(b,defender,attacker,lane,defenderCol,attackerCol){
  // Riposte : seulement contre une attaque au contact, si les deux unités vivent.
  // Une seule riposte par tour et aucune contre-riposte en chaîne.
- if(!RIPOSTE_IDS.has(defender.id)||silenced(b,defender)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
+ const experimentalCounter=!!defender.labGuard?.counter&&!defender.labGuard.counterUsed;
+ if((!RIPOSTE_IDS.has(defender.id)&&!experimentalCounter)||silenced(b,defender)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
     defender.side===attacker.side||Math.abs(defenderCol-attackerCol)!==1||defender.lastRiposteRound===b.round)return;
  defender.lastRiposteRound=b.round;
- const dealt=hit(b,attacker,2,defender.side);
+ if(experimentalCounter)defender.labGuard.counterUsed=true;
+ const dealt=hit(b,attacker,experimentalCounter?1:2,defender.side);
  if(dealt>0){
   fx(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,damage:dealt,riposte:true,icon:'↶'});
   note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
@@ -6288,6 +6382,14 @@ Object.assign(__exports,{classSkillTargetError,resolveClassSkill});
 // Statistiques d'invocation partagées par le moteur et les aperçus, sans mutation.
 const {CARDS,FACTIONS}=__load("src/data.js");
 const {gearBonus,masteryRank,reputationLevel}=__load("src/engine/profile.js");
+// Effets expérimentaux du Milicien, actifs uniquement dans une bataille de laboratoire.
+function labMilitiaBonus(rarity,level){
+ const ranks=['commun','rare','épique','légendaire','divine'],rank=ranks.indexOf(rarity);
+ if(rank<0)return {hp:0,block:0,counter:false};
+ const hp=rank>=3?2:rank>=1?1:0;
+ const block=rank===1?(level>=2?1:0):rank>=2&&rank<=3?2:rank===4?3:0;
+ return {hp,block,counter:rank===4&&level>=2};
+}
 function unitStatContext(profile){
  return {
   upgrades:{...profile.upgrades},mastery:{...profile.mastery},
@@ -6299,7 +6401,12 @@ function unitStatContext(profile){
 function unitStats(context,id,side='p'){
  const card=CARDS[id];if(!card||card.type!=='unité')return null;
  const allied=side==='p';
- const level=allied?(context.upgrades?.[id]||0):Math.max(0,context.enemyDifficulty-3);
+ const lab=context.mode==='developer'?context.labStats:null;
+ const labLevel=lab?.levels?.[side]?.[id]??0;
+ const labRank=lab?.rarities?.[side]?.[id]||card.rarity;
+ const level=lab?(id==='militia'&&labRank!=='commun'?3:labLevel):
+  allied?(context.upgrades?.[id]||0):Math.max(0,context.enemyDifficulty-3);
+ const experimental=lab&&id==='militia'?labMilitiaBonus(labRank,labLevel):{hp:0};
  const equipment=allied?(context.unitAtkBonus||0):0;
  const forge=allied?(context.forgeBonus||0):0;
  const reputation=allied?(context.reputationBonus?.[card.faction]||0):0;
@@ -6307,12 +6414,13 @@ function unitStats(context,id,side='p'){
  const bonuses=[
   {label:allied?'Amélioration':'Difficulté',atk:level,hp:level},
   {label:'Équipement',atk:equipment,hp:0},{label:'Forge',atk:0,hp:forge},
-  {label:'Réputation',atk:0,hp:reputation},{label:'Maîtrise',atk:0,hp:mastery}
+  {label:'Réputation',atk:0,hp:reputation},{label:'Maîtrise',atk:0,hp:mastery},
+  {label:'Milicien expérimental',atk:0,hp:experimental.hp}
  ].filter(b=>b.atk||b.hp);
- return {atk:card.attack+level+equipment,maxhp:card.hp+level+forge+reputation+mastery,bonuses};
+ return {atk:card.attack+level+equipment,maxhp:card.hp+level+forge+reputation+mastery+experimental.hp,bonuses};
 }
 
-Object.assign(__exports,{unitStatContext,unitStats});
+Object.assign(__exports,{labMilitiaBonus,unitStatContext,unitStats});
 
 },
 "src/engine/dungeon-run.js":function(__exports,__load){
@@ -6643,7 +6751,7 @@ function createBattleView(getState, { btn, cardUI, esc }) {
       cells === 10
         ? paintedArena(lanes, (lane, col, visual) => battleCell(battle.board[lane][col], lane, col, visual))
         : `<div class="arena-sky" aria-hidden="true"></div>${Array.from({ length: lanes }, (_, lane) => `<div class="lane-row" data-crown-col="${cells + 1}"><div class="lane-label">${['I', 'II', 'III', 'IV'][lane]}</div><div class="lane-gate" aria-label="Votre couronne"><span class="pixel-tower" aria-hidden="true"></span><b>♜</b></div>${Array.from({ length: cells }, (_, i) => battleCell(battle.board[lane][i + 1], lane, i + 1)).join('')}<div class="lane-gate enemy" aria-label="Couronne adverse"><span class="pixel-tower" aria-hidden="true"></span><b>♛</b></div></div>`).join('')}`;
-    return `<div class="combat-screen" data-painted-arena="${cells === 10}" data-card-layout="${immersive}"><div class="split-head combat-titlebar"><div><div class="kicker">COMBAT TACTIQUE · ${esc(battle.missionName)}</div><h1 class="combat-mission-name">${esc(battle.missionName)}</h1></div><span class="pill">2 cartes maximum par tour</span><button type="button" class="combat-menu-link" data-action="nav" data-page="home" aria-label="Revenir à la Citadelle sans abandonner la bataille">☷ Citadelle</button></div>
+    return `<div class="combat-screen" data-painted-arena="${cells === 10}" data-card-layout="${immersive}"><div class="split-head combat-titlebar"><div><div class="kicker">${battle.mode==='developer'?'TEST SANS RÉCOMPENSE':'COMBAT TACTIQUE'} · ${esc(battle.missionName)}</div><h1 class="combat-mission-name">${esc(battle.missionName)}</h1></div><span class="pill">2 cartes maximum par tour</span><button type="button" class="combat-menu-link" data-action="${battle.mode==='developer'?'lab-back':'nav'}" data-page="home" aria-label="${battle.mode==='developer'?'Retourner au laboratoire':'Revenir à la Citadelle sans abandonner la bataille'}">${battle.mode==='developer'?'⚙ Laboratoire':'☷ Citadelle'}</button></div>
  <section class="battle-panel arena-lofi combat-stage">${battleHud(p, e)}
  ${battle.turnFlow === 'alternating' ? `<div class="turn-indicator" role="status">${battle.phase === 'enemy' ? 'L’IA choisit et pose ses cartes, puis ses unités agiront.' : 'Placez jusqu’à deux cartes, puis validez pour lancer vos unités.'}</div>` : ''}
  <div class="arena-caption"><span>${selectedCard >= 0 ? '✦ CHOISISSEZ UNE CASE DE DÉPART' : '✧ ARÈNE DES SERMENTS'}</span><span>${lanes} lignes · ${cells} cases par ligne</span></div><div class="battle-grid ${cells === 10 ? 'arena-structured arena-painted' : ''}" tabindex="0" role="region" aria-label="Plateau de combat : ${lanes} lignes de ${cells} cases" style="--cells:${cells};--arena-scene:url('${arenaBackdrop()}')">${arena}</div>
@@ -6769,6 +6877,155 @@ function mountPaintedArena(){
 }
 
 Object.assign(__exports,{PAINTED_ARENA,paintedTile,paintedArena,paintedFootPoint,mountPaintedArena});
+
+},
+"src/ui/developer-lab.js":function(__exports,__load){
+// Panneau de configuration du même combat que la campagne, sans second moteur.
+const {CARDS,FACTIONS,CLASSES}=__load("src/data.js");
+const {AI_STYLES}=__load("src/ai.js");
+const {labRarity,labLevel,labCardStats,LAB_RANKS}=__load("src/engine/developer-lab.js");
+function developerLabUI(lab,{esc,btn}){
+ const side=lab.side,id=lab.cardId,card=CARDS[id];
+ const deck=lab.decks[side],counts={};
+ for(const key of deck)counts[key]=(counts[key]||0)+1;
+ const rarity=labRarity(lab,side,id),level=labLevel(lab,side,id);
+ const stats=labCardStats(lab,side,id);
+ const rankOptions=id==='militia'?LAB_RANKS:[card.rarity];
+ const selections=Object.values(CARDS).filter(c=>!c.heroClass||c.heroClass===lab.heroClass)
+  .map(c=>`<option value="${esc(c.id)}" ${c.id===id?'selected':''}>${esc(c.name)} · ${esc(FACTIONS[c.faction].short)}</option>`).join('');
+ const option=(value,text,current)=>`<option value="${esc(value)}" ${value===current?'selected':''}>${esc(text)}</option>`;
+ const deckRows=Object.entries(counts).map(([key,count])=>`<span class="lab-deck-card">${count}× ${esc(CARDS[key].name)}</span>`).join('');
+ return `<section class="developer-lab">
+  <div class="kicker">OUTIL TEMPORAIRE · SANS SAUVEGARDE</div>
+  <h1 class="page-title">Laboratoire de combat</h1>
+  <p class="page-sub">Même moteur, même IA et même plateau que le jeu. Les tests n'accordent ni XP, ni or, ni éclats et n'affectent pas votre aventure.</p>
+  <div class="lab-controls">
+   <div class="card-panel">
+    <h2>Configuration</h2>
+    <label>Classe du héros
+     <select data-lab-field="heroClass">${Object.entries(CLASSES).map(([key,v])=>option(key,v.name,lab.heroClass)).join('')}</select>
+    </label>
+    <label>Stratégie de l’IA
+     <select data-lab-field="aiStyle">${Object.entries(AI_STYLES).map(([key,v])=>option(key,v.name,lab.aiStyle)).join('')}</select>
+    </label>
+    <label>Composition à modifier
+     <select data-lab-field="side">${option('p','Vos cartes',''+side)}${option('e','Cartes de l’IA',''+side)}</select>
+    </label>
+    <label>Carte
+     <select data-lab-field="cardId">${selections}</select>
+    </label>
+    <div class="lab-deck-buttons">${btn('− Retirer','lab-remove','', 'ghost')}${btn('+ Ajouter','lab-add','','primary')}</div>
+    <p class="hint">${side==='p'?'Votre deck':'Deck adverse'} : ${deck.length}/24 cartes, minimum 12. Les cartes sont utilisables sans possession réelle.</p>
+    <div class="lab-deck-list">${deckRows}</div>
+   </div>
+   <div class="card-panel">
+    <h2>Réglage de la carte</h2>
+    <p><strong>${esc(card.name)}</strong> · délai ${card.delay} tour(s)</p>
+    <label>Rareté
+      <select data-lab-field="rarity">${rankOptions.map(r=>option(r,r.charAt(0).toUpperCase()+r.slice(1),rarity)).join('')}</select>
+    </label>
+    <label>Niveau d'amélioration
+      <select data-lab-field="level">${[0,1,2,3].filter(n=>id!=='militia'||rarity==='commun'||n>0).map(n=>option(String(n),n===0?'Base (aucun achat)':`Niveau ${n}`,String(level))).join('')}</select>
+    </label>
+    <p class="lab-stats">Prévision en combat : <b>${card.type==='unité'?`${stats.atk} ATQ · ${stats.hp} PV`:'sort, valeurs inchangées'}</b></p>
+    ${id==='militia'?`<p class="hint">Pilote Milicien : premier coup réduit de ${stats.block}, contre-attaque de 1 au palier Divin II. Ces effets sont des hypothèses d'équilibrage, uniquement dans le laboratoire.</p>`:
+      '<p class="hint">Les raretés supérieures de cette carte ne sont pas encore conçues. Seuls ses trois niveaux existants sont testables.</p>'}
+    <p class="hint">Une même carte partage ces réglages entre tous ses exemplaires du camp choisi. Le cadre et l’illustration restent inchangés.</p>
+   </div>
+  </div>
+  <div class="card-panel lab-launch">
+    <p>Deux decks indépendants, 12 à 24 cartes chacun. L’IA agit avec les règles habituelles.</p>
+    <div class="button-row">${btn('⚔ Lancer la bataille test','lab-start','','primary')}${btn('Retour au jeu','lab-exit','','ghost')}</div>
+  </div>
+ </section>`;
+}
+Object.assign(__exports,{developerLabUI});
+
+},
+"src/engine/developer-lab.js":function(__exports,__load){
+// Laboratoire de développement : données de test éphémères, sans modifier les profils.
+const {CARDS,CAMPAIGN,CLASSES}=__load("src/data.js");
+const {freshProfile}=__load("src/engine/profile.js");
+const {createBattle}=__load("src/engine/battle.js");
+const {labMilitiaBonus}=__load("src/engine/unit-stats.js");
+const LAB_RANKS=Object.freeze(['commun','rare','épique','légendaire','divine']);
+const LAB_SIDES=Object.freeze(['p','e']);
+
+function freshLab(){
+ return {
+  heroClass:'gardien',aiStyle:'assaut',side:'p',cardId:'militia',
+  decks:{p:[...freshProfile().deck],e:[...CAMPAIGN[0].deck]},
+  levels:{p:{},e:{}},rarities:{p:{},e:{}}
+ };
+}
+function labRarity(lab,side,id){
+ const card=CARDS[id];
+ if(!card)return null;
+ return id==='militia'?(lab.rarities?.[side]?.[id]||'commun'):card.rarity;
+}
+function labLevel(lab,side,id){return lab.levels?.[side]?.[id]||0;}
+function labCardStats(lab,side,id){
+ const card=CARDS[id];if(!card)return null;
+ const rarity=labRarity(lab,side,id),level=labLevel(lab,side,id);
+ const upgrades=id==='militia'&&rarity!=='commun'?3:level;
+ const bonus=id==='militia'?labMilitiaBonus(rarity,level):{hp:0,block:0,counter:false};
+ return {atk:card.attack+(card.type==='unité'?upgrades:0),
+  hp:card.hp+(card.type==='unité'?upgrades:0)+bonus.hp,
+  rarity,level,block:bonus.block,counter:bonus.counter};
+}
+function setLabRarity(lab,side,id,rarity){
+ if(!LAB_SIDES.includes(side)||!CARDS[id])return {ok:false,reason:'Carte inconnue.'};
+ if(id!=='militia'&&rarity!==CARDS[id].rarity)return {ok:false,reason:'Évolutions futures encore à concevoir.'};
+ if(id==='militia'&&!LAB_RANKS.includes(rarity))return {ok:false,reason:'Rareté non disponible.'};
+ lab.rarities[side][id]=rarity;
+ if(id==='militia'&&rarity!=='commun'&&labLevel(lab,side,id)===0)lab.levels[side][id]=1;
+ return {ok:true};
+}
+function setLabLevel(lab,side,id,level){
+ if(!LAB_SIDES.includes(side)||!CARDS[id]||!Number.isInteger(level)||level<0||level>3)
+  return {ok:false,reason:'Niveau invalide.'};
+ if(id==='militia'&&labRarity(lab,side,id)!=='commun'&&level<1)
+  return {ok:false,reason:'Le niveau commence à 1 au-delà de Commune.'};
+ lab.levels[side][id]=level;
+ return {ok:true};
+}
+function editLabDeck(lab,side,id,delta){
+ if(!LAB_SIDES.includes(side)||!CARDS[id]||![-1,1].includes(delta))
+  return {ok:false,reason:'Carte inconnue.'};
+ const card=CARDS[id],deck=lab.decks[side];
+ if(delta>0){
+  if(deck.length>=24)return {ok:false,reason:'Le deck est limité à 24 cartes.'};
+  if(card.heroClass&&(side==='e'||card.heroClass!==lab.heroClass))
+   return {ok:false,reason:'Compétence réservée à la classe du héros joueur.'};
+  deck.push(id);
+ }else{
+  if(deck.length<=12)return {ok:false,reason:'Le deck doit conserver au moins 12 cartes.'};
+  const index=deck.indexOf(id);
+  if(index<0)return {ok:false,reason:'Cette carte n’est pas dans le deck.'};
+  deck.splice(index,1);
+ }
+ return {ok:true};
+}
+function createLabBattle(lab,seed=Date.now()){
+ if(!CLASSES[lab.heroClass])throw Error('Classe de héros inconnue.');
+ for(const side of LAB_SIDES){
+  if(!Array.isArray(lab.decks[side])||lab.decks[side].length<12||lab.decks[side].length>24||
+   lab.decks[side].some(id=>!CARDS[id]||(CARDS[id].heroClass&&(side==='e'||CARDS[id].heroClass!==lab.heroClass))))
+   throw Error('Deck de laboratoire invalide ou compétence de classe incompatible.');
+ }
+ const p=freshProfile();
+ p.heroClass=lab.heroClass;p.deck=[...lab.decks.p];
+ p.collection=Object.fromEntries(p.deck.map(id=>[id,p.deck.filter(x=>x===id).length]));
+ p.upgrades={};p.mastery={};
+ const m={...CAMPAIGN[0],id:'laboratoire',name:'Laboratoire de combat',enemy:'IA de test',
+  hp:26,difficulty:2,boss:false,mode:'developer',aiStyle:lab.aiStyle,
+  deck:[...lab.decks.e],unlock:null};
+ const b=createBattle(p,m,seed,{turnFlow:'alternating'});
+ // Ces valeurs restent uniquement dans la bataille de test, jamais dans le stockage.
+ b.labStats={levels:structuredClone(lab.levels),rarities:structuredClone(lab.rarities)};
+ return b;
+}
+Object.assign(__exports,{LAB_RANKS,LAB_SIDES,freshLab,labRarity,labLevel,labCardStats,setLabRarity,setLabLevel,editLabDeck,createLabBattle});
 
 },
 "src/ui/combat-fx.js":function(__exports,__load){
