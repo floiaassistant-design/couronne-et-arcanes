@@ -69,6 +69,7 @@ async def play(page,id,lane):
     await page.evaluate('(id)=>{battle.heroes.p.hand=[{id,wait:0}];battle.heroes.p.cardsPlayed=0;render()}',id)
     await page.locator('.hand [data-action="select-card"]').click()
     await page.locator(f'[data-action="deploy"][data-col="1"][data-lane="{lane}"]').click()
+    await page.wait_for_function("!document.querySelector('.combat-playing')")
 
 async def run(browser,label,viewport):
     errors=[]
@@ -102,6 +103,7 @@ async def run(browser,label,viewport):
     await page.evaluate('()=>{battle.board[1][2]=__unit("wolf","p",91,"haste");battle.board[1][2].silenceUntil=2;render()}')
     await play(page,'skill_guard_wall',1)
     assert await page.evaluate('battle.board[1][2].barrier')==2
+    await page.mouse.move(1,1);await page.wait_for_timeout(180)
     await page.evaluate('()=>{battle.heroes.p.hand=[{id:"transposition",wait:0}];battle.heroes.p.cardsPlayed=0;render()}')
     await page.locator('.hand [data-action="select-card"]').click()
     assert 'Ligne 3' in await page.locator('.teleport-preview').inner_text()
@@ -126,6 +128,7 @@ async def run(browser,label,viewport):
     }''')
     await page.locator('[data-action="end-turn"]').click()
     await page.wait_for_function("()=>battle.phase!=='enemy'")
+    await page.wait_for_function("!document.querySelector('.combat-playing')")
     assert await page.evaluate('battle.traps.length')==0
     assert await page.evaluate('battle.board[2].find(u=>u?.uid===92).hp')==7
     assert 'Piège déclenché' in await page.locator('.log-list').inner_text()
@@ -134,6 +137,7 @@ async def run(browser,label,viewport):
     await page.emulate_media(reduced_motion='reduce')
     await page.locator('[data-action="end-turn"]').click()
     await page.wait_for_function("()=>battle.phase!=='enemy'")
+    await page.wait_for_function("!document.querySelector('.combat-playing')")
     assert await page.locator('.silence-badge').count()==0
     assert await page.locator('.battle-grid .lane-row').count()==3
     # Chargement d'un combat historique sans aucune propriété V2.9.
@@ -146,6 +150,7 @@ async def run(browser,label,viewport):
     page=await make_page(browser,viewport,legacy,errors)
     await page.locator('[data-action="end-turn"]').click()
     await page.wait_for_function("()=>battle.phase!=='enemy'")
+    await page.wait_for_function("!document.querySelector('.combat-playing')")
     assert await page.locator('.turn-n').inner_text()=='4'
     assert not errors,errors
     assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
@@ -169,8 +174,8 @@ async def production(browser,label,viewport):
     await page.reload()
     assert await page.locator('.turn-n').inner_text()=='2'
     assert await page.evaluate('typeof window.battle')=='undefined'
-    if await page.locator('.combat-intel summary').count():
-        await page.locator('.combat-intel summary').click()
+    if await page.locator('.combat-intel > summary').count():
+        await page.locator('.combat-intel > summary').click()
     await page.locator('[data-action="retreat"]').click()
     await page.locator('[data-action="confirm-retreat"]').click()
     await page.locator('[data-action="battle-deck"]').click()

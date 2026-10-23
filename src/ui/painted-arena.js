@@ -53,7 +53,8 @@ export function mountPaintedArena(){
    const hud=stage.querySelector('.battle-hud'),caption=stage.querySelector('.arena-caption');
    const box=grid.getBoundingClientRect();
    const first=PAINTED_ARENA.rows[0],last=PAINTED_ARENA.rows.at(-1);
-   const top=Math.max(hud.getBoundingClientRect().bottom,caption.getBoundingClientRect().bottom)-box.top+12;
+   const readout=stage.querySelector('.combat-readout');
+   const top=Math.max(hud.getBoundingClientRect().bottom,caption.getBoundingClientRect().bottom,readout?.getBoundingClientRect().bottom||0)-box.top+12;
    const bottom=dock.getBoundingClientRect().top-box.top-14;
    const scale=Math.min(Math.max(grid.clientWidth/PAINTED_ARENA.width,grid.clientHeight/PAINTED_ARENA.height),Math.max(120,bottom-top)/(last-first));
    const width=PAINTED_ARENA.width*scale,height=PAINTED_ARENA.height*scale;

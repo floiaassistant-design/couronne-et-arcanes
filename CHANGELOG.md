@@ -1,3 +1,21 @@
+## 23/10/2026 — Intégration autorisée des PR nº 35, 36 et 37
+
+- Demande du propriétaire : « fusionne les pr en cours ».
+- Guide isolé, lecture séquentielle des actions et laboratoire réunis sur la même version.
+- Conflits résolus en conservant les protections des sauvegardes et les commandes visuelles du laboratoire.
+- Parcours Milicien : tabulation explicite avant la lecture au clavier après reconstruction du DOM.
+- Export unique à reconstruire depuis les sources, puis CI complète avant fusion.
+
+## 2026-10-23 — Proposition : effets de combat et déroulé lisible
+
+- Lire les déplacements, attaques, sorts, impacts, soins et défaites dans l'ordre.
+- Afficher les vrais PV retirés et les protections consommées, avec source/cible,
+  bandeau, déroulé du tour, vitesse ×2 et passage de la séquence courante.
+- Suivre l'action sur mobile ; préserver le résultat sauvé avant la lecture,
+  le mouvement réduit, l'export unique et les anciennes parties.
+- Séparer capture publique, plan de lecture et rendu ; aucune règle ni image modifiée.
+- Proposition sur branche dédiée, sans fusion autorisée.
+
 ## 23/10/2026 — Proposition : laboratoire de combat intégré
 
 - Bouton Développeur, configuration de deux decks, niveaux, classe et style IA.

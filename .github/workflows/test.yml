@@ -31,6 +31,8 @@ jobs:
           python3 -m playwright install --with-deps chromium
       - name: Construire le HTML réservé aux tests navigateur
         run: npm run build:test
+      - name: Lecture des attaques, dégâts réels, interruption et mouvement réduit
+        run: python3 tests/browser_combat_fx.py
       - name: Cartes sur plateau, vraie pose, aperçus et export hors ligne
         run: |
           python3 tests/browser_card_study.py
@@ -80,6 +82,7 @@ jobs:
             /tmp/ca-maintenance-*.png
             /tmp/ca-arena-*.png
             /tmp/ca-combat-*.png
+            /tmp/ca-combat-fx-*.png
             /tmp/ca-capacites-*.png
             /tmp/ca-collection-*.png
             /tmp/ca-milicien-*.png
@@ -97,3 +100,4 @@ jobs:
         run: python3 tests/browser_save_integrity_v211.py
       - name: Comparaison de géométrie et reproductibilité
         run: npm run arena-balance
+

@@ -1,5 +1,6 @@
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 import {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
+import {recordCombatEvent} from './combat-events.js';
 import {rankEnemyMoves} from '../ai.js';
 import {classSkillTargetError,resolveClassSkill} from './class-skills.js';
 import {silenced,activeAbility,controlTargetError,resolveControlSpell,prepareControlUnits,triggerTrap,expireControl} from './battle-control.js';
@@ -12,7 +13,7 @@ export * from './board.js';
 function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed/4294967296;}
 function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand(b)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 export function note(b,message){b.log.unshift(message);b.log=b.log.slice(0,12);}
-function fx(b,event){if(Array.isArray(b.vfx)&&b.vfx.length<80)b.vfx.push(event);}
+function fx(b,event){recordCombatEvent(b,event);}
 function enterCell(b,u,lane,col){triggerTrap(b,u,lane,col,hit,fx,note);sweepDead(b);}
 const controlHooks={emit:fx,note,enter:enterCell};
 
@@ -98,8 +99,9 @@ function spawn(b,side,id,lane,col=entryColumn(b,side)){
  return true;
 }
 function damageHero(b,side,amount){
- const h=b.heroes[side];const absorbed=Math.min(h.shield,amount);h.shield-=absorbed;
+ const h=b.heroes[side],before=h.hp;const absorbed=Math.min(h.shield,amount);h.shield-=absorbed;
  h.hp=Math.max(0,h.hp-(amount-absorbed));
+ fx(b,{type:'hero-damage',side,damage:before-h.hp,absorbed});
 }
 function locateEnemy(b,side,lane){
  const list=b.board[lane].map((u,i)=>u&&u.side!==side?{u,i}:null).filter(Boolean);
@@ -110,7 +112,7 @@ function cast(b,side,id,lane){
  let drawAfter=0;
  const supportSpell=['spell_heal','spell_buff','spell_ward'].includes(c.ability);
  const allied=b.board[lane].findIndex(u=>u&&u.side===side);
- fx(b,{type:'spell',side,lane,from:crownColumn(b,side),to:supportSpell?(allied>=1?allied:crownColumn(b,side)):(foe?foe.i:crownColumn(b,enemy)),variant:c.ability,icon:c.icon});
+ fx(b,{type:'spell',name:c.name,side,lane,from:crownColumn(b,side),to:supportSpell?(allied>=1?allied:crownColumn(b,side)):(foe?foe.i:crownColumn(b,enemy)),variant:c.ability,icon:c.icon});
  if(c.ability==='spell_bolt'){
   if(foe)hit(b,foe.u,4,side);else damageHero(b,enemy,2);
  }else if(c.ability==='spell_heal'){
@@ -163,8 +165,12 @@ function hit(b,u,raw,bySide,ignoreArmor=false){
  if(u.labGuard?.block&&!u.labGuard.used&&bySide!==u.side){u.labGuard.used=true;dmg=Math.max(0,dmg-u.labGuard.block);}
  const barrier=u.barrier||0;
  if(barrier>0){const absorbed=Math.min(barrier,dmg);u.barrier=barrier-absorbed;dmg-=absorbed;}
- u.hp=Math.max(0,u.hp-dmg);
+ const before=u.hp;u.hp=Math.max(0,u.hp-dmg);
  if(bySide!==u.side&&u.hp<=0)b.stats[bySide==='p'?'playerKills':'enemyKills']++;
+ if(Array.isArray(b.vfx)){
+  const lane=b.board.findIndex(row=>row.includes(u)),col=lane<0?-1:b.board[lane].indexOf(u);
+  fx(b,{type:'damage',side:u.side,lane,col,damage:before-u.hp,absorbed:barrier-(u.barrier||0),armor:ignoreArmor?0:Math.min(raw-1,u.armor||0)});
+ }
  return dmg;
 }
 function sweepDead(b){
@@ -248,9 +254,9 @@ function retaliate(b,defender,attacker,lane,defenderCol,attackerCol){
     defender.side===attacker.side||Math.abs(defenderCol-attackerCol)!==1||defender.lastRiposteRound===b.round)return;
  defender.lastRiposteRound=b.round;
  if(experimentalCounter)defender.labGuard.counterUsed=true;
+ fx(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
  const dealt=hit(b,attacker,experimentalCounter?1:2,defender.side);
  if(dealt>0){
-  fx(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,damage:dealt,riposte:true,icon:'↶'});
   note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
  }
 }
@@ -424,3 +430,4 @@ export function endPlayerTurn(b){
  }
  return {ok:true};
 }
+

@@ -1,3 +1,13 @@
+## Lecture des actions — proposition du 23/10/2026
+
+`engine/combat-events.js` capture des instantanés publics transitoires ;
+`ui/combat-steps.js` décrit les écarts réels et `ui/combat-fx.js` les lit.
+L'état réel reste sauvegardé avant la projection visuelle ; ne jamais persister
+les images intermédiaires ni les déroulés. Conserver le verrou de commandes,
+la fin immédiate sans animations, le nettoyage et les anciens combats 3×5.
+Voir `docs/EFFETS_COMBAT_2026_10_23.md` ; 31 modules empaquetés.
+Cette proposition n'est pas fusionnée et demande un accord spécifique.
+
 # AGENTS.md — Couronnes & Arcanes
 
 ## Reprise et sources officielles
@@ -88,6 +98,16 @@
   mentionnant `ESSAI_CARTES.html`, `build:cards` ou quatre builds sont historiques.
 - Conserver règles, moteur, profils et sauvegardes historiques, y compris leurs
   plateaux 3×5 ; ils utilisent désormais les cartes, sans conversion des données.
+
+## Entretien des vues — proposition indépendante du 23/10/2026
+
+- Les PR 31 à 34 sont fusionnées sur `main` `adf9c9192293ea2e25849f37a0ac11d1df08c951`.
+- `ui/guide-page.js` est le propriétaire du rendu pur du Guide ; `ui/pages.js`
+  fournit son bouton et la valeur de sauvegarde précédente au moment du rendu.
+  Le nouveau module doit être embarqué par le builder et ne dépend ni du DOM,
+  ni du stockage, ni du moteur.
+- La branche de maintenance attend son accord spécifique de fusion, comme
+  toute nouvelle PR. Les chiffres des rapports datés restent historiques.
 
 ## Contrats techniques à conserver
 
@@ -203,3 +223,4 @@
   n'est validé par les seuls tests automatisés.
 - Fin de session : état de reprise court, changements et limites documentés,
   commit GitHub vérifié et PR. Les anciens bilans restent des rapports datés.
+

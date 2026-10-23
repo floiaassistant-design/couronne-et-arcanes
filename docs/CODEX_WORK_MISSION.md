@@ -1,3 +1,9 @@
+> **État vérifié le 23/10/2026 :** les PR 31 à 34 sont fusionnées
+> sur `main` `adf9c9192293ea2e25849f37a0ac11d1df08c951`.
+> Présentation cartes unique, `JOUER.html` unique. Les propositions en tête
+> des anciens documents sont historiques. Lire l'état actuel et vérifier les
+> PR ouvertes avant de commencer une nouvelle mission.
+
 ## Proposition — Présentation cartes unique et export unique, 22 octobre 2026
 
 Demande du propriétaire : conserver seulement le jeu avec les cartes sur le

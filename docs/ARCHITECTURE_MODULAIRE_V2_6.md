@@ -1,3 +1,46 @@
+# Version réunie du 23 octobre 2026 — 34 modules
+
+Les modules de Guide, de lecture des effets et de laboratoire coexistent.
+`engine/developer-lab.js` prépare des batailles `developer` via le moteur
+public. Les bonus expérimentaux du Milicien restent limités à ce mode.
+`ui/developer-lab.js` rend sa configuration ; `app.js` conserve la bataille
+réelle en mémoire et interdit toute écriture de profil/combat pendant un test.
+Les contrôles du lecteur (`fx-speed`, `fx-skip`) restent actifs dans ce mode.
+Le moteur reste indépendant du DOM ; les instantanés visuels ne sont pas persistés.
+`ui/guide-page.js` conserve son rendu pur. Le builder découvre les 34 modules.
+
+Les sections ci-dessous décrivent les contrats et leurs jalons datés.
+
+## Proposition du 23/10/2026 — lecture des événements publics
+
+- `engine/combat-events.js` : captures publiques indépendantes, activées avec
+  `b.vfx` seulement ; aucun DOM, calcul de règle ou état sauvegardé supplémentaire.
+- `ui/combat-steps.js` : narration pure et différences observées des instantanés.
+- `ui/combat-fx.js` : lecteur DOM, ancrages, commandes et nettoyage.
+- `app.js` : résultat réel persisté puis projection temporaire dans les vues.
+  Les commandes sont bloquées pendant la lecture ; fin immédiate sans animations.
+
+Le builder découvre les 31 modules par leurs imports, sans liste parallèle.
+Voir [le contrat](EFFETS_COMBAT_2026_10_23.md). Aucune fusion autorisée.
+
+# État architectural vérifié le 23 octobre 2026
+
+Les PR 31 à 34 sont déjà fusionnées sur `main` `adf9c9192293ea2e25849f37a0ac11d1df08c951`.
+Le CSS est spécialisé et seule la présentation cartes est distribuée par
+`JOUER.html`. Les propositions datées ci-dessous sont historiques.
+
+La branche `refactor/guide-module-documentation-20261023` extrait le rendu
+statique du Guide dans `src/ui/guide-page.js` avec injection de `btn`
+et `previousGameAvailable`. `src/ui/pages.js` reste responsable de la
+composition des pages et relit l'état à chaque `guideUI()`.
+La dépendance va de `pages.js` vers `guide-page.js`, sans cycle ;
+le nouveau module n'importe ni moteur ni stockage ni DOM.
+Le builder doit l'inclure dans `JOUER.html`.
+
+---
+
+## Historique architectural des versions précédentes
+
 ## Proposition — Présentation cartes unique et export unique, 22 octobre 2026
 
 Demande du propriétaire : conserver seulement le jeu avec les cartes sur le
@@ -230,3 +273,4 @@ La présentation plein écran de la vue cartes reste dans `assets/card-arena.css
 `engine/board.js` définit `deploymentColumns`, `validDeploymentColumn` et `freeDeploymentColumn` d’après le tableau réel (trois cases pour dix colonnes, une pour les anciens 3×5). `battle.js` valide la colonne optionnelle avant toute consommation, invoque exactement sur cette case et réutilise le hook d’entrée des pièges. L’appel sans colonne garde l’entrée historique. `ai.js` choisit une place libre dans la zone miroir ; le robot partagé `scripts/lib/battle_runner.mjs` emploie la même règle. Les sorts restent ciblés par ligne.
 
 `battle-view.js` rend les trois cibles de pose et transmet `data-col` à `app.js`. Le contrôleur d’aperçu ne contient plus d’état épinglé ; pointerdown/clic et sélection ferment la fiche et bloquent sa réouverture sur le même élément jusqu’à sa sortie. Focus clavier et survol restent disponibles. Aucun nouveau module, champ de sauvegarde ou mapping graphique.
+

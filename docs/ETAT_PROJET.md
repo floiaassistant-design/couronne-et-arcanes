@@ -1,3 +1,26 @@
+# Version réunie — 23 octobre 2026
+
+Le propriétaire a demandé explicitement de fusionner les PR ouvertes du jeu :
+nº 35 (Guide), nº 36 (effets de combat) et nº 37 (laboratoire).
+La nº 35 est intégrée à `420744563110952c1cc5538e7e56559154285a72`.
+Les sources de cette version réunissent les trois évolutions ; la branche du
+laboratoire conserve les commits originaux comme parents pour tracer les PR.
+Les contrôles finaux et la reconstruction de `JOUER.html` précèdent la fusion.
+
+- Même jeu web et unique export autonome, 42 images existantes, 34 modules.
+- Résultat moteur calculé avant les effets ; projections transitoires hors stockage.
+- Laboratoire sans XP/récompense ni écriture de l'aventure ; Milicien pilote uniquement.
+- Commandes ×2 et Passer également disponibles en bataille de laboratoire.
+- Aucun import d'images Éther ni fusion de l'atelier dans ce lot.
+- Aucune autorisation d'auto-merge ni de fusion des futures PR.
+
+Voir [effets](EFFETS_COMBAT_2026_10_23.md),
+[laboratoire](LABORATOIRE_2026_10_23.md) et
+[maintenance](MAINTENANCE_GUIDE_2026_10_23.md).
+Les sections suivantes sont les notes datées de chaque proposition.
+
+---
+
 ## Proposition — Laboratoire de combat intégré, 23 octobre 2026
 
 Une branche indépendante `feat/laboratoire-developpeur-20261023` ajoute un bouton
@@ -10,6 +33,37 @@ Guide est séparée : vérifier les éventuelles mises à jour documentaires lor
 leur intégration. Les paragraphes datés plus bas sont historiques.
 
 ---
+
+# Proposition du 23 octobre 2026 — effets et lecture des tours
+
+Main réel au départ : `adf9c919` ; PR nº 33 et nº 34 fusionnées. Les sections
+plus bas qui les présentent comme en attente sont historiques.
+Branche `feat/effets-combat-lisibles-20261023` : instantanés publics,
+lecture séquentielle des mouvements/attaques, vraies pertes de PV/protection,
+bandeau et déroulé, vitesse ×2, passage de séquence et suivi mobile.
+Règles, IA, illustrations et clés de sauvegarde conservées ; 31 modules.
+[Contrat, périmètre et limites](EFFETS_COMBAT_2026_10_23.md).
+Aucune fusion autorisée. La maintenance du Guide reste une évolution séparée.
+
+---
+
+
+# État intégré vérifié le 23 octobre 2026
+
+Dernier `main` confirmé : `adf9c9192293ea2e25849f37a0ac11d1df08c951`.
+Les PR 31, 32, 33 et 34 sont **fusionnées** avec l'accord du propriétaire.
+La distribution comporte une seule vue cartes, un seul `JOUER.html` autonome,
+et 17 feuilles CSS spécialisées. `ESSAI_CARTES.html` est supprimé.
+Moteur, IA, progression, catalogue et anciennes sauvegardes 3×5 préservés.
+
+La branche `refactor/guide-module-documentation-20261023` propose
+l'extraction isolée du Guide (`src/ui/guide-page.js`) et la remise à jour de
+la documentation. Elle n'est **pas intégrée** ; la fusion exige son accord propre.
+[Note de maintenance](MAINTENANCE_GUIDE_2026_10_23.md).
+
+---
+
+## Historique des propositions : les statuts de PR ci-dessous sont datés
 
 ## Proposition — Présentation cartes unique et export unique, 22 octobre 2026
 
@@ -177,3 +231,4 @@ externe ou conversation ne sert de source de reprise.
 Prochaine étape : examiner la PR Forge et son aperçu, puis décider
 séparément de sa fusion. Les autres factions et les rangs futurs continuent
 progressivement, avec leurs versions, reçus et mappings exacts.
+
