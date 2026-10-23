@@ -2,6 +2,7 @@
 import {CARDS,CAMPAIGN,CLASSES} from '../data.js';
 import {freshProfile} from './profile.js';
 import {createBattle} from './battle.js';
+import {labMilitiaBonus} from './unit-stats.js';
 
 export const LAB_RANKS=Object.freeze(['commun','rare','épique','légendaire','divine']);
 export const LAB_SIDES=Object.freeze(['p','e']);
@@ -19,13 +20,6 @@ export function labRarity(lab,side,id){
  return id==='militia'?(lab.rarities?.[side]?.[id]||'commun'):card.rarity;
 }
 export function labLevel(lab,side,id){return lab.levels?.[side]?.[id]||0;}
-export function labMilitiaBonus(rarity,level){
- if(!LAB_RANKS.includes(rarity))return {hp:0,block:0,counter:false};
- const rank=LAB_RANKS.indexOf(rarity);
- const hp=rank>=3?2:rank>=1?1:0;
- const block=rank===1?(level>=2?1:0):rank===2?2:rank===3?(level>=2?2:2):rank===4?3:0;
- return {hp,block,counter:rank===4&&level>=2};
-}
 export function labCardStats(lab,side,id){
  const card=CARDS[id];if(!card)return null;
  const rarity=labRarity(lab,side,id),level=labLevel(lab,side,id);
