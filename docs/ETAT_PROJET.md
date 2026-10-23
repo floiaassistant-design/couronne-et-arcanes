@@ -1,14 +1,3 @@
-## Publication Sites — 23 octobre 2026
-
-Le jeu de main `ef675bba` (PR 35/36/37 intégrées) est publié sur
-[Sites](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site), version 1.
-GitHub reste l'unique source de développement ; Sites reçoit son paquet compilé.
-Une automatisation de fusion est activée. Son paquet de CI attend l'intégration
-de la PR nº 38 et sa première exécution automatique reste à vérifier. Cette
-proposition remplace la configuration Vercel par Sites, sans changer le jeu.
-Voir [publication et contrôles](PUBLICATION_WEB_2026_10_23.md).
-Aucune fusion de la PR nº 38 autorisée ; chaque PR exige son accord spécifique.
-
 # Version réunie — 23 octobre 2026
 
 Le propriétaire a demandé explicitement de fusionner les PR ouvertes du jeu :
@@ -29,6 +18,20 @@ Voir [effets](EFFETS_COMBAT_2026_10_23.md),
 [laboratoire](LABORATOIRE_2026_10_23.md) et
 [maintenance](MAINTENANCE_GUIDE_2026_10_23.md).
 Les sections suivantes sont les notes datées de chaque proposition.
+
+## Publication Sites — 23 octobre 2026
+
+Le jeu de main `ef675bba` (PR 35/36/37 intégrées) est publié sur
+[Sites](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site), version 1.
+GitHub reste l'unique source de développement ; Sites reçoit son paquet compilé.
+Depuis, la PR nº 39 a intégré les 11 cartes Éther et les 23 sorts dans main.
+Le Site publié utilise toujours le paquet `ef675bba` tant qu'une nouvelle
+publication n'a pas été vérifiée.
+Une automatisation de fusion est activée. Son paquet de CI attend l'intégration
+de la PR nº 38 et sa première exécution automatique reste à vérifier. Cette
+proposition remplace la configuration Vercel par Sites, sans changer le jeu.
+Voir [publication et contrôles](PUBLICATION_WEB_2026_10_23.md).
+Aucune fusion de la PR nº 38 autorisée ; chaque PR exige son accord spécifique.
 
 ---
 
