@@ -1,76 +1,88 @@
-# Préparer la publication automatique du même jeu
+# Publication de Couronnes & Arcanes sur Sites
 
-Base : main `ef675bbaed3e1154cd52920cc9f74b4b6345d4b7` (PR 35, 36 et 37 intégrées).
-Cette proposition prépare les fichiers de publication ; aucun site n'est encore
-créé ni relié, aucune mise en production n'est revendiquée.
+Le propriétaire a choisi Sites le 23 octobre 2026.
+Jeu publié : https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site
+Site existant : `appgprj_6adb64bffce88191bb77cdb42fd9fc73`.
+Conserver cet identifiant et son audience privée actuelle.
 
-## Une seule source
+## Une seule source de développement
 
-`index.html`, `src/`, les styles et les images restent ceux du jeu existant.
+GitHub `floiaassistant-design/couronne-et-arcanes`, branche `main`, reste
+l'unique source du jeu. Le dépôt de sources natif Sites contient seulement une
+copie de diffusion compilée. Ne jamais y développer le moteur ou les images.
+
 `scripts/build_web.mjs` réutilise le compilateur autonome et ses contrôles
-d'images ; il refuse un export enregistré qui ne correspond pas aux sources.
-Il assemble `dist/` depuis les mêmes fichiers, sans modifier le moteur, l'IA,
-les sauvegardes, les identifiants ou les ressources approuvées.
+d'images ; il refuse un JOUER enregistré différent du build. Il assemble dist
+depuis les fichiers existants, sans modifier règles, IA ou sauvegardes.
+L'entrée modulaire et l'export hors ligne utilisent donc les mêmes sources.
+`dist/JOUER.html` est la copie exacte de l'unique export téléchargeable.
 
-Les scripts, tests, documents et reçus JSON ne sont pas copiés dans le site.
-Si un futur rendu consomme un JSON d'animation, son contrat devra explicitement
-adapter cet assemblage comme le générateur autonome.
-`JOUER.html` reste l'unique export hors ligne et est copié à l'identique pour
-le téléchargement. L'entrée web modulaire permet le chargement des images
-par le navigateur, au lieu d'embarquer toutes les cartes dans sa page initiale.
+Les scripts, tests, documents et reçus JSON ne sont pas distribués dans dist.
+Si un futur rendu consomme du JSON, adapter explicitement ce contrat et celui
+du générateur autonome. Aucun cache applicatif ni service worker n'est ajouté.
 
-## Configuration prête pour Vercel
+## Paquet de CI et provenance
 
-`vercel.json` sélectionne le dossier statique `dist/`, sans installation npm
-(aucune dépendance du jeu). Avant chaque build, tests Node et parité doivent
-réussir. Le compilateur vérifie ensuite l'export et les images.
-Le workflow GitHub `Assemblage web` vérifie aussi cet assemblage sur les PR
-et sur main, avec des droits de lecture uniquement ; il ne déploie aucun site.
-Les réponses sont revalidées pour éviter un mélange de versions après une
-publication. `/JOUER.html` est servi comme téléchargement.
+Le workflow `Assemblage web` s'exécute sur les PR et les push vers main,
+avec `contents: read`, sans secret ni publication. Après assemblage,
+`scripts/package_web_artifact.mjs` crée `.openai/canonical-build.json`
+et `/tmp/couronnes-web.tar.gz`. L'artifact GitHub `couronnes-web` conserve
+cette archive pendant 14 jours. Le reçu généré est exclu de Git.
 
-Pour vérifier localement :
+Le reçu identifie le dépôt, le commit source, son arbre Git, le SHA-256 de
+JOUER et celui de tous les fichiers distribués. Pour `web_sha256`, trier les
+noms relatifs POSIX, former `nom + U+0000 + sha256(octets)` pour chaque fichier,
+joindre par un saut de ligne sans saut final, puis calculer le SHA-256 UTF-8.
 
-```sh
-npm test
-npm run test:parity
-node scripts/build_web.mjs
-```
+La préparation du paquet ne remplace pas le workflow complet
+`Tests Couronnes et Arcanes`. Avant publication, les deux workflows doivent
+avoir réussi pour un arbre Git identique à celui du main visé. Une CI de PR
+fusionnée peut être réutilisée si l'arbre correspond exactement. Consulter
+la CI existante avant toute relance ; attendre un contrôle en cours.
 
-## Activation restant à effectuer
+## Déclenchement après fusion
 
-Le 23 octobre, les outils Vercel ne renvoient ni équipe ni projet lié au dépôt.
-Il faut sélectionner/connecter l'espace d'hébergement, importer le dépôt
-**privé** existant, puis vérifier les permissions et le public du site.
-Ne pas rendre le dépôt public. Ne pas copier de jeton dans Git.
+Une automatisation ChatGPT a été créée et activée sur les événements GitHub
+de fusion du dépôt canonique, sans interrogation périodique. Elle ignore les
+fusions hors main. Elle ouvre le même Site via une autorisation fraîche et
+suit `.openai/update-from-github.md`, conservé dans son dépôt de sources.
 
-Le lien Git doit prendre `main` comme branche de production ; les autres
-branches servent d'aperçus et ne remplacent pas la version stable.
-Les PR restent fusionnées uniquement sur accord explicite du propriétaire.
-Avant l'activation en production, vérifier les Deployment Checks ou une
-protection de branche équivalente pour que les parcours Chromium du workflow
-GitHub `validation` réussissent avant une publication. Le build Vercel local
-aux sources couvre Node, parité et export, pas les parcours navigateur.
+Elle télécharge le paquet vérifié, valide les chemins d'extraction, son reçu,
+l'arbre via GitHub et les empreintes. Si le contenu web est déjà identique,
+elle évite une nouvelle publication. Sinon elle remplace uniquement dist et
+le reçu, relit main pour éviter de publier une version dépassée, puis pousse
+et publie les mêmes sources par le flux natif Sites. Elle conserve l'audience
+et ne fusionne jamais de PR. Un paquet expiré, une CI rouge ou un accès perdu
+bloquent la publication et doivent être signalés.
 
-Flux cible : PR contrôlée et fusionnée sur main → build contrôlé → publication
-par la liaison Git. Aucun agent n'a besoin de recopier le code du jeu.
-Cette liaison et son blocage sur CI ne sont **pas encore activés ni testés**.
-Ne pas annoncer une URL publiée ou une automatisation opérationnelle avant
-une création, une publication et une vérification réelles.
+**Le paquet dépend encore de la PR nº 38** : ce workflow n'est pas installé sur
+main tant que cette proposition n'est pas fusionnée avec l'accord spécifique
+du propriétaire. Le premier déclenchement automatique et sa publication de
+bout en bout n'ont pas encore été observés. La création de l'automatisation
+ne constitue pas cette vérification.
 
-## Sites et travail parallèle
+## Publication initiale réellement vérifiée
 
-Le workflow Sites consulté publie une version de son propre dépôt de sources ;
-il ne fournit pas ici de liaison native confirmée à ce GitHub externe après
-chaque fusion. Ne pas prétendre qu'une simple création de Site active ce flux.
+La version 1 du Site a été publiée avec succès depuis main
+`ef675bbaed3e1154cd52920cc9f74b4b6345d4b7`, arbre
+`7d7760a7874e99ebd57ec9ca87587b7da12ce1a9` : PR 35, 36 et 37 intégrées.
+La CI complète existante réussie et son arbre identique ont été consultés.
+Le paquet compte 104 fichiers identiques aux sources, 34 modules et 42 cartes
+WebP approuvées. SHA-256 de JOUER :
+`3c6afd58b0b4c2a9562b9cf0a12665bbd71debf7bae2821524f055db2bc34bdf`.
 
-La branche de cette proposition ne modifie aucun fichier de `src/`, aucun
-style, aucune image, ni `package.json`, ni le workflow des tests existant.
-Les seules notes partagées sont l'état et le journal ; les réconcilier si une
-autre PR ajoute ses propres entrées. Relire le dernier main avant toute fusion.
+Une nouvelle session avec une autorisation fraîche a relu les sources Sites,
+les instructions et le reçu, puis confirmé l'empreinte des 104 fichiers.
+L'aperçu géré Sites ouvre l'accueil et lance la première bataille. Cette
+vérification manuelle ne prouve pas encore l'exécution future de la tâche.
 
-## Sauvegardes et limites
+## Travail parallèle et sauvegardes
 
-Le domaine du site aura son stockage navigateur propre. L'export/import du
-Guide permet de transférer l'aventure depuis le fichier hors ligne.
-Pas de cloud save ni d'authentification de jeu ajoutés par cette proposition.
+Cette PR ne modifie ni src, styles, images, package.json, ni les tests du jeu.
+Elle peut avancer pendant une autre PR. Réconcilier les notes état/journal si
+elles se chevauchent et relire le dernier main avant toute fusion.
+Chaque PR exige toujours un accord spécifique ; aucun auto-merge.
+
+Le stockage navigateur appartient au domaine du Site. Utiliser l'export/import
+du Guide pour transférer une partie depuis le fichier hors ligne. Cette
+publication n'ajoute ni compte joueur ni sauvegarde cloud.

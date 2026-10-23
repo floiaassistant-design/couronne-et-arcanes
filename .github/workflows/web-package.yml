@@ -18,3 +18,11 @@ jobs:
           node-version: '22'
       - name: Préparer les fichiers du site depuis le jeu existant
         run: node scripts/build_web.mjs
+      - name: Enregistrer la provenance exacte du paquet
+        run: node scripts/package_web_artifact.mjs "$(git rev-parse HEAD)" "$(git rev-parse 'HEAD^{tree}')"
+      - name: Conserver le paquet pour la publication Sites
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: couronnes-web
+          path: /tmp/couronnes-web.tar.gz
+          retention-days: 14

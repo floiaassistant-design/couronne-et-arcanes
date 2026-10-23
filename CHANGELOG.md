@@ -1,9 +1,11 @@
-## 23/10/2026 — Proposition : préparer la publication web
+## 23/10/2026 — Publication Sites et proposition de paquet automatique
 
-- Assemblage statique du même jeu et téléchargement de l'export unique.
-- Configuration Vercel : tests et parité avant build, revalidation des fichiers.
-- Aucune modification des sources du jeu, images ou sauvegardes.
-- Hébergement et liaison Git non activés ; proposition sur branche, sans fusion.
+- Main `ef675bba` publié sur Sites ; export unique disponible dans le paquet.
+- Assemblage statique et reçu de provenance avec empreintes SHA-256.
+- Artifact CI réutilisable après fusion, sans secret ni déploiement dans GitHub.
+- Déclencheur GitHub de fusion activé ; paquet dépendant de la PR nº 38.
+- Premier parcours automatique encore non observé ; aucune fusion autorisée.
+- Aucune modification du jeu, des images ou des sauvegardes.
 
 ## 23/10/2026 — Intégration autorisée des PR nº 35, 36 et 37
 
