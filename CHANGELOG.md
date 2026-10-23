@@ -1,3 +1,12 @@
+## 23/10/2026 — Proposition : laboratoire de combat intégré
+
+- Bouton Développeur, configuration de deux decks, niveaux, classe et style IA.
+- Batailles de test avec le moteur existant, sans récompense ni altération de
+  l'aventure sauvegardée, sans second export HTML.
+- Milicien Commune à Divine en version expérimentale uniquement ; les autres
+  raretés restent à concevoir. Tests de contrat dédiés.
+- PR en attente de validation et d'équilibrage, aucune fusion autorisée.
+
 ## 22/10/2026 — Proposition d’un seul jeu et d’un seul export
 
 - `JOUER.html` devient l’unique livraison, toujours avec les cartes sur le plateau.
