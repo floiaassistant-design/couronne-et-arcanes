@@ -44,11 +44,20 @@
 
 | **B** | **Sorts en doublon :** Lame de feu/Rayon des Couronnes, Souffle vital/Pacte vital, Orage runique/Éclairs d'Obsidienne, Prison de lierre/Racines du Monde ont actuellement les mêmes effets par paire, avec des délais parfois différents. | Conserver provisoirement le moteur ; discuter de rôles distincts lors de l'équilibrage. |
 
-| **B** | **Concorde** : texte flottant sur le plateau, bonus peu expliqué dans les descriptions. | Proposition UX : capacité de faction dans la fiche de **chaque unité** ; un **symbole propre à la faction** sur le bord de carte quand l'effet est actif, sans masquer ATQ/PV. |
+| **B** | **Concorde** : texte flottant sur le plateau, bonus peu expliqué dans les descriptions. | Proposition UX : capacité de faction expliquée dans la fiche de **chaque unité** ; **emblème exclusif de sa faction, centré en haut de la carte**, mis en valeur uniquement lorsque Concorde est actif, à la place du texte flottant. Emblèmes à créer et valider dans l'atelier graphique avant toute intégration. |
 
 | **C** | **Délai 0 / 1** : même disponibilité immédiate ; certaines évaluations de deck/IA distinguent toutefois 0 et 1. | Proposition : afficher au minimum 1, seulement après vérification des évaluations et sauvegardes. |
 
 | **C** | **Feu follet** (2 ATQ, 3 PV, délai 0, portée 2) est plus fragile que l'Éclaireuse sylvestre à attaque/délai/portée identiques. | Tester **portée 3** à statistiques inchangées ; ne pas décider avant simulation et jeu humain. |
+
+### Contrat visuel proposé — emblèmes de Concorde (non intégré)
+
+- **Un emblème original distinct pour chacun des cinq Ordres : Aube, Sylve, Ombre, Forge et Éther.** Ce ne sera **pas** un symbole générique partagé ; chaque carte emploiera celui de sa faction.
+- **Position définitive demandée : en haut, exactement au centre du cadre de la carte** (et non dans un coin ou dans un bandeau flottant au-dessus du plateau). Dimension et intégration à ajuster aux cadres existants pour ne masquer ni le nom, ni les statistiques, ni les autres éléments.
+- **Bonus inactif :** emblème discret, sans effet lumineux. **Bonus actif :** ce même emblème s'éclaire ou reçoit un léger halo/relief ; pas de texte flottant « Concorde ». Respecter le mouvement réduit et la lisibilité mobile ; ne pas confondre l'effet actif avec la rareté ou un statut.
+- **Documentation en jeu :** chaque fiche d'unité indique « Bonus de faction — [Ordre] : dès que deux alliés de cet Ordre sont sur la même ligne, chacun gagne +1 ATQ ; le bonus cesse quand la condition disparaît ». Les sorts ne reçoivent pas ce bonus.
+- **Production graphique ultérieure :** faire créer spécifiquement les cinq emblèmes par génération d'images dans l'atelier `couronne-et-arcanes-art`, à partir des contrats graphiques actifs. **Présenter chaque version au propriétaire pour validation** avant import ; conserver source, droits, provenance, reçus et empreintes, puis intégrer dans une PR graphique séparée. Aucune image n'est approuvée ou produite par le présent audit.
+- **Règles conservées :** la formation continue d'être calculée par le moteur ; l'emblème reflète son état réel et n'accorde aucun bonus supplémentaire. Vérifier les deux camps, toutes les lignes et les parties sauvegardées.
 
 ## 3. Dictionnaire des capacités — fonctionnement actuel
 
@@ -306,7 +315,7 @@ Les **sorts ne bénéficient pas de Concorde**. Leurs dégâts indiqués sont le
 
 | Délai minimum | Conserver 0/1 avec leur sens actuel. | Migrer les huit unités délai 0 à 1 sans changer leur disponibilité, adapter IA/deck et vérifier sauvegardes. | **À valider** |
 
-| Concorde / faction | Conserver +1 ATQ à 2 alliés, sans équilibrage. | Texte normalisé en fiche + petit emblème de faction actif sur le cadre à la place du texte flottant. | **À valider** |
+| Concorde / faction | Conserver +1 ATQ à 2 alliés, sans équilibrage. | Fiche de chaque unité : règle expliquée ; emblème **de sa propre faction**, **en haut au centre de la carte**, visuellement activé par la Concorde ; remplacer le texte flottant. Concevoir les cinq emblèmes originaux en atelier et les faire valider avant intégration. | **À valider** |
 
 | Sorts équivalents | Clarifier leurs textes et garder la mécanique. | Donner à chaque sort une identité distincte après analyse de coût/délai, IA et équilibrage. | **À valider** |
 
@@ -316,7 +325,7 @@ Les **sorts ne bénéficient pas de Concorde**. Leurs dégâts indiqués sont le
 
 - **Équilibrage :** mesurer comparaison avant/après sur mêmes graines et profils ; analyse par deck et faction. Les simulations automatiques ne prouvent pas le ressenti humain.
 
-- **Rendu :** vérifier que chaque animation relie l'attaquant au **vrai destinataire des PV perdus** ; impacts et PV corrects même pour dégâts absorbés, Gardes et deuxièmes cibles ; bureau, mobile simulé, réductions des mouvements.
+- **Rendu :** vérifier que chaque animation relie l'attaquant au **vrai destinataire des PV perdus** ; impacts et PV corrects même pour dégâts absorbés, Gardes et deuxièmes cibles ; bureau, mobile simulé, réductions des mouvements. Pour Concorde, vérifier sur les cadres de toutes les factions l'emblème **en haut au centre**, sans chevauchement avec nom, coût, illustration ou rareté, et l'activation/désactivation au bon moment.
 
 - **Descriptions :** comparer chaque texte à un test de moteur ; textes lisibles sur les cadres complets (53 unités + 23 sorts), fiche agrandie sur petit écran ; caractères échappés.
 
