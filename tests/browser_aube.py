@@ -8,7 +8,8 @@ FACTION_IDS={
     'aube':{'militia','shield','archer','lancer','cleric','banner','scoutcaptain','paladin','sunpriest','dawnbastion'},
     'sylve':{'treant','ranger','wolf','dryad','stag','thorn','pixie','bear','archdruid','owl','sylvan_trapper'},
     'ombre':{'graveknight','bone','shade','crypt','plague','lich','banshee','vampire','nightblade','spectre','mist_inquisitor'},
-    'forge':{'smith','golem','bomb','drill','colossus','engineer','cannon','mechanist','ironwraith','alchemist'}
+    'forge':{'smith','golem','bomb','drill','colossus','engineer','cannon','mechanist','ironwraith','alchemist'},
+    'ether':{'spark','mystic','elemental','griffin','sentinel','dragon','tempest','seer','aetherknight','seraph','portal_walker'}
 }
 
 async def exact(face,card_id,readable=True):
@@ -44,7 +45,7 @@ async def run(browser,label,viewport,faction='aube'):
         await exact(page.locator('.collection-inspection .generated-face'),card_id)
         await page.keyboard.press('Escape')
     assert await page.evaluate('JSON.stringify(profile)')==before
-    anchor={'aube':'shield','sylve':'treant','ombre':'graveknight','forge':'smith'}[faction]
+    anchor={'aube':'shield','sylve':'treant','ombre':'graveknight','forge':'smith','ether':'spark'}[faction]
     await page.locator(f'[data-collection-character="{anchor}"]').scroll_into_view_if_needed()
     await page.screenshot(path=f'/tmp/ca-{faction}-{label}-collection.png')
     await page.locator('#nav [data-page="campaign"]').click()

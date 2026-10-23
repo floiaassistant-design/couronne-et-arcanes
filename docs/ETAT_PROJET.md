@@ -1,3 +1,9 @@
+# Proposition — cartes Éther et sorts, 23 octobre 2026
+
+Branche `feat/ether-sorts-cartes-20261023` depuis le main réel `ef675bba` (PR 35–37 fusionnées). Ajout demandé de onze Éther de la PR atelier nº 26 à `53d47b13` et de 23 sorts de la nº 27 à `2871642c` : 76 illustrations, 34 modules. Cadres exacts, mapping et reçus individuels ; sorts à trois champs, valeurs réelles. Même jeu web et unique `JOUER.html` régénéré. Moteur, IA, progression et sauvegardes inchangés. [Périmètre et limites](ETHER_SORTS_INTEGRATION_2026_10_23.md). PR nº 39 ouverte ; reprise après un échec de synchronisation de la fiche dans le test navigateur des sorts en CI. Correction limitée au test et à sa documentation ; export jouable inchangé. Consulter la dernière CI avant proposition de fusion ; aucune fusion autorisée. Les sections suivantes sont historiques.
+
+---
+
 # Version réunie — 23 octobre 2026
 
 Le propriétaire a demandé explicitement de fusionner les PR ouvertes du jeu :

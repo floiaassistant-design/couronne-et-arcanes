@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "approvedBy": "Propriétaire du projet, demande explicite d’intégration dans ChatGPT",
+  "approvedOn": "2026-10-23",
+  "instruction": "il faudrai ajouter les pr du graphisque au jeux les carte qui on etait creé",
+  "scope": "Import manuel dans une PR du jeu des exports exacts ci-dessous. Aucune nouvelle possession, règle ou rareté ; aucune fusion autorisée.",
+  "sourceRepo": "floiaassistant-design/couronne-et-arcanes-art",
+  "sourceCommit": "53d47b136391582dc4fb9755c3c4cad0a5f5df00",
+  "assets": [
+    {
+      "key": "feu_follet_ether_carte_v02",
+      "cardId": "spark",
+      "version": "02",
+      "sha256": "27aa9293e3e963e617714afab43f8e27800fb2a0a6cfbfd2fdb7a6d5cfb80ec9"
+    },
+    {
+      "key": "oracle_astres_ether_carte_v01",
+      "cardId": "mystic",
+      "version": "01",
+      "sha256": "301cc9e60001862ed5afe2706499f9863e2feddeb242e065e7647c721e9b0b04"
+    },
+    {
+      "key": "elementaire_azure_ether_carte_v01",
+      "cardId": "elemental",
+      "version": "01",
+      "sha256": "c77540ec4bacdeecbf7265fcfe3cb776cf69f32d6cd670953ddacf8f96805c56"
+    },
+    {
+      "key": "griffon_zenith_ether_carte_v01",
+      "cardId": "griffin",
+      "version": "01",
+      "sha256": "261bea52fe16b7c4e47895b159503d5ed0ed1a3a3f7e7c2cd91ab84040887be0"
+    },
+    {
+      "key": "sentinelle_prismatique_ether_carte_v01",
+      "cardId": "sentinel",
+      "version": "01",
+      "sha256": "0ce758731eb973b42066d32542b0a15ca3ae0130c2f38d7a2d7ddedbe604b270"
+    },
+    {
+      "key": "dragon_sept_cieux_ether_carte_v01",
+      "cardId": "dragon",
+      "version": "01",
+      "sha256": "9d2f77a279286caa1e252679eac68ee22b3df6ca482e0dd6f9e8b0c4c2834488"
+    },
+    {
+      "key": "esprit_tempete_ether_carte_v01",
+      "cardId": "tempest",
+      "version": "01",
+      "sha256": "2af03e987553f3544a693ad7f245a2d49d77861414194c0a35afacf8a4d23496"
+    },
+    {
+      "key": "voyante_etoiles_ether_carte_v01",
+      "cardId": "seer",
+      "version": "01",
+      "sha256": "a0c080dc65b29d5eb8090e43b531b2bf466813e7987ccbb9fcc3a1ed5cf60551"
+    },
+    {
+      "key": "chevalier_zenith_ether_carte_v01",
+      "cardId": "aetherknight",
+      "version": "01",
+      "sha256": "ece9f33f4935c7fe2ff8897ecff9e407f751d2f76290087bac3de8516cd200e8"
+    },
+    {
+      "key": "seraphin_azur_ether_carte_v01",
+      "cardId": "seraph",
+      "version": "01",
+      "sha256": "63343f43c2e22f941d8f1cd3961e7b7e7c65c50b9e0e21bdfd34a4a15544f09e"
+    },
+    {
+      "key": "marcheur_portails_ether_carte_v01",
+      "cardId": "portal_walker",
+      "version": "01",
+      "sha256": "92d50dd4ce2e682e49fc191cc2998269e319b665590f566dbc10aaf9e904e576"
+    }
+  ],
+  "note": "Demande d’import postérieure aux reçus artistiques. Le manifeste atelier reste inchangé : pilote approuvé artistiquement, autres images en review. Cet import ne revendique pas une revue artistique individuelle."
+}

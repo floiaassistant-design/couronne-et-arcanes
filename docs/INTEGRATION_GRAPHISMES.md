@@ -1,3 +1,7 @@
+## Éther et sorts — import manuel demandé le 23/10/2026
+
+La demande d’ajouter les cartes créées autorise la PR jeu d’import des onze Éther (atelier nº 26, `53d47b136391582dc4fb9755c3c4cad0a5f5df00`) et 23 sorts (atelier nº 27, `2871642c54e53568153b2d9f3d69a07a7d5bd169`). Reçus `approvals/ether-onze-cartes-20261023.json` et `approvals/sorts-vingt-trois-cartes-20261023.json`, distincts des validations artistiques des pilotes. Les autres images restent review dans les sources atelier inchangées. Chaque ID possède son propre mapping et ses empreintes. Variante sorts explicite à trois champs, sans attaque/PV ; images entières. Aucun import de Feu follet v01 rejeté, aucune fusion autorisée. [Contrat et limites](ETHER_SORTS_INTEGRATION_2026_10_23.md).
+
 # Contrat de la nouvelle production graphique
 
 La décision du 20 octobre 2026 retire les anciens portraits, animations et

@@ -16,14 +16,14 @@ function fixture(){
  }
  return {root,registry:JSON.parse(fs.readFileSync(path.join(root,'assets/artwork.json'))),cleanup:()=>fs.rmSync(root,{recursive:true,force:true})};
 }
-test('Les 42 cadres complets sont épinglés à leurs octets autorisés et limités à Aube/Sylve/Ombre/Forge',()=>{
+test('Les 76 cadres complets sont épinglés à leurs octets autorisés et couvrent le catalogue',()=>{
  const f=fixture();try{
   const r=readArtwork(f.root,names);assert.deepEqual(r.art,{});
   assert.match(r.cardArt.milicien_aube_carte_v02,/^data:image\/webp;base64,/);
-  const ids=Object.values(CARDS).filter(c=>['aube','sylve','ombre','forge'].includes(c.faction)).map(c=>c.id).sort();
-  assert.equal(ids.length,42);assert.deepEqual(Object.keys(CARD_TEMPLATES).sort(),ids);
-  for(const card of Object.values(CARDS))assert.equal(cardTemplateFor(card),['aube','sylve','ombre','forge'].includes(card.faction)?CARD_TEMPLATES[card.id]:null);
-  assert.equal(Object.keys(r.cardArt).length,42);
+  const ids=Object.keys(CARDS).sort();
+  assert.equal(ids.length,76);assert.deepEqual(Object.keys(CARD_TEMPLATES).sort(),ids);
+  for(const card of Object.values(CARDS))assert.equal(cardTemplateFor(card),CARD_TEMPLATES[card.id]);
+  assert.equal(Object.keys(r.cardArt).length,76);
   for(const key of CARD_ART_NAMES)assert.match(r.cardArt[key],/^data:image\/webp;base64,/);
  }finally{f.cleanup();}
 });
@@ -48,4 +48,17 @@ test('Le cadre dessiné reçoit des valeurs actuelles sans calcul ni mutation et
  assert.match(html,/data-delay-kind="remaining"[^]*?<b>3<\/b>/);assert.match(html,/stat atk[^]*?<b>4<\/b>/);assert.match(html,/stat hp[^]*?<b>2<\/b>/);
  assert.match(html,/&lt;script>/);assert.match(html,/&lt;img>/);assert.doesNotMatch(html,/<script>|<img>/);
  assert.equal(JSON.stringify({card,stats}),before);
+});
+test('Les sorts utilisent trois champs, sans inventer attaque ni vie, et gardent leur effet complet',()=>{
+ for(const card of Object.values(CARDS).filter(c=>c.type==='sort')){
+  const before=JSON.stringify(card);
+  const html=generatedCardFace(card,{delay:2,kind:'remaining',esc:s=>s.replaceAll('<','&lt;')});
+  assert.match(html,/data-generated-layout="sort"/);
+  assert.equal((html.match(/data-card-field=/g)||[]).length,3);
+  assert.doesNotMatch(html,/data-card-field="(?:attack|health)"|card-stats|stat atk|stat hp/);
+  assert.ok(html.includes(card.description));
+  assert.match(html,/data-delay-kind="remaining"[^]*?<b>2<\/b>/);
+  assert.equal(JSON.stringify(card),before);
+ }
+ assert.equal(cardTemplateFor({id:'unknown'}),null);
 });

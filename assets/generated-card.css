@@ -4,15 +4,15 @@
 .generated-face [data-card-field]{position:absolute!important;right:auto!important;bottom:auto!important;display:flex!important;align-items:center;justify-content:center;min-height:0!important;min-width:0;margin:0!important;padding:0!important;z-index:1;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:#282115!important;text-align:center!important;text-shadow:none!important;overflow:hidden;line-height:1.16;white-space:normal}
 .generated-face .card-title{font:700 5.8cqw/1.1 Georgia,serif!important}
 .generated-face .card-detail{font:500 4cqw/1.22 Georgia,serif!important}
-.generated-face[data-generated-layout="ombre"] .card-detail{font-size:3.2cqw!important}
+.generated-face:is([data-generated-layout="ombre"],[data-generated-layout="ether"]) .card-detail{font-size:3.2cqw!important}
 .generated-face[data-long-description="true"] .card-detail{font:500 2.4cqw/1.18 Georgia,serif!important}
-.generated-face:is([data-generated-layout="sylve"],[data-generated-layout="ombre"],[data-generated-layout="forge"]) .card-title{font-size:4.8cqw!important}
+.generated-face:is([data-generated-layout="sylve"],[data-generated-layout="ombre"],[data-generated-layout="forge"],[data-generated-layout="ether"]) .card-title{font-size:4.8cqw!important}
 .generated-face .generated-counter.illustrated-count{display:flex!important;font:700 14cqw/1 Georgia,serif!important;min-height:0!important}
 .generated-face .generated-counter b{font:inherit!important}
 .generated-face .card-stats{position:absolute!important;inset:0!important;display:block!important;margin:0!important;padding:0!important;pointer-events:none}
 .generated-face .card-stats .stat{font-size:0!important}
 .generated-face .card-stats .stat b{font:700 13cqw/1 Georgia,serif!important;color:#281d12!important}
-.generated-face:is([data-generated-layout="sylve"],[data-generated-layout="ombre"],[data-generated-layout="forge"]) .card-stats .stat b{font-size:11cqw!important}
+.generated-face:is([data-generated-layout="sylve"],[data-generated-layout="ombre"],[data-generated-layout="forge"],[data-generated-layout="ether"]) .card-stats .stat b{font-size:11cqw!important}
 .generated-face .stat.cd{display:none!important}
 .unit-card.generated-template{display:block!important;padding:0!important;min-height:0!important;overflow:hidden;border:1px solid var(--rarity-border,#c9ae7c);background:#172127}
 .unit-card.generated-template>.card-head,.unit-card.generated-template>.card-quality-tag,.unit-card.generated-template>.card-traits,.unit-card.generated-template>.hand-readiness,.unit-card.generated-template>.cooldown-stamp{display:none!important}
@@ -27,9 +27,9 @@
 .card-combat-mode .board-card.generated-board .generated-face{width:auto;height:100%;aspect-ratio:2/3;margin:0 auto;max-width:100%}
 .card-combat-mode .board-card.generated-board .generated-face .card-detail{visibility:hidden}
 .card-combat-mode .board-card.generated-board .generated-face .card-title{font-size:7cqw!important}
-.card-combat-mode .board-card.generated-board .generated-face:is([data-generated-layout="sylve"],[data-generated-layout="ombre"],[data-generated-layout="forge"]) .card-title{font-size:5.8cqw!important}
+.card-combat-mode .board-card.generated-board .generated-face:is([data-generated-layout="sylve"],[data-generated-layout="ombre"],[data-generated-layout="forge"],[data-generated-layout="ether"]) .card-title{font-size:5.8cqw!important}
 .card-combat-mode .board-card.generated-board .generated-face .stat b{font-size:16cqw!important;text-shadow:0 0 2px #fff}
-.card-combat-mode .board-card.generated-board .generated-face:is([data-generated-layout="sylve"],[data-generated-layout="ombre"],[data-generated-layout="forge"]) .stat b{font-size:14cqw!important}
+.card-combat-mode .board-card.generated-board .generated-face:is([data-generated-layout="sylve"],[data-generated-layout="ombre"],[data-generated-layout="forge"],[data-generated-layout="ether"]) .stat b{font-size:14cqw!important}
 .card-combat-mode [data-card-layout=true] .unit-card.generated-template.hand-card{flex-basis:calc(var(--tray-height)*.55);width:calc(var(--tray-height)*.55)}
 .unit-card.generated-template.hand-card .generated-face{max-height:100%}
 .illustrated-inspection .inspection-feature.inspection-generated-feature{display:block;padding:0 12px 8px}
@@ -45,3 +45,8 @@
 body.card-combat-mode [data-card-layout=true] .combat-stage{overflow:clip;overflow-anchor:none}
 
 .unit-card.generated-template>.generated-card-progress{font:11px/1.4 system-ui,sans-serif;text-align:center;padding:5px;color:#ead7a8;background:#142637}
+
+/* Les sorts gardent les trois champs du grimoire et leurs effets textuels. */
+.generated-face[data-generated-layout="sort"] .card-title{font-size:4.8cqw!important}
+.generated-face[data-generated-layout="sort"] .card-detail{font-size:3.8cqw!important}
+.generated-face[data-generated-layout="sort"][data-long-description="true"] .card-detail{font-size:2.8cqw!important}

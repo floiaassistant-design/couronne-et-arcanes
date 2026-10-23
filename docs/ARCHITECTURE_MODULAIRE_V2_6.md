@@ -1,3 +1,7 @@
+## Proposition du 23/10/2026 — 76 cadres complets
+
+`visuals.js` ajoute 34 mappings individuels ; registre, index et reçus exacts concordent. `ui/generated-card.js` reste le lecteur pur commun : cinq zones pour les unités (Éther compris), trois zones grimoire pour les sorts, sans attaque/PV. Aucun nouveau module : 34. Ni règles ni stockage modifiés. Sources épinglées et contrôles inchangés du builder, unique JOUER régénéré. [Périmètre et limites](ETHER_SORTS_INTEGRATION_2026_10_23.md). Nouvelle PR sans autorisation de fusion.
+
 # Version réunie du 23 octobre 2026 — 34 modules
 
 Les modules de Guide, de lecture des effets et de laboratoire coexistent.

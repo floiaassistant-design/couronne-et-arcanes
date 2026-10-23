@@ -15,11 +15,11 @@ async def run(browser,label,viewport):
     await page.locator('[data-action="welcome-start"]').click()
     frame=page.locator('.arena-painted-frame')
     assert await frame.count()==1
-    # Une carte Éther conserve le repli neutre ; les quatre autres ordres sont illustrés.
+    # Éther utilise sa nouvelle carte complète ; aucun ancien portrait ne revient.
     await page.evaluate("()=>{battle.heroes.p.hand=[{id:'spark',wait:0}];render()}")
     image=page.locator('.hand .creature-image').first
     await image.evaluate('(el)=>el.decode()')
-    assert await image.evaluate('(el)=>el.naturalWidth===384 && el.naturalHeight===576 && el.currentSrc.startsWith("data:image/svg+xml,")')
+    assert await image.evaluate('(el)=>el.naturalWidth===768 && el.naturalHeight===1152 && el.currentSrc.startsWith("data:image/webp;base64,")')
     await page.evaluate('''()=>{
       battle.heroes.p.hand=[{id:'militia',wait:0}];battle.heroes.p.cardsPlayed=0;
       persistBattle();render();
@@ -44,7 +44,7 @@ async def run(browser,label,viewport):
     assert not external,external
     await page.screenshot(path=f'/tmp/ca-card-study-reset-{label}.png',full_page=False)
     await context.close()
-    print(f'Base neuve {label}: repères décodés, vraie pose, tour, reprise et aucun ancien effet ni réseau PASS')
+    print(f'Base neuve {label}: nouveaux cadres décodés, vraie pose, tour, reprise et aucun ancien effet ni réseau PASS')
 
 async def main():
     async with async_playwright() as pw:

@@ -1,3 +1,10 @@
+## 2026-10-23 — Proposition Éther et sorts
+
+- Import manuel des 11 cartes Éther et 23 sorts des PR atelier 26/27, commits immuables et reçus exacts ; 76 illustrations.
+- Variante de carte de sort à trois champs dynamiques ; mêmes Collection, main et aperçus, règles et sauvegardes conservées.
+- Tests dédiés, unique JOUER régénéré ; aucune fusion autorisée.
+- Reprise : attente explicite de la bonne carte dans le test navigateur des sorts après un échec CI en portrait ; aucune modification du jeu ni de son export.
+
 ## 23/10/2026 — Intégration autorisée des PR nº 35, 36 et 37
 
 - Demande du propriétaire : « fusionne les pr en cours ».

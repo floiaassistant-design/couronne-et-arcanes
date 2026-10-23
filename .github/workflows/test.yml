@@ -55,6 +55,10 @@ jobs:
         run: python3 tests/browser_ombre.py
       - name: Dix cartes Forge, champs dynamiques et reprise hors réseau
         run: python3 tests/browser_forge.py
+      - name: Onze cartes Éther, cadres exacts et reprise hors réseau
+        run: python3 tests/browser_ether.py
+      - name: Sorts illustrés, trois champs et vrai lancement hors réseau
+        run: python3 tests/browser_spells.py
       - name: Parcours V2.8 ordinateur et téléphone simulé
         run: python3 tests/browser_class_skills_v28.py
       - name: Nouvelle partie, raretés et reprise sur ordinateur et mobile
@@ -90,6 +94,8 @@ jobs:
             /tmp/ca-sylve-*.png
             /tmp/ca-ombre-*.png
             /tmp/ca-forge-*.png
+            /tmp/ca-ether-*.png
+            /tmp/ca-spells-*.png
             /tmp/ca-card-study-*.png
             /tmp/ca-card-preview-*.png
             /tmp/ca-deployment-*.png

@@ -29,7 +29,7 @@ test('Vue cartes : le registre de la nouvelle génération ne contient aucun anc
  const active=JSON.parse(fs.readFileSync('assets/artwork.json'));
  const index=JSON.parse(fs.readFileSync('docs/CARD_ARENA_ASSETS.json'));
  assert.equal(active.generation,'reset-2026-10-20');
- const ids=Object.values(CARDS).filter(c=>['aube','sylve','ombre','forge'].includes(c.faction)).map(c=>c.id).sort();assert.equal(ids.length,42);
+ const ids=Object.keys(CARDS).sort();assert.equal(ids.length,76);
  assert.deepEqual(active.assets.map(a=>a.cardId).sort(),ids);
  for(const a of active.assets){assert.equal(a.key,CARD_TEMPLATES[a.cardId]);assert.equal(a.kind,'card');}
  assert.equal(index.activeRegistry,'assets/artwork.json');assert.deepEqual(index.assets.map(a=>a.cardId).sort(),ids);
