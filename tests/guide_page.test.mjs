@@ -8,7 +8,7 @@ const btn = (label, action, extra = '', cls = '') =>
 
 test('les étapes, règles et actions du Guide sont conservées', () => {
   const html = renderGuidePage({ btn, previousGameAvailable: false });
-  assert.equal((html.match(/class="guide-step"/g) || []).length, 16);
+  assert.equal((html.match(/class="guide-step"/g) || []).length, 17);
   for (const action of ['export-save', 'import-save', 'start-mission'])
     assert.match(html, new RegExp('data-action="' + action + '"'));
   assert.match(html, /10 cases jouables/);
