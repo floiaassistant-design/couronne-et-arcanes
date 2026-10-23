@@ -19,8 +19,8 @@ async def main():
   await page.screenshot(path=str(ROOT/'apercu_bataille.png'),full_page=True)
   await page.locator('[data-action="end-turn"]').click()
   assert await page.locator('.turn-n').inner_text()=='2'
-  if await page.locator('.combat-intel summary').count():
-      await page.locator('.combat-intel summary').click()
+  if await page.locator('.combat-intel > summary').count():
+      await page.locator('.combat-intel > summary').click()
   await page.locator('[data-action="retreat"]').click()
   await page.locator('[data-action="confirm-retreat"]').click()
   await page.locator('[data-action="battle-deck"]').click()

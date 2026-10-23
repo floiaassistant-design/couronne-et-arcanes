@@ -1,3 +1,18 @@
+> **Version réunie du 23/10/2026 :** Guide modulaire, effets séquentiels du
+> combat et bouton Développeur pour le laboratoire. Même jeu et unique export
+> `JOUER.html`, 34 modules. Le laboratoire ne modifie pas la progression.
+> Voir [l'état actuel](docs/ETAT_PROJET.md) ; les étapes datées ci-dessous
+> conservent leur historique.
+
+## Proposition du 23 octobre — attaques et tours lisibles
+
+Déplacements des cartes, lien attaquant/cible, frappes et projectiles distincts,
+PV réellement perdus, soins et défaites séquencées. Bandeau d'action, vitesse
+×2, bouton Passer et déroulé du tour consultable. Les résultats sont sauvegardés
+avant la lecture ; règles et sauvegardes historiques conservées.
+[Contrat et vérification](docs/EFFETS_COMBAT_2026_10_23.md).
+Proposition sur branche dédiée, sans fusion autorisée.
+
 # Couronnes & Arcanes — base graphique neuve
 
 Jeu de cartes tactiques solo, web et hors ligne : 76 cartes, quatre classes,
@@ -161,3 +176,4 @@ proposition d’export unique en dépend et attend son propre accord de fusion.
 [rapport avant remise à zéro](docs/CHECKUP_NETTOYAGE_2026_10_20.md),
 [Bible](docs/BIBLE_DU_JEU.md). Les jalons précédents sont historiques.
 Une branche et une PR par évolution ; accord spécifique requis avant fusion.
+

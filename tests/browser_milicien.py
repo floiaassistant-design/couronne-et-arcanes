@@ -54,6 +54,7 @@ async def run(browser,label,vp):
     await page.evaluate('''()=>{const u=battle.board[0][1];u.hp=12;u.maxhp=15;u.atk=11;persistBattle();render()}''')
     assert await card.locator('.stat.atk b').inner_text()=='11';assert await card.locator('.stat.hp b').inner_text()=='12'
     await image_exact(card.locator('.generated-face'))
+    await page.keyboard.press('Tab')  # Vraie navigation clavier après le remplacement du DOM.
     await card.focus();assert await page.locator('#hand-card-inspection').is_visible()
     assert 'PV 12/15' in await page.locator('#hand-card-inspection').inner_text()
     await page.screenshot(path=f'/tmp/ca-milicien-{label}-plateau.png')

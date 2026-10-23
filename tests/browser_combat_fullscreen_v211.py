@@ -22,9 +22,9 @@ async def run(browser,name,viewport):
  assert await page.locator('.combat-menu-link').is_visible()
  assert await page.locator('.combat-hand-dock [data-action="end-turn"]').is_visible()
  assert await page.locator('.combat-hand-dock [data-action="hero-power"]').is_visible()
- await page.locator('.combat-intel summary').click()
+ await page.locator('.combat-intel > summary').click()
  assert await page.locator('.combat-hand-dock [data-action="retreat"]').is_visible()
- await page.locator('.combat-intel summary').click()
+ await page.locator('.combat-intel > summary').click()
  assert await page.locator('.combat-hand-dock .hand .unit-card').count()>0
  rect=await dock.bounding_box()
  board=await stage.bounding_box()
@@ -69,6 +69,7 @@ async def run(browser,name,viewport):
  assert await page.evaluate('battle.board[0][1]?.id') is not None
  await page.locator('.combat-hand-dock [data-action="end-turn"]').click()
  await page.wait_for_function('()=>battle.round>=2')
+ await page.wait_for_function("!document.querySelector('.combat-playing')")
  assert await page.locator('.turn-n').inner_text()=='2'
  # Le harnais teste un document injecté en about:blank : reconstituer la page à partir
  # de la sauvegarde simulée, plutôt que recharger about:blank sans contenu.

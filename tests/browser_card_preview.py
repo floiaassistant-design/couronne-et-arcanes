@@ -48,6 +48,7 @@ async def run(browser,label,viewport):
     assert await page.evaluate('battle.board[1][3]?.id')=='militia'
     assert await page.evaluate('battle.heroes.p.cardsPlayed')==2
     await page.mouse.move(1,1);await page.wait_for_timeout(220)
+    await page.wait_for_function("!document.querySelector('.combat-playing')")
     enemy=page.locator('.board-card[data-unit-id="999"]')
     await enemy.hover();assert 'Unité adverse' in await panel.inner_text()
     assert 'ATQ 5 / PV 2/6' in await panel.inner_text();await contained(page,panel)

@@ -63,9 +63,11 @@ async def run(browser,label,viewport):
         }''',lanes)
         await page.locator('.hand [data-action="select-card"]').first.click()
         await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
+        await page.wait_for_function("!document.querySelector('.combat-playing')")
         assert await page.locator('.silence-badge').count()==1
         await page.locator('.hand [data-action="select-card"]').first.click()
         await page.locator('[data-action="deploy"][data-col="1"][data-lane="0"]').click()
+        await page.wait_for_function("!document.querySelector('.combat-playing')")
         assert await page.locator('.terrain-trap').count()==1
         await page.screenshot(path=f'/tmp/ca-arena-{label}-{lanes}.png',full_page=True)
         # Les dix cases restent accessibles par défilement sans élargir la page.
@@ -82,6 +84,7 @@ async def run(browser,label,viewport):
         await page.close()
         page=await make_page(browser,viewport,saved,errors)
         assert await page.locator('.battle-cell').count()==lanes*10
+        await page.wait_for_function("!document.querySelector('.combat-playing')")
         assert await page.locator('.terrain-trap').count()==1
         await page.emulate_media(reduced_motion='reduce')
         await page.locator('[data-action="end-turn"]').click()
