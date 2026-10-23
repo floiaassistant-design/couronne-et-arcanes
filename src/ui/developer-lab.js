@@ -1,5 +1,6 @@
 // Panneau de configuration du même combat que la campagne, sans second moteur.
 import {CARDS,FACTIONS,CLASSES} from '../data.js';
+import {AI_STYLES} from '../ai.js';
 import {labRarity,labLevel,labCardStats,LAB_RANKS} from '../engine/developer-lab.js';
 
 export function developerLabUI(lab,{esc,btn}){
@@ -22,6 +23,9 @@ export function developerLabUI(lab,{esc,btn}){
     <h2>Configuration</h2>
     <label>Classe du héros
      <select data-lab-field="heroClass">${Object.entries(CLASSES).map(([key,v])=>option(key,v.name,lab.heroClass)).join('')}</select>
+    </label>
+    <label>Stratégie de l’IA
+     <select data-lab-field="aiStyle">${Object.entries(AI_STYLES).map(([key,v])=>option(key,v.name,lab.aiStyle)).join('')}</select>
     </label>
     <label>Composition à modifier
      <select data-lab-field="side">${option('p','Vos cartes',''+side)}${option('e','Cartes de l’IA',''+side)}</select>
