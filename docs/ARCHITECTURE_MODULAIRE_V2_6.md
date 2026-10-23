@@ -1,3 +1,21 @@
+# État architectural vérifié le 23 octobre 2026
+
+Les PR 31 à 34 sont déjà fusionnées sur `main` `adf9c9192293ea2e25849f37a0ac11d1df08c951`.
+Le CSS est spécialisé et seule la présentation cartes est distribuée par
+`JOUER.html`. Les propositions datées ci-dessous sont historiques.
+
+La branche `refactor/guide-module-documentation-20261023` extrait le rendu
+statique du Guide dans `src/ui/guide-page.js` avec injection de `btn`
+et `previousGameAvailable`. `src/ui/pages.js` reste responsable de la
+composition des pages et relit l'état à chaque `guideUI()`.
+La dépendance va de `pages.js` vers `guide-page.js`, sans cycle ;
+le nouveau module n'importe ni moteur ni stockage ni DOM.
+Le builder doit l'inclure dans `JOUER.html`.
+
+---
+
+## Historique architectural des versions précédentes
+
 ## Proposition — Présentation cartes unique et export unique, 22 octobre 2026
 
 Demande du propriétaire : conserver seulement le jeu avec les cartes sur le

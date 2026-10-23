@@ -1,3 +1,20 @@
+# État intégré vérifié le 23 octobre 2026
+
+Dernier `main` confirmé : `adf9c9192293ea2e25849f37a0ac11d1df08c951`.
+Les PR 31, 32, 33 et 34 sont **fusionnées** avec l'accord du propriétaire.
+La distribution comporte une seule vue cartes, un seul `JOUER.html` autonome,
+et 17 feuilles CSS spécialisées. `ESSAI_CARTES.html` est supprimé.
+Moteur, IA, progression, catalogue et anciennes sauvegardes 3×5 préservés.
+
+La branche `refactor/guide-module-documentation-20261023` propose
+l'extraction isolée du Guide (`src/ui/guide-page.js`) et la remise à jour de
+la documentation. Elle n'est **pas intégrée** ; la fusion exige son accord propre.
+[Note de maintenance](MAINTENANCE_GUIDE_2026_10_23.md).
+
+---
+
+## Historique des propositions : les statuts de PR ci-dessous sont datés
+
 ## Proposition — Présentation cartes unique et export unique, 22 octobre 2026
 
 Demande du propriétaire : conserver seulement le jeu avec les cartes sur le
