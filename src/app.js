@@ -44,7 +44,7 @@ function withBattleFx(operation,onDone){
  if(battle.status!=='active')settle({deferModal:true});
  render();
  playBattleFx(steps,()=>{
-  displayBattle=null;render();closeCardInspection(true,'fx');
+  displayBattle=null;render();
   if(deferredBattleModal){showModal(deferredBattleModal);deferredBattleModal='';}
   onDone?.(result);
  },{before,phase:phase==='enemy'?'Actions adverses':'Vos actions',onFrame:frame=>{
@@ -84,7 +84,7 @@ function render({frameUpdate=false}={}){
  const arenaVertical=document.querySelector('.battle-grid')?.scrollTop||0;
  const handScroll=document.querySelector('.combat-hand-dock .hand')?.scrollLeft||0;
  const stageScroll=document.querySelector('.combat-stage')?.scrollTop||0;
- closeCardInspection();
+ closeCardInspection(true,'render');
  document.body.classList.toggle('animations-off',!animationsEnabled);
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
  $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='battle'&&battle?battleUI():homeUI();

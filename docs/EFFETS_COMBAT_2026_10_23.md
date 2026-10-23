@@ -60,3 +60,28 @@ partiels, poison, absence de troncature et équivalence avec/sans événements.
 Le parcours navigateur vérifie la vraie validation, les cartes intermédiaires,
 le verrou, la vitesse, le défilement mobile, le journal, l'interruption et les
 modes sans animation. Aucun téléphone physique ni campagne humaine exhaustive.
+
+## Résultats locaux avant publication
+
+- `npm test` : 308 tests réussis ; huit nouveaux tests ciblés, assertions
+  existantes inchangées. `npm run test:parity` : 60 scénarios identiques.
+- `npm run build` et `npm run build:test` réussis ; 31 modules et 42 images
+  approuvées embarquées. L'export généré est comparé par empreinte après publication.
+- 21 suites navigateur exécutées : `combat_fx`, `card_study`, `deployment`,
+  `card_preview`, `art_reset`, `collection`, `milicien`, `aube`, `sylve`, `ombre`,
+  `forge`, `maintenance`, `save_integrity_v211`, `arena_v211`,
+  `combat_fullscreen_v211`, `card_capabilities`, `battle_control_v29`,
+  `class_skills_v28`, `new_game_legibility_v211`, `illustrated_pilot_v3`,
+  `painted_arena`. Les échecs de synchronisation et d'encombrement paysage ont
+  été corrigés puis les suites concernées relancées avec succès.
+- Chromium : bureau, portrait et paysage, export sans réseau, réduction du
+  mouvement, animations désactivées, défilement vers la cible, vrais PV/protections,
+  coupure en pleine lecture puis reprise sans double action. Examen visuel des
+  captures bureau/portrait/paysage. Aucune vérification sur téléphone physique.
+- `git diff --check` réussi ; aucune image ni clé de stockage modifiée.
+- La PR nº 35 du Guide est ouverte à la fin du travail. Les modules source
+  fonctionnels ne se recoupent pas ; réconcilier les notes documentaires et
+  régénérer `JOUER.html` si les deux évolutions sont intégrées successivement.
+
+Ces résultats sont locaux. La CI distante et son commit exact doivent être lus
+sur la PR ; ne pas déduire sa réussite de cette liste. Aucune fusion autorisée.

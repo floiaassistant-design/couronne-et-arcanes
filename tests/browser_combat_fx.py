@@ -84,7 +84,7 @@ async def check_effect_types(browser):
   if card=='firebolt':
    await page.wait_for_selector('.combat-fx-projectile.magic');assert 'Lame de feu' in await page.locator('.combat-action').inner_text()
   else:
-   await page.wait_for_selector('.combat-fx-number.healing')
+   await page.wait_for_selector('.combat-fx-number.healing',state='attached')
    assert await page.locator('.combat-fx-number.healing').count()==2
    assert all('+1 PV' in x for x in await page.locator('.combat-fx-number.healing').all_text_contents())
   await idle(page)

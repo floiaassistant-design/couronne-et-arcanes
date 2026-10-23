@@ -104,7 +104,7 @@ export function createCombatFx(getState){
    // Invoquer avant le halo ; conserver les autres cartes jusqu'à leur impact.
    if(step.type==='spawn'){onFrame?.(step.frame);lock(true);}
    revealAction(step);readout(`${phase} · ${cursor}/${steps.length}`,step.label);animateStep(step);
-   const duration=step.type==='attack'||step.type==='spell'?850:step.type==='death'?550:step.type==='state'?450:620;
+   const duration=step.changes.length?1000:step.type==='attack'||step.type==='spell'?850:step.type==='death'?550:step.type==='state'?450:620;
    timer=setTimeout(()=>{
     if(key!==token)return;clean();onFrame?.(step.frame);lock(true);next();
    },duration/speed);
