@@ -9,7 +9,7 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const namedImports=/^import\s*\{([^}]+)\}\s*from\s*['"]([^'"]+)['"];?$/gm;
 // Garde lexical léger : une propriété homonyme (m.aiStyle) n'est pas une liaison.
 const referencesName=(body,name)=>new RegExp('(?<![\\w$.])'+name+'(?![\\w$])').test(body);
-const sourcePaths=['src/app.js','src/ui/views.js','src/ui/pages.js','src/ui/battle-view.js'];
+const sourcePaths=['src/app.js','src/ui/views.js','src/ui/pages.js','src/ui/battle-view.js','src/ui/guide-page.js'];
 const read=file=>readFileSync(path.join(root,file),'utf8');
 
 test('Les écrans ne conservent pas de noms importés inutilisés',()=>{

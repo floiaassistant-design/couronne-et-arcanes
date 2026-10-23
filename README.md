@@ -4,20 +4,20 @@ Jeu de cartes tactiques solo, web et hors ligne : 76 cartes, quatre classes,
 12 missions, 20 étages de Tour et trois donjons. Collection, progression, IA,
 statistiques et sauvegardes sont conservées.
 
-## Proposition de simplification du 22 octobre
+## État intégré — 22 octobre 2026
 
-Un seul export `JOUER.html`, toujours en présentation cartes. L’ancienne vue
-personnages et `ESSAI_CARTES.html` sont retirés sur demande du propriétaire.
-Proposition séparée, dépendante de la PR nº 33, sans fusion autorisée.
-[Périmètre et vérification](docs/EXPORT_UNIQUE_2026_10_22.md).
+Les PR nº 31 (dépendances), 32 (vues et CSS), 33 (CSS par responsabilité)
+et 34 (présentation et export uniques) sont **fusionnées** après accords
+spécifiques. Le `main` vérifié est `adf9c9192293ea2e25849f37a0ac11d1df08c951`.
 
-## État intégré
-
-Les PR de maintenance nº 31 et nº 32 sont fusionnées sur accord spécifique,
-main vérifié `9941596d` le 22 octobre 2026. Une nouvelle proposition organise le
-CSS par responsabilité :
-[structure des styles](styles/README.md) et
-[périmètre et contrôles](docs/MODULARISATION_CSS_2026_10_22.md).
+`JOUER.html` est le seul export distribué, jouable hors réseau et avec
+les mêmes cartes sur le plateau que `index.html`. `ESSAI_CARTES.html`
+et l'ancienne présentation personnages sont supprimés. Le fichier
+`tests/JOUER.test.html` sert uniquement au diagnostic.
+Lire [les styles](styles/README.md),
+[le bilan CSS](docs/MODULARISATION_CSS_2026_10_22.md),
+[la distribution](docs/EXPORT_UNIQUE_2026_10_22.md) et
+[la maintenance ciblée](docs/MAINTENANCE_GUIDE_2026_10_23.md).
 
 Le propriétaire a demandé le 20 octobre 2026 de refaire les illustrations et
 animations en conservant le plateau et la présentation des cartes.

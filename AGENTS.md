@@ -89,6 +89,16 @@
 - Conserver règles, moteur, profils et sauvegardes historiques, y compris leurs
   plateaux 3×5 ; ils utilisent désormais les cartes, sans conversion des données.
 
+## Entretien des vues — proposition indépendante du 23/10/2026
+
+- Les PR 31 à 34 sont fusionnées sur `main` `adf9c9192293ea2e25849f37a0ac11d1df08c951`.
+- `ui/guide-page.js` est le propriétaire du rendu pur du Guide ; `ui/pages.js`
+  fournit son bouton et la valeur de sauvegarde précédente au moment du rendu.
+  Le nouveau module doit être embarqué par le builder et ne dépend ni du DOM,
+  ni du stockage, ni du moteur.
+- La branche de maintenance attend son accord spécifique de fusion, comme
+  toute nouvelle PR. Les chiffres des rapports datés restent historiques.
+
 ## Contrats techniques à conserver
 
 ### Modules et interface
