@@ -1,3 +1,12 @@
+## Proposition du 23 octobre — attaques et tours lisibles
+
+Déplacements des cartes, lien attaquant/cible, frappes et projectiles distincts,
+PV réellement perdus, soins et défaites séquencées. Bandeau d'action, vitesse
+×2, bouton Passer et déroulé du tour consultable. Les résultats sont sauvegardés
+avant la lecture ; règles et sauvegardes historiques conservées.
+[Contrat et vérification](docs/EFFETS_COMBAT_2026_10_23.md).
+Proposition sur branche dédiée, sans fusion autorisée.
+
 # Couronnes & Arcanes — base graphique neuve
 
 Jeu de cartes tactiques solo, web et hors ligne : 76 cartes, quatre classes,

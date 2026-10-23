@@ -1,3 +1,13 @@
+## Lecture des actions — proposition du 23/10/2026
+
+`engine/combat-events.js` capture des instantanés publics transitoires ;
+`ui/combat-steps.js` décrit les écarts réels et `ui/combat-fx.js` les lit.
+L'état réel reste sauvegardé avant la projection visuelle ; ne jamais persister
+les images intermédiaires ni les déroulés. Conserver le verrou de commandes,
+la fin immédiate sans animations, le nettoyage et les anciens combats 3×5.
+Voir `docs/EFFETS_COMBAT_2026_10_23.md` ; 31 modules empaquetés.
+Cette proposition n'est pas fusionnée et demande un accord spécifique.
+
 # AGENTS.md — Couronnes & Arcanes
 
 ## Reprise et sources officielles

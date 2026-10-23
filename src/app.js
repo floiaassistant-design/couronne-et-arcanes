@@ -2,6 +2,8 @@ import {esc} from './ui/markup.js';
 import {collectionInspection} from './ui/collection.js';
 import {createViews} from './ui/views.js';
 import {createCombatFx} from './ui/combat-fx.js';
+import {buildCombatSteps} from './ui/combat-steps.js';
+import {captureCombatFrame} from './engine/combat-events.js';
 import {mountPaintedArena} from './ui/painted-arena.js';
 import {createCardInspection} from './ui/card-inspection.js';
 import {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure} from './ui/storage.js';
@@ -14,10 +16,11 @@ let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}ca
 
 const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='aube',collectionOwned=false;
+let displayBattle=null,combatReport=null;
 let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null;
-const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({battle,screen}),esc);
-const {stopBattleFx,playBattleFx}=createCombatFx(()=>({animationsEnabled,screen}));
-const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
+const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({battle:displayBattle||battle,screen:isBattleFxPlaying()?'resolving':screen}),esc);
+const {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying}=createCombatFx(()=>({animationsEnabled,screen}));
+const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
 function save(){if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
@@ -30,14 +33,25 @@ function persistBattle(){
 
 // Render combat VFX from actual rules-engine events. These never enter saved battles.
 function withBattleFx(operation,onDone){
- if(!battle)return;
+ if(!battle||isBattleFxPlaying())return;
+ const before=captureCombatFrame(battle),round=battle.round,phase=battle.phase;
  battle.vfx=[];const result=operation();const events=battle.vfx;delete battle.vfx;
+ const after=captureCombatFrame(battle),steps=buildCombatSteps(result?.ok===false?[]:events,before,after);
+ if(combatReport?.battle!==battle||combatReport.round!==round)combatReport={battle,round,lines:[]};
+ combatReport.lines.push(...steps.map(s=>s.label));
  selectedCard=-1;persistBattle();
- // Apply and persist the outcome before waiting for cosmetic animations.
+ // Le résultat réel est sauvé avant toute attente visuelle, y compris les récompenses.
  if(battle.status!=='active')settle({deferModal:true});
  render();
- playBattleFx(result?.ok===false?[]:events,()=>{if(deferredBattleModal){showModal(deferredBattleModal);deferredBattleModal='';}onDone?.(result);});
-
+ playBattleFx(steps,()=>{
+  displayBattle=null;render();closeCardInspection(true,'fx');
+  if(deferredBattleModal){showModal(deferredBattleModal);deferredBattleModal='';}
+  onDone?.(result);
+ },{before,phase:phase==='enemy'?'Actions adverses':'Vos actions',onFrame:frame=>{
+  displayBattle={...battle,round,phase,status:'active',board:frame.board,traps:frame.traps,
+   heroes:{p:{...battle.heroes.p,...frame.heroes.p},e:{...battle.heroes.e,...frame.heroes.e}}};
+  render({frameUpdate:true});
+ }});
  if(result?.ok===false)toast(result.reason);
  return result;
 }
@@ -62,17 +76,20 @@ function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('sho
 function showModal(html){$('modal-root').innerHTML=`<div class="modal-backdrop"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;}
 function hideModal(){$('modal-root').innerHTML='';}
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une case de départ sur une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
-function render(){
+function render({frameUpdate=false}={}){
+ if(!frameUpdate){stopBattleFx();displayBattle=null;}
+ const fxFocus=frameUpdate?document.activeElement?.closest('.combat-readout button')?.dataset.action:null;
  document.body.classList.toggle('collection-mode',screen==='collection');
  const arenaScroll=document.querySelector('.battle-grid')?.scrollLeft||0;
  const arenaVertical=document.querySelector('.battle-grid')?.scrollTop||0;
  const handScroll=document.querySelector('.combat-hand-dock .hand')?.scrollLeft||0;
  const stageScroll=document.querySelector('.combat-stage')?.scrollTop||0;
  closeCardInspection();
- stopBattleFx();document.body.classList.toggle('animations-off',!animationsEnabled);
+ document.body.classList.toggle('animations-off',!animationsEnabled);
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
  $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='battle'&&battle?battleUI():homeUI();
- mountPaintedArena();
+ mountPaintedArena();syncFxControls();
+ if(fxFocus)document.querySelector(`[data-action="${fxFocus}"]`)?.focus({preventScroll:true});
  const arena=document.querySelector('.battle-grid');if(arena){arena.scrollLeft=arenaScroll;arena.scrollTop=arenaVertical;}
  const hand=document.querySelector('.combat-hand-dock .hand');if(hand)hand.scrollLeft=handScroll;
  const stage=document.querySelector('.combat-stage');if(stage)stage.scrollTop=stageScroll;
@@ -140,6 +157,7 @@ function startMission(id){if(battle?.status==='active'){toast('Terminez le comba
 function navigate(page){if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();if(!['home','campaign','tower','dungeons','collection','alchemy','forge','guide','battle'].includes(page))return;cancelEnemyTimer();screen=page;selectedCard=-1;render();if(page==='battle')scheduleEnemyStep();window.scrollTo(0,0);}
 function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();window.scrollTo(0,0);}
 function act(action,dataset){const {id,index,lane,col,page}=dataset;
+ if(isBattleFxPlaying()&&['select-card','deploy','end-turn','hero-power'].includes(action))return;
  switch(action){
 
   case 'new-game':showModal(`<div class="kicker">NOUVELLE PARTIE</div><h2>Choisir votre classe de départ</h2><p>Commencez une aventure à zéro avec une autre classe. Vous pouvez aussi changer de classe dans l’Atelier sans recommencer votre progression, après un combat.</p><div class="class-options new-game-classes">${Object.entries(CLASSES).map(([classId,c])=>btn(c.symbol+' '+c.name,'new-game-select',`data-id="${classId}"`,'ghost')).join('')}</div><p class="hint">La partie actuelle sera gardée dans un emplacement de sauvegarde précédent sur cet appareil. Exportez-la dans le Guide pour une copie durable.</p><div class="button-row">${btn('Annuler','close-modal','','ghost')}</div>`);break;
@@ -191,7 +209,9 @@ function act(action,dataset){const {id,index,lane,col,page}=dataset;
  case 'deploy':if(!battle||battle.phase!=='player'||selectedCard<0)return;withBattleFx(()=>playPlayerCard(battle,selectedCard,Number(lane),Number(col)));break;
  case 'end-turn':if(!battle)return;withBattleFx(()=>endPlayerTurn(battle),()=>scheduleEnemyStep());break;
  case 'hero-power':if(!battle)return;withBattleFx(()=>usePower(battle));break;
- case 'toggle-animations':animationsEnabled=!animationsEnabled;try{localStorage.setItem(VFX_KEY,animationsEnabled?'on':'off');}catch{}render();scheduleEnemyStep(0);break;
+ case 'fx-skip':skipBattleFx();break;
+ case 'fx-speed':changeFxSpeed();break;
+ case 'toggle-animations':skipBattleFx();animationsEnabled=!animationsEnabled;try{localStorage.setItem(VFX_KEY,animationsEnabled?'on':'off');}catch{}render();scheduleEnemyStep(0);break;
  case 'retreat':showModal(`<div class="kicker">RETRAITE</div><h2>Abandonner la bataille ?</h2><p>Cette décision compte comme une défaite. Dans un donjon, elle met fin à l’expédition.</p><div class="button-row">${btn('Oui, battre en retraite','confirm-retreat','','danger')}${btn('Rester au combat','close-modal','','ghost')}</div>`);break;
  case 'confirm-retreat':if(battle?.status==='active'){cancelEnemyTimer();battle.status='defeat';battle.phase='finished';hideModal();persistBattle();settle();}break;
  case 'close-modal':hideModal();break;

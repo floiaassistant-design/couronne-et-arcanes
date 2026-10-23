@@ -1,3 +1,13 @@
+## 2026-10-23 — Proposition : effets de combat et déroulé lisible
+
+- Lire les déplacements, attaques, sorts, impacts, soins et défaites dans l'ordre.
+- Afficher les vrais PV retirés et les protections consommées, avec source/cible,
+  bandeau, déroulé du tour, vitesse ×2 et passage de la séquence courante.
+- Suivre l'action sur mobile ; préserver le résultat sauvé avant la lecture,
+  le mouvement réduit, l'export unique et les anciennes parties.
+- Séparer capture publique, plan de lecture et rendu ; aucune règle ni image modifiée.
+- Proposition sur branche dédiée, sans fusion autorisée.
+
 ## 22/10/2026 — Proposition d’un seul jeu et d’un seul export
 
 - `JOUER.html` devient l’unique livraison, toujours avec les cartes sur le plateau.

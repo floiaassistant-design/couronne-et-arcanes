@@ -1,3 +1,16 @@
+# Proposition du 23 octobre 2026 — effets et lecture des tours
+
+Main réel au départ : `adf9c919` ; PR nº 33 et nº 34 fusionnées. Les sections
+plus bas qui les présentent comme en attente sont historiques.
+Branche `feat/effets-combat-lisibles-20261023` : instantanés publics,
+lecture séquentielle des mouvements/attaques, vraies pertes de PV/protection,
+bandeau et déroulé, vitesse ×2, passage de séquence et suivi mobile.
+Règles, IA, illustrations et clés de sauvegarde conservées ; 31 modules.
+[Contrat, périmètre et limites](EFFETS_COMBAT_2026_10_23.md).
+Aucune fusion autorisée. La maintenance du Guide reste une évolution séparée.
+
+---
+
 ## Proposition — Présentation cartes unique et export unique, 22 octobre 2026
 
 Demande du propriétaire : conserver seulement le jeu avec les cartes sur le

@@ -1,3 +1,15 @@
+## Proposition du 23/10/2026 — lecture des événements publics
+
+- `engine/combat-events.js` : captures publiques indépendantes, activées avec
+  `b.vfx` seulement ; aucun DOM, calcul de règle ou état sauvegardé supplémentaire.
+- `ui/combat-steps.js` : narration pure et différences observées des instantanés.
+- `ui/combat-fx.js` : lecteur DOM, ancrages, commandes et nettoyage.
+- `app.js` : résultat réel persisté puis projection temporaire dans les vues.
+  Les commandes sont bloquées pendant la lecture ; fin immédiate sans animations.
+
+Le builder découvre les 31 modules par leurs imports, sans liste parallèle.
+Voir [le contrat](EFFETS_COMBAT_2026_10_23.md). Aucune fusion autorisée.
+
 ## Proposition — Présentation cartes unique et export unique, 22 octobre 2026
 
 Demande du propriétaire : conserver seulement le jeu avec les cartes sur le
