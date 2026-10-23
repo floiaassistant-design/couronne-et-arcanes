@@ -27,10 +27,11 @@ contrôleur/rendu d’aperçu, séquenceur et bibliothèque d’effets. Aucune d
 ajoutée au jeu ; aucun asset ni statistique/IA/progression modifié.
 [Contrat, tests et limites](CIBLAGE_EFFETS_COMBAT_2026_10_23.md).
 
-Les premiers contrôles locaux passent : 323 tests, 60 parités, les 23 sorts
-sur trois formats, effets, laboratoire et plusieurs parcours de sauvegarde.
-La revue finale, l’export et la CI de cette proposition restent en cours au
-checkpoint. Ne pas annoncer cette branche comme intégrée ou publiée.
+Contrôles locaux : 324 tests, 60 parités, 23 sorts sur trois formats, nouveau
+parcours ciblage sur cinq configurations, effets, laboratoire, web modulaire,
+aperçus, déploiement et intégrité des sauvegardes réussis. Export officiel
+généré depuis les mêmes sources ; la CI complète de la PR reste à constater
+sur son commit final. Ne pas annoncer cette branche comme intégrée ou publiée.
 
 ## Publication
 

@@ -42,7 +42,7 @@ export function spellTargetOptions(b,side,card){
    const p=teleportPlan(b,side,lane);affected=[p.u.uid];cells=[{lane,col:p.col}];
   }else if(mode==='trap'){
    const p=trapPlan(b,side,lane);cells=[{lane,col:p.col}];
-  }else if(card.ability==='spell_ward')heroes=[side];
+  }else if(mode==='automatic')heroes=[card.ability==='spell_slow'?(side==='p'?'e':'p'):side];
   options.push({lane,selectors,affected,cells,heroes,error:''});
   if(mode==='automatic')break;
  }

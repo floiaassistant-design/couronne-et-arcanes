@@ -56,13 +56,20 @@ Les animations ne sont ni des assets artistiques importés ni une nouvelle règl
 
 ## Vérifications et reprise
 
-Premiers résultats locaux : 323 tests Node et 60 parités identiques ; compilation
+Résultats locaux : 324 tests Node et 60 parités identiques ; compilation
 et diagnostic réussis. Les 23 sorts ont été lancés sur bureau/portrait/paysage
 sans réseau ; aperçu, cadres, reprises et trois champs conservés. Le lecteur
 existant a validé attaques, armure, morts, tirs, magie, soins partiels, poison,
 ×2, Passer, rechargement, mouvement réduit, animations désactivées et laboratoire.
-Les parcours supplémentaires et la revue finale sont en cours à ce checkpoint.
-Ne pas présenter ces résultats comme une CI finale. Chaque PR demande sa propre
+Le nouveau parcours valide bureau, tactile portrait/paysage, ancien 3×5,
+mouvement réduit, cibles interdites, annulation, changement de cible, aperçu sans
+mutation, confirmation unique, zones, soins, protections, contrôles, reprise,
+IA automatique et repli après erreur d’animation. Contrôles de classe, contrôle,
+web modulaire, aperçu, déploiement et intégrité des sauvegardes ont réussi.
+Examen visuel des captures bureau/portrait/paysage ; l’aperçu bas en paysage
+préserve l’espace du plateau. Régression dédiée : téléportation sur piège mortel,
+ordre déplacement → dégâts → disparition conservé. La CI complète de la PR
+reste à constater sur le commit final ; ne pas la déduire de ces résultats. Chaque PR demande sa propre
 autorisation avant fusion. Publication Sites après fusion uniquement.
 
 Limites : Chromium, formats tactiles simulés ; pas de téléphone physique,

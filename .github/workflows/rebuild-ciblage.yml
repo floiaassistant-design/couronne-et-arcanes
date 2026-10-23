@@ -26,3 +26,5 @@ jobs:
             git commit -m 'build: regenerate official JOUER from targeting sources'
             git push origin HEAD:feat/ciblage-effets-combat-20261023
           fi
+
+# Reconstruction finale après les contrôles des cibles automatiques et zones.
