@@ -4789,7 +4789,10 @@ function previewPlayerSpell(b,index,lane){
  if(CARDS[b.heroes.p.hand[index]?.id]?.type!=='sort')return {ok:false,reason:'Sélectionnez un sort.'};
  const copy=JSON.parse(JSON.stringify(b));delete copy.vfx;
  const before=captureCombatFrame(copy),result=playPlayerCard(copy,index,lane);
- return result.ok?{ok:true,before,after:captureCombatFrame(copy)}:result;
+ if(!result.ok)return result;
+ const ability=CARDS[b.heroes.p.hand[index].id].ability;
+ const detail=ability==='spell_ranger_draw'?`Pioche : ${copy.heroes.p.hand.length-(b.heroes.p.hand.length-1)} carte(s).`:['spell_hasten','spell_slow'].includes(ability)?copy.log.find(s=>s.startsWith(ability==='spell_hasten'?'Élan des Heures :':'Nœud du Temps :'))||'':'';
+ return {ok:true,before,after:captureCombatFrame(copy),detail};
 }
 function hit(b,u,raw,bySide,ignoreArmor=false){
  // Une attaque sur une unité déjà vaincue ne doit pas créer un second kill.
@@ -5159,7 +5162,7 @@ function spellTargetOptions(b,side,card){
    const p=teleportPlan(b,side,lane);affected=[p.u.uid];cells=[{lane,col:p.col}];
   }else if(mode==='trap'){
    const p=trapPlan(b,side,lane);cells=[{lane,col:p.col}];
-  }else if(card.ability==='spell_ward')heroes=[side];
+  }else if(mode==='automatic')heroes=[card.ability==='spell_slow'?(side==='p'?'e':'p'):side];
   options.push({lane,selectors,affected,cells,heroes,error:''});
   if(mode==='automatic')break;
  }
@@ -7113,7 +7116,7 @@ function spellTargetingUI(selection,target,preview,esc){
  const {card,mode,options,option,reason}=selection;
  const hint=mode==='first'?'Cliquez le premier ennemi sur sa ligne.':mode==='blessing'?'Cliquez l’allié le plus blessé de sa ligne.':mode==='silence'?'Cliquez la cible du silence mise en évidence.':mode==='enemy-line'||mode==='chain'?'Cliquez un ennemi autorisé pour choisir sa ligne.':mode==='ally-line'?'Cliquez un allié pour choisir sa ligne.':mode==='destination'?'Choisissez la ligne de destination.':mode==='trap'?'Choisissez la ligne du piège.':'Cibles automatiques : aucune sélection nécessaire.';
  const movement=option?.cells?.length?option.cells.map(c=>`Case ${c.col}, ligne ${c.lane+1}`).join(' · '):'';
- const prediction=[predictionText(preview),movement].filter(Boolean).join(' · ');
+ const prediction=[predictionText(preview),preview?.detail,movement].filter(Boolean).join(' · ');
  const automatic=mode==='automatic',ready=option&&preview?.ok;
  return `<section class="spell-targeting" aria-label="Ciblage du sort"><div class="spell-target-heading"><b>${esc(card.name)}</b><button type="button" data-action="spell-cancel">Annuler</button></div><p>${esc(reason||hint)}</p>
  ${automatic?'':`<div class="spell-lanes" aria-label="Choisir la ligne du sort">${options.map(o=>`<button type="button" data-action="spell-lane" data-lane="${o.lane}" ${o.error?'disabled':''} aria-pressed="${option?.lane===o.lane}" title="${esc(o.error||'Prévisualiser cette ligne')}">Ligne ${o.lane+1}</button>`).join('')}</div>`}
