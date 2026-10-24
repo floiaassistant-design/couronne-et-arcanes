@@ -14,6 +14,97 @@
 
 **Règle globale de transmission des capacités (validée en conception) :** à chaque rareté supérieure, **la carte garde toutes les capacités et bonus déjà acquis**, et gagne une nouvelle capacité ou une amélioration de l'une des anciennes. **Une amélioration remplace sa valeur précédente**, elle ne s'y ajoute pas (réduction du premier coup de 1 → 2 → 3 dégâts = réduction de 3, pas 6). Les **effets distincts** et les bonus permanents restent présents aux rangs suivants, sauf décision expresse contraire. Ex. Milicien Éveillé : réduction de 3 dégâts du premier coup reçu (une fois/invocation), riposte au contact égale à son ATQ effective (une fois/invocation), bonus de +3 PV maximum débloqué au Légendaire et Dernier Rempart (survit une fois avec 5 PV au plus). **Définir le nouveau gain par rang dans les cases de la matrice ; détailler la combinaison totale dans la fiche**, et ne pas recopier toutes les capacités héritées en gros texte sur la petite carte. Statut : décision de conception, **non implémentée dans le moteur**.
 
+### Prérequis obligatoire : déplacement, portée et rôle AVANT les évolutions
+
+**Diagnostic du moteur en production (main `ea1e18c49bcfd291a664dacdf95b4bb5c847af89`, 24 octobre 2026).** Nous avions commencé les capacités par rareté sans documenter systématiquement **déplacement, portée des attaques, portée des effets, statistiques et délai**. Ce tableau établit le **socle réel des 53 unités** ; il ne valide aucune augmentation de vitesse ou de portée. Source : `src/data.js` et `src/engine/battle.js` (déplacement `moveUnits`, attaque `findTarget`) ainsi que `src/engine/battle-control.js`.
+
+- **Déplacement normal :** au plus **1 case en avant par phase d'action de l'unité** ; **Célérité** (Loup, Cerf, Ombre vorace, Griffon, Spectre) permet jusqu'à **2 cases**. Le mouvement cesse si une cible est déjà attaquable, si le chemin est bloqué, si l'unité est immobilisée ou à la limite du plateau. Silence peut suspendre Célérité.
+- **Vol :** ne donne pas automatiquement 2 cases de vitesse ; il autorise à **sauter par-dessus un allié immédiatement devant**, avec une case d'atterrissage libre et dans les limites. Certaines unités possèdent à la fois Vol et Célérité.
+- **Portée d'attaque actuelle :** **1 case** pour 45 unités, **2 cases** pour les 8 unités `ranged` ; la cible est cherchée **devant, sur la même ligne**. La distance d'un sort, de Garde, d'un soin ou d'un autre pouvoir est **distincte** de la portée de l'attaque.
+- **Délai** du tableau : attente de la carte avant sa pose, **pas** une durée de déplacement ni un temps de recharge universel de ses capacités. Les ATQ/PV sont les valeurs du catalogue avant bonus de profil, maîtrise, formation, équipement ou évolution future.
+- **Attention aux écarts entre proposition et moteur :** Garde Divine/Éveillée sur plusieurs positions/lignes et Impact de zone limité à un second ennemi adjacent relèvent de **choix de conception non programmés** ; le moteur actuel de Garde protège la couronne de sa ligne et l'Impact peut atteindre un autre ennemi de la même ligne. La proposition historique d'un Feu follet avec portée 3 **n'est pas une valeur actuelle** (portée 2 dans le moteur).
+- **Méthode obligatoire avant de valider une nouvelle rareté :** vérifier pour l'unité (1) ATQ/PV/délai, (2) déplacement normal et spécial, (3) portée/cibles de l'attaque, (4) portée/cibles/fréquence des capacités, (5) bonus conservés et nouvelle capacité, (6) interaction avec blocage/Vol/Garde/Charge/Concorde/Riposte, (7) texte court sur la carte et descriptif complet dans la fiche, (8) statut *actuel / proposé / validé / intégré*. **Ne pas fixer d'augmentation de mouvement ou de portée sans accord** et ne pas transposer silencieusement les anciens paliers.
+
+#### Aube — 10 unités
+
+| Unité | Base native (ATQ / PV / délai) | Avance max. | Attaque | Effets : cible/zone actuelle | Mobilité particulière |
+|---|---|---|---|---|---|
+| Milicien de l’Aube (`militia`) | commun ; 2 ATQ / 5 PV ; délai 0 | 1 case | 1 case | Aucun | — |
+| Porte-égide (`shield`) | commun ; 1 ATQ / 9 PV ; délai 1 | 1 case | 1 case | Armure : soi ; Garde : couronne de sa ligne ; Riposte : ennemi au contact | — |
+| Arbalétrière (`archer`) | commun ; 2 ATQ / 3 PV ; délai 1 | 1 case | 2 cases | Distance : attaque | — |
+| Sœur de l’Aurore (`cleric`) | rare ; 1 ATQ / 4 PV ; délai 2 | 1 case | 1 case | Soin : allié de sa ligne | — |
+| Paladin solaire (`paladin`) | épique ; 4 ATQ / 9 PV ; délai 3 | 1 case | 1 case | Armure : soi ; Riposte : ennemi au contact | — |
+| Porte-étendard (`banner`) | rare ; 2 ATQ / 6 PV ; délai 2 | 1 case | 1 case | Inspiration : allié de sa ligne | — |
+| Capitaine de l’Aube (`scoutcaptain`) | rare ; 3 ATQ / 6 PV ; délai 1 | 1 case | 1 case | Inspiration : allié de sa ligne | — |
+| Prieur solaire (`sunpriest`) | rare ; 2 ATQ / 7 PV ; délai 2 | 1 case | 1 case | Soin : allié de sa ligne | — |
+| Lancier des Remparts (`lancer`) | commun ; 3 ATQ / 5 PV ; délai 1 | 1 case | 1 case | Perforation : cible attaquée | Charge après déplacement |
+| Ange du Bastion (`dawnbastion`) | légendaire ; 5 ATQ / 11 PV ; délai 4 | 1 case | 1 case | Protection : sa couronne ; Riposte : ennemi au contact | Vol : saute un allié si atterrissage libre |
+
+#### Sylve — 11 unités
+
+| Unité | Base native (ATQ / PV / délai) | Avance max. | Attaque | Effets : cible/zone actuelle | Mobilité particulière |
+|---|---|---|---|---|---|
+| Éclaireuse sylvestre (`ranger`) | commun ; 2 ATQ / 4 PV ; délai 0 | 1 case | 2 cases | Distance : attaque | — |
+| Loup des Brumes (`wolf`) | commun ; 3 ATQ / 3 PV ; délai 0 | 2 cases | 1 case | Célérité : déplacement | Charge après déplacement |
+| Gardien des Racines (`treant`) | rare ; 3 ATQ / 10 PV ; délai 2 | 1 case | 1 case | Armure : soi ; Garde : couronne de sa ligne ; Riposte : ennemi au contact | — |
+| Dryade luminescente (`dryad`) | rare ; 1 ATQ / 5 PV ; délai 2 | 1 case | 1 case | Soin : allié de sa ligne | — |
+| Cerf astral (`stag`) | épique ; 5 ATQ / 6 PV ; délai 3 | 2 cases | 1 case | Célérité : déplacement | Charge après déplacement |
+| Traqueur d’épines (`thorn`) | commun ; 2 ATQ / 5 PV ; délai 1 | 1 case | 1 case | Poison : cible touchée | — |
+| Luciole des Épineuses (`pixie`) | commun ; 2 ATQ / 3 PV ; délai 0 | 1 case | 1 case | Protection : sa couronne | Vol : saute un allié si atterrissage libre |
+| Ours des Roches (`bear`) | rare ; 4 ATQ / 9 PV ; délai 2 | 1 case | 1 case | Armure : soi | — |
+| Archidruide Feuillage (`archdruid`) | épique ; 3 ATQ / 7 PV ; délai 3 | 1 case | 1 case | Soin : allié de sa ligne | — |
+| Hibou du Crépuscule (`owl`) | commun ; 2 ATQ / 4 PV ; délai 1 | 1 case | 2 cases | Distance : attaque | Vol : saute un allié si atterrissage libre |
+| Trappeur sylvestre (`sylvan_trapper`) | commun ; 2 ATQ / 5 PV ; délai 2 | 1 case | 1 case | Piège : case libre devant lui | — |
+
+#### Ombre — 11 unités
+
+| Unité | Base native (ATQ / PV / délai) | Avance max. | Attaque | Effets : cible/zone actuelle | Mobilité particulière |
+|---|---|---|---|---|---|
+| Guerrier d’ossements (`bone`) | commun ; 3 ATQ / 3 PV ; délai 0 | 1 case | 1 case | Aucun | — |
+| Ombre vorace (`shade`) | rare ; 3 ATQ / 3 PV ; délai 1 | 2 cases | 1 case | Célérité : déplacement | Charge après déplacement |
+| Veilleur du tombeau (`crypt`) | commun ; 2 ATQ / 7 PV ; délai 1 | 1 case | 1 case | Armure : soi ; Garde : couronne de sa ligne | — |
+| Faucheur de fièvre (`plague`) | rare ; 3 ATQ / 5 PV ; délai 2 | 1 case | 1 case | Poison : cible touchée | — |
+| Archiliche de Minuit (`lich`) | légendaire ; 6 ATQ / 9 PV ; délai 4 | 1 case | 1 case | Impact : autre ennemi de sa ligne (moteur actuel) | — |
+| Banshee des Voiles (`banshee`) | épique ; 4 ATQ / 5 PV ; délai 3 | 1 case | 2 cases | Distance : attaque | Vol : saute un allié si atterrissage libre |
+| Vampire d’Obsidienne (`vampire`) | épique ; 5 ATQ / 6 PV ; délai 3 | 1 case | 1 case | Vol de vie : son héros | — |
+| Chevalier du Tombeau (`graveknight`) | rare ; 4 ATQ / 8 PV ; délai 2 | 1 case | 1 case | Armure : soi ; Riposte : ennemi au contact | Charge après déplacement |
+| Lame nocturne (`nightblade`) | commun ; 3 ATQ / 3 PV ; délai 0 | 1 case | 1 case | Perforation : cible attaquée | — |
+| Spectre du Caveau (`spectre`) | rare ; 3 ATQ / 4 PV ; délai 1 | 2 cases | 1 case | Célérité : déplacement | Charge après déplacement |
+| Inquisiteur des Brumes (`mist_inquisitor`) | rare ; 2 ATQ / 6 PV ; délai 3 | 1 case | 1 case | Silence : ennemi de sa ligne | — |
+
+#### Forge — 10 unités
+
+| Unité | Base native (ATQ / PV / délai) | Avance max. | Attaque | Effets : cible/zone actuelle | Mobilité particulière |
+|---|---|---|---|---|---|
+| Marteau des Monts (`smith`) | commun ; 3 ATQ / 6 PV ; délai 1 | 1 case | 1 case | Aucun | — |
+| Golem runique (`golem`) | rare ; 2 ATQ / 12 PV ; délai 2 | 1 case | 1 case | Armure : soi ; Garde : couronne de sa ligne ; Riposte : ennemi au contact | — |
+| Sapeur gobelin (`bomb`) | rare ; 4 ATQ / 3 PV ; délai 2 | 1 case | 1 case | Impact : autre ennemi de sa ligne (moteur actuel) | — |
+| Foreur de fer (`drill`) | commun ; 2 ATQ / 5 PV ; délai 0 | 1 case | 1 case | Armure : soi | — |
+| Colosse de braise (`colossus`) | légendaire ; 6 ATQ / 13 PV ; délai 4 | 1 case | 1 case | Armure : soi | — |
+| Ingénieure d’acier (`engineer`) | épique ; 3 ATQ / 7 PV ; délai 3 | 1 case | 1 case | Inspiration : allié de sa ligne | — |
+| Canon des Terres Rouges (`cannon`) | épique ; 5 ATQ / 7 PV ; délai 3 | 1 case | 2 cases | Distance : attaque | — |
+| Mécaniste des Hauts-Fours (`mechanist`) | rare ; 2 ATQ / 8 PV ; délai 2 | 1 case | 1 case | Inspiration : allié de sa ligne | — |
+| Marchefer (`ironwraith`) | commun ; 2 ATQ / 7 PV ; délai 1 | 1 case | 1 case | Protection : sa couronne | — |
+| Alchimiste des Braises (`alchemist`) | rare ; 3 ATQ / 5 PV ; délai 2 | 1 case | 1 case | Poison : cible touchée | — |
+
+#### Éther — 11 unités
+
+| Unité | Base native (ATQ / PV / délai) | Avance max. | Attaque | Effets : cible/zone actuelle | Mobilité particulière |
+|---|---|---|---|---|---|
+| Feu follet (`spark`) | commun ; 2 ATQ / 3 PV ; délai 0 | 1 case | 2 cases | Distance : attaque | — |
+| Oracle des Astres (`mystic`) | rare ; 3 ATQ / 4 PV ; délai 2 | 1 case | 2 cases | Distance : attaque | — |
+| Élémentaire azuré (`elemental`) | épique ; 5 ATQ / 8 PV ; délai 3 | 1 case | 1 case | Impact : autre ennemi de sa ligne (moteur actuel) | — |
+| Griffon du Zénith (`griffin`) | épique ; 5 ATQ / 6 PV ; délai 3 | 2 cases | 1 case | Célérité : déplacement | Vol : saute un allié si atterrissage libre ; Charge après déplacement |
+| Sentinelle prismatique (`sentinel`) | rare ; 2 ATQ / 9 PV ; délai 2 | 1 case | 1 case | Armure : soi ; Garde : couronne de sa ligne ; Riposte : ennemi au contact | — |
+| Dragon des Sept Cieux (`dragon`) | légendaire ; 7 ATQ / 12 PV ; délai 5 | 1 case | 1 case | Impact : autre ennemi de sa ligne (moteur actuel) | Vol : saute un allié si atterrissage libre |
+| Esprit de Tempête (`tempest`) | rare ; 3 ATQ / 6 PV ; délai 2 | 1 case | 1 case | Impact : autre ennemi de sa ligne (moteur actuel) | — |
+| Voyante des Étoiles (`seer`) | commun ; 2 ATQ / 4 PV ; délai 1 | 1 case | 2 cases | Distance : attaque | — |
+| Chevalier du Zénith (`aetherknight`) | épique ; 5 ATQ / 9 PV ; délai 3 | 1 case | 1 case | Perforation : cible attaquée | Charge après déplacement |
+| Séraphin d’Azur (`seraph`) | légendaire ; 5 ATQ / 10 PV ; délai 4 | 1 case | 1 case | Soin : allié de sa ligne | Vol : saute un allié si atterrissage libre |
+| Marcheur des Portails (`portal_walker`) | rare ; 3 ATQ / 5 PV ; délai 2 | 1 case | 1 case | Portail : autre ligne, même colonne | Changement de ligne conditionnel |
+
+**Exemple de lecture :** Milicien Commun : **2 ATQ / 5 PV, délai 0, avance 1 case, attaque à 1 case**. Porte-égide Commun : **1 ATQ / 9 PV, délai 1, avance 1 case, attaque à 1 case**, avec Armure 2, Garde et Riposte actuelles (Riposte fixe 2 dans le moteur ; **riposte égale à l'ATQ** uniquement projetée). Même au rang Éveillé, les caractéristiques de mouvement/portée **ne changent pas sans décision spécifique**. Les stats finales des futures raretés restent à définir.
+
 ### Règle de conception et interface souhaitée
 
 - **Six rangs affichables :** Commun, Rare, Épique, Légendaire, Divin, Éveillé ; **un état d'évolution par rang**, au lieu de trois sous-paliers à définir pour chaque rang. Les identifiants techniques déjà utilisés dans la Collection, notamment `divine` et `éveillée`, ne seront pas renommés sans migration étudiée.
