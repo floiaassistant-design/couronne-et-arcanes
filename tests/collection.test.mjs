@@ -47,7 +47,7 @@ test('Les statistiques de la version actuelle réutilisent les bonus du profil',
 
 test('Chaque rareté garde une carte survolable sans nouveau bouton de fiche',()=>{
  const profile=freshProfile(),html=view(profile).collectionUI();
- const row=html.match(/<tr data-collection-character="militia">([\\s\\S]*?)<\\/tr>/)[1];
+ const row=html.match(/<tr data-collection-character="militia">([\s\S]*?)<\/tr>/)[1];
  assert.equal((row.match(/data-collection-preview/g)||[]).length,6);
  assert.equal((row.match(/tabindex="0"/g)||[]).length,6);
  assert.equal((row.match(/aria-describedby="collection-hover-inspection"/g)||[]).length,6);
@@ -60,11 +60,11 @@ test('Les aperçus concis des raretés inconnues n’inventent aucune statistiqu
  const future=collectionHoverContent(profile,'militia','éveillée',esc);
  assert.match(future,/Évolution à concevoir/);
  assert.match(future,/Statistiques à concevoir/);
- assert.doesNotMatch(future,/ATQ [0-9]+ \\/ PV [0-9]+/);
+ assert.doesNotMatch(future,/ATQ [0-9]+ \/ PV [0-9]+/);
  assert.equal(collectionHoverContent(profile,'missing','rare',esc),null);
  assert.equal(collectionHoverContent(profile,'militia','unknown',esc),null);
  const present=collectionHoverContent(profile,'militia','commun',esc);
- assert.match(present,/ATQ [0-9]+ \\/ PV [0-9]+/);
+ assert.match(present,/ATQ [0-9]+ \/ PV [0-9]+/);
  assert.match(present,/COLLECTION/);
  assert.equal(JSON.stringify(profile),before);
  assert(collectionEntries(profile,'sort').every(c=>c.type==='sort'));
