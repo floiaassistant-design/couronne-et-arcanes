@@ -10,7 +10,7 @@ progression et anciennes batailles 3×5 conservés.
 
 ## Proposition actuelle — Concorde
 
-Branche `feat/concorde-emblemes-20261024`, depuis ce main exact.
+Branche `feat/concorde-emblemes-20261024`, [PR nº 42](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/42), depuis ce main exact.
 L’emblème déjà peint en haut à droite s’éclaire de façon fixe lorsque le moteur
 accorde Concorde. Le badge flottant est retiré. Explications dans les fiches
 main/plateau/Collection ; la fiche réserve le menu Citadelle sur petit écran.
@@ -27,7 +27,10 @@ suivies dans Notion ne sont pas implémentées par cette branche.
 
 ## Vérifications et reprise
 
-Les résultats locaux et distants sont consignés dans le contrat et la PR.
+Local : 330 tests, 60 parités et builds réussis ; Concorde, aperçus, Collection,
+pose, Aube/sceaux, capacités, effets/laboratoire, jeu modulaire et sauvegardes
+contrôlés. JOUER distant et local identiques, blob `1e2efb67929e1c0d50c93914c288ef60ce957056`.
+Les résultats détaillés et la CI finale sont consignés dans le contrat et la PR.
 Relire le main et les PR, puis le diff complet avant proposition de fusion.
 Le rendu reste proposé, non fusionné et non publié. Chaque PR nécessite
 son propre accord explicite ; ne pas fusionner l’audit avec cette évolution.
