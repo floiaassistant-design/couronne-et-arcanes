@@ -18,7 +18,7 @@
 - **Une fiche de conception par unité**, dans laquelle chaque rang comporte au plus **une ligne** : `Rang | Stats réelles ou projetées | Capacité / bonus total | Obtention | Description | État`. « À définir » si aucune validation, aucune puissance inventée. Les valeurs de base des 53 unités et les descriptions des 23 sorts restent celles de l'audit ci-dessous.
 - **Ne pas transformer l'historique en règle actuelle :** les trois sous-niveaux du Milicien discutés dans Notion (réduction du premier coup, riposte, Dernier Rempart et leurs valeurs validées) sont préservés comme **décisions historiques de l'ancien modèle** ; leur traduction en **un seul rang Rare, Épique, etc.** nécessite un nouvel arbitrage. Le Milicien n'a **pas** Garde.
 - **Séparer les trois systèmes :** actuellement, une unité possède des **améliorations payantes 0 à 3** (35/70/105 éclats, bonus ATQ/PV), une **maîtrise 0 à 3** qui rapporte une progression propre, et **une rareté native fixe**. La décision sur « une évolution par rareté » concerne le **futur système** ; elle ne supprime, ne rembourse et ne migre pas implicitement les améliorations, maîtrises, decks et sauvegardes. Leur coexistence reste à décider avant programmation.
-- **Distinguer les PR parallèles :** la PR nº 42 est une proposition de Concorde **sur les logos peints existants en haut à droite**, non fusionnée, à examiner visuellement. Le projet antérieur d'emblèmes neufs **en haut au centre**, détaillé au §2, reste une **variante historique**, pas un second import à lancer en parallèle.
+- **Actualisation du 24 octobre 2026 — Concorde :** la [PR nº 42](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/42) est **fusionnée sur main** (`ea1e18c49bcfd291a664dacdf95b4bb5c847af89`) : elle réutilise les logos déjà peints **en haut à droite** avec une surbrillance conditionnelle, sans nouvel emblème importé. La variante ancienne d'emblèmes nouveaux **centrés en haut**, décrite au §2, est **historique et non retenue**. La présente PR nº 41 demeure séparée et non fusionnée.
 
 ### Petit tableau des rangs — une évolution et non trois par rareté
 
@@ -175,7 +175,9 @@
 
 | **C** | **Feu follet** (2 ATQ, 3 PV, délai 0, portée 2) est plus fragile que l'Éclaireuse sylvestre à attaque/délai/portée identiques. | Tester **portée 3** à statistiques inchangées ; ne pas décider avant simulation et jeu humain. |
 
-### Contrat visuel proposé — emblèmes de Concorde (non intégré)
+### Historique : contrat visuel proposé pour des emblèmes Concorde neufs (non retenu)
+
+**Cet ancien scénario ne doit pas être confondu avec la solution intégrée par la PR nº 42** (logos existants sur les cartes, surbrillance discrète). Les choix qui suivent décrivent l'idée initiale et ne lancent pas de nouvelle production graphique.
 
 - **Un emblème original distinct pour chacun des cinq Ordres : Aube, Sylve, Ombre, Forge et Éther.** Ce ne sera **pas** un symbole générique partagé ; chaque carte emploiera celui de sa faction.
 - **Position définitive demandée : en haut, exactement au centre du cadre de la carte** (et non dans un coin ou dans un bandeau flottant au-dessus du plateau). Dimension et intégration à ajuster aux cadres existants pour ne masquer ni le nom, ni les statistiques, ni les autres éléments.
