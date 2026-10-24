@@ -8,6 +8,7 @@
 - Fiche agrandie sous la barre de navigation, pour garder Citadelle accessible.
 - Moteur, IA, statistiques, images et sauvegardes conservés. Un seul export
   JOUER régénéré, tests dédiés et vérifications de compatibilité.
+- CI navigateur fixée sur Ubuntu 24.04 après le passage de ubuntu-latest à une version incompatible avec Playwright épinglé ; toutes les suites conservées.
 - Proposition non fusionnée ni publiée ; revue et autorisation spécifique requises.
 
 ## Historique des propositions et intégrations antérieures
