@@ -138,6 +138,30 @@
 
 **Les statistiques de conception du Milicien sont désormais validées** : 2 ATQ aux six rangs, 5 PV aux trois premiers, 8 PV à partir du Légendaire, délai 1 à chaque rang. **Les améliorations, bonus de maîtrise, équipement, Forge et réputation restent distincts** et ne sont pas supprimés. Pour le jeu actuel, la mise à 1 du délai des huit cartes initialement à 0 est **déjà intégrée (PR nº 44)** ; elle n'implémente pas les cinq raretés futures. Prochaines questions : délai des autres unités unitairement, ordre des effets défensifs, statistiques effectives avec bonus, équilibre. **Fiche textuelle courte sur la carte**, pouvoirs complets au clic.
 
+### Fiche de conception — Porte-égide de l’Aube (`shield`)
+
+**Statut : socle Commun vérifié sur `main` `f0c67075`, raretés supérieures en conception uniquement.** Cette fiche n'ajoute aucune statistique au jeu ; elle complète le Milicien comme deuxième unité étudiée.
+
+**Carte actuellement jouable (Commun) :** 1 ATQ / 9 PV / délai 1. Avance normalement d'**une case** sur sa ligne et attaque à **une case devant elle**, sans Célérité, Vol, changement de ligne ni attaque à distance. Son rôle est la défense de la couronne.
+
+- **Armure 2 (actuel) :** enlève 2 aux dégâts bruts d'une frappe dirigée contre le Porte-égide, sans descendre sous 1 avant les barrières ; Perforation peut ignorer cette armure.
+- **Garde (actuel) :** intercepte des coups visant sa **couronne sur sa ligne**, y compris depuis une position derrière l'attaquant ; **ne protège pas les autres unités**. Ce comportement historique reste actif tant qu'une PR de règles ne l'a pas modifié.
+- **Riposte (actuel) :** si le Porte-égide survit à une attaque ennemie **au contact**, il peut infliger **2 dégâts bruts** à l'attaquant, au plus **une fois par tour**. Pas de riposte contre les tirs à distance, si la capacité est réduite au silence, ou en chaîne contre une riposte.
+- **Concorde Aube (actuel) :** ☀ **Bonus de faction : +1 attaque** tant qu'au moins deux unités Aube alliées vivantes sont sur la même ligne. Ce bonus ne modifie pas aujourd'hui les 2 dégâts fixes de Riposte.
+
+| Rareté | Données et pouvoirs | Statut |
+| --- | --- | --- |
+| **Commun** | **1 ATQ / 9 PV / délai 1** ; avance 1, portée 1 ; Armure 2, Garde de ligne actuellement, Riposte fixe 2 | **Jouable et vérifié** |
+| **Rare** | Conserver les capacités acquises ; gain, ATQ, PV, délai, mobilité et portée du rang **à définir**. L'ancienne idée « Riposte fixe 3 » est abandonnée. | **À définir** |
+| **Épique** | Conserver les capacités acquises ; nouveau gain et chiffres **à définir**. | **À définir** |
+| **Légendaire** | Conserver les capacités acquises ; nouveau gain et chiffres **à définir**. | **À définir** |
+| **Divin** | **Décision de conception :** Garde peut défendre la couronne depuis toute **sa ligne**, même derrière l'attaquant ; jamais les unités. Statistiques et autre gain éventuel **à définir**. | **Validé en conception, non codé** |
+| **Éveillé** | **Décision de conception :** Garde peut défendre la couronne contre des attaques provenant de **toutes les lignes**, jamais les unités. Statistiques et autre gain éventuel **à définir**. | **Validé en conception, non codé** |
+
+**Règle transversale future déjà retenue :** lorsque la Riposte sera réécrite, ses dégâts bruts suivront l'**ATQ effective** du Porte-égide au moment du contre-coup (par exemple, 1 ATQ de base → 1 dégât brut ; avec +1 ATQ de Concorde → 2), avant réduction éventuelle par les protections adverses. Elle restera limitée à une fois par tour au contact pour cette unité. **Cette règle n'est pas intégrée** : ne pas afficher les nouveaux dégâts de Riposte comme une capacité jouable.
+
+**Questions restant à trancher pour le Porte-égide :** gain propre aux rangs Rare, Épique et Légendaire ; ATQ, PV, délai, vitesse et portée à chaque future rareté ; éventuel bonus supplémentaire Divin ou Éveillé ; conditions d'acquisition et impact sur sauvegardes. Ne pas transformer la Garde historique en protection positionnelle par une simple modification de texte. La petite carte conservera seulement **Armure · Garde · Riposte** et la ligne courte de faction ; les conditions seront présentées dans la fiche détaillée.
+
 ### Règle de conception et interface souhaitée
 
 - **Six rangs affichables :** Commun, Rare, Épique, Légendaire, Divin, Éveillé ; **un état d'évolution par rang**, au lieu de trois sous-paliers à définir pour chaque rang. Les identifiants techniques déjà utilisés dans la Collection, notamment `divine` et `éveillée`, ne seront pas renommés sans migration étudiée.
