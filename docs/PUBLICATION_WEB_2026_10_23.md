@@ -1,5 +1,11 @@
 # Publication de Couronnes & Arcanes sur Sites
 
+**Dernier état de diffusion vérifié :** Sites version 7 après la fusion autorisée
+de la [PR nº 45](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/45)
+le 24 octobre 2026 ; déploiement `appgdep_6adcf79b58a88191a148fcf5539a926c`
+réussi et fichiers diffusés contrôlés, selon le bilan de cette PR. Les preuves
+détaillées de la première publication Concorde version 5 plus bas sont historiques.
+
 Le propriétaire a choisi Sites le 23 octobre 2026.
 Jeu publié : https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site
 Site existant : `appgprj_6adb64bffce88191bb77cdb42fd9fc73`.
