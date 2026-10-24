@@ -1,4 +1,4 @@
-# Repères de camp et fiches — proposition du 24 octobre 2026
+# Repères de camp et fiches — intégré et publié le 24 octobre 2026
 
 ## Demande validée
 
@@ -21,9 +21,9 @@ fixe sur les emblèmes peints sont conservées. Aucun import dans l’atelier.
 - Aucun calcul métier, état persistant, image, identifiant ou dépendance ajouté.
   Les deux builds restent générés depuis les mêmes sources et feuilles.
 
-## Reprise
+## Historique de préparation et bilan
 
-Branche : `fix/discreet-camp-markers-faction-summary-20261024`.
+Branche de préparation (historique) : `fix/discreet-camp-markers-faction-summary-20261024`.
 Base officielle : main `3beb7346cc6b881ad6ea123087309c853d51162b`, arbre
 `e4119167750232e3cfdfdfdb475926fabf44c57a`. La copie locale complète et son export
 de départ ont été comparés aux empreintes Git de cet arbre, tous identiques.
@@ -42,6 +42,11 @@ préparation, lancées avant synchronisation de JOUER, ne valident pas cet arbre
 Les anciens tests du texte détaillé vérifient maintenant le résumé demandé,
 ses cinq symboles et les états réels ; les vérifications du moteur sont conservées.
 
-Statut : proposition non fusionnée et non publiée. Chaque fusion exige un accord
-spécifique. Les captures automatisées ne valident pas un téléphone physique,
-Safari/Firefox ni un équilibrage humain exhaustif.
+Statut final : [PR nº 45](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/45)
+fusionnée sur autorisation spécifique, main `63bc8b14b09bf4ecd94bb12bc6aecf17d8d2678e`.
+La CI finale (333 tests, 60 parités, deux builds et contrôles navigateur) est
+réussie sur un arbre identique à celui du main fusionné. L'automatisation Sites
+a publié la version 7 ; déploiement `appgdep_6adcf79b58a88191a148fcf5539a926c`
+terminé avec succès, fichiers servis vérifiés dans le bilan de PR. Les captures
+automatisées ne valident pas un téléphone physique, Safari/Firefox ni un
+équilibrage humain exhaustif. Toute future PR exige son propre accord.
