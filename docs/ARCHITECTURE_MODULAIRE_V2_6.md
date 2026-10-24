@@ -1,4 +1,4 @@
-# Proposition — Concorde, 24 octobre 2026
+# Architecture intégrée — Concorde, 24 octobre 2026
 
 `ui/concorde.js` porte le rendu pur de la lumière sur les emblèmes déjà peints
 et le texte commun aux fiches. `battle-view.js` transmet le booléen issu de
@@ -12,7 +12,8 @@ La feuille `styles/cards/concorde.css` est reliée à index, et le module est
 embarqué par découverte d’imports. Les anciens styles du badge flottant sont
 retirés. Le moteur, les événements de combat et le stockage sont inchangés.
 La fiche agrandie réserve la barre de navigation du combat et la main lorsqu’elle ne peut pas tenir à côté de la carte.
-[Contrat et vérifications](CONCORDE_2026_10_24.md). Proposition non fusionnée.
+[Contrat et vérifications](CONCORDE_2026_10_24.md). PR nº 42 fusionnée sur accord
+spécifique ; version 5 de Sites publiée et vérifiée le 24 octobre 2026.
 
 # Architecture courante — ciblage et effets
 

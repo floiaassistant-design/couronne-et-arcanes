@@ -35,20 +35,21 @@ sauvegardé avant les effets ; une interruption ne rejoue aucune attaque.
 [Contrat et vérifications](docs/CIBLAGE_EFFETS_COMBAT_2026_10_23.md).
 Le ciblage et ces effets sont intégrés sur GitHub depuis la PR nº 40.
 
-## Concorde — proposition en revue
+## Concorde — intégré et publié
 
 Deux unités alliées du même Ordre sur la même ligne gagnent chacune +1 ATQ.
 La carte elle-même compte parmi les deux ; davantage d’unités ne cumule pas ce
 bonus. Il disparaît lorsque la formation cesse ; les sorts en sont exclus.
 
-La proposition éclaire discrètement l’emblème déjà peint **en haut à droite**
+Le jeu éclaire discrètement l’emblème déjà peint **en haut à droite**
 des cartes concernées. La lumière est fixe et localisée ; les fiches de main,
 de plateau et de Collection expliquent la règle. Aucun nouveau dessin : les
 illustrations et leurs reçus sont conservés. La variante à emblèmes neufs au
 centre envisagée dans l’audit reste historique, sans import automatique.
 [Contrat et validation](docs/CONCORDE_2026_10_24.md).
-Cette évolution attend sa revue et son accord spécifique de fusion ; elle
-n’est pas publiée sur le Site.
+La PR nº 42 a été fusionnée sur accord spécifique le 24 octobre 2026, puis
+publiée sur le [jeu en ligne](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site)
+(Sites, version 5). Le déploiement et les fichiers servis ont été vérifiés.
 
 ## Progression et sauvegarde
 
