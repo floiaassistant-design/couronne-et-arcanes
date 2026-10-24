@@ -90,9 +90,14 @@ python3 tests/browser_spell_targeting.py
 python3 tests/browser_combat_fx.py
 ```
 
-La CI existante couvre aussi les images, interfaces bureau/mobile simulé,
-anciennes sauvegardes, laboratoire, reprise et hors réseau. Un résultat ancien
-ne valide pas un nouveau commit. Le builder découvre les modules importés et
+La CI couvre également images, interfaces bureau/mobile simulé, anciennes
+sauvegardes, laboratoire, reprise et hors réseau. Pour une PR ne modifiant
+que des fichiers Markdown à la racine ou dans `docs/`, seuls le contrôle
+de portée et ses tests légers tournent ; les deux jobs restent présents.
+Tout autre changement en PR, et tout push sur `main`, gardent la suite complète
+et le paquet de diffusion nécessaire à Sites.
+[Contrat de CI](AGENTS.md#contrat-ci--vérification-sélective-des-pr-documentaires).
+Un résultat ancien ne valide pas automatiquement un nouveau commit. Le builder découvre les modules importés et
 les feuilles reliées par index.html ; ne jamais éditer JOUER.html à la main.
 Aucune bibliothèque de jeu externe n’est nécessaire.
 
