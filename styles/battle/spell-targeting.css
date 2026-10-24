@@ -41,7 +41,7 @@
 .combat-screen .battle-cell.spell-zone {outline:3px dashed #90eed4;outline-offset:-4px;cursor:crosshair;background:#65d9b330}
 .combat-screen .fighter.spell-hero-affected {outline:3px solid #ffe09c;outline-offset:2px}
 /* Les indications décoratives ne doivent pas intercepter le clic d'une carte. */
-.combat-screen .formation-badge,.combat-screen .silence-badge {pointer-events:none}
+.combat-screen .silence-badge {pointer-events:none}
 /* En paysage bas, garder des cartes assez grandes : aperçu entre main et actions. */
 @media(max-height:540px) and (min-width:650px){
  .combat-screen .combat-readout:has(.spell-targeting) {right:125px;flex-wrap:nowrap}

@@ -1,3 +1,55 @@
+## Proposition — CI sélective pour PR Markdown (24 octobre 2026)
+
+- Détection Git prudente d'une PR ne modifiant que des Markdown racine/`docs/`.
+  Deux jobs obligatoires conservés, contrôles légers sur ces seules PR.
+- CI complète inchangée pour tout fichier de jeu, test, script, workflow,
+  ressource ou export et pour chaque push sur main. Génération du paquet Sites
+  toujours conservée sur main. Tests de classification et de renommage ajoutés.
+- Aucun moteur, carte, sauvegarde, illustration ni JOUER modifié.
+  Proposition à tester et relire ; non fusionnée, non publiée.
+
+## Intégré et publié — repères de camp discrets et fiche courte (24 octobre 2026)
+
+- Rond bleu allié et losange rouge adverse de 7 px, à gauche des cartes : retrait
+  des grands blasons superposés au bord supérieur. Deux formes et libellés accessibles.
+- Résumé partagé : « ☀ Bonus de faction : +1 attaque », symbole adapté à l’Ordre,
+  état inactif grisé et explicite. Lumière de Concorde sur l’emblème peint conservée.
+- Aucun changement des règles, statistiques, illustrations ou sauvegardes.
+  Export JOUER régénéré ; PR nº 45 fusionnée dans `63bc8b14` après autorisation.
+  CI finale : 333 tests, 60 parités, builds et navigateur réussis sur le même arbre
+  que main ; publication Sites version 7 contrôlée (bilan dans la PR nº 45).
+
+## Intégré — délai de base minimum 1 (24 octobre 2026)
+
+- Huit unités passent du délai 0 à 1 ; les 68 autres cartes, les capacités, l'IA de combat, le déplacement, les récompenses et les sauvegardes restent inchangés.
+- L'attente de pioche reste `max(0, délai - 1)` : les huit cartes restent immédiatement jouables.
+- Les propositions de decks conservent les classements historiques Assaut, Rempart, Arcanes et Équilibré ; un test de référence évite les changements silencieux.
+- `JOUER.html` doit rester généré depuis les sources, jamais modifié manuellement ; contrôle de la CI finale avant fusion.
+- PR nº 44 fusionnée dans `3beb7346cc6b881ad6ea123087309c853d51162b`,
+  distincte de Concorde (PR nº 42, documentation PR nº 43). La publication
+  du main incluant cette correction a ensuite été vérifiée dans le bilan
+  de la PR nº 45 (Sites version 7).
+
+## Intégré et publié — Concorde sur les emblèmes existants, 24 octobre 2026
+
+- Lumière fixe et discrète sur les cinq logos déjà peints en haut à droite,
+  uniquement lorsque le moteur accorde réellement Concorde ; retrait du badge
+  flottant et de ses styles obsolètes.
+- Règle commune expliquée dans les fiches des 53 unités : deux alliés au total,
+  même Ordre/camp/ligne, +1 ATQ chacun sans cumul, retrait à rupture de formation.
+- Fiche agrandie sous la barre de navigation, pour garder Citadelle accessible.
+- Moteur, IA, statistiques, images et sauvegardes conservés. Un seul export
+  JOUER régénéré, tests dédiés et vérifications de compatibilité.
+- CI navigateur fixée sur Ubuntu 24.04 après le passage de ubuntu-latest à une version incompatible avec Playwright épinglé ; toutes les suites conservées.
+- PR nº 42 fusionnée sur accord spécifique, main `ea1e18c49bcfd291a664dacdf95b4bb5c847af89`.
+  Publication automatique Sites version 5 réussie ; 147 fichiers de diffusion
+  comparés au paquet canonique et 14 fichiers modifiés vérifiés par HTTP.
+
+## Historique des propositions et intégrations antérieures
+
+Les statuts datés ci-dessous décrivent leurs étapes historiques ; lire l’état
+courant et les PR réelles pour connaître les travaux encore ouverts.
+
 ## Proposition — ciblage direct et effets de combat, 23 octobre 2026
 
 - Clic sur les cartes autorisées, aperçu exact du moteur, confirmation,

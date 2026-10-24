@@ -1,4 +1,5 @@
 import {generatedCardFace} from './generated-card.js';
+import {concordeDetails} from './concorde.js';
 // Fiche partagée main/plateau : lecture et état éphémère, aucune action de jeu.
 import {CARDS,FACTIONS,CLASSES,cardTraits} from '../data.js';
 import {unitStats} from '../engine/unit-stats.js';
@@ -11,7 +12,7 @@ export function boardInspectionData(battle,uid){
   const u=battle.board[lane][col];if(!u||String(u.uid)!==String(uid))continue;
   const concord=formationBonus(battle,lane,u),rallied=u.rallyUntil>=battle.round?1:0;
   const statuses=[concord?'Concorde +1 ATQ':'',rallied?'Ralliement +1 ATQ':'',u.armor?'Armure '+u.armor:'',u.barrier?'Barrière '+u.barrier:'',u.poisonTurns?'Poison '+u.poisonTurns+' tour(s)':'',u.stun?'Immobilisation '+u.stun:'',silenced(battle,u)?'Silence : capacités déclenchées suspendues':''].filter(Boolean);
-  return {card:CARDS[u.id],entry:{wait:0},stats:{atk:u.atk+concord+rallied,hp:u.hp,maxhp:u.maxhp,bonuses:[]},board:{side:u.side,lane,col,statuses}};
+  return {card:CARDS[u.id],entry:{wait:0},stats:{atk:u.atk+concord+rallied,hp:u.hp,maxhp:u.maxhp,bonuses:[]},board:{side:u.side,lane,col,statuses,concordeActive:!!concord}};
  }
  return null;
 }
@@ -22,8 +23,9 @@ export function cardInspectionContent(card,entry,stats,esc,{board=null}={}){
  const readiness=board?`${board.side==='p'?'Votre unité':'Unité adverse'} · Ligne ${board.lane+1}, case ${board.col}`:entry.wait>0?'Attente '+entry.wait+' tour'+(entry.wait>1?'s':''):'Prête à jouer';
  const heading=`<div class="inspection-heading"><span class="inspection-context">${board?'SUR LE PLATEAU':'DANS VOTRE MAIN'}</span><button type="button" data-action="close-inspection" aria-label="Fermer la fiche">×</button></div>`;
  const statistics=stats?`<div class="inspection-stats">${board?'En combat':'À l’invocation'} : <b>ATQ ${stats.atk} / PV ${board?stats.hp+'/':''}${stats.maxhp}</b></div>`:'';
- const identity=`<div class="inspection-feature ${cardTemplateFor(card)?'inspection-generated-feature':''}">${cardTemplateFor(card)?generatedCardFace(card,{stats,delay:board?0:entry.wait,kind:board?'deployed':'remaining',esc}):`<img class="inspection-art" src="${artSrc(visualFor(card,{cards:true}).art)}" alt="" data-artwork-status="placeholder" draggable="false">`}<div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span><span class="inspection-rarity">${esc(card.rarity)} · ${esc(card.type)}</span><div class="inspection-readiness">${esc(readiness)}</div>${statistics}</div></div>`;
+ const identity=`<div class="inspection-feature ${cardTemplateFor(card)?'inspection-generated-feature':''}">${cardTemplateFor(card)?generatedCardFace(card,{stats,delay:board?0:entry.wait,kind:board?'deployed':'remaining',concordeActive:!!board?.concordeActive,esc}):`<img class="inspection-art" src="${artSrc(visualFor(card,{cards:true}).art)}" alt="" data-artwork-status="placeholder" draggable="false">`}<div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span><span class="inspection-rarity">${esc(card.rarity)} · ${esc(card.type)}</span><div class="inspection-readiness">${esc(readiness)}</div>${statistics}</div></div>`;
  const body=`<div class="inspection-body"><p class="inspection-description">${esc(card.description)}</p>
+  ${concordeDetails(card,esc,board?board.concordeActive:null)}
   <div class="inspection-summary">${esc(faction.name)} · ${esc(card.rarity)}${card.heroClass?' · '+esc(CLASSES[card.heroClass].name):''} · ${esc(readiness)}</div>
   ${traits.length?`<div class="inspection-traits">${traits.map(t=>`<span>${esc(t)}</span>`).join(' · ')}</div>`:''}
   ${board?.statuses.length?`<div class="inspection-statuses">${board.statuses.map(esc).join(' · ')}</div>`:''}
@@ -46,7 +48,7 @@ export function previewPosition(anchor,size,viewport,kind){
   if(anchor.right+gap+size.width<=viewport.width-margin)x=anchor.right+gap;
   else if(anchor.left-size.width-gap>=margin)x=anchor.left-size.width-gap;
  }
- return {left:clamp(x,viewport.width-size.width),top:clamp(y,viewport.height-size.height)};
+ return {left:clamp(x,viewport.width-size.width),top:Math.max(viewport.topInset||margin,clamp(y,viewport.height-size.height))};
 }
 
 export function createCardInspection(getContext,esc){
@@ -66,14 +68,24 @@ export function createCardInspection(getContext,esc){
  function position(){
   const el=panel();if(!el||el.hidden||!trigger?.isConnected)return;
   const anchor=trigger.getBoundingClientRect();
-  el.style.removeProperty('--preview-max-height');
+  // Les descriptions peuvent agrandir la fiche : garder le menu Citadelle libre.
+  const titlebar=document.querySelector('.combat-titlebar')?.getBoundingClientRect();
+  const topInset=Math.max(12,titlebar?.bottom+8||12);
+  let availableHeight=innerHeight-topInset-12;
+  el.style.setProperty('--preview-max-height',availableHeight+'px');
   const size=el.getBoundingClientRect();
+  const beside=anchor.right+12+size.width<=innerWidth-12||anchor.left-size.width-12>=12;
+  const handTop=document.querySelector('.combat-hand-tray')?.getBoundingClientRect().top;
+  if(!beside&&handTop>topInset+180){
+   availableHeight=Math.min(availableHeight,handTop-topInset-12);
+   el.style.setProperty('--preview-max-height',availableHeight+'px');
+  }
   // Sur écran étroit, une grande fiche de main doit tenir au-dessus de la carte
   // lorsqu'aucun côté n'a assez de place : elle ne doit pas bloquer sa sélection.
-  if(current.kind==='hand'&&anchor.top>=324&&anchor.right+12+size.width>innerWidth-12&&anchor.left-size.width-12<12){
-   el.style.setProperty('--preview-max-height',(anchor.top-24)+'px');
+  if(current.kind==='hand'&&anchor.top>=324&&!beside){
+   el.style.setProperty('--preview-max-height',Math.min(availableHeight,anchor.top-topInset-12)+'px');
   }
-  const pos=previewPosition(anchor,el.getBoundingClientRect(),{width:innerWidth,height:innerHeight},current.kind);
+  const pos=previewPosition(anchor,el.getBoundingClientRect(),{width:innerWidth,height:innerHeight,topInset},current.kind);
   el.style.left=pos.left+'px';el.style.top=pos.top+'px';
  }
  function show(request){

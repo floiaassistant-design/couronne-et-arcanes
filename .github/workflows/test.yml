@@ -7,80 +7,120 @@ on:
 
 jobs:
   validation:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
       - name: Récupérer le code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - name: Installer Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Déterminer la portée de validation de la PR
+        id: scope
+        env:
+          CI_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: node scripts/ci_change_scope.mjs
+      - name: Tester la classification des changements
+        run: node --test tests/ci_change_scope.test.mjs
       - name: Tests du moteur et des compositions
+        if: steps.scope.outputs.docs_only != 'true'
         run: npm test
       - name: Parité déterministe du combat
+        if: steps.scope.outputs.docs_only != 'true'
         run: npm run test:parity
       - name: Construire le jeu hors ligne
+        if: steps.scope.outputs.docs_only != 'true'
         run: npm run build
       - name: Vérifier la synchronisation du HTML autonome
+        if: steps.scope.outputs.docs_only != 'true'
         run: git diff --exit-code -- JOUER.html
       - name: Installer Playwright et Chromium
+        if: steps.scope.outputs.docs_only != 'true'
         run: |
           python3 -m pip install playwright==1.56.0
           python3 -m playwright install --with-deps chromium
       - name: Construire le HTML réservé aux tests navigateur
+        if: steps.scope.outputs.docs_only != 'true'
         run: npm run build:test
+      - name: Concorde, emblèmes existants, formations et reprise hors ligne
+        if: steps.scope.outputs.docs_only != 'true'
+        run: python3 tests/browser_concorde.py
       - name: Ciblage direct, aperçu, souris, tactile et repli du lecteur
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_spell_targeting.py
       - name: Lecture des attaques, dégâts réels, interruption et mouvement réduit
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_combat_fx.py
       - name: Cartes sur plateau, vraie pose, aperçus et export hors ligne
+        if: steps.scope.outputs.docs_only != 'true'
         run: |
           python3 tests/browser_card_study.py
           python3 tests/browser_deployment.py
           python3 tests/browser_card_preview.py
           python3 tests/browser_art_reset.py
       - name: Laboratoire développeur et non-régression des sauvegardes hors ligne
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_developer_lab.py
       - name: Jeu web modulaire, navigation et reprise bureau/mobile
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_maintenance.py
       - name: Collection pleine largeur, exemplaires réels et reprise
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_collection.py
       - name: Milicien v02, champs dynamiques, pose et reprise hors réseau
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_milicien.py
       - name: Dix cartes Aube et sceaux des deux camps, bureau et mobile hors réseau
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_aube.py
       - name: Onze cartes Sylve, valeurs réelles et reprise bureau/mobile hors réseau
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_sylve.py
       - name: Onze cartes Ombre, champs dynamiques et reprise hors réseau
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_ombre.py
       - name: Dix cartes Forge, champs dynamiques et reprise hors réseau
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_forge.py
       - name: Onze cartes Éther, cadres exacts et reprise hors réseau
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_ether.py
       - name: Sorts illustrés, trois champs et vrai lancement hors réseau
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_spells.py
       - name: Parcours V2.8 ordinateur et téléphone simulé
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_class_skills_v28.py
       - name: Nouvelle partie, raretés et reprise sur ordinateur et mobile
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_new_game_legibility_v211.py
       - name: Parcours V2.9 et export autonome ordinateur et téléphone simulé
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_battle_control_v29.py
       - name: 'Pilote Illustrée : fiche, délai réel, pose et mobile'
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_illustrated_pilot_v3.py
       - name: Statistiques effectives, capacités et combat réel bureau/mobile
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_card_capabilities.py
       - name: Simulations de contrôle reproductibles
+        if: steps.scope.outputs.docs_only != 'true'
         run: npm run control-balance
       - name: Arène 2/3/4 lignes, mobile et reprise historique
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_arena_v211.py
       - name: Combat immersif, main fixe en bas, bureau et mobile
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_combat_fullscreen_v211.py
       - name: Arène peinte fixe, ancrages et statistiques des cartes
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_painted_arena.py
       - name: Captures des arènes et version jouable pour revue
-        if: always() && github.event_name == 'pull_request'
+        if: always() && github.event_name == 'pull_request' && steps.scope.outputs.docs_only != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: apercu-arene-structuree
@@ -90,6 +130,7 @@ jobs:
             /tmp/ca-combat-*.png
             /tmp/ca-combat-fx-*.png
             /tmp/ca-targeting-*.png
+            /tmp/ca-concorde-*.png
             /tmp/ca-capacites-*.png
             /tmp/ca-collection-*.png
             /tmp/ca-milicien-*.png
@@ -106,7 +147,9 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
       - name: Clôture du combat, stockage et reprise après coupure
+        if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_save_integrity_v211.py
       - name: Comparaison de géométrie et reproductibilité
+        if: steps.scope.outputs.docs_only != 'true'
         run: npm run arena-balance
 

@@ -1,5 +1,22 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Contrat — affichage de Concorde
+
+- `ui/concorde.js` rend la lumière de l’emblème et le résumé partagé : symbole
+  de faction en tête, « Bonus de faction : +1 attaque », état inactif grisé.
+  L’état vient de `formationBonus`, jamais de l’attaque affichée ou d’un calcul
+  copié dans la vue. Aucun état de présentation ajouté aux sauvegardes.
+- Le rendu éclaire les pixels de l’emblème déjà peint ; les zones par Ordre
+  appartiennent à la présentation. Tout changement des cadres demande leur
+  vérification visuelle. Les images originales restent contrôlées par les reçus.
+- `styles/cards/concorde.css` est relié à index et embarqué par le builder.
+  Garder une lumière fixe, les clics accessibles, les valeurs réelles et les
+  fiches lisibles sous la barre de navigation, y compris sur petit écran.
+- `ui/card-arena.js` conserve le rendu partagé `campSeal` pour les deux camps :
+  rond bleu allié, losange rouge adverse. `assets/card-arena.css` place ces petits
+  repères à gauche, hors de la carte ; garder les illustrations, nombres et
+  clics accessibles. Le propriétaire reste celui de `u.side`, sans état sauvegardé.
+
 ## Contrat — ciblage direct et effets de combat
 
 - `engine/spell-targeting.js` centralise les sélecteurs, en réutilisant les
@@ -78,6 +95,25 @@
 - **Contrôles avant proposition :** relire le diff, comparer au `main` actuel, vérifier les sauvegardes historiques, l'équilibrage et les tests pertinents ; exécuter `npm test`, `npm run test:parity` lorsque les règles sont inchangées, `npm run build`, vérifier `JOUER.html` et effectuer des parcours navigateur desktop/mobile si l'interface change. Ne jamais qualifier une CI absente, incomplète ou rouge de « verte ».
 - **Après autorisation explicite uniquement :** revérifier le commit `head`, la branche cible, les tests, les éventuels conflits et les mises à jour depuis la revue. Ne jamais écraser `main` ni forcer l'historique. Si la PR a changé ou si un contrôle échoue, suspendre et demander une nouvelle décision au besoin.
 - **Continuité :** le joueur teste quand il le souhaite ; les évolutions peuvent rester sur des branches et des PR ouvertes sans être fusionnées. À chaque fin de session, enregistrer le code et l'état du travail sur la branche, sans publier une nouvelle version stable sans accord.
+
+## Contrat CI — vérification sélective des PR documentaires
+
+- Les workflows `test.yml` et `web-package.yml` gardent leurs deux statuts
+  de validation. Le script `scripts/ci_change_scope.mjs` examine le diff Git
+  réel entre la base de PR et son checkout de fusion. Seuls les Markdown de
+  racine et de `docs/` constituent une **PR documentaire uniquement**.
+- Une liste vide, un changement d'application, de CSS, de test, de script,
+  d'image, d'export, de workflow, de configuration ou un renommage provenant
+  du code impose les contrôles complets (comportement conservateur).
+  Toute erreur de détection bloque la CI ; ne jamais réussir par défaut.
+- Sur PR documentaire seule, exécuter la classification et son test ciblé,
+  conserver les jobs verts, mais omettre navigateur, moteurs, builds et paquet.
+  **Sur tout push main**, continuer tous les tests et le paquet de publication,
+  même après une fusion documentaire : preuve de provenance exigée par Sites.
+- Garder les tests métier, la parité, le contrôle de JOUER, l'export web et les
+  chemins navigateur inchangés pour les PR ayant un impact autre que Markdown.
+  Modifier la classification ou les workflows exige toujours la CI complète
+  et des tests du classificateur couvrant les chemins inconnus et renommages.
 
 ## Règle permanente — architecture modulaire et qualité du code
 

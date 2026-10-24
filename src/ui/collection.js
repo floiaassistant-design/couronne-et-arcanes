@@ -1,4 +1,5 @@
 import {generatedCardFace} from './generated-card.js';
+import {concordeDetails} from './concorde.js';
 // Catalogue en lecture : les versions à concevoir ne créent jamais de cartes.
 import {CARDS,FACTIONS} from '../data.js';
 import {visualFor,artSrc,UI_BACKGROUNDS,cardTemplateFor} from '../visuals.js';
@@ -70,6 +71,7 @@ export function collectionInspection(profile,id,rarity,{btn,cardUI,esc}){
  return `<section class="collection-inspection"><div class="kicker">${esc(FACTIONS[card.faction].short)} · ${rank.name}</div><h2>${esc(card.name)}</h2>
   <div class="collection-inspection-card">${current?cardUI(id):futureCard(card,rarity,esc)}</div>
   <p>${current?esc(card.description):'Cette évolution est à concevoir. Ses statistiques, ses capacités et ses conditions d’obtention seront précisées lors de sa création.'}</p>
+  ${current?concordeDetails(card,esc):''}
   <p>${current?(owned?`Vous possédez ${owned} exemplaire${owned>1?'s':''} de cette carte.`:'Vous ne possédez pas encore cette carte.'):'Cette version ne peut pas encore être ajoutée au deck.'}</p>
   <div class="button-row">${btn('Fermer','close-modal','','primary')}</div></section>`;
 }

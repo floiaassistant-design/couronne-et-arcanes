@@ -1,0 +1,28 @@
+/* Lumière fixe et localisée sur l'emblème peint, sans modifier le cadre. */
+.concorde-emblem-light {
+ position:absolute;
+ z-index:1;
+ display:block;
+ pointer-events:none;
+ opacity:.82;
+ filter:drop-shadow(0 0 1.2cqw var(--concorde-glow));
+}
+.concorde-emblem-pixels {
+ display:block;
+ width:100%;
+ height:100%;
+ background-repeat:no-repeat;
+ filter:brightness(1.55) saturate(1.15);
+ mask-image:radial-gradient(ellipse, #000 28%, #000c 53%, transparent 76%);
+}
+.concorde-description {
+ font:12px/1.5 system-ui,sans-serif;
+ color:#e6dcc6;
+ margin:9px 0 0;
+}
+.concorde-symbol {display:inline-block;margin-right:3px}
+.concorde-description[data-concorde-state="active"] {color:#f6dfaa}
+.concorde-description[data-concorde-state="inactive"] {color:#a8b4bd}
+@media (forced-colors:active) {
+ .concorde-emblem-light {filter:none}
+}

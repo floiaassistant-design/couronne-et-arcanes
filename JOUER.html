@@ -1828,28 +1828,6 @@ main {
 .unit-on-board {
   position: relative;
 }
-.formation-badge {
-  position: absolute;
-  top: 2px;
-  left: 3px;
-  right: 3px;
-  padding: 2px 3px;
-  text-align: center;
-  border: 1px solid #f2da9e99;
-  border-radius: 3px;
-  background: #1d3437df;
-  color: #ffe2a0;
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  line-height: 1.1;
-}
-.unit-on-board:has(.formation-badge) {
-  border-color: #f6d890;
-  box-shadow:
-    inset 0 0 0 1px #f0d18b50,
-    0 0 9px #eabf6540;
-}
 .formation-tip {
   font-size: 11px;
   color: #e4c58a;
@@ -1862,10 +1840,6 @@ main {
   justify-content: flex-end;
   gap: 2px;
   padding: 3px 3px 4px;
-}
-
-.unit-on-board .formation-badge {
-  z-index: 3;
 }
 
 </style>
@@ -2265,10 +2239,6 @@ body.animations-off .hand-card .cooldown-stamp {
   overflow: hidden;
 }
 
-.arena-lofi .formation-badge {
-  padding: 2px;
-  border-radius: 0;
-}
 .arena-lofi .silence-badge {
   font-size: 9px;
   border-radius: 0;
@@ -2899,13 +2869,6 @@ body:has(.combat-screen) #view {
   --unit-rarity: #ffd46b;
 }
 
-.arena-lofi .formation-badge {
-  top: 48px;
-  left: 2px;
-  right: 2px;
-  font-size: 7px;
-  z-index: 7;
-}
 .arena-lofi .silence-badge {
   top: 61px;
   z-index: 8;
@@ -3641,7 +3604,7 @@ body:has(.combat-screen) #view {
 .combat-screen .battle-cell.spell-zone {outline:3px dashed #90eed4;outline-offset:-4px;cursor:crosshair;background:#65d9b330}
 .combat-screen .fighter.spell-hero-affected {outline:3px solid #ffe09c;outline-offset:2px}
 /* Les indications décoratives ne doivent pas intercepter le clic d'une carte. */
-.combat-screen .formation-badge,.combat-screen .silence-badge {pointer-events:none}
+.combat-screen .silence-badge {pointer-events:none}
 /* En paysage bas, garder des cartes assez grandes : aperçu entre main et actions. */
 @media(max-height:540px) and (min-width:650px){
  .combat-screen .combat-readout:has(.spell-targeting) {right:125px;flex-wrap:nowrap}
@@ -3758,16 +3721,15 @@ body:has(.combat-screen) #view {
 .card-combat-mode .board-card-name{position:absolute;z-index:1;left:3px;right:3px;bottom:25px;font:10px/1.1 Arial;text-align:center;text-shadow:0 1px 3px #000}
 .card-combat-mode .board-card-stats{position:absolute;bottom:8px;left:5px;right:5px;z-index:1;display:flex;justify-content:space-between;font:12px Arial;color:#f3d797}
 .card-combat-mode .board-card-stats b{font-size:14px}.card-combat-mode .board-card-stats>span+span{color:#bbf5d2}
-.board-camp-seal{width:16px;height:19px;flex:none;overflow:visible;color:#f9e8c3;filter:drop-shadow(0 2px 2px #000b)}
-.camp-seal-body{fill:#284958;stroke:#e6c787;stroke-width:1.5;stroke-linejoin:round}
-.camp-seal-mark{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.board-camp-seal[data-camp="e"] .camp-seal-body{fill:#623f48}
-.card-combat-mode .board-card>.board-camp-seal{position:absolute;z-index:3;top:-5px;right:-6px;pointer-events:none}
-.arena-legend .board-camp-seal{width:11px;height:13px;vertical-align:middle;margin-right:4px}
+.board-camp-seal{width:7px;height:7px;flex:none;overflow:visible;color:#8ac7df;filter:drop-shadow(0 1px 1px #0004)}
+.camp-seal-body{fill:currentColor;stroke:#0a1c29a8;stroke-width:1;stroke-linejoin:round}
+.board-camp-seal[data-camp="e"]{color:#e99b9f}
+.card-combat-mode .board-card>.board-camp-seal{position:absolute;z-index:3;top:50%;left:-12px;transform:translateY(-50%);pointer-events:none}
+.arena-legend .board-camp-seal{vertical-align:middle;margin-right:4px}
 .card-combat-mode .arena-legend .legend-ally,.card-combat-mode .arena-legend .legend-enemy{color:#eaddc5}
 .card-combat-mode .unit-on-board{justify-content:center}
 
-.card-combat-mode .unit-on-board .formation-badge,.card-combat-mode .unit-on-board .silence-badge{z-index:4}
+.card-combat-mode .unit-on-board .silence-badge{z-index:4}
 /* 82 px en coordonnées d'image : marge verticale entre les quatre rangées.
    Le redimensionnement et le défilement restent ceux du plateau peint. */
 .card-combat-mode .arena-painted .unit-on-board .board-card{
@@ -3778,7 +3740,7 @@ body:has(.combat-screen) #view {
 .card-combat-mode .arena-painted .board-card-order{font-size:6px}
 .card-combat-mode .arena-painted .board-card-stats{font-size:11px;left:3px;right:3px}
 .card-combat-mode .arena-painted .board-card-stats b{font-size:14px}
-.card-combat-mode .arena-painted .unit-on-board .formation-badge,.card-combat-mode .arena-painted .unit-on-board .silence-badge{top:0;right:-2px;font-size:9px}
+.card-combat-mode .arena-painted .unit-on-board .silence-badge{top:0;right:-2px;font-size:9px}
 @media(prefers-reduced-motion:reduce){.card-combat-mode .board-card,.card-combat-mode .board-card-art{animation:none!important;transition:none!important}}
 
 /* Contrat de présentation : une scène plein écran, HUD en haut, main sur la
@@ -4078,6 +4040,37 @@ body.card-combat-mode [data-card-layout=true] .combat-stage{overflow:clip;overfl
 .generated-face[data-generated-layout="sort"] .card-title{font-size:4.8cqw!important}
 .generated-face[data-generated-layout="sort"] .card-detail{font-size:3.8cqw!important}
 .generated-face[data-generated-layout="sort"][data-long-description="true"] .card-detail{font-size:2.8cqw!important}
+
+</style>
+<style>
+/* Lumière fixe et localisée sur l'emblème peint, sans modifier le cadre. */
+.concorde-emblem-light {
+ position:absolute;
+ z-index:1;
+ display:block;
+ pointer-events:none;
+ opacity:.82;
+ filter:drop-shadow(0 0 1.2cqw var(--concorde-glow));
+}
+.concorde-emblem-pixels {
+ display:block;
+ width:100%;
+ height:100%;
+ background-repeat:no-repeat;
+ filter:brightness(1.55) saturate(1.15);
+ mask-image:radial-gradient(ellipse, #000 28%, #000c 53%, transparent 76%);
+}
+.concorde-description {
+ font:12px/1.5 system-ui,sans-serif;
+ color:#e6dcc6;
+ margin:9px 0 0;
+}
+.concorde-symbol {display:inline-block;margin-right:3px}
+.concorde-description[data-concorde-state="active"] {color:#f6dfaa}
+.concorde-description[data-concorde-state="inactive"] {color:#a8b4bd}
+@media (forced-colors:active) {
+ .concorde-emblem-light {filter:none}
+}
 
 </style>
 </head>
@@ -4474,19 +4467,19 @@ Object.assign(__exports,{createSpellController});
 // COURONNES & ARCANES — data-driven, wholly original game content.
 const raw = [
 // id | name | faction | rarity | cd | atk | hp | ability | icon | description
-['militia','Milicien de l’Aube','aube','commun',0,2,5,'','⚔','Un soldat loyal, solide en première ligne.'],
+['militia','Milicien de l’Aube','aube','commun',1,2,5,'','⚔','Un soldat loyal, solide en première ligne.'],
 ['shield','Porte-égide','aube','commun',1,1,9,'armor','⬡','Garde et Riposte : intercepte et contre-attaque au corps à corps.'],
 ['archer','Arbalétrière','aube','commun',1,2,3,'ranged','➶','Peut attaquer à deux cases.'],
 ['cleric','Sœur de l’Aurore','aube','rare',2,1,4,'heal','✧','Soigne un allié après chaque affrontement.'],
 ['paladin','Paladin solaire','aube','épique',3,4,9,'armor','♜','Armure et Riposte : contre-attaque une fois par tour au corps à corps.'],
 ['banner','Porte-étendard','aube','rare',2,2,6,'inspire','⚑','Renforce les autres alliés sur sa ligne.'],
-['ranger','Éclaireuse sylvestre','sylve','commun',0,2,4,'ranged','➶','Tire à distance dans les profondeurs de la forêt.'],
-['wolf','Loup des Brumes','sylve','commun',0,3,3,'haste','♞','Célérité et Charge : +2 attaque après un déplacement avant de frapper.'],
+['ranger','Éclaireuse sylvestre','sylve','commun',1,2,4,'ranged','➶','Tire à distance dans les profondeurs de la forêt.'],
+['wolf','Loup des Brumes','sylve','commun',1,3,3,'haste','♞','Célérité et Charge : +2 attaque après un déplacement avant de frapper.'],
 ['treant','Gardien des Racines','sylve','rare',2,3,10,'armor','♣','Garde : protecteur robuste des bois anciens.'],
 ['dryad','Dryade luminescente','sylve','rare',2,1,5,'heal','❀','Régénère les créatures de sa ligne.'],
 ['stag','Cerf astral','sylve','épique',3,5,6,'haste','♘','Charge : une attaque renforcée après déplacement.'],
 ['thorn','Traqueur d’épines','sylve','commun',1,2,5,'poison','❧','Inflige un poison persistant à sa cible.'],
-['bone','Guerrier d’ossements','ombre','commun',0,3,3,'','☠','Un combattant revenu des cryptes.'],
+['bone','Guerrier d’ossements','ombre','commun',1,3,3,'','☠','Un combattant revenu des cryptes.'],
 ['shade','Ombre vorace','ombre','rare',1,3,3,'haste','☾','Contourne rapidement les défenses.'],
 ['crypt','Veilleur du tombeau','ombre','commun',1,2,7,'armor','♜','Garde : la pierre protège ses os animés.'],
 ['plague','Faucheur de fièvre','ombre','rare',2,3,5,'poison','☣','Ses coups provoquent des dégâts différés.'],
@@ -4495,10 +4488,10 @@ const raw = [
 ['smith','Marteau des Monts','forge','commun',1,3,6,'','⚒','Forge une brèche dans la ligne adverse.'],
 ['golem','Golem runique','forge','rare',2,2,12,'armor','⬢','Garde : créature de pierre presque indestructible.'],
 ['bomb','Sapeur gobelin','forge','rare',2,4,3,'splash','✷','Ses charges endommagent plusieurs ennemis.'],
-['drill','Foreur de fer','forge','commun',0,2,5,'armor','⚙','Un mécanisme de guerre fiable.'],
+['drill','Foreur de fer','forge','commun',1,2,5,'armor','⚙','Un mécanisme de guerre fiable.'],
 ['colossus','Colosse de braise','forge','légendaire',4,6,13,'armor','♜','Titan construit dans les hauts-fourneaux.'],
 ['engineer','Ingénieure d’acier','forge','épique',3,3,7,'inspire','⚒','Coordonne les machines sur sa ligne.'],
-['spark','Feu follet','ether','commun',0,2,3,'ranged','✦','Esprit élémentaire qui frappe de loin.'],
+['spark','Feu follet','ether','commun',1,2,3,'ranged','✦','Esprit élémentaire qui frappe de loin.'],
 ['mystic','Oracle des Astres','ether','rare',2,3,4,'ranged','✧','Mage capable de viser les lignes ennemies.'],
 ['elemental','Élémentaire azuré','ether','épique',3,5,8,'splash','✺','Déchaîne une onde magique.'],
 ['griffin','Griffon du Zénith','ether','épique',3,5,6,'haste','♞','Vol : franchit une case occupée par un allié en avançant.'],
@@ -4517,13 +4510,13 @@ const expansion = [
 ['sunpriest','Prieur solaire','aube','rare',2,2,7,'heal','✝','Restaure régulièrement un allié blessé.'],
 ['lancer','Lancier des Remparts','aube','commun',1,3,5,'pierce','⚔','Perce les armures avec une lance de siège.'],
 ['dawnbastion','Ange du Bastion','aube','légendaire',4,5,11,'ward','✵','À l’arrivée, protège la couronne.'],
-['pixie','Luciole des Épineuses','sylve','commun',0,2,3,'ward','✤','Protège la couronne en entrant en jeu.'],
+['pixie','Luciole des Épineuses','sylve','commun',1,2,3,'ward','✤','Protège la couronne en entrant en jeu.'],
 ['bear','Ours des Roches','sylve','rare',2,4,9,'armor','♞','Puissante sentinelle des vallons.'],
 ['archdruid','Archidruide Feuillage','sylve','épique',3,3,7,'heal','❀','Soigne les créatures forestières.'],
 ['owl','Hibou du Crépuscule','sylve','commun',1,2,4,'ranged','➶','Vol : franchit les alliés et guette sa proie à distance.'],
 ['vampire','Vampire d’Obsidienne','ombre','épique',3,5,6,'lifesteal','☾','Ses coups redonnent des PV au héros.'],
 ['graveknight','Chevalier du Tombeau','ombre','rare',2,4,8,'armor','♞','Une armure liée aux anciens serments.'],
-['nightblade','Lame nocturne','ombre','commun',0,3,3,'pierce','⚔','Ignore les armures de ses cibles.'],
+['nightblade','Lame nocturne','ombre','commun',1,3,3,'pierce','⚔','Ignore les armures de ses cibles.'],
 ['spectre','Spectre du Caveau','ombre','rare',1,3,4,'haste','☄','Traverse rapidement les lignes.'],
 ['cannon','Canon des Terres Rouges','forge','épique',3,5,7,'ranged','✷','Tire à travers la mêlée.'],
 ['mechanist','Mécaniste des Hauts-Fours','forge','rare',2,2,8,'inspire','⚙','Entretient la cohésion des machines.'],
@@ -6020,6 +6013,7 @@ Object.assign(__exports,{esc});
 },
 "src/ui/collection.js":function(__exports,__load){
 const {generatedCardFace}=__load("src/ui/generated-card.js");
+const {concordeDetails}=__load("src/ui/concorde.js");
 // Catalogue en lecture : les versions à concevoir ne créent jamais de cartes.
 const {CARDS,FACTIONS}=__load("src/data.js");
 const {visualFor,artSrc,UI_BACKGROUNDS,cardTemplateFor}=__load("src/visuals.js");
@@ -6090,6 +6084,7 @@ function collectionInspection(profile,id,rarity,{btn,cardUI,esc}){
  return `<section class="collection-inspection"><div class="kicker">${esc(FACTIONS[card.faction].short)} · ${rank.name}</div><h2>${esc(card.name)}</h2>
   <div class="collection-inspection-card">${current?cardUI(id):futureCard(card,rarity,esc)}</div>
   <p>${current?esc(card.description):'Cette évolution est à concevoir. Ses statistiques, ses capacités et ses conditions d’obtention seront précisées lors de sa création.'}</p>
+  ${current?concordeDetails(card,esc):''}
   <p>${current?(owned?`Vous possédez ${owned} exemplaire${owned>1?'s':''} de cette carte.`:'Vous ne possédez pas encore cette carte.'):'Cette version ne peut pas encore être ajoutée au deck.'}</p>
   <div class="button-row">${btn('Fermer','close-modal','','primary')}</div></section>`;
 }
@@ -6100,6 +6095,7 @@ Object.assign(__exports,{COLLECTION_RANKS,collectionEntries,renderCollectionCata
 "src/ui/generated-card.js":function(__exports,__load){
 // Carte dessinée complète : zones normalisées, valeurs fournies par les vues.
 const {cardTemplateFor,cardTemplateSrc}=__load("src/visuals.js");
+const {concordeLight}=__load("src/ui/concorde.js");
 const GENERATED_CARD_FIELDS=Object.freeze({
  counter:[6,5,17,11],name:[12,69.6,76,5.6],description:[23,77.3,54,14],
  attack:[3.5,83.5,18,12],health:[78.5,83.5,18,12]
@@ -6115,11 +6111,12 @@ const SPELL_CARD_FIELDS=Object.freeze({
 });
 const layouts=Object.freeze({aube:GENERATED_CARD_FIELDS,sylve:SYLVE_CARD_FIELDS,ombre:SYLVE_CARD_FIELDS,forge:SYLVE_CARD_FIELDS,ether:SYLVE_CARD_FIELDS,sort:SPELL_CARD_FIELDS});
 const zone=(fields,name)=>{const [x,y,w,h]=fields[name];return `data-card-field="${name}" style="left:${x}%;top:${y}%;width:${w}%;height:${h}%"`;};
-function generatedCardFace(card,{stats=null,delay=card.delay,description=card.description,kind='base',board=false,esc}){
+function generatedCardFace(card,{stats=null,delay=card.delay,description=card.description,kind='base',board=false,concordeActive=false,esc}){
  const key=cardTemplateFor(card);if(!key)return '';
  const layout=card.type==='sort'?'sort':Object.hasOwn(layouts,card.faction)?card.faction:'aube',fields=layouts[layout];
- return `<div class="generated-face" data-card-template="${key}" data-generated-layout="${layout}" data-long-description="${description.length>(layout==='ether'?140:160)}">
+ return `<div class="generated-face" data-card-template="${key}" data-generated-layout="${layout}" ${card.type==='unité'?`data-concorde="${concordeActive?'active':'inactive'}"`:''} data-long-description="${description.length>(layout==='ether'?140:160)}">
   <img class="creature-image generated-card-image ${board?'board-card-art':''}" src="${cardTemplateSrc(key)}" alt="" data-artwork-status="approved" draggable="false" />
+  ${concordeLight(card,cardTemplateSrc(key),concordeActive)}
   <span class="generated-counter illustrated-count" ${zone(fields,'counter')} data-delay-kind="${kind}" aria-label="${kind==='remaining'?'Attente restante':kind==='deployed'?'Déployée, attente':'Délai de base'} : ${delay}"><b>${delay}</b></span>
   <div class="card-title ${board?'board-card-name':''}" ${zone(fields,'name')}>${esc(card.name)}</div>
   <div class="card-detail" ${zone(fields,'description')}>${esc(description)}</div>
@@ -6250,6 +6247,42 @@ function artSrc(name){
 }
 
 Object.assign(__exports,{UI_BACKGROUNDS,UI_ART_NAMES,ART_NAMES,CARD_ARENA_ART,CARD_TEMPLATES,CARD_ART_NAMES,INLINE_CARDS,cardTemplateFor,cardTemplateSrc,visualFor,PLACEHOLDER_ART,INLINE_CREATURES,artSrc});
+
+},
+"src/ui/concorde.js":function(__exports,__load){
+// Présentation seulement : l'état actif est fourni par formationBonus du moteur.
+const {FACTIONS}=__load("src/data.js");
+// Zones des emblèmes déjà peints, en pourcentage du cadre complet 768 × 1152.
+// Une copie locale de ces pixels s'éclaire ; aucune nouvelle illustration.
+const EMBLEMS=Object.freeze({
+ aube:{box:[82,2.2,16,11],glow:'#ffe3a0',symbol:'☀'},
+ sylve:{box:[79.5,2,19,14.5],glow:'#bce6a0',symbol:'❧'},
+ ombre:{box:[81,1.8,18,12],glow:'#d8d0f0',symbol:'☾'},
+ forge:{box:[78.5,1.7,20,13.5],glow:'#ffd09b',symbol:'⚒'},
+ ether:{box:[79.2,1.6,19.5,15.2],glow:'#a7dfff',symbol:'◇'}
+});
+
+function concordeLight(card,src,active){
+ const emblem=card?.type==='unité'&&EMBLEMS[card.faction];
+ if(!active||!emblem||!src)return '';
+ const [x,y,w,h]=emblem.box;
+ const style=`left:${x}%;top:${y}%;width:${w}%;height:${h}%;--concorde-glow:${emblem.glow}`;
+ const crop=`background-image:url('${src}');background-size:${10000/w}% ${10000/h}%;background-position:${100*x/(100-w)}% ${100*y/(100-h)}%`;
+ return `<span class="concorde-emblem-light" data-concorde-faction="${card.faction}" style="${style}" aria-hidden="true"><span class="concorde-emblem-pixels" style="${crop}"></span></span>`;
+}
+
+function concordeDescription(card){
+ if(card?.type!=='unité'||!EMBLEMS[card.faction])return '';
+ return 'Bonus de faction : +1 attaque';
+}
+
+function concordeDetails(card,esc,active=null){
+ const description=concordeDescription(card);if(!description)return '';
+ const state=active===null?'available':active?'active':'inactive';
+ return `<p class="concorde-description" data-concorde-state="${state}"><span class="concorde-symbol" role="img" aria-label="${esc(FACTIONS[card.faction].short)}">${EMBLEMS[card.faction].symbol}</span> ${esc(description)}${active===false?' <span class="concorde-state">(inactif)</span>':''}</p>`;
+}
+
+Object.assign(__exports,{concordeLight,concordeDescription,concordeDetails});
 
 },
 "src/ui/views.js":function(__exports,__load){
@@ -6848,11 +6881,17 @@ const DECK_STYLES=Object.freeze({
  arcanes:{name:'Arcanes',description:'Sorts de contrôle, tireurs et unités mystiques.',size:18,spells:3}
 });
 
+// Huit unités autrefois à délai 0 restent prioritaires dans les propositions de decks.
+// La normalisation de leur délai affiché à 1 ne doit pas rééquilibrer les decks.
+// Exclusivement un critère de classement historique, sans effet sur l'attente de combat.
+const FORMER_ZERO_DELAY_UNITS=new Set(['militia','ranger','wolf','bone','drill','spark','pixie','nightblade']);
+const deckRankingDelay=c=>FORMER_ZERO_DELAY_UNITS.has(c.id)&&c.delay===1?0:c.delay;
 const abilityOf=c=>c.ability||'';
 function unitScore(c,style){
- const base=5+c.attack*1.2+c.hp*.32-c.delay*.6;
+ const rankingDelay=deckRankingDelay(c);
+ const base=5+c.attack*1.2+c.hp*.32-rankingDelay*.6;
  const guard=GUARD_IDS.has(c.id),charge=CHARGE_IDS.has(c.id);
- if(style==='assaut')return base+c.attack*1.8+(c.delay===0?7:0)+(charge?9:0)+(abilityOf(c)==='haste'?5:0)-c.hp*.15;
+ if(style==='assaut')return base+c.attack*1.8+(rankingDelay===0?7:0)+(charge?9:0)+(abilityOf(c)==='haste'?5:0)-c.hp*.15;
  if(style==='rempart')return base+c.hp*.95+(guard?13:0)+(abilityOf(c)==='armor'?7:0)+(abilityOf(c)==='heal'?8:0)+(abilityOf(c)==='ward'?5:0);
  if(style==='arcanes')return base+(c.faction==='ether'?13:0)+(abilityOf(c)==='ranged'?7:0)+(abilityOf(c)==='splash'?7:0)+(abilityOf(c)==='inspire'?3:0);
  return base+(guard?4:0)+(charge?3:0)+(abilityOf(c)==='ranged'?4:0)+(abilityOf(c)==='heal'?5:0);
@@ -6879,7 +6918,7 @@ function deckOverview(deck){
  const counts={},factions={};let units=0,spells=0,guards=0,quick=0;
  for(const id of deck||[]){const c=CARDS[id];if(!c)continue;
   counts[id]=(counts[id]||0)+1;
-  if(c.type==='sort')spells++;else{units++;factions[c.faction]=(factions[c.faction]||0)+1;if(GUARD_IDS.has(id))guards++;if(c.delay===0)quick++;}
+  if(c.type==='sort')spells++;else{units++;factions[c.faction]=(factions[c.faction]||0)+1;if(GUARD_IDS.has(id))guards++;if(c.delay===1)quick++;}
  }
  const dominant=Object.entries(factions).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))[0]?.[0]||null;
  return {total:units+spells,units,spells,guards,quick,dominant,counts};
@@ -6939,7 +6978,7 @@ function renderGuidePage({ btn, previousGameAvailable }) {
       ],
       [
         'Activez une formation',
-        'Placez au moins deux créatures du même Ordre sur une même ligne : chacune gagne +1 attaque tant que la formation tient. Ce bonus est visible avec ✦ Concorde et fonctionne aussi pour les ennemis.'
+        'Placez au moins deux créatures du même Ordre sur une même ligne : chacune gagne +1 attaque tant que la formation tient. La carte elle-même compte parmi les deux ; davantage de créatures ne porte pas ce bonus au-delà de +1. L’emblème déjà peint en haut à droite de la carte s’éclaire quand Concorde est actif, aussi chez les ennemis. La fiche indique le bonus et son état.'
       ],
       [
         'Choisissez vos talents',
@@ -7017,7 +7056,7 @@ function createBattleView(getState, { btn, cardUI, esc }) {
     const rallied = u && u.rallyUntil >= battle.round ? 1 : 0;
     const targeting=selection?spellCardState(selection,u.uid):null;
     const attack = u ? u.atk + concord + rallied : 0;
-    return `<div class="unit-on-board ${u.side === 'e' ? 'enemy' : 'ally'} ${silent ? 'silenced' : ''}" data-actor-id="${u.uid}" data-facing="${u.side === 'p' ? 'right' : 'left'}" data-animation-state="idle" data-owner="${u.side}" data-rarity="${esc(card.rarity)}" style="--tone:${FACTIONS[card.faction].tone}" data-unit-summary="${u.side === 'p' ? 'Votre unité' : 'Unité adverse'} · ${esc(FACTIONS[card.faction].name)} · ${esc(card.rarity)} · ${esc(card.name)} · ${esc(cardTraits(u.id).join(', '))} · Attaque ${attack}${concord ? ' (dont +1 Concorde)' : ''}${rallied ? ' (dont +1 Ralliement)' : ''} · PV ${u.hp}/${u.maxhp}${u.barrier ? ' · Barrière ' + u.barrier : ''}${silent ? ' · Silence : ' + remaining + ' résolution(s)' : ''}">${silent ? `<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>` : ''}${concord ? '<div class="formation-badge" aria-label="Concorde de faction active">✦ Concorde</div>' : ''}${boardCard(u, attack, selection?{...targeting,lane}:null,battle.round)}</div>`;
+    return `<div class="unit-on-board ${u.side === 'e' ? 'enemy' : 'ally'} ${silent ? 'silenced' : ''}" data-actor-id="${u.uid}" data-facing="${u.side === 'p' ? 'right' : 'left'}" data-animation-state="idle" data-owner="${u.side}" data-rarity="${esc(card.rarity)}" style="--tone:${FACTIONS[card.faction].tone}" data-unit-summary="${u.side === 'p' ? 'Votre unité' : 'Unité adverse'} · ${esc(FACTIONS[card.faction].name)} · ${esc(card.rarity)} · ${esc(card.name)} · ${esc(cardTraits(u.id).join(', '))} · Attaque ${attack}${concord ? ' (dont +1 Concorde)' : ''}${rallied ? ' (dont +1 Ralliement)' : ''} · PV ${u.hp}/${u.maxhp}${u.barrier ? ' · Barrière ' + u.barrier : ''}${silent ? ' · Silence : ' + remaining + ' résolution(s)' : ''}">${silent ? `<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>` : ''}${boardCard(u, attack, selection?{...targeting,lane}:null,battle.round,!!concord)}</div>`;
   }
 
   function battleCell(u, lane, col, visualLane = null) {
@@ -7072,7 +7111,7 @@ function createBattleView(getState, { btn, cardUI, esc }) {
  <p class="arena-scroll-hint">Sur petit écran, faites glisser le plateau pour voir toutes les cases. Les couronnes sont hors de la grille.</p><div class="vfx-controls"><span>Attaques, déplacements et effets du combat.</span><button type="button" class="vfx-toggle" data-action="toggle-animations" aria-pressed="${animationsEnabled}">${animationsEnabled ? '✦ ' : ''}Animations ${animationsEnabled ? 'activées' : 'désactivées'}</button></div>
  ${battle.mode === 'dungeon' ? `<div class="dungeon-battle-banner">♛ DONJON · ${battle.dungeonBonus ? 'Épreuve bonus' : 'Salle ' + (battle.dungeonStage + 1) + '/3'} · Les PV du héros sont conservés entre les combats (+6 PV après victoire).</div>` : ''}
  <p class="control-tip">⊘ Silence : capacités déclenchées suspendues, attaques et traits passifs conservés. ✧ Téléportation : autre ligne, même colonne. ⌁ Pièges publics : déclenchés à l’arrivée d’un ennemi, deux par camp. ◷ Tempo : accélérez vos cartes ou ralentissez une carte adverse.</p>${preview ? `<p class="teleport-preview" role="status">${preview}</p>` : ''}
- <p class="formation-tip">✦ CONCORDE : deux alliés du même Ordre gagnent +1 attaque. ⚡ CHARGE : +2 attaque après déplacement. ↶ RIPOSTE : 2 dégâts avant armure, une fois par tour au contact.</p>
+ <p class="formation-tip">✦ CONCORDE : deux alliés du même Ordre sur la même ligne gagnent chacun +1 attaque ; leur emblème s’éclaire. ⚡ CHARGE : +2 attaque après déplacement. ↶ RIPOSTE : 2 dégâts avant armure, une fois par tour au contact.</p>
  <div class="battle-tip"><span>← VOTRE COURONNE · VOS UNITÉS AVANCENT →</span><span>← L’ENNEMI AVANCE · COURONNE ADVERSE →</span></div>
  ${immersive ? '' : '</section>'}<div class="combat-hand-dock" role="region" aria-label="Main de cartes et actions de combat"><div class="hand-panel"><div class="combat-hand-tray"><div class="hand-header"><div><div class="section-caption">Votre main · ${p.hand.length} cartes</div><div class="selection-guide">${selectedCard >= 0 ? (selection?'✦ Sort sélectionné : cliquez une cible, puis confirmez.':'✦ Carte sélectionnée : choisissez une des trois premières cases libres.') : 'Survolez pour lire ; cliquez pour sélectionner puis choisissez une case de départ.'}</div></div><span class="pill">${p.cardsPlayed}/2 jouées</span></div><div class="hand">${p.hand.map((c, i) => cardUI(c.id, { compact: true, index: i, select: selectedCard === i, cooldown: c.wait })).join('') || '<div class="hint">Votre main est vide. Terminez le tour.</div>'}</div></div>
  ${battleActions(immersive)}</div></div>${immersive ? '</section>' : ''}${inspectionPanel}</div>`;
@@ -7224,15 +7263,15 @@ const {generatedCardFace}=__load("src/ui/generated-card.js");
 // Présentation des vraies unités sur leurs cases. Ni règles, ni partie préfabriquée.
 const {CARDS,FACTIONS}=__load("src/data.js");
 const {visualFor,artSrc,cardTemplateFor}=__load("src/visuals.js");
-// Deux silhouettes distinctes : le camp reste lisible sans dépendre de la couleur.
+// Rond allié et losange adverse : deux petits repères sans dépendre de la couleur.
 function campSeal(side){
  const enemy=side==='e';
- return `<svg class="board-camp-seal" data-camp="${enemy?'e':'p'}" viewBox="0 0 24 28" aria-hidden="true" focusable="false"><path class="camp-seal-body" d="${enemy?'M12 1 23 14 12 27 1 14Z':'M2 2H22V13C22 20 17 24 12 27 7 24 2 20 2 13Z'}"/><path class="camp-seal-mark" d="${enemy?'M8 9 16 19M16 9 8 19':'M7 11 12 16 17 11'}"/></svg>`;
+ return `<svg class="board-camp-seal" data-camp="${enemy?'e':'p'}" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path class="camp-seal-body" d="${enemy?'M6 1 11 6 6 11 1 6Z':'M6 1a5 5 0 1 0 0 10a5 5 0 1 0 0-10Z'}"/></svg>`;
 }
-function boardCard(u,attack=u.atk,targeting=null,round=0){
+function boardCard(u,attack=u.atk,targeting=null,round=0,concordeActive=false){
  const c=CARDS[u.id],v=visualFor(c,{cards:true});
- return `<button type="button" class="board-card ${targeting?(targeting.valid?'spell-eligible':'spell-forbidden'):''} ${u.barrier>0?'protected-card':''} ${targeting?.affected?'spell-affected':''} ${cardTemplateFor(c)?'generated-board':''}" data-unit-id="${esc(u.uid)}" ${targeting?`data-action="${targeting.valid?'spell-target':'spell-invalid'}" data-lane="${targeting.lane}" aria-disabled="${!targeting.valid}"`: ''} aria-controls="hand-card-inspection" aria-expanded="false" data-card-id="${u.id}" data-side="${u.side}" aria-label="${u.side==='e'?'Unité adverse':'Votre unité'}, ${esc(c.name)} : attaque ${attack}, vie ${u.hp} sur ${u.maxhp}${targeting?(targeting.valid?', Cible autorisée':', Cible interdite'):''}">
- ${cardTemplateFor(c)?generatedCardFace(c,{stats:{atk:attack,hp:u.hp},delay:0,kind:'deployed',board:true,esc}):` <img class="board-card-art" src="${artSrc(v.art)}" alt="" draggable="false"><span class="board-card-order">${esc(FACTIONS[c.faction].short)}</span>
+ return `<button type="button" class="board-card ${targeting?(targeting.valid?'spell-eligible':'spell-forbidden'):''} ${u.barrier>0?'protected-card':''} ${targeting?.affected?'spell-affected':''} ${cardTemplateFor(c)?'generated-board':''}" data-unit-id="${esc(u.uid)}" ${targeting?`data-action="${targeting.valid?'spell-target':'spell-invalid'}" data-lane="${targeting.lane}" aria-disabled="${!targeting.valid}"`: ''} aria-controls="hand-card-inspection" aria-expanded="false" data-card-id="${u.id}" data-side="${u.side}" aria-label="${u.side==='e'?'Unité adverse':'Votre unité'}, ${esc(c.name)} : attaque ${attack}, vie ${u.hp} sur ${u.maxhp}${concordeActive?', Concorde active : +1 ATQ incluse':''}${targeting?(targeting.valid?', Cible autorisée':', Cible interdite'):''}">
+ ${cardTemplateFor(c)?generatedCardFace(c,{stats:{atk:attack,hp:u.hp},delay:0,kind:'deployed',board:true,concordeActive,esc}):` <img class="board-card-art" src="${artSrc(v.art)}" alt="" draggable="false"><span class="board-card-order">${esc(FACTIONS[c.faction].short)}</span>
  <span class="board-card-name">${esc(c.name)}</span><span class="board-card-stats"><span>⚔ <b>${attack}</b></span><span>♥ <b>${u.hp}</b></span></span>`}
 
  ${campSeal(u.side)}${unitStatusBadges(u,round)}</button>`;
@@ -7665,6 +7704,7 @@ Object.assign(__exports,{combatEffectProfile,createCombatEffects});
 },
 "src/ui/card-inspection.js":function(__exports,__load){
 const {generatedCardFace}=__load("src/ui/generated-card.js");
+const {concordeDetails}=__load("src/ui/concorde.js");
 // Fiche partagée main/plateau : lecture et état éphémère, aucune action de jeu.
 const {CARDS,FACTIONS,CLASSES,cardTraits}=__load("src/data.js");
 const {unitStats}=__load("src/engine/unit-stats.js");
@@ -7676,7 +7716,7 @@ function boardInspectionData(battle,uid){
   const u=battle.board[lane][col];if(!u||String(u.uid)!==String(uid))continue;
   const concord=formationBonus(battle,lane,u),rallied=u.rallyUntil>=battle.round?1:0;
   const statuses=[concord?'Concorde +1 ATQ':'',rallied?'Ralliement +1 ATQ':'',u.armor?'Armure '+u.armor:'',u.barrier?'Barrière '+u.barrier:'',u.poisonTurns?'Poison '+u.poisonTurns+' tour(s)':'',u.stun?'Immobilisation '+u.stun:'',silenced(battle,u)?'Silence : capacités déclenchées suspendues':''].filter(Boolean);
-  return {card:CARDS[u.id],entry:{wait:0},stats:{atk:u.atk+concord+rallied,hp:u.hp,maxhp:u.maxhp,bonuses:[]},board:{side:u.side,lane,col,statuses}};
+  return {card:CARDS[u.id],entry:{wait:0},stats:{atk:u.atk+concord+rallied,hp:u.hp,maxhp:u.maxhp,bonuses:[]},board:{side:u.side,lane,col,statuses,concordeActive:!!concord}};
  }
  return null;
 }
@@ -7687,8 +7727,9 @@ function cardInspectionContent(card,entry,stats,esc,{board=null}={}){
  const readiness=board?`${board.side==='p'?'Votre unité':'Unité adverse'} · Ligne ${board.lane+1}, case ${board.col}`:entry.wait>0?'Attente '+entry.wait+' tour'+(entry.wait>1?'s':''):'Prête à jouer';
  const heading=`<div class="inspection-heading"><span class="inspection-context">${board?'SUR LE PLATEAU':'DANS VOTRE MAIN'}</span><button type="button" data-action="close-inspection" aria-label="Fermer la fiche">×</button></div>`;
  const statistics=stats?`<div class="inspection-stats">${board?'En combat':'À l’invocation'} : <b>ATQ ${stats.atk} / PV ${board?stats.hp+'/':''}${stats.maxhp}</b></div>`:'';
- const identity=`<div class="inspection-feature ${cardTemplateFor(card)?'inspection-generated-feature':''}">${cardTemplateFor(card)?generatedCardFace(card,{stats,delay:board?0:entry.wait,kind:board?'deployed':'remaining',esc}):`<img class="inspection-art" src="${artSrc(visualFor(card,{cards:true}).art)}" alt="" data-artwork-status="placeholder" draggable="false">`}<div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span><span class="inspection-rarity">${esc(card.rarity)} · ${esc(card.type)}</span><div class="inspection-readiness">${esc(readiness)}</div>${statistics}</div></div>`;
+ const identity=`<div class="inspection-feature ${cardTemplateFor(card)?'inspection-generated-feature':''}">${cardTemplateFor(card)?generatedCardFace(card,{stats,delay:board?0:entry.wait,kind:board?'deployed':'remaining',concordeActive:!!board?.concordeActive,esc}):`<img class="inspection-art" src="${artSrc(visualFor(card,{cards:true}).art)}" alt="" data-artwork-status="placeholder" draggable="false">`}<div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span><span class="inspection-rarity">${esc(card.rarity)} · ${esc(card.type)}</span><div class="inspection-readiness">${esc(readiness)}</div>${statistics}</div></div>`;
  const body=`<div class="inspection-body"><p class="inspection-description">${esc(card.description)}</p>
+  ${concordeDetails(card,esc,board?board.concordeActive:null)}
   <div class="inspection-summary">${esc(faction.name)} · ${esc(card.rarity)}${card.heroClass?' · '+esc(CLASSES[card.heroClass].name):''} · ${esc(readiness)}</div>
   ${traits.length?`<div class="inspection-traits">${traits.map(t=>`<span>${esc(t)}</span>`).join(' · ')}</div>`:''}
   ${board?.statuses.length?`<div class="inspection-statuses">${board.statuses.map(esc).join(' · ')}</div>`:''}
@@ -7711,7 +7752,7 @@ function previewPosition(anchor,size,viewport,kind){
   if(anchor.right+gap+size.width<=viewport.width-margin)x=anchor.right+gap;
   else if(anchor.left-size.width-gap>=margin)x=anchor.left-size.width-gap;
  }
- return {left:clamp(x,viewport.width-size.width),top:clamp(y,viewport.height-size.height)};
+ return {left:clamp(x,viewport.width-size.width),top:Math.max(viewport.topInset||margin,clamp(y,viewport.height-size.height))};
 }
 
 function createCardInspection(getContext,esc){
@@ -7731,14 +7772,24 @@ function createCardInspection(getContext,esc){
  function position(){
   const el=panel();if(!el||el.hidden||!trigger?.isConnected)return;
   const anchor=trigger.getBoundingClientRect();
-  el.style.removeProperty('--preview-max-height');
+  // Les descriptions peuvent agrandir la fiche : garder le menu Citadelle libre.
+  const titlebar=document.querySelector('.combat-titlebar')?.getBoundingClientRect();
+  const topInset=Math.max(12,titlebar?.bottom+8||12);
+  let availableHeight=innerHeight-topInset-12;
+  el.style.setProperty('--preview-max-height',availableHeight+'px');
   const size=el.getBoundingClientRect();
+  const beside=anchor.right+12+size.width<=innerWidth-12||anchor.left-size.width-12>=12;
+  const handTop=document.querySelector('.combat-hand-tray')?.getBoundingClientRect().top;
+  if(!beside&&handTop>topInset+180){
+   availableHeight=Math.min(availableHeight,handTop-topInset-12);
+   el.style.setProperty('--preview-max-height',availableHeight+'px');
+  }
   // Sur écran étroit, une grande fiche de main doit tenir au-dessus de la carte
   // lorsqu'aucun côté n'a assez de place : elle ne doit pas bloquer sa sélection.
-  if(current.kind==='hand'&&anchor.top>=324&&anchor.right+12+size.width>innerWidth-12&&anchor.left-size.width-12<12){
-   el.style.setProperty('--preview-max-height',(anchor.top-24)+'px');
+  if(current.kind==='hand'&&anchor.top>=324&&!beside){
+   el.style.setProperty('--preview-max-height',Math.min(availableHeight,anchor.top-topInset-12)+'px');
   }
-  const pos=previewPosition(anchor,el.getBoundingClientRect(),{width:innerWidth,height:innerHeight},current.kind);
+  const pos=previewPosition(anchor,el.getBoundingClientRect(),{width:innerWidth,height:innerHeight,topInset},current.kind);
   el.style.left=pos.left+'px';el.style.top=pos.top+'px';
  }
  function show(request){
