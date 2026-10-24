@@ -14,6 +14,16 @@
 
 **Règle globale de transmission des capacités (validée en conception) :** à chaque rareté supérieure, **la carte garde toutes les capacités et bonus déjà acquis**, et gagne une nouvelle capacité ou une amélioration de l'une des anciennes. **Une amélioration remplace sa valeur précédente**, elle ne s'y ajoute pas (réduction du premier coup de 1 → 2 → 3 dégâts = réduction de 3, pas 6). Les **effets distincts** et les bonus permanents restent présents aux rangs suivants, sauf décision expresse contraire. Ex. Milicien Éveillé : réduction de 3 dégâts du premier coup reçu (une fois/invocation), riposte au contact égale à son ATQ effective (une fois/invocation), bonus de +3 PV maximum débloqué au Légendaire et Dernier Rempart (survit une fois avec 5 PV au plus). **Définir le nouveau gain par rang dans les cases de la matrice ; détailler la combinaison totale dans la fiche**, et ne pas recopier toutes les capacités héritées en gros texte sur la petite carte. Statut : décision de conception, **non implémentée dans le moteur**.
 
+### Décision transversale — délai minimum de 1 (24 octobre 2026)
+
+**Validé par le propriétaire :** **aucune carte ne doit avoir un délai de base inférieur à 1**. Toutes les cartes actuellement à `delay: 0` passent à `delay: 1` ; les valeurs **2, 3, 4 et 5 restent inchangées** jusqu'à l'examen de leur carte. Le délai devra figurer dans **chaque fiche d'unité** et être décidé à chaque évolution, comme l'ATQ, les PV, la portée et le déplacement.
+
+**Huit unités concernées par le catalogue actuel (sur 76 cartes) :** Milicien de l'Aube (`militia`), Éclaireuse sylvestre (`ranger`), Loup des Brumes (`wolf`), Guerrier d'ossements (`bone`), Foreur de fer (`drill`), Feu follet (`spark`), Luciole des Épineuses (`pixie`), Lame nocturne (`nightblade`). **Aucun sort** ne possède actuellement un délai 0.
+
+**Attention à la mécanique effective :** à la pioche, `src/engine/battle.js` calcule l'attente initiale avec `Math.max(0, CARDS[id].delay - 1)`. **0 et 1 conduisent tous deux à une attente initiale de zéro** : le changement du chiffre n'invente donc pas un tour d'attente supplémentaire. Ne pas changer cette règle historique sans décision séparée et tests de compatibilité.
+
+**Statut : règle validée en conception.** Le changement des valeurs du catalogue, les tests et la régénération de l'unique `JOUER.html` sont à réaliser dans **une PR de gameplay distincte**. Ne pas traiter la PR documentaire nº 41 comme une version déjà publiée. La future revue individuelle de chaque unité portera notamment sur le **délai supérieur ou égal à 1**, plutôt que de donner un délai de 1 à toutes les cartes par défaut.
+
 ### Prérequis obligatoire : déplacement, portée et rôle AVANT les évolutions
 
 **Diagnostic du moteur en production (main `ea1e18c49bcfd291a664dacdf95b4bb5c847af89`, 24 octobre 2026).** Nous avions commencé les capacités par rareté sans documenter systématiquement **déplacement, portée des attaques, portée des effets, statistiques et délai**. Ce tableau établit le **socle réel des 53 unités** ; il ne valide aucune augmentation de vitesse ou de portée. Source : `src/data.js` et `src/engine/battle.js` (déplacement `moveUnits`, attaque `findTarget`) ainsi que `src/engine/battle-control.js`.
@@ -107,20 +117,20 @@
 
 ### Fiche complète du Milicien — mobilité et portée validées en conception
 
-**Méthode :** fixer d'abord le fonctionnement **spatial** de l'unité, puis les statistiques définitives. Le Milicien Commun est **effectivement jouable** avec **2 ATQ, 5 PV, délai 0, déplacement de 1 case en avant par action, attaque de contact à 1 case devant lui sur sa ligne**, sans Vol ni changement de ligne, et **sans Garde**. En présence d'une cible à portée, il cesse d'avancer pour attaquer. Les statistiques évolutives définitives sont **encore à définir** ; les valeurs de base ne sont pas automatiquement reportées à tous les rangs.
+**Méthode :** fixer d'abord le fonctionnement **spatial** de l'unité, puis les statistiques définitives. Dans le moteur actuellement publié, le Milicien Commun possède **2 ATQ, 5 PV, délai 0 (avant le changement prévu à 1), déplacement de 1 case en avant par action, attaque de contact à 1 case devant lui sur sa ligne**, sans Vol ni changement de ligne, et **sans Garde**. En présence d'une cible à portée, il cesse d'avancer pour attaquer. **Décision du propriétaire, 24 octobre 2026 :** Milicien de Commun à Éveillé : **2 ATQ**, **délai minimum 1** ; **5 PV de Commun à Épique**, puis **8 PV de Légendaire à Éveillé** (+3 PV total par rapport à Épique, sans cumul supplémentaire). Ce sont des **statistiques de conception**, non des variantes déjà jouables.
 
 **Décision explicite du propriétaire du 24 octobre 2026 : déplacement de 1 case et portée d'attaque de 1 case devant lui, sur sa ligne, à chacune des six raretés** (Commun, Rare, Épique, Légendaire, Divin, Éveillé). Aucun Vol, aucune Célérité, aucune attaque à distance ni changement de ligne ne sont acquis avec la rareté. **Validé en conception seulement ; non programmé.**
 
 | Rareté | Déplacement | Portée d'attaque | ATQ / PV / délai | Gain ou amélioration propre à la rareté | Statut mobilité/portée |
 |---|---|---|---|---|---|
-| Commun | **1 case, actuel** | **1 case devant, actuelle** | **2 ATQ / 5 PV / délai 0, actuels** | Aucune capacité spéciale | **Vérifié dans le jeu** |
-| Rare | **1 case — validé en conception** | **1 case — validé en conception** | À définir | Réduction de 1 dégât au premier coup reçu, une fois par invocation | **Validé en conception ; non intégré** |
-| Épique | **1 case — validé en conception** | **1 case — validé en conception** | À définir | Réduction portée à 2 dégâts (remplace la valeur 1) | **Validé en conception ; non intégré** |
-| Légendaire | **1 case — validé en conception** | **1 case — validé en conception** | À définir ; **+3 PV max** par rapport au rang Épique | Conserve la réduction de 2 et gagne ce bonus total de PV | **Validé en conception ; non intégré** |
-| Divin | **1 case — validé en conception** | **1 case — validé en conception** | À définir | Réduction portée à 3 ; **Riposte égale à l'ATQ effective**, une fois par invocation et uniquement au contact | **Validé en conception ; non intégré** |
-| Éveillé | **1 case — validé en conception** | **1 case — validé en conception** | À définir | Ajoute **Dernier Rempart** : survie une fois avec **5 PV max** ; conserve réduction 3, riposte et bonus de PV du Légendaire | **Validé en conception ; non intégré** |
+| Commun | **1 case, actuel** | **1 case devant, actuelle** | 2 ATQ / 5 PV / délai 1 **(conception ; moteur actuel : délai 0)** | Aucune capacité spéciale | **Vérifié dans le jeu** |
+| Rare | **1 case — validé en conception** | **1 case — validé en conception** | 2 ATQ / 5 PV / délai 1 **(conception)** | Réduction de 1 dégât au premier coup reçu, une fois par invocation | **Validé en conception ; non intégré** |
+| Épique | **1 case — validé en conception** | **1 case — validé en conception** | 2 ATQ / 5 PV / délai 1 **(conception)** | Réduction portée à 2 dégâts (remplace la valeur 1) | **Validé en conception ; non intégré** |
+| Légendaire | **1 case — validé en conception** | **1 case — validé en conception** | 2 ATQ / 8 PV / délai 1 **(conception)** | Conserve la réduction de 2 et gagne ce bonus total de PV | **Validé en conception ; non intégré** |
+| Divin | **1 case — validé en conception** | **1 case — validé en conception** | 2 ATQ / 8 PV / délai 1 **(conception)** | Réduction portée à 3 ; **Riposte égale à l'ATQ effective**, une fois par invocation et uniquement au contact | **Validé en conception ; non intégré** |
+| Éveillé | **1 case — validé en conception** | **1 case — validé en conception** | 2 ATQ / 8 PV / délai 1 **(conception)** | Ajoute **Dernier Rempart** : survie une fois avec **5 PV max** ; conserve réduction 3, riposte et bonus de PV du Légendaire | **Validé en conception ; non intégré** |
 
-**Prochaine décision distincte :** les **statistiques ATQ/PV/délai des versions Rare à Éveillé** (la Commune possède réellement 2 ATQ, 5 PV et délai 0). Le +3 PV maximum total du Légendaire par rapport à l'Épique est retenu en conception ; il ne fixe pas encore les autres chiffres. Le choix de mobilité/portée est désormais validé, **sans valider les statistiques encore inconnues ni déclencher une modification du moteur ou des sauvegardes**. **Fiche textuelle courte sur la carte**, pouvoirs complets au clic.
+**Les statistiques de conception du Milicien sont désormais validées** : 2 ATQ aux six rangs, 5 PV aux trois premiers, 8 PV à partir du Légendaire, délai 1 à chaque rang. **Les améliorations, bonus de maîtrise, équipement, Forge et réputation restent distincts** et ne sont pas supprimés. Pour le jeu actuel, la mise à 1 du délai des huit cartes initialement à 0 appartient à **une PR de gameplay séparée** ; cela n'implémente pas les cinq raretés futures. Prochaines questions : délai des autres unités unitairement, ordre des effets défensifs, statistiques effectives avec bonus, équilibre. **Fiche textuelle courte sur la carte**, pouvoirs complets au clic.
 
 ### Règle de conception et interface souhaitée
 
