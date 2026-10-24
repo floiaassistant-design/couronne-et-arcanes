@@ -1,0 +1,56 @@
+name: PR44 reconcile latest main (temporary)
+on:
+  push:
+    branches:
+      - fix/minimum-card-delay-one-20261024
+permissions:
+  contents: write
+jobs:
+  reconcile:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout PR branch with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Merge latest main, preserve both documentary changes
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          if git merge --no-commit --no-ff origin/main; then
+            echo 'Automatic merge succeeds'
+          else
+            conflicts="$(git diff --name-only --diff-filter=U)"
+            test -n "$conflicts"
+            while IFS= read -r file; do
+              case "$file" in
+                README.md|CHANGELOG.md)
+                  git checkout --ours -- "$file"
+                  git add -- "$file"
+                  ;;
+                *)
+                  echo "Unexpected conflict: $file" >&2
+                  exit 1
+                  ;;
+              esac
+            done <<< "$conflicts"
+            test -z "$(git diff --name-only --diff-filter=U)"
+          fi
+          grep -q 'Concorde — intégré et publié' README.md
+          grep -q 'délai de base minimum de 1' README.md
+          grep -q 'Intégré et publié — Concorde' CHANGELOG.md
+          grep -q 'Proposition — délai de base minimum 1' CHANGELOG.md
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'chore(pr44): integrer main apres la PR 43 sans perdre les documents'
+      - name: Rebuild offline export and check it is unchanged by the merge
+        run: |
+          set -euo pipefail
+          npm run build
+          git diff --exit-code -- JOUER.html
+      - name: Remove the temporary workflow and push the reconciled PR
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/pr44-merge-main-temporaire.yml
+          git diff --cached --check
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'chore(pr44): retirer le workflow ponctuel de reunion'
+          git push origin HEAD:fix/minimum-card-delay-one-20261024
