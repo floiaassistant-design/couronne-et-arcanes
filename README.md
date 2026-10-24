@@ -55,14 +55,17 @@ La PR nº 42 a été fusionnée sur accord spécifique le 24 octobre 2026, puis
 publiée sur le [jeu en ligne](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site)
 (Sites, version 5). Le déploiement et les fichiers servis ont été vérifiés.
 
-### Affichage simplifié proposé
+### Affichage simplifié — intégré et publié
 
-Les repères deviennent un petit rond bleu pour vos unités et un losange rouge
+Les repères sont un petit rond bleu pour vos unités et un losange rouge
 pour les adversaires, à côté de chaque carte. Les fiches main/plateau/Collection
 affichent une ligne : **☀ Bonus de faction : +1 attaque**, avec le symbole de
 l’Ordre en tête. Le bonus inactif est grisé et marqué « inactif » ; la lumière
-de Concorde sur l’image est conservée. Proposition non fusionnée et non publiée.
-[Périmètre et reprise](docs/REPERES_CAMP_FICHES_2026_10_24.md).
+de Concorde sur l’image est conservée.
+La [PR nº 45](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/45)
+a été fusionnée le 24 octobre 2026. La CI finale et la publication automatique
+Sites version 7 ont été vérifiées dans son bilan.
+[Contrat et reprise](docs/REPERES_CAMP_FICHES_2026_10_24.md).
 
 ## Progression et sauvegarde
 
@@ -102,8 +105,8 @@ chaque fusion exige un accord explicite et spécifique du propriétaire.
 
 ## Graphismes et publication
 
-Les 76 images importées, le plateau peint, les cadres et leurs reçus restent
-inchangés par la proposition de ciblage. L’atelier est
+Les 76 images importées, le plateau peint, les cadres et leurs reçus ont été
+préservés par les PR nº 44 et 45. L’atelier est
 [floiaassistant-design/couronne-et-arcanes-art](https://github.com/floiaassistant-design/couronne-et-arcanes-art).
 Toute nouvelle image demande son mapping et sa provenance vérifiés ; aucun
 ancien lot ne doit être restauré implicitement.
