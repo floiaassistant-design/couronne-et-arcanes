@@ -20,7 +20,9 @@
  color:#e6dcc6;
  margin:9px 0 0;
 }
-.concorde-state {color:#f6dfaa}
+.concorde-symbol {display:inline-block;margin-right:3px}
+.concorde-description[data-concorde-state="active"] {color:#f6dfaa}
+.concorde-description[data-concorde-state="inactive"] {color:#a8b4bd}
 @media (forced-colors:active) {
  .concorde-emblem-light {filter:none}
 }

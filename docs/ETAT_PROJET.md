@@ -1,49 +1,40 @@
 # État courant — 24 octobre 2026
 
-## Intégré sur GitHub
+## Main et propositions
 
-Main vérifié après fusion autorisée de la [PR nº 42](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/42) :
-`ea1e18c49bcfd291a664dacdf95b4bb5c847af89`, arbre
-`6ca0680d09f3e560059d10420ed77014c4951619`.
-Le ciblage des sorts, le lecteur d’effets, le laboratoire, les 76 cartes
-illustrées et l’affichage Concorde sont intégrés. Un jeu web et un seul JOUER
-hors ligne ; profils, progression et anciennes batailles 3×5 conservés.
+Main vérifié : `3beb7346cc6b881ad6ea123087309c853d51162b`, arbre
+`e4119167750232e3cfdfdfdb475926fabf44c57a`, après la fusion autorisée de la
+[PR nº 44](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/44).
+Ciblage direct, lecteur d’effets, laboratoire, 76 cartes et Concorde sont intégrés.
+Le délai de base minimum est 1 ; attente à la pioche et decks historiques conservés.
+Un seul jeu web et un seul export JOUER, anciennes sauvegardes 3×5 compatibles.
 
-## Concorde livré
+Proposition actuelle : `fix/discreet-camp-markers-faction-summary-20261024`.
+Rond bleu allié et losange rouge adverse à côté des cartes ; fiches réduites à
+« ☀ Bonus de faction : +1 attaque », symbole de l’Ordre en tête et état inactif grisé.
+La lumière sur l’emblème peint est conservée. Aucune règle, image, progression
+ou sauvegarde modifiée. **Non fusionné et non publié.**
+[Contrat et reprise](REPERES_CAMP_FICHES_2026_10_24.md).
 
-L’emblème déjà peint en haut à droite s’éclaire de façon fixe lorsque le moteur
-accorde Concorde. Le badge flottant est retiré. Les fiches main/plateau/Collection
-expliquent le bonus de faction ; la fiche réserve Citadelle sur petit écran.
-La fusion de cette variante a été autorisée spécifiquement par le propriétaire.
-Aucun emblème neuf créé ou importé, aucun fichier de l’atelier modifié.
-[Contrat, contrôles et bilan de livraison](CONCORDE_2026_10_24.md).
-
-Les validations de conception Garde, Impact de zone, évolutions et Milicien
-suivies dans Notion ne sont pas implémentées par cette livraison.
 L’audit documentaire [nº 41](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/41)
-reste indépendant et non fusionné.
+reste indépendant, ouvert et non fusionné. Les validations Garde, Impact de zone,
+évolutions et Milicien suivies dans Notion ne sont pas implémentées ici.
 
-## Vérifications et reprise
+## Contrôles et prochaine étape
 
-330 tests, 60 parités, builds et parcours bureau/mobile/ancien 3×5 réussis.
-La [CI complète](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40077509046)
-et l’[assemblage web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40077509054)
-ont validé le même arbre que ce main ; aucune suite retirée.
-JOUER distant et local identiques, blob `1e2efb67929e1c0d50c93914c288ef60ce957056`.
-Les contrôles automatisés ne remplacent pas un test sur téléphone physique ou
-un équilibrage humain exhaustif. Relire main et les PR réelles avant de reprendre.
-Chaque future PR nécessite son propre accord explicite de fusion.
+Les résultats sur la tête exacte sont consignés dans la PR proposée ; les anciens
+bilans de Concorde ne valident pas automatiquement cette nouvelle présentation.
+L’arbre de départ local a été vérifié identique au main officiel, JOUER compris.
+Relire le diff complet, le main et la CI avant toute future fusion, qui exige
+l’accord spécifique du propriétaire. Aucun déploiement demandé par cette PR.
 
-## Publication vérifiée
+## Publication
 
-[Jeu en ligne](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) :
-Sites version 5, publication automatique du main ci-dessus, déploiement
-`appgdep_6adc74e226408191a465f3690ac2a758` terminé avec `succeeded`
-le 24 octobre 2026 à 09:05:46 UTC. Les 147 fichiers du commit de diffusion
-ont été comparés au paquet canonique ; les 14 fichiers nouveaux ou modifiés
-ont aussi été comparés par HTTP sans cache, tous identiques.
+[Jeu en ligne](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site).
+La publication publique n’a pas été recontrôlée pendant cette préparation ; ne
+pas confondre les captures locales avec la version du Site. Le bilan vérifié de
+Concorde est conservé dans [son contrat](CONCORDE_2026_10_24.md).
 
-L’unique export hors ligne demeure dans GitHub ; seul le miroir Sites omet
-JOUER.html, trop gros pour son dépôt de diffusion. Le reçu garde son empreinte.
-Le Site, son audience publique et l’automatisation existante sont conservés.
-[Procédure et provenance](PUBLICATION_WEB_2026_10_23.md).
+Réutiliser le Site et son automatisation :
+[procédure de publication](PUBLICATION_WEB_2026_10_23.md). GitHub reste la source
+officielle ; JOUER est généré, et seul le miroir Sites peut l’omettre pour sa taille.

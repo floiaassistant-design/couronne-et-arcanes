@@ -1,10 +1,19 @@
-## Proposition — délai de base minimum 1 (24 octobre 2026)
+## Proposition — repères de camp discrets et fiche courte (24 octobre 2026)
+
+- Rond bleu allié et losange rouge adverse de 7 px, à gauche des cartes : retrait
+  des grands blasons superposés au bord supérieur. Deux formes et libellés accessibles.
+- Résumé partagé : « ☀ Bonus de faction : +1 attaque », symbole adapté à l’Ordre,
+  état inactif grisé et explicite. Lumière de Concorde sur l’emblème peint conservée.
+- Aucun changement des règles, statistiques, illustrations ou sauvegardes.
+  Export JOUER régénéré ; proposition en attente de revue, sans fusion/publication.
+
+## Intégré — délai de base minimum 1 (24 octobre 2026)
 
 - Huit unités passent du délai 0 à 1 ; les 68 autres cartes, les capacités, l'IA de combat, le déplacement, les récompenses et les sauvegardes restent inchangés.
 - L'attente de pioche reste `max(0, délai - 1)` : les huit cartes restent immédiatement jouables.
 - Les propositions de decks conservent les classements historiques Assaut, Rempart, Arcanes et Équilibré ; un test de référence évite les changements silencieux.
 - `JOUER.html` doit rester généré depuis les sources, jamais modifié manuellement ; contrôle de la CI finale avant fusion.
-- PR nº 44 en préparation, distincte de Concorde déjà intégrée et publiée (PR nº 42, documentation PR nº 43). Aucune fusion ni publication anticipée.
+- PR nº 44 fusionnée dans `3beb7346cc6b881ad6ea123087309c853d51162b`, distincte de Concorde (PR nº 42, documentation PR nº 43). Publication non recontrôlée pendant cette préparation.
 
 ## Intégré et publié — Concorde sur les emblèmes existants, 24 octobre 2026
 

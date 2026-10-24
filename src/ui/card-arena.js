@@ -4,10 +4,10 @@ import {generatedCardFace} from './generated-card.js';
 // Présentation des vraies unités sur leurs cases. Ni règles, ni partie préfabriquée.
 import {CARDS,FACTIONS} from '../data.js';
 import {visualFor,artSrc,cardTemplateFor} from '../visuals.js';
-// Deux silhouettes distinctes : le camp reste lisible sans dépendre de la couleur.
+// Rond allié et losange adverse : deux petits repères sans dépendre de la couleur.
 export function campSeal(side){
  const enemy=side==='e';
- return `<svg class="board-camp-seal" data-camp="${enemy?'e':'p'}" viewBox="0 0 24 28" aria-hidden="true" focusable="false"><path class="camp-seal-body" d="${enemy?'M12 1 23 14 12 27 1 14Z':'M2 2H22V13C22 20 17 24 12 27 7 24 2 20 2 13Z'}"/><path class="camp-seal-mark" d="${enemy?'M8 9 16 19M16 9 8 19':'M7 11 12 16 17 11'}"/></svg>`;
+ return `<svg class="board-camp-seal" data-camp="${enemy?'e':'p'}" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path class="camp-seal-body" d="${enemy?'M6 1 11 6 6 11 1 6Z':'M6 1a5 5 0 1 0 0 10a5 5 0 1 0 0-10Z'}"/></svg>`;
 }
 export function boardCard(u,attack=u.atk,targeting=null,round=0,concordeActive=false){
  const c=CARDS[u.id],v=visualFor(c,{cards:true});

@@ -1,3 +1,15 @@
+# Proposition — repères discrets et résumé de faction, 24 octobre 2026
+
+`ui/card-arena.js` garde `campSeal` partagé par le plateau et sa légende : rond
+allié et losange adverse. `assets/card-arena.css` réduit ces SVG et les place à
+gauche, hors des cartes. Aucun module ni ressource graphique supplémentaire.
+`ui/concorde.js` associe le symbole de chaque Ordre au résumé « Bonus de faction :
++1 attaque ». Le même lecteur sert main, plateau et Collection ; seul le modèle
+du plateau fournit l’état actif/inactif. Les coordonnées et la lumière des emblèmes
+peints sont conservées. Règles, IA, événements et stockage inchangés.
+La même cascade et le même builder alimentent le web et l’unique JOUER.html.
+[Contrat et reprise](REPERES_CAMP_FICHES_2026_10_24.md). Proposition non fusionnée.
+
 # Architecture intégrée — Concorde, 24 octobre 2026
 
 `ui/concorde.js` porte le rendu pur de la lumière sur les emblèmes déjà peints

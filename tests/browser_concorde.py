@@ -45,6 +45,10 @@ async def run(browser,label,viewport,legacy=False,reduced=False,off=False):
    assert await light.evaluate('e=>getComputedStyle(e).pointerEvents')=='none'
    assert await light.evaluate('e=>e.getAnimations().length')==0
    assert await light.evaluate('e=>{const a=e.getBoundingClientRect(),b=e.closest(".board-card").querySelector(".board-camp-seal").getBoundingClientRect();return a.right<=b.x||a.x>=b.right||a.bottom<=b.y||a.y>=b.bottom}'),'Le sceau de camp doit laisser le logo visible'
+   marker=card.locator('.board-camp-seal')
+   assert await marker.evaluate('e=>getComputedStyle(e).width')=='7px'
+   assert await marker.evaluate('e=>{const a=e.getBoundingClientRect(),b=e.closest(".board-card").getBoundingClientRect();return a.right<b.left}'),'Le repère doit rester à côté de la carte'
+   assert await marker.evaluate('e=>getComputedStyle(e).pointerEvents')=='none'
    assert await light.evaluate('e=>{const a=e.getBoundingClientRect(),b=e.closest(".generated-face").getBoundingClientRect();return a.x>=b.x&&a.y>=b.y&&a.right<=b.right+1&&a.bottom<=b.bottom+1}')
    assert await light.locator('.concorde-emblem-pixels').evaluate('e=>getComputedStyle(e).backgroundImage.includes(e.closest(".generated-face").querySelector("img").src)')
    expected=await card.evaluate('e=>{const u=battle.board.flat().find(u=>u&&String(u.uid)===e.dataset.unitId);return u.atk+1}')
@@ -56,8 +60,9 @@ async def run(browser,label,viewport,legacy=False,reduced=False,off=False):
   panel=page.locator('#hand-card-inspection')
   assert await panel.is_visible()
   assert await panel.locator('.concorde-emblem-light').count()==1
-  assert 'Actif : +1 ATQ incluse' in await panel.inner_text()
-  assert 'La carte elle-même compte parmi les deux' in await panel.inner_text()
+  symbols={'aube':'☀','sylve':'❧','ombre':'☾','forge':'⚒','ether':'◇'}
+  assert await panel.locator('.concorde-description').inner_text()==symbols[faction]+' Bonus de faction : +1 attaque'
+  assert await panel.locator('.concorde-description').get_attribute('data-concorde-state')=='active'
   assert await page.evaluate('JSON.stringify({profile,battle})')==before
   assert await panel.evaluate('e=>{const r=e.getBoundingClientRect();return r.x>=0&&r.y>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1}')
   await page.screenshot(path=f'/tmp/ca-concorde-{label}-{faction}-fiche.png')
@@ -75,6 +80,13 @@ async def run(browser,label,viewport,legacy=False,reduced=False,off=False):
   await page.reload()
   assert await page.evaluate('(k)=>localStorage.getItem(k)',KEY)==saved
   assert await page.locator('.board-card .concorde-emblem-light').count()==4
+  assert await page.locator('.board-card>.board-camp-seal').evaluate_all('''els=>els.every(e=>{
+   const a=e.getBoundingClientRect();
+   return [...document.querySelectorAll('.board-card')].every(card=>{
+    const b=card.getBoundingClientRect();
+    return a.right<=b.left||a.left>=b.right||a.bottom<=b.top||a.top>=b.bottom;
+   });
+  })'''),'Un repère ne doit recouvrir aucune carte voisine'
   # Vrai sort mortel : l'indicateur s'éteint et l'ATQ revient à sa valeur réelle.
   await page.locator('.hand-card').click()
   await page.locator('.board-card[data-unit-id="901"]').click()
@@ -84,6 +96,11 @@ async def run(browser,label,viewport,legacy=False,reduced=False,off=False):
   remaining=page.locator('.board-card[data-side="e"]');assert await remaining.count()==1
   assert await remaining.locator('.stat.atk b').inner_text()==str(await remaining.evaluate('e=>battle.board.flat().find(u=>u&&String(u.uid)===e.dataset.unitId).atk'))
   assert 'concorde' not in json.loads(await page.evaluate('(k)=>localStorage.getItem(k)',KEY))
+  await page.keyboard.press('Tab')
+  await remaining.focus()
+  assert await panel.locator('.concorde-description').get_attribute('data-concorde-state')=='inactive'
+  assert await panel.locator('.concorde-description').inner_text()==symbols[faction]+' Bonus de faction : +1 attaque (inactif)'
+  await page.keyboard.press('Escape');await page.mouse.move(1,1)
   await page.screenshot(path=f'/tmp/ca-concorde-{label}-{faction}-plateau.png')
  assert not errors,errors
  assert not network,network

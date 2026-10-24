@@ -4,11 +4,11 @@ import {FACTIONS} from '../data.js';
 // Zones des emblèmes déjà peints, en pourcentage du cadre complet 768 × 1152.
 // Une copie locale de ces pixels s'éclaire ; aucune nouvelle illustration.
 const EMBLEMS=Object.freeze({
- aube:{box:[82,2.2,16,11],glow:'#ffe3a0'},
- sylve:{box:[79.5,2,19,14.5],glow:'#bce6a0'},
- ombre:{box:[81,1.8,18,12],glow:'#d8d0f0'},
- forge:{box:[78.5,1.7,20,13.5],glow:'#ffd09b'},
- ether:{box:[79.2,1.6,19.5,15.2],glow:'#a7dfff'}
+ aube:{box:[82,2.2,16,11],glow:'#ffe3a0',symbol:'☀'},
+ sylve:{box:[79.5,2,19,14.5],glow:'#bce6a0',symbol:'❧'},
+ ombre:{box:[81,1.8,18,12],glow:'#d8d0f0',symbol:'☾'},
+ forge:{box:[78.5,1.7,20,13.5],glow:'#ffd09b',symbol:'⚒'},
+ ether:{box:[79.2,1.6,19.5,15.2],glow:'#a7dfff',symbol:'◇'}
 });
 
 export function concordeLight(card,src,active){
@@ -21,11 +21,12 @@ export function concordeLight(card,src,active){
 }
 
 export function concordeDescription(card){
- if(card?.type!=='unité'||!FACTIONS[card.faction])return '';
- return `Bonus de faction — ${FACTIONS[card.faction].short} : dès que 2 unités alliées de cet Ordre sont sur la même ligne, chacune gagne +1 ATQ. La carte elle-même compte parmi les deux. Le bonus reste +1 avec davantage d'unités et cesse dès que la condition disparaît.`;
+ if(card?.type!=='unité'||!EMBLEMS[card.faction])return '';
+ return 'Bonus de faction : +1 attaque';
 }
 
 export function concordeDetails(card,esc,active=null){
  const description=concordeDescription(card);if(!description)return '';
- return `<p class="concorde-description">${esc(description)}${active===null?'':` <strong class="concorde-state">${active?'Actif : +1 ATQ incluse.':'Inactif sur cette unité.'}</strong>`}</p>`;
+ const state=active===null?'available':active?'active':'inactive';
+ return `<p class="concorde-description" data-concorde-state="${state}"><span class="concorde-symbol" role="img" aria-label="${esc(FACTIONS[card.faction].short)}">${EMBLEMS[card.faction].symbol}</span> ${esc(description)}${active===false?' <span class="concorde-state">(inactif)</span>':''}</p>`;
 }

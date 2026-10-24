@@ -2,7 +2,8 @@
 
 ## Contrat — affichage de Concorde
 
-- `ui/concorde.js` rend la lumière de l’emblème et les explications partagées.
+- `ui/concorde.js` rend la lumière de l’emblème et le résumé partagé : symbole
+  de faction en tête, « Bonus de faction : +1 attaque », état inactif grisé.
   L’état vient de `formationBonus`, jamais de l’attaque affichée ou d’un calcul
   copié dans la vue. Aucun état de présentation ajouté aux sauvegardes.
 - Le rendu éclaire les pixels de l’emblème déjà peint ; les zones par Ordre
@@ -11,6 +12,10 @@
 - `styles/cards/concorde.css` est relié à index et embarqué par le builder.
   Garder une lumière fixe, les clics accessibles, les valeurs réelles et les
   fiches lisibles sous la barre de navigation, y compris sur petit écran.
+- `ui/card-arena.js` conserve le rendu partagé `campSeal` pour les deux camps :
+  rond bleu allié, losange rouge adverse. `assets/card-arena.css` place ces petits
+  repères à gauche, hors de la carte ; garder les illustrations, nombres et
+  clics accessibles. Le propriétaire reste celui de `u.side`, sans état sauvegardé.
 
 ## Contrat — ciblage direct et effets de combat
 
