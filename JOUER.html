@@ -6879,11 +6879,17 @@ const DECK_STYLES=Object.freeze({
  arcanes:{name:'Arcanes',description:'Sorts de contrôle, tireurs et unités mystiques.',size:18,spells:3}
 });
 
+// Huit unités autrefois à délai 0 restent prioritaires dans les propositions de decks.
+// La normalisation de leur délai affiché à 1 ne doit pas rééquilibrer les decks.
+// Exclusivement un critère de classement historique, sans effet sur l'attente de combat.
+const FORMER_ZERO_DELAY_UNITS=new Set(['militia','ranger','wolf','bone','drill','spark','pixie','nightblade']);
+const deckRankingDelay=c=>FORMER_ZERO_DELAY_UNITS.has(c.id)&&c.delay===1?0:c.delay;
 const abilityOf=c=>c.ability||'';
 function unitScore(c,style){
- const base=5+c.attack*1.2+c.hp*.32-c.delay*.6;
+ const rankingDelay=deckRankingDelay(c);
+ const base=5+c.attack*1.2+c.hp*.32-rankingDelay*.6;
  const guard=GUARD_IDS.has(c.id),charge=CHARGE_IDS.has(c.id);
- if(style==='assaut')return base+c.attack*1.8+(c.delay===1?7:0)+(charge?9:0)+(abilityOf(c)==='haste'?5:0)-c.hp*.15;
+ if(style==='assaut')return base+c.attack*1.8+(rankingDelay===0?7:0)+(charge?9:0)+(abilityOf(c)==='haste'?5:0)-c.hp*.15;
  if(style==='rempart')return base+c.hp*.95+(guard?13:0)+(abilityOf(c)==='armor'?7:0)+(abilityOf(c)==='heal'?8:0)+(abilityOf(c)==='ward'?5:0);
  if(style==='arcanes')return base+(c.faction==='ether'?13:0)+(abilityOf(c)==='ranged'?7:0)+(abilityOf(c)==='splash'?7:0)+(abilityOf(c)==='inspire'?3:0);
  return base+(guard?4:0)+(charge?3:0)+(abilityOf(c)==='ranged'?4:0)+(abilityOf(c)==='heal'?5:0);
