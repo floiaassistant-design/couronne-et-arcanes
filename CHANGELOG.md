@@ -1,3 +1,10 @@
+## Proposition — délai de base minimum 1 (24 octobre 2026)
+
+- Huit unités à délai 0 passent à 1 : Milicien, Éclaireuse, Loup des Brumes, Guerrier d'ossements, Foreur, Feu follet, Luciole des Épineuses, Lame nocturne. Aucun délai 2–5, statistique, capacité, mouvement, IA ou sauvegarde volontairement changé.
+- Le calcul historique d'attente initiale (`max(0, délai - 1)`) est conservé : délai 1 reste jouable à la pioche ; cette modification aligne le chiffre du catalogue sur le minimum validé sans ajouter une attente supplémentaire.
+- Test de catalogue (76 cartes, aucune à délai 0) et de compatibilité de la pioche ajouté.
+- **PR en préparation uniquement :** export `JOUER.html` à régénérer exclusivement par `npm run build`, puis tests, parité, build:test, CI et revue du diff avant proposition de fusion. Aucun statut « intégré » ou « publié » anticipé.
+
 ## Proposition — Concorde sur les emblèmes existants, 24 octobre 2026
 
 - Lumière fixe et discrète sur les cinq logos déjà peints en haut à droite,
