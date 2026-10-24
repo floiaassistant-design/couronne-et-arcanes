@@ -3721,12 +3721,11 @@ body:has(.combat-screen) #view {
 .card-combat-mode .board-card-name{position:absolute;z-index:1;left:3px;right:3px;bottom:25px;font:10px/1.1 Arial;text-align:center;text-shadow:0 1px 3px #000}
 .card-combat-mode .board-card-stats{position:absolute;bottom:8px;left:5px;right:5px;z-index:1;display:flex;justify-content:space-between;font:12px Arial;color:#f3d797}
 .card-combat-mode .board-card-stats b{font-size:14px}.card-combat-mode .board-card-stats>span+span{color:#bbf5d2}
-.board-camp-seal{width:16px;height:19px;flex:none;overflow:visible;color:#f9e8c3;filter:drop-shadow(0 2px 2px #000b)}
-.camp-seal-body{fill:#284958;stroke:#e6c787;stroke-width:1.5;stroke-linejoin:round}
-.camp-seal-mark{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.board-camp-seal[data-camp="e"] .camp-seal-body{fill:#623f48}
-.card-combat-mode .board-card>.board-camp-seal{position:absolute;z-index:3;top:-7px;left:50%;transform:translateX(-50%);pointer-events:none}
-.arena-legend .board-camp-seal{width:11px;height:13px;vertical-align:middle;margin-right:4px}
+.board-camp-seal{width:7px;height:7px;flex:none;overflow:visible;color:#8ac7df;filter:drop-shadow(0 1px 1px #0004)}
+.camp-seal-body{fill:currentColor;stroke:#0a1c29a8;stroke-width:1;stroke-linejoin:round}
+.board-camp-seal[data-camp="e"]{color:#e99b9f}
+.card-combat-mode .board-card>.board-camp-seal{position:absolute;z-index:3;top:50%;left:-12px;transform:translateY(-50%);pointer-events:none}
+.arena-legend .board-camp-seal{vertical-align:middle;margin-right:4px}
 .card-combat-mode .arena-legend .legend-ally,.card-combat-mode .arena-legend .legend-enemy{color:#eaddc5}
 .card-combat-mode .unit-on-board{justify-content:center}
 
@@ -4066,7 +4065,9 @@ body.card-combat-mode [data-card-layout=true] .combat-stage{overflow:clip;overfl
  color:#e6dcc6;
  margin:9px 0 0;
 }
-.concorde-state {color:#f6dfaa}
+.concorde-symbol {display:inline-block;margin-right:3px}
+.concorde-description[data-concorde-state="active"] {color:#f6dfaa}
+.concorde-description[data-concorde-state="inactive"] {color:#a8b4bd}
 @media (forced-colors:active) {
  .concorde-emblem-light {filter:none}
 }
@@ -6254,11 +6255,11 @@ const {FACTIONS}=__load("src/data.js");
 // Zones des emblèmes déjà peints, en pourcentage du cadre complet 768 × 1152.
 // Une copie locale de ces pixels s'éclaire ; aucune nouvelle illustration.
 const EMBLEMS=Object.freeze({
- aube:{box:[82,2.2,16,11],glow:'#ffe3a0'},
- sylve:{box:[79.5,2,19,14.5],glow:'#bce6a0'},
- ombre:{box:[81,1.8,18,12],glow:'#d8d0f0'},
- forge:{box:[78.5,1.7,20,13.5],glow:'#ffd09b'},
- ether:{box:[79.2,1.6,19.5,15.2],glow:'#a7dfff'}
+ aube:{box:[82,2.2,16,11],glow:'#ffe3a0',symbol:'☀'},
+ sylve:{box:[79.5,2,19,14.5],glow:'#bce6a0',symbol:'❧'},
+ ombre:{box:[81,1.8,18,12],glow:'#d8d0f0',symbol:'☾'},
+ forge:{box:[78.5,1.7,20,13.5],glow:'#ffd09b',symbol:'⚒'},
+ ether:{box:[79.2,1.6,19.5,15.2],glow:'#a7dfff',symbol:'◇'}
 });
 
 function concordeLight(card,src,active){
@@ -6271,13 +6272,14 @@ function concordeLight(card,src,active){
 }
 
 function concordeDescription(card){
- if(card?.type!=='unité'||!FACTIONS[card.faction])return '';
- return `Bonus de faction — ${FACTIONS[card.faction].short} : dès que 2 unités alliées de cet Ordre sont sur la même ligne, chacune gagne +1 ATQ. La carte elle-même compte parmi les deux. Le bonus reste +1 avec davantage d'unités et cesse dès que la condition disparaît.`;
+ if(card?.type!=='unité'||!EMBLEMS[card.faction])return '';
+ return 'Bonus de faction : +1 attaque';
 }
 
 function concordeDetails(card,esc,active=null){
  const description=concordeDescription(card);if(!description)return '';
- return `<p class="concorde-description">${esc(description)}${active===null?'':` <strong class="concorde-state">${active?'Actif : +1 ATQ incluse.':'Inactif sur cette unité.'}</strong>`}</p>`;
+ const state=active===null?'available':active?'active':'inactive';
+ return `<p class="concorde-description" data-concorde-state="${state}"><span class="concorde-symbol" role="img" aria-label="${esc(FACTIONS[card.faction].short)}">${EMBLEMS[card.faction].symbol}</span> ${esc(description)}${active===false?' <span class="concorde-state">(inactif)</span>':''}</p>`;
 }
 
 Object.assign(__exports,{concordeLight,concordeDescription,concordeDetails});
@@ -7261,10 +7263,10 @@ const {generatedCardFace}=__load("src/ui/generated-card.js");
 // Présentation des vraies unités sur leurs cases. Ni règles, ni partie préfabriquée.
 const {CARDS,FACTIONS}=__load("src/data.js");
 const {visualFor,artSrc,cardTemplateFor}=__load("src/visuals.js");
-// Deux silhouettes distinctes : le camp reste lisible sans dépendre de la couleur.
+// Rond allié et losange adverse : deux petits repères sans dépendre de la couleur.
 function campSeal(side){
  const enemy=side==='e';
- return `<svg class="board-camp-seal" data-camp="${enemy?'e':'p'}" viewBox="0 0 24 28" aria-hidden="true" focusable="false"><path class="camp-seal-body" d="${enemy?'M12 1 23 14 12 27 1 14Z':'M2 2H22V13C22 20 17 24 12 27 7 24 2 20 2 13Z'}"/><path class="camp-seal-mark" d="${enemy?'M8 9 16 19M16 9 8 19':'M7 11 12 16 17 11'}"/></svg>`;
+ return `<svg class="board-camp-seal" data-camp="${enemy?'e':'p'}" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path class="camp-seal-body" d="${enemy?'M6 1 11 6 6 11 1 6Z':'M6 1a5 5 0 1 0 0 10a5 5 0 1 0 0-10Z'}"/></svg>`;
 }
 function boardCard(u,attack=u.atk,targeting=null,round=0,concordeActive=false){
  const c=CARDS[u.id],v=visualFor(c,{cards:true});
