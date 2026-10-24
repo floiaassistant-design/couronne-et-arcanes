@@ -31,7 +31,17 @@ test('V2.6 genuinely different strategies from starting collection',()=>{
  const p=freshProfile();const assault=proposeDeck(p,'assaut'),defense=proposeDeck(p,'rempart'),magic=proposeDeck(p,'arcanes');
  assert.notDeepEqual(assault.deck,defense.deck);
  assert.notDeepEqual(magic.deck,assault.deck);
- assert.ok(assault.overview.quick>defense.overview.quick,'assault uses faster creatures');
+ // Les anciennes cartes à délai 0 ont maintenant un délai 1 : elles sont
+ // toujours immédiatement jouables. Distinguer Assaut par sa puissance offensive,
+ // et contrôler séparément que l'indicateur « rapide » suit bien ce nouveau seuil.
+ const avgAttack=deck=>{
+  const units=deck.map(id=>CARDS[id]).filter(c=>c.type==='unité');
+  return units.reduce((sum,c)=>sum+c.attack,0)/units.length;
+ };
+ assert.ok(avgAttack(assault.deck)>avgAttack(defense.deck),'assault privilégie les attaquants plus puissants');
+ for(const proposal of [assault,defense]){
+  assert.equal(proposal.overview.quick,proposal.deck.filter(id=>CARDS[id].type==='unité'&&CARDS[id].delay===1).length);
+ }
  assert.ok(defense.overview.guards>assault.overview.guards,'defense uses more guards');
  assert.ok(magic.overview.spells>assault.overview.spells,'magic uses more spells');
 });
