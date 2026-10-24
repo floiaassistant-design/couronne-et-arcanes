@@ -2,43 +2,48 @@
 
 ## Intégré sur GitHub
 
-Main vérifié : `2de25b7cb9cc99bd1edb9202c43fea5f8338b5c6`, arbre
-`7ce5becc3c5af17715a10ff7d1a2b157dcf982f6`, après la PR nº 40.
-Le ciblage des sorts, le lecteur d’effets, le laboratoire et les 76 cartes
-illustrées sont intégrés. Un jeu web et un seul JOUER hors ligne ; profils,
-progression et anciennes batailles 3×5 conservés.
+Main vérifié après fusion autorisée de la [PR nº 42](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/42) :
+`ea1e18c49bcfd291a664dacdf95b4bb5c847af89`, arbre
+`6ca0680d09f3e560059d10420ed77014c4951619`.
+Le ciblage des sorts, le lecteur d’effets, le laboratoire, les 76 cartes
+illustrées et l’affichage Concorde sont intégrés. Un jeu web et un seul JOUER
+hors ligne ; profils, progression et anciennes batailles 3×5 conservés.
 
-## Proposition actuelle — Concorde
+## Concorde livré
 
-Branche `feat/concorde-emblemes-20261024`, [PR nº 42](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/42), depuis ce main exact.
 L’emblème déjà peint en haut à droite s’éclaire de façon fixe lorsque le moteur
-accorde Concorde. Le badge flottant est retiré. Explications dans les fiches
-main/plateau/Collection ; la fiche réserve le menu Citadelle sur petit écran.
-
-Le propriétaire a demandé de faire le travail Concorde, puis évoqué la
-surbrillance du logo actuel et sa crainte d’un résultat trop chargé. Cette
-variante conserve donc les logos existants et leur place ; l’esthétique de la
-proposition et la fusion restent à valider. Aucun emblème neuf créé ou importé,
-aucun fichier de l’atelier modifié. L’audit documentaire nº 41 reste indépendant.
-[Contrat et contrôles](CONCORDE_2026_10_24.md).
+accorde Concorde. Le badge flottant est retiré. Les fiches main/plateau/Collection
+expliquent le bonus de faction ; la fiche réserve Citadelle sur petit écran.
+La fusion de cette variante a été autorisée spécifiquement par le propriétaire.
+Aucun emblème neuf créé ou importé, aucun fichier de l’atelier modifié.
+[Contrat, contrôles et bilan de livraison](CONCORDE_2026_10_24.md).
 
 Les validations de conception Garde, Impact de zone, évolutions et Milicien
-suivies dans Notion ne sont pas implémentées par cette branche.
+suivies dans Notion ne sont pas implémentées par cette livraison.
+L’audit documentaire [nº 41](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/41)
+reste indépendant et non fusionné.
 
 ## Vérifications et reprise
 
-Local : 330 tests, 60 parités et builds réussis ; Concorde, aperçus, Collection,
-pose, Aube/sceaux, capacités, effets/laboratoire, jeu modulaire et sauvegardes
-contrôlés. JOUER distant et local identiques, blob `1e2efb67929e1c0d50c93914c288ef60ce957056`.
-Les résultats détaillés et la CI finale sont consignés dans le contrat et la PR.
-Relire le main et les PR, puis le diff complet avant proposition de fusion.
-Le rendu reste proposé, non fusionné et non publié. Chaque PR nécessite
-son propre accord explicite ; ne pas fusionner l’audit avec cette évolution.
+330 tests, 60 parités, builds et parcours bureau/mobile/ancien 3×5 réussis.
+La [CI complète](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40077509046)
+et l’[assemblage web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40077509054)
+ont validé le même arbre que ce main ; aucune suite retirée.
+JOUER distant et local identiques, blob `1e2efb67929e1c0d50c93914c288ef60ce957056`.
+Les contrôles automatisés ne remplacent pas un test sur téléphone physique ou
+un équilibrage humain exhaustif. Relire main et les PR réelles avant de reprendre.
+Chaque future PR nécessite son propre accord explicite de fusion.
 
-## Publication
+## Publication vérifiée
 
-Sites reste l’hébergement identifié dans `.openai/hosting.json`.
-[Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site).
-Aucune publication de branche ; publier uniquement main après fusion autorisée,
-CI correspondante et vérification du déploiement terminal. Cette mission ne
-modifie ni l’automatisation existante ni l’audience du Site.
+[Jeu en ligne](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) :
+Sites version 5, publication automatique du main ci-dessus, déploiement
+`appgdep_6adc74e226408191a465f3690ac2a758` terminé avec `succeeded`
+le 24 octobre 2026 à 09:05:46 UTC. Les 147 fichiers du commit de diffusion
+ont été comparés au paquet canonique ; les 14 fichiers nouveaux ou modifiés
+ont aussi été comparés par HTTP sans cache, tous identiques.
+
+L’unique export hors ligne demeure dans GitHub ; seul le miroir Sites omet
+JOUER.html, trop gros pour son dépôt de diffusion. Le reçu garde son empreinte.
+Le Site, son audience publique et l’automatisation existante sont conservés.
+[Procédure et provenance](PUBLICATION_WEB_2026_10_23.md).
