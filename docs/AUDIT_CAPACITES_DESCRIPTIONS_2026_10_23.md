@@ -138,44 +138,36 @@
 
 **Les statistiques de conception du Milicien sont désormais validées** : 2 ATQ aux six rangs, 5 PV aux trois premiers, 8 PV à partir du Légendaire, délai 1 à chaque rang. **Les améliorations, bonus de maîtrise, équipement, Forge et réputation restent distincts** et ne sont pas supprimés. Pour le jeu actuel, la mise à 1 du délai des huit cartes initialement à 0 est **déjà intégrée (PR nº 44)** ; elle n'implémente pas les cinq raretés futures. Prochaines questions : délai des autres unités unitairement, ordre des effets défensifs, statistiques effectives avec bonus, équilibre. **Fiche textuelle courte sur la carte**, pouvoirs complets au clic.
 
-### Fiche de conception — Porte-égide de l’Aube (`shield`)
+### Fiche de conception validée — Porte-égide de l’Aube (`shield`)
 
-**Statut : socle Commun vérifié sur `main` `f0c67075`, raretés supérieures en conception uniquement.** Cette fiche n'ajoute aucune statistique au jeu ; elle complète le Milicien comme deuxième unité étudiée.
+**Décision du propriétaire du 24 octobre 2026 : progression Rare → Éveillé validée en conception, cumulative. Non programmée dans le jeu.** Le socle Commun est vérifié sur `main` `f0c67075` ; les cinq rangs suivants et la future refonte de Garde/Riposte ne sont pas jouables. Cette fiche complète le Milicien sans changer le moteur, la progression ni les sauvegardes.
 
-**Carte actuellement jouable (Commun) :** 1 ATQ / 9 PV / délai 1. Avance normalement d'**une case** sur sa ligne et attaque à **une case devant lui**, sans Célérité, Vol, changement de ligne ni attaque à distance. Son rôle principal est la défense de la couronne. Dans le ciblage actuel des attaques, une unité Garde présente à portée peut aussi être choisie en priorité devant une autre cible ; la règle future prévoit explicitement de ne protéger que la couronne.
+**Version Commun actuelle :** 1 ATQ / 9 PV / délai 1. Avance au plus **1 case** vers l'avant sur sa ligne et attaque à **1 case devant lui**, sans Vol, Célérité, portée à distance ni changement de ligne.
 
-- **Armure 2 (actuel) :** enlève 2 aux dégâts bruts d'une frappe dirigée contre le Porte-égide, sans descendre sous 1 avant les barrières ; Perforation peut ignorer cette armure.
-- **Garde (actuel) :** intercepte des coups visant sa **couronne sur sa ligne**, y compris depuis une position derrière l'attaquant ; la priorité donnée aux gardiens présents à portée peut également détourner un coup qui aurait ciblé une autre unité. **Le choix « ne protéger que la couronne » relève de la future règle**, pas d'une propriété du ciblage actuel. Ce comportement historique reste actif tant qu'une PR de règles ne l'a pas modifié.
-- **Riposte (actuel) :** si le Porte-égide survit à une attaque ennemie **au contact**, il peut infliger **2 dégâts bruts** à l'attaquant, au plus **une fois par tour**. Pas de riposte contre les tirs à distance, si la capacité est réduite au silence, ou en chaîne contre une riposte.
-- **Concorde Aube (actuel) :** ☀ **Bonus de faction : +1 attaque** tant qu'au moins deux unités Aube alliées vivantes sont sur la même ligne. Ce bonus ne modifie pas aujourd'hui les 2 dégâts fixes de Riposte.
+- **Armure 2 (actuel) :** retranche 2 aux dégâts bruts reçus, avec un minimum de 1 avant les barrières ; la Perforation ignore l'armure.
+- **Garde (actuel) :** intercepte des attaques visant la couronne de sa ligne, y compris si le gardien se trouve derrière l'attaquant. À portée de frappe, le ciblage actuel peut aussi privilégier une Garde devant une autre unité. **Ne pas confondre avec la future règle** limitée à la protection de la couronne.
+- **Riposte (actuel) :** 2 dégâts bruts fixes contre un attaquant ennemi au contact, une fois par tour au maximum, si le défenseur survit et n'est pas réduit au silence ; pas contre une attaque à distance ni de contre-riposte en chaîne.
+- **Concorde Aube (actuel) :** ☀ **Bonus de faction : +1 attaque** à partir de deux alliés Aube sur la même ligne. Ce bonus n'augmente **pas aujourd'hui** les dégâts fixes de Riposte.
 
-| Rareté | Données et pouvoirs | Statut |
-| --- | --- | --- |
-| **Commun** | **1 ATQ / 9 PV / délai 1** ; avance 1, portée 1 ; Armure 2, Garde de ligne actuellement, Riposte fixe 2 | **Jouable et vérifié** |
-| **Rare** | Conserver les capacités acquises ; gain, ATQ, PV, délai, mobilité et portée du rang **à définir**. L'ancienne idée « Riposte fixe 3 » est abandonnée. | **À définir** |
-| **Épique** | Conserver les capacités acquises ; nouveau gain et chiffres **à définir**. | **À définir** |
-| **Légendaire** | Conserver les capacités acquises ; nouveau gain et chiffres **à définir**. | **À définir** |
-| **Divin** | **Décision de conception :** Garde peut défendre la couronne depuis toute **sa ligne**, même derrière l'attaquant ; jamais les unités. Statistiques et autre gain éventuel **à définir**. | **Validé en conception, non codé** |
-| **Éveillé** | **Décision de conception :** Garde peut défendre la couronne contre des attaques provenant de **toutes les lignes**, jamais les unités. Statistiques et autre gain éventuel **à définir**. | **Validé en conception, non codé** |
+**Principe de cumul validé :** chaque rareté **garde les statistiques augmentées, capacités et bonus des rangs précédents**, puis gagne son amélioration. Les augmentations de statistiques s'additionnent à la **base Commune**, sans réadditionner toute la valeur du rang précédent. Lorsqu'un même effet évolue (ici **Garde**), sa nouvelle portée **remplace et étend** la précédente : il n'y a ni deux Gardes ni double interception pour une même attaque. **Armure 2**, Riposte et autres effets distincts demeurent acquis.
 
-**Proposition à discuter — progression complète de Rare à Éveillé (24 octobre 2026).** Les nouveaux chiffres de cette matrice n'ont **pas** reçu l'accord du propriétaire ; ils ne sont **ni programmés, ni validés**. Ils privilégient des gains simples de résistance et d'attaque, puis les deux extensions de Garde **déjà décidées en conception**. Chaque ligne indique la **valeur totale envisagée**, et non un gain à ajouter une deuxième fois. Armure 2 et Riposte sont conservées à tous les rangs ; pour la future Riposte, les dégâts bruts suivent l'ATQ effective, pas une valeur fixe accrue.
-
-| Rareté | ATQ proposée | PV proposés | Gain à cette rareté | Statut |
+| Rareté | ATQ totale | PV max totaux | Gain ajouté à ce rang | Statut |
 | --- | ---: | ---: | --- | --- |
-| Commun | **1** | **9** | Socle actuel. Garde de ligne réellement jouable, qui doit être rendue positionnelle dans une future PR de règles | **Actuel** |
-| Rare | **1** | **11** | **+2 PV maximum** par rapport au Commun | **Suggestion à valider** |
-| Épique | **2** | **11** | **+1 ATQ de base**, y compris dans le calcul de Riposte seulement quand cette réforme sera intégrée | **Suggestion à valider** |
-| Légendaire | **2** | **13** | **+2 PV maximum** par rapport à l'Épique ; soit +4 PV au total comparé au Commun | **Suggestion à valider** |
-| Divin | **2** | **13** | **Garde sur toute sa ligne**, même derrière l'attaquant : **capacité décidée en conception** ; chiffres seulement proposés | **Pouvoir décidé ; chiffres à valider** |
-| Éveillé | **2** | **13** | **Garde contre les attaques depuis toutes les lignes**, sans protéger d'autres unités : **capacité décidée en conception** ; chiffres seulement proposés | **Pouvoir décidé ; chiffres à valider** |
+| **Commun** | **1** | **9** | Armure 2, Garde et Riposte **actuelles** | **Jouable** |
+| **Rare** | **1** | **11** | **+2 PV max** (gain conservé ensuite) | **Validé en conception** |
+| **Épique** | **2** | **11** | **+1 ATQ de base** (cumulée avec les 2 PV de Rare) | **Validé en conception** |
+| **Légendaire** | **2** | **13** | **+2 PV max** supplémentaires, soit **+4 PV** depuis Commun | **Validé en conception** |
+| **Divin** | **2** | **13** | **Garde protège la couronne depuis toute sa ligne**, même si l'attaquant l'a dépassé | **Validé en conception** |
+| **Éveillé** | **2** | **13** | **Garde protège la couronne contre des attaques provenant de toutes les lignes** (extension du Divin) | **Validé en conception** |
 
-**Valeurs secondaires proposées, à confirmer :** délai **1**, déplacement **1 case** par action et portée d'attaque **1 case devant soi sur sa ligne** à tous les rangs. Pas de Vol, Célérité ni attaque à distance ajoutée. **L'Armure reste à 2** à ce stade du projet. Le choix « Garde protège uniquement la couronne » doit s'appliquer à la version normale lorsqu'une PR de moteur sera autorisée ; Divin/Éveillé en étendent la portée sans donner de protection aux autres unités. L'ancienne idée « Riposte fixe 3 en Rare » est rejetée. **Conditions supplémentaires à définir** : cadence des interceptions si plusieurs attaques menacent la couronne, interaction avec Garde de plusieurs unités, silence, types de dégâts, IA et impacts sur 2–4 lignes. Aucune limite de déclenchement nouvelle n'est supposée.
+**Paramètres validés en conception pour tous ces rangs :** **délai 1**, déplacement **1 case par action**, portée d'attaque **1 case devant sur sa ligne**, **Armure 2** inchangée. Pas de gain implicite de Vol, Célérité ou Distance. Aucun autre bonus de statistiques n'est ajouté aux rangs Divin/Éveillé ; les **2 ATQ / 13 PV** hérités du Légendaire sont conservés.
 
-**À faire valider par le propriétaire avant de transformer cette proposition en décision :** +2 PV Rare, +1 ATQ Épique, +2 PV Légendaire, maintien du délai/vitesse/portée et maintien des statistiques au Divin et à l'Éveillé. L'efficacité défensive et l'équilibrage doivent être examinés avec le moteur et en jeu humain ; aucune simulation comparative n'a été réalisée pour ces nombres.
+**Garde future :** la Garde de base (Commun, Rare, Épique et Légendaire) n'intercepte les coups **visant la couronne** que si le défenseur se trouve **entre l'attaquant et cette couronne**. Le Divin étend la protection à **toute sa ligne**, même derrière l'attaquant. L'Éveillé l'étend aux coups **provenant de toutes les lignes**. **Jamais de protection des autres unités**. Ceci n'est pas encore programmé.
 
-**Règle transversale future déjà retenue :** lorsque la Riposte sera réécrite, ses dégâts bruts suivront l'**ATQ effective** du Porte-égide au moment du contre-coup (par exemple, 1 ATQ de base → 1 dégât brut ; avec +1 ATQ de Concorde → 2), avant réduction éventuelle par les protections adverses. Elle restera limitée à une fois par tour au contact pour cette unité. **Cette règle n'est pas intégrée** : ne pas afficher les nouveaux dégâts de Riposte comme une capacité jouable.
+**Riposte future :** lorsque la réforme transversale sera codée, les dégâts bruts du contre-coup suivront l'**ATQ effective** au moment de Riposte (bonus actifs comme Concorde inclus, mais sans ajouter artificiellement la Charge). Le Porte-égide continuera à riposter au contact, **au maximum une fois par tour**, si les conditions le permettent. Exemple : Commun 1 ATQ sans bonus → 1 dégât brut ; Épique 2 ATQ sans bonus → 2 ; avec Concorde +1 → 3. Les protections adverses réduisent les dégâts ensuite. **Le moteur publié inflige toujours 2 dégâts fixes**, quel que soit son bonus ATQ. L'ancienne proposition « Riposte fixe 3 au rang Rare » est abandonnée.
 
-**Questions restant à trancher pour le Porte-égide :** gain propre aux rangs Rare, Épique et Légendaire ; ATQ, PV, délai, vitesse et portée à chaque future rareté ; éventuel bonus supplémentaire Divin ou Éveillé ; conditions d'acquisition et impact sur sauvegardes. Ne pas transformer la Garde historique en protection positionnelle par une simple modification de texte. La petite carte conservera seulement **Armure · Garde · Riposte** et la ligne courte de faction ; les conditions seront présentées dans la fiche détaillée.
+**À préciser au moment de programmer :** priorité si plusieurs Gardes protègent une couronne, fréquence exacte de plusieurs interceptions, interactions de silence/armure/barrière, géométrie de 2–4 lignes, sauvegardes, IA et équilibrage réel. **Ces points encore ouverts ne remettent pas en cause les chiffres de progression validés.** Ne pas imposer de migration ni de nouvelles interactions sans une autre décision. Sur la petite carte, garder uniquement **Armure · Garde · Riposte** et le résumé de faction ; détailler les conditions dans la fiche accessible au clic/toucher.
+
 
 ### Règle de conception et interface souhaitée
 
