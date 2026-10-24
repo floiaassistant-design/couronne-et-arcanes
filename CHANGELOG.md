@@ -1,11 +1,13 @@
-## Proposition — repères de camp discrets et fiche courte (24 octobre 2026)
+## Intégré et publié — repères de camp discrets et fiche courte (24 octobre 2026)
 
 - Rond bleu allié et losange rouge adverse de 7 px, à gauche des cartes : retrait
   des grands blasons superposés au bord supérieur. Deux formes et libellés accessibles.
 - Résumé partagé : « ☀ Bonus de faction : +1 attaque », symbole adapté à l’Ordre,
   état inactif grisé et explicite. Lumière de Concorde sur l’emblème peint conservée.
 - Aucun changement des règles, statistiques, illustrations ou sauvegardes.
-  Export JOUER régénéré ; proposition en attente de revue, sans fusion/publication.
+  Export JOUER régénéré ; PR nº 45 fusionnée dans `63bc8b14` après autorisation.
+  CI finale : 333 tests, 60 parités, builds et navigateur réussis sur le même arbre
+  que main ; publication Sites version 7 contrôlée (bilan dans la PR nº 45).
 
 ## Intégré — délai de base minimum 1 (24 octobre 2026)
 
@@ -13,7 +15,8 @@
 - L'attente de pioche reste `max(0, délai - 1)` : les huit cartes restent immédiatement jouables.
 - Les propositions de decks conservent les classements historiques Assaut, Rempart, Arcanes et Équilibré ; un test de référence évite les changements silencieux.
 - `JOUER.html` doit rester généré depuis les sources, jamais modifié manuellement ; contrôle de la CI finale avant fusion.
-- PR nº 44 fusionnée dans `3beb7346cc6b881ad6ea123087309c853d51162b`, distincte de Concorde (PR nº 42, documentation PR nº 43). Publication non recontrôlée pendant cette préparation.
+- PR nº 44 fusionnée dans `3beb7346cc6b881ad6ea123087309c853d51162b`, distincte de Concorde (PR nº 42, documentation PR nº 43). La publication du main incluant cette correction a ensuite été vérifiée
+  dans le bilan de la PR nº 45 (Sites version 7).
 
 ## Intégré et publié — Concorde sur les emblèmes existants, 24 octobre 2026
 
