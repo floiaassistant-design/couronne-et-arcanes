@@ -6,6 +6,125 @@
 
 **Aucune règle, statistique, sauvegarde, image, animation, IA ni export n'est modifié par ce document.** Les textes ci-dessous sont des *propositions* fidèles au moteur actuel, pas encore visibles dans le jeu ; les changements d’équilibrage restent en décision.
 
+## 0. Simplification des raretés et de la Collection — décision du 24 octobre 2026
+
+**Décision de conception du propriétaire : une seule évolution par rareté, sans les trois sous-paliers I/II/III pour chaque rareté dans le futur système d'évolution.** Objectif : collection simple à parcourir, sans matrice permanente 6 × 3, dans l'esprit de *Kings and Legends*. **Non intégré au jeu** : les valeurs et règles réelles restent celles du code actuel.
+
+### Règle de conception et interface souhaitée
+
+- **Six rangs affichables :** Commun, Rare, Épique, Légendaire, Divin, Éveillé ; **un état d'évolution par rang**, au lieu de trois sous-paliers à définir pour chaque rang. Les identifiants techniques déjà utilisés dans la Collection, notamment `divine` et `éveillée`, ne seront pas renommés sans migration étudiée.
+- **Une seule carte visible par personnage** dans la Collection, avec son portrait déjà autorisé, nom, rareté **réelle actuelle**, possession et caractéristiques. **Au clic/toucher**, une fiche lisible montre la capacité, les stats et **la prochaine évolution** (ou « À définir »), avec accès secondaire au détail des autres raretés. Le survol peut être facultatif sur ordinateur, mais ne doit jamais être obligatoire pour le mobile ou le clavier.
+- **La rareté native n'est pas toujours Commune.** Certaines cartes commencent Rare, Épique ou Légendaire : préserver leurs valeurs et identifiants ; ne pas leur attribuer des versions inférieures fictives ni une progression 100 % Commune→Éveillée sans avoir défini les règles d'accès.
+- **Une fiche de conception par unité**, dans laquelle chaque rang comporte au plus **une ligne** : `Rang | Stats réelles ou projetées | Capacité / bonus total | Obtention | Description | État`. « À définir » si aucune validation, aucune puissance inventée. Les valeurs de base des 53 unités et les descriptions des 23 sorts restent celles de l'audit ci-dessous.
+- **Ne pas transformer l'historique en règle actuelle :** les trois sous-niveaux du Milicien discutés dans Notion (réduction du premier coup, riposte, Dernier Rempart et leurs valeurs validées) sont préservés comme **décisions historiques de l'ancien modèle** ; leur traduction en **un seul rang Rare, Épique, etc.** nécessite un nouvel arbitrage. Le Milicien n'a **pas** Garde.
+- **Séparer les trois systèmes :** actuellement, une unité possède des **améliorations payantes 0 à 3** (35/70/105 éclats, bonus ATQ/PV), une **maîtrise 0 à 3** qui rapporte une progression propre, et **une rareté native fixe**. La décision sur « une évolution par rareté » concerne le **futur système** ; elle ne supprime, ne rembourse et ne migre pas implicitement les améliorations, maîtrises, decks et sauvegardes. Leur coexistence reste à décider avant programmation.
+- **Distinguer les PR parallèles :** la PR nº 42 est une proposition de Concorde **sur les logos peints existants en haut à droite**, non fusionnée, à examiner visuellement. Le projet antérieur d'emblèmes neufs **en haut au centre**, détaillé au §2, reste une **variante historique**, pas un second import à lancer en parallèle.
+
+### Petit tableau des rangs — une évolution et non trois par rareté
+
+| Rang | Ce qui sera défini une seule fois par carte | Statut global |
+|---|---|---|
+| Commun | Version de référence si la rareté native est Commune | Stats actuelles conservées |
+| Rare | Évolution propre au rang, ou rareté native déjà jouable | Effets/obtention à préciser |
+| Épique | Évolution propre au rang, ou rareté native déjà jouable | Effets/obtention à préciser |
+| Légendaire | Évolution propre au rang, ou rareté native déjà jouable | Reprendre les anciens choix à un seul rang |
+| Divin | Une forme nouvelle par unité, si définie | À concevoir (hors prototype de labo) |
+| Éveillé | Une forme nouvelle par unité, si définie | À concevoir |
+
+### Liste de travail compacte : 53 unités, une seule ligne par personnage
+
+Ce tableau sert seulement à **organiser les validations futures**, pas à définir les pouvoirs des rangs manquants. La rareté native est relevée de `src/data.js` au `main` examiné.
+
+#### Aube — 10 unités
+
+| Carte | Rareté native | Nouvelle évolution / état |
+|---|---|---|
+| Milicien de l’Aube (`militia`) | commun | Anciennes décisions à convertir et revalider pour un seul palier |
+| Porte-égide (`shield`) | commun | À définir |
+| Arbalétrière (`archer`) | commun | À définir |
+| Sœur de l’Aurore (`cleric`) | rare | À définir |
+| Paladin solaire (`paladin`) | épique | À définir |
+| Porte-étendard (`banner`) | rare | À définir |
+| Capitaine de l’Aube (`scoutcaptain`) | rare | À définir |
+| Prieur solaire (`sunpriest`) | rare | À définir |
+| Lancier des Remparts (`lancer`) | commun | À définir |
+| Ange du Bastion (`dawnbastion`) | légendaire | À définir |
+
+#### Sylve — 11 unités
+
+| Carte | Rareté native | Nouvelle évolution / état |
+|---|---|---|
+| Éclaireuse sylvestre (`ranger`) | commun | À définir |
+| Loup des Brumes (`wolf`) | commun | À définir |
+| Gardien des Racines (`treant`) | rare | À définir |
+| Dryade luminescente (`dryad`) | rare | À définir |
+| Cerf astral (`stag`) | épique | À définir |
+| Traqueur d’épines (`thorn`) | commun | À définir |
+| Luciole des Épineuses (`pixie`) | commun | À définir |
+| Ours des Roches (`bear`) | rare | À définir |
+| Archidruide Feuillage (`archdruid`) | épique | À définir |
+| Hibou du Crépuscule (`owl`) | commun | À définir |
+| Trappeur sylvestre (`sylvan_trapper`) | commun | À définir |
+
+#### Ombre — 11 unités
+
+| Carte | Rareté native | Nouvelle évolution / état |
+|---|---|---|
+| Guerrier d’ossements (`bone`) | commun | À définir |
+| Ombre vorace (`shade`) | rare | À définir |
+| Veilleur du tombeau (`crypt`) | commun | À définir |
+| Faucheur de fièvre (`plague`) | rare | À définir |
+| Archiliche de Minuit (`lich`) | légendaire | À définir |
+| Banshee des Voiles (`banshee`) | épique | À définir |
+| Vampire d’Obsidienne (`vampire`) | épique | À définir |
+| Chevalier du Tombeau (`graveknight`) | rare | À définir |
+| Lame nocturne (`nightblade`) | commun | À définir |
+| Spectre du Caveau (`spectre`) | rare | À définir |
+| Inquisiteur des Brumes (`mist_inquisitor`) | rare | À définir |
+
+#### Forge — 10 unités
+
+| Carte | Rareté native | Nouvelle évolution / état |
+|---|---|---|
+| Marteau des Monts (`smith`) | commun | À définir |
+| Golem runique (`golem`) | rare | À définir |
+| Sapeur gobelin (`bomb`) | rare | À définir |
+| Foreur de fer (`drill`) | commun | À définir |
+| Colosse de braise (`colossus`) | légendaire | À définir |
+| Ingénieure d’acier (`engineer`) | épique | À définir |
+| Canon des Terres Rouges (`cannon`) | épique | À définir |
+| Mécaniste des Hauts-Fours (`mechanist`) | rare | À définir |
+| Marchefer (`ironwraith`) | commun | À définir |
+| Alchimiste des Braises (`alchemist`) | rare | À définir |
+
+#### Éther — 11 unités
+
+| Carte | Rareté native | Nouvelle évolution / état |
+|---|---|---|
+| Feu follet (`spark`) | commun | À définir |
+| Oracle des Astres (`mystic`) | rare | À définir |
+| Élémentaire azuré (`elemental`) | épique | À définir |
+| Griffon du Zénith (`griffin`) | épique | À définir |
+| Sentinelle prismatique (`sentinel`) | rare | À définir |
+| Dragon des Sept Cieux (`dragon`) | légendaire | À définir |
+| Esprit de Tempête (`tempest`) | rare | À définir |
+| Voyante des Étoiles (`seer`) | commun | À définir |
+| Chevalier du Zénith (`aetherknight`) | épique | À définir |
+| Séraphin d’Azur (`seraph`) | légendaire | À définir |
+| Marcheur des Portails (`portal_walker`) | rare | À définir |
+
+### Plan de mise à jour du jeu — futures PR séparées
+
+1. **Valider le modèle de progression** : décider du lien entre la rareté évolutive, les améliorations payantes existantes, la maîtrise, l'obtention de copies et le deck, en préservant toutes les sauvegardes. Ne pas retirer l'atelier ni changer le coût des éclats de manière implicite.
+2. **Définir les cartes l'une après l'autre** : commencer par le Milicien en **réconciliant explicitement les validations anciennes à trois niveaux** avec le nouveau rang unique ; ensuite les autres unités. Pour chaque rang, décider **les valeurs finales, la capacité, les conditions et la description**, puis seulement valider. Pas de duplication du calcul des capacités dans chaque fiche.
+3. **PR de simplification de l'interface Collection** : remplacer les six cartes côte à côte dans `src/ui/collection.js` / `assets/collection.css` par une vignette unique et une fiche accessible au clic/toucher ; réutiliser `collectionInspection`, le rendu de cartes et les fonctions existantes. Tant que le nouveau système n'est pas programmé, montrer **la version native et « prochaine évolution à définir »** sans débloquer de copies fictives. Préserver filtres, onglets, raccourcis du deck, les cinq Ordres et les sorts.
+4. **PR moteur/progression uniquement après validation des données** : centraliser les définitions par identifiant de carte, garder les règles dans le moteur (sans DOM), vérifier IA, équilibrage, 2–4 lignes et ancien 3 × 5 ; laboratoire isolé ; aucune migration implicite. Préserver jeu web et export généré `JOUER.html` depuis les mêmes sources.
+5. **Vérifier sur le code exact** : `npm test`, parité lorsque les règles ne changent pas, `npm run build`, `npm run build:test` ; bureau, mobile, clavier, mouvement réduit, image, deck, sauvegarde/reprise, anciens profils, export hors connexion. Relire les PR concurrentes, particulièrement nº 42. Fusion uniquement sur accord explicite pour **chaque PR**, puis publication Sites vérifiée séparément.
+
+**Statut : préparation documentaire ; aucune modification du jeu, du laboratoire, des images, des statistiques ni des sauvegardes dans cette PR.** Les sections 1 à 8 conservent l'audit factuel du moteur et les descriptifs proposés des **76 cartes actuelles**.
+
+---
+
 ## 1. Principes de lecture
 
 - Le plateau courant a **10 cases par ligne** et 2 à 4 lignes ; les anciens combats **3 × 5** sont toujours pris en charge. Le joueur avance vers la droite et l’IA vers la gauche.
