@@ -45,6 +45,21 @@ test('V2.6 genuinely different strategies from starting collection',()=>{
  assert.ok(defense.overview.guards>assault.overview.guards,'defense uses more guards');
  assert.ok(magic.overview.spells>assault.overview.spells,'magic uses more spells');
 });
+test('La normalisation des délais conserve les quatre compositions automatiques historiques',()=>{
+ const p=freshProfile();
+ // Référence figée depuis main avant le passage des huit délais 0 à 1.
+ // Les scores et les cartes proposées ne doivent pas être rééquilibrés en silence.
+ const expected={
+  equilibre:["firebolt","firebolt","healing","healing","ranger","ranger","wolf","wolf","shield","shield","spark","archer","archer","smith","bone","drill","militia","militia"],
+  assaut:["firebolt","firebolt","wolf","wolf","bone","drill","militia","militia","ranger","ranger","spark","militia","militia","smith","thorn","archer"],
+  rempart:["healing","healing","firebolt","firebolt","shield","shield","drill","smith","militia","militia","thorn","militia","ranger","ranger","bone","wolf","wolf","militia"],
+  arcanes:["firebolt","firebolt","healing","spark","ranger","ranger","archer","archer","smith","bone","wolf","wolf","drill","militia","militia","shield","shield","thorn"]
+ };
+ for(const [style,deck] of Object.entries(expected)){
+  assert.deepEqual(proposeDeck(p,style).deck,deck,`composition ${style} modifiée`);
+ }
+});
+
 test('V2.6 applying a preset changes only the deck and spends no resources',()=>{
  const p=freshProfile(),before=structuredClone(p);
  const result=applyDeckStyle(p,'assaut');assert.equal(result.ok,true);
