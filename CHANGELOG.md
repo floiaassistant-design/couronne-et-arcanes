@@ -1,12 +1,12 @@
 ## Proposition — délai de base minimum 1 (24 octobre 2026)
 
-- Huit unités à délai 0 passent à 1 : Milicien, Éclaireuse, Loup des Brumes, Guerrier d'ossements, Foreur, Feu follet, Luciole des Épineuses, Lame nocturne. Aucun délai 2–5, statistique, capacité, mouvement, IA de combat ou sauvegarde volontairement changé.
-- Le constructeur de decks conserve le classement « rapide » et la préférence de l'archétype Assaut en employant le nouveau seuil 1 plutôt que l'ancien seuil 0 ; tests d'identité des stratégies actualisés.
-- Le calcul historique d'attente initiale (`max(0, délai - 1)`) est conservé : délai 1 reste jouable à la pioche ; cette modification aligne le chiffre du catalogue sur le minimum validé sans ajouter une attente supplémentaire.
-- Test de catalogue (76 cartes, aucune à délai 0) et de compatibilité de la pioche ajouté.
-- **PR nº 44 en brouillon :** l'unique export `JOUER.html` a été régénéré par le build officiel dans GitHub Actions et commité, avec retrait du workflow de génération ponctuelle. Les tests métier et parités ont réussi sur un commit intermédiaire ; la CI complète, les parcours navigateur et la revue du diff final restent à vérifier avant proposition de fusion. Aucun statut « intégré » ou « publié » anticipé.
+- Huit unités passent du délai 0 à 1 ; les 68 autres cartes, les capacités, l'IA de combat, le déplacement, les récompenses et les sauvegardes restent inchangés.
+- L'attente de pioche reste `max(0, délai - 1)` : les huit cartes restent immédiatement jouables.
+- Les propositions de decks conservent les classements historiques Assaut, Rempart, Arcanes et Équilibré ; un test de référence évite les changements silencieux.
+- `JOUER.html` doit rester généré depuis les sources, jamais modifié manuellement ; contrôle de la CI finale avant fusion.
+- PR nº 44 en préparation, distincte de Concorde déjà intégrée et publiée (PR nº 42, documentation PR nº 43). Aucune fusion ni publication anticipée.
 
-## Proposition — Concorde sur les emblèmes existants, 24 octobre 2026
+## Intégré et publié — Concorde sur les emblèmes existants, 24 octobre 2026
 
 - Lumière fixe et discrète sur les cinq logos déjà peints en haut à droite,
   uniquement lorsque le moteur accorde réellement Concorde ; retrait du badge
@@ -17,7 +17,9 @@
 - Moteur, IA, statistiques, images et sauvegardes conservés. Un seul export
   JOUER régénéré, tests dédiés et vérifications de compatibilité.
 - CI navigateur fixée sur Ubuntu 24.04 après le passage de ubuntu-latest à une version incompatible avec Playwright épinglé ; toutes les suites conservées.
-- Proposition non fusionnée ni publiée ; revue et autorisation spécifique requises.
+- PR nº 42 fusionnée sur accord spécifique, main `ea1e18c49bcfd291a664dacdf95b4bb5c847af89`.
+  Publication automatique Sites version 5 réussie ; 147 fichiers de diffusion
+  comparés au paquet canonique et 14 fichiers modifiés vérifiés par HTTP.
 
 ## Historique des propositions et intégrations antérieures
 
