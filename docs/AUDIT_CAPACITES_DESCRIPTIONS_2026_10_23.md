@@ -31,87 +31,91 @@
 | Divin | Une forme nouvelle par unité, si définie | À concevoir (hors prototype de labo) |
 | Éveillé | Une forme nouvelle par unité, si définie | À concevoir |
 
-### Liste de travail compacte : 53 unités, une seule ligne par personnage
+### Tableau de conception : une capacité à définir par rareté pour chacune des 53 unités
 
-Ce tableau sert seulement à **organiser les validations futures**, pas à définir les pouvoirs des rangs manquants. La rareté native est relevée de `src/data.js` au `main` examiné.
+**Tableaux de travail pour Notion et la conception, pas une interface à afficher dans le jeu.** Chaque colonne correspond à **une seule version de rareté**, sans sous-paliers I / II / III. **Actuel** désigne la seule version jouable du catalogue, avec capacité et chiffres de base (audit détaillé au §4). **À définir** est un espace libre pour imaginer puis faire valider une capacité de ce rang ; **—** représente une rareté inférieure à la rareté native, non définie. Ce tableau ne crée aucune carte supplémentaire.
+
+**Milicien :** les capacités historiquement approuvées pour le modèle à trois sous-niveaux sont rappelées au rang correspondant, mais sont marquées **« Ancien choix à réadapter »** ; ce ne sont pas des valeurs finales validées pour les rangs uniques. Il n'a **pas Garde**. Détail des anciennes décisions et chiffres dans la [fiche Notion principale](https://app.notion.com/p/4026633072a881ed9768c615f538a929).
+
+**Tableaux actifs et plus lisibles dans Notion :** [Évolutions simplifiées — 53 unités, six raretés](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f). Les nouveaux pouvoirs et bonus seront renseignés au fur et à mesure des décisions et séparés clairement des données déjà intégrées.
 
 #### Aube — 10 unités
 
-| Carte | Rareté native | Nouvelle évolution / état |
-|---|---|---|
-| Milicien de l’Aube (`militia`) | commun | Anciennes décisions à convertir et revalider pour un seul palier |
-| Porte-égide (`shield`) | commun | À définir |
-| Arbalétrière (`archer`) | commun | À définir |
-| Sœur de l’Aurore (`cleric`) | rare | À définir |
-| Paladin solaire (`paladin`) | épique | À définir |
-| Porte-étendard (`banner`) | rare | À définir |
-| Capitaine de l’Aube (`scoutcaptain`) | rare | À définir |
-| Prieur solaire (`sunpriest`) | rare | À définir |
-| Lancier des Remparts (`lancer`) | commun | À définir |
-| Ange du Bastion (`dawnbastion`) | légendaire | À définir |
+| Unité | Commun | Rare | Épique | Légendaire | Divin | Éveillé |
+|---|---|---|---|---|---|---|
+| Milicien de l’Aube (`militia`) | **Base actuelle :** corps à corps, 2 ATQ, 5 PV, sans pouvoir spécial | **Ancien choix à réadapter :** réduction du premier coup, 1 fois par invocation | **Ancien choix à réadapter :** réduction du premier coup de 2 dégâts | **Ancien choix à réadapter :** réduction + PV, anciennes variantes I–III non transférées | **Ancien choix à réadapter :** réduction 3 et éventuelle riposte ponctuelle | **Ancien choix à réadapter :** Dernier Rempart (survie 1 / 3 / 5 PV ; choisir un seul résultat) |
+| Porte-égide (`shield`) | **Actuel :** Armure 2. Garde : intercepte les attaques contre la couronne de sa ligne. Riposte : 2 dégâts au contact, 1 fois/tour. | À définir | À définir | À définir | À définir | À définir |
+| Arbalétrière (`archer`) | **Actuel :** Distance : attaque jusqu’à 2 cases devant elle, sur sa ligne. | À définir | À définir | À définir | À définir | À définir |
+| Sœur de l’Aurore (`cleric`) | — | **Actuel :** Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne (elle-même incluse). | À définir | À définir | À définir | À définir |
+| Paladin solaire (`paladin`) | — | — | **Actuel :** Armure 2. Riposte : inflige 2 dégâts à un attaquant adjacent au contact, au plus une fois par tour. | À définir | À définir | À définir |
+| Porte-étendard (`banner`) | — | **Actuel :** Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). | À définir | À définir | À définir | À définir |
+| Capitaine de l’Aube (`scoutcaptain`) | — | **Actuel :** Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). | À définir | À définir | À définir | À définir |
+| Prieur solaire (`sunpriest`) | — | **Actuel :** Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. | À définir | À définir | À définir | À définir |
+| Lancier des Remparts (`lancer`) | **Actuel :** Perforation : ignore l’armure. Charge : +2 ATQ s’il a avancé avant d’attaquer. | À définir | À définir | À définir | À définir | À définir |
+| Ange du Bastion (`dawnbastion`) | — | — | — | **Actuel :** Protection : à l’invocation, +3 bouclier à sa couronne (plafond 20). Vol : franchit un allié. Riposte : 2 dégâts au contact, 1 fois/tour. | À définir | À définir |
 
 #### Sylve — 11 unités
 
-| Carte | Rareté native | Nouvelle évolution / état |
-|---|---|---|
-| Éclaireuse sylvestre (`ranger`) | commun | À définir |
-| Loup des Brumes (`wolf`) | commun | À définir |
-| Gardien des Racines (`treant`) | rare | À définir |
-| Dryade luminescente (`dryad`) | rare | À définir |
-| Cerf astral (`stag`) | épique | À définir |
-| Traqueur d’épines (`thorn`) | commun | À définir |
-| Luciole des Épineuses (`pixie`) | commun | À définir |
-| Ours des Roches (`bear`) | rare | À définir |
-| Archidruide Feuillage (`archdruid`) | épique | À définir |
-| Hibou du Crépuscule (`owl`) | commun | À définir |
-| Trappeur sylvestre (`sylvan_trapper`) | commun | À définir |
+| Unité | Commun | Rare | Épique | Légendaire | Divin | Éveillé |
+|---|---|---|---|---|---|---|
+| Éclaireuse sylvestre (`ranger`) | **Actuel :** Distance : attaque jusqu’à 2 cases devant elle, sur sa ligne. | À définir | À définir | À définir | À définir | À définir |
+| Loup des Brumes (`wolf`) | **Actuel :** Célérité : avance jusqu’à 2 cases libres/tour. Charge : +2 ATQ s’il a avancé avant de frapper. | À définir | À définir | À définir | À définir | À définir |
+| Gardien des Racines (`treant`) | — | **Actuel :** Armure 2. Garde : intercepte les attaques visant la couronne de sa ligne. Riposte : 2 dégâts au contact, 1 fois/tour. | À définir | À définir | À définir | À définir |
+| Dryade luminescente (`dryad`) | — | **Actuel :** Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. | À définir | À définir | À définir | À définir |
+| Cerf astral (`stag`) | — | — | **Actuel :** Célérité : avance jusqu’à 2 cases/tour. Charge : +2 ATQ s’il a avancé avant de frapper. | À définir | À définir | À définir |
+| Traqueur d’épines (`thorn`) | **Actuel :** Poison : après une attaque, inflige 1 dégât par résolution pendant 2 résolutions à la cible touchée. | À définir | À définir | À définir | À définir | À définir |
+| Luciole des Épineuses (`pixie`) | **Actuel :** Protection : à l’invocation, +3 bouclier à sa couronne (plafond 20). Vol : franchit un allié si l’arrivée est libre. | À définir | À définir | À définir | À définir | À définir |
+| Ours des Roches (`bear`) | — | **Actuel :** Armure 2 : réduit les dégâts subis. Ne possède pas Garde. | À définir | À définir | À définir | À définir |
+| Archidruide Feuillage (`archdruid`) | — | — | **Actuel :** Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. | À définir | À définir | À définir |
+| Hibou du Crépuscule (`owl`) | **Actuel :** Distance : attaque jusqu’à 2 cases devant lui. Vol : franchit un allié si la case suivante est libre. | À définir | À définir | À définir | À définir | À définir |
+| Trappeur sylvestre (`sylvan_trapper`) | **Actuel :** Piège : tous les 3 tours, arme la case libre juste devant lui si possible. À l’arrivée d’un ennemi : 1 dégât brut et immobilisation, piège visible durant au plus 3 résolutions. | À définir | À définir | À définir | À définir | À définir |
 
 #### Ombre — 11 unités
 
-| Carte | Rareté native | Nouvelle évolution / état |
-|---|---|---|
-| Guerrier d’ossements (`bone`) | commun | À définir |
-| Ombre vorace (`shade`) | rare | À définir |
-| Veilleur du tombeau (`crypt`) | commun | À définir |
-| Faucheur de fièvre (`plague`) | rare | À définir |
-| Archiliche de Minuit (`lich`) | légendaire | À définir |
-| Banshee des Voiles (`banshee`) | épique | À définir |
-| Vampire d’Obsidienne (`vampire`) | épique | À définir |
-| Chevalier du Tombeau (`graveknight`) | rare | À définir |
-| Lame nocturne (`nightblade`) | commun | À définir |
-| Spectre du Caveau (`spectre`) | rare | À définir |
-| Inquisiteur des Brumes (`mist_inquisitor`) | rare | À définir |
+| Unité | Commun | Rare | Épique | Légendaire | Divin | Éveillé |
+|---|---|---|---|---|---|---|
+| Guerrier d’ossements (`bone`) | **Actuel :** Corps à corps : attaque à 1 case devant lui, sur sa ligne. | À définir | À définir | À définir | À définir | À définir |
+| Ombre vorace (`shade`) | — | **Actuel :** Célérité : avance jusqu’à 2 cases/tour. Charge : +2 ATQ s’il a avancé avant de frapper. | À définir | À définir | À définir | À définir |
+| Veilleur du tombeau (`crypt`) | **Actuel :** Armure 2. Garde : intercepte les attaques visant la couronne de sa ligne. | À définir | À définir | À définir | À définir | À définir |
+| Faucheur de fièvre (`plague`) | — | **Actuel :** Poison : après une attaque, inflige 1 dégât par résolution pendant 2 résolutions à la cible touchée. | À définir | À définir | À définir | À définir |
+| Archiliche de Minuit (`lich`) | — | — | — | **Actuel :** Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de la même ligne. | À définir | À définir |
+| Banshee des Voiles (`banshee`) | — | — | **Actuel :** Distance : attaque à 2 cases devant elle. Vol : peut franchir une case occupée par un allié si la case suivante est libre. | À définir | À définir | À définir |
+| Vampire d’Obsidienne (`vampire`) | — | — | **Actuel :** Vol de vie : à chaque attaque effectuée, rend 2 PV à son héros, même si la frappe a été absorbée. | À définir | À définir | À définir |
+| Chevalier du Tombeau (`graveknight`) | — | **Actuel :** Armure 2. Charge : +2 ATQ s’il a avancé. Riposte : 2 dégâts au contact, 1 fois/tour (pas de Garde). | À définir | À définir | À définir | À définir |
+| Lame nocturne (`nightblade`) | **Actuel :** Perforation : ses attaques ignorent l’armure de la cible. | À définir | À définir | À définir | À définir | À définir |
+| Spectre du Caveau (`spectre`) | — | **Actuel :** Célérité : avance jusqu’à 2 cases/tour sur sa ligne. Charge : +2 ATQ après déplacement (ne change pas de ligne). | À définir | À définir | À définir | À définir |
+| Inquisiteur des Brumes (`mist_inquisitor`) | — | **Actuel :** Silence : avant son déplacement, désactive certaines capacités d’un ennemi de sa ligne pour la résolution en cours (au plus une fois tous les 3 tours). | À définir | À définir | À définir | À définir |
 
 #### Forge — 10 unités
 
-| Carte | Rareté native | Nouvelle évolution / état |
-|---|---|---|
-| Marteau des Monts (`smith`) | commun | À définir |
-| Golem runique (`golem`) | rare | À définir |
-| Sapeur gobelin (`bomb`) | rare | À définir |
-| Foreur de fer (`drill`) | commun | À définir |
-| Colosse de braise (`colossus`) | légendaire | À définir |
-| Ingénieure d’acier (`engineer`) | épique | À définir |
-| Canon des Terres Rouges (`cannon`) | épique | À définir |
-| Mécaniste des Hauts-Fours (`mechanist`) | rare | À définir |
-| Marchefer (`ironwraith`) | commun | À définir |
-| Alchimiste des Braises (`alchemist`) | rare | À définir |
+| Unité | Commun | Rare | Épique | Légendaire | Divin | Éveillé |
+|---|---|---|---|---|---|---|
+| Marteau des Monts (`smith`) | **Actuel :** Corps à corps : attaque à 1 case devant lui, sur sa ligne. | À définir | À définir | À définir | À définir | À définir |
+| Golem runique (`golem`) | — | **Actuel :** Armure 2. Garde : intercepte les attaques visant la couronne. Riposte : 2 dégâts au contact, 1 fois/tour. | À définir | À définir | À définir | À définir |
+| Sapeur gobelin (`bomb`) | — | **Actuel :** Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de la même ligne. | À définir | À définir | À définir | À définir |
+| Foreur de fer (`drill`) | **Actuel :** Armure 2 : réduit de 2 les dégâts bruts de chaque frappe, avec un minimum de 1 avant barrière. | À définir | À définir | À définir | À définir | À définir |
+| Colosse de braise (`colossus`) | — | — | — | **Actuel :** Armure 2 : résiste aux frappes. Ne possède ni Garde ni Riposte dans les règles actuelles. | À définir | À définir |
+| Ingénieure d’acier (`engineer`) | — | — | **Actuel :** Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). | À définir | À définir | À définir |
+| Canon des Terres Rouges (`cannon`) | — | — | **Actuel :** Distance : attaque jusqu’à 2 cases devant lui, sur sa ligne. | À définir | À définir | À définir |
+| Mécaniste des Hauts-Fours (`mechanist`) | — | **Actuel :** Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). | À définir | À définir | À définir | À définir |
+| Marchefer (`ironwraith`) | **Actuel :** Protection : à l’invocation, +3 bouclier à sa couronne (plafond 20). | À définir | À définir | À définir | À définir | À définir |
+| Alchimiste des Braises (`alchemist`) | — | **Actuel :** Poison : après une attaque, inflige 1 dégât par résolution pendant 2 résolutions à la cible touchée. | À définir | À définir | À définir | À définir |
 
 #### Éther — 11 unités
 
-| Carte | Rareté native | Nouvelle évolution / état |
-|---|---|---|
-| Feu follet (`spark`) | commun | À définir |
-| Oracle des Astres (`mystic`) | rare | À définir |
-| Élémentaire azuré (`elemental`) | épique | À définir |
-| Griffon du Zénith (`griffin`) | épique | À définir |
-| Sentinelle prismatique (`sentinel`) | rare | À définir |
-| Dragon des Sept Cieux (`dragon`) | légendaire | À définir |
-| Esprit de Tempête (`tempest`) | rare | À définir |
-| Voyante des Étoiles (`seer`) | commun | À définir |
-| Chevalier du Zénith (`aetherknight`) | épique | À définir |
-| Séraphin d’Azur (`seraph`) | légendaire | À définir |
-| Marcheur des Portails (`portal_walker`) | rare | À définir |
+| Unité | Commun | Rare | Épique | Légendaire | Divin | Éveillé |
+|---|---|---|---|---|---|---|
+| Feu follet (`spark`) | **Actuel :** Distance : attaque jusqu’à 2 cases devant lui, sur sa ligne (portée 3 seulement proposée, non active). | À définir | À définir | À définir | À définir | À définir |
+| Oracle des Astres (`mystic`) | — | **Actuel :** Distance : attaque jusqu’à 2 cases devant lui, uniquement sur sa ligne. | À définir | À définir | À définir | À définir |
+| Élémentaire azuré (`elemental`) | — | — | **Actuel :** Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de la même ligne. | À définir | À définir | À définir |
+| Griffon du Zénith (`griffin`) | — | — | **Actuel :** Célérité : avance jusqu’à 2 cases/tour. Vol : franchit un allié si possible. Charge : +2 ATQ après déplacement. | À définir | À définir | À définir |
+| Sentinelle prismatique (`sentinel`) | — | **Actuel :** Armure 2. Garde : intercepte les attaques visant la couronne. Riposte : 2 dégâts au contact, 1 fois/tour. | À définir | À définir | À définir | À définir |
+| Dragon des Sept Cieux (`dragon`) | — | — | — | **Actuel :** Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de sa ligne. Vol : franchit un allié si possible. | À définir | À définir |
+| Esprit de Tempête (`tempest`) | — | **Actuel :** Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de la même ligne. | À définir | À définir | À définir | À définir |
+| Voyante des Étoiles (`seer`) | **Actuel :** Distance : attaque jusqu’à 2 cases devant elle, sur sa ligne. | À définir | À définir | À définir | À définir | À définir |
+| Chevalier du Zénith (`aetherknight`) | — | — | **Actuel :** Perforation : ignore l’armure. Charge : +2 ATQ s’il a avancé avant de frapper. | À définir | À définir | À définir |
+| Séraphin d’Azur (`seraph`) | — | — | — | **Actuel :** Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. Vol : franchit un allié. | À définir | À définir |
+| Marcheur des Portails (`portal_walker`) | — | **Actuel :** Portail : avant le déplacement, change de ligne à la même colonne libre si le moteur juge le gain suffisant (au plus une fois tous les 3 tours). | À définir | À définir | À définir | À définir |
 
 ### Plan de mise à jour du jeu — futures PR séparées
 
