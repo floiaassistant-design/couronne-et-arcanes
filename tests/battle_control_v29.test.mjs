@@ -17,9 +17,14 @@ function combat(id='seal_silence'){
 function storage(){
  const cache=new Map();globalThis.localStorage={getItem:k=>cache.get(k)??null,setItem:(k,v)=>cache.set(k,v),removeItem:k=>cache.delete(k)};return cache;
 }
-test('V2.9 catalogue preserves all 68 V2.8 cards, campaign and 20 tower decks',()=>{
+test('V2.9 conserve les cartes V2.8 hors délais approuvés, ainsi que campagne et Tour',()=>{
  const baseline=JSON.parse(readFileSync(new URL('./fixtures/catalogue_v28.json',import.meta.url)));
- assert.deepEqual(Object.fromEntries(Object.entries(CARDS).filter(([id])=>!CONTROL_IDS.includes(id)&&!TEMPO_IDS.includes(id))),baseline.cards);
+ // Garder le snapshot historique et toutes ses caractéristiques.
+ // Seuls les anciens délais 0 sont intentionnellement normalisés à 1.
+ const expectedCards=Object.fromEntries(Object.entries(baseline.cards).map(([id,card])=>[
+  id,{...card,delay:Math.max(1,card.delay)}
+ ]));
+ assert.deepEqual(Object.fromEntries(Object.entries(CARDS).filter(([id])=>!CONTROL_IDS.includes(id)&&!TEMPO_IDS.includes(id))),expectedCards);
  assert.deepEqual(CAMPAIGN,baseline.campaign);
  assert.deepEqual(Array.from({length:20},(_,i)=>towerMission(i+1)),baseline.tower);
  assert.equal(Object.keys(CARDS).length,76);assert.equal(Object.keys(CLASS_SKILLS).length,8);

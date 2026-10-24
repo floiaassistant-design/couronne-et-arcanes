@@ -1,3 +1,11 @@
+## Proposition — délai de base minimum 1 (24 octobre 2026)
+
+- Huit unités passent du délai 0 à 1 ; les 68 autres cartes, les capacités, l'IA de combat, le déplacement, les récompenses et les sauvegardes restent inchangés.
+- L'attente de pioche reste `max(0, délai - 1)` : les huit cartes restent immédiatement jouables.
+- Les propositions de decks conservent les classements historiques Assaut, Rempart, Arcanes et Équilibré ; un test de référence évite les changements silencieux.
+- `JOUER.html` doit rester généré depuis les sources, jamais modifié manuellement ; contrôle de la CI finale avant fusion.
+- PR nº 44 en préparation, distincte de Concorde déjà intégrée et publiée (PR nº 42, documentation PR nº 43). Aucune fusion ni publication anticipée.
+
 ## Intégré et publié — Concorde sur les emblèmes existants, 24 octobre 2026
 
 - Lumière fixe et discrète sur les cinq logos déjà peints en haut à droite,

@@ -9,6 +9,11 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 - `JOUER.html` : **unique export jouable**, complet et autonome sans réseau.
 - `tests/JOUER.test.html` : diagnostic automatisé seulement, jamais distribué.
 
+Le catalogue impose un **délai de base minimum de 1** : huit unités passent
+de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
+(`max(0, délai - 1)`). Elles restent jouables immédiatement ; les decks
+automatiques conservent leurs compositions historiques.
+
 Le plateau, les cartes et le moteur sont communs. Les nouveaux combats utilisent
 les tours alternés : poser jusqu’à deux cartes, valider, puis regarder ses unités
 agir et l’IA jouer. Les anciens combats 3×5 gardent leurs règles historiques.
