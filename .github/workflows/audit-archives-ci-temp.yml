@@ -32,6 +32,14 @@ jobs:
                   except ValueError: pass
           total=sum(x['bytes'] for x in rows)
           print('Nombre archives:',len(rows),'volume Mo:',round(total/1024/1024,1))
+          from collections import defaultdict
+          groups=defaultdict(list)
+          for x in rows: groups[x['name']].append(x)
+          print('ARCHIVES PAR TYPE :')
+          for name,entries in sorted(groups.items(),key=lambda pair:-sum(x['bytes'] for x in pair[1])):
+              size=sum(x['bytes'] for x in entries)/1024/1024
+              recent=max(entries,key=lambda a:a['created'])
+              print(f"TYPE | {name} | count={len(entries)} | total={size:.1f} Mo | latest={recent['created']} | id={recent['id']} | latest_size={recent['bytes']/1024/1024:.1f} Mo")
           print('Archives plus lourdes:')
           for x in sorted(rows,key=lambda a:a['bytes'],reverse=True)[:35]:
               print(f"{x['id']} | {x['bytes']/1024/1024:.1f} Mo | {x['created']} | expire={x['expired']} | {x['name']}")
