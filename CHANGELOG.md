@@ -15,8 +15,10 @@
 - L'attente de pioche reste `max(0, délai - 1)` : les huit cartes restent immédiatement jouables.
 - Les propositions de decks conservent les classements historiques Assaut, Rempart, Arcanes et Équilibré ; un test de référence évite les changements silencieux.
 - `JOUER.html` doit rester généré depuis les sources, jamais modifié manuellement ; contrôle de la CI finale avant fusion.
-- PR nº 44 fusionnée dans `3beb7346cc6b881ad6ea123087309c853d51162b`, distincte de Concorde (PR nº 42, documentation PR nº 43). La publication du main incluant cette correction a ensuite été vérifiée
-  dans le bilan de la PR nº 45 (Sites version 7).
+- PR nº 44 fusionnée dans `3beb7346cc6b881ad6ea123087309c853d51162b`,
+  distincte de Concorde (PR nº 42, documentation PR nº 43). La publication
+  du main incluant cette correction a ensuite été vérifiée dans le bilan
+  de la PR nº 45 (Sites version 7).
 
 ## Intégré et publié — Concorde sur les emblèmes existants, 24 octobre 2026
 
