@@ -59,11 +59,13 @@ test('le diff réel refuse une PR mixte ou un renommage depuis du code', () => {
     git('add', '.');
     git('commit', '-qm', 'code');
     assert.equal(validate('pull_request', base), 'docs_only=false');
-    // Même si le fichier devient un .md, son retrait du code est détecté.
+    // Même sans autre modification du code, la suppression du chemin src/
+    // doit empêcher de qualifier ce renommage de documentaire.
+    const beforeRename = git('rev-parse', 'HEAD');
     renameSync(join(dir, 'src', 'game.js'), join(dir, 'docs', 'game.md'));
     git('add', '-A');
     git('commit', '-qm', 'rename');
-    assert.equal(validate('pull_request', base), 'docs_only=false');
+    assert.equal(validate('pull_request', beforeRename), 'docs_only=false');
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
