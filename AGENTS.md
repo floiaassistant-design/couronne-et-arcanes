@@ -96,6 +96,25 @@
 - **Après autorisation explicite uniquement :** revérifier le commit `head`, la branche cible, les tests, les éventuels conflits et les mises à jour depuis la revue. Ne jamais écraser `main` ni forcer l'historique. Si la PR a changé ou si un contrôle échoue, suspendre et demander une nouvelle décision au besoin.
 - **Continuité :** le joueur teste quand il le souhaite ; les évolutions peuvent rester sur des branches et des PR ouvertes sans être fusionnées. À chaque fin de session, enregistrer le code et l'état du travail sur la branche, sans publier une nouvelle version stable sans accord.
 
+## Contrat CI — vérification sélective des PR documentaires
+
+- Les workflows `test.yml` et `web-package.yml` gardent leurs deux statuts
+  de validation. Le script `scripts/ci_change_scope.mjs` examine le diff Git
+  réel entre la base de PR et son checkout de fusion. Seuls les Markdown de
+  racine et de `docs/` constituent une **PR documentaire uniquement**.
+- Une liste vide, un changement d'application, de CSS, de test, de script,
+  d'image, d'export, de workflow, de configuration ou un renommage provenant
+  du code impose les contrôles complets (comportement conservateur).
+  Toute erreur de détection bloque la CI ; ne jamais réussir par défaut.
+- Sur PR documentaire seule, exécuter la classification et son test ciblé,
+  conserver les jobs verts, mais omettre navigateur, moteurs, builds et paquet.
+  **Sur tout push main**, continuer tous les tests et le paquet de publication,
+  même après une fusion documentaire : preuve de provenance exigée par Sites.
+- Garder les tests métier, la parité, le contrôle de JOUER, l'export web et les
+  chemins navigateur inchangés pour les PR ayant un impact autre que Markdown.
+  Modifier la classification ou les workflows exige toujours la CI complète
+  et des tests du classificateur couvrant les chemins inconnus et renommages.
+
 ## Règle permanente — architecture modulaire et qualité du code
 
 **Priorité à chaque mission de développement.** Cette section s'applique à toutes les futures versions et prévaut sur les indications d'architecture des sections historiques plus bas. Conserver des fichiers compréhensibles et une architecture cohérente au fil des ajouts, pas seulement lors d'une refonte ponctuelle.
