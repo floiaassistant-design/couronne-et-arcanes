@@ -22,7 +22,7 @@
 
 **Attention à la mécanique effective :** à la pioche, `src/engine/battle.js` calcule l'attente initiale avec `Math.max(0, CARDS[id].delay - 1)`. **0 et 1 conduisent tous deux à une attente initiale de zéro** : le changement du chiffre n'invente donc pas un tour d'attente supplémentaire. Ne pas changer cette règle historique sans décision séparée et tests de compatibilité.
 
-**Statut : règle validée en conception.** Le changement des valeurs du catalogue, les tests et la régénération de l'unique `JOUER.html` sont à réaliser dans **une PR de gameplay distincte**. Ne pas traiter la PR documentaire nº 41 comme une version déjà publiée. La future revue individuelle de chaque unité portera notamment sur le **délai supérieur ou égal à 1**, plutôt que de donner un délai de 1 à toutes les cartes par défaut.
+**Statut vérifié : règle validée en conception, et changement technique préparé dans la [PR nº 44](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/44), actuellement en brouillon, non fusionnée.** Les 8 délais 0→1 et la régénération de l'unique `JOUER.html` sont présents dans cette branche dédiée ; contrôles CI sur le dernier commit à confirmer. Ne pas confondre la présente PR documentaire nº 41, cette PR nº 44 et une version déjà publiée. La revue individuelle des autres cartes portera notamment sur le **délai supérieur ou égal à 1**, plutôt que de ramener toutes les cartes à 1 par défaut.
 
 ### Prérequis obligatoire : déplacement, portée et rôle AVANT les évolutions
 
