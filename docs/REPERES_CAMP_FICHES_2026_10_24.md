@@ -35,8 +35,10 @@ intégrité des sauvegardes réussis avec Playwright 1.56.0 / Chromium 141.
 Les repères ne recouvrent aucune carte voisine. Captures bureau et portrait
 examinées : texte court, symbole en tête, emblème lumineux et Citadelle conservés.
 Export local : 34 443 715 octets, blob Git `f61db5e6089a2cab7cb552d43bf2542f4b703422`.
-Le générateur distant ponctuel doit produire le même blob, puis être retiré ;
-la CI finale et son commit sont consignés dans la PR.
+Le [générateur distant ponctuel](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40118987337)
+a réussi et vérifié ce même blob. Son workflow est retiré de l’arbre final ;
+la CI finale et son commit sont consignés dans la PR. Les premières CI de
+préparation, lancées avant synchronisation de JOUER, ne valident pas cet arbre.
 Les anciens tests du texte détaillé vérifient maintenant le résumé demandé,
 ses cinq symboles et les états réels ; les vérifications du moteur sont conservées.
 
