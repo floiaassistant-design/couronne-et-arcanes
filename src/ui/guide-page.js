@@ -27,7 +27,7 @@ export function renderGuidePage({ btn, previousGameAvailable }) {
       ],
       [
         'Activez une formation',
-        'Placez au moins deux créatures du même Ordre sur une même ligne : chacune gagne +1 attaque tant que la formation tient. Ce bonus est visible avec ✦ Concorde et fonctionne aussi pour les ennemis.'
+        'Placez au moins deux créatures du même Ordre sur une même ligne : chacune gagne +1 attaque tant que la formation tient. La carte elle-même compte parmi les deux ; davantage de créatures ne porte pas ce bonus au-delà de +1. L’emblème déjà peint en haut à droite de la carte s’éclaire quand Concorde est actif, aussi chez les ennemis. La fiche indique le bonus et son état.'
       ],
       [
         'Choisissez vos talents',

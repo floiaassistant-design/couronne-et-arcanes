@@ -1,3 +1,20 @@
+## Proposition — Concorde sur les emblèmes existants, 24 octobre 2026
+
+- Lumière fixe et discrète sur les cinq logos déjà peints en haut à droite,
+  uniquement lorsque le moteur accorde réellement Concorde ; retrait du badge
+  flottant et de ses styles obsolètes.
+- Règle commune expliquée dans les fiches des 53 unités : deux alliés au total,
+  même Ordre/camp/ligne, +1 ATQ chacun sans cumul, retrait à rupture de formation.
+- Fiche agrandie sous la barre de navigation, pour garder Citadelle accessible.
+- Moteur, IA, statistiques, images et sauvegardes conservés. Un seul export
+  JOUER régénéré, tests dédiés et vérifications de compatibilité.
+- Proposition non fusionnée ni publiée ; revue et autorisation spécifique requises.
+
+## Historique des propositions et intégrations antérieures
+
+Les statuts datés ci-dessous décrivent leurs étapes historiques ; lire l’état
+courant et les PR réelles pour connaître les travaux encore ouverts.
+
 ## Proposition — ciblage direct et effets de combat, 23 octobre 2026
 
 - Clic sur les cartes autorisées, aperçu exact du moteur, confirmation,

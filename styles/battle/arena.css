@@ -166,10 +166,6 @@
   overflow: hidden;
 }
 
-.arena-lofi .formation-badge {
-  padding: 2px;
-  border-radius: 0;
-}
 .arena-lofi .silence-badge {
   font-size: 9px;
   border-radius: 0;
