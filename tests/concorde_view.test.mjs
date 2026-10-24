@@ -5,7 +5,7 @@ import {freshProfile,createBattle,playPlayerCard} from '../src/engine.js';
 import {createViews} from '../src/ui/views.js';
 import {boardInspectionData,cardInspectionContent,previewPosition} from '../src/ui/card-inspection.js';
 import {generatedCardFace} from '../src/ui/generated-card.js';
-import {collectionInspection} from '../src/ui/collection.js';
+import {collectionHoverContent} from '../src/ui/collection.js';
 import {concordeDescription} from '../src/ui/concorde.js';
 import {esc} from '../src/ui/markup.js';
 
@@ -84,9 +84,9 @@ test('Les deux camps affichent leur formation sans modifier les cinq champs de c
 });
 
 test('La Collection explique la version jouable sans définir les futures évolutions',()=>{
- const profile=freshProfile(),helpers={esc,cardUI:()=>'',btn:()=>''};
- assert.match(collectionInspection(profile,'militia','commun',helpers),/concorde-description/);
- assert.doesNotMatch(collectionInspection(profile,'militia','divine',helpers),/concorde-description/);
+ const profile=freshProfile();
+ assert.match(collectionHoverContent(profile,'militia','commun',esc),/concorde-description/);
+ assert.doesNotMatch(collectionHoverContent(profile,'militia','divine',esc),/concorde-description/);
  const card={...CARDS.militia,name:'<img>'};
  assert.doesNotMatch(cardInspectionContent(card,{wait:0},null,esc),/<img>/);
 });
