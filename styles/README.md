@@ -17,6 +17,7 @@ et son paquet diagnostic `tests/JOUER.test.html`.
 | `cards/hand.css` | Cartes compactes, sélection, attente et disponibilité |
 | `cards/rarity.css` | Contours et étiquettes de rareté |
 | `cards/illustrated.css` | Cadre illustré et variante compacte |
+| `cards/concorde.css` | Lumière des emblèmes peints et descriptions du bonus de faction |
 | `cards/inspection.css` | Lecture des capacités et espace réservé |
 | `battle/base.css` | HUD, cases, journal, formations et contrôle |
 | `battle/units.css` | Unités sur les cases, notamment les parties historiques |

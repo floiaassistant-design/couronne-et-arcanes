@@ -7,7 +7,7 @@ on:
 
 jobs:
   validation:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
@@ -31,6 +31,8 @@ jobs:
           python3 -m playwright install --with-deps chromium
       - name: Construire le HTML réservé aux tests navigateur
         run: npm run build:test
+      - name: Concorde, emblèmes existants, formations et reprise hors ligne
+        run: python3 tests/browser_concorde.py
       - name: Ciblage direct, aperçu, souris, tactile et repli du lecteur
         run: python3 tests/browser_spell_targeting.py
       - name: Lecture des attaques, dégâts réels, interruption et mouvement réduit
@@ -90,6 +92,7 @@ jobs:
             /tmp/ca-combat-*.png
             /tmp/ca-combat-fx-*.png
             /tmp/ca-targeting-*.png
+            /tmp/ca-concorde-*.png
             /tmp/ca-capacites-*.png
             /tmp/ca-collection-*.png
             /tmp/ca-milicien-*.png

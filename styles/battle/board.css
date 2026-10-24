@@ -25,13 +25,6 @@
   --unit-rarity: #ffd46b;
 }
 
-.arena-lofi .formation-badge {
-  top: 48px;
-  left: 2px;
-  right: 2px;
-  font-size: 7px;
-  z-index: 7;
-}
 .arena-lofi .silence-badge {
   top: 61px;
   z-index: 8;

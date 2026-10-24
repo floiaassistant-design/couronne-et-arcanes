@@ -1,57 +1,44 @@
-# État courant — 23 octobre 2026
+# État courant — 24 octobre 2026
 
 ## Intégré sur GitHub
 
-Base vérifiée au début de la mission : main
-`56d786d4e4ae160e731460f2ba7860f5ca6fe2e5`, arbre
-`ddf7ae16828b5142bda9ae1d9e0c384336e254ca`.
-Les PR 35–39 sont fusionnées : Guide modulaire, lecture séquentielle du combat,
-laboratoire, onze Éther + 23 sorts, préparation de publication Sites.
-La CI de cette base est réussie. Aucune PR n’était ouverte au démarrage.
+Main vérifié : `2de25b7cb9cc99bd1edb9202c43fea5f8338b5c6`, arbre
+`7ce5becc3c5af17715a10ff7d1a2b157dcf982f6`, après la PR nº 40.
+Le ciblage des sorts, le lecteur d’effets, le laboratoire et les 76 cartes
+illustrées sont intégrés. Un jeu web et un seul JOUER hors ligne ; profils,
+progression et anciennes batailles 3×5 conservés.
 
-Un jeu web et un seul JOUER.html hors ligne, cartes sur le plateau et
-76 illustrations. Tours alternés sur les nouvelles batailles ; compatibilité
-historique 3×5, profils et clés de stockage conservés.
+## Proposition actuelle — Concorde
 
-## Proposition actuelle — ciblage direct et effets
+Branche `feat/concorde-emblemes-20261024`, [PR nº 42](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/42), depuis ce main exact.
+L’emblème déjà peint en haut à droite s’éclaire de façon fixe lorsque le moteur
+accorde Concorde. Le badge flottant est retiré. Explications dans les fiches
+main/plateau/Collection ; la fiche réserve le menu Citadelle sur petit écran.
 
-Branche `feat/ciblage-effets-combat-20261023`, depuis la base ci-dessus.
-Clic direct sur les cibles légales, aperçu issu du moteur sur copie,
-confirmation/annulation, zones affectées et soutien. Aucun changement des
-priorités automatiques des sorts ni de leur exécution immédiate.
-Contact, tirs et magie par ordre, soins, barrières, états actifs et disparition
-étendent le lecteur séquentiel existant. Le laboratoire reste isolé de l’aventure.
+Le propriétaire a demandé de faire le travail Concorde, puis évoqué la
+surbrillance du logo actuel et sa crainte d’un résultat trop chargé. Cette
+variante conserve donc les logos existants et leur place ; l’esthétique de la
+proposition et la fusion restent à valider. Aucun emblème neuf créé ou importé,
+aucun fichier de l’atelier modifié. L’audit documentaire nº 41 reste indépendant.
+[Contrat et contrôles](CONCORDE_2026_10_24.md).
 
-Les responsabilités sont séparées entre ciblage/résolution moteur,
-contrôleur/rendu d’aperçu, séquenceur et bibliothèque d’effets. Aucune dépendance
-ajoutée au jeu ; aucun asset ni statistique/IA/progression modifié.
-[Contrat, tests et limites](CIBLAGE_EFFETS_COMBAT_2026_10_23.md).
+Les validations de conception Garde, Impact de zone, évolutions et Milicien
+suivies dans Notion ne sont pas implémentées par cette branche.
 
-Contrôles locaux : 325 tests, 60 parités, 23 sorts sur trois formats, nouveau
-parcours ciblage sur cinq configurations, effets, laboratoire, web modulaire,
-aperçus, déploiement et intégrité des sauvegardes réussis. Export officiel
-généré depuis les mêmes sources ; la CI complète de la PR reste à constater
-sur son commit final. Ne pas annoncer cette branche comme intégrée ou publiée.
+## Vérifications et reprise
+
+Local : 330 tests, 60 parités et builds réussis ; Concorde, aperçus, Collection,
+pose, Aube/sceaux, capacités, effets/laboratoire, jeu modulaire et sauvegardes
+contrôlés. JOUER distant et local identiques, blob `1e2efb67929e1c0d50c93914c288ef60ce957056`.
+Les résultats détaillés et la CI finale sont consignés dans le contrat et la PR.
+Relire le main et les PR, puis le diff complet avant proposition de fusion.
+Le rendu reste proposé, non fusionné et non publié. Chaque PR nécessite
+son propre accord explicite ; ne pas fusionner l’audit avec cette évolution.
 
 ## Publication
 
-Hébergement choisi : Sites, identifié dans `.openai/hosting.json`.
+Sites reste l’hébergement identifié dans `.openai/hosting.json`.
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site).
-Le statut publié doit être confirmé dans le déploiement terminal ; les résultats
-de la mission de ciblage ne modifient pas la publication actuelle.
-L’automatisation de publication existante est réservée aux fusions sur main.
-Aucune publication concurrente créée par cette mission.
-
-## Reprise
-
-1. Lire AGENTS, README, le présent état et le contrat de ciblage.
-2. Vérifier le main, la branche, les PR et les derniers résultats réels.
-3. Terminer les contrôles annoncés en cours, relire le diff et l’export généré.
-4. Obtenir l’accord explicite pour cette PR avant toute fusion.
-
-Les anciens rapports datés dans docs décrivent leurs propres jalons :
-[effets initiaux](EFFETS_COMBAT_2026_10_23.md),
-[laboratoire](LABORATOIRE_2026_10_23.md),
-[import Éther/sorts](ETHER_SORTS_INTEGRATION_2026_10_23.md),
-[export unique](EXPORT_UNIQUE_2026_10_22.md).
-Leurs anciennes mentions « proposé / pas fusionné » sont historiques.
+Aucune publication de branche ; publier uniquement main après fusion autorisée,
+CI correspondante et vérification du déploiement terminal. Cette mission ne
+modifie ni l’automatisation existante ni l’audience du Site.

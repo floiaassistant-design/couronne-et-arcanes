@@ -13,7 +13,7 @@ Le plateau, les cartes et le moteur sont communs. Les nouveaux combats utilisent
 les tours alternés : poser jusqu’à deux cartes, valider, puis regarder ses unités
 agir et l’IA jouer. Les anciens combats 3×5 gardent leurs règles historiques.
 
-## Ciblage direct et effets — proposition en cours
+## Ciblage direct et effets
 
 Sélectionner un sort, cliquer une carte autorisée, lire l’aperçu puis **Lancer le
 sort**. Les contours verts désignent les cibles autorisées ; les contours dorés
@@ -33,7 +33,22 @@ L’ordre et les résultats sont ceux du moteur. Vitesse ×2, Passer, mouvement 
 et désactivation des animations restent disponibles. Le résultat réel est
 sauvegardé avant les effets ; une interruption ne rejoue aucune attaque.
 [Contrat et vérifications](docs/CIBLAGE_EFFETS_COMBAT_2026_10_23.md).
-Cette proposition n’est ni fusionnée ni publiée.
+Le ciblage et ces effets sont intégrés sur GitHub depuis la PR nº 40.
+
+## Concorde — proposition en revue
+
+Deux unités alliées du même Ordre sur la même ligne gagnent chacune +1 ATQ.
+La carte elle-même compte parmi les deux ; davantage d’unités ne cumule pas ce
+bonus. Il disparaît lorsque la formation cesse ; les sorts en sont exclus.
+
+La proposition éclaire discrètement l’emblème déjà peint **en haut à droite**
+des cartes concernées. La lumière est fixe et localisée ; les fiches de main,
+de plateau et de Collection expliquent la règle. Aucun nouveau dessin : les
+illustrations et leurs reçus sont conservés. La variante à emblèmes neufs au
+centre envisagée dans l’audit reste historique, sans import automatique.
+[Contrat et validation](docs/CONCORDE_2026_10_24.md).
+Cette évolution attend sa revue et son accord spécifique de fusion ; elle
+n’est pas publiée sur le Site.
 
 ## Progression et sauvegarde
 
@@ -53,6 +68,7 @@ npm test
 npm run test:parity
 npm run build
 npm run build:test
+python3 tests/browser_concorde.py
 python3 tests/browser_spell_targeting.py
 python3 tests/browser_combat_fx.py
 ```
