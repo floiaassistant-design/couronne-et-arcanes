@@ -1,6 +1,6 @@
 import {createSpellController} from './ui/spell-controller.js';
 import {esc} from './ui/markup.js';
-import {collectionInspection} from './ui/collection.js';
+import {bindCollectionHover} from './ui/collection.js';
 import {createViews} from './ui/views.js';
 import {developerLabUI} from './ui/developer-lab.js';
 import {freshLab,editLabDeck,setLabLevel,setLabRarity,createLabBattle} from './engine/developer-lab.js';
@@ -22,6 +22,7 @@ let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCar
 let displayBattle=null,combatReport=null;
 let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null,developer=null;
 const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({battle:displayBattle||battle,screen:isBattleFxPlaying()||CARDS[battle?.heroes.p.hand[selectedCard]?.id]?.type==='sort'?'resolving':screen}),esc);
+const closeCollectionHover=bindCollectionHover(()=>({profile,screen}),esc);
 const {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying}=createCombatFx(()=>({animationsEnabled,screen}));
 const {spellState,handleSpell,resetSpell}=createSpellController(()=>({battle,selectedCard}),{refresh:()=>render(),launch:(index,lane)=>withBattleFx(()=>playPlayerCard(battle,index,lane)),closeInspection:()=>closeCardInspection(true)});
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
@@ -90,6 +91,7 @@ function render({frameUpdate=false}={}){
  const handScroll=document.querySelector('.combat-hand-dock .hand')?.scrollLeft||0;
  const stageScroll=document.querySelector('.combat-stage')?.scrollTop||0;
  closeCardInspection(true,'render');
+ closeCollectionHover();
  document.body.classList.toggle('animations-off',!animationsEnabled);
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
  $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
@@ -227,7 +229,6 @@ case 'lab-open':openDeveloper();break;
   case 'restore-previous-game':if(!hasPreviousAdventure()){toast('Aucune partie précédente disponible.');break;}showModal(`<div class="kicker">PARTIE PRÉCÉDENTE</div><h2>Échanger les deux parties ?</h2><p>La partie précédente (y compris son combat sauvegardé) sera rétablie. Votre partie actuelle prendra sa place dans l’emplacement précédent.</p><div class="button-row">${btn('Oui, retrouver la partie','confirm-restore-previous-game','','primary')}${btn('Annuler','close-modal','','ghost')}</div>`);break;
   case 'confirm-restore-previous-game':if(!restorePreviousAdventure()){toast('Restauration impossible : vérifiez le stockage local.');break;}switchToSavedAdventure();toast('Partie précédente retrouvée.');break;
  case 'collection-faction':if(id==='all'||FACTIONS[id]){collectionFilter=id;render();}break;
- case 'collection-inspect':{const html=collectionInspection(profile,id,dataset.rarity,{btn,cardUI,esc});if(html){showModal(html);document.querySelector('.collection-inspection [data-action="close-modal"]')?.focus();}break;}
  case 'home':navigate('home');break;
  case 'nav':navigate(page);break;
  case 'start-next':startMission(CAMPAIGN[Math.min(profile.unlocked-1,11)].id);break;
@@ -296,7 +297,7 @@ case 'lab-open':openDeveloper();break;
 }
 document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();act(el.dataset.action,el.dataset);});
 document.addEventListener('keydown',event=>{
- if(event.key==='Escape'){if(isBattleFxPlaying())return;if(selectedCard>=0){resetSpell();selectedCard=-1;render();}closeCardInspection(true);if(document.querySelector('.collection-inspection'))hideModal();return;}
+ if(event.key==='Escape'){if(isBattleFxPlaying())return;if(selectedCard>=0){resetSpell();selectedCard=-1;render();}closeCardInspection(true);return;}
  if((event.key==='Enter'||event.key===' ')&&!event.target.closest('button')){
   const el=event.target.closest('.unit-card.compact,[data-action="deploy"],[data-action="spell-lane"]');
   if(el){event.preventDefault();act(el.dataset.action,el.dataset);}
