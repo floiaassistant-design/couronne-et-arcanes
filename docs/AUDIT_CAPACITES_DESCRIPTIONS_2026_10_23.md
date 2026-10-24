@@ -215,6 +215,31 @@
 
 **À spécifier techniquement dans une PR ultérieure :** égalités de proportion de PV entre cibles, calcul stable des deux bénéficiaires, interaction avec les états qui bloquent le soin, présentation et animations multi-lignes, sauvegardes historiques et tests d’équilibrage. Aucune modification du moteur ni publication par la PR documentaire nº 41.
 
+### Fiche de conception validée — Paladin solaire de l’Aube (`paladin`)
+
+**Validation du propriétaire du 24 octobre 2026 : progression Épique → Éveillé, cumulative, approuvée en conception uniquement.** Le Paladin est **nativement Épique** ; **aucune forme Commune ni Rare inférieure** n'est à créer. Les rangs supérieurs ne sont **pas intégrés au moteur**, à la Collection ni aux sauvegardes par cette PR documentaire.
+
+**Version Épique jouable** (`src/data.js`, `src/engine/battle.js` du `main` `f0c67075`) : **4 ATQ / 9 PV / délai 3**, déplacement d'**une case** maximum vers l'avant par action, attaque à **une case devant sur sa ligne**. **Armure 2** : retranche 2 aux dégâts bruts reçus, avec un minimum de 1 avant barrière, sauf Perforation. **Riposte** : 2 dégâts bruts fixes actuellement, **au plus une fois par tour**, si le Paladin survit à une attaque ennemie **au contact**, que les deux unités peuvent agir et qu'il n'est pas réduit au silence ; jamais sur une attaque à distance ni en chaîne. Le Paladin **n'a pas Garde** : il ne possède pas l'interception propre au Porte-égide. **☀ Bonus de faction : +1 attaque** avec deux unités Aube alliées sur sa ligne, sans modifier la Riposte fixe actuellement jouable.
+
+**Héritage validé :** chaque nouvelle rareté **conserve les statistiques et pouvoirs précédemment acquis** et ajoute son gain. Lorsque l'Armure s'améliore, **Armure 3 remplace Armure 2**, sans réduction cumulée de 5. La barrière de l'Éveillé vient **en plus** de l'Armure et de la Riposte conservées. Les nombres ATQ et PV indiquent les **totaux à ce rang**.
+
+| Rareté | ATQ totale | PV max totaux | Gain du rang | Statut |
+| --- | ---: | ---: | --- | --- |
+| **Commune** | — | — | Aucun rang inférieur à inventer | **Inexistante pour cette carte** |
+| **Rare** | — | — | Aucun rang inférieur à inventer | **Inexistante pour cette carte** |
+| **Épique** | **4** | **9** | **Armure 2** et **Riposte** | **Jouable** |
+| **Légendaire** | **4** | **11** | **+2 PV maximum** conservés ensuite | **Validé en conception** |
+| **Divin** | **4** | **11** | **Armure améliorée de 2 à 3** (remplacement, sans cumul) | **Validé en conception** |
+| **Éveillé** | **4** | **11** | Après une **Riposte réellement déclenchée**, obtient une **barrière de 2 points**, limitée à **2 points pour ce pouvoir**, **au plus une fois par tour** ; ne protège que lui-même | **Validé en conception** |
+
+**Enchaînement Éveillé validé :** 1. une unité ennemie attaque le Paladin au **corps à corps** ; 2. le Paladin survit et, si toutes les conditions de Riposte sont réunies, **riposte** ; 3. **après cette Riposte**, il reçoit sa barrière personnelle de 2 points. Si le Paladin ne peut pas riposter (attaque à distance, silence, mort, Riposte déjà utilisée dans le tour), **il ne reçoit aucune barrière par cette capacité**. L'effet propre à la Riposte Éveillée est plafonné à **2 points**, sans ajouter 2 de plus à chaque coup ; la gestion de barrières éventuellement fournies par **d'autres pouvoirs** reste à préciser pour ne pas les supprimer arbitrairement.
+
+**Riposte future déjà décidée pour toutes les unités concernées, pas encore codée :** les dégâts bruts suivront l'**ATQ effective** au moment du contre-coup, bonus comme Concorde compris. Paladin : **4 dégâts bruts sans bonus** ; **5 avec Concorde +1**, avant les protections adverses. La fréquence demeure **une Riposte par tour au contact**. Le jeu publié inflige **toujours 2 dégâts fixes** pour le moment.
+
+**Paramètres conservés aux quatre raretés existantes/envisagées :** **délai 3**, déplacement **1 case**, portée d'attaque **1 case devant lui sur sa ligne** ; **4 ATQ de base** ; aucun Vol, Célérité, Garde ou tir à distance inventé. L'Armure se maintient à 2 jusqu'à Légendaire, puis à 3 au Divin et à l'Éveillé.
+
+**Reste à prévoir pour une future PR de règles :** précision de l'état temporaire et du plafond de la barrière vis-à-vis d'autres boucliers, reprise de sauvegardes anciennes, effets visuels et journal des dégâts, silence, intégrité de la limite par tour, cas de mort simultanée et simulations d'équilibrage. Aucune de ces fonctionnalités futures n'est implantée par la présente fiche.
+
 ### Règle de conception et interface souhaitée
 
 - **Six rangs affichables :** Commun, Rare, Épique, Légendaire, Divin, Éveillé ; **un état d'évolution par rang**, au lieu de trois sous-paliers à définir pour chaque rang. Les identifiants techniques déjà utilisés dans la Collection, notamment `divine` et `éveillée`, ne seront pas renommés sans migration étudiée.
@@ -254,7 +279,7 @@
 | Porte-égide (`shield`) | **Actuel :** 1 ATQ / 9 PV / délai 1 ; Armure 2, Garde de ligne historique, Riposte fixe 2 au contact (1 fois/tour). | **Conception validée :** 1 ATQ / 11 PV, +2 PV | **Conception validée :** 2 ATQ / 11 PV, +1 ATQ | **Conception validée :** 2 ATQ / 13 PV, +2 PV | **Conception validée :** 2 ATQ / 13 PV, Garde de sa couronne sur toute sa ligne | **Conception validée :** 2 ATQ / 13 PV, Garde de sa couronne face aux attaques de toutes les lignes |
 | Arbalétrière (`archer`) | **Actuel :** 2 ATQ / 3 PV / délai 1 ; tire à 2 cases devant elle, sur sa ligne. | **Conception validée :** 2 ATQ / 4 PV, +1 PV | **Conception validée :** 3 ATQ / 4 PV, +1 ATQ | **Conception validée :** 3 ATQ / 4 PV, portée 3 cases | **Conception validée :** 3 ATQ / 4 PV, perforation de l'armure sur la cible principale | **Conception validée :** 3 ATQ / 4 PV, +2 dégâts bruts à la seconde cible immédiatement derrière la première, protections appliquées |
 | Sœur de l’Aurore (`cleric`) | **Pas de version Commune à inventer** | **Rare jouable :** 1 ATQ / 4 PV / délai 2 ; soin de 2 PV à un allié blessé de sa ligne, elle-même comprise | **Conception validée :** 1 ATQ / 6 PV ; +2 PV | **Conception validée :** 1 ATQ / 6 PV ; soin amélioré à 3 PV pour une cible | **Conception validée :** 1 ATQ / 6 PV ; soigne jusqu’à 2 alliés blessés de sa ligne, 3 PV chacun | **Conception validée :** 1 ATQ / 6 PV ; soigne jusqu’à 2 alliés blessés, toutes lignes confondues, 3 PV chacun |
-| Paladin solaire (`paladin`) | — | — | **Actuel :** Armure 2. Riposte : inflige 2 dégâts à un attaquant adjacent au contact, au plus une fois par tour. | À définir | À définir | À définir |
+| Paladin solaire (`paladin`) | **Pas de version Commune** | **Pas de version Rare** | **Épique jouable :** 4 ATQ / 9 PV / délai 3 ; Armure 2 et Riposte fixe 2 (une fois/tour au contact) | **Conception validée :** 4 ATQ / 11 PV, +2 PV | **Conception validée :** 4 ATQ / 11 PV, Armure 3 remplace Armure 2 | **Conception validée :** 4 ATQ / 11 PV, après Riposte autorisée, barrière personnelle 2 points plafonnée et une fois/tour |
 | Porte-étendard (`banner`) | — | **Actuel :** Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). | À définir | À définir | À définir | À définir |
 | Capitaine de l’Aube (`scoutcaptain`) | — | **Actuel :** Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). | À définir | À définir | À définir | À définir |
 | Prieur solaire (`sunpriest`) | — | **Actuel :** Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. | À définir | À définir | À définir | À définir |
