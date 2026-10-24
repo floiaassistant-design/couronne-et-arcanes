@@ -10,10 +10,10 @@ function battle(id='hourglass_surge'){
  for(const side of ['p','e'])Object.assign(b.heroes[side],{hand:[],deck:[],discard:[],hp:100,maxhp:100});
  b.heroes.p.hand=[{id,wait:0}];return b;
 }
-test('V2.10 adds two tempo spells without changing previous nominal delays',()=>{
+test('V2.10 conserve les cartes longues et normalise le délai minimal à 1',()=>{
  assert.equal(Object.keys(CARDS).length,76);
  assert.deepEqual([...TEMPO_IDS],['hourglass_surge','time_bind']);
- assert.equal(CARDS.dragon.delay,5);assert.equal(CARDS.militia.delay,0);
+ assert.equal(CARDS.dragon.delay,5);assert.equal(CARDS.militia.delay,1);
  assert.ok(TEMPO_IDS.every(id=>CARDS[id].type==='sort'));
 });
 test('Acceleration targets the slowest friendly card and respects leftmost ties',()=>{
