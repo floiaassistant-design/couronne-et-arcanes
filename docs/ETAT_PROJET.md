@@ -41,6 +41,17 @@ et fichiers diffusés comparés au paquet, selon le bilan de la PR nº 45.
 La publication est distincte de la fusion ; ne pas la déduire d'une simple CI.
 [Procédure et historique](PUBLICATION_WEB_2026_10_23.md).
 
+## Proposition de CI sélective — en préparation
+
+Branche `ci/sauter-tests-complets-pr-docs-20261024` : optimisations
+des deux workflows pour les PR Markdown uniquement. Les jobs restent
+visibles, la détection est prudente et couverte par de nouveaux tests.
+Toute PR touchant au jeu, à la configuration, aux ressources, à l'export
+ou à la CI garde le parcours complet ; tout push sur main conserve
+également les deux contrôles et l'archive de diffusion Sites.
+**Proposition non fusionnée, non publiée** : seule une PR approuvée
+spécifiquement pourra changer cette politique.
+
 ## Proposition ouverte et prochaine étape
 
 La [PR nº 41](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/41)
