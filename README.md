@@ -9,7 +9,10 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 - `JOUER.html` : **unique export jouable**, complet et autonome sans réseau.
 - `tests/JOUER.test.html` : diagnostic automatisé seulement, jamais distribué.
 
-Le catalogue impose un **délai de base minimal de 1** : les huit unités qui avaient un délai 0 passent à 1, sans changer les valeurs supérieures. À la pioche, un délai 1 reste immédiatement jouable avec l'attente historique `max(0, délai - 1)` ; cela ne crée pas un tour de préparation supplémentaire. Les délais plus élevés seront étudiés carte par carte.
+Le catalogue impose un **délai de base minimum de 1** : huit unités passent
+de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
+(`max(0, délai - 1)`). Elles restent jouables immédiatement ; les decks
+automatiques conservent leurs compositions historiques.
 
 Le plateau, les cartes et le moteur sont communs. Les nouveaux combats utilisent
 les tours alternés : poser jusqu’à deux cartes, valider, puis regarder ses unités
@@ -37,20 +40,21 @@ sauvegardé avant les effets ; une interruption ne rejoue aucune attaque.
 [Contrat et vérifications](docs/CIBLAGE_EFFETS_COMBAT_2026_10_23.md).
 Le ciblage et ces effets sont intégrés sur GitHub depuis la PR nº 40.
 
-## Concorde — proposition en revue
+## Concorde — intégré et publié
 
 Deux unités alliées du même Ordre sur la même ligne gagnent chacune +1 ATQ.
 La carte elle-même compte parmi les deux ; davantage d’unités ne cumule pas ce
 bonus. Il disparaît lorsque la formation cesse ; les sorts en sont exclus.
 
-La proposition éclaire discrètement l’emblème déjà peint **en haut à droite**
+Le jeu éclaire discrètement l’emblème déjà peint **en haut à droite**
 des cartes concernées. La lumière est fixe et localisée ; les fiches de main,
 de plateau et de Collection expliquent la règle. Aucun nouveau dessin : les
 illustrations et leurs reçus sont conservés. La variante à emblèmes neufs au
 centre envisagée dans l’audit reste historique, sans import automatique.
 [Contrat et validation](docs/CONCORDE_2026_10_24.md).
-Cette évolution attend sa revue et son accord spécifique de fusion ; elle
-n’est pas publiée sur le Site.
+La PR nº 42 a été fusionnée sur accord spécifique le 24 octobre 2026, puis
+publiée sur le [jeu en ligne](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site)
+(Sites, version 5). Le déploiement et les fichiers servis ont été vérifiés.
 
 ## Progression et sauvegarde
 
