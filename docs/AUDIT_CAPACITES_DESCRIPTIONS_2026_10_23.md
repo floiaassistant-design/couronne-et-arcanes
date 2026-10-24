@@ -1,10 +1,16 @@
 # Audit des capacités et projet de descriptions — Couronnes & Arcanes
 
-**État : PROPOSITION DOCUMENTAIRE, non validée.** 23 octobre 2026.
+**État : PROPOSITION DOCUMENTAIRE, non validée.** Audit initial du 23 octobre 2026.
 
-**Source vérifiée :** `floiaassistant-design/couronne-et-arcanes`, `main` au commit `2de25b7cb9cc99bd1edb9202c43fea5f8338b5c6` (PR 40 déjà intégrée au moment de l’audit). **Périmètre :** 76 cartes = 53 unités et 23 sorts, moteur, ciblage, capacités secondaires et textes affichés.
+**État révisé le 24 octobre 2026 — main officiel `f0c67075b2a954565601860dcd622f328168ec2c` (PR nº 47 fusionnée).** Cet audit conserve l'observation historique de la PR nº 40, mais les chiffres de délai, les propositions de textes courts et les décisions du propriétaire ont été confrontés au jeu et au suivi Notion du 24 octobre. **PR nº 41 toujours documentaire et non fusionnée** : aucune capacité future ci-dessous n'est programmée par sa lecture.
 
-**Aucune règle, statistique, sauvegarde, image, animation, IA ni export n'est modifié par ce document.** Les textes ci-dessous sont des *propositions* fidèles au moteur actuel, pas encore visibles dans le jeu ; les changements d’équilibrage restent en décision.
+**Déjà intégré :** Concorde sur l'emblème peint en haut à droite (PR nº 42), petits repères bleu/rouge et fiches à symbole suivi de « Bonus de faction : +1 attaque » (PR nº 45), délai minimum 1 et huit cartes corrigées sans attente supplémentaire (PR nº 44), puis CI sélective pour les PR Markdown (PR nº 47). Publication Sites du jeu vérifiée en version 7 après la PR nº 45. Les anciennes propositions d'emblèmes centrés et de délais 0, conservées en historique, ne décrivent pas les règles actuelles.
+
+**Validé uniquement pour de futures PR de règles :** Garde normale interceptant seulement entre attaquant et couronne, extensions de protection Divin et Éveillé à préciser lors de l'implémentation ; Impact de zone frappant seulement un second ennemi adjacent juste derrière la première cible, devant l'attaquant (+2 dégâts bruts) ; Feu follet portée 3 à ATQ 2 / PV 3 ; Riposte basée sur l'ATQ effective ; évolution unique par rareté. Rien de cela n'est actif par ce document. [Décisions Notion](https://app.notion.com/p/4026633072a881ed9768c615f538a929) et [tableau des 53 unités](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f).
+
+**Source de l'audit initial (historique) :** `floiaassistant-design/couronne-et-arcanes`, `main` au commit `2de25b7cb9cc99bd1edb9202c43fea5f8338b5c6` (PR 40 déjà intégrée à cette date). Les corrections ponctuelles datées ci-dessus sont vérifiées sur le main actuel ; les autres textes de capacité restent des propositions à tester avant intégration. **Périmètre :** 76 cartes = 53 unités et 23 sorts, moteur, ciblage, capacités secondaires et textes affichés.
+
+**Aucune règle, statistique, sauvegarde, image, animation, IA ni export n'est modifié par ce document.** Les descriptions sont des *propositions* issues de l'audit initial, actualisées pour les délais et la fiche de faction ; leur intégration et tout changement de règles demandent des PR séparées et leurs propres tests.
 
 ## 0. Simplification des raretés et de la Collection — décision du 24 octobre 2026
 
@@ -16,17 +22,17 @@
 
 ### Décision transversale — délai minimum de 1 (24 octobre 2026)
 
-**Validé par le propriétaire :** **aucune carte ne doit avoir un délai de base inférieur à 1**. Toutes les cartes actuellement à `delay: 0` passent à `delay: 1` ; les valeurs **2, 3, 4 et 5 restent inchangées** jusqu'à l'examen de leur carte. Le délai devra figurer dans **chaque fiche d'unité** et être décidé à chaque évolution, comme l'ATQ, les PV, la portée et le déplacement.
+**Validé et intégré par la [PR nº 44](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/44) :** **aucune carte n'a de délai de base inférieur à 1**. Les huit anciennes valeurs `delay: 0` sont passées à `delay: 1` ; les valeurs **2, 3, 4 et 5 restent inchangées** jusqu'à l'examen de leur carte. Le délai devra figurer dans **chaque fiche d'unité** et être décidé à chaque évolution, comme l'ATQ, les PV, la portée et le déplacement.
 
-**Huit unités concernées par le catalogue actuel (sur 76 cartes) :** Milicien de l'Aube (`militia`), Éclaireuse sylvestre (`ranger`), Loup des Brumes (`wolf`), Guerrier d'ossements (`bone`), Foreur de fer (`drill`), Feu follet (`spark`), Luciole des Épineuses (`pixie`), Lame nocturne (`nightblade`). **Aucun sort** ne possède actuellement un délai 0.
+**Huit unités corrigées par la PR nº 44 (sur 76 cartes) :** Milicien de l'Aube (`militia`), Éclaireuse sylvestre (`ranger`), Loup des Brumes (`wolf`), Guerrier d'ossements (`bone`), Foreur de fer (`drill`), Feu follet (`spark`), Luciole des Épineuses (`pixie`), Lame nocturne (`nightblade`). **Aucun sort** ne possédait de délai 0 et le catalogue actuel ne conserve plus aucune carte à délai 0.
 
-**Attention à la mécanique effective :** à la pioche, `src/engine/battle.js` calcule l'attente initiale avec `Math.max(0, CARDS[id].delay - 1)`. **0 et 1 conduisent tous deux à une attente initiale de zéro** : le changement du chiffre n'invente donc pas un tour d'attente supplémentaire. Ne pas changer cette règle historique sans décision séparée et tests de compatibilité.
+**Attention à la mécanique effective :** à la pioche, `src/engine/battle.js` calcule l'attente initiale avec `Math.max(0, CARDS[id].delay - 1)`. **Les anciennes valeurs 0 et les nouvelles valeurs 1 donnent toutes deux une attente initiale de zéro** : le changement du chiffre n'a pas ajouté de tour d'attente supplémentaire. Ne pas changer cette règle historique sans décision séparée et tests de compatibilité.
 
-**Statut vérifié : règle validée en conception, et changement technique préparé dans la [PR nº 44](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/44), actuellement en brouillon, non fusionnée.** Les 8 délais 0→1 et la régénération de l'unique `JOUER.html` sont présents dans cette branche dédiée ; contrôles CI sur le dernier commit à confirmer. Ne pas confondre la présente PR documentaire nº 41, cette PR nº 44 et une version déjà publiée. La revue individuelle des autres cartes portera notamment sur le **délai supérieur ou égal à 1**, plutôt que de ramener toutes les cartes à 1 par défaut.
+**Statut vérifié : PR nº 44 fusionnée, nouveau catalogue et unique `JOUER.html` intégrés, avec tests réussis et publication du jeu incluant cette correction constatée ensuite en version Sites 7.** La PR nº 41 reste un audit documentaire non fusionné. Ne pas confondre les anciennes valeurs de ses tableaux historiques avec le jeu actuel. La revue individuelle des autres cartes portera notamment sur le **délai supérieur ou égal à 1**, plutôt que de ramener toutes les cartes à 1 par défaut.
 
 ### Prérequis obligatoire : déplacement, portée et rôle AVANT les évolutions
 
-**Diagnostic du moteur en production (main `ea1e18c49bcfd291a664dacdf95b4bb5c847af89`, 24 octobre 2026).** Nous avions commencé les capacités par rareté sans documenter systématiquement **déplacement, portée des attaques, portée des effets, statistiques et délai**. Ce tableau établit le **socle réel des 53 unités** ; il ne valide aucune augmentation de vitesse ou de portée. Source : `src/data.js` et `src/engine/battle.js` (déplacement `moveUnits`, attaque `findTarget`) ainsi que `src/engine/battle-control.js`.
+**Diagnostic réalisé sur main `ea1e18c49bcfd291a664dacdf95b4bb5c847af89` ; délais réconciliés ensuite avec main `f0c67075b2a954565601860dcd622f328168ec2c` (24 octobre 2026).** Nous avions commencé les capacités par rareté sans documenter systématiquement **déplacement, portée des attaques, portée des effets, statistiques et délai**. Ce tableau établit le **socle réel des 53 unités** ; il ne valide aucune augmentation de vitesse ou de portée. Source : `src/data.js` et `src/engine/battle.js` (déplacement `moveUnits`, attaque `findTarget`) ainsi que `src/engine/battle-control.js`.
 
 - **Déplacement normal :** au plus **1 case en avant par phase d'action de l'unité** ; **Célérité** (Loup, Cerf, Ombre vorace, Griffon, Spectre) permet jusqu'à **2 cases**. Le mouvement cesse si une cible est déjà attaquable, si le chemin est bloqué, si l'unité est immobilisée ou à la limite du plateau. Silence peut suspendre Célérité.
 - **Vol :** ne donne pas automatiquement 2 cases de vitesse ; il autorise à **sauter par-dessus un allié immédiatement devant**, avec une case d'atterrissage libre et dans les limites. Certaines unités possèdent à la fois Vol et Célérité.
@@ -39,7 +45,7 @@
 
 | Unité | Base native (ATQ / PV / délai) | Avance max. | Attaque | Effets : cible/zone actuelle | Mobilité particulière |
 |---|---|---|---|---|---|
-| Milicien de l’Aube (`militia`) | commun ; 2 ATQ / 5 PV ; délai 0 | 1 case | 1 case | Aucun | — |
+| Milicien de l’Aube (`militia`) | commun ; 2 ATQ / 5 PV ; délai 1 | 1 case | 1 case | Aucun | — |
 | Porte-égide (`shield`) | commun ; 1 ATQ / 9 PV ; délai 1 | 1 case | 1 case | Armure : soi ; Garde : couronne de sa ligne ; Riposte : ennemi au contact | — |
 | Arbalétrière (`archer`) | commun ; 2 ATQ / 3 PV ; délai 1 | 1 case | 2 cases | Distance : attaque | — |
 | Sœur de l’Aurore (`cleric`) | rare ; 1 ATQ / 4 PV ; délai 2 | 1 case | 1 case | Soin : allié de sa ligne | — |
@@ -54,13 +60,13 @@
 
 | Unité | Base native (ATQ / PV / délai) | Avance max. | Attaque | Effets : cible/zone actuelle | Mobilité particulière |
 |---|---|---|---|---|---|
-| Éclaireuse sylvestre (`ranger`) | commun ; 2 ATQ / 4 PV ; délai 0 | 1 case | 2 cases | Distance : attaque | — |
-| Loup des Brumes (`wolf`) | commun ; 3 ATQ / 3 PV ; délai 0 | 2 cases | 1 case | Célérité : déplacement | Charge après déplacement |
+| Éclaireuse sylvestre (`ranger`) | commun ; 2 ATQ / 4 PV ; délai 1 | 1 case | 2 cases | Distance : attaque | — |
+| Loup des Brumes (`wolf`) | commun ; 3 ATQ / 3 PV ; délai 1 | 2 cases | 1 case | Célérité : déplacement | Charge après déplacement |
 | Gardien des Racines (`treant`) | rare ; 3 ATQ / 10 PV ; délai 2 | 1 case | 1 case | Armure : soi ; Garde : couronne de sa ligne ; Riposte : ennemi au contact | — |
 | Dryade luminescente (`dryad`) | rare ; 1 ATQ / 5 PV ; délai 2 | 1 case | 1 case | Soin : allié de sa ligne | — |
 | Cerf astral (`stag`) | épique ; 5 ATQ / 6 PV ; délai 3 | 2 cases | 1 case | Célérité : déplacement | Charge après déplacement |
 | Traqueur d’épines (`thorn`) | commun ; 2 ATQ / 5 PV ; délai 1 | 1 case | 1 case | Poison : cible touchée | — |
-| Luciole des Épineuses (`pixie`) | commun ; 2 ATQ / 3 PV ; délai 0 | 1 case | 1 case | Protection : sa couronne | Vol : saute un allié si atterrissage libre |
+| Luciole des Épineuses (`pixie`) | commun ; 2 ATQ / 3 PV ; délai 1 | 1 case | 1 case | Protection : sa couronne | Vol : saute un allié si atterrissage libre |
 | Ours des Roches (`bear`) | rare ; 4 ATQ / 9 PV ; délai 2 | 1 case | 1 case | Armure : soi | — |
 | Archidruide Feuillage (`archdruid`) | épique ; 3 ATQ / 7 PV ; délai 3 | 1 case | 1 case | Soin : allié de sa ligne | — |
 | Hibou du Crépuscule (`owl`) | commun ; 2 ATQ / 4 PV ; délai 1 | 1 case | 2 cases | Distance : attaque | Vol : saute un allié si atterrissage libre |
@@ -70,7 +76,7 @@
 
 | Unité | Base native (ATQ / PV / délai) | Avance max. | Attaque | Effets : cible/zone actuelle | Mobilité particulière |
 |---|---|---|---|---|---|
-| Guerrier d’ossements (`bone`) | commun ; 3 ATQ / 3 PV ; délai 0 | 1 case | 1 case | Aucun | — |
+| Guerrier d’ossements (`bone`) | commun ; 3 ATQ / 3 PV ; délai 1 | 1 case | 1 case | Aucun | — |
 | Ombre vorace (`shade`) | rare ; 3 ATQ / 3 PV ; délai 1 | 2 cases | 1 case | Célérité : déplacement | Charge après déplacement |
 | Veilleur du tombeau (`crypt`) | commun ; 2 ATQ / 7 PV ; délai 1 | 1 case | 1 case | Armure : soi ; Garde : couronne de sa ligne | — |
 | Faucheur de fièvre (`plague`) | rare ; 3 ATQ / 5 PV ; délai 2 | 1 case | 1 case | Poison : cible touchée | — |
@@ -78,7 +84,7 @@
 | Banshee des Voiles (`banshee`) | épique ; 4 ATQ / 5 PV ; délai 3 | 1 case | 2 cases | Distance : attaque | Vol : saute un allié si atterrissage libre |
 | Vampire d’Obsidienne (`vampire`) | épique ; 5 ATQ / 6 PV ; délai 3 | 1 case | 1 case | Vol de vie : son héros | — |
 | Chevalier du Tombeau (`graveknight`) | rare ; 4 ATQ / 8 PV ; délai 2 | 1 case | 1 case | Armure : soi ; Riposte : ennemi au contact | Charge après déplacement |
-| Lame nocturne (`nightblade`) | commun ; 3 ATQ / 3 PV ; délai 0 | 1 case | 1 case | Perforation : cible attaquée | — |
+| Lame nocturne (`nightblade`) | commun ; 3 ATQ / 3 PV ; délai 1 | 1 case | 1 case | Perforation : cible attaquée | — |
 | Spectre du Caveau (`spectre`) | rare ; 3 ATQ / 4 PV ; délai 1 | 2 cases | 1 case | Célérité : déplacement | Charge après déplacement |
 | Inquisiteur des Brumes (`mist_inquisitor`) | rare ; 2 ATQ / 6 PV ; délai 3 | 1 case | 1 case | Silence : ennemi de sa ligne | — |
 
@@ -89,7 +95,7 @@
 | Marteau des Monts (`smith`) | commun ; 3 ATQ / 6 PV ; délai 1 | 1 case | 1 case | Aucun | — |
 | Golem runique (`golem`) | rare ; 2 ATQ / 12 PV ; délai 2 | 1 case | 1 case | Armure : soi ; Garde : couronne de sa ligne ; Riposte : ennemi au contact | — |
 | Sapeur gobelin (`bomb`) | rare ; 4 ATQ / 3 PV ; délai 2 | 1 case | 1 case | Impact : autre ennemi de sa ligne (moteur actuel) | — |
-| Foreur de fer (`drill`) | commun ; 2 ATQ / 5 PV ; délai 0 | 1 case | 1 case | Armure : soi | — |
+| Foreur de fer (`drill`) | commun ; 2 ATQ / 5 PV ; délai 1 | 1 case | 1 case | Armure : soi | — |
 | Colosse de braise (`colossus`) | légendaire ; 6 ATQ / 13 PV ; délai 4 | 1 case | 1 case | Armure : soi | — |
 | Ingénieure d’acier (`engineer`) | épique ; 3 ATQ / 7 PV ; délai 3 | 1 case | 1 case | Inspiration : allié de sa ligne | — |
 | Canon des Terres Rouges (`cannon`) | épique ; 5 ATQ / 7 PV ; délai 3 | 1 case | 2 cases | Distance : attaque | — |
@@ -101,7 +107,7 @@
 
 | Unité | Base native (ATQ / PV / délai) | Avance max. | Attaque | Effets : cible/zone actuelle | Mobilité particulière |
 |---|---|---|---|---|---|
-| Feu follet (`spark`) | commun ; 2 ATQ / 3 PV ; délai 0 | 1 case | 2 cases | Distance : attaque | — |
+| Feu follet (`spark`) | commun ; 2 ATQ / 3 PV ; délai 1 | 1 case | 2 cases | Distance : attaque | — |
 | Oracle des Astres (`mystic`) | rare ; 3 ATQ / 4 PV ; délai 2 | 1 case | 2 cases | Distance : attaque | — |
 | Élémentaire azuré (`elemental`) | épique ; 5 ATQ / 8 PV ; délai 3 | 1 case | 1 case | Impact : autre ennemi de sa ligne (moteur actuel) | — |
 | Griffon du Zénith (`griffin`) | épique ; 5 ATQ / 6 PV ; délai 3 | 2 cases | 1 case | Célérité : déplacement | Vol : saute un allié si atterrissage libre ; Charge après déplacement |
@@ -113,24 +119,24 @@
 | Séraphin d’Azur (`seraph`) | légendaire ; 5 ATQ / 10 PV ; délai 4 | 1 case | 1 case | Soin : allié de sa ligne | Vol : saute un allié si atterrissage libre |
 | Marcheur des Portails (`portal_walker`) | rare ; 3 ATQ / 5 PV ; délai 2 | 1 case | 1 case | Portail : autre ligne, même colonne | Changement de ligne conditionnel |
 
-**Exemple de lecture :** Milicien Commun : **2 ATQ / 5 PV, délai 0, avance 1 case, attaque à 1 case**. Porte-égide Commun : **1 ATQ / 9 PV, délai 1, avance 1 case, attaque à 1 case**, avec Armure 2, Garde et Riposte actuelles (Riposte fixe 2 dans le moteur ; **riposte égale à l'ATQ** uniquement projetée). Même au rang Éveillé, les caractéristiques de mouvement/portée **ne changent pas sans décision spécifique**. Les stats finales des futures raretés restent à définir.
+**Exemple de lecture :** Milicien Commun : **2 ATQ / 5 PV, délai 1, avance 1 case, attaque à 1 case**. Porte-égide Commun : **1 ATQ / 9 PV, délai 1, avance 1 case, attaque à 1 case**, avec Armure 2, Garde et Riposte actuelles (Riposte fixe 2 dans le moteur ; **riposte égale à l'ATQ** uniquement projetée). Même au rang Éveillé, les caractéristiques de mouvement/portée **ne changent pas sans décision spécifique**. Les stats finales des futures raretés restent à définir.
 
 ### Fiche complète du Milicien — mobilité et portée validées en conception
 
-**Méthode :** fixer d'abord le fonctionnement **spatial** de l'unité, puis les statistiques définitives. Dans le moteur actuellement publié, le Milicien Commun possède **2 ATQ, 5 PV, délai 0 (avant le changement prévu à 1), déplacement de 1 case en avant par action, attaque de contact à 1 case devant lui sur sa ligne**, sans Vol ni changement de ligne, et **sans Garde**. En présence d'une cible à portée, il cesse d'avancer pour attaquer. **Décision du propriétaire, 24 octobre 2026 :** Milicien de Commun à Éveillé : **2 ATQ**, **délai minimum 1** ; **5 PV de Commun à Épique**, puis **8 PV de Légendaire à Éveillé** (+3 PV total par rapport à Épique, sans cumul supplémentaire). Ce sont des **statistiques de conception**, non des variantes déjà jouables.
+**Méthode :** fixer d'abord le fonctionnement **spatial** de l'unité, puis les statistiques définitives. Dans le moteur actuellement publié, le Milicien Commun possède **2 ATQ, 5 PV, délai 1, déplacement de 1 case en avant par action, attaque de contact à 1 case devant lui sur sa ligne**, sans Vol ni changement de ligne, et **sans Garde**. En présence d'une cible à portée, il cesse d'avancer pour attaquer. **Décision du propriétaire, 24 octobre 2026 :** Milicien de Commun à Éveillé : **2 ATQ**, **délai minimum 1** ; **5 PV de Commun à Épique**, puis **8 PV de Légendaire à Éveillé** (+3 PV total par rapport à Épique, sans cumul supplémentaire). Ce sont des **statistiques de conception**, non des variantes déjà jouables.
 
 **Décision explicite du propriétaire du 24 octobre 2026 : déplacement de 1 case et portée d'attaque de 1 case devant lui, sur sa ligne, à chacune des six raretés** (Commun, Rare, Épique, Légendaire, Divin, Éveillé). Aucun Vol, aucune Célérité, aucune attaque à distance ni changement de ligne ne sont acquis avec la rareté. **Validé en conception seulement ; non programmé.**
 
 | Rareté | Déplacement | Portée d'attaque | ATQ / PV / délai | Gain ou amélioration propre à la rareté | Statut mobilité/portée |
 |---|---|---|---|---|---|
-| Commun | **1 case, actuel** | **1 case devant, actuelle** | 2 ATQ / 5 PV / délai 1 **(conception ; moteur actuel : délai 0)** | Aucune capacité spéciale | **Vérifié dans le jeu** |
+| Commun | **1 case, actuel** | **1 case devant, actuelle** | 2 ATQ / 5 PV / délai 1 **(jouable actuellement)** | Aucune capacité spéciale | **Vérifié dans le jeu** |
 | Rare | **1 case — validé en conception** | **1 case — validé en conception** | 2 ATQ / 5 PV / délai 1 **(conception)** | Réduction de 1 dégât au premier coup reçu, une fois par invocation | **Validé en conception ; non intégré** |
 | Épique | **1 case — validé en conception** | **1 case — validé en conception** | 2 ATQ / 5 PV / délai 1 **(conception)** | Réduction portée à 2 dégâts (remplace la valeur 1) | **Validé en conception ; non intégré** |
 | Légendaire | **1 case — validé en conception** | **1 case — validé en conception** | 2 ATQ / 8 PV / délai 1 **(conception)** | Conserve la réduction de 2 et gagne ce bonus total de PV | **Validé en conception ; non intégré** |
 | Divin | **1 case — validé en conception** | **1 case — validé en conception** | 2 ATQ / 8 PV / délai 1 **(conception)** | Réduction portée à 3 ; **Riposte égale à l'ATQ effective**, une fois par invocation et uniquement au contact | **Validé en conception ; non intégré** |
 | Éveillé | **1 case — validé en conception** | **1 case — validé en conception** | 2 ATQ / 8 PV / délai 1 **(conception)** | Ajoute **Dernier Rempart** : survie une fois avec **5 PV max** ; conserve réduction 3, riposte et bonus de PV du Légendaire | **Validé en conception ; non intégré** |
 
-**Les statistiques de conception du Milicien sont désormais validées** : 2 ATQ aux six rangs, 5 PV aux trois premiers, 8 PV à partir du Légendaire, délai 1 à chaque rang. **Les améliorations, bonus de maîtrise, équipement, Forge et réputation restent distincts** et ne sont pas supprimés. Pour le jeu actuel, la mise à 1 du délai des huit cartes initialement à 0 appartient à **une PR de gameplay séparée** ; cela n'implémente pas les cinq raretés futures. Prochaines questions : délai des autres unités unitairement, ordre des effets défensifs, statistiques effectives avec bonus, équilibre. **Fiche textuelle courte sur la carte**, pouvoirs complets au clic.
+**Les statistiques de conception du Milicien sont désormais validées** : 2 ATQ aux six rangs, 5 PV aux trois premiers, 8 PV à partir du Légendaire, délai 1 à chaque rang. **Les améliorations, bonus de maîtrise, équipement, Forge et réputation restent distincts** et ne sont pas supprimés. Pour le jeu actuel, la mise à 1 du délai des huit cartes initialement à 0 est **déjà intégrée (PR nº 44)** ; elle n'implémente pas les cinq raretés futures. Prochaines questions : délai des autres unités unitairement, ordre des effets défensifs, statistiques effectives avec bonus, équilibre. **Fiche textuelle courte sur la carte**, pouvoirs complets au clic.
 
 ### Règle de conception et interface souhaitée
 
@@ -167,7 +173,7 @@
 
 | Unité | Commun | Rare | Épique | Légendaire | Divin | Éveillé |
 |---|---|---|---|---|---|---|
-| Milicien de l’Aube (`militia`) | **Actuel :** Combattant au corps à corps, 2 ATQ, 5 PV, délai 0. Aucune capacité spéciale. | **Description retenue :** Réduit de 1 les dégâts du premier coup reçu après son invocation. Une seule fois par invocation. | **Description retenue :** Réduit de 2 les dégâts du premier coup reçu après son invocation. Une seule fois par invocation. | **Description retenue :** Réduit de 2 les dégâts du premier coup reçu après son invocation, une seule fois. Possède 3 PV maximum supplémentaires par rapport au Milicien Épique (sans addition des anciens sous-paliers). | **Description retenue :** Réduit de 3 les dégâts du premier coup reçu après son invocation, une seule fois. Lorsqu'un ennemi l'attaque au corps à corps, il riposte en infligeant des dégâts bruts égaux à son ATQ effective, une seule fois par invocation. | **Description retenue (Éveillé) :** Conserve la réduction de **3 dégâts sur le premier coup reçu**, une fois par invocation, et la **riposte égale à son ATQ effective** contre un attaquant au corps à corps, une fois par invocation. Ajoute **Dernier Rempart** : lorsqu'un coup devrait le tuer, il survit avec **5 PV** (sans dépasser son maximum), une seule fois par invocation. Conserve le bonus de PV déjà acquis au rang Légendaire. |
+| Milicien de l’Aube (`militia`) | **Actuel :** Combattant au corps à corps, 2 ATQ, 5 PV, délai 1. Aucune capacité spéciale. | **Description retenue :** Réduit de 1 les dégâts du premier coup reçu après son invocation. Une seule fois par invocation. | **Description retenue :** Réduit de 2 les dégâts du premier coup reçu après son invocation. Une seule fois par invocation. | **Description retenue :** Réduit de 2 les dégâts du premier coup reçu après son invocation, une seule fois. Possède 3 PV maximum supplémentaires par rapport au Milicien Épique (sans addition des anciens sous-paliers). | **Description retenue :** Réduit de 3 les dégâts du premier coup reçu après son invocation, une seule fois. Lorsqu'un ennemi l'attaque au corps à corps, il riposte en infligeant des dégâts bruts égaux à son ATQ effective, une seule fois par invocation. | **Description retenue (Éveillé) :** Conserve la réduction de **3 dégâts sur le premier coup reçu**, une fois par invocation, et la **riposte égale à son ATQ effective** contre un attaquant au corps à corps, une fois par invocation. Ajoute **Dernier Rempart** : lorsqu'un coup devrait le tuer, il survit avec **5 PV** (sans dépasser son maximum), une seule fois par invocation. Conserve le bonus de PV déjà acquis au rang Légendaire. |
 | Porte-égide (`shield`) | **Actuel :** Armure 2. Garde : intercepte les attaques contre la couronne de sa ligne. Riposte : 2 dégâts au contact, 1 fois/tour. | À définir | À définir | À définir | À définir | À définir |
 | Arbalétrière (`archer`) | **Actuel :** Distance : attaque jusqu’à 2 cases devant elle, sur sa ligne. | À définir | À définir | À définir | À définir | À définir |
 | Sœur de l’Aurore (`cleric`) | — | **Actuel :** Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne (elle-même incluse). | À définir | À définir | À définir | À définir |
@@ -247,7 +253,7 @@
 2. **Valider le socle de combat avant les pouvoirs** : parcourir les 53 unités du référentiel (déplacement, Vol / Célérité / Portail, portée d'attaque, cible/zone des pouvoirs, délai, ATQ/PV et particularités). Pour chaque rang, commencer par décider **si vitesse ou portée sont conservées ou modifiées**, puis les statistiques, les capacités héritées, le nouveau gain, les conditions et le descriptif complet. Commencer par Milicien puis Porte-égide, sans importer les anciennes valeurs I–III. Rien de non arbitré n'est ajouté au moteur ; éviter de recopier les règles dans les fiches.
 3. **PR de simplification de l'interface Collection** : remplacer les six cartes côte à côte dans `src/ui/collection.js` / `assets/collection.css` par une vignette unique et une fiche accessible au clic/toucher ; réutiliser `collectionInspection`, le rendu de cartes et les fonctions existantes. Tant que le nouveau système n'est pas programmé, montrer **la version native et « prochaine évolution à définir »** sans débloquer de copies fictives. Préserver filtres, onglets, raccourcis du deck, les cinq Ordres et les sorts.
 4. **PR moteur/progression uniquement après validation des données** : centraliser les définitions par identifiant de carte, garder les règles dans le moteur (sans DOM), vérifier IA, équilibrage, 2–4 lignes et ancien 3 × 5 ; laboratoire isolé ; aucune migration implicite. Préserver jeu web et export généré `JOUER.html` depuis les mêmes sources.
-5. **Vérifier sur le code exact** : `npm test`, parité lorsque les règles ne changent pas, `npm run build`, `npm run build:test` ; bureau, mobile, clavier, mouvement réduit, image, deck, sauvegarde/reprise, anciens profils, export hors connexion. Relire les PR concurrentes, notamment la PR nº 43 de documentation de publication ; la PR nº 42 est désormais fusionnée sur main. Fusion uniquement sur accord explicite pour **chaque PR**, puis publication Sites vérifiée séparément.
+5. **Vérifier sur le code exact** : `npm test`, parité lorsque les règles ne changent pas, `npm run build`, `npm run build:test` ; bureau, mobile, clavier, mouvement réduit, image, deck, sauvegarde/reprise, anciens profils, export hors connexion. Relire les PR concurrentes ; les PR nº 42, 43, 44, 45, 46 et 47 sont désormais fusionnées. La PR nº 41 reste une proposition autonome. Fusion uniquement sur accord explicite pour **chaque PR**, puis publication Sites vérifiée séparément.
 
 **Statut : préparation documentaire ; aucune modification du jeu, du laboratoire, des images, des statistiques ni des sauvegardes dans cette PR.** Les sections 1 à 8 conservent l'audit factuel du moteur et les descriptifs proposés des **76 cartes actuelles**.
 
@@ -267,7 +273,7 @@
 
 - **Concorde (bonus de faction commun aux 53 unités)** : si **au moins 2 unités alliées du même Ordre** se trouvent sur la **même ligne**, **chacune** gagne **+1 ATQ** tant que la condition reste vraie. Les sorts n'en bénéficient pas. Cela s'ajoute à la capacité propre à chaque unité.
 
-- **Délai de carte** : à la pioche, le compteur vaut `max(0, délai - 1)`. Les valeurs 0 **et** 1 sont donc jouables immédiatement ; 2 demande un tour d'attente, etc. Le changement proposé « minimum 1 » n'est **pas** appliqué.
+- **Délai de carte** : à la pioche, le compteur vaut `max(0, délai - 1)`. Les anciennes valeurs 0 et les valeurs 1 sont jouables immédiatement ; 2 demande un tour d'attente, etc. Le minimum 1 est **déjà intégré** depuis la PR nº 44.
 
 - Les nouveaux combats séparent les actions alliées et adverses ; les anciens combats sauvegardés gardent leur mode historique. Sorts : le joueur sélectionne une cible **autorisée** et confirme, mais certaines priorités automatiques restent imposées.
 
@@ -277,9 +283,9 @@
 
 |---|---|---|
 
-| **A** | **Garde / attaque vers l'arrière :** une attaque destinée à la couronne est redirigée vers une Garde quelconque de la ligne, sans contrôle qu'elle se situe entre l'attaquant et la couronne. L'événement visuel pointe aussi vers cette case arrière. | Comportement réel, déjà couvert par un ancien test de « protection de couronne ». Décider : **garder une protection magique sur toute la ligne et l'expliquer**, ou **restreindre l'interception à l'avant** puis rééquilibrer. Ne pas corriger sans choix. |
+| **A** | **Garde / attaque vers l'arrière :** une attaque destinée à la couronne est redirigée vers une Garde quelconque de la ligne, même derrière l'attaquant. | **Décision de conception validée, non codée** : Garde normale n'intercepte que si elle se situe entre l'attaquant et sa couronne ; Garde Divine protège sur toute la ligne ; Éveillée contre les attaques de toutes les lignes. Garde ne protège jamais les autres unités. Nécessite une PR de moteur, tests de positions et équilibrage. |
 
-| **A** | **Impact de zone :** après avoir touché une unité, le moteur cherche un autre ennemi vivant **partout sur la même ligne** (premier trouvé en ordre de colonnes), sans notion de proximité ni de direction. | Un ennemi derrière l'attaquant peut perdre des PV ; définir si c'est une onde magique volontaire ou une zone à restreindre. |
+| **A** | **Impact de zone :** après avoir touché une unité, le moteur cherche un autre ennemi vivant **partout sur la même ligne** (premier trouvé en ordre de colonnes), sans notion de proximité ni de direction. | **Décision de conception validée, non codée** : seconde cible seulement dans la case directement derrière la première victime dans le sens de l'attaque, sans trou et jamais derrière l'attaquant ; +2 dégâts bruts. À tester dans une PR de moteur distincte. |
 
 | **B** | **Oracle des Astres** : « viser les lignes ennemies » peut suggérer plusieurs lignes, mais la portée actuelle est **2 cases sur une seule ligne**. | Réécrire, sans lui donner une nouvelle capacité. |
 
@@ -291,15 +297,15 @@
 
 | **B** | **Sorts en doublon :** Lame de feu/Rayon des Couronnes, Souffle vital/Pacte vital, Orage runique/Éclairs d'Obsidienne, Prison de lierre/Racines du Monde ont actuellement les mêmes effets par paire, avec des délais parfois différents. | Conserver provisoirement le moteur ; discuter de rôles distincts lors de l'équilibrage. |
 
-| **B** | **Concorde** : texte flottant sur le plateau, bonus peu expliqué dans les descriptions. | Proposition UX : capacité de faction expliquée dans la fiche de **chaque unité** ; **emblème exclusif de sa faction, centré en haut de la carte**, mis en valeur uniquement lorsque Concorde est actif, à la place du texte flottant. Emblèmes à créer et valider dans l'atelier graphique avant toute intégration. |
+| **B** | **Concorde — constat historique :** la fiche était longue et le texte flottant gênait le plateau. | **Déjà corrigé, PR nº 42 et 45** : emblème peint existant en haut à droite et lumière locale fixe, petits repères de camp hors des cartes, fiche courte avec symbole d'Ordre puis « Bonus de faction : +1 attaque ». Pas de nouveaux emblèmes. |
 
-| **C** | **Délai 0 / 1** : même disponibilité immédiate ; certaines évaluations de deck/IA distinguent toutefois 0 et 1. | Proposition : afficher au minimum 1, seulement après vérification des évaluations et sauvegardes. |
+| **C** | **Délai 0 / 1 — relevé historique** : même disponibilité immédiate. | **Intégré PR nº 44** : les huit cartes passent à 1, restent disponibles immédiatement ; composition des decks, anciennes sauvegardes et export préservés selon les tests de PR. |
 
-| **C** | **Feu follet** (2 ATQ, 3 PV, délai 0, portée 2) est plus fragile que l'Éclaireuse sylvestre à attaque/délai/portée identiques. | Tester **portée 3** à statistiques inchangées ; ne pas décider avant simulation et jeu humain. |
+| **C** | **Feu follet** (2 ATQ, 3 PV, délai **1**, portée actuellement 2) : ancienne comparaison avant PR 44. | **Portée 3 validée en conception, non codée**, sans modifier ATQ/PV ni délai 1. Prévoir tests et équilibrage pour la future PR de gameplay. |
 
 ### Historique : contrat visuel proposé pour des emblèmes Concorde neufs (non retenu)
 
-**Cet ancien scénario ne doit pas être confondu avec la solution intégrée par la PR nº 42** (logos existants sur les cartes, surbrillance discrète). Les choix qui suivent décrivent l'idée initiale et ne lancent pas de nouvelle production graphique.
+**Cet ancien scénario ne doit pas être confondu avec la solution intégrée par les PR nº 42 et 45** (logos existants sur les cartes, surbrillance discrète et fiche courte). Les choix qui suivent décrivent l'idée initiale et ne lancent pas de nouvelle production graphique.
 
 - **Un emblème original distinct pour chacun des cinq Ordres : Aube, Sylve, Ombre, Forge et Éther.** Ce ne sera **pas** un symbole générique partagé ; chaque carte emploiera celui de sa faction.
 - **Position définitive demandée : en haut, exactement au centre du cadre de la carte** (et non dans un coin ou dans un bandeau flottant au-dessus du plateau). Dimension et intégration à ajuster aux cadres existants pour ne masquer ni le nom, ni les statistiques, ni les autres éléments.
@@ -358,7 +364,7 @@
 
 ## 4. Propositions de descriptifs — les 53 unités
 
-Le texte ci-dessous peut être découpé en **ligne courte sur la carte** (capacité) et **fiche détaillée** (capacité + bonus commun + précisions). Tous les chiffres sont ceux du moteur actuel, pas des buffs proposés. **Pour chaque unité de chaque section, la fiche doit ajouter explicitement :** « Bonus de faction — [Ordre] : 2 unités alliées de cet Ordre sur la même ligne = +1 ATQ pour chacune, tant qu'elles restent ensemble. »
+Les propositions ci-dessous séparent le texte de **capacité propre**, à valider, et le **résumé de faction déjà intégré** sur les fiches du jeu : symbole de l'Ordre suivi de « Bonus de faction : +1 attaque ». Ne pas remettre un long paragraphe sur la petite carte ; la règle de Concorde est décrite ailleurs dans l'aide. Les valeurs du catalogue ont été réconciliées pour les huit délais modifiés par la PR nº 44. Les autres capacités restent des propositions à vérifier avant intégration.
 
 ### Alliance de l’Aube — 10 unités
 
@@ -366,25 +372,25 @@ Le texte ci-dessous peut être découpé en **ligne courte sur la carte** (capac
 
 |---|---:|---|
 
-| **Milicien de l’Aube** (`militia`) | 0 / 2 / 5 | Corps à corps : attaque à 1 case devant lui, sur sa ligne. **Concorde Aube** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Milicien de l’Aube** (`militia`) | 1 / 2 / 5 | Corps à corps : attaque à 1 case devant lui, sur sa ligne. **☀ Bonus de faction : +1 attaque** |
 
-| **Porte-égide** (`shield`) | 1 / 1 / 9 | Armure 2. Garde : intercepte les attaques contre la couronne de sa ligne. Riposte : 2 dégâts au contact, 1 fois/tour. **Concorde Aube** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Porte-égide** (`shield`) | 1 / 1 / 9 | Armure 2. Garde : intercepte les attaques contre la couronne de sa ligne. Riposte : 2 dégâts au contact, 1 fois/tour. **☀ Bonus de faction : +1 attaque** |
 
-| **Arbalétrière** (`archer`) | 1 / 2 / 3 | Distance : attaque jusqu’à 2 cases devant elle, sur sa ligne. **Concorde Aube** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Arbalétrière** (`archer`) | 1 / 2 / 3 | Distance : attaque jusqu’à 2 cases devant elle, sur sa ligne. **☀ Bonus de faction : +1 attaque** |
 
-| **Sœur de l’Aurore** (`cleric`) | 2 / 1 / 4 | Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne (elle-même incluse). **Concorde Aube** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Sœur de l’Aurore** (`cleric`) | 2 / 1 / 4 | Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne (elle-même incluse). **☀ Bonus de faction : +1 attaque** |
 
-| **Paladin solaire** (`paladin`) | 3 / 4 / 9 | Armure 2. Riposte : inflige 2 dégâts à un attaquant adjacent au contact, au plus une fois par tour. **Concorde Aube** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Paladin solaire** (`paladin`) | 3 / 4 / 9 | Armure 2. Riposte : inflige 2 dégâts à un attaquant adjacent au contact, au plus une fois par tour. **☀ Bonus de faction : +1 attaque** |
 
-| **Porte-étendard** (`banner`) | 2 / 2 / 6 | Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). **Concorde Aube** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Porte-étendard** (`banner`) | 2 / 2 / 6 | Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). **☀ Bonus de faction : +1 attaque** |
 
-| **Capitaine de l’Aube** (`scoutcaptain`) | 1 / 3 / 6 | Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). **Concorde Aube** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Capitaine de l’Aube** (`scoutcaptain`) | 1 / 3 / 6 | Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). **☀ Bonus de faction : +1 attaque** |
 
-| **Prieur solaire** (`sunpriest`) | 2 / 2 / 7 | Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. **Concorde Aube** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Prieur solaire** (`sunpriest`) | 2 / 2 / 7 | Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. **☀ Bonus de faction : +1 attaque** |
 
-| **Lancier des Remparts** (`lancer`) | 1 / 3 / 5 | Perforation : ignore l’armure. Charge : +2 ATQ s’il a avancé avant d’attaquer. **Concorde Aube** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Lancier des Remparts** (`lancer`) | 1 / 3 / 5 | Perforation : ignore l’armure. Charge : +2 ATQ s’il a avancé avant d’attaquer. **☀ Bonus de faction : +1 attaque** |
 
-| **Ange du Bastion** (`dawnbastion`) | 4 / 5 / 11 | Protection : à l’invocation, +3 bouclier à sa couronne (plafond 20). Vol : franchit un allié. Riposte : 2 dégâts au contact, 1 fois/tour. **Concorde Aube** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Ange du Bastion** (`dawnbastion`) | 4 / 5 / 11 | Protection : à l’invocation, +3 bouclier à sa couronne (plafond 20). Vol : franchit un allié. Riposte : 2 dégâts au contact, 1 fois/tour. **☀ Bonus de faction : +1 attaque** |
 
 ### Conclave Sylvestre — 11 unités
 
@@ -392,27 +398,27 @@ Le texte ci-dessous peut être découpé en **ligne courte sur la carte** (capac
 
 |---|---:|---|
 
-| **Éclaireuse sylvestre** (`ranger`) | 0 / 2 / 4 | Distance : attaque jusqu’à 2 cases devant elle, sur sa ligne. **Concorde Sylve** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Éclaireuse sylvestre** (`ranger`) | 1 / 2 / 4 | Distance : attaque jusqu’à 2 cases devant elle, sur sa ligne. **❧ Bonus de faction : +1 attaque** |
 
-| **Loup des Brumes** (`wolf`) | 0 / 3 / 3 | Célérité : avance jusqu’à 2 cases libres/tour. Charge : +2 ATQ s’il a avancé avant de frapper. **Concorde Sylve** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Loup des Brumes** (`wolf`) | 1 / 3 / 3 | Célérité : avance jusqu’à 2 cases libres/tour. Charge : +2 ATQ s’il a avancé avant de frapper. **❧ Bonus de faction : +1 attaque** |
 
-| **Gardien des Racines** (`treant`) | 2 / 3 / 10 | Armure 2. Garde : intercepte les attaques visant la couronne de sa ligne. Riposte : 2 dégâts au contact, 1 fois/tour. **Concorde Sylve** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Gardien des Racines** (`treant`) | 2 / 3 / 10 | Armure 2. Garde : intercepte les attaques visant la couronne de sa ligne. Riposte : 2 dégâts au contact, 1 fois/tour. **❧ Bonus de faction : +1 attaque** |
 
-| **Dryade luminescente** (`dryad`) | 2 / 1 / 5 | Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. **Concorde Sylve** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Dryade luminescente** (`dryad`) | 2 / 1 / 5 | Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. **❧ Bonus de faction : +1 attaque** |
 
-| **Cerf astral** (`stag`) | 3 / 5 / 6 | Célérité : avance jusqu’à 2 cases/tour. Charge : +2 ATQ s’il a avancé avant de frapper. **Concorde Sylve** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Cerf astral** (`stag`) | 3 / 5 / 6 | Célérité : avance jusqu’à 2 cases/tour. Charge : +2 ATQ s’il a avancé avant de frapper. **❧ Bonus de faction : +1 attaque** |
 
-| **Traqueur d’épines** (`thorn`) | 1 / 2 / 5 | Poison : après une attaque, inflige 1 dégât par résolution pendant 2 résolutions à la cible touchée. **Concorde Sylve** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Traqueur d’épines** (`thorn`) | 1 / 2 / 5 | Poison : après une attaque, inflige 1 dégât par résolution pendant 2 résolutions à la cible touchée. **❧ Bonus de faction : +1 attaque** |
 
-| **Luciole des Épineuses** (`pixie`) | 0 / 2 / 3 | Protection : à l’invocation, +3 bouclier à sa couronne (plafond 20). Vol : franchit un allié si l’arrivée est libre. **Concorde Sylve** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Luciole des Épineuses** (`pixie`) | 1 / 2 / 3 | Protection : à l’invocation, +3 bouclier à sa couronne (plafond 20). Vol : franchit un allié si l’arrivée est libre. **❧ Bonus de faction : +1 attaque** |
 
-| **Ours des Roches** (`bear`) | 2 / 4 / 9 | Armure 2 : réduit les dégâts subis. Ne possède pas Garde. **Concorde Sylve** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Ours des Roches** (`bear`) | 2 / 4 / 9 | Armure 2 : réduit les dégâts subis. Ne possède pas Garde. **❧ Bonus de faction : +1 attaque** |
 
-| **Archidruide Feuillage** (`archdruid`) | 3 / 3 / 7 | Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. **Concorde Sylve** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Archidruide Feuillage** (`archdruid`) | 3 / 3 / 7 | Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. **❧ Bonus de faction : +1 attaque** |
 
-| **Hibou du Crépuscule** (`owl`) | 1 / 2 / 4 | Distance : attaque jusqu’à 2 cases devant lui. Vol : franchit un allié si la case suivante est libre. **Concorde Sylve** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Hibou du Crépuscule** (`owl`) | 1 / 2 / 4 | Distance : attaque jusqu’à 2 cases devant lui. Vol : franchit un allié si la case suivante est libre. **❧ Bonus de faction : +1 attaque** |
 
-| **Trappeur sylvestre** (`sylvan_trapper`) | 2 / 2 / 5 | Piège : tous les 3 tours, arme la case libre juste devant lui si possible. À l’arrivée d’un ennemi : 1 dégât brut et immobilisation, piège visible durant au plus 3 résolutions. **Concorde Sylve** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Trappeur sylvestre** (`sylvan_trapper`) | 2 / 2 / 5 | Piège : tous les 3 tours, arme la case libre juste devant lui si possible. À l’arrivée d’un ennemi : 1 dégât brut et immobilisation, piège visible durant au plus 3 résolutions. **❧ Bonus de faction : +1 attaque** |
 
 ### Cour des Ombres — 11 unités
 
@@ -420,27 +426,27 @@ Le texte ci-dessous peut être découpé en **ligne courte sur la carte** (capac
 
 |---|---:|---|
 
-| **Guerrier d’ossements** (`bone`) | 0 / 3 / 3 | Corps à corps : attaque à 1 case devant lui, sur sa ligne. **Concorde Ombre** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Guerrier d’ossements** (`bone`) | 1 / 3 / 3 | Corps à corps : attaque à 1 case devant lui, sur sa ligne. **☾ Bonus de faction : +1 attaque** |
 
-| **Ombre vorace** (`shade`) | 1 / 3 / 3 | Célérité : avance jusqu’à 2 cases/tour. Charge : +2 ATQ s’il a avancé avant de frapper. **Concorde Ombre** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Ombre vorace** (`shade`) | 1 / 3 / 3 | Célérité : avance jusqu’à 2 cases/tour. Charge : +2 ATQ s’il a avancé avant de frapper. **☾ Bonus de faction : +1 attaque** |
 
-| **Veilleur du tombeau** (`crypt`) | 1 / 2 / 7 | Armure 2. Garde : intercepte les attaques visant la couronne de sa ligne. **Concorde Ombre** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Veilleur du tombeau** (`crypt`) | 1 / 2 / 7 | Armure 2. Garde : intercepte les attaques visant la couronne de sa ligne. **☾ Bonus de faction : +1 attaque** |
 
-| **Faucheur de fièvre** (`plague`) | 2 / 3 / 5 | Poison : après une attaque, inflige 1 dégât par résolution pendant 2 résolutions à la cible touchée. **Concorde Ombre** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Faucheur de fièvre** (`plague`) | 2 / 3 / 5 | Poison : après une attaque, inflige 1 dégât par résolution pendant 2 résolutions à la cible touchée. **☾ Bonus de faction : +1 attaque** |
 
-| **Archiliche de Minuit** (`lich`) | 4 / 6 / 9 | Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de la même ligne. **Concorde Ombre** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Archiliche de Minuit** (`lich`) | 4 / 6 / 9 | Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de la même ligne. **☾ Bonus de faction : +1 attaque** |
 
-| **Banshee des Voiles** (`banshee`) | 3 / 4 / 5 | Distance : attaque à 2 cases devant elle. Vol : peut franchir une case occupée par un allié si la case suivante est libre. **Concorde Ombre** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Banshee des Voiles** (`banshee`) | 3 / 4 / 5 | Distance : attaque à 2 cases devant elle. Vol : peut franchir une case occupée par un allié si la case suivante est libre. **☾ Bonus de faction : +1 attaque** |
 
-| **Vampire d’Obsidienne** (`vampire`) | 3 / 5 / 6 | Vol de vie : à chaque attaque effectuée, rend 2 PV à son héros, même si la frappe a été absorbée. **Concorde Ombre** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Vampire d’Obsidienne** (`vampire`) | 3 / 5 / 6 | Vol de vie : à chaque attaque effectuée, rend 2 PV à son héros, même si la frappe a été absorbée. **☾ Bonus de faction : +1 attaque** |
 
-| **Chevalier du Tombeau** (`graveknight`) | 2 / 4 / 8 | Armure 2. Charge : +2 ATQ s’il a avancé. Riposte : 2 dégâts au contact, 1 fois/tour (pas de Garde). **Concorde Ombre** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Chevalier du Tombeau** (`graveknight`) | 2 / 4 / 8 | Armure 2. Charge : +2 ATQ s’il a avancé. Riposte : 2 dégâts au contact, 1 fois/tour (pas de Garde). **☾ Bonus de faction : +1 attaque** |
 
-| **Lame nocturne** (`nightblade`) | 0 / 3 / 3 | Perforation : ses attaques ignorent l’armure de la cible. **Concorde Ombre** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Lame nocturne** (`nightblade`) | 1 / 3 / 3 | Perforation : ses attaques ignorent l’armure de la cible. **☾ Bonus de faction : +1 attaque** |
 
-| **Spectre du Caveau** (`spectre`) | 1 / 3 / 4 | Célérité : avance jusqu’à 2 cases/tour sur sa ligne. Charge : +2 ATQ après déplacement (ne change pas de ligne). **Concorde Ombre** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Spectre du Caveau** (`spectre`) | 1 / 3 / 4 | Célérité : avance jusqu’à 2 cases/tour sur sa ligne. Charge : +2 ATQ après déplacement (ne change pas de ligne). **☾ Bonus de faction : +1 attaque** |
 
-| **Inquisiteur des Brumes** (`mist_inquisitor`) | 3 / 2 / 6 | Silence : avant son déplacement, désactive certaines capacités d’un ennemi de sa ligne pour la résolution en cours (au plus une fois tous les 3 tours). **Concorde Ombre** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Inquisiteur des Brumes** (`mist_inquisitor`) | 3 / 2 / 6 | Silence : avant son déplacement, désactive certaines capacités d’un ennemi de sa ligne pour la résolution en cours (au plus une fois tous les 3 tours). **☾ Bonus de faction : +1 attaque** |
 
 ### Légions de la Forge — 10 unités
 
@@ -448,25 +454,25 @@ Le texte ci-dessous peut être découpé en **ligne courte sur la carte** (capac
 
 |---|---:|---|
 
-| **Marteau des Monts** (`smith`) | 1 / 3 / 6 | Corps à corps : attaque à 1 case devant lui, sur sa ligne. **Concorde Forge** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Marteau des Monts** (`smith`) | 1 / 3 / 6 | Corps à corps : attaque à 1 case devant lui, sur sa ligne. **⚒ Bonus de faction : +1 attaque** |
 
-| **Golem runique** (`golem`) | 2 / 2 / 12 | Armure 2. Garde : intercepte les attaques visant la couronne. Riposte : 2 dégâts au contact, 1 fois/tour. **Concorde Forge** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Golem runique** (`golem`) | 2 / 2 / 12 | Armure 2. Garde : intercepte les attaques visant la couronne. Riposte : 2 dégâts au contact, 1 fois/tour. **⚒ Bonus de faction : +1 attaque** |
 
-| **Sapeur gobelin** (`bomb`) | 2 / 4 / 3 | Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de la même ligne. **Concorde Forge** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Sapeur gobelin** (`bomb`) | 2 / 4 / 3 | Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de la même ligne. **⚒ Bonus de faction : +1 attaque** |
 
-| **Foreur de fer** (`drill`) | 0 / 2 / 5 | Armure 2 : réduit de 2 les dégâts bruts de chaque frappe, avec un minimum de 1 avant barrière. **Concorde Forge** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Foreur de fer** (`drill`) | 1 / 2 / 5 | Armure 2 : réduit de 2 les dégâts bruts de chaque frappe, avec un minimum de 1 avant barrière. **⚒ Bonus de faction : +1 attaque** |
 
-| **Colosse de braise** (`colossus`) | 4 / 6 / 13 | Armure 2 : résiste aux frappes. Ne possède ni Garde ni Riposte dans les règles actuelles. **Concorde Forge** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Colosse de braise** (`colossus`) | 4 / 6 / 13 | Armure 2 : résiste aux frappes. Ne possède ni Garde ni Riposte dans les règles actuelles. **⚒ Bonus de faction : +1 attaque** |
 
-| **Ingénieure d’acier** (`engineer`) | 3 / 3 / 7 | Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). **Concorde Forge** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Ingénieure d’acier** (`engineer`) | 3 / 3 / 7 | Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). **⚒ Bonus de faction : +1 attaque** |
 
-| **Canon des Terres Rouges** (`cannon`) | 3 / 5 / 7 | Distance : attaque jusqu’à 2 cases devant lui, sur sa ligne. **Concorde Forge** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Canon des Terres Rouges** (`cannon`) | 3 / 5 / 7 | Distance : attaque jusqu’à 2 cases devant lui, sur sa ligne. **⚒ Bonus de faction : +1 attaque** |
 
-| **Mécaniste des Hauts-Fours** (`mechanist`) | 2 / 2 / 8 | Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). **Concorde Forge** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Mécaniste des Hauts-Fours** (`mechanist`) | 2 / 2 / 8 | Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). **⚒ Bonus de faction : +1 attaque** |
 
-| **Marchefer** (`ironwraith`) | 1 / 2 / 7 | Protection : à l’invocation, +3 bouclier à sa couronne (plafond 20). **Concorde Forge** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Marchefer** (`ironwraith`) | 1 / 2 / 7 | Protection : à l’invocation, +3 bouclier à sa couronne (plafond 20). **⚒ Bonus de faction : +1 attaque** |
 
-| **Alchimiste des Braises** (`alchemist`) | 2 / 3 / 5 | Poison : après une attaque, inflige 1 dégât par résolution pendant 2 résolutions à la cible touchée. **Concorde Forge** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Alchimiste des Braises** (`alchemist`) | 2 / 3 / 5 | Poison : après une attaque, inflige 1 dégât par résolution pendant 2 résolutions à la cible touchée. **⚒ Bonus de faction : +1 attaque** |
 
 ### Ordre de l’Éther — 11 unités
 
@@ -474,27 +480,27 @@ Le texte ci-dessous peut être découpé en **ligne courte sur la carte** (capac
 
 |---|---:|---|
 
-| **Feu follet** (`spark`) | 0 / 2 / 3 | Distance : attaque jusqu’à 2 cases devant lui, sur sa ligne (portée 3 seulement proposée, non active). **Concorde Éther** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Feu follet** (`spark`) | 1 / 2 / 3 | Distance : attaque jusqu’à 2 cases devant lui, sur sa ligne (portée 3 seulement proposée, non active). **◇ Bonus de faction : +1 attaque** |
 
-| **Oracle des Astres** (`mystic`) | 2 / 3 / 4 | Distance : attaque jusqu’à 2 cases devant lui, uniquement sur sa ligne. **Concorde Éther** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Oracle des Astres** (`mystic`) | 2 / 3 / 4 | Distance : attaque jusqu’à 2 cases devant lui, uniquement sur sa ligne. **◇ Bonus de faction : +1 attaque** |
 
-| **Élémentaire azuré** (`elemental`) | 3 / 5 / 8 | Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de la même ligne. **Concorde Éther** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Élémentaire azuré** (`elemental`) | 3 / 5 / 8 | Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de la même ligne. **◇ Bonus de faction : +1 attaque** |
 
-| **Griffon du Zénith** (`griffin`) | 3 / 5 / 6 | Célérité : avance jusqu’à 2 cases/tour. Vol : franchit un allié si possible. Charge : +2 ATQ après déplacement. **Concorde Éther** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Griffon du Zénith** (`griffin`) | 3 / 5 / 6 | Célérité : avance jusqu’à 2 cases/tour. Vol : franchit un allié si possible. Charge : +2 ATQ après déplacement. **◇ Bonus de faction : +1 attaque** |
 
-| **Sentinelle prismatique** (`sentinel`) | 2 / 2 / 9 | Armure 2. Garde : intercepte les attaques visant la couronne. Riposte : 2 dégâts au contact, 1 fois/tour. **Concorde Éther** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Sentinelle prismatique** (`sentinel`) | 2 / 2 / 9 | Armure 2. Garde : intercepte les attaques visant la couronne. Riposte : 2 dégâts au contact, 1 fois/tour. **◇ Bonus de faction : +1 attaque** |
 
-| **Dragon des Sept Cieux** (`dragon`) | 5 / 7 / 12 | Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de sa ligne. Vol : franchit un allié si possible. **Concorde Éther** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Dragon des Sept Cieux** (`dragon`) | 5 / 7 / 12 | Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de sa ligne. Vol : franchit un allié si possible. **◇ Bonus de faction : +1 attaque** |
 
-| **Esprit de Tempête** (`tempest`) | 2 / 3 / 6 | Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de la même ligne. **Concorde Éther** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Esprit de Tempête** (`tempest`) | 2 / 3 / 6 | Impact de zone : sa frappe sur une unité peut infliger 2 dégâts supplémentaires à un autre ennemi de la même ligne. **◇ Bonus de faction : +1 attaque** |
 
-| **Voyante des Étoiles** (`seer`) | 1 / 2 / 4 | Distance : attaque jusqu’à 2 cases devant elle, sur sa ligne. **Concorde Éther** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Voyante des Étoiles** (`seer`) | 1 / 2 / 4 | Distance : attaque jusqu’à 2 cases devant elle, sur sa ligne. **◇ Bonus de faction : +1 attaque** |
 
-| **Chevalier du Zénith** (`aetherknight`) | 3 / 5 / 9 | Perforation : ignore l’armure. Charge : +2 ATQ s’il a avancé avant de frapper. **Concorde Éther** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Chevalier du Zénith** (`aetherknight`) | 3 / 5 / 9 | Perforation : ignore l’armure. Charge : +2 ATQ s’il a avancé avant de frapper. **◇ Bonus de faction : +1 attaque** |
 
-| **Séraphin d’Azur** (`seraph`) | 4 / 5 / 10 | Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. Vol : franchit un allié. **Concorde Éther** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Séraphin d’Azur** (`seraph`) | 4 / 5 / 10 | Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. Vol : franchit un allié. **◇ Bonus de faction : +1 attaque** |
 
-| **Marcheur des Portails** (`portal_walker`) | 2 / 3 / 5 | Portail : avant le déplacement, change de ligne à la même colonne libre si le moteur juge le gain suffisant (au plus une fois tous les 3 tours). **Concorde Éther** : +1 ATQ avec 2 alliés du même Ordre sur la ligne. |
+| **Marcheur des Portails** (`portal_walker`) | 2 / 3 / 5 | Portail : avant le déplacement, change de ligne à la même colonne libre si le moteur juge le gain suffisant (au plus une fois tous les 3 tours). **◇ Bonus de faction : +1 attaque** |
 
 ## 5. Propositions de descriptifs — les 23 sorts et compétences
 
@@ -556,15 +562,15 @@ Les **sorts ne bénéficient pas de Concorde**. Leurs dégâts indiqués sont le
 
 |---|---|---|---|
 
-| Garde arrière | Garder la protection de ligne entière, **l'indiquer clairement** et montrer une interception spéciale. | Interception uniquement si le gardien se situe entre l'attaquant et sa couronne. | **À valider** |
+| Garde arrière | Moteur actuel : protection de couronne sur toute la ligne, même derrière. | **Décidé pour une future PR** : Garde normale entre attaquant et couronne ; Divine sur toute sa ligne ; Éveillée toutes les lignes. Jamais les autres unités. | **Conception validée, non codée** |
 
-| Impact de zone arrière | Garder l'onde sur toute la ligne et la rendre visuellement compréhensible. | Limiter la seconde cible à la proximité ou en avant de la première. | **À valider** |
+| Impact de zone arrière | Moteur actuel : seconde victime potentielle n'importe où sur la ligne. | **Décidé pour une future PR** : seconde victime immédiatement après la première dans le sens de l'attaque, sans trou, +2 dégâts bruts. | **Conception validée, non codée** |
 
-| Portée Feu follet | Conserver 2 cases. | Tester 3 cases avec 2 ATQ / 3 PV et délai inchangé. | **À valider** |
+| Portée Feu follet | Moteur actuel : 2 cases, 2 ATQ, 3 PV, délai 1. | Portée 3 choisie, autres valeurs conservées ; tests/équilibrage requis avant programmation. | **Conception validée, non codée** |
 
-| Délai minimum | Conserver 0/1 avec leur sens actuel. | Migrer les huit unités délai 0 à 1 sans changer leur disponibilité, adapter IA/deck et vérifier sauvegardes. | **À valider** |
+| Délai minimum | Ancien catalogue : huit délais 0. | Catalogue intégré : minimum 1, disponibilité immédiate et decks historiques conservés. | **Intégré PR nº 44** |
 
-| Concorde / faction | Conserver +1 ATQ à 2 alliés, sans équilibrage. | Fiche de chaque unité : règle expliquée ; emblème **de sa propre faction**, **en haut au centre de la carte**, visuellement activé par la Concorde ; remplacer le texte flottant. Concevoir les cinq emblèmes originaux en atelier et les faire valider avant intégration. | **À valider** |
+| Concorde / faction | Deux unités alliées du même Ordre sur une ligne : +1 ATQ chacune, sans cumul. | Logos déjà peints en haut à droite éclairés localement ; repères bleu/rouge hors carte, résumé court à symbole « Bonus de faction : +1 attaque ». | **Intégré PR nº 42 et 45** |
 
 | Sorts équivalents | Clarifier leurs textes et garder la mécanique. | Donner à chaque sort une identité distincte après analyse de coût/délai, IA et équilibrage. | **À valider** |
 
@@ -574,7 +580,7 @@ Les **sorts ne bénéficient pas de Concorde**. Leurs dégâts indiqués sont le
 
 - **Équilibrage :** mesurer comparaison avant/après sur mêmes graines et profils ; analyse par deck et faction. Les simulations automatiques ne prouvent pas le ressenti humain.
 
-- **Rendu :** vérifier que chaque animation relie l'attaquant au **vrai destinataire des PV perdus** ; impacts et PV corrects même pour dégâts absorbés, Gardes et deuxièmes cibles ; bureau, mobile simulé, réductions des mouvements. Pour Concorde, vérifier sur les cadres de toutes les factions l'emblème **en haut au centre**, sans chevauchement avec nom, coût, illustration ou rareté, et l'activation/désactivation au bon moment.
+- **Rendu :** vérifier que chaque animation relie l'attaquant au **vrai destinataire des PV perdus** ; impacts et PV corrects même pour dégâts absorbés, Gardes et deuxièmes cibles ; bureau, mobile simulé, réduction des mouvements. Pour Concorde déjà intégré, préserver l'emblème **en haut à droite**, sa lumière locale, le résumé court et les repères discrets hors des cartes.
 
 - **Descriptions :** comparer chaque texte à un test de moteur ; textes lisibles sur les cadres complets (53 unités + 23 sorts), fiche agrandie sur petit écran ; caractères échappés.
 
@@ -586,7 +592,7 @@ Les **sorts ne bénéficient pas de Concorde**. Leurs dégâts indiqués sont le
 
 Sources au commit ci-dessus : [catalogue et traits](../src/data.js), [ciblage, déplacements, dégâts et tours](../src/engine/battle.js), [sorts](../src/engine/spell-casting.js), [compétences de classe](../src/engine/class-skills.js), [contrôles, pièges et silence](../src/engine/battle-control.js), [tempo](../src/engine/tempo.js), [contrat de cibles des sorts](../src/engine/spell-targeting.js), [fiche d’inspection](../src/ui/card-inspection.js), [effets](../src/ui/combat-fx.js), [tests historiques de Garde](../tests/engine.test.mjs).
 
-**Méthode :** lecture du code et des tests existants + concordance des **76 identifiants du catalogue** avec les **76 descriptifs proposés**. La CI du `main` vérifiée avant l'audit était verte au commit `2de25b7...` ([tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40011997013), [assemblage](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40011996924)). **Aucune nouvelle simulation ou vérification visuelle effectuée pour ce rapport** : les scénarios Garde/Impact arrière sont déduits du code et d'anciens tests, pas reproduits sur le téléphone du propriétaire.
+**Méthode :** lecture initiale du code et des tests + concordance des **76 identifiants du catalogue** avec les **76 descriptifs proposés**. Les huit délais ont ensuite été réconciliés avec le catalogue actuel, sans examen exhaustif de chaque règle ni simulation nouvelle. La CI historique du `main` était verte au commit `2de25b7...` ([tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40011997013), [assemblage](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40011996924)). **Aucune nouvelle simulation ou vérification visuelle effectuée pour ce rapport** : les scénarios Garde/Impact arrière sont déduits du code et d'anciens tests, pas reproduits sur le téléphone du propriétaire.
 
-**Suite :** propriétaire valide ou refuse les décisions du §6 ; ensuite seulement, créer une PR **de règles** distincte de la PR **de descriptions/interface**, avec tests adaptés. Aucune fusion automatique.
+**Suite :** les décisions Garde, Impact, Feu follet et Riposte sont actées **en conception seulement**. Les descriptions spécifiques et les statistiques restantes doivent être approuvées au cas par cas avant intégration. Développer ensuite des PR **de règles** et **de descriptions/interface** distinctes, avec leurs tests. Aucune fusion automatique ; PR nº 41 toujours en brouillon tant que sa revue n'est pas terminée.
 
