@@ -105,6 +105,23 @@
 
 **Exemple de lecture :** Milicien Commun : **2 ATQ / 5 PV, délai 0, avance 1 case, attaque à 1 case**. Porte-égide Commun : **1 ATQ / 9 PV, délai 1, avance 1 case, attaque à 1 case**, avec Armure 2, Garde et Riposte actuelles (Riposte fixe 2 dans le moteur ; **riposte égale à l'ATQ** uniquement projetée). Même au rang Éveillé, les caractéristiques de mouvement/portée **ne changent pas sans décision spécifique**. Les stats finales des futures raretés restent à définir.
 
+### Fiche complète du Milicien — première décision : mobilité et portée
+
+**Méthode :** fixer d'abord le fonctionnement **spatial** de l'unité, puis les statistiques définitives. Le Milicien Commun est **effectivement jouable** avec **2 ATQ, 5 PV, délai 0, déplacement de 1 case en avant par action, attaque de contact à 1 case devant lui sur sa ligne**, sans Vol ni changement de ligne, et **sans Garde**. En présence d'une cible à portée, il cesse d'avancer pour attaquer. Les statistiques évolutives définitives sont **encore à définir** ; les valeurs de base ne sont pas automatiquement reportées à tous les rangs.
+
+**Proposition de conception à faire valider : maintenir déplacement 1 et portée 1 aux six raretés** (milicien de mêlée, même rôle), sans lui ajouter Vol, Célérité, attaque à distance ni changement de ligne. Cette proposition **n'est pas validée** : elle ne change aucun code.
+
+| Rareté | Déplacement | Portée d'attaque | ATQ / PV / délai | Gain ou amélioration propre à la rareté | Statut mobilité/portée |
+|---|---|---|---|---|---|
+| Commun | **1 case, actuel** | **1 case devant, actuelle** | **2 ATQ / 5 PV / délai 0, actuels** | Aucune capacité spéciale | **Vérifié dans le jeu** |
+| Rare | **1 case proposé** | **1 case proposé** | À définir | Réduction de 1 dégât au premier coup reçu, une fois par invocation | À valider |
+| Épique | **1 case proposé** | **1 case proposé** | À définir | Réduction portée à 2 dégâts (remplace la valeur 1) | À valider |
+| Légendaire | **1 case proposé** | **1 case proposé** | À définir ; **+3 PV max** par rapport au rang Épique | Conserve la réduction de 2 et gagne ce bonus total de PV | À valider |
+| Divin | **1 case proposé** | **1 case proposé** | À définir | Réduction portée à 3 ; **Riposte égale à l'ATQ effective**, une fois par invocation et uniquement au contact | À valider |
+| Éveillé | **1 case proposé** | **1 case proposé** | À définir | Ajoute **Dernier Rempart** : survie une fois avec **5 PV max** ; conserve réduction 3, riposte et bonus de PV du Légendaire | À valider |
+
+**Question de validation isolée :** conserver **1 case de déplacement et 1 case de portée sur toute la progression du Milicien**, sans ajouter une nouvelle mobilité ou portée ? Les **capacités déjà discutées restent dans leur statut de conception** ; les ATQ/PV/délai totaux futurs, les interactions et l'équilibrage seront étudiés après cette réponse. **Fiche textuelle courte sur la carte**, pouvoirs complets au clic ; ne pas copier le tableau dans l'interface.
+
 ### Règle de conception et interface souhaitée
 
 - **Six rangs affichables :** Commun, Rare, Épique, Légendaire, Divin, Éveillé ; **un état d'évolution par rang**, au lieu de trois sous-paliers à définir pour chaque rang. Les identifiants techniques déjà utilisés dans la Collection, notamment `divine` et `éveillée`, ne seront pas renommés sans migration étudiée.
