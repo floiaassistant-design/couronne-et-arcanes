@@ -13,16 +13,17 @@ const pairs=[['militia','shield'],['ranger','wolf'],['bone','crypt'],['smith','d
 const view=(profile,battle)=>createViews(()=>({profile,battle,screen:'battle',selectedCard:-1,animationsEnabled:false}));
 const countLights=html=>(html.match(/class="concorde-emblem-light"/g)||[]).length;
 
-test('Concorde : descriptions pour les 53 unités et aucune promesse de bonus pour les 23 sorts',()=>{
+test('Concorde : résumé et symbole de faction pour les 53 unités, aucun bonus pour les 23 sorts',()=>{
  let units=0,spells=0;
  for(const card of Object.values(CARDS)){
   const before=JSON.stringify(card);
   const html=cardInspectionContent(card,{wait:0},null,esc);
   if(card.type==='unité'){
    units++;assert.match(html,/class="concorde-description"/);
-   assert.match(html,/même ligne/);assert.match(html,/elle-même compte/);
-   assert.match(html,/reste \+1/);assert.match(html,/condition disparaît/);
-   assert.ok(concordeDescription(card).includes('Bonus de faction'));
+   const symbols={aube:'☀',sylve:'❧',ombre:'☾',forge:'⚒',ether:'◇'};
+   assert.match(html,new RegExp(`class="concorde-symbol"[^>]*>${symbols[card.faction]}</span> Bonus de faction : \\+1 attaque`));
+   assert.equal(concordeDescription(card),'Bonus de faction : +1 attaque');
+   assert.doesNotMatch(html,/elle-même compte|condition disparaît|\(inactif\)/);
   }else{
    spells++;assert.doesNotMatch(html,/concorde-description|data-concorde=|concorde-emblem-light/);
   }
@@ -52,7 +53,8 @@ test('Le rendu suit le moteur : camps, lignes, morts, troisième allié, Silence
   const model=boardInspectionData(battle,unit.uid);
   assert.equal(model.board.concordeActive,true);assert.equal(model.stats.atk,unit.atk+2);
   const preview=cardInspectionContent(model.card,model.entry,model.stats,esc,{board:model.board});
-  assert.equal(countLights(preview),1);assert.match(preview,/Actif : \+1 ATQ incluse/);
+  assert.equal(countLights(preview),1);assert.match(preview,/data-concorde-state="active"/);
+  assert.match(preview,/Bonus de faction : \+1 attaque/);assert.doesNotMatch(preview,/\(inactif\)/);
   assert.equal(JSON.stringify({profile,battle}),before,'Aucun état graphique sauvegardé');
   battle.board[0][3]={...ally,uid:902};
   assert.equal(countLights(v.battleUI()),3);
@@ -62,6 +64,9 @@ test('Le rendu suit le moteur : camps, lignes, morts, troisième allié, Silence
   battle.board[0][2]=null;
   const restored=JSON.parse(JSON.stringify(battle));
   assert.equal(countLights(view(profile,restored).battleUI()),0);
+  const inactive=boardInspectionData(restored,unit.uid);
+  const inactivePreview=cardInspectionContent(inactive.card,inactive.entry,inactive.stats,esc,{board:inactive.board});
+  assert.match(inactivePreview,/data-concorde-state="inactive"/);assert.match(inactivePreview,/\(inactif\)/);
  }
 });
 

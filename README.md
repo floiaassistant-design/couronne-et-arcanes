@@ -47,14 +47,22 @@ La carte elle-même compte parmi les deux ; davantage d’unités ne cumule pas 
 bonus. Il disparaît lorsque la formation cesse ; les sorts en sont exclus.
 
 Le jeu éclaire discrètement l’emblème déjà peint **en haut à droite**
-des cartes concernées. La lumière est fixe et localisée ; les fiches de main,
-de plateau et de Collection expliquent la règle. Aucun nouveau dessin : les
+des cartes concernées. La lumière est fixe et localisée. Aucun nouveau dessin : les
 illustrations et leurs reçus sont conservés. La variante à emblèmes neufs au
 centre envisagée dans l’audit reste historique, sans import automatique.
 [Contrat et validation](docs/CONCORDE_2026_10_24.md).
 La PR nº 42 a été fusionnée sur accord spécifique le 24 octobre 2026, puis
 publiée sur le [jeu en ligne](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site)
 (Sites, version 5). Le déploiement et les fichiers servis ont été vérifiés.
+
+### Affichage simplifié proposé
+
+Les repères deviennent un petit rond bleu pour vos unités et un losange rouge
+pour les adversaires, à côté de chaque carte. Les fiches main/plateau/Collection
+affichent une ligne : **☀ Bonus de faction : +1 attaque**, avec le symbole de
+l’Ordre en tête. Le bonus inactif est grisé et marqué « inactif » ; la lumière
+de Concorde sur l’image est conservée. Proposition non fusionnée et non publiée.
+[Périmètre et reprise](docs/REPERES_CAMP_FICHES_2026_10_24.md).
 
 ## Progression et sauvegarde
 
