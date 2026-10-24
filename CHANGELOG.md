@@ -4,7 +4,7 @@
 - Le constructeur de decks conserve le classement « rapide » et la préférence de l'archétype Assaut en employant le nouveau seuil 1 plutôt que l'ancien seuil 0 ; tests d'identité des stratégies actualisés.
 - Le calcul historique d'attente initiale (`max(0, délai - 1)`) est conservé : délai 1 reste jouable à la pioche ; cette modification aligne le chiffre du catalogue sur le minimum validé sans ajouter une attente supplémentaire.
 - Test de catalogue (76 cartes, aucune à délai 0) et de compatibilité de la pioche ajouté.
-- **PR en préparation uniquement :** export `JOUER.html` à régénérer exclusivement par `npm run build`, puis tests, parité, build:test, CI et revue du diff avant proposition de fusion. Aucun statut « intégré » ou « publié » anticipé.
+- **PR nº 44 en brouillon :** l'unique export `JOUER.html` a été régénéré par le build officiel dans GitHub Actions et commité, avec retrait du workflow de génération ponctuelle. Les tests métier et parités ont réussi sur un commit intermédiaire ; la CI complète, les parcours navigateur et la revue du diff final restent à vérifier avant proposition de fusion. Aucun statut « intégré » ou « publié » anticipé.
 
 ## Proposition — Concorde sur les emblèmes existants, 24 octobre 2026
 
