@@ -1,8 +1,16 @@
 # État courant — 24 octobre 2026
 
+## Actualisation — fusion de la PR nº 49
+
+**Main officiel vérifié :** `170e9c9a898821dfe27945d18ef0617a79e6cf94`, [PR nº 49](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/49) fusionnée sur accord spécifique le 24 octobre 2026. **Uniquement les workflows d'archivage CI et leurs documents** ont changé ; aucune carte, règle, progression, illustration ni sauvegarde modifiée. L'arbre Git du merge (`747902180cca411758e08545f70e01008f5aeac2`) est identique à celui de la branche validée par les deux CI réussies : [tests complets](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40133817048) et [assemblage web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40133816929).
+
+**Nettoyage externe terminé :** [exécution d'audit GitHub Actions](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40133466726), **250 archives redondantes supprimées, 9 références conservées, 399,5 Mo restants** selon l'API du dépôt. Le contrat désormais actif : captures de PR uniquement en cas d'échec ou de label `captures-ci` (rétention 2 jours), paquet web toujours construit/vérifié mais archivé **uniquement sur main** pendant 7 jours.
+
+**Blocage externe encore observé :** [premier assemblage web post-fusion](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40135240903) a généré avec succès les fichiers `dist/` et le paquet du nouveau main, mais son **téléversement a échoué** car GitHub n'avait pas encore recalculé le quota. [Tests main](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40135240945) étaient en cours au dernier relevé. **Aucune nouvelle publication Sites attestée** : dernière version vérifiée, Sites v7. **PR nº 41 et nº 48 toujours ouvertes** et non fusionnées.
+
 ## Main, jeu et publication
 
-Main officiel vérifié : `63bc8b14b09bf4ecd94bb12bc6aecf17d8d2678e`, fusion autorisée de la
+**Historique antérieur :** `63bc8b14b09bf4ecd94bb12bc6aecf17d8d2678e`, fusion autorisée de la
 [PR nº 45](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/45)
 le 24 octobre 2026. Les PR nº 43 (documentation Concorde) et nº 44 (délai
 minimal 1) sont également fusionnées. Les 76 cartes, le ciblage direct, les
