@@ -49,6 +49,29 @@ body.collection-mode #view{max-width:none;padding:0 0 36px;min-width:0}
 .collection-delay{position:absolute;top:9px;left:9px;z-index:3;display:grid;place-items:center;width:29px;height:30px;border:1px solid #cfad69;border-radius:4px 4px 9px 9px;background:#191d14;color:#f6dfb3;font:500 19px Georgia,serif}
 .collection-possession{font-size:12px;line-height:1.5;min-height:27px;margin:9px 0 7px;display:flex;align-items:center;justify-content:center;color:#beb6a4}
 .collection-possession.is-owned{background:#51452b;border-radius:4px;color:#efcc86}
+/* L'aperçu suit la carte au survol, comme dans la main et le plateau.
+   Il vit hors du défilement horizontal pour ne pas être rogné. */
+.collection-card-visual[data-collection-preview]{cursor:help;border-radius:8px}
+.collection-card-visual[data-collection-preview]:focus-visible{outline:3px solid #ffedb4;outline-offset:3px}
+.collection-card-visual[data-collection-preview]:hover>.unit-card,
+.collection-card-visual[data-collection-preview]:focus-visible>.unit-card{box-shadow:inset 0 0 0 1px #b3965733,0 0 0 2px #ffedb477,0 4px 12px #0008}
+.collection-hover-inspection:not([hidden]){
+ position:fixed;z-index:80;display:flex;flex-direction:column;
+ width:min(312px,calc(100vw - 24px));max-height:calc(100dvh - 24px);
+ overflow:hidden;pointer-events:none;border:1px solid #cfb47b;border-radius:12px;
+ background:linear-gradient(135deg,#234154,#102737 44%,#0a1a2b);
+ box-shadow:0 12px 38px #020711b8,0 0 0 3px #07121dcc;
+ color:#fff0d2;font:12px/1.4 system-ui,sans-serif;
+}
+.collection-hover-inspection .card-preview{max-height:calc(100dvh - 26px)}
+.collection-hover-inspection .inspection-heading{padding:10px 13px 6px;min-height:28px}
+.collection-hover-inspection .inspection-feature{grid-template-columns:90px minmax(0,1fr);gap:10px;padding:4px 12px 11px}
+.collection-hover-inspection .inspection-art{width:90px;height:134px}
+.collection-hover-inspection .inspection-identity h2{font-size:17px}
+.collection-hover-inspection .inspection-body{padding:9px 12px 13px;overflow:auto}
+.collection-hover-inspection .inspection-description{font-size:13px;line-height:1.4}
+.collection-hover-inspection .inspection-stats{font-size:11px}
+@media(prefers-reduced-motion:reduce){.collection-hover-inspection{animation:none!important;transition:none!important}}
 .collection-card-actions{display:flex;align-items:center;justify-content:space-between;gap:3px;flex-wrap:wrap;min-height:38px}
 .collection-card-actions .btn{min-width:38px;min-height:38px;padding:7px 8px;font-size:11px;margin:0}
 .collection-deck-actions{display:flex;gap:4px}
