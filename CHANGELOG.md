@@ -1,3 +1,13 @@
+## Proposition — CI sélective pour PR Markdown (24 octobre 2026)
+
+- Détection Git prudente d'une PR ne modifiant que des Markdown racine/`docs/`.
+  Deux jobs obligatoires conservés, contrôles légers sur ces seules PR.
+- CI complète inchangée pour tout fichier de jeu, test, script, workflow,
+  ressource ou export et pour chaque push sur main. Génération du paquet Sites
+  toujours conservée sur main. Tests de classification et de renommage ajoutés.
+- Aucun moteur, carte, sauvegarde, illustration ni JOUER modifié.
+  Proposition à tester et relire ; non fusionnée, non publiée.
+
 ## Intégré et publié — repères de camp discrets et fiche courte (24 octobre 2026)
 
 - Rond bleu allié et losange rouge adverse de 7 px, à gauche des cartes : retrait
