@@ -158,6 +158,21 @@
 | **Divin** | **Décision de conception :** Garde peut défendre la couronne depuis toute **sa ligne**, même derrière l'attaquant ; jamais les unités. Statistiques et autre gain éventuel **à définir**. | **Validé en conception, non codé** |
 | **Éveillé** | **Décision de conception :** Garde peut défendre la couronne contre des attaques provenant de **toutes les lignes**, jamais les unités. Statistiques et autre gain éventuel **à définir**. | **Validé en conception, non codé** |
 
+**Proposition à discuter — progression complète de Rare à Éveillé (24 octobre 2026).** Les nouveaux chiffres de cette matrice n'ont **pas** reçu l'accord du propriétaire ; ils ne sont **ni programmés, ni validés**. Ils privilégient des gains simples de résistance et d'attaque, puis les deux extensions de Garde **déjà décidées en conception**. Chaque ligne indique la **valeur totale envisagée**, et non un gain à ajouter une deuxième fois. Armure 2 et Riposte sont conservées à tous les rangs ; pour la future Riposte, les dégâts bruts suivent l'ATQ effective, pas une valeur fixe accrue.
+
+| Rareté | ATQ proposée | PV proposés | Gain à cette rareté | Statut |
+| --- | ---: | ---: | --- | --- |
+| Commun | **1** | **9** | Socle actuel. Garde de ligne réellement jouable, qui doit être rendue positionnelle dans une future PR de règles | **Actuel** |
+| Rare | **1** | **11** | **+2 PV maximum** par rapport au Commun | **Suggestion à valider** |
+| Épique | **2** | **11** | **+1 ATQ de base**, y compris dans le calcul de Riposte seulement quand cette réforme sera intégrée | **Suggestion à valider** |
+| Légendaire | **2** | **13** | **+2 PV maximum** par rapport à l'Épique ; soit +4 PV au total comparé au Commun | **Suggestion à valider** |
+| Divin | **2** | **13** | **Garde sur toute sa ligne**, même derrière l'attaquant : **capacité décidée en conception** ; chiffres seulement proposés | **Pouvoir décidé ; chiffres à valider** |
+| Éveillé | **2** | **13** | **Garde contre les attaques depuis toutes les lignes**, sans protéger d'autres unités : **capacité décidée en conception** ; chiffres seulement proposés | **Pouvoir décidé ; chiffres à valider** |
+
+**Valeurs secondaires proposées, à confirmer :** délai **1**, déplacement **1 case** par action et portée d'attaque **1 case devant soi sur sa ligne** à tous les rangs. Pas de Vol, Célérité ni attaque à distance ajoutée. **L'Armure reste à 2** à ce stade du projet. Le choix « Garde protège uniquement la couronne » doit s'appliquer à la version normale lorsqu'une PR de moteur sera autorisée ; Divin/Éveillé en étendent la portée sans donner de protection aux autres unités. L'ancienne idée « Riposte fixe 3 en Rare » est rejetée. **Conditions supplémentaires à définir** : cadence des interceptions si plusieurs attaques menacent la couronne, interaction avec Garde de plusieurs unités, silence, types de dégâts, IA et impacts sur 2–4 lignes. Aucune limite de déclenchement nouvelle n'est supposée.
+
+**À faire valider par le propriétaire avant de transformer cette proposition en décision :** +2 PV Rare, +1 ATQ Épique, +2 PV Légendaire, maintien du délai/vitesse/portée et maintien des statistiques au Divin et à l'Éveillé. L'efficacité défensive et l'équilibrage doivent être examinés avec le moteur et en jeu humain ; aucune simulation comparative n'a été réalisée pour ces nombres.
+
 **Règle transversale future déjà retenue :** lorsque la Riposte sera réécrite, ses dégâts bruts suivront l'**ATQ effective** du Porte-égide au moment du contre-coup (par exemple, 1 ATQ de base → 1 dégât brut ; avec +1 ATQ de Concorde → 2), avant réduction éventuelle par les protections adverses. Elle restera limitée à une fois par tour au contact pour cette unité. **Cette règle n'est pas intégrée** : ne pas afficher les nouveaux dégâts de Riposte comme une capacité jouable.
 
 **Questions restant à trancher pour le Porte-égide :** gain propre aux rangs Rare, Épique et Légendaire ; ATQ, PV, délai, vitesse et portée à chaque future rareté ; éventuel bonus supplémentaire Divin ou Éveillé ; conditions d'acquisition et impact sur sauvegardes. Ne pas transformer la Garde historique en protection positionnelle par une simple modification de texte. La petite carte conservera seulement **Armure · Garde · Riposte** et la ligne courte de faction ; les conditions seront présentées dans la fiche détaillée.
