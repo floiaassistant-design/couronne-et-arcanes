@@ -10,6 +10,8 @@
 
 **Décision de conception du propriétaire : une seule évolution par rareté, sans les trois sous-paliers I/II/III pour chaque rareté dans le futur système d'évolution.** Objectif : collection simple à parcourir, sans matrice permanente 6 × 3, dans l'esprit de *Kings and Legends*. **Non intégré au jeu** : les valeurs et règles réelles restent celles du code actuel.
 
+**Règle globale de transmission des capacités (validée en conception) :** à chaque rareté supérieure, **la carte garde toutes les capacités et bonus déjà acquis**, et gagne une nouvelle capacité ou une amélioration de l'une des anciennes. **Une amélioration remplace sa valeur précédente**, elle ne s'y ajoute pas (réduction du premier coup de 1 → 2 → 3 dégâts = réduction de 3, pas 6). Les **effets distincts** et les bonus permanents restent présents aux rangs suivants, sauf décision expresse contraire. Ex. Milicien Éveillé : réduction de 3 dégâts du premier coup reçu (une fois/invocation), riposte de 2 dégâts au contact (une fois/invocation), bonus de +3 PV maximum débloqué au Légendaire et Dernier Rempart (survit une fois avec 5 PV au plus). **Définir le nouveau gain par rang dans les cases de la matrice ; détailler la combinaison totale dans la fiche**, et ne pas recopier toutes les capacités héritées en gros texte sur la petite carte. Statut : décision de conception, **non implémentée dans le moteur**.
+
 ### Règle de conception et interface souhaitée
 
 - **Six rangs affichables :** Commun, Rare, Épique, Légendaire, Divin, Éveillé ; **un état d'évolution par rang**, au lieu de trois sous-paliers à définir pour chaque rang. Les identifiants techniques déjà utilisés dans la Collection, notamment `divine` et `éveillée`, ne seront pas renommés sans migration étudiée.
