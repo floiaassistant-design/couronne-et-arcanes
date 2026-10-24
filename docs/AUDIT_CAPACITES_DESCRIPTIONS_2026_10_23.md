@@ -169,6 +169,29 @@
 **À préciser au moment de programmer :** priorité si plusieurs Gardes protègent une couronne, fréquence exacte de plusieurs interceptions, interactions de silence/armure/barrière, géométrie de 2–4 lignes, sauvegardes, IA et équilibrage réel. **Ces points encore ouverts ne remettent pas en cause les chiffres de progression validés.** Ne pas imposer de migration ni de nouvelles interactions sans une autre décision. Sur la petite carte, garder uniquement **Armure · Garde · Riposte** et le résumé de faction ; détailler les conditions dans la fiche accessible au clic/toucher.
 
 
+### Fiche de conception validée — Arbalétrière de l’Aube (`archer`)
+
+**Décision du propriétaire du 24 octobre 2026 : progression cumulative du rang Rare à Éveillé validée en conception, non programmée dans le jeu.** La version Commune est vérifiée dans `src/data.js` et le moteur du `main` `f0c67075`. Il n'existe pas encore de ces cinq nouvelles raretés jouables pour l'Arbalétrière ; cette fiche n'altère ni stats réelles, ni moteur, ni sauvegardes.
+
+**Version Commune jouable :** **2 ATQ / 3 PV / délai 1**, déplacement **1 case** par action, attaque à distance jusqu'à **2 cases devant elle sur sa propre ligne**. **☀ Bonus de faction : +1 attaque** lorsque Concorde Aube est actif, calculé par le moteur selon la formation.
+
+**Principe cumulatif validé :** une évolution conserve chaque augmentation de statistique et chaque capacité acquise, puis ajoute son effet ; quand une capacité existante s'améliore (ici la portée de tir), c'est **la portée maximale qui passe de 2 à 3**, sans créer un second tir automatique. Le tir perforant puis le tir transperçant sont deux propriétés distinctes conservées ensemble au rang Éveillé. Les chiffres ci-dessous désignent les **totaux** à chaque rang, pas des augmentations à additionner à nouveau.
+
+| Rareté | ATQ totale | PV max totaux | Gain propre au rang | Statut |
+| --- | ---: | ---: | --- | --- |
+| **Commune** | **2** | **3** | Distance : attaque jusqu'à **2 cases** devant elle, sur sa ligne | **Jouable aujourd'hui** |
+| **Rare** | **2** | **4** | **+1 PV maximum**, conservé par la suite | **Validé en conception** |
+| **Épique** | **3** | **4** | **+1 ATQ de base**, conservée ensuite | **Validé en conception** |
+| **Légendaire** | **3** | **4** | Portée de tir étendue à **3 cases devant elle**, sur sa ligne | **Validé en conception** |
+| **Divine** | **3** | **4** | **Tir perforant** : son attaque principale **ignore l'armure de la cible** | **Validé en conception** |
+| **Éveillée** | **3** | **4** | **Tir transperçant** : après la cible principale, touche **un deuxième ennemi immédiatement derrière elle**, sur la même ligne, pour **2 dégâts bruts supplémentaires** | **Validé en conception** |
+
+**Paramètres conservés à toutes les raretés :** délai de base **1**, déplacement au maximum **1 case en avant** par action ; attaque dirigée **vers l'avant, sur sa propre ligne** (portée 2 jusqu'à Épique, 3 dès Légendaire). Pas de Vol, de changement de ligne ni de seconde attaque automatique ajoutée.
+
+**Géométrie du tir transperçant validée :** seule une **deuxième unité ennemie** occupant la case **immédiatement derrière la première unité touchée dans le sens du tir**, sans case vide, reçoit les **2 dégâts bruts** secondaires. Pas d'ennemi derrière la tireuse, ni d'une autre ligne, ni d'effet secondaire sur la couronne. S'il manque cet ennemi adjacent, le tir ne touche que la cible principale. La **Perforation Divine ne supprime pas les protections de cette deuxième cible** : ses dégâts secondaires subissent les réductions et barrières normales. La perforation s'applique à la **frappe principale** seulement. Limiter l'effet à **une cible supplémentaire** ; les résultats d'animations devront suivre les dégâts réellement calculés par le moteur.
+
+**Points d'implémentation ultérieurs :** ordre exact des dommages et des boucliers, cibles simultanées éventuelles, interactions avec la Garde et les anciennes sauvegardes, équilibrage et simulations. Ces précisions techniques ne justifient aucun changement implicite des règles déjà validées. Une future PR de gameplay distincte sera nécessaire avec tests ciblés ; la PR nº 41 reste purement documentaire.
+
 ### Règle de conception et interface souhaitée
 
 - **Six rangs affichables :** Commun, Rare, Épique, Légendaire, Divin, Éveillé ; **un état d'évolution par rang**, au lieu de trois sous-paliers à définir pour chaque rang. Les identifiants techniques déjà utilisés dans la Collection, notamment `divine` et `éveillée`, ne seront pas renommés sans migration étudiée.
@@ -206,7 +229,7 @@
 |---|---|---|---|---|---|---|
 | Milicien de l’Aube (`militia`) | **Actuel :** Combattant au corps à corps, 2 ATQ, 5 PV, délai 1. Aucune capacité spéciale. | **Description retenue :** Réduit de 1 les dégâts du premier coup reçu après son invocation. Une seule fois par invocation. | **Description retenue :** Réduit de 2 les dégâts du premier coup reçu après son invocation. Une seule fois par invocation. | **Description retenue :** Réduit de 2 les dégâts du premier coup reçu après son invocation, une seule fois. Possède 3 PV maximum supplémentaires par rapport au Milicien Épique (sans addition des anciens sous-paliers). | **Description retenue :** Réduit de 3 les dégâts du premier coup reçu après son invocation, une seule fois. Lorsqu'un ennemi l'attaque au corps à corps, il riposte en infligeant des dégâts bruts égaux à son ATQ effective, une seule fois par invocation. | **Description retenue (Éveillé) :** Conserve la réduction de **3 dégâts sur le premier coup reçu**, une fois par invocation, et la **riposte égale à son ATQ effective** contre un attaquant au corps à corps, une fois par invocation. Ajoute **Dernier Rempart** : lorsqu'un coup devrait le tuer, il survit avec **5 PV** (sans dépasser son maximum), une seule fois par invocation. Conserve le bonus de PV déjà acquis au rang Légendaire. |
 | Porte-égide (`shield`) | **Actuel :** 1 ATQ / 9 PV / délai 1 ; Armure 2, Garde de ligne historique, Riposte fixe 2 au contact (1 fois/tour). | **Conception validée :** 1 ATQ / 11 PV, +2 PV | **Conception validée :** 2 ATQ / 11 PV, +1 ATQ | **Conception validée :** 2 ATQ / 13 PV, +2 PV | **Conception validée :** 2 ATQ / 13 PV, Garde de sa couronne sur toute sa ligne | **Conception validée :** 2 ATQ / 13 PV, Garde de sa couronne face aux attaques de toutes les lignes |
-| Arbalétrière (`archer`) | **Actuel :** Distance : attaque jusqu’à 2 cases devant elle, sur sa ligne. | À définir | À définir | À définir | À définir | À définir |
+| Arbalétrière (`archer`) | **Actuel :** 2 ATQ / 3 PV / délai 1 ; tire à 2 cases devant elle, sur sa ligne. | **Conception validée :** 2 ATQ / 4 PV, +1 PV | **Conception validée :** 3 ATQ / 4 PV, +1 ATQ | **Conception validée :** 3 ATQ / 4 PV, portée 3 cases | **Conception validée :** 3 ATQ / 4 PV, perforation de l'armure sur la cible principale | **Conception validée :** 3 ATQ / 4 PV, +2 dégâts bruts à la seconde cible immédiatement derrière la première, protections appliquées |
 | Sœur de l’Aurore (`cleric`) | — | **Actuel :** Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne (elle-même incluse). | À définir | À définir | À définir | À définir |
 | Paladin solaire (`paladin`) | — | — | **Actuel :** Armure 2. Riposte : inflige 2 dégâts à un attaquant adjacent au contact, au plus une fois par tour. | À définir | À définir | À définir |
 | Porte-étendard (`banner`) | — | **Actuel :** Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). | À définir | À définir | À définir | À définir |
