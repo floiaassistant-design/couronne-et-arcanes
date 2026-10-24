@@ -13,6 +13,16 @@ Conserver cet identifiant et l’audience renvoyée par le Site natif lors de la
 publication. Le 24 octobre 2026, elle est publique ; l’ancienne mention privée
 ne doit pas déclencher de changement d’accès.
 
+## Réduction proposée des archives CI (24 octobre 2026 — non fusionnée)
+
+Les archives GitHub Actions ont atteint environ **10,2 Go pour 259 copies** au 24 octobre 2026, bloquant leurs téléversements. Leur nettoyage n'affecte **ni le code GitHub, ni les images validées des dépôts, ni les sauvegardes**. Un audit temporaire est exécuté sur une branche dédiée, sans fusion.
+
+**Proposition CI :** la suite complète (tests, parité, navigateur, builds) continue à chaque PR de code et à chaque push `main`. Seul le **stockage** change : les captures de PR ne sont conservées que si le job échoue ou si la PR porte le label `captures-ci` (réexécuter la CI après l'ajout de ce label). Leur durée de conservation serait de **2 jours**, sans joindre une seconde copie de `JOUER.html`. Le paquet `couronnes-web` continuerait à être **construit et validé** pour les PR, mais ne serait **archivé que sur main**, avec une conservation de **7 jours**, en cohérence avec l'interdiction de publier une branche non fusionnée.
+
+**Avant toute publication Sites :** vérifier comme auparavant le **commit réellement intégré à main**, les contrôles correspondants et le paquet exact conservé pour ce main. Un paquet expiré nécessite une nouvelle génération vérifiée ; ne jamais publier l'archive d'une PR. Les screenshots ne sont pas des sources de code ; leur absence après une CI réussie ne dispense pas d'examiner visuellement l'interface lors des changements concernés.
+
+Ce changement de politique attend sa **PR distincte et l'accord de fusion spécifique du propriétaire**. Les détails historiques ci-dessous restent des relevés et n'annulent pas cette condition.
+
 ## Une seule source de développement
 
 GitHub `floiaassistant-design/couronne-et-arcanes`, branche `main`, reste

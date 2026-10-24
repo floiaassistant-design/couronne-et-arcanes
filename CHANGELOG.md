@@ -1,3 +1,10 @@
+## Proposition — éviter la saturation des artefacts GitHub Actions (24 octobre 2026)
+
+- Le 24 octobre, un inventaire automatisé des archives CI de `couronne-et-arcanes` a mesuré **259 archives et environ 10,2 Go**, dont les captures répétées des PR et les paquets web. Ce stockage d'archives est distinct du code et des sauvegardes.
+- Conserver **l'ensemble des tests, parité et builds**. Sur les PR, n'archiver les captures que **lors d'un échec** ou sur demande de revue (étiquette `captures-ci`), après toutes les étapes ; rétention **2 jours**, sans dupliquer `JOUER.html` déjà testé et versionné.
+- Continuer à **construire et vérifier le paquet web sur chaque PR** modifiant le jeu ; ne stocker l'archive `couronnes-web` que **sur un push main** (publication Sites autorisée uniquement depuis main), pour **7 jours**.
+- Modification documentaire et de workflow seulement ; aucune suppression de CI ni modification du jeu. **Proposé en PR, non intégré tant que sa fusion n'est pas expressément autorisée.**
+
 ## Proposition — CI sélective pour PR Markdown (24 octobre 2026)
 
 - Détection Git prudente d'une PR ne modifiant que des Markdown racine/`docs/`.

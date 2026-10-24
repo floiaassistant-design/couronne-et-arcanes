@@ -119,8 +119,15 @@ jobs:
       - name: Arène peinte fixe, ancrages et statistiques des cartes
         if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_painted_arena.py
-      - name: Captures des arènes et version jouable pour revue
-        if: always() && github.event_name == 'pull_request' && steps.scope.outputs.docs_only != 'true'
+      - name: Clôture du combat, stockage et reprise après coupure
+        if: steps.scope.outputs.docs_only != 'true'
+        run: python3 tests/browser_save_integrity_v211.py
+      - name: Comparaison de géométrie et reproductibilité
+        if: steps.scope.outputs.docs_only != 'true'
+        run: npm run arena-balance
+
+      - name: Conserver les captures si échec ou revue demandée
+        if: always() && github.event_name == 'pull_request' && steps.scope.outputs.docs_only != 'true' && (failure() || contains(github.event.pull_request.labels.*.name, 'captures-ci'))
         uses: actions/upload-artifact@v4
         with:
           name: apercu-arene-structuree
@@ -143,13 +150,5 @@ jobs:
             /tmp/ca-card-study-*.png
             /tmp/ca-card-preview-*.png
             /tmp/ca-deployment-*.png
-            JOUER.html
           if-no-files-found: warn
-          retention-days: 14
-      - name: Clôture du combat, stockage et reprise après coupure
-        if: steps.scope.outputs.docs_only != 'true'
-        run: python3 tests/browser_save_integrity_v211.py
-      - name: Comparaison de géométrie et reproductibilité
-        if: steps.scope.outputs.docs_only != 'true'
-        run: npm run arena-balance
-
+          retention-days: 2
