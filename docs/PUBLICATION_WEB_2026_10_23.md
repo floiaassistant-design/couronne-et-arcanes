@@ -45,8 +45,14 @@ noms relatifs POSIX, former `nom + U+0000 + sha256(octets)` pour chaque fichier,
 joindre par un saut de ligne sans saut final, puis calculer le SHA-256 UTF-8.
 
 La préparation du paquet ne remplace pas le workflow complet
-`Tests Couronnes et Arcanes`. Avant publication, les deux workflows doivent
-avoir réussi pour un arbre Git identique à celui du main visé. Une CI de PR
+`Tests Couronnes et Arcanes`. Une optimisation de CI est proposée :
+seules les PR modifiant exclusivement du Markdown à la racine ou dans `docs/`
+passent en contrôle allégé, sans produire de paquet pour cette PR.
+Le **push vers main reste intégral** pour les deux workflows et son paquet
+avec reçu, y compris après une fusion documentaire ; le déclencheur Sites
+n'est pas modifié. Cette politique n'est active qu'après fusion de la PR dédiée.
+Avant publication, les deux workflows doivent avoir réussi pour un arbre Git
+identique à celui du main visé. Une CI de PR
 fusionnée peut être réutilisée si l'arbre correspond exactement. Consulter
 la CI existante avant toute relance ; attendre un contrôle en cours.
 
