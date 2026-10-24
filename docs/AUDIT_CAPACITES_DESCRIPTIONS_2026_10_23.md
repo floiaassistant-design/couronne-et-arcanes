@@ -221,7 +221,7 @@
 
 **Version Épique jouable** (`src/data.js`, `src/engine/battle.js` du `main` `f0c67075`) : **4 ATQ / 9 PV / délai 3**, déplacement d'**une case** maximum vers l'avant par action, attaque à **une case devant sur sa ligne**. **Armure 2** : retranche 2 aux dégâts bruts reçus, avec un minimum de 1 avant barrière, sauf Perforation. **Riposte** : 2 dégâts bruts fixes actuellement, **au plus une fois par tour**, si le Paladin survit à une attaque ennemie **au contact**, que les deux unités peuvent agir et qu'il n'est pas réduit au silence ; jamais sur une attaque à distance ni en chaîne. Le Paladin **n'a pas Garde** : il ne possède pas l'interception propre au Porte-égide. **☀ Bonus de faction : +1 attaque** avec deux unités Aube alliées sur sa ligne, sans modifier la Riposte fixe actuellement jouable.
 
-**Héritage validé :** chaque nouvelle rareté **conserve les statistiques et pouvoirs précédemment acquis** et ajoute son gain. Lorsque l'Armure s'améliore, **Armure 3 remplace Armure 2**, sans réduction cumulée de 5. La barrière de l'Éveillé vient **en plus** de l'Armure et de la Riposte conservées. Les nombres ATQ et PV indiquent les **totaux à ce rang**.
+**Héritage validé :** chaque nouvelle rareté **conserve les statistiques et pouvoirs précédemment acquis** et ajoute son gain. Lorsque l'Armure s'améliore, **Armure 3 remplace Armure 2**, sans réduction cumulée de 5. **Correction du propriétaire : le rang Éveillé ajoute aussi +2 PV maximum** (11 → **13 PV**) **en plus** de la barrière, tout en conservant Armure 3 et Riposte. Cette combinaison représente l'unique évolution propre au rang Éveillé ; elle ne crée aucune seconde activation de Riposte. Les nombres ATQ et PV indiquent les **totaux à ce rang**.
 
 | Rareté | ATQ totale | PV max totaux | Gain du rang | Statut |
 | --- | ---: | ---: | --- | --- |
@@ -230,7 +230,7 @@
 | **Épique** | **4** | **9** | **Armure 2** et **Riposte** | **Jouable** |
 | **Légendaire** | **4** | **11** | **+2 PV maximum** conservés ensuite | **Validé en conception** |
 | **Divin** | **4** | **11** | **Armure améliorée de 2 à 3** (remplacement, sans cumul) | **Validé en conception** |
-| **Éveillé** | **4** | **11** | Après une **Riposte réellement déclenchée**, obtient une **barrière de 2 points**, limitée à **2 points pour ce pouvoir**, **au plus une fois par tour** ; ne protège que lui-même | **Validé en conception** |
+| **Éveillé** | **4** | **13** | **+2 PV maximum supplémentaires** (11 → 13) **et**, après une **Riposte réellement déclenchée**, une **barrière personnelle de 2 points**, limitée à **2 points pour ce pouvoir**, **au plus une fois par tour** ; ne protège que lui-même | **Validé en conception — correction explicite du propriétaire** |
 
 **Enchaînement Éveillé validé :** 1. une unité ennemie attaque le Paladin au **corps à corps** ; 2. le Paladin survit et, si toutes les conditions de Riposte sont réunies, **riposte** ; 3. **après cette Riposte**, il reçoit sa barrière personnelle de 2 points. Si le Paladin ne peut pas riposter (attaque à distance, silence, mort, Riposte déjà utilisée dans le tour), **il ne reçoit aucune barrière par cette capacité**. L'effet propre à la Riposte Éveillée est plafonné à **2 points**, sans ajouter 2 de plus à chaque coup ; la gestion de barrières éventuellement fournies par **d'autres pouvoirs** reste à préciser pour ne pas les supprimer arbitrairement.
 
@@ -238,7 +238,32 @@
 
 **Paramètres conservés aux quatre raretés existantes/envisagées :** **délai 3**, déplacement **1 case**, portée d'attaque **1 case devant lui sur sa ligne** ; **4 ATQ de base** ; aucun Vol, Célérité, Garde ou tir à distance inventé. L'Armure se maintient à 2 jusqu'à Légendaire, puis à 3 au Divin et à l'Éveillé.
 
+**Correction validée par le propriétaire (24 octobre 2026) :** le total de PV de l'Éveillé est **13**, et non 11. Les gains **+2 PV de Légendaire et +2 PV supplémentaires à Éveillé se cumulent** ; le Paladin Éveillé garde son **Armure 3**, sa Riposte et sa barrière personnelle de 2 points après Riposte. Aucun autre rang n'est modifié. 
+
 **Reste à prévoir pour une future PR de règles :** précision de l'état temporaire et du plafond de la barrière vis-à-vis d'autres boucliers, reprise de sauvegardes anciennes, effets visuels et journal des dégâts, silence, intégrité de la limite par tour, cas de mort simultanée et simulations d'équilibrage. Aucune de ces fonctionnalités futures n'est implantée par la présente fiche.
+
+### Fiche de conception validée — Porte-étendard de l'Aube (`banner`)
+
+**Validation du propriétaire du 24 octobre 2026 : progression cumulative de Rare à Éveillé, avec notamment +2 PV au rang Épique, décidée en conception uniquement.** Le Porte-étendard commence **nativement Rare**, sans forme Commune à créer. Les versions évoluées ne sont **pas programmées** dans le jeu.
+
+**Version Rare jouable** (GitHub `main` `f0c67075`) : **2 ATQ / 6 PV / délai 2**, avance d'**une case** au maximum vers l'avant par action, attaque à **une case devant lui sur sa ligne**. **Inspiration :** après les attaques, **tous les 3 tours**, accorde **+1 ATQ au premier autre allié de sa ligne**, s'il existe, avec une **ATQ plafonnée à 12**. Le Porte-étendard ne se renforce pas lui-même grâce à son Inspiration. Les effets d'Inspiration accumulés sur une unité restent soumis au plafond du moteur. **☀ Bonus de faction : +1 attaque** si la formation Aube active Concorde.
+
+**Règle cumulative validée :** chaque rang **conserve ses bonus précédents** ; une même capacité d'Inspiration est **améliorée**, pas rejouée en plusieurs versions indépendantes. Les **2 PV gagnés en Épique** se conservent jusqu'en Éveillé, sans +2 PV supplémentaires automatiques aux rangs suivants.
+
+| Rareté | ATQ totale | PV max totaux | Gain propre au rang | Statut |
+| --- | ---: | ---: | --- | --- |
+| **Commune** | — | — | Forme inférieure inexistante | **Aucune version Commune** |
+| **Rare** | **2** | **6** | **Inspiration : +1 ATQ à un autre allié de sa ligne tous les 3 tours** | **Jouable actuellement** |
+| **Épique** | **2** | **8** | **+2 PV maximum** | **Validé en conception** |
+| **Légendaire** | **2** | **8** | **Inspiration : renforce deux autres alliés de sa ligne** au lieu d'un | **Validé en conception** |
+| **Divin** | **2** | **8** | **Inspiration : +2 ATQ à chacun** des deux alliés ciblés, au lieu de +1 | **Validé en conception** |
+| **Éveillé** | **2** | **8** | **Inspiration : les deux alliés peuvent être sur n'importe quelle ligne**, chacun reçoit +2 ATQ | **Validé en conception** |
+
+**Inspiration future :** **un seul déclenchement tous les 3 tours**, après les attaques, avec au plus **deux autres unités alliées** à partir du rang Légendaire, et une **augmentation de 2 ATQ par bénéficiaire** dès Divin. Les deux bénéficiaires peuvent être sur des lignes **différentes** à l'Éveillé. La capacité reste soumise au plafond **12 ATQ pour chaque bénéficiaire** ; elle ne s'applique pas au Porte-étendard lui-même et ne renforce pas la couronne. **Aucune cible additionnelle** si moins de deux autres alliés sont présents, et **pas de double augmentation de la même unité sur un même déclenchement**.
+
+**Paramètres conservés à tous les rangs :** **2 ATQ de base**, **délai 2**, **déplacement 1 case par action**, attaque **à 1 case devant sur sa ligne**. Pas de changement de ligne pour le Porte-étendard, pas de Vol, Célérité ni tir à distance ajouté. Ce sont les zones **de son Inspiration**, pas de son déplacement ou de son attaque, qui s'étendent au rang Éveillé.
+
+**Reste à préciser pour l'implémentation :** la priorité de sélection déterministe des deux autres alliés, l'ordre de résolution et les égalités, l'impact des bonus persistants sur le moteur, les anciens profils et sauvegardes, les tests de parité et l'équilibrage. La validation est **documentaire et de conception** : elle ne modifie pas le jeu, l'IA, les valeurs jouables ou `JOUER.html`.
 
 ### Règle de conception et interface souhaitée
 
@@ -279,8 +304,8 @@
 | Porte-égide (`shield`) | **Actuel :** 1 ATQ / 9 PV / délai 1 ; Armure 2, Garde de ligne historique, Riposte fixe 2 au contact (1 fois/tour). | **Conception validée :** 1 ATQ / 11 PV, +2 PV | **Conception validée :** 2 ATQ / 11 PV, +1 ATQ | **Conception validée :** 2 ATQ / 13 PV, +2 PV | **Conception validée :** 2 ATQ / 13 PV, Garde de sa couronne sur toute sa ligne | **Conception validée :** 2 ATQ / 13 PV, Garde de sa couronne face aux attaques de toutes les lignes |
 | Arbalétrière (`archer`) | **Actuel :** 2 ATQ / 3 PV / délai 1 ; tire à 2 cases devant elle, sur sa ligne. | **Conception validée :** 2 ATQ / 4 PV, +1 PV | **Conception validée :** 3 ATQ / 4 PV, +1 ATQ | **Conception validée :** 3 ATQ / 4 PV, portée 3 cases | **Conception validée :** 3 ATQ / 4 PV, perforation de l'armure sur la cible principale | **Conception validée :** 3 ATQ / 4 PV, +2 dégâts bruts à la seconde cible immédiatement derrière la première, protections appliquées |
 | Sœur de l’Aurore (`cleric`) | **Pas de version Commune à inventer** | **Rare jouable :** 1 ATQ / 4 PV / délai 2 ; soin de 2 PV à un allié blessé de sa ligne, elle-même comprise | **Conception validée :** 1 ATQ / 6 PV ; +2 PV | **Conception validée :** 1 ATQ / 6 PV ; soin amélioré à 3 PV pour une cible | **Conception validée :** 1 ATQ / 6 PV ; soigne jusqu’à 2 alliés blessés de sa ligne, 3 PV chacun | **Conception validée :** 1 ATQ / 6 PV ; soigne jusqu’à 2 alliés blessés, toutes lignes confondues, 3 PV chacun |
-| Paladin solaire (`paladin`) | **Pas de version Commune** | **Pas de version Rare** | **Épique jouable :** 4 ATQ / 9 PV / délai 3 ; Armure 2 et Riposte fixe 2 (une fois/tour au contact) | **Conception validée :** 4 ATQ / 11 PV, +2 PV | **Conception validée :** 4 ATQ / 11 PV, Armure 3 remplace Armure 2 | **Conception validée :** 4 ATQ / 11 PV, après Riposte autorisée, barrière personnelle 2 points plafonnée et une fois/tour |
-| Porte-étendard (`banner`) | — | **Actuel :** Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). | À définir | À définir | À définir | À définir |
+| Paladin solaire (`paladin`) | **Pas de version Commune** | **Pas de version Rare** | **Épique jouable :** 4 ATQ / 9 PV / délai 3 ; Armure 2 et Riposte fixe 2 (une fois/tour au contact) | **Conception validée :** 4 ATQ / 11 PV, +2 PV | **Conception validée :** 4 ATQ / 11 PV, Armure 3 remplace Armure 2 | **Conception corrigée et validée :** 4 ATQ / **13 PV**, +2 PV supplémentaires, conserve Armure 3 et gagne après Riposte autorisée une barrière personnelle de 2 points plafonnée et une fois/tour |
+| Porte-étendard (`banner`) | **Pas de version Commune** | **Rare jouable :** 2 ATQ / 6 PV / délai 2 ; tous les 3 tours, +1 ATQ au premier autre allié de sa ligne (plafond ATQ 12) | **Conception validée :** 2 ATQ / 8 PV, +2 PV maximum | **Conception validée :** 2 ATQ / 8 PV, renforce jusqu'à 2 autres alliés de sa ligne | **Conception validée :** 2 ATQ / 8 PV, donne +2 ATQ à chacun des deux alliés ciblés de sa ligne | **Conception validée :** 2 ATQ / 8 PV, renforce jusqu'à 2 autres alliés sur toutes les lignes, +2 ATQ chacun tous les 3 tours (plafond ATQ 12) |
 | Capitaine de l’Aube (`scoutcaptain`) | — | **Actuel :** Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). | À définir | À définir | À définir | À définir |
 | Prieur solaire (`sunpriest`) | — | **Actuel :** Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. | À définir | À définir | À définir | À définir |
 | Lancier des Remparts (`lancer`) | **Actuel :** Perforation : ignore l’armure. Charge : +2 ATQ s’il a avancé avant d’attaquer. | À définir | À définir | À définir | À définir | À définir |
