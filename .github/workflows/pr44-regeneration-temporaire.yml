@@ -1,0 +1,30 @@
+name: PR44 regenerate JOUER (temporary)
+on:
+  push:
+    branches:
+      - fix/minimum-card-delay-one-20261024
+permissions:
+  contents: write
+jobs:
+  regenerate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate the sole offline export from sources
+        run: npm run build
+      - name: Commit generated export and remove this temporary workflow
+        run: |
+          set -euo pipefail
+          test -s JOUER.html
+          git rm .github/workflows/pr44-regeneration-temporaire.yml
+          git add JOUER.html
+          git diff --cached --check
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'chore(pr44): regenerer JOUER et retirer le workflow ponctuel'
+          git push origin HEAD:fix/minimum-card-delay-one-20261024
