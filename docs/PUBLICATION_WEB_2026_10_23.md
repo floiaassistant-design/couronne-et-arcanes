@@ -13,15 +13,15 @@ Conserver cet identifiant et l’audience renvoyée par le Site natif lors de la
 publication. Le 24 octobre 2026, elle est publique ; l’ancienne mention privée
 ne doit pas déclencher de changement d’accès.
 
-## Réduction proposée des archives CI (24 octobre 2026 — non fusionnée)
+## Conservation des archives CI — PR nº 49 fusionnée (24 octobre 2026)
 
-Les archives GitHub Actions ont atteint environ **10,2 Go pour 259 copies** au 24 octobre 2026, bloquant leurs téléversements. Leur nettoyage n'affecte **ni le code GitHub, ni les images validées des dépôts, ni les sauvegardes**. Un audit temporaire est exécuté sur une branche dédiée, sans fusion.
+Les archives GitHub Actions ont atteint environ **10,2 Go pour 259 copies** au 24 octobre 2026, bloquant leurs téléversements. Leur nettoyage n'affecte **ni le code GitHub, ni les images validées des dépôts, ni les sauvegardes**. Un audit temporaire distinct a **supprimé 250 archives obsolètes** et conservé **9 références** (399,5 Mo restant selon l’API), sans modification du code ou des sauvegardes. Le workflow temporaire de nettoyage a été retiré de sa branche après exécution.
 
-**Proposition CI :** la suite complète (tests, parité, navigateur, builds) continue à chaque PR de code et à chaque push `main`. Seul le **stockage** change : les captures de PR ne sont conservées que si le job échoue ou si la PR porte le label `captures-ci` (réexécuter la CI après l'ajout de ce label). Leur durée de conservation serait de **2 jours**, sans joindre une seconde copie de `JOUER.html`. Le paquet `couronnes-web` continuerait à être **construit et validé** pour les PR, mais ne serait **archivé que sur main**, avec une conservation de **7 jours**, en cohérence avec l'interdiction de publier une branche non fusionnée.
+**Contrat CI intégré à `main` par la PR nº 49 :** la suite complète (tests, parité, navigateur, builds) continue à chaque PR de code et à chaque push `main`. Seul le **stockage** change : les captures de PR ne sont conservées que si le job échoue ou si la PR porte le label `captures-ci` (réexécuter la CI après l'ajout de ce label). Leur durée de conservation est de **2 jours**, sans joindre une seconde copie de `JOUER.html`. Le paquet `couronnes-web` continue à être **construit et validé** pour les PR, mais n'est **archivé que sur main**, avec une conservation de **7 jours**, en cohérence avec l'interdiction de publier une branche non fusionnée.
 
 **Avant toute publication Sites :** vérifier comme auparavant le **commit réellement intégré à main**, les contrôles correspondants et le paquet exact conservé pour ce main. Un paquet expiré nécessite une nouvelle génération vérifiée ; ne jamais publier l'archive d'une PR. Les screenshots ne sont pas des sources de code ; leur absence après une CI réussie ne dispense pas d'examiner visuellement l'interface lors des changements concernés.
 
-Ce changement de politique attend sa **PR distincte et l'accord de fusion spécifique du propriétaire**. Les détails historiques ci-dessous restent des relevés et n'annulent pas cette condition.
+**Intégration confirmée** : [PR nº 49](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/49), fusion autorisée dans `main` au commit `170e9c9a898821dfe27945d18ef0617a79e6cf94`, arbre Git identique au commit testé. Les deux CI sur l'arbre approuvé ont réussi. Le premier [assemblage web sur main](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40135240903) a bien généré le paquet, mais le **téléversement demeure bloqué par le quota GitHub Actions non encore recalculé** ; la nouvelle publication Sites n'est donc **pas revendiquée**. Les détails historiques ci-dessous demeurent des repères d'exécution.
 
 ## Une seule source de développement
 
@@ -47,7 +47,7 @@ Le workflow `Assemblage web` s'exécute sur les PR et les push vers main,
 avec `contents: read`, sans secret ni publication. Après assemblage,
 `scripts/package_web_artifact.mjs` crée `.openai/canonical-build.json`
 et `/tmp/couronnes-web.tar.gz`. L'artifact GitHub `couronnes-web` conserve
-cette archive pendant 14 jours. Le reçu généré est exclu de Git.
+cette archive pendant **7 jours sur main uniquement**. Le reçu généré est exclu de Git.
 
 Le reçu identifie le dépôt, le commit source, son arbre Git, le SHA-256 de
 JOUER et celui de tous les fichiers distribués. Pour `web_sha256`, trier les
