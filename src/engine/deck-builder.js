@@ -15,7 +15,7 @@ const abilityOf=c=>c.ability||'';
 function unitScore(c,style){
  const base=5+c.attack*1.2+c.hp*.32-c.delay*.6;
  const guard=GUARD_IDS.has(c.id),charge=CHARGE_IDS.has(c.id);
- if(style==='assaut')return base+c.attack*1.8+(c.delay===0?7:0)+(charge?9:0)+(abilityOf(c)==='haste'?5:0)-c.hp*.15;
+ if(style==='assaut')return base+c.attack*1.8+(c.delay===1?7:0)+(charge?9:0)+(abilityOf(c)==='haste'?5:0)-c.hp*.15;
  if(style==='rempart')return base+c.hp*.95+(guard?13:0)+(abilityOf(c)==='armor'?7:0)+(abilityOf(c)==='heal'?8:0)+(abilityOf(c)==='ward'?5:0);
  if(style==='arcanes')return base+(c.faction==='ether'?13:0)+(abilityOf(c)==='ranged'?7:0)+(abilityOf(c)==='splash'?7:0)+(abilityOf(c)==='inspire'?3:0);
  return base+(guard?4:0)+(charge?3:0)+(abilityOf(c)==='ranged'?4:0)+(abilityOf(c)==='heal'?5:0);
@@ -42,7 +42,7 @@ export function deckOverview(deck){
  const counts={},factions={};let units=0,spells=0,guards=0,quick=0;
  for(const id of deck||[]){const c=CARDS[id];if(!c)continue;
   counts[id]=(counts[id]||0)+1;
-  if(c.type==='sort')spells++;else{units++;factions[c.faction]=(factions[c.faction]||0)+1;if(GUARD_IDS.has(id))guards++;if(c.delay===0)quick++;}
+  if(c.type==='sort')spells++;else{units++;factions[c.faction]=(factions[c.faction]||0)+1;if(GUARD_IDS.has(id))guards++;if(c.delay===1)quick++;}
  }
  const dominant=Object.entries(factions).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))[0]?.[0]||null;
  return {total:units+spells,units,spells,guards,quick,dominant,counts};
