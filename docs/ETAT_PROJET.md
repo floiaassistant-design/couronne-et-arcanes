@@ -44,7 +44,7 @@ La publication est distincte de la fusion ; ne pas la déduire d'une simple CI.
 ## Proposition ouverte et prochaine étape
 
 La [PR nº 41](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/41)
-est **la seule PR du jeu encore ouverte** lors de cette vérification. C'est un
+reste ouverte en brouillon parmi les travaux antérieurs. C'est un
 audit documentaire en brouillon des 53 unités et 23 sorts, réalisé à partir
 d'un ancien main ; ses constats et descriptifs doivent être rapprochés des
 modifications fusionnées depuis, sans intégrer automatiquement de nouvelles
