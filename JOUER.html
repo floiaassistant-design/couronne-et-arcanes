@@ -4673,6 +4673,7 @@ Object.assign(__exports,{CLASS_SKILLS,CARDS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPO
 },
 "src/engine/battle.js":function(__exports,__load){
 const {castSpell}=__load("src/engine/spell-casting.js");
+const {unitVersionPlayable}=__load("src/cards/definitions.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 const {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
 const {frontEnemy}=__load("src/engine/spell-targeting.js");
@@ -4788,6 +4789,7 @@ function play(b,side,index,lane,col=entryColumn(b,side)){
  if(hero.cardsPlayed>=2)return {ok:false,reason:'Limite de deux cartes par tour.'};
  const c=CARDS[hand.id];
  if(!c)return {ok:false,reason:'Carte inconnue.'};
+ if(c.type==='unité'&&!unitVersionPlayable(hand))return {ok:false,reason:'Cette version de la carte n’est pas encore jouable.'};
  if(c.heroClass&&(side!=='p'||c.heroClass!==b.heroClass))return {ok:false,reason:'Compétence réservée à une autre classe.'};
  const targetError=classSkillTargetError(b,side,c,lane)||controlTargetError(b,side,c,lane)||tempoTargetError(b,side,c);
  if(targetError)return {ok:false,reason:targetError};
@@ -5482,6 +5484,211 @@ function resolveTempoSpell(b,side,card,note){
 Object.assign(__exports,{TEMPO_IDS,TEMPO_MAX_WAIT,accelerationTarget,obstructionTarget,tempoTargetError,resolveTempoSpell});
 
 },
+"src/cards/definitions.js":function(__exports,__load){
+// Catalogue de versions en lecture seule. Aucun ajout à CARDS, aucune possession ni règle activée.
+const {CARDS}=__load("src/data.js");
+const {CARD_RARITIES,normalizeCardRarity,freezeCardData}=__load("src/cards/schema.js");
+const {nativeUnitAbilities,inheritUnitAbilities}=__load("src/cards/abilities.js");
+const {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE}=__load("src/cards/aube.js");
+const AUBE_UNIT_IDS=Object.freeze(Object.keys(AUBE_EVOLUTIONS));
+const definitions=new Map();
+const noVersions=Object.freeze([]);
+
+for(const card of Object.values(CARDS)){
+ if(card.type!=='unité')continue;
+ const nativeIndex=CARD_RARITIES.findIndex(rank=>rank.id===card.rarity);
+ if(nativeIndex<0)throw Error('Rareté native inconnue : '+card.id);
+ const versions=[];
+ let stats={attack:card.attack,hp:card.hp,delay:card.delay};
+ let geometry={steps:card.ability==='haste'?2:1,range:card.ability==='ranged'?2:1};
+ let abilities=nativeUnitAbilities(card),pendingDecisions=[];
+ for(const rank of CARD_RARITIES.slice(nativeIndex)){
+  const native=rank.id===card.rarity;
+  const patch=AUBE_EVOLUTIONS[card.id]?.[rank.id];
+  if(!native&&!patch)break;
+  stats={...stats,...patch?.stats};
+  geometry={...geometry,...patch?.geometry};
+  abilities=inheritUnitAbilities(abilities,patch?.abilities);
+  pendingDecisions=patch?.pendingDecisions||pendingDecisions;
+  const definition=freezeCardData({
+   id:card.id,versionId:`${card.id}:${rank.id}`,rarity:rank.id,nativeRarity:card.rarity,
+   stats:{...stats},geometry:{...geometry},abilities,
+   status:{design:'validated',combat:native?'implemented':'pending',obtaining:native?'existing':'undefined'},
+   pendingDecisions:[...pendingDecisions],source:native?null:AUBE_DESIGN_SOURCE
+  });
+  versions.push(definition);
+ }
+ definitions.set(card.id,Object.freeze(versions));
+}
+
+// Une chaîne historique désigne toujours le natif. Une référence future garde le même ID.
+// Une rareté explicite inconnue/inexistante échoue, sans repli silencieux sur le natif.
+function resolveUnitDefinition(reference,rarity){
+ const id=typeof reference==='string'?reference:reference?.id;
+ if(typeof id!=='string'||!definitions.has(id))return null;
+ const explicit=rarity!==undefined?rarity:typeof reference==='object'?reference?.rarity:undefined;
+ const rank=explicit===undefined?CARDS[id].rarity:normalizeCardRarity(explicit);
+ return definitions.get(id).find(version=>version.rarity===rank)||null;
+}
+
+function unitVersions(id){return definitions.get(id)||noVersions;}
+
+function unitVersionReference(id,rarity){
+ const definition=resolveUnitDefinition(id,rarity);
+ return definition?Object.freeze({id:definition.id,rarity:definition.rarity}):null;
+}
+
+function unitVersionPlayable(reference){
+ return resolveUnitDefinition(reference)?.status.combat==='implemented';
+}
+
+Object.assign(__exports,{AUBE_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable});
+
+},
+"src/cards/schema.js":function(__exports,__load){
+// Identité des versions : indépendante des achats et compatible avec les rangs UI historiques.
+function freezeCardData(value){
+ if(value&&typeof value==='object'&&!Object.isFrozen(value)){
+  for(const child of Object.values(value))freezeCardData(child);
+  Object.freeze(value);
+ }
+ return value;
+}
+
+const CARD_RARITIES=freezeCardData([
+ {id:'commun',name:'Commun'},
+ {id:'rare',name:'Rare'},
+ {id:'épique',name:'Épique'},
+ {id:'légendaire',name:'Légendaire'},
+ {id:'divine',name:'Divin'},
+ {id:'éveillée',name:'Éveillé'}
+]);
+const aliases=Object.freeze({divin:'divine','éveillé':'éveillée'});
+function normalizeCardRarity(value){
+ if(typeof value!=='string')return null;
+ const lower=value.normalize('NFC').toLowerCase();
+ const id=Object.hasOwn(aliases,lower)?aliases[lower]:lower;
+ return CARD_RARITIES.some(rank=>rank.id===id)?id:null;
+}
+
+Object.assign(__exports,{freezeCardData,CARD_RARITIES,normalizeCardRarity});
+
+},
+"src/cards/abilities.js":function(__exports,__load){
+// Description structurée du socle natif. Le branchement des règles de combat suit aux étapes 3/4.
+const {FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
+function nativeUnitAbilities(card){
+ const abilities={};
+ const primary={
+  armor:{amount:2,minimumDamage:1},
+  ranged:{},haste:{},
+  heal:{amount:2,targets:1,scope:'line',includeSelf:true,selection:'injury-ratio',timing:'after-attacks'},
+  inspire:{amount:1,targets:1,scope:'line',includeSelf:false,period:3,cap:12,timing:'after-attacks'},
+  ward:{amount:3,cap:20,target:'own-crown',timing:'spawn'},
+  pierce:{target:'primary',ignoreArmor:true},
+  poison:{amount:1,resolutions:2,target:'primary'},
+  splash:{amount:2,target:'other-enemy-on-line'},
+  lifesteal:{amount:2,target:'own-hero',trigger:'attack'},
+  silence:{period:3,resolutions:1,target:'enemy-on-line'},
+  portal:{period:3,target:'free-same-column'},
+  trapper:{period:3,damage:1,stun:1,resolutions:3}
+ };
+ if(card.ability&&Object.hasOwn(primary,card.ability))abilities[card.ability]=primary[card.ability];
+ if(FLYING_IDS.has(card.id))abilities.flying={over:'ally',landing:'free'};
+ if(GUARD_IDS.has(card.id))abilities.guard={scope:'legacy-line',target:'own-crown',unitTargetPriority:true};
+ if(CHARGE_IDS.has(card.id))abilities.charge={amount:2,condition:'moved-before-attack'};
+ if(RIPOSTE_IDS.has(card.id))abilities.riposte={damageMode:'fixed',amount:2,frequency:'round',trigger:'melee-attack'};
+ return abilities;
+}
+
+// Un seul enregistrement par pouvoir : une amélioration remplace ses paramètres, jamais un second déclencheur.
+function inheritUnitAbilities(previous,changes={}){
+ const result=structuredClone(previous);
+ for(const [id,parameters] of Object.entries(changes)){
+  result[id]={...result[id],...parameters};
+ }
+ return result;
+}
+
+Object.assign(__exports,{nativeUnitAbilities,inheritUnitAbilities});
+
+},
+"src/cards/aube.js":function(__exports,__load){
+// Transcription du tableau maître, édition observée le 25/10/2026 à 17:28:45.661Z.
+// Les chiffres remplacent les valeurs de base ; ce ne sont jamais des bonus à additionner.
+const {freezeCardData}=__load("src/cards/schema.js");
+const AUBE_DESIGN_SOURCE=freezeCardData({
+ url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
+ editedAt:'2026-10-25T17:28:45.661Z'
+});
+
+const AUBE_EVOLUTIONS=freezeCardData({
+ militia:{
+  rare:{abilities:{firstHitReduction:{amount:1,frequency:'invocation'}}},
+  'épique':{abilities:{firstHitReduction:{amount:2}}},
+  'légendaire':{stats:{hp:8}},
+  divine:{abilities:{firstHitReduction:{amount:3},riposte:{damageMode:'effective-attack',frequency:'invocation',trigger:'melee-attack'}}},
+  'éveillée':{abilities:{lastStand:{hp:5,frequency:'invocation'}}}
+ },
+ shield:{
+  rare:{stats:{hp:11},pendingDecisions:['guard-scope','riposte-damage']},
+  'épique':{stats:{attack:2}},
+  'légendaire':{stats:{hp:13}},
+  divine:{abilities:{guard:{scope:'line',unitTargetPriority:false}}},
+  'éveillée':{abilities:{guard:{scope:'all-lines'}}}
+ },
+ archer:{
+  rare:{stats:{hp:4}},
+  'épique':{stats:{attack:3}},
+  'légendaire':{geometry:{range:3}},
+  divine:{abilities:{pierce:{target:'primary',ignoreArmor:true}}},
+  'éveillée':{abilities:{rearShot:{amount:2,target:'enemy-immediately-behind-primary',ignoreArmor:false}}}
+ },
+ cleric:{
+  'épique':{stats:{hp:6}},
+  'légendaire':{abilities:{heal:{amount:3}}},
+  divine:{abilities:{heal:{targets:2}}},
+  'éveillée':{abilities:{heal:{scope:'all-lines'}}}
+ },
+ paladin:{
+  'légendaire':{stats:{hp:11},pendingDecisions:['riposte-damage']},
+  divine:{abilities:{armor:{amount:3}}},
+  'éveillée':{stats:{hp:13},abilities:{riposteBarrier:{amount:2,cap:2,frequency:'round',target:'self',trigger:'authorized-riposte'}}}
+ },
+ banner:{
+  'épique':{stats:{hp:8}},
+  'légendaire':{abilities:{inspire:{targets:2}}},
+  divine:{abilities:{inspire:{amount:2}}},
+  'éveillée':{abilities:{inspire:{scope:'all-lines'}}}
+ },
+ scoutcaptain:{
+  'épique':{stats:{hp:8}},
+  'légendaire':{stats:{attack:4}},
+  divine:{abilities:{inspire:{period:2}}},
+  'éveillée':{abilities:{arrivalInspire:{amount:1,targets:1,scope:'line',includeSelf:false,cap:12,timing:'spawn'}}}
+ },
+ sunpriest:{
+  'épique':{stats:{hp:9}},
+  'légendaire':{abilities:{heal:{amount:3}}},
+  divine:{abilities:{healBarrier:{amount:1,cap:2,target:'healed-unit',trigger:'effective-heal'}}},
+  'éveillée':{abilities:{healBarrier:{amount:2}}}
+ },
+ lancer:{
+  rare:{stats:{hp:6}},
+  'épique':{stats:{attack:4}},
+  'légendaire':{stats:{hp:8}},
+  divine:{abilities:{charge:{amount:3}}},
+  'éveillée':{geometry:{steps:2},abilities:{haste:{}}}
+ },
+ dawnbastion:{
+  divine:{abilities:{intervention:{amount:4,range:2,targets:1,scope:'line',direction:'forward',timing:'spawn',ignoreArmor:false}},pendingDecisions:['riposte-damage']},
+  'éveillée':{stats:{attack:7}}
+ }
+});
+
+Object.assign(__exports,{AUBE_DESIGN_SOURCE,AUBE_EVOLUTIONS});
+
+},
 "src/engine/combat-events.js":function(__exports,__load){
 // Instantanés publics de présentation. Aucun calcul de règle, DOM ou stockage.
 function captureCombatFrame(b) {
@@ -5980,6 +6187,7 @@ Object.assign(__exports,{DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMi
 // Statistiques d'invocation partagées par le moteur et les aperçus, sans mutation.
 const {CARDS,FACTIONS}=__load("src/data.js");
 const {gearBonus,masteryRank,reputationLevel}=__load("src/engine/profile.js");
+const {resolveUnitDefinition}=__load("src/cards/definitions.js");
 // Effets expérimentaux du Milicien, actifs uniquement dans une bataille de laboratoire.
 function labMilitiaBonus(rarity,level){
  const ranks=['commun','rare','épique','légendaire','divine'],rank=ranks.indexOf(rarity);
@@ -5997,7 +6205,9 @@ function unitStatContext(profile){
 }
 
 function unitStats(context,id,side='p'){
- const card=CARDS[id];if(!card||card.type!=='unité')return null;
+ if(typeof id!=='string')return null;
+ const definition=resolveUnitDefinition(id);
+ const card=CARDS[id];if(!definition||!card||card.type!=='unité')return null;
  const allied=side==='p';
  const lab=context.mode==='developer'?context.labStats:null;
  const labLevel=lab?.levels?.[side]?.[id]??0;
@@ -6005,6 +6215,21 @@ function unitStats(context,id,side='p'){
  const level=lab?(id==='militia'&&labRank!=='commun'?3:labLevel):
   allied?(context.upgrades?.[id]||0):Math.max(0,context.enemyDifficulty-3);
  const experimental=lab&&id==='militia'?labMilitiaBonus(labRank,labLevel):{hp:0};
+ return calculateUnitStats(context,definition,side,level,experimental.hp);
+}
+
+// Prévision pure des versions définies : ne rend aucune évolution jouable et n'écrit aucun état.
+// Le laboratoire sera raccordé à cette API seulement avec les pouvoirs des étapes 3/4.
+function versionUnitStats(context,reference,side='p'){
+ const definition=resolveUnitDefinition(reference);if(!definition)return null;
+ const level=context.mode==='developer'?(context.labStats?.levels?.[side]?.[definition.id]||0):
+  side==='p'?(context.upgrades?.[definition.id]||0):Math.max(0,context.enemyDifficulty-3);
+ return {versionId:definition.versionId,base:{...definition.stats},
+  ...calculateUnitStats(context,definition,side,level)};
+}
+
+function calculateUnitStats(context,definition,side,level,experimentalHp=0){
+ const id=definition.id,card=CARDS[id],allied=side==='p';
  const equipment=allied?(context.unitAtkBonus||0):0;
  const forge=allied?(context.forgeBonus||0):0;
  const reputation=allied?(context.reputationBonus?.[card.faction]||0):0;
@@ -6013,12 +6238,13 @@ function unitStats(context,id,side='p'){
   {label:allied?'Amélioration':'Difficulté',atk:level,hp:level},
   {label:'Équipement',atk:equipment,hp:0},{label:'Forge',atk:0,hp:forge},
   {label:'Réputation',atk:0,hp:reputation},{label:'Maîtrise',atk:0,hp:mastery},
-  {label:'Milicien expérimental',atk:0,hp:experimental.hp}
+  {label:'Milicien expérimental',atk:0,hp:experimentalHp}
  ].filter(b=>b.atk||b.hp);
- return {atk:card.attack+level+equipment,maxhp:card.hp+level+forge+reputation+mastery+experimental.hp,bonuses};
+ return {atk:definition.stats.attack+level+equipment,
+  maxhp:definition.stats.hp+level+forge+reputation+mastery+experimentalHp,bonuses};
 }
 
-Object.assign(__exports,{labMilitiaBonus,unitStatContext,unitStats});
+Object.assign(__exports,{labMilitiaBonus,unitStatContext,unitStats,versionUnitStats});
 
 },
 "src/ui/markup.js":function(__exports,__load){
