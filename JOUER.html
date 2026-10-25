@@ -3942,12 +3942,12 @@ body.collection-mode #view{max-width:none;padding:0 0 36px;min-width:0}
 .collection-version{display:flex;flex-direction:column;height:100%;min-width:0}
 .collection-card-visual{position:relative;min-width:0;flex:1;display:flex}
 .collection-version .unit-card{position:relative;isolation:isolate;display:flex;flex-direction:column;width:100%;min-width:0;min-height:292px;height:100%;padding:6px;background:linear-gradient(135deg,#303026,#24251e);border-radius:8px;border:3px solid var(--rarity-border);box-shadow:inset 0 0 0 1px #b3965733,0 4px 10px #0005}
-.collection-screen [data-rarity=commun],.collection-inspection [data-rarity=commun]{--collection-rarity:#b8b0a1;--rarity-border:#b8b0a1}
-.collection-screen [data-rarity=rare],.collection-inspection [data-rarity=rare]{--collection-rarity:#83b5db;--rarity-border:#83b5db}
-.collection-screen [data-rarity=épique],.collection-inspection [data-rarity=épique]{--collection-rarity:#bc91d2;--rarity-border:#bc91d2}
-.collection-screen [data-rarity=légendaire],.collection-inspection [data-rarity=légendaire]{--collection-rarity:#e5bc6d;--rarity-border:#e5bc6d}
-.collection-screen [data-rarity=divine],.collection-inspection [data-rarity=divine]{--collection-rarity:#f06a5f;--rarity-border:#f06a5f}
-.collection-screen [data-rarity=éveillée],.collection-inspection [data-rarity=éveillée]{--collection-rarity:#fff09a;--rarity-border:#fff09a}
+.collection-screen [data-rarity=commun],.collection-hover-inspection [data-rarity=commun]{--collection-rarity:#b8b0a1;--rarity-border:#b8b0a1}
+.collection-screen [data-rarity=rare],.collection-hover-inspection [data-rarity=rare]{--collection-rarity:#83b5db;--rarity-border:#83b5db}
+.collection-screen [data-rarity=épique],.collection-hover-inspection [data-rarity=épique]{--collection-rarity:#bc91d2;--rarity-border:#bc91d2}
+.collection-screen [data-rarity=légendaire],.collection-hover-inspection [data-rarity=légendaire]{--collection-rarity:#e5bc6d;--rarity-border:#e5bc6d}
+.collection-screen [data-rarity=divine],.collection-hover-inspection [data-rarity=divine]{--collection-rarity:#f06a5f;--rarity-border:#f06a5f}
+.collection-screen [data-rarity=éveillée],.collection-hover-inspection [data-rarity=éveillée]{--collection-rarity:#fff09a;--rarity-border:#fff09a}
 .collection-version .unit-card .portrait{position:relative;inset:auto;z-index:auto;flex:none;height:116px!important;min-height:116px;width:100%;border:1px solid #9e855044;border-radius:3px;background:#1b211f;margin:0;overflow:hidden}
 .collection-version .unit-card .creature-image{object-fit:cover;object-position:center 35%;filter:none;transition:none}
 .collection-version .unit-card:hover .creature-image{transform:none}
@@ -3964,6 +3964,30 @@ body.collection-mode #view{max-width:none;padding:0 0 36px;min-width:0}
 .collection-delay{position:absolute;top:9px;left:9px;z-index:3;display:grid;place-items:center;width:29px;height:30px;border:1px solid #cfad69;border-radius:4px 4px 9px 9px;background:#191d14;color:#f6dfb3;font:500 19px Georgia,serif}
 .collection-possession{font-size:12px;line-height:1.5;min-height:27px;margin:9px 0 7px;display:flex;align-items:center;justify-content:center;color:#beb6a4}
 .collection-possession.is-owned{background:#51452b;border-radius:4px;color:#efcc86}
+/* L'aperçu suit la carte au survol, comme dans la main et le plateau.
+   Il vit hors du défilement horizontal pour ne pas être rogné. */
+.collection-card-visual[data-collection-preview]{cursor:help;border-radius:8px}
+.collection-card-visual[data-collection-preview]:focus-visible{outline:3px solid #ffedb4;outline-offset:3px}
+.collection-card-visual[data-collection-preview]:hover>.unit-card,
+.collection-card-visual[data-collection-preview]:focus-visible>.unit-card{box-shadow:inset 0 0 0 1px #b3965733,0 0 0 2px #ffedb477,0 4px 12px #0008}
+.collection-hover-inspection:not([hidden]){
+ position:fixed;z-index:80;display:flex;flex-direction:column;
+ width:min(312px,calc(100vw - 24px));max-height:calc(100dvh - 24px);
+ overflow:hidden;pointer-events:none;border:1px solid #cfb47b;border-radius:12px;
+ background:linear-gradient(135deg,#234154,#102737 44%,#0a1a2b);
+ box-shadow:0 12px 38px #020711b8,0 0 0 3px #07121dcc;
+ color:#fff0d2;font:12px/1.4 system-ui,sans-serif;
+}
+.collection-hover-inspection .card-preview{max-height:calc(100dvh - 26px)}
+.collection-hover-inspection .inspection-heading{padding:10px 13px 6px;min-height:28px}
+.collection-hover-inspection .inspection-feature{grid-template-columns:90px minmax(0,1fr);gap:10px;padding:4px 12px 11px}
+.collection-hover-inspection .inspection-art{width:90px;height:134px}
+.collection-hover-inspection .inspection-identity h2{font-size:17px}
+.collection-hover-inspection .inspection-body{padding:9px 12px 13px;overflow:auto}
+.collection-hover-inspection .inspection-description{font-size:13px;line-height:1.4}
+.collection-hover-inspection .inspection-stats{font-size:11px}
+.collection-hover-inspection .inspection-rarity{color:var(--collection-rarity,#e5c080)}
+@media(prefers-reduced-motion:reduce){.collection-hover-inspection{animation:none!important;transition:none!important}}
 .collection-card-actions{display:flex;align-items:center;justify-content:space-between;gap:3px;flex-wrap:wrap;min-height:38px}
 .collection-card-actions .btn{min-width:38px;min-height:38px;padding:7px 8px;font-size:11px;margin:0}
 .collection-deck-actions{display:flex;gap:4px}
@@ -3972,9 +3996,6 @@ body.collection-mode #view{max-width:none;padding:0 0 36px;min-width:0}
 .collection-management .deck-workshop{grid-column:1}.collection-management .collection-skills{grid-column:1;margin-top:0}
 .collection-management .deck-aside{position:static;grid-column:2;grid-row:1/3;margin:0;min-width:0}
 .collection-management .deck-list{max-height:none}.collection-management .deck-preset-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.collection-inspection-card{max-width:250px;margin:0 auto}.collection-inspection-card .unit-card{max-height:410px;overflow:auto}
-.collection-inspection .collection-future .portrait{height:145px}.collection-inspection .card-detail{font-size:13px}
-.modal:has(.collection-inspection){max-height:calc(100dvh - 28px);overflow-y:auto}
 @media(max-width:760px){
  .collection-hero{padding:26px 17px;min-height:230px;background-position:62% center}
  .collection-hero .page-title{font-size:38px}.collection-hero .page-sub{font-size:13px}
@@ -4096,7 +4117,7 @@ const __factories={
 "src/app.js":function(__exports,__load){
 const {createSpellController}=__load("src/ui/spell-controller.js");
 const {esc}=__load("src/ui/markup.js");
-const {collectionInspection}=__load("src/ui/collection.js");
+const {bindCollectionHover}=__load("src/ui/collection.js");
 const {createViews}=__load("src/ui/views.js");
 const {developerLabUI}=__load("src/ui/developer-lab.js");
 const {freshLab,editLabDeck,setLabLevel,setLabRarity,createLabBattle}=__load("src/engine/developer-lab.js");
@@ -4117,6 +4138,7 @@ let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCar
 let displayBattle=null,combatReport=null;
 let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null,developer=null;
 const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({battle:displayBattle||battle,screen:isBattleFxPlaying()||CARDS[battle?.heroes.p.hand[selectedCard]?.id]?.type==='sort'?'resolving':screen}),esc);
+const closeCollectionHover=bindCollectionHover(()=>({profile,screen}),esc);
 const {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying}=createCombatFx(()=>({animationsEnabled,screen}));
 const {spellState,handleSpell,resetSpell}=createSpellController(()=>({battle,selectedCard}),{refresh:()=>render(),launch:(index,lane)=>withBattleFx(()=>playPlayerCard(battle,index,lane)),closeInspection:()=>closeCardInspection(true)});
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
@@ -4185,6 +4207,7 @@ function render({frameUpdate=false}={}){
  const handScroll=document.querySelector('.combat-hand-dock .hand')?.scrollLeft||0;
  const stageScroll=document.querySelector('.combat-stage')?.scrollTop||0;
  closeCardInspection(true,'render');
+ closeCollectionHover();
  document.body.classList.toggle('animations-off',!animationsEnabled);
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
  $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
@@ -4322,7 +4345,6 @@ case 'lab-open':openDeveloper();break;
   case 'restore-previous-game':if(!hasPreviousAdventure()){toast('Aucune partie précédente disponible.');break;}showModal(`<div class="kicker">PARTIE PRÉCÉDENTE</div><h2>Échanger les deux parties ?</h2><p>La partie précédente (y compris son combat sauvegardé) sera rétablie. Votre partie actuelle prendra sa place dans l’emplacement précédent.</p><div class="button-row">${btn('Oui, retrouver la partie','confirm-restore-previous-game','','primary')}${btn('Annuler','close-modal','','ghost')}</div>`);break;
   case 'confirm-restore-previous-game':if(!restorePreviousAdventure()){toast('Restauration impossible : vérifiez le stockage local.');break;}switchToSavedAdventure();toast('Partie précédente retrouvée.');break;
  case 'collection-faction':if(id==='all'||FACTIONS[id]){collectionFilter=id;render();}break;
- case 'collection-inspect':{const html=collectionInspection(profile,id,dataset.rarity,{btn,cardUI,esc});if(html){showModal(html);document.querySelector('.collection-inspection [data-action="close-modal"]')?.focus();}break;}
  case 'home':navigate('home');break;
  case 'nav':navigate(page);break;
  case 'start-next':startMission(CAMPAIGN[Math.min(profile.unlocked-1,11)].id);break;
@@ -4391,7 +4413,7 @@ case 'lab-open':openDeveloper();break;
 }
 document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();act(el.dataset.action,el.dataset);});
 document.addEventListener('keydown',event=>{
- if(event.key==='Escape'){if(isBattleFxPlaying())return;if(selectedCard>=0){resetSpell();selectedCard=-1;render();}closeCardInspection(true);if(document.querySelector('.collection-inspection'))hideModal();return;}
+ if(event.key==='Escape'){if(isBattleFxPlaying())return;if(selectedCard>=0){resetSpell();selectedCard=-1;render();}closeCardInspection(true);return;}
  if((event.key==='Enter'||event.key===' ')&&!event.target.closest('button')){
   const el=event.target.closest('.unit-card.compact,[data-action="deploy"],[data-action="spell-lane"]');
   if(el){event.preventDefault();act(el.dataset.action,el.dataset);}
@@ -6015,8 +6037,9 @@ Object.assign(__exports,{esc});
 const {generatedCardFace}=__load("src/ui/generated-card.js");
 const {concordeDetails}=__load("src/ui/concorde.js");
 // Catalogue en lecture : les versions à concevoir ne créent jamais de cartes.
-const {CARDS,FACTIONS}=__load("src/data.js");
-const {visualFor,artSrc,UI_BACKGROUNDS,cardTemplateFor}=__load("src/visuals.js");
+const {CARDS,FACTIONS,cardTraits}=__load("src/data.js");
+const {unitStatContext,unitStats}=__load("src/engine/unit-stats.js");
+const {visualFor,artSrc,UI_BACKGROUNDS,cardTemplateFor,cardTemplateSrc}=__load("src/visuals.js");
 const COLLECTION_RANKS=Object.freeze([
  {id:'commun',name:'Commune'},
  {id:'rare',name:'Rare'},
@@ -6044,16 +6067,14 @@ function futureCard(card,rarity,esc){
 
 function versionCell(profile,card,rank,{btn,cardUI,esc}){
  const current=rank.id===card.rarity,owned=current?(profile.collection[card.id]||0):0;
- const attrs=`data-id="${card.id}" data-rarity="${rank.id}"`;
  const status=current?(owned?`✓ Possédée ×${owned}`:'Non possédée'):'À concevoir';
  return `<td data-card-id="${card.id}" data-collection-rarity="${rank.id}" data-current-version="${current}">
   <article class="collection-version ${current?'current-version':'future-version'}" aria-label="${esc(card.name)} · ${rank.name} · ${status}">
-   <div class="collection-card-visual"><span class="collection-delay" aria-label="${current?'Délai de base : '+card.delay:'Délai à définir'}">${current?card.delay:'—'}</span>
+   <div class="collection-card-visual" data-collection-preview data-card-id="${card.id}" data-rarity="${rank.id}" tabindex="0" aria-label="Aperçu de ${esc(card.name)}, ${rank.name}" aria-describedby="collection-hover-inspection"><span class="collection-delay" aria-label="${current?'Délai de base : '+card.delay:'Délai à définir'}">${current?card.delay:'—'}</span>
     ${current?cardUI(card.id):futureCard(card,rank.id,esc)}
    </div>
    <div class="collection-possession ${owned?'is-owned':''}">${status}</div>
-   <div class="collection-card-actions">${btn('Fiche','collection-inspect',attrs,'small ghost')}
-    ${current&&owned?`<span class="collection-deck-actions">${btn('+','deck-add',`data-id="${card.id}" aria-label="Ajouter ${esc(card.name)} au deck"`,'small')}${btn('−','deck-remove',`data-id="${card.id}" aria-label="Retirer ${esc(card.name)} du deck"`,'small ghost')}</span>`:''}
+   <div class="collection-card-actions">${current&&owned?`<span class="collection-deck-actions">${btn('+','deck-add',`data-id="${card.id}" aria-label="Ajouter ${esc(card.name)} au deck"`,'small')}${btn('−','deck-remove',`data-id="${card.id}" aria-label="Retirer ${esc(card.name)} du deck"`,'small ghost')}</span>`:''}
    </div>
   </article></td>`;
 }
@@ -6077,19 +6098,94 @@ function renderCollectionCatalogue(profile,{faction='aube',ownedOnly=false}={},h
   </div>`;
 }
 
-function collectionInspection(profile,id,rarity,{btn,cardUI,esc}){
+// Aperçu bref pour les six raretés, sans créer de statistiques non intégrées.
+function collectionHoverContent(profile,id,rarity,esc){
  const card=CARDS[id],rank=COLLECTION_RANKS.find(r=>r.id===rarity);
  if(!card||!rank)return null;
- const current=card.rarity===rarity,owned=current?(profile.collection[id]||0):0;
- return `<section class="collection-inspection"><div class="kicker">${esc(FACTIONS[card.faction].short)} · ${rank.name}</div><h2>${esc(card.name)}</h2>
-  <div class="collection-inspection-card">${current?cardUI(id):futureCard(card,rarity,esc)}</div>
-  <p>${current?esc(card.description):'Cette évolution est à concevoir. Ses statistiques, ses capacités et ses conditions d’obtention seront précisées lors de sa création.'}</p>
-  ${current?concordeDetails(card,esc):''}
-  <p>${current?(owned?`Vous possédez ${owned} exemplaire${owned>1?'s':''} de cette carte.`:'Vous ne possédez pas encore cette carte.'):'Cette version ne peut pas encore être ajoutée au deck.'}</p>
-  <div class="button-row">${btn('Fermer','close-modal','','primary')}</div></section>`;
+ const current=card.rarity===rarity;
+ const stats=current?unitStats(unitStatContext(profile),id):null;
+ // Réutiliser l'image complète approuvée de la carte, jamais le SVG neutre.
+ const template=cardTemplateFor(card);
+ const art=template?cardTemplateSrc(template):artSrc(visualFor(card).art);
+ const faction=FACTIONS[card.faction];
+ const traits=current?cardTraits(id):[];
+ return `<div class="card-preview collection-preview" data-rarity="${esc(rarity)}">
+  <div class="inspection-heading"><span class="inspection-context">COLLECTION · ${esc(rank.name)}</span></div>
+  <div class="inspection-feature">
+   <img class="inspection-art" src="${art}" alt="" loading="lazy" draggable="false">
+   <div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span>
+    <span class="inspection-rarity">${esc(rank.name)}</span>
+    <div class="inspection-stats">${current?`<b>ATQ ${stats.atk} / PV ${stats.maxhp}</b>Délai ${card.delay}`:'Statistiques à concevoir'}</div>
+   </div>
+  </div>
+  <div class="inspection-body"><p class="inspection-description">${current?esc(card.description):'Évolution à concevoir. Non jouable.'}</p>
+   ${current?concordeDetails(card,esc):''}
+   ${traits.length?`<div class="inspection-traits">${traits.map(t=>`<span>${esc(t)}</span>`).join(' · ')}</div>`:''}
+  </div>
+ </div>`;
 }
 
-Object.assign(__exports,{COLLECTION_RANKS,collectionEntries,renderCollectionCatalogue,collectionInspection});
+// Le lecteur suit le survol comme en combat, mais reste indépendant des actions de jeu.
+function bindCollectionHover(getContext,esc){
+ let trigger=null,popup=null;
+ const source=t=>t instanceof Element?t.closest('.collection-card-visual[data-collection-preview]'):null;
+ const panel=()=>{
+  if(!popup){
+   popup=document.createElement('div');
+   popup.id='collection-hover-inspection';
+   popup.className='collection-hover-inspection illustrated-inspection';
+   popup.setAttribute('role','tooltip');
+   popup.hidden=true;
+   document.body.appendChild(popup);
+  }
+  return popup;
+ };
+ function close(){
+  trigger?.setAttribute('aria-expanded','false');
+  trigger=null;
+  if(popup){popup.hidden=true;popup.textContent='';}
+ }
+ function position(){
+  if(!trigger?.isConnected||!popup||popup.hidden){if(trigger&&!trigger.isConnected)close();return;}
+  const a=trigger.getBoundingClientRect(),width=popup.offsetWidth,height=popup.offsetHeight;
+  let left=a.right+12;
+  if(left+width>innerWidth-12)left=a.left-width-12;
+  if(left<12)left=Math.max(12,Math.min(innerWidth-width-12,a.left+(a.width-width)/2));
+  const top=Math.max(12,Math.min(Math.max(12,innerHeight-height-12),a.top));
+  popup.style.left=left+'px';popup.style.top=top+'px';
+ }
+ function show(el){
+  const context=getContext();
+  if(!el||context.screen!=='collection')return;
+  if(el===trigger&&popup&&!popup.hidden)return;
+  const html=collectionHoverContent(context.profile,el.dataset.cardId,el.dataset.rarity,esc);
+  if(!html)return;
+  close();trigger=el;trigger.setAttribute('aria-expanded','true');
+  panel().innerHTML=html;popup.hidden=false;position();
+ }
+ // Les contacts tactiles génèrent parfois des événements souris synthétiques.
+ // Ne fermer sur une sortie que pour un pointeur qui sait réellement survoler.
+ document.addEventListener('pointerover',e=>{if(e.pointerType!=='touch')show(source(e.target));});
+ document.addEventListener('pointerout',e=>{
+  if(e.pointerType==='touch')return;
+  const el=source(e.target);if(el&&el===trigger&&!el.contains(e.relatedTarget))close();
+ });
+ document.addEventListener('focusin',e=>show(source(e.target)));
+ document.addEventListener('focusout',e=>{
+  if(trigger&&trigger.contains(e.target)&&!trigger.contains(e.relatedTarget))close();
+ });
+ document.addEventListener('pointerdown',e=>{
+  const el=source(e.target);
+  if(e.pointerType==='touch'&&el)show(el);
+  else if(!el&&trigger)close();
+ });
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+ document.addEventListener('scroll',position,true);
+ window.addEventListener('resize',position);
+ return close;
+}
+
+Object.assign(__exports,{COLLECTION_RANKS,collectionEntries,renderCollectionCatalogue,collectionHoverContent,bindCollectionHover});
 
 },
 "src/ui/generated-card.js":function(__exports,__load){

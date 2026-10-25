@@ -1,8 +1,9 @@
 import {generatedCardFace} from './generated-card.js';
 import {concordeDetails} from './concorde.js';
 // Catalogue en lecture : les versions à concevoir ne créent jamais de cartes.
-import {CARDS,FACTIONS} from '../data.js';
-import {visualFor,artSrc,UI_BACKGROUNDS,cardTemplateFor} from '../visuals.js';
+import {CARDS,FACTIONS,cardTraits} from '../data.js';
+import {unitStatContext,unitStats} from '../engine/unit-stats.js';
+import {visualFor,artSrc,UI_BACKGROUNDS,cardTemplateFor,cardTemplateSrc} from '../visuals.js';
 
 export const COLLECTION_RANKS=Object.freeze([
  {id:'commun',name:'Commune'},
@@ -31,16 +32,14 @@ function futureCard(card,rarity,esc){
 
 function versionCell(profile,card,rank,{btn,cardUI,esc}){
  const current=rank.id===card.rarity,owned=current?(profile.collection[card.id]||0):0;
- const attrs=`data-id="${card.id}" data-rarity="${rank.id}"`;
  const status=current?(owned?`✓ Possédée ×${owned}`:'Non possédée'):'À concevoir';
  return `<td data-card-id="${card.id}" data-collection-rarity="${rank.id}" data-current-version="${current}">
   <article class="collection-version ${current?'current-version':'future-version'}" aria-label="${esc(card.name)} · ${rank.name} · ${status}">
-   <div class="collection-card-visual"><span class="collection-delay" aria-label="${current?'Délai de base : '+card.delay:'Délai à définir'}">${current?card.delay:'—'}</span>
+   <div class="collection-card-visual" data-collection-preview data-card-id="${card.id}" data-rarity="${rank.id}" tabindex="0" aria-label="Aperçu de ${esc(card.name)}, ${rank.name}" aria-describedby="collection-hover-inspection"><span class="collection-delay" aria-label="${current?'Délai de base : '+card.delay:'Délai à définir'}">${current?card.delay:'—'}</span>
     ${current?cardUI(card.id):futureCard(card,rank.id,esc)}
    </div>
    <div class="collection-possession ${owned?'is-owned':''}">${status}</div>
-   <div class="collection-card-actions">${btn('Fiche','collection-inspect',attrs,'small ghost')}
-    ${current&&owned?`<span class="collection-deck-actions">${btn('+','deck-add',`data-id="${card.id}" aria-label="Ajouter ${esc(card.name)} au deck"`,'small')}${btn('−','deck-remove',`data-id="${card.id}" aria-label="Retirer ${esc(card.name)} du deck"`,'small ghost')}</span>`:''}
+   <div class="collection-card-actions">${current&&owned?`<span class="collection-deck-actions">${btn('+','deck-add',`data-id="${card.id}" aria-label="Ajouter ${esc(card.name)} au deck"`,'small')}${btn('−','deck-remove',`data-id="${card.id}" aria-label="Retirer ${esc(card.name)} du deck"`,'small ghost')}</span>`:''}
    </div>
   </article></td>`;
 }
@@ -64,14 +63,89 @@ export function renderCollectionCatalogue(profile,{faction='aube',ownedOnly=fals
   </div>`;
 }
 
-export function collectionInspection(profile,id,rarity,{btn,cardUI,esc}){
+// Aperçu bref pour les six raretés, sans créer de statistiques non intégrées.
+export function collectionHoverContent(profile,id,rarity,esc){
  const card=CARDS[id],rank=COLLECTION_RANKS.find(r=>r.id===rarity);
  if(!card||!rank)return null;
- const current=card.rarity===rarity,owned=current?(profile.collection[id]||0):0;
- return `<section class="collection-inspection"><div class="kicker">${esc(FACTIONS[card.faction].short)} · ${rank.name}</div><h2>${esc(card.name)}</h2>
-  <div class="collection-inspection-card">${current?cardUI(id):futureCard(card,rarity,esc)}</div>
-  <p>${current?esc(card.description):'Cette évolution est à concevoir. Ses statistiques, ses capacités et ses conditions d’obtention seront précisées lors de sa création.'}</p>
-  ${current?concordeDetails(card,esc):''}
-  <p>${current?(owned?`Vous possédez ${owned} exemplaire${owned>1?'s':''} de cette carte.`:'Vous ne possédez pas encore cette carte.'):'Cette version ne peut pas encore être ajoutée au deck.'}</p>
-  <div class="button-row">${btn('Fermer','close-modal','','primary')}</div></section>`;
+ const current=card.rarity===rarity;
+ const stats=current?unitStats(unitStatContext(profile),id):null;
+ // Réutiliser l'image complète approuvée de la carte, jamais le SVG neutre.
+ const template=cardTemplateFor(card);
+ const art=template?cardTemplateSrc(template):artSrc(visualFor(card).art);
+ const faction=FACTIONS[card.faction];
+ const traits=current?cardTraits(id):[];
+ return `<div class="card-preview collection-preview" data-rarity="${esc(rarity)}">
+  <div class="inspection-heading"><span class="inspection-context">COLLECTION · ${esc(rank.name)}</span></div>
+  <div class="inspection-feature">
+   <img class="inspection-art" src="${art}" alt="" loading="lazy" draggable="false">
+   <div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span>
+    <span class="inspection-rarity">${esc(rank.name)}</span>
+    <div class="inspection-stats">${current?`<b>ATQ ${stats.atk} / PV ${stats.maxhp}</b>Délai ${card.delay}`:'Statistiques à concevoir'}</div>
+   </div>
+  </div>
+  <div class="inspection-body"><p class="inspection-description">${current?esc(card.description):'Évolution à concevoir. Non jouable.'}</p>
+   ${current?concordeDetails(card,esc):''}
+   ${traits.length?`<div class="inspection-traits">${traits.map(t=>`<span>${esc(t)}</span>`).join(' · ')}</div>`:''}
+  </div>
+ </div>`;
+}
+
+// Le lecteur suit le survol comme en combat, mais reste indépendant des actions de jeu.
+export function bindCollectionHover(getContext,esc){
+ let trigger=null,popup=null;
+ const source=t=>t instanceof Element?t.closest('.collection-card-visual[data-collection-preview]'):null;
+ const panel=()=>{
+  if(!popup){
+   popup=document.createElement('div');
+   popup.id='collection-hover-inspection';
+   popup.className='collection-hover-inspection illustrated-inspection';
+   popup.setAttribute('role','tooltip');
+   popup.hidden=true;
+   document.body.appendChild(popup);
+  }
+  return popup;
+ };
+ function close(){
+  trigger?.setAttribute('aria-expanded','false');
+  trigger=null;
+  if(popup){popup.hidden=true;popup.textContent='';}
+ }
+ function position(){
+  if(!trigger?.isConnected||!popup||popup.hidden){if(trigger&&!trigger.isConnected)close();return;}
+  const a=trigger.getBoundingClientRect(),width=popup.offsetWidth,height=popup.offsetHeight;
+  let left=a.right+12;
+  if(left+width>innerWidth-12)left=a.left-width-12;
+  if(left<12)left=Math.max(12,Math.min(innerWidth-width-12,a.left+(a.width-width)/2));
+  const top=Math.max(12,Math.min(Math.max(12,innerHeight-height-12),a.top));
+  popup.style.left=left+'px';popup.style.top=top+'px';
+ }
+ function show(el){
+  const context=getContext();
+  if(!el||context.screen!=='collection')return;
+  if(el===trigger&&popup&&!popup.hidden)return;
+  const html=collectionHoverContent(context.profile,el.dataset.cardId,el.dataset.rarity,esc);
+  if(!html)return;
+  close();trigger=el;trigger.setAttribute('aria-expanded','true');
+  panel().innerHTML=html;popup.hidden=false;position();
+ }
+ // Les contacts tactiles génèrent parfois des événements souris synthétiques.
+ // Ne fermer sur une sortie que pour un pointeur qui sait réellement survoler.
+ document.addEventListener('pointerover',e=>{if(e.pointerType!=='touch')show(source(e.target));});
+ document.addEventListener('pointerout',e=>{
+  if(e.pointerType==='touch')return;
+  const el=source(e.target);if(el&&el===trigger&&!el.contains(e.relatedTarget))close();
+ });
+ document.addEventListener('focusin',e=>show(source(e.target)));
+ document.addEventListener('focusout',e=>{
+  if(trigger&&trigger.contains(e.target)&&!trigger.contains(e.relatedTarget))close();
+ });
+ document.addEventListener('pointerdown',e=>{
+  const el=source(e.target);
+  if(e.pointerType==='touch'&&el)show(el);
+  else if(!el&&trigger)close();
+ });
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+ document.addEventListener('scroll',position,true);
+ window.addEventListener('resize',position);
+ return close;
 }

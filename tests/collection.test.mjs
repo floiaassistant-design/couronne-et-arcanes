@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {freshProfile} from '../src/engine.js';
 import {CARDS} from '../src/data.js';
 import {createViews} from '../src/ui/views.js';
-import {COLLECTION_RANKS,collectionEntries,collectionInspection} from '../src/ui/collection.js';
+import {COLLECTION_RANKS,collectionEntries,collectionHoverContent} from '../src/ui/collection.js';
 
 function view(profile,faction='aube'){return createViews(()=>({profile,battle:null,screen:'collection',selectedCard:-1,collectionFilter:faction,collectionOwned:false,animationsEnabled:false}));}
 const esc=s=>String(s).replaceAll('<','&lt;').replaceAll('>','&gt;');
@@ -45,14 +45,30 @@ test('Les statistiques de la version actuelle réutilisent les bonus du profil',
  assert.match(cell,/class="stat hp"[^>]*>♥ <b>8<\/b>/);
 });
 
-test('Les rangs futurs se consultent sans permettre une fausse évolution',()=>{
- const profile=freshProfile(),views=view(profile),helpers={btn:views.btn,cardUI:views.cardUI,esc};
- const before=JSON.stringify(profile);
- const future=collectionInspection(profile,'militia','éveillée',helpers);
- assert.match(future,/évolution est à concevoir/);
- assert.doesNotMatch(future,/data-action="(?:deck-add|card-upgrade|fuse-card)"/);
- assert.equal(collectionInspection(profile,'missing','rare',helpers),null);
- assert.equal(collectionInspection(profile,'militia','missing',helpers),null);
+test('Chaque rareté garde une carte survolable sans nouveau bouton de fiche',()=>{
+ const profile=freshProfile(),html=view(profile).collectionUI();
+ const row=html.match(/<tr data-collection-character="militia">([\s\S]*?)<\/tr>/)[1];
+ assert.equal((row.match(/data-collection-preview/g)||[]).length,6);
+ assert.equal((row.match(/tabindex="0"/g)||[]).length,6);
+ assert.equal((row.match(/aria-describedby="collection-hover-inspection"/g)||[]).length,6);
+ assert.doesNotMatch(row,/data-action="collection-inspect"/);
+ assert.match(row,/data-action="deck-add"/);
+});
+
+test('Les aperçus concis des raretés inconnues n’inventent aucune statistique',()=>{
+ const profile=freshProfile(),before=JSON.stringify(profile);
+ const future=collectionHoverContent(profile,'militia','éveillée',esc);
+ assert.match(future,/Évolution à concevoir/);
+ assert.match(future,/Statistiques à concevoir/);
+ assert.match(future,/milicien_aube_carte_v02\.webp/,'Le futur rang conserve l’illustration autorisée');
+ assert.doesNotMatch(future,/ATQ [0-9]+ \/ PV [0-9]+/);
+ assert.equal(collectionHoverContent(profile,'missing','rare',esc),null);
+ assert.equal(collectionHoverContent(profile,'militia','unknown',esc),null);
+ const present=collectionHoverContent(profile,'militia','commun',esc);
+ assert.match(present,/ATQ [0-9]+ \/ PV [0-9]+/);
+ assert.match(present,/COLLECTION/);
+ assert.match(present,/milicien_aube_carte_v02\.webp/,'La fiche reprend la carte approuvée, pas le SVG provisoire');
+ assert.doesNotMatch(present,/data:image\/svg\+xml/);
  assert.equal(JSON.stringify(profile),before);
  assert(collectionEntries(profile,'sort').every(c=>c.type==='sort'));
  assert(collectionEntries(profile,'aube',true).every(c=>(profile.collection[c.id]||0)>0));

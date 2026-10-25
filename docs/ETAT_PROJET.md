@@ -1,6 +1,40 @@
 # État courant — 25 octobre 2026
 
-## Main et contrôles au dernier relevé
+## Reprise PR nº 48 — export reconstruit, CI à valider (25 octobre 2026)
+
+La branche `feat/collection-six-cartes-apercu-survol-20261024` a été corrigée par le workflow GitHub Actions ponctuel [régénération](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40176177646), **terminé avec succès**. Son commit [`e6475b6`](https://github.com/floiaassistant-design/couronne-et-arcanes/commit/e6475b60698e7948c962e198f707589a94e58840) a régénéré `JOUER.html` uniquement avec le builder et **supprimé le workflow temporaire** ; les sources du moteur et les sauvegardes n'ont pas changé.
+
+Les deux nouvelles exécutions de ce commit, [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40210736535) et [assemblage](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40210736576), ont reçu le statut `action_required` **avant la création de tout job**. Elles ne sont ni des réussites ni des échecs fonctionnels. Vérifier leur éventuelle demande d'approbation dans l'interface GitHub et exiger une CI complète sur le prochain commit exact avant toute proposition de fusion. La PR reste en brouillon, non fusionnée et non publiée ; Sites reste à sa dernière version vérifiée.
+
+## Historique — blocage de validation avant reconstruction (25 octobre 2026)
+
+Sur la tête `75f8f625`, les exécutions Actions [génération](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40176177646), [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40176180677) et [assemblage](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40176180555) ont échoué avant toute étape : runner absent, logs indisponibles. La relance unique du job de génération a également échoué avant exécution. [Statut public GitHub Actions](https://www.githubstatus.com/) annoncé opérationnel au relevé ; panne globale non confirmée. Vérifier via l'interface GitHub les annotations et les éventuelles limitations de facturation/stockage avant toute nouvelle tentative.
+
+Un nettoyage indépendant supprime les CSS obsolètes de l'ancienne fiche et restaure les couleurs de rareté sur le nouvel aperçu. Cet ajustement est une **proposition non validée**. **Reste nécessaire :** reconstruire `JOUER.html` par `npm run build` depuis les sources, supprimer le workflow ponctuel de régénération, obtenir les résultats complets sur l'arbre final et relire l'ensemble avant une éventuelle autorisation de fusion. Ne jamais fusionner ni publier automatiquement.
+
+## Contrôles récents et correction en cours — PR nº 48
+
+La [CI sur `b02dceb`](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40175425633) a validé 336 tests Node, la parité, l'export autonome synchronisé, les parcours Collection bureau/portrait/paysage, le ciblage, Concorde et plusieurs parcours de sauvegarde. Elle a ensuite échoué parce que l'ancien test Milicien recherchait `collection-inspect`, bouton volontairement supprimé. Les tests suivants ont été interrompus. L'[assemblage web sur ce commit](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40175425639) a **réussi**. Le téléversement des captures d'échec a aussi rencontré le quota externe GitHub Actions.
+
+La branche ajoute maintenant une correction ciblée du test Milicien et du test Aube (même sélecteur obsolète), vérifie les empreintes des visuels et remplace l'image neutre de l'aperçu Collection par la vraie carte déjà approuvée, sans changement de ressource, de mécanique ni de sauvegarde. **Régénérer `JOUER.html` depuis les sources**, relire le résultat des deux CI sur le dernier commit, sans surveillance active et sans fusion ni publication implicite.
+
+## Historique — correctif tactile et export synchronisé — PR nº 48
+
+L'export officiel `JOUER.html` a été **régénéré depuis les sources par `npm run build` sur GitHub Actions**, commit [`5474a7e6`](https://github.com/floiaassistant-design/couronne-et-arcanes/commit/5474a7e6a074b71d6c16deb897eb3ac378fe7efb). Le workflow ponctuel de génération s'est supprimé dans le même commit et ne reste **pas** dans le diff de PR. Le contrôle intermédiaire sur `59dc38ba` échouait uniquement à la vérification de synchronisation de cet export (336 tests Node et parité réussis) ; les parcours navigateur de cette exécution ont été sautés. La validation finale de la branche régénérée est à lire dans les nouveaux contrôles GitHub, sans présumer leur issue.
+
+L'[exécution CI sur `93998477`](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40173082058) échouait dans le test navigateur Collection en orientation portrait, tandis que l'assemblage web réussissait. Un correctif de la gestion de l'aperçu distingue désormais les événements de survol des contacts tactiles et ignore la sortie de pointeur due au toucher. Le test simule les événements souris de compatibilité et vérifie que la fiche reste ouverte. Les règles, valeurs de cartes et sauvegardes restent inchangées. **PR non fusionnée ; vérifier le nouvel export autonome généré et la CI du commit final avant toute intégration.** Le quota d'archives GitHub Actions reste une question distincte.
+
+## Proposition Collection — PR nº 48 (non fusionnée)
+
+La [PR nº 48](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/48) conserve six cartes par unité, avec une fiche courte au survol, au focus et au toucher, sans bouton « Fiche ». Les raretés non intégrées restent « À concevoir », sans chiffres ni capacités inventés. Aucun changement du moteur, de l'IA ou des sauvegardes. La proposition a été rapprochée du `main` `7e9613b9872db3171246f2ddccfb3353bd542408` sans perdre les optimisations de CI. Le test navigateur Collection vérifie désormais le lecteur sur les cartes ; contrôler la nouvelle CI avant toute fusion. La PR nº 41 reste indépendante.
+
+## Main confirmé le 25 octobre 2026
+
+`main` `7e9613b9872db3171246f2ddccfb3353bd542408` après fusion de la PR nº 50 : les [tests GitHub](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40164564331) ont réussi ; l'[assemblage web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40164564386) a construit le paquet mais son téléversement a échoué (quota GitHub Actions). Dernière publication Sites vérifiée : version 7. Aucun résultat de CI de la nouvelle PR nº 48 n'est présumé.
+
+## Historique documentaire
+
+### Relevé avant fusion de la PR nº 50
 
 **Main vérifié avant cette PR documentaire :** `1aa294511d35dd063eade2401360ad98a3ea9184`, issu de la [PR nº 51](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/51), qui formalise dans `AGENTS.md` la fin de la surveillance active des tests GitHub une fois tout autre travail utile achevé. Aucun code du jeu modifié par cette PR documentaire. [Tests de PR nº 51](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40163579140) et [assemblage de PR](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40163579155) réussis, arbre Git identique après fusion.
 

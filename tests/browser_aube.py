@@ -24,6 +24,15 @@ async def exact(face,card_id,readable=True):
           return r.x>=p.x && r.y>=p.y && r.right<=p.right+1 && r.bottom<=p.bottom+1 && e.scrollWidth<=e.clientWidth+1 && e.scrollHeight<=e.clientHeight+1;
         })'''),card_id
 
+async def exact_preview(popup,card_id):
+    assert await popup.is_visible(),card_id
+    image=popup.locator('.inspection-art')
+    await image.evaluate('(e)=>e.decode()')
+    assert await image.evaluate('(e)=>[e.naturalWidth,e.naturalHeight]')==[768,1152]
+    src=await image.get_attribute('src')
+    assert hashlib.sha256(base64.b64decode(src.split(',',1)[1])).hexdigest()==ASSETS[card_id]['sha256'],card_id
+    assert await popup.locator('.inspection-description').is_visible(),card_id
+
 async def run(browser,label,viewport,faction='aube'):
     ctx=await browser.new_context(viewport=viewport,offline=True,reduced_motion='reduce')
     page=await ctx.new_page();errors=[];network=[]
@@ -41,9 +50,14 @@ async def run(browser,label,viewport,faction='aube'):
         assert await row.locator('.generated-face').count()==6,card_id
         await exact(row.locator('[data-current-version="true"] .generated-face'),card_id)
         assert await row.locator('[data-current-version="false"] .stat.hp b').all_inner_texts()==['—']*5
-        await row.locator('[data-current-version="true"] [data-action="collection-inspect"]').click()
-        await exact(page.locator('.collection-inspection .generated-face'),card_id)
+        # La fiche suit directement la carte : aucun bouton « Fiche » ni copie de .generated-face.
+        preview=row.locator('[data-current-version="true"] [data-collection-preview]')
+        await preview.hover()
+        assert await preview.get_attribute('aria-expanded')=='true',card_id
+        popup=page.locator('#collection-hover-inspection')
+        await exact_preview(popup,card_id)
         await page.keyboard.press('Escape')
+        assert await popup.is_hidden(),card_id
     assert await page.evaluate('JSON.stringify(profile)')==before
     anchor={'aube':'shield','sylve':'treant','ombre':'graveknight','forge':'smith','ether':'spark'}[faction]
     await page.locator(f'[data-collection-character="{anchor}"]').scroll_into_view_if_needed()

@@ -31,10 +31,26 @@ async def run(browser,label,vp):
     await image_exact(row.locator('[data-current-version="true"] .generated-face'))
     assert await row.locator('.generated-face').count()==6
     assert await row.locator('[data-current-version="false"] .stat.hp b').all_inner_texts()==['—']*5
-    await row.locator('[data-current-version="true"] [data-action="collection-inspect"]').click()
-    await image_exact(page.locator('.collection-inspection .generated-face'))
+    # La fiche ne possède plus de bouton ni de carte dupliquée : survol ou toucher.
+    preview=row.locator('[data-current-version="true"] [data-collection-preview]')
+    if label=='desktop':
+        await preview.hover()
+    else:
+        await preview.tap()
+    popup=page.locator('#collection-hover-inspection')
+    assert await popup.is_visible()
+    assert await preview.get_attribute('aria-expanded')=='true'
+    image=popup.locator('.inspection-art')
+    await image.evaluate('(e)=>e.decode()')
+    assert await image.evaluate('(e)=>[e.naturalWidth,e.naturalHeight]')==[768,1152]
+    src=await image.get_attribute('src')
+    assert hashlib.sha256(base64.b64decode(src.split(',',1)[1])).hexdigest()==SHA
+    assert 'Milicien' in await popup.inner_text()
+    assert await popup.locator('.inspection-description').is_visible()
     await page.screenshot(path=f'/tmp/ca-milicien-{label}-fiche.png')
-    await page.keyboard.press('Escape');assert await page.evaluate('JSON.stringify(profile)')==before
+    await page.keyboard.press('Escape')
+    assert await popup.is_hidden()
+    assert await page.evaluate('JSON.stringify(profile)')==before
     await page.locator('#nav [data-page="campaign"]').click();await page.locator('[data-action="start-mission"][data-id="01"]').click()
     await page.evaluate('''()=>{
       battle=createBattle(profile,{id:'01',name:'Milicien intégré',enemy:'Sentinelle',hp:80,difficulty:1,deck:[]},415);

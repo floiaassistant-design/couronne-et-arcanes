@@ -67,6 +67,10 @@ a été fusionnée le 24 octobre 2026. La CI finale et la publication automatiqu
 Sites version 7 ont été vérifiées dans son bilan.
 [Contrat et reprise](docs/REPERES_CAMP_FICHES_2026_10_24.md).
 
+### Collection — six cartes et aperçu rapide
+
+Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions non jouables restent « À concevoir ». L'aperçu au survol de la main et du plateau ne change pas.
+
 ## Progression et sauvegarde
 
 La Collection, les classes, les maîtrises, équipements, talents et donjons sont

@@ -1,5 +1,12 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Contrat permanent — six raretés de Collection et fiche courte
+
+- La Collection conserve **six cartes côte à côte pour chaque personnage** (Commune, Rare, Épique, Légendaire, Divine, Éveillée), et non une vignette unique. Le remplacement de six cartes par une seule était une proposition documentaire annulée par le propriétaire.
+- Chaque carte garde une **description brève** et son rang réel ; les rangs sans mécanique intégrée affichent **« À concevoir »**, sans inventer de statistiques, d'obtention ni de déblocage. Les rangs inférieurs à la rareté native ne deviennent pas jouables par simple affichage.
+- La **fiche compacte** apparaît **au survol de la carte** dans la Collection, selon le principe existant pour la main et le plateau. **Aucun bouton supplémentaire pour ouvrir la fiche.** Le focus clavier et le toucher peuvent consulter la même fiche directement sur la carte, sans contrôler la sélection ou la pose en combat.
+- Texte de fiche également **concis** : caractéristiques, pouvoirs et conditions essentielles uniquement. Garder les données et les effets hors des vues, éviter les copies de règles et ne pas modifier l'aperçu de combat lorsque seule la Collection est concernée.
+
 ## Contrat — affichage de Concorde
 
 - `ui/concorde.js` rend la lumière de l’emblème et le résumé partagé : symbole

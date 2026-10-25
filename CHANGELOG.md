@@ -1,3 +1,27 @@
+## Dernier ajustement Collection — raretés et CSS (25 octobre 2026, PR nº 48)
+
+- Le nouvel aperçu flottant reprend les six couleurs de rareté déjà utilisées dans la Collection ; les sélecteurs CSS de l'ancienne modale « Fiche » supprimée sont retirés.
+- Aucun changement de carte, moteur, illustration, progression ou sauvegarde. La version autonome JOUER doit encore être reconstruite depuis les sources, puis revalidée en CI.
+- GitHub Actions n'a attribué aucun runner à la génération ni aux deux validations sur `75f8f625`. Une seule relance diagnostique de la génération a échoué de la même manière : pas de nouvel essai en boucle.
+
+## Correction préparée — fiches avec image approuvée et tests complets, PR nº 48 (25 octobre 2026)
+
+- La fiche Collection reprend l'image exacte de la carte déjà présente sur le plateau et dans la main ; pas de nouvel actif ni d'illustration neutre.
+- Les contrôles navigateur du Milicien et des dix cartes Aube recherchent désormais l'aperçu au survol ou toucher plutôt que le bouton supprimé, et vérifient les empreintes SHA-256 des illustrations approuvées.
+- Sur `b02dceb`, l'assemblage web et le navigateur Collection ont réussi ; les tests complets étaient bloqués par un ancien sélecteur Milicien puis par le quota GitHub Actions pour les captures. Le nouveau commit doit être revalidé ; PR non fusionnée.
+
+## Correctif proposé — interaction tactile Collection, PR nº 48 (25 octobre 2026)
+
+- Le survol de souris et le contact tactile utilisent des événements pointeur adaptés : les événements souris synthétiques émis par le navigateur après un toucher ne doivent plus refermer la fiche.
+- Ajout d'une non-régression navigateur simulant les sorties de souris/pointeur après le toucher, en conservant les parcours bureau, portrait et paysage. Les règles, statistiques et sauvegardes ne sont pas modifiées.
+- Correctif **non fusionné** : export `JOUER.html` à régénérer depuis les sources, contrôles sur le commit final à constater.
+
+## Proposition — six cartes et aperçu au survol dans la Collection, PR nº 48 (25 octobre 2026)
+
+- Six raretés par unité conservées ; fiche concise au survol, focus et toucher directement sur la carte, sans bouton « Fiche ». Les raretés non jouables restent à concevoir, sans chiffres fictifs.
+- Réutilisation des caractéristiques du moteur et du bonus de faction ; aucune règle ni sauvegarde modifiée, même jeu web et `JOUER.html` généré.
+- Reprise du dernier `main` après les PR nº 49, 50 et 51 ; correction du test navigateur qui cherchait l'ancien bouton. **PR nº 48 non fusionnée et non publiée ; CI à vérifier sur la nouvelle tête.**
+
 ## Intégré — arrêter la surveillance active de la CI, PR nº 51 (25 octobre 2026)
 
 - La [PR nº 51](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/51) a ajouté à `AGENTS.md` une règle permanente : terminer le travail utile indépendant des résultats GitHub Actions, puis arrêter la session si seule la CI reste à attendre. Ne pas multiplier les consultations qui consomment le quota de l'agent ; reprendre après notification et demande du propriétaire.
