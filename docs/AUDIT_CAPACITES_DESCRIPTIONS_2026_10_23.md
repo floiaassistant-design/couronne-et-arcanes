@@ -265,6 +265,23 @@
 
 **Reste à préciser pour l'implémentation :** la priorité de sélection déterministe des deux autres alliés, l'ordre de résolution et les égalités, l'impact des bonus persistants sur le moteur, les anciens profils et sauvegardes, les tests de parité et l'équilibrage. La validation est **documentaire et de conception** : elle ne modifie pas le jeu, l'IA, les valeurs jouables ou `JOUER.html`.
 
+### Préparation de conception — Capitaine de l’Aube (`scoutcaptain`)
+
+**Socle actuel vérifié le 25 octobre 2026 sur GitHub `main` (catalogue `src/data.js`, résolution `src/engine/battle.js`) ; évolutions non décidées.** Cette fiche prépare le prochain arbitrage carte par carte, sans modifier ni valider de nouvelles mécaniques.
+
+**Version Rare jouable :** **3 ATQ / 6 PV / délai 1**. Déplacement normal au plus **1 case en avant par action**, attaque à **1 case devant lui sur sa ligne** ; ni Vol, ni Célérité, ni changement de ligne, ni attaque à distance. **Inspiration** : après les attaques, à chaque tour dont le numéro est multiple de trois, si un autre allié est présent sur sa ligne, le Capitaine donne **+1 ATQ au premier autre allié de cette ligne** dans l'ordre du plateau (ATQ de l'unité bénéficiaire plafonnée à **12**). Il ne se cible pas lui-même. Ce bonus peut rester acquis durant le combat ; les conditions et déclenchements suivent le moteur actuel. **☀ Bonus de faction : +1 attaque** si Concorde Aube est active. Le Porte-étendard partage aujourd'hui le mécanisme d'Inspiration, mais a **2 ATQ / 6 PV / délai 2** : éviter de copier automatiquement ses évolutions sans choix de rôle.
+
+| Rareté | ATQ / PV / délai | Déplacement | Portée d'attaque | Inspiration, gain propre et état |
+| --- | --- | --- | --- | --- |
+| **Commune** | — | — | — | **Aucune forme Commune native à inventer** |
+| **Rare** | **3 / 6 / 1** | **1 case** | **1 case devant, même ligne** | **Jouable** : +1 ATQ au premier autre allié de la ligne tous les 3 tours, plafond ATQ 12 |
+| **Épique** | À définir | À définir | À définir | **À définir — aucun gain approuvé** |
+| **Légendaire** | À définir | À définir | À définir | **À définir — aucun gain approuvé** |
+| **Divine** | À définir | À définir | À définir | **À définir — aucun gain approuvé** |
+| **Éveillée** | À définir | À définir | À définir | **À définir — aucun gain approuvé** |
+
+**Questions de conception à valider :** conserver ou faire évoluer les **3 ATQ / 6 PV / délai 1**, le déplacement 1 et la portée 1 ; définir pour chaque rang supérieur un gain cumulatif distinct du Porte-étendard, avec cibles, fréquence et conditions précises. La capacité héritée reste présente ; son éventuelle amélioration remplace sa valeur précédente, sans deuxième activation implicite. **Aucune de ces évolutions n'est approuvée, codée ou affichée comme jouable.** La PR nº 41 reste documentaire, en brouillon et non fusionnée ; le jeu, le laboratoire, les sauvegardes, les images, l'IA et l'export sont inchangés.
+
 ### Règle de conception et interface souhaitée — clarification ultérieure prioritaire
 
 **Précision du propriétaire :** l'aperçu existant au **survol** dans la main et sur le plateau est conservé tel quel. La Collection conserve **six cartes par personnage** avec un texte court sur la carte et **une fiche également courte au survol de chaque version** ; aucun ajout de bouton de fiche. Les sections historiques évoquant « une carte par personnage » ou une fiche à ouvrir volontairement ne doivent plus être appliquées.
