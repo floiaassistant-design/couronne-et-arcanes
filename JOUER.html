@@ -3942,12 +3942,12 @@ body.collection-mode #view{max-width:none;padding:0 0 36px;min-width:0}
 .collection-version{display:flex;flex-direction:column;height:100%;min-width:0}
 .collection-card-visual{position:relative;min-width:0;flex:1;display:flex}
 .collection-version .unit-card{position:relative;isolation:isolate;display:flex;flex-direction:column;width:100%;min-width:0;min-height:292px;height:100%;padding:6px;background:linear-gradient(135deg,#303026,#24251e);border-radius:8px;border:3px solid var(--rarity-border);box-shadow:inset 0 0 0 1px #b3965733,0 4px 10px #0005}
-.collection-screen [data-rarity=commun],.collection-inspection [data-rarity=commun]{--collection-rarity:#b8b0a1;--rarity-border:#b8b0a1}
-.collection-screen [data-rarity=rare],.collection-inspection [data-rarity=rare]{--collection-rarity:#83b5db;--rarity-border:#83b5db}
-.collection-screen [data-rarity=épique],.collection-inspection [data-rarity=épique]{--collection-rarity:#bc91d2;--rarity-border:#bc91d2}
-.collection-screen [data-rarity=légendaire],.collection-inspection [data-rarity=légendaire]{--collection-rarity:#e5bc6d;--rarity-border:#e5bc6d}
-.collection-screen [data-rarity=divine],.collection-inspection [data-rarity=divine]{--collection-rarity:#f06a5f;--rarity-border:#f06a5f}
-.collection-screen [data-rarity=éveillée],.collection-inspection [data-rarity=éveillée]{--collection-rarity:#fff09a;--rarity-border:#fff09a}
+.collection-screen [data-rarity=commun],.collection-hover-inspection [data-rarity=commun]{--collection-rarity:#b8b0a1;--rarity-border:#b8b0a1}
+.collection-screen [data-rarity=rare],.collection-hover-inspection [data-rarity=rare]{--collection-rarity:#83b5db;--rarity-border:#83b5db}
+.collection-screen [data-rarity=épique],.collection-hover-inspection [data-rarity=épique]{--collection-rarity:#bc91d2;--rarity-border:#bc91d2}
+.collection-screen [data-rarity=légendaire],.collection-hover-inspection [data-rarity=légendaire]{--collection-rarity:#e5bc6d;--rarity-border:#e5bc6d}
+.collection-screen [data-rarity=divine],.collection-hover-inspection [data-rarity=divine]{--collection-rarity:#f06a5f;--rarity-border:#f06a5f}
+.collection-screen [data-rarity=éveillée],.collection-hover-inspection [data-rarity=éveillée]{--collection-rarity:#fff09a;--rarity-border:#fff09a}
 .collection-version .unit-card .portrait{position:relative;inset:auto;z-index:auto;flex:none;height:116px!important;min-height:116px;width:100%;border:1px solid #9e855044;border-radius:3px;background:#1b211f;margin:0;overflow:hidden}
 .collection-version .unit-card .creature-image{object-fit:cover;object-position:center 35%;filter:none;transition:none}
 .collection-version .unit-card:hover .creature-image{transform:none}
@@ -3986,6 +3986,7 @@ body.collection-mode #view{max-width:none;padding:0 0 36px;min-width:0}
 .collection-hover-inspection .inspection-body{padding:9px 12px 13px;overflow:auto}
 .collection-hover-inspection .inspection-description{font-size:13px;line-height:1.4}
 .collection-hover-inspection .inspection-stats{font-size:11px}
+.collection-hover-inspection .inspection-rarity{color:var(--collection-rarity,#e5c080)}
 @media(prefers-reduced-motion:reduce){.collection-hover-inspection{animation:none!important;transition:none!important}}
 .collection-card-actions{display:flex;align-items:center;justify-content:space-between;gap:3px;flex-wrap:wrap;min-height:38px}
 .collection-card-actions .btn{min-width:38px;min-height:38px;padding:7px 8px;font-size:11px;margin:0}
@@ -3995,9 +3996,6 @@ body.collection-mode #view{max-width:none;padding:0 0 36px;min-width:0}
 .collection-management .deck-workshop{grid-column:1}.collection-management .collection-skills{grid-column:1;margin-top:0}
 .collection-management .deck-aside{position:static;grid-column:2;grid-row:1/3;margin:0;min-width:0}
 .collection-management .deck-list{max-height:none}.collection-management .deck-preset-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.collection-inspection-card{max-width:250px;margin:0 auto}.collection-inspection-card .unit-card{max-height:410px;overflow:auto}
-.collection-inspection .collection-future .portrait{height:145px}.collection-inspection .card-detail{font-size:13px}
-.modal:has(.collection-inspection){max-height:calc(100dvh - 28px);overflow-y:auto}
 @media(max-width:760px){
  .collection-hero{padding:26px 17px;min-height:230px;background-position:62% center}
  .collection-hero .page-title{font-size:38px}.collection-hero .page-sub{font-size:13px}
@@ -6041,7 +6039,7 @@ const {concordeDetails}=__load("src/ui/concorde.js");
 // Catalogue en lecture : les versions à concevoir ne créent jamais de cartes.
 const {CARDS,FACTIONS,cardTraits}=__load("src/data.js");
 const {unitStatContext,unitStats}=__load("src/engine/unit-stats.js");
-const {visualFor,artSrc,UI_BACKGROUNDS,cardTemplateFor}=__load("src/visuals.js");
+const {visualFor,artSrc,UI_BACKGROUNDS,cardTemplateFor,cardTemplateSrc}=__load("src/visuals.js");
 const COLLECTION_RANKS=Object.freeze([
  {id:'commun',name:'Commune'},
  {id:'rare',name:'Rare'},
@@ -6106,7 +6104,9 @@ function collectionHoverContent(profile,id,rarity,esc){
  if(!card||!rank)return null;
  const current=card.rarity===rarity;
  const stats=current?unitStats(unitStatContext(profile),id):null;
- const art=artSrc(visualFor(card,{cards:true}).art);
+ // Réutiliser l'image complète approuvée de la carte, jamais le SVG neutre.
+ const template=cardTemplateFor(card);
+ const art=template?cardTemplateSrc(template):artSrc(visualFor(card).art);
  const faction=FACTIONS[card.faction];
  const traits=current?cardTraits(id):[];
  return `<div class="card-preview collection-preview" data-rarity="${esc(rarity)}">
