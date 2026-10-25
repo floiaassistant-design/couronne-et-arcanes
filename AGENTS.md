@@ -96,6 +96,36 @@
 - **Après autorisation explicite uniquement :** revérifier le commit `head`, la branche cible, les tests, les éventuels conflits et les mises à jour depuis la revue. Ne jamais écraser `main` ni forcer l'historique. Si la PR a changé ou si un contrôle échoue, suspendre et demander une nouvelle décision au besoin.
 - **Continuité :** le joueur teste quand il le souhaite ; les évolutions peuvent rester sur des branches et des PR ouvertes sans être fusionnées. À chaque fin de session, enregistrer le code et l'état du travail sur la branche, sans publier une nouvelle version stable sans accord.
 
+## Politique de travail — ne pas attendre activement la CI
+
+- Après avoir préparé le code, les contrôles locaux nécessaires et la documentation,
+  pousser la branche et ouvrir ou actualiser sa PR : les GitHub Actions se
+  déclenchent normalement sur cet événement. Ne pas relancer un workflow déjà
+  en cours ni multiplier les exécutions sans raison.
+- **Ne pas arrêter le travail simplement parce que la CI a démarré.** Tant que
+  des tâches utiles **indépendantes du résultat distant** subsistent, les
+  terminer : relire le diff et les fichiers générés, vérifier les dépendances
+  et les PR parallèles, corriger les problèmes déjà identifiés, documenter le
+  changement, compléter la PR et préparer une reprise claire.
+- Lorsque la CI tourne encore **et qu'il ne reste plus aucun travail utile
+  réalisable sans son résultat**, terminer la session au lieu de surveiller
+  activement GitHub. Éviter les boucles de consultation, les attentes
+  artificielles et les appels répétés qui consomment le quota de l'agent.
+- Donner au propriétaire la branche, la PR, le dernier commit, le lien vers
+  GitHub Actions, les vérifications déjà réalisées, les contrôles encore en
+  cours et la prochaine action. Laisser GitHub notifier la fin des tests ;
+  le propriétaire peut alors demander à un agent d'examiner le résultat.
+  Ne jamais annoncer une CI réussie tant que son statut final n'est pas vérifié.
+- Si la CI est déjà terminée au cours du travail utile, lire son résultat et
+  traiter les échecs pertinents ; après une correction, pousser et laisser le
+  nouveau run se dérouler selon la même règle. N'interrompre un travail utile
+  que s'il est réellement bloqué par un résultat attendu.
+- Avant toute fusion, reprendre la revue du commit exact, des tests, conflits
+  et changements de main ; **l'autorisation explicite et spécifique du
+  propriétaire reste obligatoire**. Après fusion, préserver les contrôles
+  requis sur main et confirmer séparément la publication ; ne pas confondre
+  fin d'attente active, réussite CI, fusion et déploiement.
+
 ## Contrat CI — vérification sélective des PR documentaires
 
 - Les workflows `test.yml` et `web-package.yml` gardent leurs deux statuts
