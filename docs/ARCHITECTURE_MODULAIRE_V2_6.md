@@ -1,3 +1,7 @@
+## Proposition Collection — PR nº 48, non fusionnée (25 octobre 2026)
+
+`ui/collection.js` garde le catalogue en lecture seule : six cellules par unité et un lecteur `bindCollectionHover` éphémère, déclenché par événements délégués souris, clavier ou tactile. La fiche compacte vit sur `document.body` afin de ne pas être rognée par le défilement horizontal. `app.js` la ferme lors des rerendus ; les chiffres existants viennent de `unitStats`, le bonus de `ui/concorde.js`, et les évolutions futures n'inventent aucune donnée. `assets/collection.css` est inclus dans l'unique `JOUER.html` généré. Aucun nouveau module, état sauvegardé, calcul moteur ou dépendance. `tests/browser_collection.py` vérifie les gestes et l'absence de l'ancien bouton.
+
 # Proposition — repères discrets et résumé de faction, 24 octobre 2026
 
 `ui/card-arena.js` garde `campSeal` partagé par le plateau et sa légende : rond

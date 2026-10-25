@@ -1,4 +1,4 @@
-"""Vraie collection : rangs projetés, deck, stockage, fonds et mise en page."""
+"""Collection : six rangs, aperçu survol/tactile/clavier, deck, stockage, fonds."""
 import asyncio,json,os
 from pathlib import Path
 from playwright.async_api import async_playwright
@@ -31,11 +31,28 @@ async def run(browser,label,viewport,url=None):
     }''')
     assert dimensions==[1774,887],dimensions
     before=await page.evaluate('(k)=>localStorage.getItem(k)',SAVE)
-    await row.locator('[data-collection-rarity="divine"] [data-action="collection-inspect"]').click()
-    modal=page.locator('.collection-inspection')
-    assert 'évolution est à concevoir' in await modal.inner_text()
-    assert await modal.locator('[data-action="deck-add"]').count()==0
-    await page.keyboard.press('Escape');assert await modal.count()==0
+    assert await row.locator('[data-collection-preview]').count()==6
+    assert await row.locator('[data-action="collection-inspect"]').count()==0
+    future=row.locator('[data-collection-rarity="divine"] [data-collection-preview]')
+    if label=='desktop':
+        await future.hover()
+    else:
+        await future.tap()
+    popup=page.locator('#collection-hover-inspection')
+    assert await popup.is_visible()
+    assert await future.get_attribute('aria-expanded')=='true'
+    assert 'Évolution à concevoir' in await popup.inner_text()
+    assert 'Statistiques à concevoir' in await popup.inner_text()
+    assert await popup.locator('[data-action="deck-add"]').count()==0
+    bounds=await popup.bounding_box()
+    assert bounds and bounds['x']>=0 and bounds['y']>=0 and bounds['x']+bounds['width']<=viewport['width']+1 and bounds['y']+bounds['height']<=viewport['height']+1,bounds
+    await page.keyboard.press('Escape')
+    assert await popup.is_hidden()
+    if label=='desktop':
+        await future.focus()
+        assert await popup.is_visible()
+        await page.keyboard.press('Escape')
+        assert await popup.is_hidden()
     assert await page.evaluate('(k)=>localStorage.getItem(k)',SAVE)==before
     # Les quatre Miliciens sont déjà dans le deck : retirer, reprendre, puis réajouter.
     await row.locator('[data-current-version="true"] [data-action="deck-remove"]').click()
@@ -71,9 +88,15 @@ async def run(browser,label,viewport,url=None):
     await page.locator('[data-collection-character="militia"] .creature-image').first.evaluate('e=>e.src="data:image/png;base64,broken"')
     assert await page.locator('[data-collection-character="militia"] .card-title').first.is_visible()
     assert await page.locator('[data-collection-character="militia"] [data-action="deck-add"]').is_visible()
-    await page.locator('[data-collection-character="militia"] [data-current-version="true"] [data-action="collection-inspect"]').click()
-    assert 'Un soldat loyal' in await page.locator('.collection-inspection').inner_text()
-    await page.locator('.collection-inspection [data-action="close-modal"]').click()
+    present=page.locator('[data-collection-character="militia"] [data-current-version="true"] [data-collection-preview]')
+    if label=='desktop':
+        await present.hover()
+    else:
+        await present.tap()
+    assert await popup.is_visible()
+    assert 'Un soldat loyal' in await popup.inner_text()
+    await page.keyboard.press('Escape')
+    assert await popup.is_hidden()
     await page.locator('.collection-hero').scroll_into_view_if_needed()
     await page.screenshot(path=f'/tmp/ca-collection-{label}.png',full_page=False)
     await page.locator('#nav [data-page="home"]').click()
@@ -99,7 +122,7 @@ async def run(browser,label,viewport,url=None):
     assert not errors,errors
     assert not external,external
     await context.close()
-    print(f'Collection {label}: vrais exemplaires, six rangs, lecture sans mutation, deck/reprise, images absentes et largeur PASS')
+    print(f'Collection {label}: six rangs, survol/tactile/clavier, deck/reprise, images absentes et largeur PASS')
 
 async def main():
     async with async_playwright() as pw:

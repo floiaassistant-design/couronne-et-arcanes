@@ -1,4 +1,22 @@
-## Proposition — CI sélective pour PR Markdown (24 octobre 2026)
+## Proposition — six cartes et aperçu au survol dans la Collection, PR nº 48 (25 octobre 2026)
+
+- Six raretés par unité conservées ; fiche concise au survol, focus et toucher directement sur la carte, sans bouton « Fiche ». Les raretés non jouables restent à concevoir, sans chiffres fictifs.
+- Réutilisation des caractéristiques du moteur et du bonus de faction ; aucune règle ni sauvegarde modifiée, même jeu web et `JOUER.html` généré.
+- Reprise du dernier `main` après les PR nº 49, 50 et 51 ; correction du test navigateur qui cherchait l'ancien bouton. **PR nº 48 non fusionnée et non publiée ; CI à vérifier sur la nouvelle tête.**
+
+## Intégré — arrêter la surveillance active de la CI, PR nº 51 (25 octobre 2026)
+
+- La [PR nº 51](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/51) a ajouté à `AGENTS.md` une règle permanente : terminer le travail utile indépendant des résultats GitHub Actions, puis arrêter la session si seule la CI reste à attendre. Ne pas multiplier les consultations qui consomment le quota de l'agent ; reprendre après notification et demande du propriétaire.
+- Fusion confirmée dans `main` : `1aa294511d35dd063eade2401360ad98a3ea9184` ; aucune modification du code du jeu, des tests ou des workflows. Les deux CI documentaires de la PR étaient réussies ; les contrôles de `main` restent à distinguer de cette réussite.
+
+## Intégré — maîtrise des artefacts GitHub Actions, PR nº 49 (24 octobre 2026)
+
+- Le 24 octobre, un inventaire automatisé des archives CI de `couronne-et-arcanes` a mesuré **259 archives et environ 10,2 Go**, dont les captures répétées des PR et les paquets web. Ce stockage d'archives est distinct du code et des sauvegardes.
+- Conserver **l'ensemble des tests, parité et builds**. Sur les PR, n'archiver les captures que **lors d'un échec** ou sur demande de revue (étiquette `captures-ci`), après toutes les étapes ; rétention **2 jours**, sans dupliquer `JOUER.html` déjà testé et versionné.
+- Continuer à **construire et vérifier le paquet web sur chaque PR** modifiant le jeu ; ne stocker l'archive `couronnes-web` que **sur un push main** (publication Sites autorisée uniquement depuis main), pour **7 jours**.
+- Modification documentaire et de workflow seulement ; aucun test supprimé, aucune règle du jeu modifiée. **PR nº 49 fusionnée sur autorisation spécifique**, commit `170e9c9a898821dfe27945d18ef0617a79e6cf94`. Arbre du merge identique à celui des deux CI de PR réussies. Nettoyage ponctuel séparé : 250 archives supprimées et 9 références conservées (399,5 Mo restants selon l'API). Le premier assemblage sur `main` a généré le paquet, mais **son dépôt a échoué** à cause du quota externe non encore recalculé : aucune nouvelle publication Sites attestée.
+
+## Intégré — CI sélective pour PR Markdown, PR nº 47 (24 octobre 2026)
 
 - Détection Git prudente d'une PR ne modifiant que des Markdown racine/`docs/`.
   Deux jobs obligatoires conservés, contrôles légers sur ces seules PR.
@@ -6,7 +24,7 @@
   ressource ou export et pour chaque push sur main. Génération du paquet Sites
   toujours conservée sur main. Tests de classification et de renommage ajoutés.
 - Aucun moteur, carte, sauvegarde, illustration ni JOUER modifié.
-  Proposition à tester et relire ; non fusionnée, non publiée.
+  PR nº 47 fusionnée le 24 octobre 2026 ; les PR exclusivement documentaires exécutent les contrôles légers, et chaque push sur `main` conserve les contrôles complets.
 
 ## Intégré et publié — repères de camp discrets et fiche courte (24 octobre 2026)
 
