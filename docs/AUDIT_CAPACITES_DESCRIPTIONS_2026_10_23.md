@@ -294,17 +294,19 @@
 - **Fiche courte au survol (Rare) :** `Après l'attaque : soigne de 2 PV l'allié le plus blessé de sa ligne (lui-même inclus).`
 - **Rangs Épique → Éveillé :** gains de statistiques, renforcement du soin, zone et fréquence **à définir** séparément ; conserver les capacités héritées lorsque la progression sera décidée, sans prétendre qu'elle est jouable.
 
+**Référence Notion vérifiée :** [Évolutions simplifiées — tableau des 53 unités](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f), état consulté du 24 octobre 2026. Les rangs explicitement « À définir » restent non spécifiés dans cet audit.
+
 ### Fiche de référence — Lancier des Remparts (`lancer`)
 
-**Rang natif Commun, jouable sur `main` ; évolution Rare proposée ici à discuter, non validée et non programmée.**
+**Rang natif Commun, jouable sur `main` ; évolution Rare explicitement « À définir » dans la sous-page Notion des 53 unités au 24 octobre 2026. Aucune statistique future n'est validée ni programmée.**
 
 - **Commun :** **3 ATQ / 5 PV / délai 1** ; déplacement au plus **1 case vers l'avant par action** ; attaque à **1 case devant lui sur sa ligne**. **Perforation :** l'attaque ignore l'Armure de sa cible. **Charge :** **+2 ATQ** à son attaque si l'unité **s'est déplacée pendant le tour avant d'attaquer** ; le bonus ne dure pas au tour suivant. Sans cible, aucune attaque supplémentaire. Pas de Vol, de Célérité, de tir à distance ni de changement de ligne.
 - **Concorde :** ☀ **Bonus de faction : +1 attaque** en formation ; s'applique à l'ATQ de l'attaque normale. Le texte de Charge n'implique pas deux coups séparés.
 - **Petite carte (Commun) :** `Perforation · Charge +2 ATQ`.
 - **Fiche courte au survol (Commun) :** `Ignore l'armure. +2 ATQ s'il avance avant de frapper.`
-- **Rare — suggestion de progression à valider :** **3 ATQ / 6 PV / délai 1** (soit **+1 PV maximum**, conservé aux rangs futurs) ; conserve Perforation et Charge **+2 ATQ**. Déplacement **1 case**, portée **1 case devant sur sa ligne**, inchangés. **Ce gain de PV n'a pas encore été approuvé : ne pas le présenter dans la Collection comme une carte jouable ou une décision acquise.**
-- **Petite carte proposée (Rare) :** `+1 PV · Perforation · Charge +2 ATQ`.
-- **Fiche courte proposée au survol (Rare) :** `6 PV. Ignore l'armure et gagne +2 ATQ lorsqu'il avance avant de frapper.`
+- **Rare — à définir :** aucun bonus, aucune statistique totale, aucune nouvelle capacité ni portée n'ont encore été décidés dans Notion. **Ne pas déduire automatiquement +1 PV ou une autre amélioration.**
+- **Petite carte (Rare, non jouable) :** `À concevoir`.
+- **Fiche courte au survol (Rare) :** `Évolution non définie. Statistiques et capacités à concevoir.`
 - **Épique → Éveillé :** capacités, valeurs et interactions supplémentaires **à définir** ; aucune amélioration automatique de Charge ou de Perforation.
 
 ### Synthèse de rédaction — huit unités Aube de Commun à Rare
@@ -320,7 +322,7 @@ Ce tableau fournit le **texte court sur la carte** et la **fiche courte au survo
 | **Arbalétrière — Commun** | 2 / 3 / 1 | Tir : 2 cases | Frappe à 2 cases devant elle, sur sa ligne. | **Actuel** |
 | **Arbalétrière — Rare** | 2 / 4 / 1 | +1 PV · Tir : 2 cases | Gagne 1 PV ; conserve le tir à 2 cases. | **Validé en conception, non joué** |
 | **Lancier des Remparts — Commun** | 3 / 5 / 1 | Perforation · Charge +2 ATQ | Ignore l'armure. +2 ATQ s'il avance avant de frapper. | **Actuel** |
-| **Lancier des Remparts — Rare** | **3 / 6 / 1 (proposition)** | +1 PV · Perforation · Charge +2 ATQ | 6 PV ; ignore l'armure et gagne +2 ATQ s'il avance avant de frapper. | **Proposé, à valider ; non joué** |
+| **Lancier des Remparts — Rare** | **À définir** | À concevoir | Évolution non définie. Statistiques et capacités à concevoir. | **Non décidé dans Notion ; non joué** |
 | **Sœur de l'Aurore — Rare native** | 1 / 4 / 2 | Soin 2 PV | Après l'attaque : soigne un allié blessé de sa ligne de 2 PV (elle-même comprise). | **Actuel ; aucune Commune** |
 | **Porte-étendard — Rare natif** | 2 / 6 / 2 | Inspiration +1 ATQ | Tous les 3 tours : +1 ATQ au premier autre allié de sa ligne (maximum 12 ATQ). | **Actuel ; aucune Commune** |
 | **Capitaine de l'Aube — Rare natif** | 3 / 6 / 1 | Inspiration +1 ATQ | Tous les 3 tours : +1 ATQ au premier autre allié de sa ligne (maximum 12 ATQ). | **Actuel ; aucune Commune** |
@@ -375,7 +377,7 @@ Ce tableau fournit le **texte court sur la carte** et la **fiche courte au survo
 | Porte-étendard (`banner`) | **Pas de version Commune** | **Rare jouable :** 2 ATQ / 6 PV / délai 2 ; tous les 3 tours, +1 ATQ au premier autre allié de sa ligne (plafond ATQ 12) | **Conception validée :** 2 ATQ / 8 PV, +2 PV maximum | **Conception validée :** 2 ATQ / 8 PV, renforce jusqu'à 2 autres alliés de sa ligne | **Conception validée :** 2 ATQ / 8 PV, donne +2 ATQ à chacun des deux alliés ciblés de sa ligne | **Conception validée :** 2 ATQ / 8 PV, renforce jusqu'à 2 autres alliés sur toutes les lignes, +2 ATQ chacun tous les 3 tours (plafond ATQ 12) |
 | Capitaine de l’Aube (`scoutcaptain`) | — | **Actuel :** Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). | À définir | À définir | À définir | À définir |
 | Prieur solaire (`sunpriest`) | **Aucune forme Commune** | **Rare jouable :** 2 ATQ / 7 PV / délai 2 ; Soin 2 PV après attaques à l'allié le plus blessé proportionnellement sur sa ligne (lui-même inclus) | À définir | À définir | À définir | À définir |
-| Lancier des Remparts (`lancer`) | **Commun jouable :** 3 ATQ / 5 PV / délai 1 ; Perforation ignore l’armure, Charge +2 ATQ après déplacement avant attaque | **Proposition à valider :** 3 ATQ / 6 PV / délai 1 ; +1 PV, Perforation et Charge conservées ; **non jouable** | À définir | À définir | À définir | À définir |
+| Lancier des Remparts (`lancer`) | **Commun jouable :** 3 ATQ / 5 PV / délai 1 ; Perforation ignore l’armure, Charge +2 ATQ après déplacement avant attaque | **À définir (Notion) :** aucune statistique ni capacité Rare approuvée ; **non jouable** | À définir | À définir | À définir | À définir |
 | Ange du Bastion (`dawnbastion`) | — | — | — | **Actuel :** Protection : à l’invocation, +3 bouclier à sa couronne (plafond 20). Vol : franchit un allié. Riposte : 2 dégâts au contact, 1 fois/tour. | À définir | À définir |
 
 #### Sylve — 11 unités
