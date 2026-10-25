@@ -282,6 +282,52 @@
 
 **Questions de conception à valider :** conserver ou faire évoluer les **3 ATQ / 6 PV / délai 1**, le déplacement 1 et la portée 1 ; définir pour chaque rang supérieur un gain cumulatif distinct du Porte-étendard, avec cibles, fréquence et conditions précises. La capacité héritée reste présente ; son éventuelle amélioration remplace sa valeur précédente, sans deuxième activation implicite. **Aucune de ces évolutions n'est approuvée, codée ou affichée comme jouable.** La PR nº 41 reste documentaire, en brouillon et non fusionnée ; le jeu, le laboratoire, les sauvegardes, les images, l'IA et l'export sont inchangés.
 
+### Fiche de référence — Prieur solaire de l’Aube (`sunpriest`)
+
+**Rang natif Rare, jouable sur `main` au 25 octobre 2026 ; rangs supérieurs encore à définir.** Aucune version Commune inférieure n'est ajoutée.
+
+- **ATQ / PV / délai :** **2 / 7 / 2**. Déplacement normal **1 case en avant par action** ; attaque de contact à **1 case devant lui sur sa ligne**. Ni Vol, ni Célérité, ni changement de ligne, ni tir à distance.
+- **Soin actuel :** après la phase d'attaques, rend **2 PV** à **un allié blessé de sa ligne**, lui-même compris. La priorité va à l'unité ayant la plus faible proportion **PV actuels / PV maximum**. Le soin est plafonné aux PV max ; aucune cible blessée signifie aucun soin.
+- **Différence avec la Sœur de l'Aurore :** même mécanique actuelle de Soin, mais le Prieur possède **2 ATQ / 7 PV / délai 2**, contre **1 ATQ / 4 PV / délai 2** pour la Sœur. Aucune capacité supplémentaire propre au Prieur n'est aujourd'hui codée ; ne pas en suggérer une comme acquise.
+- **Concorde :** ☀ **Bonus de faction : +1 attaque** si actif sur sa ligne ; n'accroît pas les PV soignés.
+- **Petite carte (Rare) :** `Soin 2 PV`.
+- **Fiche courte au survol (Rare) :** `Après l'attaque : soigne de 2 PV l'allié le plus blessé de sa ligne (lui-même inclus).`
+- **Rangs Épique → Éveillé :** gains de statistiques, renforcement du soin, zone et fréquence **à définir** séparément ; conserver les capacités héritées lorsque la progression sera décidée, sans prétendre qu'elle est jouable.
+
+### Fiche de référence — Lancier des Remparts (`lancer`)
+
+**Rang natif Commun, jouable sur `main` ; évolution Rare proposée ici à discuter, non validée et non programmée.**
+
+- **Commun :** **3 ATQ / 5 PV / délai 1** ; déplacement au plus **1 case vers l'avant par action** ; attaque à **1 case devant lui sur sa ligne**. **Perforation :** l'attaque ignore l'Armure de sa cible. **Charge :** **+2 ATQ** à son attaque si l'unité **s'est déplacée pendant le tour avant d'attaquer** ; le bonus ne dure pas au tour suivant. Sans cible, aucune attaque supplémentaire. Pas de Vol, de Célérité, de tir à distance ni de changement de ligne.
+- **Concorde :** ☀ **Bonus de faction : +1 attaque** en formation ; s'applique à l'ATQ de l'attaque normale. Le texte de Charge n'implique pas deux coups séparés.
+- **Petite carte (Commun) :** `Perforation · Charge +2 ATQ`.
+- **Fiche courte au survol (Commun) :** `Ignore l'armure. +2 ATQ s'il avance avant de frapper.`
+- **Rare — suggestion de progression à valider :** **3 ATQ / 6 PV / délai 1** (soit **+1 PV maximum**, conservé aux rangs futurs) ; conserve Perforation et Charge **+2 ATQ**. Déplacement **1 case**, portée **1 case devant sur sa ligne**, inchangés. **Ce gain de PV n'a pas encore été approuvé : ne pas le présenter dans la Collection comme une carte jouable ou une décision acquise.**
+- **Petite carte proposée (Rare) :** `+1 PV · Perforation · Charge +2 ATQ`.
+- **Fiche courte proposée au survol (Rare) :** `6 PV. Ignore l'armure et gagne +2 ATQ lorsqu'il avance avant de frapper.`
+- **Épique → Éveillé :** capacités, valeurs et interactions supplémentaires **à définir** ; aucune amélioration automatique de Charge ou de Perforation.
+
+### Synthèse de rédaction — huit unités Aube de Commun à Rare
+
+Ce tableau fournit le **texte court sur la carte** et la **fiche courte au survol** pour les rangs concernés. Il ne crée pas de nouvelle rareté jouable. Les quatre autres cases d'évolution d'une unité ne sont pas supprimées. Les rangs natifs sont vérifiés sur le catalogue et le moteur de `main` au 25 octobre 2026 ; les rangs futurs sont distingués.
+
+| Unité et rang | Base ATQ / PV / délai | Texte court sur la carte | Fiche concise au survol | Statut |
+|---|---|---|---|---|
+| **Milicien — Commun** | 2 / 5 / 1 | Corps à corps | Avance d'1 case ; frappe à 1 case devant lui. | **Actuel** |
+| **Milicien — Rare** | 2 / 5 / 1 | Premier coup : −1 dégât | Réduit de 1 les dégâts du premier coup reçu, une fois par invocation. | **Validé en conception, non joué** |
+| **Porte-égide — Commun** | 1 / 9 / 1 | Armure 2 · Garde · Riposte | Protège la couronne de sa ligne ; riposte au contact (2 dégâts fixes actuels, au plus 1 fois/tour). | **Actuel** |
+| **Porte-égide — Rare** | 1 / 11 / 1 | +2 PV · Armure 2 · Garde · Riposte | Gagne 2 PV ; conserve Armure, Garde et Riposte. | **Validé en conception, non joué** |
+| **Arbalétrière — Commun** | 2 / 3 / 1 | Tir : 2 cases | Frappe à 2 cases devant elle, sur sa ligne. | **Actuel** |
+| **Arbalétrière — Rare** | 2 / 4 / 1 | +1 PV · Tir : 2 cases | Gagne 1 PV ; conserve le tir à 2 cases. | **Validé en conception, non joué** |
+| **Lancier des Remparts — Commun** | 3 / 5 / 1 | Perforation · Charge +2 ATQ | Ignore l'armure. +2 ATQ s'il avance avant de frapper. | **Actuel** |
+| **Lancier des Remparts — Rare** | **3 / 6 / 1 (proposition)** | +1 PV · Perforation · Charge +2 ATQ | 6 PV ; ignore l'armure et gagne +2 ATQ s'il avance avant de frapper. | **Proposé, à valider ; non joué** |
+| **Sœur de l'Aurore — Rare native** | 1 / 4 / 2 | Soin 2 PV | Après l'attaque : soigne un allié blessé de sa ligne de 2 PV (elle-même comprise). | **Actuel ; aucune Commune** |
+| **Porte-étendard — Rare natif** | 2 / 6 / 2 | Inspiration +1 ATQ | Tous les 3 tours : +1 ATQ au premier autre allié de sa ligne (maximum 12 ATQ). | **Actuel ; aucune Commune** |
+| **Capitaine de l'Aube — Rare natif** | 3 / 6 / 1 | Inspiration +1 ATQ | Tous les 3 tours : +1 ATQ au premier autre allié de sa ligne (maximum 12 ATQ). | **Actuel ; aucune Commune** |
+| **Prieur solaire — Rare natif** | 2 / 7 / 2 | Soin 2 PV | Après l'attaque : soigne un allié blessé de sa ligne de 2 PV (lui-même compris). | **Actuel ; aucune Commune** |
+
+**Limites du périmètre :** le **Paladin solaire** commence à **Épique** et l'**Ange du Bastion** à **Légendaire**. N'inventer pour eux ni Commun ni Rare. Tous les textes de capacités sont distincts du résumé de faction déjà intégré (☀ **Bonus de faction : +1 attaque**) ; ne pas recopier ce résumé dans chaque petite carte. Conserver l'aperçu au **survol, focus ou toucher**, sans bouton « Fiche ». Les gains de rangs non intégrés restent explicitement « À concevoir » dans le jeu et dans la PR nº 48 jusqu'à une PR d'implémentation autorisée.
+
 ### Règle de conception et interface souhaitée — clarification ultérieure prioritaire
 
 **Précision du propriétaire :** l'aperçu existant au **survol** dans la main et sur le plateau est conservé tel quel. La Collection conserve **six cartes par personnage** avec un texte court sur la carte et **une fiche également courte au survol de chaque version** ; aucun ajout de bouton de fiche. Les sections historiques évoquant « une carte par personnage » ou une fiche à ouvrir volontairement ne doivent plus être appliquées.
@@ -328,8 +374,8 @@
 | Paladin solaire (`paladin`) | **Pas de version Commune** | **Pas de version Rare** | **Épique jouable :** 4 ATQ / 9 PV / délai 3 ; Armure 2 et Riposte fixe 2 (une fois/tour au contact) | **Conception validée :** 4 ATQ / 11 PV, +2 PV | **Conception validée :** 4 ATQ / 11 PV, Armure 3 remplace Armure 2 | **Conception corrigée et validée :** 4 ATQ / **13 PV**, +2 PV supplémentaires, conserve Armure 3 et gagne après Riposte autorisée une barrière personnelle de 2 points plafonnée et une fois/tour |
 | Porte-étendard (`banner`) | **Pas de version Commune** | **Rare jouable :** 2 ATQ / 6 PV / délai 2 ; tous les 3 tours, +1 ATQ au premier autre allié de sa ligne (plafond ATQ 12) | **Conception validée :** 2 ATQ / 8 PV, +2 PV maximum | **Conception validée :** 2 ATQ / 8 PV, renforce jusqu'à 2 autres alliés de sa ligne | **Conception validée :** 2 ATQ / 8 PV, donne +2 ATQ à chacun des deux alliés ciblés de sa ligne | **Conception validée :** 2 ATQ / 8 PV, renforce jusqu'à 2 autres alliés sur toutes les lignes, +2 ATQ chacun tous les 3 tours (plafond ATQ 12) |
 | Capitaine de l’Aube (`scoutcaptain`) | — | **Actuel :** Inspiration : tous les 3 tours, donne +1 ATQ au premier autre allié de sa ligne (cumul possible, ATQ plafonnée à 12). | À définir | À définir | À définir | À définir |
-| Prieur solaire (`sunpriest`) | — | **Actuel :** Soin : après les attaques, rend 2 PV à l’allié le plus blessé proportionnellement sur sa ligne. | À définir | À définir | À définir | À définir |
-| Lancier des Remparts (`lancer`) | **Actuel :** Perforation : ignore l’armure. Charge : +2 ATQ s’il a avancé avant d’attaquer. | À définir | À définir | À définir | À définir | À définir |
+| Prieur solaire (`sunpriest`) | **Aucune forme Commune** | **Rare jouable :** 2 ATQ / 7 PV / délai 2 ; Soin 2 PV après attaques à l'allié le plus blessé proportionnellement sur sa ligne (lui-même inclus) | À définir | À définir | À définir | À définir |
+| Lancier des Remparts (`lancer`) | **Commun jouable :** 3 ATQ / 5 PV / délai 1 ; Perforation ignore l’armure, Charge +2 ATQ après déplacement avant attaque | **Proposition à valider :** 3 ATQ / 6 PV / délai 1 ; +1 PV, Perforation et Charge conservées ; **non jouable** | À définir | À définir | À définir | À définir |
 | Ange du Bastion (`dawnbastion`) | — | — | — | **Actuel :** Protection : à l’invocation, +3 bouclier à sa couronne (plafond 20). Vol : franchit un allié. Riposte : 2 dégâts au contact, 1 fois/tour. | À définir | À définir |
 
 #### Sylve — 11 unités
