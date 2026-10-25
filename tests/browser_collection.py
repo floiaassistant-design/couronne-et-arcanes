@@ -94,7 +94,12 @@ async def run(browser,label,viewport,url=None):
     else:
         await present.tap()
     assert await popup.is_visible()
-    assert 'Un soldat loyal' in await popup.inner_text()
+    assert await present.get_attribute('aria-expanded')=='true', f'{label}: fiche active sur une autre carte'
+    description=popup.locator('.inspection-description')
+    assert await description.is_visible(), f'{label}: description de la fiche masquée'
+    await description.scroll_into_view_if_needed()
+    actual=await description.inner_text()
+    assert 'Un soldat loyal' in actual, f'{label}: description inattendue: {actual!r} ; fiche: {await popup.inner_text()!r}'
     await page.keyboard.press('Escape')
     assert await popup.is_hidden()
     await page.locator('.collection-hero').scroll_into_view_if_needed()
