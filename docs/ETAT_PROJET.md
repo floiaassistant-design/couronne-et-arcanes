@@ -1,6 +1,12 @@
 # État courant — 25 octobre 2026
 
-## Blocage de validation — contrôle du 25 octobre 2026
+## Reprise PR nº 48 — export reconstruit, CI à valider (25 octobre 2026)
+
+La branche `feat/collection-six-cartes-apercu-survol-20261024` a été corrigée par le workflow GitHub Actions ponctuel [régénération](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40176177646), **terminé avec succès**. Son commit [`e6475b6`](https://github.com/floiaassistant-design/couronne-et-arcanes/commit/e6475b60698e7948c962e198f707589a94e58840) a régénéré `JOUER.html` uniquement avec le builder et **supprimé le workflow temporaire** ; les sources du moteur et les sauvegardes n'ont pas changé.
+
+Les deux nouvelles exécutions de ce commit, [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40210736535) et [assemblage](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40210736576), ont reçu le statut `action_required` **avant la création de tout job**. Elles ne sont ni des réussites ni des échecs fonctionnels. Vérifier leur éventuelle demande d'approbation dans l'interface GitHub et exiger une CI complète sur le prochain commit exact avant toute proposition de fusion. La PR reste en brouillon, non fusionnée et non publiée ; Sites reste à sa dernière version vérifiée.
+
+## Historique — blocage de validation avant reconstruction (25 octobre 2026)
 
 Sur la tête `75f8f625`, les exécutions Actions [génération](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40176177646), [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40176180677) et [assemblage](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40176180555) ont échoué avant toute étape : runner absent, logs indisponibles. La relance unique du job de génération a également échoué avant exécution. [Statut public GitHub Actions](https://www.githubstatus.com/) annoncé opérationnel au relevé ; panne globale non confirmée. Vérifier via l'interface GitHub les annotations et les éventuelles limitations de facturation/stockage avant toute nouvelle tentative.
 
