@@ -6,7 +6,7 @@
 
 **Contrôles réussis sur cet arbre :** [tests complets](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40210891590) (336 tests Node, 60 scénarios de parité et parcours navigateur bureau/mobile simulé, hors réseau, sauvegardes) ; [assemblage web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40210891602) (paquet de PR construit et contrôle de synchronisation `JOUER.html`). L'export officiel a été généré par le builder sur GitHub dans `e6475b6` ; le workflow ponctuel de génération a été supprimé. Les deux vérifications main post-fusion peuvent être réutilisées si leur arbre est identique ; ne pas confondre tests de PR et résultat des nouveaux jobs main.
 
-**Publication distincte :** l'automatisation « Publication Couronnes sur Sites » s'est déclenchée après cette fusion et était en cours au dernier relevé. Aucune nouvelle version Sites n'est encore confirmée dans ce document ; la dernière publication attestée était **v7** sur [le site](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site). Vérifier son résultat terminal, la CI main et l'archive correspondante avant d'affirmer une diffusion.
+**Publication Sites confirmée :** l'automatisation existante « Publication Couronnes sur Sites » a achevé son exécution le 25 octobre 2026 (16:52:27 UTC). Elle confirme le commit publié `1810b1518bc0e8d668ed11bc55042ae5161ae94e`, la **version Sites nº 8**, la comparaison des fichiers publics avec le paquet GitHub, et le maintien de l'audience publique. [Jouer à Couronnes & Arcanes](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site). La publication est distincte de la fusion et de la CI.
 
 ## Collection intégrée par la PR nº 48
 
