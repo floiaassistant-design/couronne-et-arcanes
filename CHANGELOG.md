@@ -1,3 +1,9 @@
+## Correctif proposé — interaction tactile Collection, PR nº 48 (25 octobre 2026)
+
+- Le survol de souris et le contact tactile utilisent des événements pointeur adaptés : les événements souris synthétiques émis par le navigateur après un toucher ne doivent plus refermer la fiche.
+- Ajout d'une non-régression navigateur simulant les sorties de souris/pointeur après le toucher, en conservant les parcours bureau, portrait et paysage. Les règles, statistiques et sauvegardes ne sont pas modifiées.
+- Correctif **non fusionné** : export `JOUER.html` à régénérer depuis les sources, contrôles sur le commit final à constater.
+
 ## Proposition — six cartes et aperçu au survol dans la Collection, PR nº 48 (25 octobre 2026)
 
 - Six raretés par unité conservées ; fiche concise au survol, focus et toucher directement sur la carte, sans bouton « Fiche ». Les raretés non jouables restent à concevoir, sans chiffres fictifs.

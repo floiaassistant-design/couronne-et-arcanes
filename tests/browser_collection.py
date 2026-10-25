@@ -40,6 +40,12 @@ async def run(browser,label,viewport,url=None):
         await future.tap()
     popup=page.locator('#collection-hover-inspection')
     assert await popup.is_visible()
+    if label!='desktop':
+        # Chromium peut envoyer un mouseout de compatibilité après un toucher.
+        # Il ne doit pas masquer la fiche tactile, même si la souris sort.
+        await future.evaluate("""el=>el.dispatchEvent(new MouseEvent('mouseout',{bubbles:true,relatedTarget:null}))""")
+        await future.evaluate("""el=>el.dispatchEvent(new PointerEvent('pointerout',{bubbles:true,pointerType:'touch',relatedTarget:null}))""")
+        assert await popup.is_visible(), f'{label}: fiche tactile masquée par une sortie synthétique'
     assert await future.get_attribute('aria-expanded')=='true'
     assert 'Évolution à concevoir' in await popup.inner_text()
     assert 'Statistiques à concevoir' in await popup.inner_text()

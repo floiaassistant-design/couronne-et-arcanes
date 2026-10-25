@@ -1,5 +1,9 @@
 # État courant — 25 octobre 2026
 
+## Correctif tactile en cours — PR nº 48
+
+L'[exécution CI sur `93998477`](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40173082058) échouait dans le test navigateur Collection en orientation portrait, tandis que l'assemblage web réussissait. Un correctif de la gestion de l'aperçu distingue désormais les événements de survol des contacts tactiles et ignore la sortie de pointeur due au toucher. Le test simule les événements souris de compatibilité et vérifie que la fiche reste ouverte. Les règles, valeurs de cartes et sauvegardes restent inchangées. **PR non fusionnée ; vérifier le nouvel export autonome généré et la CI du commit final avant toute intégration.** Le quota d'archives GitHub Actions reste une question distincte.
+
 ## Proposition Collection — PR nº 48 (non fusionnée)
 
 La [PR nº 48](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/48) conserve six cartes par unité, avec une fiche courte au survol, au focus et au toucher, sans bouton « Fiche ». Les raretés non intégrées restent « À concevoir », sans chiffres ni capacités inventés. Aucun changement du moteur, de l'IA ou des sauvegardes. La proposition a été rapprochée du `main` `7e9613b9872db3171246f2ddccfb3353bd542408` sans perdre les optimisations de CI. Le test navigateur Collection vérifie désormais le lecteur sur les cartes ; contrôler la nouvelle CI avant toute fusion. La PR nº 41 reste indépendante.
