@@ -1,6 +1,8 @@
 # État courant — 25 octobre 2026
 
-## Correctif tactile en cours — PR nº 48
+## Correctif tactile et export synchronisé — PR nº 48
+
+L'export officiel `JOUER.html` a été **régénéré depuis les sources par `npm run build` sur GitHub Actions**, commit [`5474a7e6`](https://github.com/floiaassistant-design/couronne-et-arcanes/commit/5474a7e6a074b71d6c16deb897eb3ac378fe7efb). Le workflow ponctuel de génération s'est supprimé dans le même commit et ne reste **pas** dans le diff de PR. Le contrôle intermédiaire sur `59dc38ba` échouait uniquement à la vérification de synchronisation de cet export (336 tests Node et parité réussis) ; les parcours navigateur de cette exécution ont été sautés. La validation finale de la branche régénérée est à lire dans les nouveaux contrôles GitHub, sans présumer leur issue.
 
 L'[exécution CI sur `93998477`](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40173082058) échouait dans le test navigateur Collection en orientation portrait, tandis que l'assemblage web réussissait. Un correctif de la gestion de l'aperçu distingue désormais les événements de survol des contacts tactiles et ignore la sortie de pointeur due au toucher. Le test simule les événements souris de compatibilité et vérifie que la fiche reste ouverte. Les règles, valeurs de cartes et sauvegardes restent inchangées. **PR non fusionnée ; vérifier le nouvel export autonome généré et la CI du commit final avant toute intégration.** Le quota d'archives GitHub Actions reste une question distincte.
 
