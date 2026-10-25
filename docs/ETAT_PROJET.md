@@ -1,12 +1,18 @@
-# État courant — 24 octobre 2026
+# État courant — 25 octobre 2026
 
-## Actualisation — fusion de la PR nº 49
+## Main et contrôles au dernier relevé
 
-**Main officiel vérifié :** `170e9c9a898821dfe27945d18ef0617a79e6cf94`, [PR nº 49](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/49) fusionnée sur accord spécifique le 24 octobre 2026. **Uniquement les workflows d'archivage CI et leurs documents** ont changé ; aucune carte, règle, progression, illustration ni sauvegarde modifiée. L'arbre Git du merge (`747902180cca411758e08545f70e01008f5aeac2`) est identique à celui de la branche validée par les deux CI réussies : [tests complets](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40133817048) et [assemblage web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40133816929).
+**Main vérifié avant cette PR documentaire :** `1aa294511d35dd063eade2401360ad98a3ea9184`, issu de la [PR nº 51](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/51), qui formalise dans `AGENTS.md` la fin de la surveillance active des tests GitHub une fois tout autre travail utile achevé. Aucun code du jeu modifié par cette PR documentaire. [Tests de PR nº 51](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40163579140) et [assemblage de PR](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40163579155) réussis, arbre Git identique après fusion.
+
+**Contrôles sur ce main :** [tests GitHub](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40163653903) encore **en cours au dernier relevé** ; [assemblage web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40163653915) **en échec uniquement lors de l'envoi de l'archive**, les étapes de préparation du paquet ayant réussi. Le quota GitHub Actions demeure bloquant. Aucun nouveau déploiement Sites n'est confirmé ; dernière publication vérifiée : **version 7**. Reprendre les contrôles après notification, sans boucle d'attente active.
+
+## Historique — fusion de la PR nº 49 (24 octobre 2026)
+
+**Main après la PR nº 49 (relevé historique) :** `170e9c9a898821dfe27945d18ef0617a79e6cf94`, [PR nº 49](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/49) fusionnée sur accord spécifique le 24 octobre 2026. **Uniquement les workflows d'archivage CI et leurs documents** ont changé ; aucune carte, règle, progression, illustration ni sauvegarde modifiée. L'arbre Git du merge (`747902180cca411758e08545f70e01008f5aeac2`) est identique à celui de la branche validée par les deux CI réussies : [tests complets](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40133817048) et [assemblage web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40133816929).
 
 **Nettoyage externe terminé :** [exécution d'audit GitHub Actions](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40133466726), **250 archives redondantes supprimées, 9 références conservées, 399,5 Mo restants** selon l'API du dépôt. Le contrat désormais actif : captures de PR uniquement en cas d'échec ou de label `captures-ci` (rétention 2 jours), paquet web toujours construit/vérifié mais archivé **uniquement sur main** pendant 7 jours.
 
-**Blocage externe encore observé :** [premier assemblage web post-fusion](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40135240903) a généré avec succès les fichiers `dist/` et le paquet du nouveau main, mais son **téléversement a échoué** car GitHub n'avait pas encore recalculé le quota. [Tests main](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40135240945) étaient en cours au dernier relevé. **Aucune nouvelle publication Sites attestée** : dernière version vérifiée, Sites v7. **PR nº 41 et nº 48 toujours ouvertes** et non fusionnées.
+**Blocage externe encore observé :** [premier assemblage web post-fusion](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40135240903) a généré avec succès les fichiers `dist/` et le paquet du nouveau main, mais son **téléversement a échoué** car GitHub n'avait pas encore recalculé le quota. [Tests main](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40135240945) ont ensuite **réussi**. La [relance de l'assemblage le 25 octobre](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40135240903) a de nouveau été refusée au téléversement pour quota de stockage. **Aucune nouvelle publication Sites attestée** : dernière version vérifiée, Sites v7. **PR nº 41 et nº 48 toujours ouvertes** et non fusionnées.
 
 ## Main, jeu et publication
 
@@ -49,16 +55,9 @@ et fichiers diffusés comparés au paquet, selon le bilan de la PR nº 45.
 La publication est distincte de la fusion ; ne pas la déduire d'une simple CI.
 [Procédure et historique](PUBLICATION_WEB_2026_10_23.md).
 
-## Proposition de CI sélective — en préparation
+## CI sélective — intégrée par la PR nº 47
 
-Branche `ci/sauter-tests-complets-pr-docs-20261024` : optimisations
-des deux workflows pour les PR Markdown uniquement. Les jobs restent
-visibles, la détection est prudente et couverte par de nouveaux tests.
-Toute PR touchant au jeu, à la configuration, aux ressources, à l'export
-ou à la CI garde le parcours complet ; tout push sur main conserve
-également les deux contrôles et l'archive de diffusion Sites.
-**Proposition non fusionnée, non publiée** : seule une PR approuvée
-spécifiquement pourra changer cette politique.
+La [PR nº 47](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/47) a été fusionnée le 24 octobre : les PR exclusivement Markdown déclenchent des contrôles légers. Les autres PR conservent les tests complets ; tout push sur `main` garde les deux workflows et l'assemblage pour Sites. Cette optimisation ne dispense pas de vérifier la CI du commit visé.
 
 ## Proposition ouverte et prochaine étape
 

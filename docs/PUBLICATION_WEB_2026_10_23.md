@@ -13,6 +13,10 @@ Conserver cet identifiant et l’audience renvoyée par le Site natif lors de la
 publication. Le 24 octobre 2026, elle est publique ; l’ancienne mention privée
 ne doit pas déclencher de changement d’accès.
 
+## Suivi du 25 octobre 2026 — quota et reprise
+
+La [relance du paquet de la PR nº 49 fusionnée](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40135240903) a encore échoué au téléversement avec le message de quota GitHub Actions ; les tests sur son commit `main` sont terminés avec succès. Après fusion de la [PR nº 51](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/51), [l'assemblage du nouveau main](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40163653915) a rencontré le même refus. Les [tests de ce nouveau main](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40163653903) étaient encore en cours au dernier relevé. Ne pas affirmer qu'un nouveau paquet a été archivé ni qu'une nouvelle publication Sites a été effectuée. Suivre la règle `AGENTS.md` de non-surveillance active de la CI ; revenir examiner les résultats sur demande.
+
 ## Conservation des archives CI — PR nº 49 fusionnée (24 octobre 2026)
 
 Les archives GitHub Actions ont atteint environ **10,2 Go pour 259 copies** au 24 octobre 2026, bloquant leurs téléversements. Leur nettoyage n'affecte **ni le code GitHub, ni les images validées des dépôts, ni les sauvegardes**. Un audit temporaire distinct a **supprimé 250 archives obsolètes** et conservé **9 références** (399,5 Mo restant selon l’API), sans modification du code ou des sauvegardes. Le workflow temporaire de nettoyage a été retiré de sa branche après exécution.
@@ -55,12 +59,12 @@ noms relatifs POSIX, former `nom + U+0000 + sha256(octets)` pour chaque fichier,
 joindre par un saut de ligne sans saut final, puis calculer le SHA-256 UTF-8.
 
 La préparation du paquet ne remplace pas le workflow complet
-`Tests Couronnes et Arcanes`. Une optimisation de CI est proposée :
+`Tests Couronnes et Arcanes`. Une optimisation de CI a été intégrée :
 seules les PR modifiant exclusivement du Markdown à la racine ou dans `docs/`
 passent en contrôle allégé, sans produire de paquet pour cette PR.
 Le **push vers main reste intégral** pour les deux workflows et son paquet
 avec reçu, y compris après une fusion documentaire ; le déclencheur Sites
-n'est pas modifié. Cette politique n'est active qu'après fusion de la PR dédiée.
+n'est pas modifié. Cette politique est **intégrée depuis la PR nº 47** (24 octobre 2026).
 Avant publication, les deux workflows doivent avoir réussi pour un arbre Git
 identique à celui du main visé. Une CI de PR
 fusionnée peut être réutilisée si l'arbre correspond exactement. Consulter
