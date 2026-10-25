@@ -1,5 +1,16 @@
 # État courant — 25 octobre 2026
 
+## Intégration Aube — travail par étapes, non intégré
+
+Mission autorisée : dix personnages et six raretés, capacités centrales et fiche
+universelle, dans une seule PR sur `feat/aube-evolutions-fiche-universelle`.
+**Étape 1 terminée : audit et préparation uniquement.** Aucun changement du jeu,
+de ses sauvegardes ni de `JOUER.html`. Le propriétaire demande un arrêt entre
+chaque étape. [Checkpoint, périmètre, points à résoudre et prochaine étape](REPRISE_INTEGRATION_AUBE.md).
+La suite est l'étape 2 (définitions et compatibilité), sur cette même branche.
+Le tableau maître Notion est la référence de conception ; la PR nº 41 reste
+un audit documentaire indépendant. Aucune fusion ni publication autorisée.
+
 ## Jeu intégré sur main
 
 **Main vérifié :** [`1810b1518bc0e8d668ed11bc55042ae5161ae94e`](https://github.com/floiaassistant-design/couronne-et-arcanes/commit/1810b1518bc0e8d668ed11bc55042ae5161ae94e), fusion autorisée de la [PR nº 48](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/48) le 25 octobre 2026. La comparaison GitHub de ce merge à `main` est identique (aucun commit d'écart). La comparaison avec le commit PR `af048c1b` montre un commit de fusion **sans aucune différence de fichiers** : le code et `JOUER.html` sur main sont ceux qui ont été vérifiés.
