@@ -1,5 +1,11 @@
 # État courant — 25 octobre 2026
 
+## Blocage de validation — contrôle du 25 octobre 2026
+
+Sur la tête `75f8f625`, les exécutions Actions [génération](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40176177646), [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40176180677) et [assemblage](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40176180555) ont échoué avant toute étape : runner absent, logs indisponibles. La relance unique du job de génération a également échoué avant exécution. [Statut public GitHub Actions](https://www.githubstatus.com/) annoncé opérationnel au relevé ; panne globale non confirmée. Vérifier via l'interface GitHub les annotations et les éventuelles limitations de facturation/stockage avant toute nouvelle tentative.
+
+Un nettoyage indépendant supprime les CSS obsolètes de l'ancienne fiche et restaure les couleurs de rareté sur le nouvel aperçu. Cet ajustement est une **proposition non validée**. **Reste nécessaire :** reconstruire `JOUER.html` par `npm run build` depuis les sources, supprimer le workflow ponctuel de régénération, obtenir les résultats complets sur l'arbre final et relire l'ensemble avant une éventuelle autorisation de fusion. Ne jamais fusionner ni publier automatiquement.
+
 ## Contrôles récents et correction en cours — PR nº 48
 
 La [CI sur `b02dceb`](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40175425633) a validé 336 tests Node, la parité, l'export autonome synchronisé, les parcours Collection bureau/portrait/paysage, le ciblage, Concorde et plusieurs parcours de sauvegarde. Elle a ensuite échoué parce que l'ancien test Milicien recherchait `collection-inspect`, bouton volontairement supprimé. Les tests suivants ont été interrompus. L'[assemblage web sur ce commit](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40175425639) a **réussi**. Le téléversement des captures d'échec a aussi rencontré le quota externe GitHub Actions.

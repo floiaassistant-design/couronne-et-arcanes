@@ -1,3 +1,9 @@
+## Dernier ajustement Collection — raretés et CSS (25 octobre 2026, PR nº 48)
+
+- Le nouvel aperçu flottant reprend les six couleurs de rareté déjà utilisées dans la Collection ; les sélecteurs CSS de l'ancienne modale « Fiche » supprimée sont retirés.
+- Aucun changement de carte, moteur, illustration, progression ou sauvegarde. La version autonome JOUER doit encore être reconstruite depuis les sources, puis revalidée en CI.
+- GitHub Actions n'a attribué aucun runner à la génération ni aux deux validations sur `75f8f625`. Une seule relance diagnostique de la génération a échoué de la même manière : pas de nouvel essai en boucle.
+
 ## Correction préparée — fiches avec image approuvée et tests complets, PR nº 48 (25 octobre 2026)
 
 - La fiche Collection reprend l'image exacte de la carte déjà présente sur le plateau et dans la main ; pas de nouvel actif ni d'illustration neutre.
