@@ -1,3 +1,10 @@
+## Fusion validée — Collection six raretés, PR nº 48 (25 octobre 2026)
+
+- [PR nº 48](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/48) **fusionnée sur main** au commit `1810b1518bc0e8d668ed11bc55042ae5161ae94e` après autorisation explicite. Le contenu de main est identique à l'arbre testé de la PR `af048c1b` (zéro fichier différent).
+- Six cartes par personnage, aperçu bref au survol/toucher/focus, vraie illustration et bonus de faction concis. `JOUER.html` régénéré depuis les sources et workflow temporaire retiré. Aucun changement de règle, IA, progression ni sauvegarde.
+- CI [tests complets](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40210891590) réussie (336 tests, 60 scénarios de parité et navigateur) et [assemblage web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40210891602) réussi sur l'arbre intégré. Publication Sites **distincte, non encore confirmée** au dernier relevé ; automatisation existante déclenchée.
+- Les sections ci-dessous conservent les étapes **historiques d'avant fusion** et leurs erreurs intermédiaires ; leur statut « non fusionnée » ne décrit plus le main.
+
 ## Dernier ajustement Collection — raretés et CSS (25 octobre 2026, PR nº 48)
 
 - Le nouvel aperçu flottant reprend les six couleurs de rareté déjà utilisées dans la Collection ; les sélecteurs CSS de l'ancienne modale « Fiche » supprimée sont retirés.
