@@ -1,3 +1,17 @@
+## Versions de rareté — préparation sur la branche Aube
+
+`cards/schema.js` porte les identifiants et l'immuabilité ; `cards/aube.js` les
+gains validés par rareté ; `cards/abilities.js` les capacités structurées et leur
+héritage ; `cards/definitions.js` le résolveur par ID historique et rareté.
+La dépendance va du moteur vers ce registre, puis vers les données natives,
+jamais vers le DOM ou le stockage. `unit-stats.js` partage les additions de
+bonus entre natif et prévision de version. Le point d'entrée de pose refuse les
+versions dont les pouvoirs ne sont pas intégrés, sans consommation.
+Le catalogue économique et les schémas sauvegardés restent inchangés.
+Ces modules sont embarqués par découverte d'imports ; aucun second moteur ni
+nouvel écran actif. [API et limites actuelles](AUBE_VERSIONS.md).
+Cette préparation appartient à la PR Aube en brouillon et n'est pas sur main.
+
 ## Collection intégrée — PR nº 48 fusionnée (25 octobre 2026)
 
 `ui/collection.js` garde le catalogue en lecture seule : six cellules par unité et un lecteur `bindCollectionHover` éphémère, déclenché par événements délégués souris, clavier ou tactile. La fiche compacte vit sur `document.body` afin de ne pas être rognée par le défilement horizontal. `app.js` la ferme lors des rerendus ; les chiffres existants viennent de `unitStats`, le bonus de `ui/concorde.js`, et les évolutions futures n'inventent aucune donnée. `assets/collection.css` est inclus dans l'unique `JOUER.html` généré. Aucun nouveau module, état sauvegardé, calcul moteur ou dépendance. `tests/browser_collection.py` vérifie les gestes et l'absence de l'ancien bouton.

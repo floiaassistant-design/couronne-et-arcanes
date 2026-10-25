@@ -4,10 +4,15 @@
 
 Mission autorisée : dix personnages et six raretés, capacités centrales et fiche
 universelle, dans une seule PR sur `feat/aube-evolutions-fiche-universelle`.
-**Étape 1 terminée : audit et préparation uniquement.** Aucun changement du jeu,
-de ses sauvegardes ni de `JOUER.html`. Le propriétaire demande un arrêt entre
+**Étape 2 terminée : définitions centrales et compatibilité préparées.** Les
+51 versions réelles ont leurs totaux et capacités structurées ; les 41 évolutions
+restent non jouables jusqu'au raccordement des pouvoirs. Achats, maîtrises,
+possessions, decks et sauvegardes conservés ; aucun déblocage. `JOUER.html`
+est régénéré avec le même registre, sans changement d'écran ou de graphisme.
+Le propriétaire demande un arrêt entre
 chaque étape. [Checkpoint, périmètre, points à résoudre et prochaine étape](REPRISE_INTEGRATION_AUBE.md).
-La suite est l'étape 2 (définitions et compatibilité), sur cette même branche.
+La suite est l'étape 3 (capacités défensives), sur cette même branche, après
+résolution des divergences Garde/Riposte consignées dans le checkpoint.
 Le tableau maître Notion est la référence de conception ; la PR nº 41 reste
 un audit documentaire indépendant. Aucune fusion ni publication autorisée.
 

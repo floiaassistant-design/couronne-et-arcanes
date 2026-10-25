@@ -2,14 +2,14 @@
 
 ## Point de reprise — 25 octobre 2026
 
-**Étape 1 terminée : audit et préparation uniquement. Arrêt demandé par le propriétaire entre chaque étape.**
+**Étape 2 terminée : définitions centrales et compatibilité préparées. Arrêt demandé par le propriétaire entre chaque étape.**
 
 - Branche unique : `feat/aube-evolutions-fiche-universelle`.
 - Base vérifiée : `cf8175002431e1714460f8be917665437a5b78c4` ; arbre `25e920beb822826e23d24833f6d591020a73b8ef`.
-- PR : brouillon d'intégration Aube sur cette branche ; continuer cette même PR à toutes les étapes. Retrouver son numéro par la branche sur GitHub, sans ouvrir une deuxième PR.
-- Dernier commit : tête distante de cette branche, à relire avant reprise ; le présent checkpoint appartient au commit documentaire d'étape 1.
-- Aucun fichier source, test, image, workflow, sauvegarde ou export modifié à cette étape. Aucune nouvelle rareté intégrée ni obtenable.
-- Prochaine intervention : **étape 2, définitions centrales et compatibilité**, puis nouvel arrêt avec checkpoint actualisé.
+- PR unique : [nº 53, brouillon](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53). Continuer cette PR à toutes les étapes.
+- Dernier commit : tête distante de cette branche, à relire avant reprise ; le présent checkpoint décrit l'étape 2. La description de PR donne la tête exacte et ses résultats CI.
+- Registre central des 51 versions, prévision statistique commune et refus sans consommation des versions non programmées. Les 41 évolutions restent non jouables. Aucune possession ni sauvegarde modifiée. Export régénéré depuis les sources ; graphismes et écrans conservés.
+- Prochaine intervention : **étape 3, capacités défensives**, après résolution des divergences Garde/Riposte ci-dessous ; puis nouvel arrêt avec checkpoint actualisé.
 - Aucune autorisation de fusion ou de publication. La mission autorise le développement ; chaque fusion exige un accord explicite et spécifique.
 
 ## Sources examinées et état réel
@@ -35,9 +35,9 @@ Les dix IDs historiques et leurs raretés natives restent les suivants ; ce tabl
 | Lancier des Remparts | `lancer` | Commun | Commun à Éveillé : 6 |
 | Ange du Bastion | `dawnbastion` | Légendaire | Légendaire à Éveillé : 3 |
 
-**Cible : 51 versions réelles, dont 10 natives et 41 évolutions ; 9 emplacements inférieurs inexistants dans les 60 cellules visibles.** Cette couverture est un objectif, pas le résultat de l'étape 1.
+**Cible : 51 versions réelles, dont 10 natives et 41 évolutions ; 9 emplacements inférieurs inexistants dans les 60 cellules visibles.** Les 51 définitions et les neuf absences sont testées à l'étape 2. Leurs pouvoirs futurs restent à raccorder au combat.
 
-## Compatibilité : constats avant programmation
+## Compatibilité : constats de l’audit initial
 
 1. `CARDS` contient 76 entrées natives. Le profil possède des quantités par ID (`collection`), des decks de chaînes d'ID, des achats `upgrades[id]` de 0 à 3 et de la maîtrise `mastery[id]`. Les paquets, recettes, extractions, rencontres et générateurs de decks parcourent ce catalogue. Y ajouter naïvement toutes les variantes modifierait l'économie, la Tour, les pools et la normalisation.
 2. `unitStats` centralise déjà les chiffres d'invocation et sépare amélioration/difficulté, équipement, Forge, réputation et maîtrise. La main lit l'instantané de bataille ; la Collection lit le profil courant. Les effets de Concorde et de Ralliement sont calculés séparément en combat.
@@ -47,7 +47,7 @@ Les dix IDs historiques et leurs raretés natives restent les suivants ; ce tabl
 6. `generatedCardFace` est partagé par les vues. En revanche, la fiche de Collection et la fiche main/plateau ont actuellement deux rendus et deux lecteurs d'événements. L'ancien lecteur combat ferme la fiche au toucher/clic pour sélectionner ; cela ne satisfait pas encore la consultation tactile universelle demandée. Un clic sur une unité alliée peut aussi remonter à la case de déploiement : couvrir ce risque.
 7. Les noms de rareté actuels emploient notamment `divine` et `éveillée` côté interface ; normaliser les identifiants à une seule convention et fournir les libellés affichés depuis le même endroit. Aucun renommage d'ID de personnage.
 
-## Architecture retenue pour la suite
+## Architecture retenue et préparation de l’étape 2
 
 - Conserver le catalogue historique des cartes natives et ses IDs. Ajouter un registre central des versions et un résolveur pur **(ID historique, rareté)** donnant une identité de version stable, les valeurs totales et les capacités effectives. Éviter de disperser les constantes de capacités entre registre, moteur, IA et vues.
 - Séparer explicitement les couches : **base de rareté → achats existants → bonus de profil → effets temporaires**. Une statistique totale de Notion remplace la base du rang précédent ; elle n'est jamais additionnée comme un bonus. Une capacité améliorée remplace l'ancienne dans une seule définition résolue.
@@ -91,8 +91,8 @@ Chaque ligne correspond à une intervention distincte, suivie d'un arrêt et d'u
 | Étape | Livrable attendu | Vérifications avant arrêt |
 | --- | --- | --- |
 | **1 — terminée** | Audit du main/Notion, compatibilité, carte d'impact et plan durable | Sources et PR examinées ; parité de base ; tests documentaires ; diff uniquement Markdown |
-| 2 — prochaine | Registre des 51 versions, identité, capacités résolues et statistiques en couches ; contrat de repli historique | Totaux de toutes les versions, héritage/remplacement, absence des 9 versions inférieures, achats/maîtrise indépendants, sauvegardes et économie inchangées ; aucune activation partielle en jeu |
-| 3 | Capacités défensives : réduction initiale, Armure, Garde, Riposte, barrière, Dernier Rempart | Résoudre Garde/Riposte avant leur modification ; protections, mortalité, quotas, silence, anciens combats et cinq factions |
+| **2 — terminée** | Registre des 51 versions, identité, capacités résolues et statistiques en couches ; contrat de repli historique | Totaux de toutes les versions, héritage/remplacement, absence des 9 versions inférieures, achats/maîtrise indépendants, sauvegardes et économie inchangées ; aucune activation partielle en jeu |
+| 3 — prochaine | Capacités défensives : réduction initiale, Armure, Garde, Riposte, barrière, Dernier Rempart | Résoudre Garde/Riposte avant leur modification ; protections, mortalité, quotas, silence, anciens combats et cinq factions |
 | 4 | Capacités offensives/de soutien/d'arrivée et laboratoire sur le moteur commun | Portée, Perforation, Charge, Célérité, tir derrière, soins, Inspiration, Commandement, Intervention ; retirer l'ancien pilote ; IA et laboratoire isolé |
 | 5 | Carte brève et fiche universelle dans tous les écrans contenant des cartes | Main, deux camps du plateau, 60 cellules Collection, deck, Atelier/Alchimie, paquets, obtention/récompenses et laboratoire ; souris/toucher/focus sans action accidentelle ; bureau/mobile/mouvement réduit |
 | 6 | Revue finale, export généré, documents à jour et PR prête à examiner | Quatre commandes obligatoires, anciennes sauvegardes et nouveaux pouvoirs sur la tête exacte, simulations pertinentes, HTTP et hors réseau, revue complète, CI du commit exact |
@@ -106,6 +106,18 @@ La programmation du registre d'étape 2 n'autorise pas une fiche à annoncer un 
 - `npm test`, les deux builds et les parcours navigateur n'ont pas été relancés localement pour ce changement uniquement documentaire. Aucun nouveau pouvoir ni nouvelle interface n'a été testé ou annoncé comme intégré.
 - Le diff de l'étape 1 doit contenir uniquement ce fichier et le lien de suivi dans `ETAT_PROJET.md`. La CI légère de la PR est distincte de la CI complète requise après modification du code.
 
+## Résultat de l’étape 2
+
+- `cards/schema.js`, `aube.js`, `abilities.js`, `definitions.js` : identifiants stables et données immuables, 51 versions Aube, totaux hérités/remplacés, capacités uniques par clé et statuts de disponibilité explicites. Les autres unités conservent leur définition native. [Contrat d’API](AUBE_VERSIONS.md).
+- `unit-stats.js` partage les additions de bonus. `versionUnitStats` calcule une prévision séparant `base` et `bonuses` ; aucun niveau forcé ni ancien bonus expérimental dans cette API. Le chemin natif conserve son comportement et son instantané.
+- `play` dans `battle.js`, commun aux cinq factions et aux deux camps, refuse les références futures ou invalides avant invocation/consommation. La présence d’une définition ne rend pas une carte jouable. Tests de refus sans mutation sur les deux géométries et les deux camps.
+- `CARDS`, les profils, recettes, paquets, decks, maîtrises et sauvegardes ne sont pas transformés. Les unités déjà invoquées conservent leurs chiffres à la reprise. L’ancien pilote du laboratoire reste isolé et sera retiré à l’étape 4, après programmation de ses pouvoirs.
+- Garde et Riposte restent explicitement dans `pendingDecisions` pour les évolutions concernées. Leurs valeurs historiques héritées dans les données ne tranchent pas la divergence Notion. L’étape 3 doit résoudre ce point avant activation.
+- `JOUER.html` et le diagnostic navigateur sont générés avec les nouveaux modules par le builder commun. Aucun HTML de variante et aucun nouvel accès économique. Le générateur GitHub ponctuel sert uniquement à enregistrer l’export volumineux sur la branche ; il doit être retiré avant livraison de l’étape, sans changement durable des workflows.
+- Vérifications locales : **355 tests réussis**, dont **19 nouveaux tests** de données/compatibilité ; **60 scénarios de parité identiques** ; `npm run build` et `npm run build:test` réussis. Les suites Node incluent imports sans cycle et compatibilité historique.
+- Les résultats navigateur, la présence de l’export exact sur GitHub et la CI de la tête finale sont consignés dans la description de PR après leur observation. Aucune CI de la base ne valide à elle seule les nouvelles sources.
+- Limites de cette étape : capacités déclarées, pas encore exécutées pour les nouvelles raretés ; aucune nouvelle fiche universelle ni modification de la Collection. L’obtention reste à décider. Aucun test sur téléphone physique ou équilibrage humain revendiqué.
+
 ## Procédure de reprise
 
 1. Récupérer le dépôt officiel, relire `AGENTS.md`, l'état courant et ce fichier sur `feat/aube-evolutions-fiche-universelle` ; vérifier le SHA distant et toute copie locale avant usage.
@@ -114,4 +126,4 @@ La programmation du registre d'étape 2 n'autorise pas une fiche à annoncer un 
 4. Réaliser **une seule étape suivante**, ses tests utiles et sa revue. Mettre à jour le point de reprise en tête, les contrôles et les limites ; pousser puis vérifier le commit sur GitHub.
 5. Si seule la CI reste en cours, fournir son lien et s'arrêter sans la consulter en boucle. Après notification, vérifier le résultat sur le commit exact.
 
-Instruction de reprise : **« Reprends l'étape 2 de l'intégration Aube sur la branche `feat/aube-evolutions-fiche-universelle`, lis `docs/REPRISE_INTEGRATION_AUBE.md`, poursuis la même PR puis arrête-toi à la fin de l'étape. »**
+Instruction de reprise : **« Reprends l'étape 3 de l'intégration Aube sur la branche `feat/aube-evolutions-fiche-universelle`, lis `docs/REPRISE_INTEGRATION_AUBE.md`, poursuis la même PR puis arrête-toi à la fin de l'étape. »**

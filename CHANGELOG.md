@@ -1,3 +1,14 @@
+## En préparation — Aube, définitions et compatibilité (25 octobre 2026)
+
+- Registre central de 51 versions Aube : identités par personnage/rareté,
+  statistiques totales, héritage des capacités et décisions restant à résoudre.
+- Prévisions partageant le calcul des bonus natifs ; achats et maîtrise restent
+  indépendants. Aucun nouveau rang obtenu ni activé dans le jeu.
+- Refus sans consommation d'une version non programmée ; sauvegardes, decks,
+  économie, autres factions et ancien laboratoire conservés.
+- Tests des définitions et de compatibilité, export généré depuis les sources.
+  PR unique en brouillon ; [reprise par étapes](docs/REPRISE_INTEGRATION_AUBE.md).
+
 ## Fusion validée — Collection six raretés, PR nº 48 (25 octobre 2026)
 
 - [PR nº 48](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/48) **fusionnée sur main** au commit `1810b1518bc0e8d668ed11bc55042ae5161ae94e` après autorisation explicite. Le contenu de main est identique à l'arbre testé de la PR `af048c1b` (zéro fichier différent).

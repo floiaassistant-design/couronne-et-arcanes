@@ -1,5 +1,20 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Contrat — versions de rareté et compatibilité
+
+- `src/cards/definitions.js` résout une unité par son ID historique et une rareté
+  facultative. Le catalogue `CARDS` conserve ses natifs ; ne pas y ajouter les
+  variantes au risque de modifier paquets, rencontres et économie.
+- Les statistiques totales du rang remplacent la base. Achats, maîtrise,
+  équipement, bonus de profil et effets temporaires restent distincts.
+  Réutiliser le calcul de `engine/unit-stats.js`, sans conversion de niveaux.
+- Une définition future ne signifie pas que ses pouvoirs sont programmés.
+  Respecter les statuts de combat et les décisions en attente ; ne pas activer
+  une version incomplète. Les références natives historiques restent valides.
+- Préserver les IDs, decks, possessions, sauvegardes et chiffres des unités déjà
+  invoquées. Aucun recalcul à la reprise, aucune obtention ou migration implicite.
+  Voir le [contrat des versions](docs/AUBE_VERSIONS.md).
+
 ## Contrat permanent — six raretés de Collection et fiche courte
 
 - La Collection conserve **six cartes côte à côte pour chaque personnage** (Commune, Rare, Épique, Légendaire, Divine, Éveillée), et non une vignette unique. Le remplacement de six cartes par une seule était une proposition documentaire annulée par le propriétaire.

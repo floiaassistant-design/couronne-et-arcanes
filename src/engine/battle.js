@@ -1,4 +1,5 @@
 import {castSpell} from './spell-casting.js';
+import {unitVersionPlayable} from '../cards/definitions.js';
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 import {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
 import {frontEnemy} from './spell-targeting.js';
@@ -114,6 +115,7 @@ function play(b,side,index,lane,col=entryColumn(b,side)){
  if(hero.cardsPlayed>=2)return {ok:false,reason:'Limite de deux cartes par tour.'};
  const c=CARDS[hand.id];
  if(!c)return {ok:false,reason:'Carte inconnue.'};
+ if(c.type==='unité'&&!unitVersionPlayable(hand))return {ok:false,reason:'Cette version de la carte n’est pas encore jouable.'};
  if(c.heroClass&&(side!=='p'||c.heroClass!==b.heroClass))return {ok:false,reason:'Compétence réservée à une autre classe.'};
  const targetError=classSkillTargetError(b,side,c,lane)||controlTargetError(b,side,c,lane)||tempoTargetError(b,side,c);
  if(targetError)return {ok:false,reason:targetError};
