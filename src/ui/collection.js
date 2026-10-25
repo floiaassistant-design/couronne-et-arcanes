@@ -3,7 +3,7 @@ import {concordeDetails} from './concorde.js';
 // Catalogue en lecture : les versions à concevoir ne créent jamais de cartes.
 import {CARDS,FACTIONS,cardTraits} from '../data.js';
 import {unitStatContext,unitStats} from '../engine/unit-stats.js';
-import {visualFor,artSrc,UI_BACKGROUNDS,cardTemplateFor} from '../visuals.js';
+import {visualFor,artSrc,UI_BACKGROUNDS,cardTemplateFor,cardTemplateSrc} from '../visuals.js';
 
 export const COLLECTION_RANKS=Object.freeze([
  {id:'commun',name:'Commune'},
@@ -69,7 +69,9 @@ export function collectionHoverContent(profile,id,rarity,esc){
  if(!card||!rank)return null;
  const current=card.rarity===rarity;
  const stats=current?unitStats(unitStatContext(profile),id):null;
- const art=artSrc(visualFor(card,{cards:true}).art);
+ // Réutiliser l'image complète approuvée de la carte, jamais le SVG neutre.
+ const template=cardTemplateFor(card);
+ const art=template?cardTemplateSrc(template):artSrc(visualFor(card).art);
  const faction=FACTIONS[card.faction];
  const traits=current?cardTraits(id):[];
  return `<div class="card-preview collection-preview" data-rarity="${esc(rarity)}">

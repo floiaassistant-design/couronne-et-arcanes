@@ -60,12 +60,15 @@ test('Les aperçus concis des raretés inconnues n’inventent aucune statistiqu
  const future=collectionHoverContent(profile,'militia','éveillée',esc);
  assert.match(future,/Évolution à concevoir/);
  assert.match(future,/Statistiques à concevoir/);
+ assert.match(future,/milicien_aube_carte_v02\.webp/,'Le futur rang conserve l’illustration autorisée');
  assert.doesNotMatch(future,/ATQ [0-9]+ \/ PV [0-9]+/);
  assert.equal(collectionHoverContent(profile,'missing','rare',esc),null);
  assert.equal(collectionHoverContent(profile,'militia','unknown',esc),null);
  const present=collectionHoverContent(profile,'militia','commun',esc);
  assert.match(present,/ATQ [0-9]+ \/ PV [0-9]+/);
  assert.match(present,/COLLECTION/);
+ assert.match(present,/milicien_aube_carte_v02\.webp/,'La fiche reprend la carte approuvée, pas le SVG provisoire');
+ assert.doesNotMatch(present,/data:image\/svg\+xml/);
  assert.equal(JSON.stringify(profile),before);
  assert(collectionEntries(profile,'sort').every(c=>c.type==='sort'));
  assert(collectionEntries(profile,'aube',true).every(c=>(profile.collection[c.id]||0)>0));

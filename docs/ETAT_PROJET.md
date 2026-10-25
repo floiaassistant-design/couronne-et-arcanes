@@ -1,6 +1,12 @@
 # État courant — 25 octobre 2026
 
-## Correctif tactile et export synchronisé — PR nº 48
+## Contrôles récents et correction en cours — PR nº 48
+
+La [CI sur `b02dceb`](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40175425633) a validé 336 tests Node, la parité, l'export autonome synchronisé, les parcours Collection bureau/portrait/paysage, le ciblage, Concorde et plusieurs parcours de sauvegarde. Elle a ensuite échoué parce que l'ancien test Milicien recherchait `collection-inspect`, bouton volontairement supprimé. Les tests suivants ont été interrompus. L'[assemblage web sur ce commit](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40175425639) a **réussi**. Le téléversement des captures d'échec a aussi rencontré le quota externe GitHub Actions.
+
+La branche ajoute maintenant une correction ciblée du test Milicien et du test Aube (même sélecteur obsolète), vérifie les empreintes des visuels et remplace l'image neutre de l'aperçu Collection par la vraie carte déjà approuvée, sans changement de ressource, de mécanique ni de sauvegarde. **Régénérer `JOUER.html` depuis les sources**, relire le résultat des deux CI sur le dernier commit, sans surveillance active et sans fusion ni publication implicite.
+
+## Historique — correctif tactile et export synchronisé — PR nº 48
 
 L'export officiel `JOUER.html` a été **régénéré depuis les sources par `npm run build` sur GitHub Actions**, commit [`5474a7e6`](https://github.com/floiaassistant-design/couronne-et-arcanes/commit/5474a7e6a074b71d6c16deb897eb3ac378fe7efb). Le workflow ponctuel de génération s'est supprimé dans le même commit et ne reste **pas** dans le diff de PR. Le contrôle intermédiaire sur `59dc38ba` échouait uniquement à la vérification de synchronisation de cet export (336 tests Node et parité réussis) ; les parcours navigateur de cette exécution ont été sautés. La validation finale de la branche régénérée est à lire dans les nouveaux contrôles GitHub, sans présumer leur issue.
 
