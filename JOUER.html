@@ -4673,11 +4673,13 @@ Object.assign(__exports,{CLASS_SKILLS,CARDS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPO
 },
 "src/engine/battle.js":function(__exports,__load){
 const {castSpell}=__load("src/engine/spell-casting.js");
-const {unitVersionPlayable,versionUnitAbilities}=__load("src/cards/definitions.js");
+const {versionUnitAbilities,AUBE_RULESET}=__load("src/cards/definitions.js");
 const {hit,resolveRetaliation}=__load("src/engine/battle-defense.js");
 const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
+const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying}=__load("src/engine/unit-rules.js");
+const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
-const {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS}=__load("src/data.js");
+const {CARDS,FACTIONS,GUARD_IDS}=__load("src/data.js");
 const {frontEnemy}=__load("src/engine/spell-targeting.js");
 const {captureCombatFrame,recordCombatEvent}=__load("src/engine/combat-events.js");
 const {rankEnemyMoves}=__load("src/ai.js");
@@ -4686,7 +4688,7 @@ const {silenced,activeAbility,controlTargetError,prepareControlUnits,triggerTrap
 const {chosenTalents}=__load("src/talents.js");
 const {tempoTargetError}=__load("src/engine/tempo.js");
 const {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,gearBonus}=__load("src/engine/profile.js");
-const {unitStatContext,unitStats,labMilitiaBonus}=__load("src/engine/unit-stats.js");
+const {unitStatContext,unitStats}=__load("src/engine/unit-stats.js");
 const {laneCount,lastCell,crownColumn,entryColumn,validDeploymentColumn,validLane,missionLayout}=__load("src/engine/board.js");
 Object.assign(__exports,__load("src/engine/board.js"));
 Object.assign(__exports,__load("src/engine/guard-candidates.js"));
@@ -4705,7 +4707,8 @@ function draw(b,side,n=1){
    hero.deck=shuffle(b,hero.discard);hero.discard=[];
   }
   const id=hero.deck.pop();if(!CARDS[id])continue;
-  hero.hand.push({id,wait:Math.max(0,CARDS[id].delay-1)});
+  const definition=CARDS[id].type==='unité'?battleUnitDefinition(b,id,side):null;
+  hero.hand.push({id,wait:Math.max(0,(definition?.stats.delay??CARDS[id].delay)-1)});
  }
 }
 
@@ -4721,6 +4724,7 @@ function createBattle(profile,mission,seed=Date.now(),options={}){
  aiStyle:mission.aiStyle||'equilibre',aiBoss:!!mission.boss,aiPhaseAnnounced:false,
  upgrades:bonuses.upgrades,mastery:bonuses.mastery,enemyDifficulty:mission.difficulty,mode:mission.mode||'campaign',stats:{playerKills:0,enemyKills:0}};
  if(options.turnFlow==='alternating')b.turnFlow='alternating';
+ if(options.cardRules===AUBE_RULESET)b.cardRules=AUBE_RULESET;
  b.heroes.p.deck=shuffle(b,p.deck);
  b.heroes.e.deck=shuffle(b,mission.deck);
  draw(b,'p',5+b.libraryBonus);draw(b,'e',5);
@@ -4728,7 +4732,7 @@ function createBattle(profile,mission,seed=Date.now(),options={}){
  return b;
 }
 const forward=side=>side==='p'?1:-1;
-const isFlying=u=>!!u&&FLYING_IDS.has(u.id);
+const isFlying=unitFlying;
 const isGuard=u=>!!u&&GUARD_IDS.has(u.id) && u.hp>0;
 
 // Bonus de formation calculé à la volée : aucune modification permanente des statistiques.
@@ -4746,34 +4750,31 @@ function formationBonus(b,lane,unit){
 }
 function enemyAt(b,lane,col,side){return col>=1&&col<=lastCell(b)&&b.board[lane][col]&&b.board[lane][col].side!==side?b.board[lane][col]:null;}
 function findTarget(b,lane,col,unit){
- const range=unit.ranged?2:1;
+ const range=unitAttackRange(unit);
  let fallback=null;
  for(let d=1;d<=range;d++){
   const targetCol=col+forward(unit.side)*d;
   const target=enemyAt(b,lane,targetCol,unit.side);
-  if(target && isGuard(target)&&!versionUnitAbilities(target))return {type:'unit',target,col:targetCol};
+  if(target && isGuard(target)&&!versionUnitAbilities(target)&&!versionUnitAbilities(unit))return {type:'unit',target,col:targetCol};
   if(target && !fallback)fallback={type:'unit',target,col:targetCol};
  }
  if(fallback)return fallback;
  const heroDist=unit.side==='p'?crownColumn(b,'e')-col:col;
  return heroDist<=range?{type:'hero',side:unit.side==='p'?'e':'p'}:null;
 }
-function spawn(b,side,id,lane,col=entryColumn(b,side)){
- const c=CARDS[id];if(!c||c.type==='sort')return false;
+function spawn(b,side,reference,lane,col=entryColumn(b,side)){
+ const id=reference.id,c=CARDS[id];if(!c||c.type==='sort')return false;
  if(!validDeploymentColumn(b,side,col)||b.board[lane][col])return false;
- const stats=unitStats(b,id,side);
+ const definition=battleUnitDefinition(b,reference,side),stats=unitStats(b,reference,side);
  const u={uid:b.nextUnitId++,id,side,atk:stats.atk,maxhp:stats.maxhp,
   hp:stats.maxhp,armor:c.ability==='armor'?2:0,ranged:c.ability==='ranged',
   ability:c.ability,stun:0,poison:0,poisonTurns:0};
- if(b.mode==='developer'&&id==='militia'){
-  const rank=b.labStats?.rarities?.[side]?.[id]||'commun',level=b.labStats?.levels?.[side]?.[id]||0;
-  const bonus=labMilitiaBonus(rank,level);
-  if(bonus.block||bonus.counter)u.labGuard={block:bonus.block,used:false,counter:bonus.counter,counterUsed:false};
- }
+ if(b.cardRules===AUBE_RULESET){u.rarity=definition.rarity;u.cardRules=AUBE_RULESET;u.armor=definition.abilities.armor?.amount||0;u.ranged=!!definition.abilities.ranged;}
  b.board[lane][col]=u;
  fx(b,{type:'spawn',side,lane,col,icon:c.icon});
  if(formationBonus(b,lane,u))note(b,`Concorde de ${FACTIONS[c.faction].short} : +1 attaque aux alliés de cet ordre sur la ligne ${lane+1}.`);
- if(c.ability==='ward')b.heroes[side].shield=Math.min(20,b.heroes[side].shield+3);
+ if(!versionUnitAbilities(u)&&c.ability==='ward')b.heroes[side].shield=Math.min(20,b.heroes[side].shield+3);
+ resolveUnitArrival(b,u,lane,col,{hit,emit:fx,note});sweepDead(b);
  note(b,`${side==='p'?'Vous invoquez': 'L’ennemi invoque'} ${c.name} (ligne ${lane+1}).`);
  enterCell(b,u,lane,col);
  return true;
@@ -4792,11 +4793,11 @@ function play(b,side,index,lane,col=entryColumn(b,side)){
  if(hero.cardsPlayed>=2)return {ok:false,reason:'Limite de deux cartes par tour.'};
  const c=CARDS[hand.id];
  if(!c)return {ok:false,reason:'Carte inconnue.'};
- if(c.type==='unité'&&!unitVersionPlayable(hand))return {ok:false,reason:'Cette version de la carte n’est pas encore jouable.'};
+ if(c.type==='unité'&&!unitCanPlay(b,hand,side))return {ok:false,reason:'Cette version de la carte n’est pas encore jouable.'};
  if(c.heroClass&&(side!=='p'||c.heroClass!==b.heroClass))return {ok:false,reason:'Compétence réservée à une autre classe.'};
  const targetError=classSkillTargetError(b,side,c,lane)||controlTargetError(b,side,c,lane)||tempoTargetError(b,side,c);
  if(targetError)return {ok:false,reason:targetError};
- if(c.type==='unité'&&!spawn(b,side,hand.id,lane,col))return {ok:false,reason:'La case de déploiement est occupée.'};
+ if(c.type==='unité'&&!spawn(b,side,hand,lane,col))return {ok:false,reason:'La case de déploiement est occupée.'};
  const drawAfter=c.type==='sort'?castSpell(b,side,hand.id,lane,{emit:fx,hit,damageHero,sweepDead,checkOutcome,note,controlHooks}):0;
  if(side==='p'){if(!b.cardUses)b.cardUses={};b.cardUses[hand.id]=(b.cardUses[hand.id]||0)+1;}
  hero.discard.push(hand.id);hero.hand.splice(index,1);hero.cardsPlayed++;
@@ -4858,7 +4859,7 @@ function moveUnits(b,sideFilter=null){
  for(const side of sideFilter?[sideFilter]:(b.round%2?['p','e']:['e','p']))for(let lane=0;lane<laneCount(b);lane++){
   const cols=Array.from({length:lastCell(b)},(_,i)=>side==='p'?lastCell(b)-i:i+1);
   for(const original of cols){const u=b.board[lane][original];if(!u||u.side!==side||u.stun>0)continue;
-   let col=original;const steps=activeAbility(b,u)==='haste'?2:1;
+   let col=original;const steps=unitMovementSteps(u,silenced(b,u));
    for(let step=0;step<steps;step++){
     if(findTarget(b,lane,col,u))break;
     const next=col+forward(side);
@@ -4884,13 +4885,23 @@ function retaliate(b,defender,attacker,lane,defenderCol,attackerCol,defenderLane
  resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,bonus,note);
 }
 
+function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppressed=false){
+ const p=versionUnitAbilities(u)?.rearShot;if(!p||suppressed||lane!==targetLane)return;
+ const dir=u.side==='p'?1:-1;
+ // Une interception arrière/interligne ne crée pas de cible derrière le tireur.
+ if((targetCol-sourceCol)*dir<=0)return;
+ const col=targetCol+dir;if(col<1||col>lastCell(b))return;
+ const other=b.board[lane][col];
+ if(other&&other.hp>0&&other.side!==u.side)hit(b,other,p.amount,u.side,p.ignoreArmor);
+}
+
 function resolveAttacks(b,sideFilter=null){
  const intents=[];
  for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
   const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0||(sideFilter&&u.side!==sideFilter))continue;
   const target=findTarget(b,lane,col,u);
-  const charged=!silenced(b,u)&&CHARGE_IDS.has(u.id)&&!!u.movedThisRound;
-  if(target)intents.push({u,lane,col,target,atk:u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?2:0),ability:activeAbility(b,u),charged});
+  const charged=!silenced(b,u)&&unitChargeAmount(u)>0&&!!u.movedThisRound;
+  if(target)intents.push({u,lane,col,target,atk:u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0),ability:activeAbility(b,u),charged});
  }
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
@@ -4898,40 +4909,32 @@ function resolveAttacks(b,sideFilter=null){
   const targetColForFx = guardIntercept?guardIntercept.col:(target.type==='hero'?crownColumn(b,target.side):target.col);
   const targetLane=guardIntercept?.lane??lane;
   fx(b,{type:'attack',side:u.side,lane:targetLane,...(targetLane!==lane?{fromLane:lane}:{}),from:intent.col,to:targetColForFx,ranged:!!u.ranged,magic:['splash','poison'].includes(ability),damage:atk,charged,icon:CARDS[u.id]?.icon||'⚔'});
-  if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +2 attaque sur la ligne ${lane+1}.`);
+  if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +${unitChargeAmount(u)} attaque sur la ligne ${lane+1}.`);
   if(target.type==='hero'){
    if(guardIntercept){
-    hit(b,guardIntercept.u,atk,u.side,ability==='pierce');
+    hit(b,guardIntercept.u,atk,u.side,unitHasPierce(u,silenced(b,u)));
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
     if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
     if(ability==='poison'){guardIntercept.u.poison=1;guardIntercept.u.poisonTurns=Math.max(guardIntercept.u.poisonTurns,2);}
+    resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}}
   } else {
-   hit(b,target.target,atk,u.side,ability==='pierce');
+   hit(b,target.target,atk,u.side,unitHasPierce(u,silenced(b,u)));
    if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
    if(ability==='poison'){target.target.poison=1;target.target.poisonTurns=Math.max(target.target.poisonTurns,2);}
    if(ability==='splash'){
     const extra=b.board[lane].find(v=>v&&v.side!==u.side&&v.uid!==target.target.uid&&v.hp>0);
     if(extra)hit(b,extra,2,u.side);
    }
+   resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);
   }
  }
  // Le bonus de charge ne dure qu'un seul tour et doit survivre aux sauvegardes historiques.
  for(const row of b.board)for(const u of row)if(u&&(!sideFilter||u.side===sideFilter))u.movedThisRound=false;
  sweepDead(b);
- // Persistent support abilities trigger after combat.
- for(let lane=0;lane<laneCount(b);lane++)for(const u of b.board[lane])if(u&&u.hp>0&&(!sideFilter||u.side===sideFilter)){
-  if(activeAbility(b,u)==='heal'){
-   const allies=b.board[lane].filter(v=>v&&v.side===u.side&&v.hp<v.maxhp);
-   if(allies.length){allies.sort((a,z)=>(a.hp/a.maxhp)-(z.hp/z.maxhp));allies[0].hp=Math.min(allies[0].maxhp,allies[0].hp+2);const col=b.board[lane].indexOf(allies[0]);fx(b,{type:'heal',lane,col});}
-  }
-  if(activeAbility(b,u)==='inspire'){
-   const allies=b.board[lane].filter(v=>v&&v.side===u.side&&v.uid!==u.uid);
-   if(allies.length&&b.round%3===0){allies[0].atk=Math.min(allies[0].atk+1,12);}
-  }
- }
+ resolveUnitSupport(b,sideFilter,fx);
  for(const row of b.board)for(const u of row)if(u&&u.stun>0&&(!sideFilter||u.side===sideFilter))u.stun--;
  checkOutcome(b);
 }
@@ -5168,6 +5171,7 @@ Object.assign(__exports,{SPELL_TARGET_MODES,frontEnemy,spellTargetOptions,spellT
 // Effets des compétences de classe : règles isolées du DOM et de la sauvegarde.
 // Les unités anciennes sans barrier/rallyUntil restent totalement compatibles.
 const {validLane}=__load("src/engine/board.js");
+const {grantSharedBarrier}=__load("src/engine/battle-defense.js");
 const own=(u,side)=>u&&u.hp>0&&u.side===side;
 function classSkillAllies(b,side,lane){return b.board[lane].filter(u=>own(u,side));}
 function classSkillEnemies(b,side,lane){
@@ -5197,7 +5201,7 @@ function blessingTarget(b,side,lane){
 function resolveClassSkill(b,side,card,lane,hit){
  const friends=classSkillAllies(b,side,lane),foes=classSkillEnemies(b,side,lane),ability=card.ability;
  if(ability==='spell_guard_wall'){
-  for(const u of friends)u.barrier=Math.min(4,(u.barrier||0)+2);
+  for(const u of friends)grantSharedBarrier(u,2,4);
  }else if(ability==='spell_guard_rally'){
   for(const u of friends)u.rallyUntil=Math.max(u.rallyUntil||0,b.round+1);
  }else if(ability==='spell_arc_freeze'){
@@ -5214,7 +5218,7 @@ function resolveClassSkill(b,side,card,lane,hit){
   for(const u of friends)u.hp=Math.min(u.maxhp,u.hp+3);
  }else if(ability==='spell_cleric_bless'){
   const target=blessingTarget(b,side,lane);
-  target.barrier=Math.min(6,(target.barrier||0)+4);
+  grantSharedBarrier(target,4,6);
  }
  return 0;
 }
@@ -5259,11 +5263,332 @@ function supportedBoard(board){
 Object.assign(__exports,{LANES,WIDTH,laneCount,lastCell,crownColumn,entryColumn,deploymentColumns,validDeploymentColumn,freeDeploymentColumn,validLane,missionLayout,trapColumns,supportedBoard});
 
 },
+"src/engine/battle-defense.js":function(__exports,__load){
+// Résolution commune des dégâts et défenses. Aucun DOM, profil ou moteur parallèle.
+const {CARDS,RIPOSTE_IDS}=__load("src/data.js");
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
+const {silenced}=__load("src/engine/battle-control.js");
+const {recordCombatEvent}=__load("src/engine/combat-events.js");
+const barrierKeys=['healBarrier','riposteBarrier'];
+function grantAbilityBarrier(u,key,parameters){
+ if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
+ const sources={...u.abilityBarriers};
+ const remaining=Math.min(sources[key]||0,u.barrier||0);
+ const added=Math.max(0,Math.min(parameters.amount,parameters.cap-remaining));
+ if(!added)return 0;
+ sources[key]=remaining+added;u.abilityBarriers=sources;
+ u.barrier=(u.barrier||0)+added;
+ return added;
+}
+
+function grantSharedBarrier(u,amount,cap){
+ if(!versionUnitAbilities(u)&&!u.abilityBarriers){u.barrier=Math.min(cap,(u.barrier||0)+amount);return;}
+ // Le plafond du sort porte sur la barrière totale ; ne jamais effacer un
+ // surplus déjà acquis via une autre source ni réattribuer ses points.
+ const total=u.barrier||0;u.barrier=Math.max(total,Math.min(cap,total+amount));
+}
+
+function absorbBarrier(u,damage){
+ const absorbed=Math.min(u.barrier||0,damage);
+ if((u.barrier||0)>0)u.barrier-=absorbed;
+ if(absorbed&&u.abilityBarriers){
+  let left=absorbed;const sources={...u.abilityBarriers};
+  // Les barrières de capacités sont consommées avant le reste du bouclier.
+  for(const key of barrierKeys){const used=Math.min(sources[key]||0,left);sources[key]=(sources[key]||0)-used;left-=used;}
+  u.abilityBarriers=sources;
+ }
+ return absorbed;
+}
+
+function hit(b,u,raw,bySide,ignoreArmor=false){
+ if(!u||u.hp<=0)return 0; // Une victime ne compte jamais deux fois.
+ const abilities=versionUnitAbilities(u);
+ const armor=abilities?.armor?.amount??u.armor??0;
+ let dmg=Math.max(1,raw-(ignoreArmor?0:armor));
+ const reduction=abilities?.firstHitReduction;
+ if(reduction&&!u.firstHitReductionUsed&&bySide!==u.side){
+  u.firstHitReductionUsed=true;dmg=Math.max(0,dmg-reduction.amount);
+ }
+ if(u.labGuard?.block&&!u.labGuard.used&&bySide!==u.side){u.labGuard.used=true;dmg=Math.max(0,dmg-u.labGuard.block);}
+ const absorbed=absorbBarrier(u,dmg);dmg-=absorbed;
+ const before=u.hp;u.hp=Math.max(0,u.hp-dmg);
+ // « Coup mortel » : les dégâts directs passent ici ; le poison garde sa résolution historique.
+ if(u.hp<=0&&abilities?.lastStand&&!u.lastStandUsed&&!silenced(b,{...u,hp:before})){
+  u.lastStandUsed=true;u.hp=Math.min(u.maxhp,abilities.lastStand.hp);
+ }
+ if(bySide!==u.side&&u.hp<=0)b.stats[bySide==='p'?'playerKills':'enemyKills']++;
+ if(Array.isArray(b.vfx)){
+  const lane=b.board.findIndex(row=>row.includes(u)),col=lane<0?-1:b.board[lane].indexOf(u);
+  recordCombatEvent(b,{type:'damage',side:u.side,lane,col,damage:Math.max(0,before-u.hp),absorbed,armor:ignoreArmor?0:Math.min(raw-1,armor)});
+ }
+ return dmg;
+}
+
+function resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,attackBonus=0,note=()=>{}){
+ const abilities=versionUnitAbilities(defender),riposte=abilities?.riposte;
+ const experimentalCounter=!!defender.labGuard?.counter&&!defender.labGuard.counterUsed;
+ const eligible=abilities?!!riposte:RIPOSTE_IDS.has(defender.id)||experimentalCounter;
+ const spent=riposte?.frequency==='invocation'?defender.riposteUsed:defender.lastRiposteRound===b.round;
+ if(!eligible||spent||silenced(b,defender)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
+    defender.side===attacker.side||Math.abs(defenderCol-attackerCol)!==1)return false;
+ if(riposte?.frequency==='invocation')defender.riposteUsed=true;
+ else defender.lastRiposteRound=b.round;
+ if(experimentalCounter)defender.labGuard.counterUsed=true;
+ recordCombatEvent(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
+ const raw=riposte?.damageMode==='effective-attack'?defender.atk+attackBonus:experimentalCounter?1:riposte?.amount??2;
+ const dealt=hit(b,attacker,raw,defender.side);
+ if(dealt>0)note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
+ if(abilities?.riposteBarrier)grantAbilityBarrier(defender,'riposteBarrier',abilities.riposteBarrier);
+ return true;
+}
+
+// Raccordé au soin multi-cible à l'étape 4 ; aucun gain pour un soin nul ou une autre cible.
+function grantHealBarrier(b,healer,target,healed){
+ const parameters=versionUnitAbilities(healer)?.healBarrier;
+ if(!parameters||healed<=0||healer.hp<=0||target?.side!==healer.side||silenced(b,healer))return 0;
+ return grantAbilityBarrier(target,'healBarrier',parameters);
+}
+
+Object.assign(__exports,{grantAbilityBarrier,grantSharedBarrier,hit,resolveRetaliation,grantHealBarrier});
+
+},
+"src/cards/definitions.js":function(__exports,__load){
+// Catalogue de versions en lecture seule. Aucun ajout à CARDS, aucune possession ni règle activée.
+const {CARDS}=__load("src/data.js");
+const {CARD_RARITIES,normalizeCardRarity,freezeCardData}=__load("src/cards/schema.js");
+const {nativeUnitAbilities,inheritUnitAbilities,FUTURE_GUARD_POLICY}=__load("src/cards/abilities.js");
+const {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE}=__load("src/cards/aube.js");
+const AUBE_UNIT_IDS=Object.freeze(Object.keys(AUBE_EVOLUTIONS));
+const definitions=new Map();
+const noVersions=Object.freeze([]);
+
+for(const card of Object.values(CARDS)){
+ if(card.type!=='unité')continue;
+ const nativeIndex=CARD_RARITIES.findIndex(rank=>rank.id===card.rarity);
+ if(nativeIndex<0)throw Error('Rareté native inconnue : '+card.id);
+ const versions=[];
+ let stats={attack:card.attack,hp:card.hp,delay:card.delay};
+ let geometry={steps:card.ability==='haste'?2:1,range:card.ability==='ranged'?2:1};
+ let abilities=nativeUnitAbilities(card),pendingDecisions=[];
+ for(const rank of CARD_RARITIES.slice(nativeIndex)){
+  const native=rank.id===card.rarity;
+  const patch=AUBE_EVOLUTIONS[card.id]?.[rank.id];
+  if(!native&&!patch)break;
+  stats={...stats,...patch?.stats};
+  geometry={...geometry,...patch?.geometry};
+  abilities=inheritUnitAbilities(abilities,patch?.abilities);
+  pendingDecisions=patch?.pendingDecisions||pendingDecisions;
+  const definition=freezeCardData({
+   id:card.id,versionId:`${card.id}:${rank.id}`,rarity:rank.id,nativeRarity:card.rarity,
+   stats:{...stats},geometry:{...geometry},abilities,
+   status:{design:'validated',combat:native?'implemented':'pending',engine:'implemented',obtaining:native?'existing':'undefined'},
+   pendingDecisions:[...pendingDecisions],source:native?null:AUBE_DESIGN_SOURCE
+  });
+  versions.push(definition);
+ }
+ definitions.set(card.id,Object.freeze(versions));
+}
+
+// Une chaîne historique désigne toujours le natif. Une référence future garde le même ID.
+// Une rareté explicite inconnue/inexistante échoue, sans repli silencieux sur le natif.
+function resolveUnitDefinition(reference,rarity){
+ const id=typeof reference==='string'?reference:reference?.id;
+ if(typeof id!=='string'||!definitions.has(id))return null;
+ const explicit=rarity!==undefined?rarity:typeof reference==='object'?reference?.rarity:undefined;
+ const rank=explicit===undefined?CARDS[id].rarity:normalizeCardRarity(explicit);
+ return definitions.get(id).find(version=>version.rarity===rank)||null;
+}
+
+function unitVersions(id){return definitions.get(id)||noVersions;}
+
+function unitVersionReference(id,rarity){
+ const definition=resolveUnitDefinition(id,rarity);
+ return definition?Object.freeze({id:definition.id,rarity:definition.rarity}):null;
+}
+
+function unitVersionPlayable(reference){
+ return resolveUnitDefinition(reference)?.status.combat==='implemented';
+}
+
+// Identité explicite des règles futures. Les anciens instantanés restent historiques.
+const AUBE_RULESET='aube-v1';
+const rulesDefinitions=new Map();
+for(const versions of definitions.values())for(const def of versions){
+ if(!AUBE_UNIT_IDS.includes(def.id))continue;
+ const changes={};
+ if(def.abilities.riposte&&def.id!=='militia')changes.riposte={damageMode:'effective-attack'};
+ if(def.abilities.guard)changes.guard={...FUTURE_GUARD_POLICY,scope:def.rarity===def.nativeRarity?'positioned':def.abilities.guard.scope,unitTargetPriority:false};
+ rulesDefinitions.set(def.versionId,freezeCardData({...def,cardRules:AUBE_RULESET,
+  abilities:inheritUnitAbilities(def.abilities,changes),source:AUBE_DESIGN_SOURCE}));
+}
+function resolveRulesDefinition(reference){
+ const def=resolveUnitDefinition(reference);return def?rulesDefinitions.get(def.versionId)||def:null;
+}
+function versionUnitAbilities(unit){
+ if(!unit||!Object.hasOwn(unit,'rarity'))return null;
+ const d=unit.cardRules===AUBE_RULESET?resolveRulesDefinition(unit):resolveUnitDefinition(unit);
+ return d?.source?d.abilities:null;
+}
+
+Object.assign(__exports,{AUBE_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable,AUBE_RULESET,resolveRulesDefinition,versionUnitAbilities});
+
+},
+"src/cards/schema.js":function(__exports,__load){
+// Identité des versions : indépendante des achats et compatible avec les rangs UI historiques.
+function freezeCardData(value){
+ if(value&&typeof value==='object'&&!Object.isFrozen(value)){
+  for(const child of Object.values(value))freezeCardData(child);
+  Object.freeze(value);
+ }
+ return value;
+}
+
+const CARD_RARITIES=freezeCardData([
+ {id:'commun',name:'Commun'},
+ {id:'rare',name:'Rare'},
+ {id:'épique',name:'Épique'},
+ {id:'légendaire',name:'Légendaire'},
+ {id:'divine',name:'Divin'},
+ {id:'éveillée',name:'Éveillé'}
+]);
+const aliases=Object.freeze({divin:'divine','éveillé':'éveillée'});
+function normalizeCardRarity(value){
+ if(typeof value!=='string')return null;
+ const lower=value.normalize('NFC').toLowerCase();
+ const id=Object.hasOwn(aliases,lower)?aliases[lower]:lower;
+ return CARD_RARITIES.some(rank=>rank.id===id)?id:null;
+}
+
+Object.assign(__exports,{freezeCardData,CARD_RARITIES,normalizeCardRarity});
+
+},
+"src/cards/abilities.js":function(__exports,__load){
+// Description structurée du socle natif. Le branchement des règles de combat suit aux étapes 3/4.
+const {FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
+// Politique future validée dans Notion ; réutilisable par chaque faction.
+const FUTURE_GUARD_POLICY=Object.freeze({
+ priority:'same-line-then-own-crown',tieBreak:'lane-uid',frequency:'while-alive',maxPerAttack:1
+});
+
+function nativeUnitAbilities(card){
+ const abilities={};
+ const primary={
+  armor:{amount:2,minimumDamage:1},
+  ranged:{},haste:{},
+  heal:{amount:2,targets:1,scope:'line',includeSelf:true,selection:'injury-ratio',timing:'after-attacks'},
+  inspire:{amount:1,targets:1,scope:'line',includeSelf:false,period:3,cap:12,timing:'after-attacks'},
+  ward:{amount:3,cap:20,target:'own-crown',timing:'spawn'},
+  pierce:{target:'primary',ignoreArmor:true},
+  poison:{amount:1,resolutions:2,target:'primary'},
+  splash:{amount:2,target:'other-enemy-on-line'},
+  lifesteal:{amount:2,target:'own-hero',trigger:'attack'},
+  silence:{period:3,resolutions:1,target:'enemy-on-line'},
+  portal:{period:3,target:'free-same-column'},
+  trapper:{period:3,damage:1,stun:1,resolutions:3}
+ };
+ if(card.ability&&Object.hasOwn(primary,card.ability))abilities[card.ability]=primary[card.ability];
+ if(FLYING_IDS.has(card.id))abilities.flying={over:'ally',landing:'free'};
+ if(GUARD_IDS.has(card.id))abilities.guard={scope:'legacy-line',target:'own-crown',unitTargetPriority:true};
+ if(CHARGE_IDS.has(card.id))abilities.charge={amount:2,condition:'moved-before-attack'};
+ if(RIPOSTE_IDS.has(card.id))abilities.riposte={damageMode:'fixed',amount:2,frequency:'round',trigger:'melee-attack'};
+ return abilities;
+}
+
+// Un seul enregistrement par pouvoir : une amélioration remplace ses paramètres, jamais un second déclencheur.
+function inheritUnitAbilities(previous,changes={}){
+ const result=structuredClone(previous);
+ for(const [id,parameters] of Object.entries(changes)){
+  result[id]={...result[id],...parameters};
+ }
+ return result;
+}
+
+Object.assign(__exports,{FUTURE_GUARD_POLICY,nativeUnitAbilities,inheritUnitAbilities});
+
+},
+"src/cards/aube.js":function(__exports,__load){
+// Transcription du tableau maître, édition observée le 26/10/2026 à 08:37:43.944Z.
+// Les chiffres remplacent les valeurs de base ; ce ne sont jamais des bonus à additionner.
+const {freezeCardData}=__load("src/cards/schema.js");
+const {FUTURE_GUARD_POLICY}=__load("src/cards/abilities.js");
+const AUBE_DESIGN_SOURCE=freezeCardData({
+ url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
+ editedAt:'2026-10-26T08:37:43.944Z'
+});
+
+const AUBE_EVOLUTIONS=freezeCardData({
+ militia:{
+  rare:{abilities:{firstHitReduction:{amount:1,frequency:'invocation'}}},
+  'épique':{abilities:{firstHitReduction:{amount:2}}},
+  'légendaire':{stats:{hp:8}},
+  divine:{abilities:{firstHitReduction:{amount:3},riposte:{damageMode:'effective-attack',frequency:'invocation',trigger:'melee-attack'}}},
+  'éveillée':{abilities:{lastStand:{hp:5,frequency:'invocation'}}}
+ },
+ shield:{
+  rare:{stats:{hp:11},abilities:{guard:{...FUTURE_GUARD_POLICY,scope:'positioned',unitTargetPriority:false},riposte:{damageMode:'effective-attack'}}},
+  'épique':{stats:{attack:2}},
+  'légendaire':{stats:{hp:13}},
+  divine:{abilities:{guard:{scope:'line',unitTargetPriority:false}}},
+  'éveillée':{abilities:{guard:{scope:'all-lines'}}}
+ },
+ archer:{
+  rare:{stats:{hp:4}},
+  'épique':{stats:{attack:3}},
+  'légendaire':{geometry:{range:3}},
+  divine:{abilities:{pierce:{target:'primary',ignoreArmor:true}}},
+  'éveillée':{abilities:{rearShot:{amount:2,target:'enemy-immediately-behind-primary',ignoreArmor:false}}}
+ },
+ cleric:{
+  'épique':{stats:{hp:6}},
+  'légendaire':{abilities:{heal:{amount:3}}},
+  divine:{abilities:{heal:{targets:2}}},
+  'éveillée':{abilities:{heal:{scope:'all-lines'}}}
+ },
+ paladin:{
+  'légendaire':{stats:{hp:11},abilities:{riposte:{damageMode:'effective-attack'}}},
+  divine:{abilities:{armor:{amount:3}}},
+  'éveillée':{stats:{hp:13},abilities:{riposteBarrier:{amount:2,cap:2,frequency:'round',target:'self',trigger:'authorized-riposte'}}}
+ },
+ banner:{
+  'épique':{stats:{hp:8}},
+  'légendaire':{abilities:{inspire:{targets:2}}},
+  divine:{abilities:{inspire:{amount:2}}},
+  'éveillée':{abilities:{inspire:{scope:'all-lines'}}}
+ },
+ scoutcaptain:{
+  'épique':{stats:{hp:8}},
+  'légendaire':{stats:{attack:4}},
+  divine:{abilities:{inspire:{period:2}}},
+  'éveillée':{abilities:{arrivalInspire:{amount:1,targets:1,scope:'line',includeSelf:false,cap:12,timing:'spawn'}}}
+ },
+ sunpriest:{
+  'épique':{stats:{hp:9}},
+  'légendaire':{abilities:{heal:{amount:3}}},
+  divine:{abilities:{healBarrier:{amount:1,cap:2,target:'healed-unit',trigger:'effective-heal'}}},
+  'éveillée':{abilities:{healBarrier:{amount:2}}}
+ },
+ lancer:{
+  rare:{stats:{hp:6}},
+  'épique':{stats:{attack:4}},
+  'légendaire':{stats:{hp:8}},
+  divine:{abilities:{charge:{amount:3}}},
+  'éveillée':{geometry:{steps:2},abilities:{haste:{}}}
+ },
+ dawnbastion:{
+  divine:{abilities:{riposte:{damageMode:'effective-attack'},intervention:{amount:4,range:2,targets:1,scope:'line',direction:'forward',timing:'spawn',ignoreArmor:false}}},
+  'éveillée':{stats:{attack:7}}
+ }
+});
+
+Object.assign(__exports,{AUBE_DESIGN_SOURCE,AUBE_EVOLUTIONS});
+
+},
 "src/engine/battle-control.js":function(__exports,__load){
 // Contrôle du plateau : règles pures, utilisées par le moteur, l'IA et les aperçus.
 // Aucun accès aux mains, pioches, profils, DOM ou stockage.
 const {CARDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
+const {unitAttackRange}=__load("src/engine/unit-rules.js");
 const {laneCount,lastCell,crownColumn,entryColumn,validLane,trapColumns}=__load("src/engine/board.js");
 const alive=u=>!!u&&u.hp>0;
 const direction=side=>side==='p'?1:-1;
@@ -5273,7 +5598,7 @@ const activeAbility=(b,u)=>silenced(b,u)?'':u.ability;
 function silenceValue(u){
  const value={heal:6,inspire:5,splash:6,poison:5,lifesteal:5,pierce:3,haste:3,silence:6,portal:4,trapper:4}[u?.ability]||0;
  const future=versionUnitAbilities(u);
- return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0);
+ return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0);
 }
 function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 function silenceTarget(b,side,lane){
@@ -5308,12 +5633,12 @@ function teleportPlan(b,side,toLane){
 // Avantage public de position ; pas d'anticipation de cartes privées.
 function positionValue(b,side,u,lane,col){
  const foes=b.board[lane].map((v,c)=>({u:v,col:c})).filter(v=>alive(v.u)&&v.u.side!==side);
- const range=u.ranged?2:1;
+ const range=unitAttackRange(u);
  let value=0;
  for(const foe of foes){
   const ahead=(foe.col-col)*direction(side);
   if(ahead>0&&ahead<=range)value+=u.atk>=foe.u.hp?5:1;
-  if(Math.abs(foe.col-col)<= (foe.u.ranged?2:1))value-=foe.u.atk>=u.hp?9:3;
+  if(Math.abs(foe.col-col)<= unitAttackRange(foe.u))value-=foe.u.atk>=u.hp?9:3;
   const homeDistance=side==='p'?foe.col:crownColumn(b,'e')-foe.col;
   if(homeDistance<=2&&ahead>0)value+=6;
  }
@@ -5413,222 +5738,61 @@ function prepareControlUnits(b,hooks,sideFilter=null){
 Object.assign(__exports,{CONTROL_IDS,silenced,activeAbility,silenceValue,canSilence,silenceTarget,applySilence,teleportDestinationError,teleportPlan,teleportGain,teleportUnit,trapPlan,placeTrap,triggerTrap,expireControl,controlTargetError,resolveControlSpell,prepareControlUnits});
 
 },
-"src/cards/definitions.js":function(__exports,__load){
-// Catalogue de versions en lecture seule. Aucun ajout à CARDS, aucune possession ni règle activée.
-const {CARDS}=__load("src/data.js");
-const {CARD_RARITIES,normalizeCardRarity,freezeCardData}=__load("src/cards/schema.js");
-const {nativeUnitAbilities,inheritUnitAbilities}=__load("src/cards/abilities.js");
-const {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE}=__load("src/cards/aube.js");
-const AUBE_UNIT_IDS=Object.freeze(Object.keys(AUBE_EVOLUTIONS));
-const definitions=new Map();
-const noVersions=Object.freeze([]);
-
-for(const card of Object.values(CARDS)){
- if(card.type!=='unité')continue;
- const nativeIndex=CARD_RARITIES.findIndex(rank=>rank.id===card.rarity);
- if(nativeIndex<0)throw Error('Rareté native inconnue : '+card.id);
- const versions=[];
- let stats={attack:card.attack,hp:card.hp,delay:card.delay};
- let geometry={steps:card.ability==='haste'?2:1,range:card.ability==='ranged'?2:1};
- let abilities=nativeUnitAbilities(card),pendingDecisions=[];
- for(const rank of CARD_RARITIES.slice(nativeIndex)){
-  const native=rank.id===card.rarity;
-  const patch=AUBE_EVOLUTIONS[card.id]?.[rank.id];
-  if(!native&&!patch)break;
-  stats={...stats,...patch?.stats};
-  geometry={...geometry,...patch?.geometry};
-  abilities=inheritUnitAbilities(abilities,patch?.abilities);
-  pendingDecisions=patch?.pendingDecisions||pendingDecisions;
-  const definition=freezeCardData({
-   id:card.id,versionId:`${card.id}:${rank.id}`,rarity:rank.id,nativeRarity:card.rarity,
-   stats:{...stats},geometry:{...geometry},abilities,
-   status:{design:'validated',combat:native?'implemented':'pending',obtaining:native?'existing':'undefined'},
-   pendingDecisions:[...pendingDecisions],source:native?null:AUBE_DESIGN_SOURCE
-  });
-  versions.push(definition);
- }
- definitions.set(card.id,Object.freeze(versions));
+"src/engine/unit-rules.js":function(__exports,__load){
+// Lecture commune des paramètres de combat, sans moteur, DOM ou accès au profil.
+const {CARDS,CHARGE_IDS,FLYING_IDS}=__load("src/data.js");
+const {resolveUnitDefinition,resolveRulesDefinition,versionUnitAbilities,AUBE_RULESET}=__load("src/cards/definitions.js");
+function battleUnitReference(context,reference,side='p'){
+ const entry=typeof reference==='string'?{id:reference}:reference;
+ if(!entry||!CARDS[entry.id])return null;
+ if(Object.hasOwn(entry,'rarity'))return {id:entry.id,rarity:entry.rarity};
+ const rarity=context.mode==='developer'?context.labStats?.rarities?.[side]?.[entry.id]:undefined;
+ return rarity===undefined?{id:entry.id}:{id:entry.id,rarity};
 }
-
-// Une chaîne historique désigne toujours le natif. Une référence future garde le même ID.
-// Une rareté explicite inconnue/inexistante échoue, sans repli silencieux sur le natif.
-function resolveUnitDefinition(reference,rarity){
- const id=typeof reference==='string'?reference:reference?.id;
- if(typeof id!=='string'||!definitions.has(id))return null;
- const explicit=rarity!==undefined?rarity:typeof reference==='object'?reference?.rarity:undefined;
- const rank=explicit===undefined?CARDS[id].rarity:normalizeCardRarity(explicit);
- return definitions.get(id).find(version=>version.rarity===rank)||null;
+function battleUnitDefinition(context,reference,side='p'){
+ const ref=battleUnitReference(context,reference,side);
+ return context.cardRules===AUBE_RULESET?resolveRulesDefinition(ref):resolveUnitDefinition(ref);
 }
-
-function unitVersions(id){return definitions.get(id)||noVersions;}
-
-function unitVersionReference(id,rarity){
- const definition=resolveUnitDefinition(id,rarity);
- return definition?Object.freeze({id:definition.id,rarity:definition.rarity}):null;
+function unitCanPlay(context,reference,side='p'){
+ const d=battleUnitDefinition(context,reference,side);if(!d)return false;
+ if(d.rarity===d.nativeRarity)return true;
+ return context.mode==='developer'&&context.cardRules===AUBE_RULESET&&d.status.engine==='implemented';
 }
-
-function unitVersionPlayable(reference){
- return resolveUnitDefinition(reference)?.status.combat==='implemented';
+function unitAttackRange(u){
+ const d=versionUnitAbilities(u);
+ return d?resolveRulesDefinition(u).geometry.range:u.ranged?2:1;
 }
-
-// Lecture des seuls instantanés futurs explicites ; aucun changement des références natives.
-function versionUnitAbilities(unit){
- if(!unit||!Object.hasOwn(unit,'rarity'))return null;
- const definition=resolveUnitDefinition(unit);
- return definition?.source?definition.abilities:null;
+function unitMovementSteps(u,suppressed=false){
+ const abilities=versionUnitAbilities(u);
+ return abilities?(abilities.haste&&!suppressed?resolveRulesDefinition(u).geometry.steps:1):!suppressed&&u.ability==='haste'?2:1;
 }
+function unitChargeAmount(u){return versionUnitAbilities(u)?.charge?.amount??(CHARGE_IDS.has(u.id)?2:0);}
+function unitHasPierce(u,suppressed=false){return !suppressed&&(versionUnitAbilities(u)?!!versionUnitAbilities(u).pierce?.ignoreArmor:u.ability==='pierce');}
+function unitFlying(u){return !!u&&(versionUnitAbilities(u)?!!versionUnitAbilities(u).flying:FLYING_IDS.has(u.id));}
 
-Object.assign(__exports,{AUBE_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable,versionUnitAbilities});
+Object.assign(__exports,{battleUnitReference,battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying});
 
 },
-"src/cards/schema.js":function(__exports,__load){
-// Identité des versions : indépendante des achats et compatible avec les rangs UI historiques.
-function freezeCardData(value){
- if(value&&typeof value==='object'&&!Object.isFrozen(value)){
-  for(const child of Object.values(value))freezeCardData(child);
-  Object.freeze(value);
- }
- return value;
-}
-
-const CARD_RARITIES=freezeCardData([
- {id:'commun',name:'Commun'},
- {id:'rare',name:'Rare'},
- {id:'épique',name:'Épique'},
- {id:'légendaire',name:'Légendaire'},
- {id:'divine',name:'Divin'},
- {id:'éveillée',name:'Éveillé'}
-]);
-const aliases=Object.freeze({divin:'divine','éveillé':'éveillée'});
-function normalizeCardRarity(value){
- if(typeof value!=='string')return null;
- const lower=value.normalize('NFC').toLowerCase();
- const id=Object.hasOwn(aliases,lower)?aliases[lower]:lower;
- return CARD_RARITIES.some(rank=>rank.id===id)?id:null;
-}
-
-Object.assign(__exports,{freezeCardData,CARD_RARITIES,normalizeCardRarity});
-
-},
-"src/cards/abilities.js":function(__exports,__load){
-// Description structurée du socle natif. Le branchement des règles de combat suit aux étapes 3/4.
-const {FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
-// Politique future validée dans Notion ; réutilisable par chaque faction.
-const FUTURE_GUARD_POLICY=Object.freeze({
- priority:'same-line-then-own-crown',tieBreak:'lane-uid',frequency:'while-alive',maxPerAttack:1
-});
-
-function nativeUnitAbilities(card){
- const abilities={};
- const primary={
-  armor:{amount:2,minimumDamage:1},
-  ranged:{},haste:{},
-  heal:{amount:2,targets:1,scope:'line',includeSelf:true,selection:'injury-ratio',timing:'after-attacks'},
-  inspire:{amount:1,targets:1,scope:'line',includeSelf:false,period:3,cap:12,timing:'after-attacks'},
-  ward:{amount:3,cap:20,target:'own-crown',timing:'spawn'},
-  pierce:{target:'primary',ignoreArmor:true},
-  poison:{amount:1,resolutions:2,target:'primary'},
-  splash:{amount:2,target:'other-enemy-on-line'},
-  lifesteal:{amount:2,target:'own-hero',trigger:'attack'},
-  silence:{period:3,resolutions:1,target:'enemy-on-line'},
-  portal:{period:3,target:'free-same-column'},
-  trapper:{period:3,damage:1,stun:1,resolutions:3}
+"src/engine/combat-events.js":function(__exports,__load){
+// Instantanés publics de présentation. Aucun calcul de règle, DOM ou stockage.
+function captureCombatFrame(b) {
+ return {
+  board:b.board.map(row=>row.map(u=>u?{...u}:null)),
+  heroes:Object.fromEntries(['p','e'].map(side=>[side,{hp:b.heroes[side].hp,shield:b.heroes[side].shield}])),
+  traps:(b.traps||[]).map(t=>({...t}))
  };
- if(card.ability&&Object.hasOwn(primary,card.ability))abilities[card.ability]=primary[card.ability];
- if(FLYING_IDS.has(card.id))abilities.flying={over:'ally',landing:'free'};
- if(GUARD_IDS.has(card.id))abilities.guard={scope:'legacy-line',target:'own-crown',unitTargetPriority:true};
- if(CHARGE_IDS.has(card.id))abilities.charge={amount:2,condition:'moved-before-attack'};
- if(RIPOSTE_IDS.has(card.id))abilities.riposte={damageMode:'fixed',amount:2,frequency:'round',trigger:'melee-attack'};
- return abilities;
+}
+function recordCombatEvent(b,event) {
+ if(!Array.isArray(b.vfx))return;
+ const frame=captureCombatFrame(b);
+ // Le moteur retire la carte juste après l'émission ; le lecteur la retire à la fin de l'effet.
+ if(event.type==='death')frame.board[event.lane][event.col]=null;
+ // Métadonnée locale non énumérable : préserver le contrat des événements historiques.
+ const recorded={...event};Object.defineProperty(recorded,'frame',{value:frame});
+ b.vfx.push(recorded);
 }
 
-// Un seul enregistrement par pouvoir : une amélioration remplace ses paramètres, jamais un second déclencheur.
-function inheritUnitAbilities(previous,changes={}){
- const result=structuredClone(previous);
- for(const [id,parameters] of Object.entries(changes)){
-  result[id]={...result[id],...parameters};
- }
- return result;
-}
-
-Object.assign(__exports,{FUTURE_GUARD_POLICY,nativeUnitAbilities,inheritUnitAbilities});
-
-},
-"src/cards/aube.js":function(__exports,__load){
-// Transcription du tableau maître, édition observée le 26/10/2026 à 08:18:43.609Z.
-// Les chiffres remplacent les valeurs de base ; ce ne sont jamais des bonus à additionner.
-const {freezeCardData}=__load("src/cards/schema.js");
-const {FUTURE_GUARD_POLICY}=__load("src/cards/abilities.js");
-const AUBE_DESIGN_SOURCE=freezeCardData({
- url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
- editedAt:'2026-10-26T08:18:43.609Z'
-});
-
-const AUBE_EVOLUTIONS=freezeCardData({
- militia:{
-  rare:{abilities:{firstHitReduction:{amount:1,frequency:'invocation'}}},
-  'épique':{abilities:{firstHitReduction:{amount:2}}},
-  'légendaire':{stats:{hp:8}},
-  divine:{abilities:{firstHitReduction:{amount:3},riposte:{damageMode:'effective-attack',frequency:'invocation',trigger:'melee-attack'}}},
-  'éveillée':{abilities:{lastStand:{hp:5,frequency:'invocation'}}}
- },
- shield:{
-  rare:{stats:{hp:11},abilities:{guard:{...FUTURE_GUARD_POLICY,scope:'positioned',unitTargetPriority:false},riposte:{damageMode:'effective-attack'}}},
-  'épique':{stats:{attack:2}},
-  'légendaire':{stats:{hp:13}},
-  divine:{abilities:{guard:{scope:'line',unitTargetPriority:false}}},
-  'éveillée':{abilities:{guard:{scope:'all-lines'}}}
- },
- archer:{
-  rare:{stats:{hp:4}},
-  'épique':{stats:{attack:3}},
-  'légendaire':{geometry:{range:3}},
-  divine:{abilities:{pierce:{target:'primary',ignoreArmor:true}}},
-  'éveillée':{abilities:{rearShot:{amount:2,target:'enemy-immediately-behind-primary',ignoreArmor:false}}}
- },
- cleric:{
-  'épique':{stats:{hp:6}},
-  'légendaire':{abilities:{heal:{amount:3}}},
-  divine:{abilities:{heal:{targets:2}}},
-  'éveillée':{abilities:{heal:{scope:'all-lines'}}}
- },
- paladin:{
-  'légendaire':{stats:{hp:11},abilities:{riposte:{damageMode:'effective-attack'}}},
-  divine:{abilities:{armor:{amount:3}}},
-  'éveillée':{stats:{hp:13},abilities:{riposteBarrier:{amount:2,cap:2,frequency:'round',target:'self',trigger:'authorized-riposte'}}}
- },
- banner:{
-  'épique':{stats:{hp:8}},
-  'légendaire':{abilities:{inspire:{targets:2}}},
-  divine:{abilities:{inspire:{amount:2}}},
-  'éveillée':{abilities:{inspire:{scope:'all-lines'}}}
- },
- scoutcaptain:{
-  'épique':{stats:{hp:8}},
-  'légendaire':{stats:{attack:4}},
-  divine:{abilities:{inspire:{period:2}}},
-  'éveillée':{abilities:{arrivalInspire:{amount:1,targets:1,scope:'line',includeSelf:false,cap:12,timing:'spawn'}}}
- },
- sunpriest:{
-  'épique':{stats:{hp:9}},
-  'légendaire':{abilities:{heal:{amount:3}}},
-  divine:{abilities:{healBarrier:{amount:1,cap:2,target:'healed-unit',trigger:'effective-heal'}}},
-  'éveillée':{abilities:{healBarrier:{amount:2}}}
- },
- lancer:{
-  rare:{stats:{hp:6}},
-  'épique':{stats:{attack:4}},
-  'légendaire':{stats:{hp:8}},
-  divine:{abilities:{charge:{amount:3}}},
-  'éveillée':{geometry:{steps:2},abilities:{haste:{}}}
- },
- dawnbastion:{
-  divine:{abilities:{riposte:{damageMode:'effective-attack'},intervention:{amount:4,range:2,targets:1,scope:'line',direction:'forward',timing:'spawn',ignoreArmor:false}}},
-  'éveillée':{stats:{attack:7}}
- }
-});
-
-Object.assign(__exports,{AUBE_DESIGN_SOURCE,AUBE_EVOLUTIONS});
+Object.assign(__exports,{captureCombatFrame,recordCombatEvent});
 
 },
 "src/engine/tempo.js":function(__exports,__load){
@@ -5675,110 +5839,6 @@ function resolveTempoSpell(b,side,card,note){
 Object.assign(__exports,{TEMPO_IDS,TEMPO_MAX_WAIT,accelerationTarget,obstructionTarget,tempoTargetError,resolveTempoSpell});
 
 },
-"src/engine/battle-defense.js":function(__exports,__load){
-// Résolution commune des dégâts et défenses. Aucun DOM, profil ou moteur parallèle.
-const {CARDS,RIPOSTE_IDS}=__load("src/data.js");
-const {versionUnitAbilities}=__load("src/cards/definitions.js");
-const {silenced}=__load("src/engine/battle-control.js");
-const {recordCombatEvent}=__load("src/engine/combat-events.js");
-const barrierKeys=['healBarrier','riposteBarrier'];
-function grantAbilityBarrier(u,key,parameters){
- if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
- const sources={...u.abilityBarriers};
- const remaining=Math.min(sources[key]||0,u.barrier||0);
- const added=Math.max(0,Math.min(parameters.amount,parameters.cap-remaining));
- if(!added)return 0;
- sources[key]=remaining+added;u.abilityBarriers=sources;
- u.barrier=(u.barrier||0)+added;
- return added;
-}
-
-function absorbBarrier(u,damage){
- const absorbed=Math.min(u.barrier||0,damage);
- if((u.barrier||0)>0)u.barrier-=absorbed;
- if(absorbed&&u.abilityBarriers){
-  let left=absorbed;const sources={...u.abilityBarriers};
-  // Les barrières de capacités sont consommées avant le reste du bouclier.
-  for(const key of barrierKeys){const used=Math.min(sources[key]||0,left);sources[key]=(sources[key]||0)-used;left-=used;}
-  u.abilityBarriers=sources;
- }
- return absorbed;
-}
-
-function hit(b,u,raw,bySide,ignoreArmor=false){
- if(!u||u.hp<=0)return 0; // Une victime ne compte jamais deux fois.
- const abilities=versionUnitAbilities(u);
- const armor=abilities?.armor?.amount??u.armor??0;
- let dmg=Math.max(1,raw-(ignoreArmor?0:armor));
- const reduction=abilities?.firstHitReduction;
- if(reduction&&!u.firstHitReductionUsed&&bySide!==u.side){
-  u.firstHitReductionUsed=true;dmg=Math.max(0,dmg-reduction.amount);
- }
- if(u.labGuard?.block&&!u.labGuard.used&&bySide!==u.side){u.labGuard.used=true;dmg=Math.max(0,dmg-u.labGuard.block);}
- const absorbed=absorbBarrier(u,dmg);dmg-=absorbed;
- const before=u.hp;u.hp=Math.max(0,u.hp-dmg);
- // « Coup mortel » : les dégâts directs passent ici ; le poison garde sa résolution historique.
- if(u.hp<=0&&abilities?.lastStand&&!u.lastStandUsed&&!silenced(b,{...u,hp:before})){
-  u.lastStandUsed=true;u.hp=Math.min(u.maxhp,abilities.lastStand.hp);
- }
- if(bySide!==u.side&&u.hp<=0)b.stats[bySide==='p'?'playerKills':'enemyKills']++;
- if(Array.isArray(b.vfx)){
-  const lane=b.board.findIndex(row=>row.includes(u)),col=lane<0?-1:b.board[lane].indexOf(u);
-  recordCombatEvent(b,{type:'damage',side:u.side,lane,col,damage:Math.max(0,before-u.hp),absorbed,armor:ignoreArmor?0:Math.min(raw-1,armor)});
- }
- return dmg;
-}
-
-function resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,attackBonus=0,note=()=>{}){
- const abilities=versionUnitAbilities(defender),riposte=abilities?.riposte;
- const experimentalCounter=!!defender.labGuard?.counter&&!defender.labGuard.counterUsed;
- const eligible=abilities?!!riposte:RIPOSTE_IDS.has(defender.id)||experimentalCounter;
- const spent=riposte?.frequency==='invocation'?defender.riposteUsed:defender.lastRiposteRound===b.round;
- if(!eligible||spent||silenced(b,defender)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
-    defender.side===attacker.side||Math.abs(defenderCol-attackerCol)!==1)return false;
- if(riposte?.frequency==='invocation')defender.riposteUsed=true;
- else defender.lastRiposteRound=b.round;
- if(experimentalCounter)defender.labGuard.counterUsed=true;
- recordCombatEvent(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
- const raw=riposte?.damageMode==='effective-attack'?defender.atk+attackBonus:experimentalCounter?1:riposte?.amount??2;
- const dealt=hit(b,attacker,raw,defender.side);
- if(dealt>0)note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
- if(abilities?.riposteBarrier)grantAbilityBarrier(defender,'riposteBarrier',abilities.riposteBarrier);
- return true;
-}
-
-// Raccordé au soin multi-cible à l'étape 4 ; aucun gain pour un soin nul ou une autre cible.
-function grantHealBarrier(b,healer,target,healed){
- const parameters=versionUnitAbilities(healer)?.healBarrier;
- if(!parameters||healed<=0||healer.hp<=0||target?.side!==healer.side||silenced(b,healer))return 0;
- return grantAbilityBarrier(target,'healBarrier',parameters);
-}
-
-Object.assign(__exports,{grantAbilityBarrier,hit,resolveRetaliation,grantHealBarrier});
-
-},
-"src/engine/combat-events.js":function(__exports,__load){
-// Instantanés publics de présentation. Aucun calcul de règle, DOM ou stockage.
-function captureCombatFrame(b) {
- return {
-  board:b.board.map(row=>row.map(u=>u?{...u}:null)),
-  heroes:Object.fromEntries(['p','e'].map(side=>[side,{hp:b.heroes[side].hp,shield:b.heroes[side].shield}])),
-  traps:(b.traps||[]).map(t=>({...t}))
- };
-}
-function recordCombatEvent(b,event) {
- if(!Array.isArray(b.vfx))return;
- const frame=captureCombatFrame(b);
- // Le moteur retire la carte juste après l'émission ; le lecteur la retire à la fin de l'effet.
- if(event.type==='death')frame.board[event.lane][event.col]=null;
- // Métadonnée locale non énumérable : préserver le contrat des événements historiques.
- const recorded={...event};Object.defineProperty(recorded,'frame',{value:frame});
- b.vfx.push(recorded);
-}
-
-Object.assign(__exports,{captureCombatFrame,recordCombatEvent});
-
-},
 "src/engine/guard-candidates.js":function(__exports,__load){
 // Protection des couronnes : éligibilité et priorité validées, sans mutation.
 const {laneCount,lastCell,validLane,crownColumn}=__load("src/engine/board.js");
@@ -5821,11 +5881,88 @@ function findCrownGuardian(b,attackLane,heroSide,attackerCol){
 Object.assign(__exports,{crownGuardCandidates,findCrownGuardian});
 
 },
+"src/engine/unit-support.js":function(__exports,__load){
+// Soutiens et arrivée du moteur commun ; les capacités viennent du registre.
+const {CARDS}=__load("src/data.js");
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
+const {silenced,activeAbility}=__load("src/engine/battle-control.js");
+const {lastCell}=__load("src/engine/board.js");
+const {grantHealBarrier}=__load("src/engine/battle-defense.js");
+function allies(b,u,lane,parameters){
+ const found=[];
+ for(let l=0;l<b.board.length;l++){
+  if(parameters.scope!=='all-lines'&&l!==lane)continue;
+  for(let col=1;col<=lastCell(b);col++){
+   const other=b.board[l][col];
+   if(other&&other.hp>0&&other.side===u.side&&(parameters.includeSelf||other.uid!==u.uid))found.push({u:other,lane:l,col});
+  }
+ }
+ return found;
+}
+function inspireTargets(b,u,lane,p){return allies(b,u,lane,p).slice(0,p.targets);}
+function strengthen(target,p){const before=target.atk;target.atk=Math.max(before,Math.min(p.cap,before+p.amount));return target.atk-before;}
+
+function resolveUnitArrival(b,u,lane,col,hooks){
+ const a=versionUnitAbilities(u);
+ if(!a||u.arrivalResolved||!(a.ward||a.arrivalInspire||a.intervention))return;
+ u.arrivalResolved=true;
+ if(a.ward)b.heroes[u.side].shield=Math.max(b.heroes[u.side].shield,Math.min(a.ward.cap,b.heroes[u.side].shield+a.ward.amount));
+ if(a.arrivalInspire)for(const target of inspireTargets(b,u,lane,a.arrivalInspire)){
+  if(strengthen(target.u,a.arrivalInspire))hooks.emit(b,{type:'state',side:u.side,lane:target.lane,col:target.col});
+ }
+ if(a.intervention){
+  const p=a.intervention,dir=u.side==='p'?1:-1;
+  for(let d=1;d<=p.range;d++){
+   const targetCol=col+dir*d;if(targetCol<1||targetCol>lastCell(b))break;
+   const target=b.board[lane][targetCol];if(!target||target.hp<=0||target.side===u.side)continue;
+   hooks.emit(b,{type:'attack',side:u.side,lane,from:col,to:targetCol,ranged:true,magic:true,arrival:true,damage:p.amount,icon:CARDS[u.id]?.icon});
+   hooks.hit(b,target,p.amount,u.side,p.ignoreArmor);break;
+  }
+ }
+}
+
+function resolveUnitSupport(b,sideFilter,emit){
+ for(let lane=0;lane<b.board.length;lane++)for(const u of b.board[lane]){
+  if(!u||u.hp<=0||(sideFilter&&u.side!==sideFilter))continue;
+  const a=versionUnitAbilities(u);
+  if(!a){
+   // Repli historique inchangé : une cible, ordre stable du tableau.
+   if(activeAbility(b,u)==='heal'){
+    const targets=b.board[lane].filter(v=>v&&v.side===u.side&&v.hp<v.maxhp);
+    if(targets.length){targets.sort((x,z)=>x.hp/x.maxhp-z.hp/z.maxhp);targets[0].hp=Math.min(targets[0].maxhp,targets[0].hp+2);emit(b,{type:'heal',lane,col:b.board[lane].indexOf(targets[0])});}
+   }
+   if(activeAbility(b,u)==='inspire'&&b.round%3===0){
+    const targets=b.board[lane].filter(v=>v&&v.side===u.side&&v.uid!==u.uid);
+    if(targets.length)targets[0].atk=Math.min(targets[0].atk+1,12);
+   }
+   continue;
+  }
+  if(silenced(b,u))continue;
+  if(a.heal&&u.lastHealRound!==b.round){
+   const p=a.heal,targets=allies(b,u,lane,p).filter(t=>t.u.hp<t.u.maxhp)
+    .sort((x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid).slice(0,p.targets);
+   if(targets.length)u.lastHealRound=b.round;
+   for(const t of targets){const before=t.u.hp;t.u.hp=Math.min(t.u.maxhp,before+p.amount);grantHealBarrier(b,u,t.u,t.u.hp-before);emit(b,{type:'heal',side:u.side,lane:t.lane,col:t.col});}
+  }
+  if(a.inspire&&b.round%a.inspire.period===0&&u.lastInspireRound!==b.round){
+   const targets=inspireTargets(b,u,lane,a.inspire);if(targets.length)u.lastInspireRound=b.round;
+   for(const t of targets)if(strengthen(t.u,a.inspire))emit(b,{type:'state',side:u.side,lane:t.lane,col:t.col});
+  }
+ }
+}
+
+Object.assign(__exports,{resolveUnitArrival,resolveUnitSupport});
+
+},
 "src/ai.js":function(__exports,__load){
 // IA tactique V1.7 — heuristique déterministe, sans accès aux cartes cachées du joueur.
 // Évalue l'état public du plateau et les cartes réellement présentes dans sa propre main.
-const {CARDS,GUARD_IDS,CHARGE_IDS}=__load("src/data.js");
-const {silenceTarget,silenceValue,teleportPlan,teleportGain,trapPlan,activeAbility}=__load("src/engine/battle-control.js");
+const {CARDS,GUARD_IDS}=__load("src/data.js");
+const {AUBE_RULESET}=__load("src/cards/definitions.js");
+const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount}=__load("src/engine/unit-rules.js");
+const {unitStats}=__load("src/engine/unit-stats.js");
+const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
+const {silenceTarget,silenceValue,teleportPlan,teleportGain,trapPlan,activeAbility,silenced}=__load("src/engine/battle-control.js");
 const {accelerationTarget}=__load("src/engine/tempo.js");
 const AI_STYLES = Object.freeze({
  equilibre:{name:'Équilibré',desc:'Combine attaque, défense et opportunités de cartes.'},
@@ -5852,7 +5989,7 @@ function inspectEnemyLane(b,lane){
  const urgency=threats.reduce((sum,{u,col})=>{
   const steps=Math.max(1,crownColumn(b,'e')-col);
   return sum+(steps<=2?7:steps===3?3:0)+Math.max(1,u.atk)*(steps===1?3:steps===2?1.65:steps===3?.6:.15)
-   +(CHARGE_IDS.has(u.id)&&steps<=3?2:0)+(u.ranged&&steps<=3?2:0)+1/steps;
+   +((unitChargeAmount(u)>0)&&steps<=3?2:0)+(unitAttackRange(u)>1&&steps<=3?2:0)+1/steps;
  },0);
  const frontline=threats.sort((a,z)=>z.col-a.col)[0]||null;
  const guard=friends.some(({u})=>GUARD_IDS.has(u.id));
@@ -5862,13 +5999,14 @@ function inspectEnemyLane(b,lane){
 // Estimation limitée au plateau public : une unité interposée ou un gardien
 // empêche de compter un coup direct sur la couronne au prochain combat.
 function crownRisk(b,laneInfo){
- if(laneInfo.guard)return 0;
+ if(laneInfo.guard&&b.cardRules!==AUBE_RULESET)return 0;
  return laneInfo.threats.reduce((sum,{u,col})=>{
   const steps=crownColumn(b,'e')-col;
-  if((u.stun||0)>0||!(steps<=2||(steps===3&&u.ability==='haste')))return sum;
-  const range=u.ranged?2:1;
+  if((u.stun||0)>0||!(b.cardRules===AUBE_RULESET?steps<=unitAttackRange(u)+unitMovementSteps(u,silenced(b,u)):steps<=2||(steps===3&&u.ability==='haste')))return sum;
+  if(b.cardRules===AUBE_RULESET&&findCrownGuardian(b,laneInfo.lane,'e',col))return sum;
+  const range=unitAttackRange(u);
   if(laneInfo.friends.some(x=>x.col>col&&x.col-col<=range))return sum;
-  return sum+Math.max(1,u.atk)+(CHARGE_IDS.has(u.id)&&col<lastCell(b)?2:0);
+  return sum+Math.max(1,u.atk)+((unitChargeAmount(u)>0)&&col<lastCell(b)&&(b.cardRules!==AUBE_RULESET||!silenced(b,u))?unitChargeAmount(u):0);
  },0);
 }
 
@@ -5890,6 +6028,11 @@ function scoreOption(b,card,laneInfo,context){
   score+=urgency>=8&&card.hp>=8?2:0;
   score+=friends.length===0&&threats.length===0?2.4:0;
   score-=friends.length>=3?2:0;
+  const a=card.versionDefinition?.abilities;
+  if(a?.heal)score+=Math.min(a.heal.targets,friends.filter(t=>t.u.hp<t.u.maxhp).length)*a.heal.amount;
+  if(a?.inspire)score+=Math.min(a.inspire.targets,friends.length)*a.inspire.amount;
+  if(a?.intervention&&threats.some(t=>laneInfo.deploymentCol-t.col>0&&laneInfo.deploymentCol-t.col<=a.intervention.range))score+=a.intervention.amount;
+  if(a?.rearShot&&threats.length>1)score+=a.rearShot.amount;
   if(card.ability==='silence'&&silenceTarget(b,'e',laneInfo.lane))score+=5;
   if(card.ability==='trapper'&&threats.length&&trapPlan(b,'e',laneInfo.lane,entryColumn(b,'e')-1))score+=3;
   // Les pièges visibles près de l'entrée pénalisent les unités fragiles.
@@ -5940,7 +6083,9 @@ function scoreOption(b,card,laneInfo,context){
  }else if(ability==='spell_hasten'){
   const target=accelerationTarget(b,'e');
   if(target){
-   const pending=CARDS[target.card.id],slots=Math.max(0,2-(hero.cardsPlayed||0));
+   let pending=CARDS[target.card.id];
+   if(pending?.type==='unité'&&b.cardRules===AUBE_RULESET){const stats=unitStats(b,target.card,'e');pending={...pending,attack:stats.atk,hp:stats.maxhp};}
+   const slots=Math.max(0,2-(hero.cardsPlayed||0));
    const canFollow=slots>=2&&target.wait<=2;
    score=5+Math.min(2,target.wait)*2.4;
    if(canFollow&&pending){
@@ -6016,12 +6161,14 @@ function rankEnemyMoves(b){
  const results=[];
  // Pas de changement des décisions des rencontres historiques sans sort V2.10.
  // Les nouvelles priorités s'activent uniquement avec du tempo dans NOTRE main.
- const hasTempo=b.heroes.e.hand.some(x=>x.id==='hourglass_surge'||x.id==='time_bind');
+ const hasTempo=b.cardRules===AUBE_RULESET||b.heroes.e.hand.some(x=>x.id==='hourglass_surge'||x.id==='time_bind');
  const risks=rows.map(row=>hasTempo?crownRisk(b,row):0),incoming=risks.reduce((sum,n)=>sum+n,0);
  const hero=b.heroes.e;
  const context={rows,risks,incoming,lethal:incoming>=Math.max(1,hero.hp+(hero.shield||0))};
  b.heroes.e.hand.forEach((entry,index)=>{
-  const card=CARDS[entry.id];if(!card||entry.wait>0) return;
+  let card=CARDS[entry.id];if(!card||entry.wait>0) return;
+  if(card.type==='unité'&&!unitCanPlay(b,entry,'e'))return;
+  if(card.type==='unité'&&b.cardRules===AUBE_RULESET){const stats=unitStats(b,entry,'e'),d=battleUnitDefinition(b,entry,'e');card={...card,attack:stats.atk,hp:stats.maxhp,versionDefinition:d};}
   rows.forEach(row=>{
    const rank=scoreOption(b,card,row,context);
    if(rank&&rank.score+personalityBonus(b,card,row)>0)results.push({index,lane:row.lane,...(lastCell(b)===10&&card.type==='unité'?{col:row.deploymentCol}:{}),id:entry.id,...rank,score:rank.score+personalityBonus(b,card,row)});
@@ -6033,61 +6180,53 @@ function rankEnemyMoves(b){
 Object.assign(__exports,{AI_STYLES,aiStyle,aiEnraged,inspectEnemyLane,personalityBonus,rankEnemyMoves});
 
 },
-"src/talents.js":function(__exports,__load){
-// Talents V2.3 : deux embranchements exclusifs par palier et par classe.
-// Les décisions ne concernent que le joueur. Aucun paiement et aucun bonus d'attaque passif.
-const TALENT_LEVELS = Object.freeze({1:4, 2:8});
-const TALENT_TREE = Object.freeze({
- gardien:[
-  {id:'gardien_rempart',tier:1,name:'Rempart ancien',desc:'+3 boucliers au début du combat.'},
-  {id:'gardien_serment',tier:1,name:'Serment vivant',desc:'Le pouvoir soigne le héros de 2 PV supplémentaires.'},
-  {id:'gardien_sentinelle',tier:2,name:'Veille protectrice',desc:'Le pouvoir soigne de 2 PV votre allié le plus blessé.'},
-  {id:'gardien_barriere',tier:2,name:'Bastion runique',desc:'Le pouvoir accorde 1 bouclier supplémentaire.'}
- ],
- arcaniste:[
-  {id:'arcaniste_focus',tier:1,name:'Éclat concentré',desc:'+1 dégât au pouvoir du héros.'},
-  {id:'arcaniste_barriere',tier:1,name:'Voile astral',desc:'Le pouvoir vous accorde 2 boucliers.'},
-  {id:'arcaniste_echos',tier:2,name:'Écho des étoiles',desc:'Le pouvoir inflige 2 dégâts à une seconde unité ennemie, si possible.'},
-  {id:'arcaniste_tissage',tier:2,name:'Tissage vital',desc:'Le pouvoir soigne le héros de 2 PV.'}
- ],
- rodeur:[
-  {id:'rodeur_precision',tier:1,name:'Tir précis',desc:'+2 dégâts du pouvoir sur chaque ligne touchée.'},
-  {id:'rodeur_couvert',tier:1,name:'Repli couvert',desc:'Le pouvoir vous accorde 2 boucliers.'},
-  {id:'rodeur_poursuite',tier:2,name:'Réserve de flèches',desc:'Une fois par combat, le pouvoir pioche 1 carte si la main n’est pas pleine.'},
-  {id:'rodeur_concentration',tier:2,name:'Souffle du chasseur',desc:'Si le pouvoir touche un ennemi, récupérez 2 PV.'}
- ],
- clerc:[
-  {id:'clerc_soutien',tier:1,name:'Main secourable',desc:'Le pouvoir soigne chaque allié ciblé de 2 PV et le héros de 1 PV supplémentaires.'},
-  {id:'clerc_foi',tier:1,name:'Foi rayonnante',desc:'Le pouvoir vous accorde 2 boucliers.'},
-  {id:'clerc_purification',tier:2,name:'Purification',desc:'Le pouvoir retire poison et immobilisation des alliés, et donne +1 bouclier au héros.'},
-  {id:'clerc_souffle',tier:2,name:'Souffle de grâce',desc:'Le pouvoir soigne le héros de 2 PV supplémentaires.'}
- ]
-});
-const talentById = Object.fromEntries(Object.entries(TALENT_TREE).flatMap(([hero,perks])=>perks.map(t=>[t.id,{...t,hero}])));
-function talentInfo(id){return talentById[id] || null;}
-function normalizeTalentChoices(raw){
- const choices={};
- if(!raw||typeof raw!=='object'||Array.isArray(raw))return choices;
- for(const [hero,entries] of Object.entries(TALENT_TREE)){
-  const picked=raw[hero];
-  if(!picked||typeof picked!=='object'||Array.isArray(picked))continue;
-  const found={};
-  for(const tier of [1,2]){
-   const id=picked[tier];
-   if(entries.some(perk=>perk.id===id&&perk.tier===tier))found[tier]=id;
-  }
-  if(Object.keys(found).length)choices[hero]=found;
- }
- return choices;
-}
-function chosenTalents(profile,level){
- return Object.values(profile?.talents?.[profile?.heroClass]||{}).filter(id=>{
-  const info=talentInfo(id);
-  return info&&info.hero===profile.heroClass&&Number(level)>=TALENT_LEVELS[info.tier];
- });
+"src/engine/unit-stats.js":function(__exports,__load){
+// Statistiques d'invocation partagées par le moteur et les aperçus, sans mutation.
+const {CARDS,FACTIONS}=__load("src/data.js");
+const {gearBonus,masteryRank,reputationLevel}=__load("src/engine/profile.js");
+const {resolveUnitDefinition}=__load("src/cards/definitions.js");
+const {battleUnitDefinition}=__load("src/engine/unit-rules.js");
+function unitStatContext(profile){
+ return {
+  upgrades:{...profile.upgrades},mastery:{...profile.mastery},
+  forgeBonus:profile.buildings?.forge||0,unitAtkBonus:gearBonus(profile,'unitAtk'),
+  reputationBonus:Object.fromEntries(Object.keys(FACTIONS).map(id=>[id,reputationLevel(profile,id)]))
+ };
 }
 
-Object.assign(__exports,{TALENT_LEVELS,TALENT_TREE,talentInfo,normalizeTalentChoices,chosenTalents});
+function unitStats(context,reference,side='p'){
+ const definition=battleUnitDefinition(context,reference,side);if(!definition)return null;
+ const level=context.mode==='developer'?(context.labStats?.levels?.[side]?.[definition.id]||0):
+  side==='p'?(context.upgrades?.[definition.id]||0):Math.max(0,context.enemyDifficulty-3);
+ return calculateUnitStats(context,definition,side,level);
+}
+
+// Prévision pure des versions définies : ne rend aucune évolution jouable et n'écrit aucun état.
+// Le laboratoire utilise la même définition et les mêmes bonus que la vraie invocation.
+function versionUnitStats(context,reference,side='p'){
+ const definition=context.cardRules?battleUnitDefinition(context,reference,side):resolveUnitDefinition(reference);if(!definition)return null;
+ const level=context.mode==='developer'?(context.labStats?.levels?.[side]?.[definition.id]||0):
+  side==='p'?(context.upgrades?.[definition.id]||0):Math.max(0,context.enemyDifficulty-3);
+ return {versionId:definition.versionId,base:{...definition.stats},
+  ...calculateUnitStats(context,definition,side,level)};
+}
+
+function calculateUnitStats(context,definition,side,level){
+ const id=definition.id,card=CARDS[id],allied=side==='p';
+ const equipment=allied?(context.unitAtkBonus||0):0;
+ const forge=allied?(context.forgeBonus||0):0;
+ const reputation=allied?(context.reputationBonus?.[card.faction]||0):0;
+ const mastery=allied&&masteryRank({mastery:context.mastery},id)===3?1:0;
+ const bonuses=[
+  {label:allied?'Amélioration':'Difficulté',atk:level,hp:level},
+  {label:'Équipement',atk:equipment,hp:0},{label:'Forge',atk:0,hp:forge},
+  {label:'Réputation',atk:0,hp:reputation},{label:'Maîtrise',atk:0,hp:mastery}
+ ].filter(b=>b.atk||b.hp);
+ return {atk:definition.stats.attack+level+equipment,
+  maxhp:definition.stats.hp+level+forge+reputation+mastery,bonuses};
+}
+
+Object.assign(__exports,{unitStatContext,unitStats,versionUnitStats});
 
 },
 "src/engine/profile.js":function(__exports,__load){
@@ -6293,68 +6432,61 @@ function dungeonBonusMission(id,stage){
 Object.assign(__exports,{DUNGEONS,dungeonById,dungeonStageMission,dungeonBonusMission});
 
 },
-"src/engine/unit-stats.js":function(__exports,__load){
-// Statistiques d'invocation partagées par le moteur et les aperçus, sans mutation.
-const {CARDS,FACTIONS}=__load("src/data.js");
-const {gearBonus,masteryRank,reputationLevel}=__load("src/engine/profile.js");
-const {resolveUnitDefinition}=__load("src/cards/definitions.js");
-// Effets expérimentaux du Milicien, actifs uniquement dans une bataille de laboratoire.
-function labMilitiaBonus(rarity,level){
- const ranks=['commun','rare','épique','légendaire','divine'],rank=ranks.indexOf(rarity);
- if(rank<0)return {hp:0,block:0,counter:false};
- const hp=rank>=3?2:rank>=1?1:0;
- const block=rank===1?(level>=2?1:0):rank>=2&&rank<=3?2:rank===4?3:0;
- return {hp,block,counter:rank===4&&level>=2};
+"src/talents.js":function(__exports,__load){
+// Talents V2.3 : deux embranchements exclusifs par palier et par classe.
+// Les décisions ne concernent que le joueur. Aucun paiement et aucun bonus d'attaque passif.
+const TALENT_LEVELS = Object.freeze({1:4, 2:8});
+const TALENT_TREE = Object.freeze({
+ gardien:[
+  {id:'gardien_rempart',tier:1,name:'Rempart ancien',desc:'+3 boucliers au début du combat.'},
+  {id:'gardien_serment',tier:1,name:'Serment vivant',desc:'Le pouvoir soigne le héros de 2 PV supplémentaires.'},
+  {id:'gardien_sentinelle',tier:2,name:'Veille protectrice',desc:'Le pouvoir soigne de 2 PV votre allié le plus blessé.'},
+  {id:'gardien_barriere',tier:2,name:'Bastion runique',desc:'Le pouvoir accorde 1 bouclier supplémentaire.'}
+ ],
+ arcaniste:[
+  {id:'arcaniste_focus',tier:1,name:'Éclat concentré',desc:'+1 dégât au pouvoir du héros.'},
+  {id:'arcaniste_barriere',tier:1,name:'Voile astral',desc:'Le pouvoir vous accorde 2 boucliers.'},
+  {id:'arcaniste_echos',tier:2,name:'Écho des étoiles',desc:'Le pouvoir inflige 2 dégâts à une seconde unité ennemie, si possible.'},
+  {id:'arcaniste_tissage',tier:2,name:'Tissage vital',desc:'Le pouvoir soigne le héros de 2 PV.'}
+ ],
+ rodeur:[
+  {id:'rodeur_precision',tier:1,name:'Tir précis',desc:'+2 dégâts du pouvoir sur chaque ligne touchée.'},
+  {id:'rodeur_couvert',tier:1,name:'Repli couvert',desc:'Le pouvoir vous accorde 2 boucliers.'},
+  {id:'rodeur_poursuite',tier:2,name:'Réserve de flèches',desc:'Une fois par combat, le pouvoir pioche 1 carte si la main n’est pas pleine.'},
+  {id:'rodeur_concentration',tier:2,name:'Souffle du chasseur',desc:'Si le pouvoir touche un ennemi, récupérez 2 PV.'}
+ ],
+ clerc:[
+  {id:'clerc_soutien',tier:1,name:'Main secourable',desc:'Le pouvoir soigne chaque allié ciblé de 2 PV et le héros de 1 PV supplémentaires.'},
+  {id:'clerc_foi',tier:1,name:'Foi rayonnante',desc:'Le pouvoir vous accorde 2 boucliers.'},
+  {id:'clerc_purification',tier:2,name:'Purification',desc:'Le pouvoir retire poison et immobilisation des alliés, et donne +1 bouclier au héros.'},
+  {id:'clerc_souffle',tier:2,name:'Souffle de grâce',desc:'Le pouvoir soigne le héros de 2 PV supplémentaires.'}
+ ]
+});
+const talentById = Object.fromEntries(Object.entries(TALENT_TREE).flatMap(([hero,perks])=>perks.map(t=>[t.id,{...t,hero}])));
+function talentInfo(id){return talentById[id] || null;}
+function normalizeTalentChoices(raw){
+ const choices={};
+ if(!raw||typeof raw!=='object'||Array.isArray(raw))return choices;
+ for(const [hero,entries] of Object.entries(TALENT_TREE)){
+  const picked=raw[hero];
+  if(!picked||typeof picked!=='object'||Array.isArray(picked))continue;
+  const found={};
+  for(const tier of [1,2]){
+   const id=picked[tier];
+   if(entries.some(perk=>perk.id===id&&perk.tier===tier))found[tier]=id;
+  }
+  if(Object.keys(found).length)choices[hero]=found;
+ }
+ return choices;
 }
-function unitStatContext(profile){
- return {
-  upgrades:{...profile.upgrades},mastery:{...profile.mastery},
-  forgeBonus:profile.buildings?.forge||0,unitAtkBonus:gearBonus(profile,'unitAtk'),
-  reputationBonus:Object.fromEntries(Object.keys(FACTIONS).map(id=>[id,reputationLevel(profile,id)]))
- };
-}
-
-function unitStats(context,id,side='p'){
- if(typeof id!=='string')return null;
- const definition=resolveUnitDefinition(id);
- const card=CARDS[id];if(!definition||!card||card.type!=='unité')return null;
- const allied=side==='p';
- const lab=context.mode==='developer'?context.labStats:null;
- const labLevel=lab?.levels?.[side]?.[id]??0;
- const labRank=lab?.rarities?.[side]?.[id]||card.rarity;
- const level=lab?(id==='militia'&&labRank!=='commun'?3:labLevel):
-  allied?(context.upgrades?.[id]||0):Math.max(0,context.enemyDifficulty-3);
- const experimental=lab&&id==='militia'?labMilitiaBonus(labRank,labLevel):{hp:0};
- return calculateUnitStats(context,definition,side,level,experimental.hp);
-}
-
-// Prévision pure des versions définies : ne rend aucune évolution jouable et n'écrit aucun état.
-// Le laboratoire sera raccordé à cette API seulement avec les pouvoirs des étapes 3/4.
-function versionUnitStats(context,reference,side='p'){
- const definition=resolveUnitDefinition(reference);if(!definition)return null;
- const level=context.mode==='developer'?(context.labStats?.levels?.[side]?.[definition.id]||0):
-  side==='p'?(context.upgrades?.[definition.id]||0):Math.max(0,context.enemyDifficulty-3);
- return {versionId:definition.versionId,base:{...definition.stats},
-  ...calculateUnitStats(context,definition,side,level)};
-}
-
-function calculateUnitStats(context,definition,side,level,experimentalHp=0){
- const id=definition.id,card=CARDS[id],allied=side==='p';
- const equipment=allied?(context.unitAtkBonus||0):0;
- const forge=allied?(context.forgeBonus||0):0;
- const reputation=allied?(context.reputationBonus?.[card.faction]||0):0;
- const mastery=allied&&masteryRank({mastery:context.mastery},id)===3?1:0;
- const bonuses=[
-  {label:allied?'Amélioration':'Difficulté',atk:level,hp:level},
-  {label:'Équipement',atk:equipment,hp:0},{label:'Forge',atk:0,hp:forge},
-  {label:'Réputation',atk:0,hp:reputation},{label:'Maîtrise',atk:0,hp:mastery},
-  {label:'Milicien expérimental',atk:0,hp:experimentalHp}
- ].filter(b=>b.atk||b.hp);
- return {atk:definition.stats.attack+level+equipment,
-  maxhp:definition.stats.hp+level+forge+reputation+mastery+experimentalHp,bonuses};
+function chosenTalents(profile,level){
+ return Object.values(profile?.talents?.[profile?.heroClass]||{}).filter(id=>{
+  const info=talentInfo(id);
+  return info&&info.hero===profile.heroClass&&Number(level)>=TALENT_LEVELS[info.tier];
+ });
 }
 
-Object.assign(__exports,{labMilitiaBonus,unitStatContext,unitStats,versionUnitStats});
+Object.assign(__exports,{TALENT_LEVELS,TALENT_TREE,talentInfo,normalizeTalentChoices,chosenTalents});
 
 },
 "src/ui/markup.js":function(__exports,__load){
@@ -7813,14 +7945,15 @@ Object.assign(__exports,{PAINTED_ARENA,paintedTile,paintedArena,paintedFootPoint
 // Panneau de configuration du même combat que la campagne, sans second moteur.
 const {CARDS,FACTIONS,CLASSES}=__load("src/data.js");
 const {AI_STYLES}=__load("src/ai.js");
-const {labRarity,labLevel,labCardStats,LAB_RANKS}=__load("src/engine/developer-lab.js");
+const {unitAbilitySummary}=__load("src/cards/ability-text.js");
+const {labRarity,labLevel,labCardStats,labRanks}=__load("src/engine/developer-lab.js");
 function developerLabUI(lab,{esc,btn}){
  const side=lab.side,id=lab.cardId,card=CARDS[id];
  const deck=lab.decks[side],counts={};
  for(const key of deck)counts[key]=(counts[key]||0)+1;
  const rarity=labRarity(lab,side,id),level=labLevel(lab,side,id);
  const stats=labCardStats(lab,side,id);
- const rankOptions=id==='militia'?LAB_RANKS:[card.rarity];
+ const rankOptions=labRanks(id);
  const selections=Object.values(CARDS).filter(c=>!c.heroClass||c.heroClass===lab.heroClass)
   .map(c=>`<option value="${esc(c.id)}" ${c.id===id?'selected':''}>${esc(c.name)} · ${esc(FACTIONS[c.faction].short)}</option>`).join('');
  const option=(value,text,current)=>`<option value="${esc(value)}" ${value===current?'selected':''}>${esc(text)}</option>`;
@@ -7855,11 +7988,11 @@ function developerLabUI(lab,{esc,btn}){
       <select data-lab-field="rarity">${rankOptions.map(r=>option(r,r.charAt(0).toUpperCase()+r.slice(1),rarity)).join('')}</select>
     </label>
     <label>Niveau d'amélioration
-      <select data-lab-field="level">${[0,1,2,3].filter(n=>id!=='militia'||rarity==='commun'||n>0).map(n=>option(String(n),n===0?'Base (aucun achat)':`Niveau ${n}`,String(level))).join('')}</select>
+      <select data-lab-field="level">${[0,1,2,3].map(n=>option(String(n),n===0?'Base (aucun achat)':`Niveau ${n}`,String(level))).join('')}</select>
     </label>
     <p class="lab-stats">Prévision en combat : <b>${card.type==='unité'?`${stats.atk} ATQ · ${stats.hp} PV`:'sort, valeurs inchangées'}</b></p>
-    ${id==='militia'?`<p class="hint">Pilote Milicien : premier coup réduit de ${stats.block}, contre-attaque de 1 au palier Divin II. Ces effets sont des hypothèses d'équilibrage, uniquement dans le laboratoire.</p>`:
-      '<p class="hint">Les raretés supérieures de cette carte ne sont pas encore conçues. Seuls ses trois niveaux existants sont testables.</p>'}
+    <p class="hint">${card.type==='unité'?`Version ${esc(rarity)} : déplacement ${stats.definition.geometry.steps}, portée ${stats.definition.geometry.range}. ${rankOptions.length>1?'Les évolutions définies sont testables ici ; leur obtention dans l’aventure reste à définir.':'Seule la version native est définie.'}`:'Les sorts conservent leurs effets actuels.'}</p>
+    ${card.type==='unité'?`<p class="hint lab-abilities">${unitAbilitySummary(stats.definition).map(esc).join(' · ')||'Aucun pouvoir spécial.'}</p>`:''}
     <p class="hint">Une même carte partage ces réglages entre tous ses exemplaires du camp choisi. Le cadre et l’illustration restent inchangés.</p>
    </div>
   </div>
@@ -7872,13 +8005,44 @@ function developerLabUI(lab,{esc,btn}){
 Object.assign(__exports,{developerLabUI});
 
 },
+"src/cards/ability-text.js":function(__exports,__load){
+// Libellés brefs dérivés des paramètres ; aucune règle ni valeur métier recopiée.
+function unitAbilitySummary(definition){
+ if(!definition)return [];
+ const a=definition.abilities,lines=[],scope=p=>p.scope==='all-lines'?'toutes lignes':'sa ligne';
+ if(a.armor)lines.push(`Armure ${a.armor.amount}`);
+ if(a.firstHitReduction)lines.push(`Premier coup : −${a.firstHitReduction.amount}`);
+ if(a.guard)lines.push(`Garde ${a.guard.scope==='all-lines'?'toutes lignes':a.guard.scope==='line'?'de ligne':a.guard.scope==='legacy-line'?'historique':'positionnelle'}`);
+ if(a.riposte)lines.push(`Riposte : ${a.riposte.damageMode==='effective-attack'?'ATQ':a.riposte.amount}, ${a.riposte.frequency==='invocation'?'1 fois':'1/tour'}`);
+ if(a.lastStand)lines.push(`Dernier Rempart : ${a.lastStand.hp} PV, 1 fois`);
+ if(a.riposteBarrier)lines.push(`Barrière après Riposte : ${a.riposteBarrier.amount}`);
+ if(a.heal)lines.push(`Soin ${a.heal.amount} × ${a.heal.targets}, ${scope(a.heal)}`);
+ if(a.healBarrier)lines.push(`Barrière après soin : +${a.healBarrier.amount}, max ${a.healBarrier.cap}`);
+ if(a.inspire)lines.push(`Inspiration : +${a.inspire.amount} ATQ à ${a.inspire.targets} allié(s) / ${a.inspire.period} tours, ${scope(a.inspire)}`);
+ if(a.arrivalInspire)lines.push(`Commandement : +${a.arrivalInspire.amount} ATQ à l'arrivée`);
+ if(a.ward)lines.push(`Protection : +${a.ward.amount}`);
+ if(a.intervention)lines.push(`Intervention : ${a.intervention.amount} dégâts, portée ${a.intervention.range}`);
+ if(a.flying)lines.push('Vol');
+ if(a.haste)lines.push(`Célérité ${definition.geometry.steps}`);
+ if(a.charge)lines.push(`Charge +${a.charge.amount}`);
+ if(a.pierce)lines.push('Perforation');
+ if(a.rearShot)lines.push(`Tir arrière : ${a.rearShot.amount} dégâts`);
+ for(const [key,label] of Object.entries({poison:'Poison',splash:'Impact',lifesteal:'Vol de vie',silence:'Silence',portal:'Portail',trapper:'Piège'}))if(a[key])lines.push(label);
+ return lines;
+}
+
+Object.assign(__exports,{unitAbilitySummary});
+
+},
 "src/engine/developer-lab.js":function(__exports,__load){
 // Laboratoire de développement : données de test éphémères, sans modifier les profils.
 const {CARDS,CAMPAIGN,CLASSES}=__load("src/data.js");
 const {freshProfile}=__load("src/engine/profile.js");
 const {createBattle}=__load("src/engine/battle.js");
-const {labMilitiaBonus}=__load("src/engine/unit-stats.js");
-const LAB_RANKS=Object.freeze(['commun','rare','épique','légendaire','divine']);
+const {versionUnitStats}=__load("src/engine/unit-stats.js");
+const {unitVersions,resolveRulesDefinition,AUBE_RULESET}=__load("src/cards/definitions.js");
+const {CARD_RARITIES}=__load("src/cards/schema.js");
+const LAB_RANKS=Object.freeze(CARD_RARITIES.map(r=>r.id));
 const LAB_SIDES=Object.freeze(['p','e']);
 
 function freshLab(){
@@ -7891,31 +8055,27 @@ function freshLab(){
 function labRarity(lab,side,id){
  const card=CARDS[id];
  if(!card)return null;
- return id==='militia'?(lab.rarities?.[side]?.[id]||'commun'):card.rarity;
+ return lab.rarities?.[side]?.[id]||card.rarity;
 }
 function labLevel(lab,side,id){return lab.levels?.[side]?.[id]||0;}
+function labRanks(id){return CARDS[id]?.type==='unité'?unitVersions(id).map(d=>d.rarity):CARDS[id]?[CARDS[id].rarity]:[];}
 function labCardStats(lab,side,id){
  const card=CARDS[id];if(!card)return null;
  const rarity=labRarity(lab,side,id),level=labLevel(lab,side,id);
- const upgrades=id==='militia'&&rarity!=='commun'?3:level;
- const bonus=id==='militia'?labMilitiaBonus(rarity,level):{hp:0,block:0,counter:false};
- return {atk:card.attack+(card.type==='unité'?upgrades:0),
-  hp:card.hp+(card.type==='unité'?upgrades:0)+bonus.hp,
-  rarity,level,block:bonus.block,counter:bonus.counter};
+ if(card.type!=='unité')return {rarity,level};
+ const context={mode:'developer',cardRules:AUBE_RULESET,labStats:{levels:lab.levels,rarities:lab.rarities}};
+ const stats=versionUnitStats(context,{id,rarity},side),definition=resolveRulesDefinition({id,rarity});
+ return stats?{atk:stats.atk,hp:stats.maxhp,rarity,level,definition}:null;
 }
 function setLabRarity(lab,side,id,rarity){
  if(!LAB_SIDES.includes(side)||!CARDS[id])return {ok:false,reason:'Carte inconnue.'};
- if(id!=='militia'&&rarity!==CARDS[id].rarity)return {ok:false,reason:'Évolutions futures encore à concevoir.'};
- if(id==='militia'&&!LAB_RANKS.includes(rarity))return {ok:false,reason:'Rareté non disponible.'};
+ if(!labRanks(id).includes(rarity))return {ok:false,reason:'Cette version n’est pas définie.'};
  lab.rarities[side][id]=rarity;
- if(id==='militia'&&rarity!=='commun'&&labLevel(lab,side,id)===0)lab.levels[side][id]=1;
  return {ok:true};
 }
 function setLabLevel(lab,side,id,level){
  if(!LAB_SIDES.includes(side)||!CARDS[id]||!Number.isInteger(level)||level<0||level>3)
   return {ok:false,reason:'Niveau invalide.'};
- if(id==='militia'&&labRarity(lab,side,id)!=='commun'&&level<1)
-  return {ok:false,reason:'Le niveau commence à 1 au-delà de Commune.'};
  lab.levels[side][id]=level;
  return {ok:true};
 }
@@ -7943,6 +8103,9 @@ function createLabBattle(lab,seed=Date.now()){
    lab.decks[side].some(id=>!CARDS[id]||(CARDS[id].heroClass&&(side==='e'||CARDS[id].heroClass!==lab.heroClass))))
    throw Error('Deck de laboratoire invalide ou compétence de classe incompatible.');
  }
+ for(const side of LAB_SIDES)for(const id of lab.decks[side]){
+  if(!labRanks(id).includes(labRarity(lab,side,id))||!Number.isInteger(labLevel(lab,side,id))||labLevel(lab,side,id)<0||labLevel(lab,side,id)>3)throw Error('Version ou niveau de laboratoire invalide.');
+ }
  const p=freshProfile();
  p.heroClass=lab.heroClass;p.deck=[...lab.decks.p];
  p.collection=Object.fromEntries(p.deck.map(id=>[id,p.deck.filter(x=>x===id).length]));
@@ -7950,12 +8113,12 @@ function createLabBattle(lab,seed=Date.now()){
  const m={...CAMPAIGN[0],id:'laboratoire',name:'Laboratoire de combat',enemy:'IA de test',
   hp:26,difficulty:2,boss:false,mode:'developer',aiStyle:lab.aiStyle,
   deck:[...lab.decks.e],unlock:null};
- const b=createBattle(p,m,seed,{turnFlow:'alternating'});
+ const b=createBattle(p,m,seed,{turnFlow:'alternating',cardRules:AUBE_RULESET});
  // Ces valeurs restent uniquement dans la bataille de test, jamais dans le stockage.
  b.labStats={levels:structuredClone(lab.levels),rarities:structuredClone(lab.rarities)};
  return b;
 }
-Object.assign(__exports,{LAB_RANKS,LAB_SIDES,freshLab,labRarity,labLevel,labCardStats,setLabRarity,setLabLevel,editLabDeck,createLabBattle});
+Object.assign(__exports,{LAB_RANKS,LAB_SIDES,freshLab,labRarity,labLevel,labRanks,labCardStats,setLabRarity,setLabLevel,editLabDeck,createLabBattle});
 
 },
 "src/ui/combat-fx.js":function(__exports,__load){
