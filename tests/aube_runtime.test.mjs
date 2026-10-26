@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CARDS,CAMPAIGN} from '../src/data.js';
-import {freshProfile} from '../src/engine/profile.js';
+import {freshProfile,grantBattleProgress} from '../src/engine/profile.js';
+import {completeBattle} from '../src/engine/economy.js';
 import {createBattle,playPlayerCard,playEnemyCard,endPlayerTurn,finishEnemyTurn} from '../src/engine/battle.js';
 import {freshLab,setLabRarity,setLabLevel,createLabBattle,labCardStats,labRanks} from '../src/engine/developer-lab.js';
 import {AUBE_UNIT_IDS,AUBE_RULESET,unitVersions,resolveRulesDefinition,versionUnitAbilities} from '../src/cards/definitions.js';
@@ -256,4 +257,16 @@ test('Batailles complètes du laboratoire : six rangs, deux camps, moteur commun
   assert.notEqual(b.status,'active');assert.equal(JSON.stringify(lab),draft);return JSON.stringify(b);
  }
  for(let rank=0;rank<6;rank++)for(const seed of [12,41,90,302])assert.equal(run(rank,seed),run(rank,seed));
+});
+
+
+test('Laboratoire : les API directes de récompense et progression refusent aussi tout gain',()=>{
+ for(const status of ['victory','defeat']){
+  const profile=freshProfile(),b=createLabBattle(freshLab(),73);
+  b.status=status;b.round=8;b.cardUses={militia:6,shield:4};
+  const before=JSON.stringify({profile,b});
+  assert.equal(completeBattle(profile,CAMPAIGN[0],b),null);
+  assert.equal(grantBattleProgress(profile,b).heroXp,0);
+  assert.equal(JSON.stringify({profile,b}),before,'ni profil ni bataille de test ne doivent être modifiés');
+ }
 });

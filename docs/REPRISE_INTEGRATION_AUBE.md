@@ -10,12 +10,12 @@
 - Les dix Aube ont leurs attaques, soutiens et arrivées raccordés : portée, Perforation, tir arrière, Charge/Célérité, soins multi-cibles et interlignes, barrière du Prieur, Inspiration, Commandement et Intervention. Les mêmes primitives servent le jeu et le laboratoire.
 - `resolveRulesDefinition` dérive les règles futures du registre unique, natives Aube comprises. Les nouveaux instantanés ont un marqueur explicite ; aucun ancien combattant n'est recalculé, ni profil/deck/achat/maîtrise converti.
 - Les **51 versions sont testables dans le laboratoire**, niveaux **0–3 indépendants**, pour les deux camps. L'ancien pilote Milicien et ses niveaux forcés sont retirés. IA, prévisions et invocation utilisent les paramètres et statistiques communs.
-- **Les évolutions restent refusées en aventure**, même avec le marqueur optionnel. `status.engine` distingue le moteur prêt de `status.combat: pending`, conservé pour la livraison complète. Aucune obtention ni possession créée.
+- **Les évolutions restent refusées en aventure**, même avec le marqueur optionnel. `status.engine` distingue le moteur prêt de `status.combat: pending`, conservé pour la livraison complète. Aucune obtention ni possession créée ; les API directes de récompense/progression refusent également les combats développeur sans mutation.
 - Le laboratoire affiche des libellés dérivés du registre. La fiche universelle et les descriptions de toutes les autres vues restent à faire à l'étape 5. [API](AUBE_VERSIONS.md), [contrat du moteur](AUBE_MOTEUR.md), [défenses](AUBE_DEFENSES.md).
 
 ## Vérifications de l'étape 4
 
-- `npm test` : **409 tests réussis**, dont **22 nouveaux tests métier** de moteur/laboratoire. Les anciennes attentes du pilote sont remplacées par les chiffres validés et des assertions d'indépendance des niveaux ; les scénarios historiques restent intacts.
+- `npm test` : **410 tests réussis**, dont **23 nouveaux tests métier** de moteur/laboratoire. Les anciennes attentes du pilote sont remplacées par les chiffres validés et des assertions d'indépendance des niveaux ; les scénarios historiques restent intacts.
 - Une vérification couvre **51 versions × 4 niveaux × 2 camps = 408 invocations réelles** et leur égalité avec la prévision, sans niveau forcé. Les tests incluent l'absence des neuf rangs inférieurs et les refus sans consommation en aventure.
 - **48 batailles complètes déterministes** de laboratoire : six niveaux de rareté, quatre graines, deux passes ; même moteur, quotas et intégrité des unités, aucune modification des réglages/progression.
 - `npm run test:parity` : **60 scénarios identiques**, référence inchangée. `npm run build` et `npm run build:test` : **réussis**, 50 modules et 76 illustrations, mêmes sources pour web et hors réseau.
@@ -152,4 +152,4 @@ La programmation du registre d'étape 2 n'autorise pas une fiche à annoncer un 
 4. Réaliser **une seule étape suivante**, ses tests utiles et sa revue. Mettre à jour le point de reprise en tête, les contrôles et les limites ; pousser puis vérifier le commit sur GitHub.
 5. Si seule la CI reste en cours, fournir son lien et s'arrêter sans la consulter en boucle. Après notification, vérifier le résultat sur le commit exact.
 
-Instruction de reprise : **« Reprends l'étape 3 de l'intégration Aube sur la branche `feat/aube-evolutions-fiche-universelle`, lis `docs/REPRISE_INTEGRATION_AUBE.md`, poursuis la même PR puis arrête-toi à la fin de l'étape. »**
+Instruction de reprise : **« Reprends l'étape 5 de l'intégration Aube sur la branche `feat/aube-evolutions-fiche-universelle`, lis `docs/REPRISE_INTEGRATION_AUBE.md`, poursuis la même PR puis arrête-toi à la fin de l'étape. »**

@@ -79,3 +79,8 @@ n'est pas convertie et ne reçoit pas automatiquement le marqueur futur.
 `ability-text.js` fournit les libellés de test à partir des paramètres, sans
 recopier les valeurs. L'unification de tous les textes, cartes et fiches dans
 les autres écrans reste l'étape 5. Aucun nouvel actif ou circuit économique.
+
+Les API `completeBattle` et `grantBattleProgress` refusent aussi directement
+les batailles `mode: developer`, sans modifier le profil ou l'état de test.
+L'isolation des gains est donc vérifiée dans le moteur en plus des protections
+de navigation et de stockage de l'interface.

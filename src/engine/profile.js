@@ -86,7 +86,7 @@ export function masteryRank(profile,id){
 }
 export function grantBattleProgress(profile,b){
  const none={heroXp:0,levelBefore:heroLevel(profile),levelAfter:heroLevel(profile),levelShards:0,mastered:[]};
- if(b.progressionGranted)return none;
+ if(b.mode==='developer'||b.progressionGranted)return none;
  b.progressionGranted=true;
  const victory=b.status==='victory';
  // Une retraite immédiate ne donne pas d'XP : pas de gain à la boucle abandon/recommencer.

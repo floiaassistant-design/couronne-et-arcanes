@@ -4,6 +4,7 @@ import {ownedCopies,grantBattleProgress,heroLevel} from './profile.js';
 import {CONTROL_IDS} from './battle-control.js';
 import {TEMPO_IDS} from './tempo.js';
 export function completeBattle(profile,mission,b){
+ if(b.mode==='developer')return null;
  if(b.status!=='victory'&&b.status!=='defeat')return null;
  if(b.progressionGranted)return {victory:b.status==='victory',gold:0,shards:0,card:null,reputation:[],heroXp:0,levelShards:0,mastered:[]};
  const reward={victory:b.status==='victory',gold:0,shards:0,card:null,reputation:[]};

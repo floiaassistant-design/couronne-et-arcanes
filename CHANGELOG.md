@@ -8,7 +8,9 @@
 - Les 51 versions sont testables dans le laboratoire ; niveaux 0–3 indépendants
   de la rareté, ancien calcul expérimental Milicien retiré. IA et prévisions
   partagent les mêmes paramètres ; aucune récompense ou possession offerte.
-- Libellés de test dérivés et tests métier/navigateur étendus. Les versions
+- API de récompense/progression également verrouillées pour le laboratoire,
+  sans mutation en cas d’appel direct. Libellés de test dérivés et tests
+  métier/navigateur étendus. Les versions
   futures restent en attente de livraison complète ; prochaine étape, fiche
   universelle dans tous les écrans. PR toujours en brouillon, sans publication.
 

@@ -74,3 +74,8 @@ sauvegardes et des récompenses de l'aventure.
 [Contrat d'exécution](AUBE_MOTEUR.md), [défenses](AUBE_DEFENSES.md) et
 [point de reprise](REPRISE_INTEGRATION_AUBE.md). L'unique export `JOUER.html`
 embarque les mêmes modules que le web et reste généré par le builder.
+
+Les API `completeBattle` et `grantBattleProgress` refusent aussi directement
+les batailles `mode: developer`, sans modifier le profil ou l'état de test.
+L'isolation des gains est donc vérifiée dans le moteur en plus des protections
+de navigation et de stockage de l'interface.

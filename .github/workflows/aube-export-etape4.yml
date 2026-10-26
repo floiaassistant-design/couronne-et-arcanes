@@ -19,7 +19,7 @@ jobs:
       - name: Générer et enregistrer uniquement l’export sur la branche de travail
         run: |
           npm run build
-          test "$(git hash-object JOUER.html)" = "221cf10a8c9ac201c8a147acac23902c2c8c1bc9"
+          test "$(git hash-object JOUER.html)" = "170548e5197a80f85c640c947a7689f43f8ae62a"
           git fetch origin feat/aube-evolutions-fiche-universelle
           test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
           if git diff --quiet -- JOUER.html; then exit 0; fi
