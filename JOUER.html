@@ -4673,8 +4673,9 @@ Object.assign(__exports,{CLASS_SKILLS,CARDS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPO
 },
 "src/engine/battle.js":function(__exports,__load){
 const {castSpell}=__load("src/engine/spell-casting.js");
-const {unitVersionPlayable}=__load("src/cards/definitions.js");
+const {unitVersionPlayable,versionUnitAbilities}=__load("src/cards/definitions.js");
 const {hit,resolveRetaliation}=__load("src/engine/battle-defense.js");
+const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 const {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS}=__load("src/data.js");
 const {frontEnemy}=__load("src/engine/spell-targeting.js");
@@ -4750,7 +4751,7 @@ function findTarget(b,lane,col,unit){
  for(let d=1;d<=range;d++){
   const targetCol=col+forward(unit.side)*d;
   const target=enemyAt(b,lane,targetCol,unit.side);
-  if(target && isGuard(target))return {type:'unit',target,col:targetCol};
+  if(target && isGuard(target)&&!versionUnitAbilities(target))return {type:'unit',target,col:targetCol};
   if(target && !fallback)fallback={type:'unit',target,col:targetCol};
  }
  if(fallback)return fallback;
@@ -4876,17 +4877,9 @@ function moveUnits(b,sideFilter=null){
   }
  }
 }
-function findGuardianForHero(b,lane,heroSide){
- const guards=[];
- for(let col=1;col<=lastCell(b);col++){
-  const u=b.board[lane][col];
-  if(u&&u.side===heroSide&&isGuard(u))guards.push({u,col});
- }
- if(!guards.length)return null;
- return heroSide==='p'?guards.sort((a,z)=>z.col-a.col)[0]:guards.sort((a,z)=>a.col-z.col)[0];
-}
 
-function retaliate(b,defender,attacker,lane,defenderCol,attackerCol){
+function retaliate(b,defender,attacker,lane,defenderCol,attackerCol,defenderLane=lane){
+ if(defenderLane!==lane)return; // Une interception interligne ne crée pas de contact.
  const bonus=formationBonus(b,lane,defender)+(defender.rallyUntil>=b.round?1:0);
  resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,bonus,note);
 }
@@ -4901,9 +4894,10 @@ function resolveAttacks(b,sideFilter=null){
  }
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
-  const guardIntercept = target.type==='hero' ? findGuardianForHero(b,lane,target.side) : null;
+  const guardIntercept = target.type==='hero' ? findCrownGuardian(b,lane,target.side,intent.col) : null;
   const targetColForFx = guardIntercept?guardIntercept.col:(target.type==='hero'?crownColumn(b,target.side):target.col);
-  fx(b,{type:'attack',side:u.side,lane,from:intent.col,to:targetColForFx,ranged:!!u.ranged,magic:['splash','poison'].includes(ability),damage:atk,charged,icon:CARDS[u.id]?.icon||'⚔'});
+  const targetLane=guardIntercept?.lane??lane;
+  fx(b,{type:'attack',side:u.side,lane:targetLane,...(targetLane!==lane?{fromLane:lane}:{}),from:intent.col,to:targetColForFx,ranged:!!u.ranged,magic:['splash','poison'].includes(ability),damage:atk,charged,icon:CARDS[u.id]?.icon||'⚔'});
   if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +2 attaque sur la ligne ${lane+1}.`);
   if(target.type==='hero'){
    if(guardIntercept){
@@ -4911,7 +4905,7 @@ function resolveAttacks(b,sideFilter=null){
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
     if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
     if(ability==='poison'){guardIntercept.u.poison=1;guardIntercept.u.poisonTurns=Math.max(guardIntercept.u.poisonTurns,2);}
-    retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col);
+    retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}}
   } else {
    hit(b,target.target,atk,u.side,ability==='pierce');
@@ -5519,6 +5513,11 @@ Object.assign(__exports,{freezeCardData,CARD_RARITIES,normalizeCardRarity});
 "src/cards/abilities.js":function(__exports,__load){
 // Description structurée du socle natif. Le branchement des règles de combat suit aux étapes 3/4.
 const {FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
+// Politique future validée dans Notion ; réutilisable par chaque faction.
+const FUTURE_GUARD_POLICY=Object.freeze({
+ priority:'same-line-then-own-crown',tieBreak:'lane-uid',frequency:'while-alive',maxPerAttack:1
+});
+
 function nativeUnitAbilities(card){
  const abilities={};
  const primary={
@@ -5552,16 +5551,17 @@ function inheritUnitAbilities(previous,changes={}){
  return result;
 }
 
-Object.assign(__exports,{nativeUnitAbilities,inheritUnitAbilities});
+Object.assign(__exports,{FUTURE_GUARD_POLICY,nativeUnitAbilities,inheritUnitAbilities});
 
 },
 "src/cards/aube.js":function(__exports,__load){
-// Transcription du tableau maître, édition observée le 26/10/2026 à 07:46:27.447Z.
+// Transcription du tableau maître, édition observée le 26/10/2026 à 08:18:43.609Z.
 // Les chiffres remplacent les valeurs de base ; ce ne sont jamais des bonus à additionner.
 const {freezeCardData}=__load("src/cards/schema.js");
+const {FUTURE_GUARD_POLICY}=__load("src/cards/abilities.js");
 const AUBE_DESIGN_SOURCE=freezeCardData({
  url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
- editedAt:'2026-10-26T07:46:27.447Z'
+ editedAt:'2026-10-26T08:18:43.609Z'
 });
 
 const AUBE_EVOLUTIONS=freezeCardData({
@@ -5573,7 +5573,7 @@ const AUBE_EVOLUTIONS=freezeCardData({
   'éveillée':{abilities:{lastStand:{hp:5,frequency:'invocation'}}}
  },
  shield:{
-  rare:{stats:{hp:11},abilities:{guard:{scope:'positioned',unitTargetPriority:false},riposte:{damageMode:'effective-attack'}},pendingDecisions:['guard-priority','guard-frequency']},
+  rare:{stats:{hp:11},abilities:{guard:{...FUTURE_GUARD_POLICY,scope:'positioned',unitTargetPriority:false},riposte:{damageMode:'effective-attack'}}},
   'épique':{stats:{attack:2}},
   'légendaire':{stats:{hp:13}},
   divine:{abilities:{guard:{scope:'line',unitTargetPriority:false}}},
@@ -5777,6 +5777,48 @@ function recordCombatEvent(b,event) {
 }
 
 Object.assign(__exports,{captureCombatFrame,recordCombatEvent});
+
+},
+"src/engine/guard-candidates.js":function(__exports,__load){
+// Protection des couronnes : éligibilité et priorité validées, sans mutation.
+const {laneCount,lastCell,validLane,crownColumn}=__load("src/engine/board.js");
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
+const {GUARD_IDS}=__load("src/data.js");
+const {FUTURE_GUARD_POLICY}=__load("src/cards/abilities.js");
+function crownGuardCandidates(b,attackLane,heroSide,attackerCol){
+ if(!['p','e'].includes(heroSide)||!validLane(b,attackLane)||!Number.isInteger(attackerCol)||attackerCol<1||attackerCol>lastCell(b))return [];
+ const guards=[];
+ for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
+  const u=b.board[lane][col],guard=versionUnitAbilities(u)?.guard;
+  if(!guard||u.hp<=0||u.side!==heroSide||guard.target!=='own-crown')continue;
+  const sameLine=lane===attackLane;
+  const between=heroSide==='p'?col<attackerCol:col>attackerCol;
+  if(guard.scope==='all-lines'||sameLine&&(guard.scope==='line'||guard.scope==='positioned'&&between))guards.push({u,lane,col});
+ }
+ return guards;
+}
+
+// Sans nouvelle version éligible, conserver exactement la priorité historique.
+// Dans un combat mêlant les deux systèmes, tous les candidats éligibles suivent
+// la priorité validée dès qu'une Garde versionnée entre dans la sélection.
+function findCrownGuardian(b,attackLane,heroSide,attackerCol){
+ if(!['p','e'].includes(heroSide)||!validLane(b,attackLane)||!Number.isInteger(attackerCol)||attackerCol<1||attackerCol>lastCell(b))return null;
+ const future=crownGuardCandidates(b,attackLane,heroSide,attackerCol);
+ const historical=[];
+ for(let col=1;col<=lastCell(b);col++){
+  const u=b.board[attackLane][col];
+  if(u&&u.hp>0&&u.side===heroSide&&GUARD_IDS.has(u.id)&&!versionUnitAbilities(u))historical.push({u,lane:attackLane,col});
+ }
+ if(!future.length)return historical.sort((a,z)=>heroSide==='p'?z.col-a.col:a.col-z.col)[0]||null;
+ const policy=versionUnitAbilities(future[0].u).guard;
+ if(policy.priority!==FUTURE_GUARD_POLICY.priority||policy.frequency!==FUTURE_GUARD_POLICY.frequency||policy.maxPerAttack!==1)return null;
+ const crown=crownColumn(b,heroSide);
+ return [...future,...historical].sort((a,z)=>
+  Number(a.lane!==attackLane)-Number(z.lane!==attackLane)||
+  Math.abs(a.col-crown)-Math.abs(z.col-crown)||a.lane-z.lane||a.u.uid-z.u.uid)[0]||null;
+}
+
+Object.assign(__exports,{crownGuardCandidates,findCrownGuardian});
 
 },
 "src/ai.js":function(__exports,__load){
@@ -6313,26 +6355,6 @@ function calculateUnitStats(context,definition,side,level,experimentalHp=0){
 }
 
 Object.assign(__exports,{labMilitiaBonus,unitStatContext,unitStats,versionUnitStats});
-
-},
-"src/engine/guard-candidates.js":function(__exports,__load){
-// Éligibilité de la Garde future ; aucun choix implicite entre plusieurs gardiens.
-const {laneCount,lastCell,validLane}=__load("src/engine/board.js");
-const {versionUnitAbilities}=__load("src/cards/definitions.js");
-function crownGuardCandidates(b,attackLane,heroSide,attackerCol){
- if(!validLane(b,attackLane)||!Number.isInteger(attackerCol)||attackerCol<1||attackerCol>lastCell(b))return [];
- const guards=[];
- for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
-  const u=b.board[lane][col],guard=versionUnitAbilities(u)?.guard;
-  if(!guard||u.hp<=0||u.side!==heroSide||guard.target!=='own-crown')continue;
-  const sameLine=lane===attackLane;
-  const between=heroSide==='p'?col<attackerCol:col>attackerCol;
-  if(guard.scope==='all-lines'||sameLine&&(guard.scope==='line'||guard.scope==='positioned'&&between))guards.push({u,lane,col});
- }
- return guards;
-}
-
-Object.assign(__exports,{crownGuardCandidates});
 
 },
 "src/ui/markup.js":function(__exports,__load){
