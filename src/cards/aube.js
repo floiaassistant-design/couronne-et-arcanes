@@ -1,10 +1,10 @@
-// Transcription du tableau maître, édition observée le 25/10/2026 à 17:28:45.661Z.
+// Transcription du tableau maître, édition observée le 26/10/2026 à 07:46:27.447Z.
 // Les chiffres remplacent les valeurs de base ; ce ne sont jamais des bonus à additionner.
 import {freezeCardData} from './schema.js';
 
 export const AUBE_DESIGN_SOURCE=freezeCardData({
  url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
- editedAt:'2026-10-25T17:28:45.661Z'
+ editedAt:'2026-10-26T07:46:27.447Z'
 });
 
 export const AUBE_EVOLUTIONS=freezeCardData({
@@ -16,7 +16,7 @@ export const AUBE_EVOLUTIONS=freezeCardData({
   'éveillée':{abilities:{lastStand:{hp:5,frequency:'invocation'}}}
  },
  shield:{
-  rare:{stats:{hp:11},pendingDecisions:['guard-scope','riposte-damage']},
+  rare:{stats:{hp:11},abilities:{guard:{scope:'positioned',unitTargetPriority:false},riposte:{damageMode:'effective-attack'}},pendingDecisions:['guard-priority','guard-frequency']},
   'épique':{stats:{attack:2}},
   'légendaire':{stats:{hp:13}},
   divine:{abilities:{guard:{scope:'line',unitTargetPriority:false}}},
@@ -36,7 +36,7 @@ export const AUBE_EVOLUTIONS=freezeCardData({
   'éveillée':{abilities:{heal:{scope:'all-lines'}}}
  },
  paladin:{
-  'légendaire':{stats:{hp:11},pendingDecisions:['riposte-damage']},
+  'légendaire':{stats:{hp:11},abilities:{riposte:{damageMode:'effective-attack'}}},
   divine:{abilities:{armor:{amount:3}}},
   'éveillée':{stats:{hp:13},abilities:{riposteBarrier:{amount:2,cap:2,frequency:'round',target:'self',trigger:'authorized-riposte'}}}
  },
@@ -66,7 +66,7 @@ export const AUBE_EVOLUTIONS=freezeCardData({
   'éveillée':{geometry:{steps:2},abilities:{haste:{}}}
  },
  dawnbastion:{
-  divine:{abilities:{intervention:{amount:4,range:2,targets:1,scope:'line',direction:'forward',timing:'spawn',ignoreArmor:false}},pendingDecisions:['riposte-damage']},
+  divine:{abilities:{riposte:{damageMode:'effective-attack'},intervention:{amount:4,range:2,targets:1,scope:'line',direction:'forward',timing:'spawn',ignoreArmor:false}}},
   'éveillée':{stats:{attack:7}}
  }
 });

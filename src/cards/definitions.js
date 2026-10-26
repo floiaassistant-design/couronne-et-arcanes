@@ -55,3 +55,10 @@ export function unitVersionReference(id,rarity){
 export function unitVersionPlayable(reference){
  return resolveUnitDefinition(reference)?.status.combat==='implemented';
 }
+
+// Lecture des seuls instantanés futurs explicites ; aucun changement des références natives.
+export function versionUnitAbilities(unit){
+ if(!unit||!Object.hasOwn(unit,'rarity'))return null;
+ const definition=resolveUnitDefinition(unit);
+ return definition?.source?definition.abilities:null;
+}

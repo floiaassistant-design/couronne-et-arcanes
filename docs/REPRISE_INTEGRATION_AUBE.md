@@ -1,16 +1,40 @@
 # Intégration Aube — reprise par étapes
 
-## Point de reprise — 25 octobre 2026
+## Point de reprise — 26 octobre 2026
 
-**Étape 2 terminée : définitions centrales et compatibilité préparées. Arrêt demandé par le propriétaire entre chaque étape.**
+**Étapes 1 et 2 terminées ; étape 3 partielle. Arrêt avant l'étape 4.**
 
-- Branche unique : `feat/aube-evolutions-fiche-universelle`.
-- Base vérifiée : `cf8175002431e1714460f8be917665437a5b78c4` ; arbre `25e920beb822826e23d24833f6d591020a73b8ef`.
-- PR unique : [nº 53, brouillon](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53). Continuer cette PR à toutes les étapes.
-- Dernier commit : tête distante de cette branche, à relire avant reprise ; le présent checkpoint décrit l'étape 2. La description de PR donne la tête exacte et ses résultats CI.
-- Registre central des 51 versions, prévision statistique commune et refus sans consommation des versions non programmées. Les 41 évolutions restent non jouables. Aucune possession ni sauvegarde modifiée. Export régénéré depuis les sources ; graphismes et écrans conservés.
-- Prochaine intervention : **étape 3, capacités défensives**, après résolution des divergences Garde/Riposte ci-dessous ; puis nouvel arrêt avec checkpoint actualisé.
-- Aucune autorisation de fusion ou de publication. La mission autorise le développement ; chaque fusion exige un accord explicite et spécifique.
+- Branche unique : `feat/aube-evolutions-fiche-universelle` ; [PR nº 53, brouillon](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53).
+- Base main vérifiée : `cf8175002431e1714460f8be917665437a5b78c4` ; aucune autre PR ouverte. La nº 41 est archivée, fermée sans fusion le 25 octobre.
+- Dernière tête exacte et résultats GitHub : description de PR, actualisée après enregistrement et vérification du commit. Aucun accord de fusion ou publication.
+- Source de conception relue : [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f), édition `2026-10-26T07:46:27.447Z`. La page des sorts/archives renvoie à ce tableau et ne le remplace pas.
+- Préparé : moteur commun de dégâts/Riposte, réduction initiale, Armure, barrières et Dernier Rempart ; quotas sauvegardés pour les instantanés explicitement versionnés. Définitions futures réconciliées avec les règles générales de Garde et Riposte. Natifs et autres factions conservent leur chemin historique.
+- Garde : éligibilité Normale/Divine/Éveillée testée, mais raccordement non effectué. **Deux décisions manquent : priorité entre plusieurs gardiens et fréquence des interceptions.** Voir [propositions concrètes et interactions](AUBE_DEFENSES.md). Ne pas inventer ces règles.
+- Les 41 évolutions restent `pending`, refusées à la pose dans les deux camps et le laboratoire. Pas d'obtention, de conversion de profil, d'illustration, d'écran ou de nouvelle fiche. Les six cartes Collection restent telles quelles.
+- Prochaine action : recueillir les deux décisions Garde, confirmer les conventions techniques de défense avant activation, puis terminer l'étape 3 sur cette même PR. Arrêt entre étapes conservé.
+
+## Vérifications locales de cette reprise
+
+- `npm test` : **368 réussis**, dont 13 nouveaux tests de défenses ; assertions historiques conservées. Les seules attentes de données révisées sont celles remplacées par la nouvelle lecture Notion.
+- `npm run test:parity` : **60 scénarios identiques** ; pas de mise à jour de référence.
+- `npm run build` et `npm run build:test` : **réussis**, 47 modules et 76 illustrations embarquées. `JOUER.html` généré ; aucune correction manuelle.
+- `CONTROL_SEEDS=1 npm run control-balance` : **1 280 combats**, maximum 34 tours, contrôles d'intégrité réussis ; aucun équilibrage humain ou des évolutions futures déduit de ce résultat.
+- Les tests couvrent protections directes par attaque/sort/piège, poison historique, silence, quotas par tour/invocation, survie, compte des morts, Concorde/Ralliement, Perforation, barrières par effet, sauvegarde/reprise, instantanés indépendants, natifs des cinq factions et Garde symétrique sur deux géométries.
+- Navigateur Chromium/Playwright 1.56 : `browser_developer_lab.py`, `browser_save_integrity_v211.py`, `browser_card_capabilities.py` et `browser_maintenance.py` **réussis**. Bureau, portrait et paysage, web HTTP, export sans réseau, stockage réel, mission 01, sauvegarde/reprise, animations désactivées et mouvement réduit selon les parcours. Aucun téléphone physique, Safari ou Firefox testé.
+- CI distante et présence du blob export : à vérifier sur la tête finale et à consigner dans la PR. Les deux CI de la tête précédente `5bdfd02` ont été observées **success** ; elles ne valident pas le nouveau code.
+
+## Reprise pratique
+
+1. Relire `AGENTS.md`, `ETAT_PROJET.md`, ce checkpoint et `AUBE_DEFENSES.md` sur la tête distante réelle. Vérifier main et toutes les PR ouvertes avant de modifier.
+2. Relire Notion si de nouvelles décisions y ont été ajoutées. Les cases natives historiques n'annulent pas les futures règles générales ; ne pas changer les cinq factions globalement sans périmètre explicite.
+3. Terminer les seules parties autorisées de l'étape 3 et conserver les versions incomplètes fermées à la pose. Aucune nouvelle PR ou activation du laboratoire avant l'étape prévue.
+4. Relire le diff complet, tester le code exact, générer l'export, actualiser les documents et la PR. Vérifier l'enregistrement GitHub. Si seule la CI reste en cours, arrêter sans surveillance active.
+5. Les étapes suivantes restent : 4 = offensif/soutien/arrivée/IA/laboratoire ; 5 = fiche universelle ; 6 = revue complète. Aucun enchaînement automatique, fusion ou publication.
+
+## Historique — audits et résultats des étapes 1 et 2 (25 octobre)
+
+Les constats de sources, PR, divergences et prochaines étapes ci-dessous sont
+historiques. Le point de reprise ci-dessus les remplace pour le travail actuel.
 
 ## Sources examinées et état réel
 

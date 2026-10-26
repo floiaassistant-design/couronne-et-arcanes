@@ -89,15 +89,15 @@ test('Milicien : réduction remplacée 1/2/2/3/3, 8 PV totaux, riposte et Rempar
 
 test('Porte-égide : Armure 2 héritée, Garde étendue sans duplication, ambiguïtés de règle explicites',()=>{
  const defs=unitVersions('shield');
- assert.deepEqual(defs.map(d=>d.abilities.guard.scope),['legacy-line','legacy-line','legacy-line','legacy-line','line','all-lines']);
+ assert.deepEqual(defs.map(d=>d.abilities.guard.scope),['legacy-line','positioned','positioned','positioned','line','all-lines']);
  for(const d of defs){
   assert.deepEqual(d.abilities.armor,{amount:2,minimumDamage:1});
   assert.deepEqual(Object.keys(d.abilities).sort(),['armor','guard','riposte']);
   assert.deepEqual(d.geometry,{steps:1,range:1});
-  assert.equal(d.abilities.riposte.amount,2,'Valeur historique conservée dans la définition en attente');
+  assert.equal(d.abilities.riposte.damageMode,d.source?'effective-attack':'fixed');
  }
  assert.deepEqual(defs[0].pendingDecisions,[]);
- for(const d of defs.slice(1))assert.deepEqual(d.pendingDecisions,['guard-scope','riposte-damage']);
+ for(const d of defs.slice(1))assert.deepEqual(d.pendingDecisions,['guard-priority','guard-frequency']);
  assert.equal(defs[4].abilities.guard.unitTargetPriority,false);
 });
 
@@ -131,10 +131,10 @@ test('Sœur et Prieur : montant, cibles et lignes hérités ; barrière uniqueme
 test('Paladin : Armure 3 remplace 2, barrière personnelle plafonnée après Riposte autorisée',()=>{
  const defs=unitVersions('paladin');
  assert.deepEqual(defs.map(d=>d.abilities.armor.amount),[2,2,3,3]);
- for(const d of defs){assert.equal(d.abilities.riposte.frequency,'round');assert.equal(d.abilities.riposte.amount,2);}
+ for(const d of defs){assert.equal(d.abilities.riposte.frequency,'round');assert.equal(d.abilities.riposte.damageMode,d.source?'effective-attack':'fixed');}
  assert.deepEqual(defs[3].abilities.riposteBarrier,
   {amount:2,cap:2,frequency:'round',target:'self',trigger:'authorized-riposte'});
- for(const d of defs.slice(1))assert.deepEqual(d.pendingDecisions,['riposte-damage']);
+ for(const d of defs.slice(1))assert.deepEqual(d.pendingDecisions,[]);
 });
 
 test('Porte-étendard et Capitaine : Inspiration unique, cadence et cibles distinctes, arrivée héritée',()=>{
@@ -168,6 +168,6 @@ test('Ange : une Intervention héritée, Protection +3 plafonnée 20, Vol, Ripos
  for(const d of defs.slice(1)){
   assert.deepEqual(d.abilities.intervention,{amount:4,range:2,targets:1,scope:'line',direction:'forward',timing:'spawn',ignoreArmor:false});
   assert.equal(Object.keys(d.abilities).filter(k=>k==='intervention').length,1);
-  assert.deepEqual(d.pendingDecisions,['riposte-damage']);
+  assert.deepEqual(d.pendingDecisions,[]);
  }
 });

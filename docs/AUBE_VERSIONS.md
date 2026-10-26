@@ -1,6 +1,6 @@
 # Versions de cartes — contrat de données en préparation
 
-État de la PR Aube : définitions et compatibilité préparées, pouvoirs futurs non raccordés au combat. Les décisions restent dans le [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f), édition observée `2026-10-25T17:28:45.661Z`. Ce document décrit l'API, pas un nouveau tableau de décisions.
+État de la PR Aube : définitions et compatibilité préparées ; défenses partiellement raccordées au moteur, versions futures toujours refusées à la pose. Les décisions restent dans le [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f), édition observée `2026-10-26T07:46:27.447Z`. Ce document décrit l'API, pas un nouveau tableau de décisions.
 
 ## Responsabilités
 
@@ -34,7 +34,7 @@ Les dix natifs Aube et leurs 41 évolutions ont une définition. Les neuf rangs 
 - `status.design: 'validated'` signifie que la définition est issue d'une conception validée ou du catalogue natif.
 - `status.combat: 'implemented'` est réservé aux natifs actuellement jouables ; les évolutions sont `'pending'` tant que leurs règles ne sont pas programmées et vérifiées.
 - `status.obtaining: 'existing'` conserve les circuits historiques du natif ; `'undefined'` n'invente aucun circuit pour une évolution.
-- `pendingDecisions` signale les divergences Garde/Riposte relevées dans Notion. Les paramètres historiques hérités restent visibles dans le registre, mais ne sont pas déclarés comme un arbitrage validé pour les nouvelles versions.
+- `pendingDecisions` signale désormais `guard-priority` et `guard-frequency` pour les futures versions du Porte-égide. La nouvelle édition Notion distingue les valeurs historiques natives des règles futures générales : les évolutions du Porte-égide, du Paladin et de l’Ange utilisent une Riposte effective ; les natifs conservent leur définition historique. Ce périmètre ne programme pas implicitement les quatre autres factions.
 
 Le point d'entrée commun de pose refuse une référence explicite non jouable **avant consommation**. Le refus vaut aussi pour l'adversaire et le laboratoire. Les références historiques et les variantes natives explicites continuent de fonctionner.
 
@@ -47,3 +47,16 @@ Les prévisions utilisent les mêmes additions que les statistiques natives. `un
 Réutiliser le résolveur pour la création des unités et leurs capacités ; ne pas recopier les valeurs de `aube.js` dans le moteur, l'IA ou les vues. Ne passer une version à `implemented` qu'après raccordement complet de ses pouvoirs, descriptions et tests. Résoudre les entrées `pendingDecisions` avant leur activation. Les contraintes de barrières par source et l'ordre des interactions doivent préserver les protections déjà présentes.
 
 Le builder découvre ces modules par les imports du moteur ; l'export autonome est généré avec les mêmes sources. Aucun fichier HTML de variante, catalogue de sauvegarde parallèle ou système d'obtention n'est ajouté.
+
+## Préparation défensive de l'étape 3
+
+`versionUnitAbilities(unit)` ne renvoie des paramètres que pour un instantané
+avec rareté future explicite et connue ; une unité historique ou une rareté
+native explicite reste sur le chemin historique. Cette API ne rend pas une
+version jouable et ne recalcule aucun chiffre sauvegardé. Les tests utilisent
+ces instantanés pour exercer les mêmes primitives de moteur.
+
+Les défenses et leurs quotas sont détaillés dans [AUBE_DEFENSES.md](AUBE_DEFENSES.md).
+Les barrières de soin sont prêtes mais leur raccordement aux soins effectifs
+multi-cibles appartient à l'étape 4. La Garde future n'est pas activée : seul le
+calcul d'éligibilité est disponible, sans ordre ou fréquence décidé implicitement.

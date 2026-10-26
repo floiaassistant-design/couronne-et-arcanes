@@ -1,6 +1,7 @@
 // Contrôle du plateau : règles pures, utilisées par le moteur, l'IA et les aperçus.
 // Aucun accès aux mains, pioches, profils, DOM ou stockage.
 import {CARDS,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
+import {versionUnitAbilities} from '../cards/definitions.js';
 import {laneCount,lastCell,crownColumn,entryColumn,validLane,trapColumns} from './board.js';
 const alive=u=>!!u&&u.hp>0;
 const direction=side=>side==='p'?1:-1;
@@ -9,7 +10,8 @@ export const silenced=(b,u)=>alive(u)&&Number.isFinite(u.silenceUntil)&&u.silenc
 export const activeAbility=(b,u)=>silenced(b,u)?'':u.ability;
 export function silenceValue(u){
  const value={heal:6,inspire:5,splash:6,poison:5,lifesteal:5,pierce:3,haste:3,silence:6,portal:4,trapper:4}[u?.ability]||0;
- return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)?2:0);
+ const future=versionUnitAbilities(u);
+ return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0);
 }
 export function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 export function silenceTarget(b,side,lane){

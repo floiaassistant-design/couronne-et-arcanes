@@ -1,3 +1,14 @@
+## En préparation — Aube, défenses versionnées (26 octobre 2026)
+
+- Relecture du tableau maître Notion, édition du 26 octobre ; futures Garde
+  positionnelle/Divine/Éveillée et Riposte effective retranscrites dans le registre.
+- Résolution de dégâts et Riposte extraite dans le moteur commun : réduction
+  initiale, Armure, barrières par effet, Dernier Rempart et quotas persistants.
+- Éligibilité de Garde testée, sans arbitrage entre gardiens ni quota inventé.
+  **Étape 3 partielle** ; ses deux décisions restent nécessaires avant raccordement.
+- Natifs et anciennes sauvegardes conservés ; aucune nouvelle rareté jouable,
+  obtention, fiche, image ou publication. PR nº 41 archivée ; PR nº 53 unique.
+
 ## En préparation — Aube, définitions et compatibilité (25 octobre 2026)
 
 - Registre central de 51 versions Aube : identités par personnage/rareté,

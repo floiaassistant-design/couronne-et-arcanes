@@ -15,6 +15,21 @@
   invoquées. Aucun recalcul à la reprise, aucune obtention ou migration implicite.
   Voir le [contrat des versions](docs/AUBE_VERSIONS.md).
 
+## Contrat — préparation des défenses versionnées
+
+- `engine/battle-defense.js` est l'unique résolution de `hit` et Riposte pour
+  tous les appels du moteur. `versionUnitAbilities` lit le registre seulement
+  pour un instantané portant explicitement une rareté future ; les natifs et
+  anciens combattants gardent leurs valeurs et quotas historiques.
+- Les versions futures restent `pending` et refusées à la pose. Ne pas activer
+  une définition parce qu'une partie de ses défenses fonctionne dans les tests.
+- `engine/guard-candidates.js` énumère seulement les gardiens éligibles. Aucun
+  choix entre gardiens ni quota d'interception n'est décidé par cette API ;
+  leur raccordement attend les décisions consignées dans le checkpoint.
+- Les quotas réels d'une capacité doivent survivre à la sauvegarde ; les
+  instantanés d'événements ne doivent pas partager un objet mutable de barrières.
+  Voir [les défenses et leurs limites](docs/AUBE_DEFENSES.md).
+
 ## Contrat permanent — six raretés de Collection et fiche courte
 
 - La Collection conserve **six cartes côte à côte pour chaque personnage** (Commune, Rare, Épique, Légendaire, Divine, Éveillée), et non une vignette unique. Le remplacement de six cartes par une seule était une proposition documentaire annulée par le propriétaire.

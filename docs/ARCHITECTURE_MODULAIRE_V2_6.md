@@ -1,3 +1,20 @@
+## Défenses versionnées — étape 3 partielle, 26 octobre 2026
+
+`engine/battle-defense.js` extrait la résolution de dégâts et Riposte de
+`battle.js` et partage les mêmes appels entre sorts, pièges, attaques et pouvoirs.
+Les règles futures se lisent par `cards/definitions.js:versionUnitAbilities`,
+sans copie de paramètres dans le moteur. Le contrôle de silence lit cette
+même API pour reconnaître une Riposte future hors des IDs historiques.
+Le graphe reste dirigé vers les données et sans cycle ; aucun DOM dans le moteur.
+
+`engine/guard-candidates.js` ne fait qu'énumérer l'éligibilité positionnelle,
+de ligne ou de toutes lignes ; il ne remplace pas le sélecteur historique.
+Priorité et fréquence attendent une décision. Les fonctions de barrière gardent
+un plafond par effet et ne diminuent pas une protection déjà présente.
+Les instantanés explicitement versionnés utilisés par les tests gardent leurs
+quotas ; la pose de versions futures reste interdite. Aucun écran ou catalogue
+économique ajouté. [Règles exécutées et limites](AUBE_DEFENSES.md).
+
 ## Versions de rareté — préparation sur la branche Aube
 
 `cards/schema.js` porte les identifiants et l'immuabilité ; `cards/aube.js` les
