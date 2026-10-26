@@ -30,8 +30,13 @@ async def run(browser,label,vp,touch=False,reduced=False,legacy=False):
    else:await page.mouse.click(x,y)
   elif touch:await n.tap()
   else:await n.click()
+ async def select_hand():
+  await click('.hand [data-index="0"]')
+  if touch:
+   assert await page.evaluate('selectedCard')==-1
+   await click('.hand [data-index="0"]')
  async def setup(id):
-  await page.evaluate(SETUP,{'id':id,'legacy':legacy});await click('.hand [data-index="0"]')
+  await page.evaluate(SETUP,{'id':id,'legacy':legacy});await select_hand()
  await setup('firebolt')
  snapshot=await page.evaluate('(key)=>localStorage.getItem(key)',KEY)
  state=await page.evaluate('JSON.stringify(battle)')
@@ -53,13 +58,14 @@ async def run(browser,label,vp,touch=False,reduced=False,legacy=False):
  await click('[data-action="spell-cancel"]')
  assert await page.locator('.spell-targeting').count()==0
  assert await page.evaluate('JSON.stringify(battle)')==state
- await click('.hand [data-index="0"]');await click('[data-unit-id="901"]')
+ await select_hand();await click('[data-unit-id="901"]')
  await page.screenshot(path=f'/tmp/ca-targeting-{label}.png')
  await click('[data-action="spell-confirm"]')
  assert await page.evaluate('battle.board[0][3].hp')==6
  assert await page.evaluate('battle.heroes.p.cardsPlayed')==1
  if not reduced:
-  await page.wait_for_selector('.combat-playing');await page.wait_for_timeout(450)
+  await page.wait_for_selector('.combat-playing')
+  await page.wait_for_selector('.combat-fx-layer[data-faction="forge"]')
   assert await page.locator('.combat-fx-layer[data-faction="forge"]').count()==1
   await page.screenshot(path=f'/tmp/ca-targeting-{label}-impact.png')
   await page.evaluate("act('spell-confirm',{});act('spell-target',{lane:'0',unitId:'902'})")

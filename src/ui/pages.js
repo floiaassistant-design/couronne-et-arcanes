@@ -1,3 +1,4 @@
+import {cardPreviewAttributes} from './card-presentation.js';
 import { renderCollectionCatalogue } from './collection.js';
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 import { CARDS, CLASS_SKILLS, FACTIONS, CLASSES, CAMPAIGN, TOWER_MAX, towerMission } from '../data.js';
@@ -159,7 +160,7 @@ export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
     )
       .map(
         ([id, count]) =>
-          `<div class="deck-item"><span><span class="gold">${count}×</span> ${esc(CARDS[id].name)}</span><button class="remove" aria-label="Retirer ${esc(CARDS[id].name)}" data-action="deck-remove" data-id="${id}">×</button></div>`
+          `<div class="deck-item"><span ${cardPreviewAttributes(id,CARDS[id].rarity,'deck',esc)}><span class="gold">${count}×</span> ${esc(CARDS[id].name)}</span><button class="remove" aria-label="Retirer ${esc(CARDS[id].name)}" data-action="deck-remove" data-id="${id}">×</button></div>`
       )
       .join(
         ''

@@ -1,7 +1,8 @@
-"""Aperçu au survol/focus uniquement ; clic et toucher ferment sans épingler."""
+"""Aperçu au survol/focus uniquement ; clic sélectionne, premier toucher consulte sans sélectionner."""
 import asyncio
 from pathlib import Path
 from playwright.async_api import async_playwright
+from browser_card_presentation import run as universal_run
 ROOT=Path(__file__).resolve().parents[1]
 async def contained(page,panel):
     b=await panel.bounding_box();vp=page.viewport_size
@@ -38,7 +39,8 @@ async def run(browser,label,viewport):
     await waiting.hover();assert 'Attente 3 tours' in await panel.inner_text()
     assert 'À l’invocation' in await panel.inner_text();await contained(page,panel)
     await page.screenshot(path=f'/tmp/ca-card-preview-{label}-hand.png',full_page=False)
-    await waiting.tap();assert await panel.is_hidden();assert await page.evaluate('selectedCard')==-1
+    await waiting.tap();assert await panel.is_visible();assert await page.evaluate('selectedCard')==-1
+    await panel.locator('[data-action="close-inspection"]').click();assert await panel.is_hidden()
     ready=page.locator('.hand-card[data-index="1"]')
     await ready.click();assert await page.evaluate('selectedCard')==1
     assert await panel.is_hidden()
@@ -54,7 +56,8 @@ async def run(browser,label,viewport):
     assert 'ATQ 5 / PV 2/6' in await panel.inner_text();await contained(page,panel)
     await page.screenshot(path=f'/tmp/ca-card-preview-{label}-enemy.png',full_page=False)
     before=await page.evaluate('JSON.stringify({battle,selectedCard})')
-    await enemy.tap();assert await panel.is_hidden()
+    await enemy.tap();assert await panel.is_visible()
+    await panel.locator('[data-action="close-inspection"]').click();assert await panel.is_hidden()
     assert await page.evaluate('JSON.stringify({battle,selectedCard})')==before
     await page.locator('[data-action="end-turn"]').click();assert await panel.is_hidden()
     await page.reload();assert await panel.is_hidden();assert not errors,errors
@@ -62,6 +65,8 @@ async def run(browser,label,viewport):
 async def main():
     async with async_playwright() as pw:
         browser=await pw.chromium.launch(headless=True,args=['--no-sandbox'])
-        for label,vp in [('desktop',{'width':1366,'height':900}),('mobile',{'width':390,'height':844}),('landscape',{'width':844,'height':390})]:await run(browser,label,vp)
+        for label,vp in [('desktop',{'width':1366,'height':900}),('mobile',{'width':390,'height':844}),('landscape',{'width':844,'height':390})]:
+            await run(browser,label,vp)
+            await universal_run(browser,label,vp)
         await browser.close()
 if __name__=='__main__':asyncio.run(main())

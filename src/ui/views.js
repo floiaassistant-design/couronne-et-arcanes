@@ -1,10 +1,11 @@
 import { esc } from './markup.js';
+import {cardPresentation,cardPreviewAttributes} from './card-presentation.js';
 import { generatedCardFace } from './generated-card.js';
 import { createPages } from './pages.js';
 import { createBattleView } from './battle-view.js';
-import { unitStatContext, unitStats } from '../engine/unit-stats.js';
+import { unitStatContext } from '../engine/unit-stats.js';
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
-import { CARDS, FACTIONS, CLASSES, cardTraits } from '../data.js';
+import { FACTIONS, CLASSES } from '../data.js';
 
 import { visualFor, artSrc, cardTemplateFor } from '../visuals.js';
 
@@ -73,26 +74,32 @@ export function createViews(getState) {
       select = false,
       canEdit = false,
       upgradable = false,
-      cooldown = null
+      cooldown = null,
+      rarity = null, statContext = null, side = 'p', previewContext = null
     } = {}
   ) {
-    const c = CARDS[id];
-    if (!c) return '';
+    const reference=typeof id==='object'?id:rarity?{id,rarity}:id;
+    id=typeof id==='object'?id.id:id;
+    const inHand = compact && cooldown !== null && cooldown !== undefined;
+    const context = statContext||(inHand && battle ? battle : unitStatContext(profile));
+    const entry=inHand?battle?.heroes.p.hand[index]:null;
+    const actualReference=entry?.id===id?entry:reference;
+    const presentation=cardPresentation(actualReference,{context,side});
+    if(!presentation)return '';
+    const c=presentation.card;
     const tone = FACTIONS[c.faction].tone,
       owned = profile.collection[id] || 0,
       visual = visualFor(c, { cards: true }),
       masteryXp = profile.mastery?.[id] || 0;
-    const inHand = compact && cooldown !== null && cooldown !== undefined,
-      waiting = inHand && cooldown > 0,
+    const waiting = inHand && cooldown > 0,
       ready = inHand && !waiting;
-    const context = inHand && battle ? battle : unitStatContext(profile),
-      stats = unitStats(context, id);
+    const stats=presentation.stats;
     const bonus = context.upgrades?.[id] || 0,
       rank = masteryRank({ mastery: context.mastery }, id);
     const fullCard = cardTemplateFor(c),
       pilot = id === 'archer',
       illustrated = pilot || inHand; // Cadre commun de la main illustrée.
-    return `<div class="unit-card ${fullCard ? 'generated-template' : ''} ${illustrated ? 'illustrated-pilot' : ''} ${compact ? 'compact' : ''} ${waiting ? 'on-cooldown hand-waiting' : ''} ${ready ? 'hand-ready' : ''} ${inHand ? 'hand-card' : ''} ${inHand && animationsEnabled ? 'timer-motion' : ''} ${select ? 'selected' : ''}" data-rarity="${c.rarity}" style="--tone:${tone}" ${compact ? `aria-controls="hand-card-inspection" aria-expanded="false" data-action="select-card" data-index="${index}" role="button" tabindex="0" aria-label="${esc(c.name)}${inHand ? (waiting ? ', en attente : ' + cooldown + ' tour' + (cooldown > 1 ? 's' : '') + ' avant disponibilité' : ', prête à être jouée') : ''}, consulter les capacités"` : ''}>
+    return `<div class="unit-card ${fullCard ? 'generated-template' : ''} ${illustrated ? 'illustrated-pilot' : ''} ${compact ? 'compact' : ''} ${waiting ? 'on-cooldown hand-waiting' : ''} ${ready ? 'hand-ready' : ''} ${inHand ? 'hand-card' : ''} ${inHand && animationsEnabled ? 'timer-motion' : ''} ${select ? 'selected' : ''}" data-rarity="${c.rarity}" style="--tone:${tone}" ${!inHand&&previewContext!=='collection'?cardPreviewAttributes(id,c.rarity,previewContext||screen,esc):''} ${compact ? `aria-controls="hand-card-inspection" aria-expanded="false" data-action="select-card" data-index="${index}" role="button" tabindex="0" aria-label="${esc(c.name)}${inHand ? (waiting ? ', en attente : ' + cooldown + ' tour' + (cooldown > 1 ? 's' : '') + ' avant disponibilité' : ', prête à être jouée') : ''}, consulter les capacités"` : ''}>
  ${illustrated && !fullCard ? `<span class="illustrated-faction">${esc(FACTIONS[c.faction].short)}</span><span class="illustrated-count" data-delay-kind="${inHand ? 'remaining' : 'base'}" aria-label="${inHand ? 'Attente restante' : 'Délai de base'} : ${inHand ? cooldown : c.delay}"><b>${inHand ? cooldown : c.delay}</b></span>` : ''}
  <div class="card-head"><span>${esc(c.heroClass ? CLASSES[c.heroClass].name : FACTIONS[c.faction].short)}</span><b>${c.heroClass ? 'COMPÉTENCE' : c.type === 'sort' ? 'SORT' : 'UNITÉ'}</b></div>
  <div class="card-quality-tag" aria-label="Rareté : ${esc(c.rarity)}">${esc(c.rarity.toUpperCase())}</div>
@@ -102,10 +109,10 @@ export function createViews(getState) {
      : ` <div class="portrait creature-portrait role-${visual.role}"><img class="creature-image" src="${artSrc(visual.art)}" alt="" data-artwork-status="placeholder" loading="lazy" draggable="false" /><span class="portrait-emblem" aria-hidden="true">${c.icon}</span></div>
  ${inHand ? `<div class="hand-readiness ${waiting ? 'waiting' : 'ready'}" aria-hidden="true">${waiting ? '◷ EN ATTENTE' : '✓ PRÊTE'}</div>` : ''}
  <div class="card-title">${esc(c.name)}${bonus ? ` <span class="tiny gold">+${bonus}</span>` : ''}${rank ? ` <span class="mastery-seal" title="Maîtrise ${rank}/3">✦${rank}</span>` : ''}</div>
- <div class="card-detail" title="${esc(c.description)}">${pilot ? 'Portée 2' : esc(c.description)}</div>
+ <div class="card-detail" title="${esc(c.description)}">${esc(c.description)}</div>
  ${
-   cardTraits(c.id).length
-     ? `<div class="card-traits">${cardTraits(c.id)
+   presentation.traits.length
+     ? `<div class="card-traits">${presentation.traits
          .map((t) => `<span class="trait-pill">${esc(t)}</span>`)
          .join('')}</div>`
      : ''

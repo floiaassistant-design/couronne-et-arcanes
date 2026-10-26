@@ -45,3 +45,19 @@ body.card-combat-mode #hand-card-inspection.illustrated-inspection:not([hidden])
  .illustrated-inspection .inspection-heading{min-height:34px}
 }
 @media(prefers-reduced-motion:reduce){.illustrated-inspection{animation:none!important;transition:none!important}}
+
+/* Tous les contextes reprennent la même fiche, y compris dans les modales. */
+.illustrated-inspection .inspection-description p{margin:0 0 7px}
+.illustrated-inspection .inspection-description p:last-child{margin-bottom:0}
+[data-card-preview]:focus-visible{outline:2px solid #ffe4a2;outline-offset:3px}
+.lab-card-preview{width:150px;max-width:100%;margin:12px 0;cursor:help}
+.lab-card-preview .generated-face{border:2px solid var(--rarity-border,#c9ae7c)}
+@media(max-height:540px){
+ .illustrated-inspection .card-preview{display:block;overflow-y:auto}
+ .illustrated-inspection .inspection-body{overflow:visible}
+}
+
+/* Le survol hors combat reste transparent pour atteindre les cartes voisines.
+   Focus et toucher permettent de faire défiler la fiche et de la fermer. */
+.collection-hover-inspection.illustrated-inspection[data-input="hover"]{pointer-events:none}
+.collection-hover-inspection.illustrated-inspection[data-input="hover"] .inspection-heading button{visibility:hidden;pointer-events:none}

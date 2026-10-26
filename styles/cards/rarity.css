@@ -1,18 +1,18 @@
 /* Identité de rareté des cartes, indépendante de leur disponibilité. */
 /* Lisibilité des cartes : couleur de rareté prioritaire, distincte de l'état de jeu. */
-.unit-card[data-rarity="commun"] {
+:is(.unit-card,.board-card,.card-preview,.lab-card-preview)[data-rarity="commun"] {
   --rarity-border: #c8d8df;
   --rarity-ink: #172935;
 }
-.unit-card[data-rarity="rare"] {
+:is(.unit-card,.board-card,.card-preview,.lab-card-preview)[data-rarity="rare"] {
   --rarity-border: #69dbf9;
   --rarity-ink: #092735;
 }
-.unit-card[data-rarity="épique"] {
+:is(.unit-card,.board-card,.card-preview,.lab-card-preview)[data-rarity="épique"] {
   --rarity-border: #d4a2ff;
   --rarity-ink: #2b1640;
 }
-.unit-card[data-rarity="légendaire"] {
+:is(.unit-card,.board-card,.card-preview,.lab-card-preview)[data-rarity="légendaire"] {
   --rarity-border: #ffd46b;
   --rarity-ink: #392602;
 }
@@ -62,3 +62,6 @@
   display: block;
   font-size: 8px;
 }
+
+:is(.unit-card,.board-card,.card-preview,.lab-card-preview)[data-rarity="divine"]{--rarity-border:#f06a5f;--rarity-ink:#401716}
+:is(.unit-card,.board-card,.card-preview,.lab-card-preview)[data-rarity="éveillée"]{--rarity-border:#fff09a;--rarity-ink:#383314}

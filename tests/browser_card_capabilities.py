@@ -9,6 +9,8 @@ async def touch_or_click(page,card,touch):
         await card.scroll_into_view_if_needed()
         box=await card.bounding_box()
         await page.touchscreen.tap(box['x']+10,box['y']+min(35,box['height']/2))
+        assert await page.locator('#hand-card-inspection').is_visible()
+        await page.touchscreen.tap(box['x']+10,box['y']+min(35,box['height']/2))
     else:
         await card.click(position={'x':10,'y':25})
 
@@ -39,7 +41,7 @@ async def run(browser,label,viewport):
     assert await page.evaluate('selectedCard')==-1
     assert await page.evaluate('JSON.stringify(battle)')==model
     assert 'ATQ 5 / PV 8' in await panel.inner_text()
-    assert 'Peut attaquer à deux cases' in await panel.inner_text()
+    assert 'Portée 2' in await panel.inner_text()
     assert 'Bonus inclus' in await panel.inner_text()
     after=await cards.nth(1).bounding_box()
     assert abs(before['y']-after['y'])<2,(label,before,after)

@@ -1,37 +1,7 @@
-import {generatedCardFace} from './generated-card.js';
-import {concordeDetails} from './concorde.js';
-// Fiche partagée main/plateau : lecture et état éphémère, aucune action de jeu.
-import {CARDS,FACTIONS,CLASSES,cardTraits} from '../data.js';
-import {unitStats} from '../engine/unit-stats.js';
-import {formationBonus} from '../engine.js';
-import {silenced} from '../engine/battle-control.js';
-import {visualFor,artSrc,cardTemplateFor} from '../visuals.js';
-
-export function boardInspectionData(battle,uid){
- for(let lane=0;lane<(battle?.board?.length||0);lane++)for(let col=1;col<battle.board[lane].length-1;col++){
-  const u=battle.board[lane][col];if(!u||String(u.uid)!==String(uid))continue;
-  const concord=formationBonus(battle,lane,u),rallied=u.rallyUntil>=battle.round?1:0;
-  const statuses=[concord?'Concorde +1 ATQ':'',rallied?'Ralliement +1 ATQ':'',u.armor?'Armure '+u.armor:'',u.barrier?'Barrière '+u.barrier:'',u.poisonTurns?'Poison '+u.poisonTurns+' tour(s)':'',u.stun?'Immobilisation '+u.stun:'',silenced(battle,u)?'Silence : capacités déclenchées suspendues':''].filter(Boolean);
-  return {card:CARDS[u.id],entry:{wait:0},stats:{atk:u.atk+concord+rallied,hp:u.hp,maxhp:u.maxhp,bonuses:[]},board:{side:u.side,lane,col,statuses,concordeActive:!!concord}};
- }
- return null;
-}
-
-export function cardInspectionContent(card,entry,stats,esc,{board=null}={}){
- const bonusText=stats?.bonuses.map(b=>esc(b.label)+' '+[b.atk?'+'+b.atk+' ATQ':'',b.hp?'+'+b.hp+' PV':''].filter(Boolean).join(' / ')).join(' · ');
- const traits=cardTraits(card.id),faction=FACTIONS[card.faction];
- const readiness=board?`${board.side==='p'?'Votre unité':'Unité adverse'} · Ligne ${board.lane+1}, case ${board.col}`:entry.wait>0?'Attente '+entry.wait+' tour'+(entry.wait>1?'s':''):'Prête à jouer';
- const heading=`<div class="inspection-heading"><span class="inspection-context">${board?'SUR LE PLATEAU':'DANS VOTRE MAIN'}</span><button type="button" data-action="close-inspection" aria-label="Fermer la fiche">×</button></div>`;
- const statistics=stats?`<div class="inspection-stats">${board?'En combat':'À l’invocation'} : <b>ATQ ${stats.atk} / PV ${board?stats.hp+'/':''}${stats.maxhp}</b></div>`:'';
- const identity=`<div class="inspection-feature ${cardTemplateFor(card)?'inspection-generated-feature':''}">${cardTemplateFor(card)?generatedCardFace(card,{stats,delay:board?0:entry.wait,kind:board?'deployed':'remaining',concordeActive:!!board?.concordeActive,esc}):`<img class="inspection-art" src="${artSrc(visualFor(card,{cards:true}).art)}" alt="" data-artwork-status="placeholder" draggable="false">`}<div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span><span class="inspection-rarity">${esc(card.rarity)} · ${esc(card.type)}</span><div class="inspection-readiness">${esc(readiness)}</div>${statistics}</div></div>`;
- const body=`<div class="inspection-body"><p class="inspection-description">${esc(card.description)}</p>
-  ${concordeDetails(card,esc,board?board.concordeActive:null)}
-  <div class="inspection-summary">${esc(faction.name)} · ${esc(card.rarity)}${card.heroClass?' · '+esc(CLASSES[card.heroClass].name):''} · ${esc(readiness)}</div>
-  ${traits.length?`<div class="inspection-traits">${traits.map(t=>`<span>${esc(t)}</span>`).join(' · ')}</div>`:''}
-  ${board?.statuses.length?`<div class="inspection-statuses">${board.statuses.map(esc).join(' · ')}</div>`:''}
-  ${bonusText?`<div class="inspection-bonuses">Bonus inclus : ${bonusText}</div>`:''}</div>`;
- return `<div class="card-preview" data-preview-kind="${board?'board':'hand'}" data-side="${board?.side||'p'}" data-rarity="${esc(card.rarity)}" style="--preview-tone:${faction.tone}">${heading}${identity}${body}</div>`;
-}
+// Lecteur universel : état de consultation éphémère, aucune règle ou sauvegarde.
+import {cardPresentation,cardInspectionContent,boardInspectionData} from './card-presentation.js';
+import {labCardStats,labRarity} from '../engine/developer-lab.js';
+export * from './card-presentation.js';
 
 export function previewPosition(anchor,size,viewport,kind){
  const margin=12,gap=12,clamp=(n,max)=>Math.max(margin,Math.min(n,max-margin));
@@ -52,102 +22,121 @@ export function previewPosition(anchor,size,viewport,kind){
 }
 
 export function createCardInspection(getContext,esc){
- let current=null,trigger=null,dismissTimer,dismissedKey=null;
- const panel=()=>document.getElementById('hand-card-inspection');
- const key=r=>r.kind+':'+r.id;
+ let current=null,trigger=null,popup=null,activePanel=null,dismissTimer,dismissedKey=null,touch=null,touchOpenKey=null;
+ const key=r=>[r.kind,r.id,r.rarity||'',r.side||'p'].join(':');
+ const inPanel=t=>t instanceof Element&&!!t.closest('#hand-card-inspection,#collection-hover-inspection');
+ function source(t){
+  if(!(t instanceof Element)||inPanel(t))return null;
+  const el=t.closest('.collection-card-visual[data-collection-preview],.hand-card,.battle-cell .board-card,[data-card-preview]');
+  if(!el)return null;
+  const action=t.closest('button,a,input,select,[data-action]');
+  if(action&&action!==el&&el.contains(action))return null;
+  if(el.matches('.board-card[data-action]'))return null; // Ciblage explicite d'un sort.
+  return el;
+ }
+ function request(el){
+  if(el.matches('.hand-card'))return {kind:'hand',id:Number(el.dataset.index)};
+  if(el.matches('.board-card'))return {kind:'board',id:el.dataset.unitId};
+  return {kind:el.dataset.previewContext||'collection',id:el.dataset.cardId,rarity:el.dataset.previewRarity||el.dataset.rarity,side:el.dataset.side||'p'};
+ }
+ function panel(combat){
+  if(combat)return document.getElementById('hand-card-inspection');
+  if(!popup){popup=document.createElement('div');popup.id='collection-hover-inspection';popup.className='collection-hover-inspection illustrated-inspection';popup.setAttribute('role','region');popup.setAttribute('aria-label','Capacités de la carte consultée');popup.hidden=true;document.body.appendChild(popup);}
+  return popup;
+ }
  function closeCardInspection(suppressHover=false,sourceKey=null){
   dismissedKey=suppressHover?(sourceKey||(current?key(current):dismissedKey)):null;
-  clearTimeout(dismissTimer);current=null;
+  clearTimeout(dismissTimer);current=null;touchOpenKey=null;
   trigger?.setAttribute('aria-expanded','false');trigger=null;
-  const el=panel();if(!el)return;
-  el.hidden=true;el.textContent='';el.classList.remove('illustrated-inspection');
-  for(const p of ['left','top'])el.style.removeProperty(p);
-  el.style.removeProperty('--preview-max-height');
-  el.closest('.hand-header')?.style.removeProperty('--inspection-header-height');
+  for(const el of [activePanel,popup,document.getElementById('hand-card-inspection')])if(el){
+   el.hidden=true;el.textContent='';el.style.removeProperty('left');el.style.removeProperty('top');el.style.removeProperty('--preview-max-height');
+   el.closest('.hand-header')?.style.removeProperty('--inspection-header-height');
+  }
+  activePanel=null;
  }
  function position(){
-  const el=panel();if(!el||el.hidden||!trigger?.isConnected)return;
-  const anchor=trigger.getBoundingClientRect();
-  // Les descriptions peuvent agrandir la fiche : garder le menu Citadelle libre.
-  const titlebar=document.querySelector('.combat-titlebar')?.getBoundingClientRect();
+  const el=activePanel;if(!el||el.hidden||!trigger?.isConnected){if(trigger&&!trigger.isConnected)closeCardInspection();return;}
+  const anchor=trigger.getBoundingClientRect(),combat=current.kind==='hand'||current.kind==='board';
+  const titlebar=document.querySelector(combat?'.combat-titlebar':'.main-nav')?.getBoundingClientRect();
   const topInset=Math.max(12,titlebar?.bottom+8||12);
-  let availableHeight=innerHeight-topInset-12;
+  let availableHeight=Math.max(120,innerHeight-topInset-12);
   el.style.setProperty('--preview-max-height',availableHeight+'px');
-  const size=el.getBoundingClientRect();
-  const beside=anchor.right+12+size.width<=innerWidth-12||anchor.left-size.width-12>=12;
-  const handTop=document.querySelector('.combat-hand-tray')?.getBoundingClientRect().top;
-  if(!beside&&handTop>topInset+180){
-   availableHeight=Math.min(availableHeight,handTop-topInset-12);
-   el.style.setProperty('--preview-max-height',availableHeight+'px');
-  }
-  // Sur écran étroit, une grande fiche de main doit tenir au-dessus de la carte
-  // lorsqu'aucun côté n'a assez de place : elle ne doit pas bloquer sa sélection.
-  if(current.kind==='hand'&&anchor.top>=324&&!beside){
-   el.style.setProperty('--preview-max-height',Math.min(availableHeight,anchor.top-topInset-12)+'px');
-  }
-  const pos=previewPosition(anchor,el.getBoundingClientRect(),{width:innerWidth,height:innerHeight,topInset},current.kind);
+  const size=el.getBoundingClientRect(),beside=anchor.right+12+size.width<=innerWidth-12||anchor.left-size.width-12>=12;
+  const handTop=combat?document.querySelector('.combat-hand-tray')?.getBoundingClientRect().top:null;
+  if(!beside&&handTop>topInset+180)el.style.setProperty('--preview-max-height',Math.min(availableHeight,handTop-topInset-12)+'px');
+  if(current.kind==='hand'&&anchor.top>=324&&!beside)el.style.setProperty('--preview-max-height',Math.min(availableHeight,anchor.top-topInset-12)+'px');
+  const pos=previewPosition(anchor,el.getBoundingClientRect(),{width:innerWidth,height:innerHeight,topInset},current.kind==='hand'?'hand':'board');
   el.style.left=pos.left+'px';el.style.top=pos.top+'px';
  }
- function show(request){
-  const {battle,screen}=getContext();if(!battle||screen!=='battle')return;
-  clearTimeout(dismissTimer);
-  if(dismissedKey!==null)return;
-  dismissedKey=null;
-  const el=panel();if(!el)return;
-  const data=request.kind==='board'?boardInspectionData(battle,request.id):(()=>{
-   const entry=battle.heroes.p.hand[request.id],card=entry&&CARDS[entry.id];
-   return card?{card,entry,stats:unitStats(battle,card.id)}:null;
-  })();
-  if(!data?.card)return;
-  if(current&&key(current)===key(request)&&!el.hidden)return;
-  if(el.hidden){const header=el.closest('.hand-header');header?.style.setProperty('--inspection-header-height',header.getBoundingClientRect().height+'px');}
-  trigger?.setAttribute('aria-expanded','false');
-  trigger=request.kind==='board'?[...document.querySelectorAll('.battle-cell .board-card')].find(c=>c.dataset.unitId===String(request.id)):document.querySelector(`.hand-card[data-index="${request.id}"]`);
-  trigger?.setAttribute('aria-expanded','true');current=request;
-  el.classList.add('illustrated-inspection');
-  el.innerHTML=cardInspectionContent(data.card,data.entry,data.stats,esc,{board:data.board});
-  el.hidden=false;position();
+ function read(r,ctx){
+  if(r.kind==='board')return boardInspectionData(ctx.battle,r.id);
+  if(r.kind==='hand'){
+   const entry=ctx.battle?.heroes.p.hand[r.id];if(!entry)return null;
+   const presentation=cardPresentation(entry,{context:ctx.battle});
+   return presentation?{...presentation,presentation,entry}:null;
+  }
+  let presentation;
+  if(r.kind==='developer'&&ctx.developer?.draft){
+   const lab=ctx.developer.draft,s=labCardStats(lab,r.side,r.id);
+   presentation=cardPresentation({id:r.id,rarity:labRarity(lab,r.side,r.id)},{definition:s.definition,stats:s.definition?{atk:s.atk,maxhp:s.hp,bonuses:[]}:null});
+  }else presentation=cardPresentation({id:r.id,rarity:r.rarity},{profile:ctx.profile});
+  return presentation?{...presentation,presentation,entry:{wait:0}}:null;
  }
- function inspectCard(index){const i=Number(index);if(Number.isInteger(i)&&i>=0)show({kind:'hand',id:i});}
- function inspectUnit(uid){show({kind:'board',id:String(uid)});}
- function suppressCardInspection(index){closeCardInspection(true,'hand:'+Number(index));}
- function dismissCardInspection(){const blocked=dismissedKey;closeCardInspection();dismissedKey=blocked;}
+ function show(r,el,force=false,input='hover'){
+  const ctx=getContext(),combat=r.kind==='board'||r.kind==='hand';
+  if(ctx.screen==='resolving'||(combat&&(!ctx.battle||ctx.screen!=='battle')))return;
+  clearTimeout(dismissTimer);if(dismissedKey!==null&&!force)return;
+  const data=read(r,ctx);if(!data?.card)return;
+  if(current&&key(current)===key(r)&&!activePanel?.hidden){activePanel.dataset.input=input;return;}
+  closeCardInspection();dismissedKey=null;
+  activePanel=panel(combat);if(!activePanel)return;
+  trigger=el;trigger.setAttribute('aria-expanded','true');current=r;
+  activePanel.classList.add('illustrated-inspection');activePanel.dataset.input=input;
+  activePanel.innerHTML=cardInspectionContent(data.card,data.entry,data.stats,esc,{board:data.board,presentation:data.presentation,context:r.kind});
+  activePanel.hidden=false;position();
+ }
+ function suppressCardInspection(index){closeCardInspection(true,['hand',Number(index),'','p'].join(':'));}
  function bindCardInspection(){
-  const source=t=>t instanceof Element?t.closest('.hand-card,.battle-cell .board-card'):null;
-  const sourceKey=el=>el?.matches('.board-card')?'board:'+el.dataset.unitId:el?'hand:'+el.dataset.index:null;
-  const inPanel=t=>t instanceof Element&&!!t.closest('#hand-card-inspection');
   const enter=event=>{
-   if(event.sourceCapabilities?.firesTouchEvents)return;
+   if(event.sourceCapabilities?.firesTouchEvents||event.pointerType==='touch'||touch||event.type==='mouseover'&&touchOpenKey)return;
    if(inPanel(event.target)){clearTimeout(dismissTimer);return;}
-   const el=source(event.target);if(!el)return;
-   if(el.matches('.board-card'))inspectUnit(el.dataset.unitId);else inspectCard(el.dataset.index);
+   const el=source(event.target);if(el){const r=request(el);show(r,el,event.type==='focusin'&&r.kind!=='hand'&&r.kind!=='board',event.type==='focusin'?'focus':'hover');}
   };
+  document.addEventListener('pointermove',event=>{
+   if(event.pointerType==='touch')return;
+   touch=null;const el=source(event.target);
+   if(touchOpenKey&&(event.movementX||event.movementY)){
+    touchOpenKey=null;dismissedKey=null;
+    if(el)enter(event);else if(!inPanel(event.target))closeCardInspection();
+   }
+   if(dismissedKey!==null&&(!el||key(request(el))!==dismissedKey)){dismissedKey=null;if(el)enter(event);}
+  });
+  document.addEventListener('keydown',event=>{if(event.key==='Tab'){dismissedKey=null;touch=null;touchOpenKey=null;}if(event.key==='Escape')closeCardInspection(true);});
+  document.addEventListener('pointerdown',event=>{
+   const el=source(event.target);
+   if(event.pointerType==='touch'&&el){const r=request(el);touch={key:key(r),repeat:touchOpenKey===key(r)&&current&&key(current)===key(r)};return;}
+   touch=null;
+   if(el&&(el.matches('.hand-card,.board-card')))closeCardInspection(true,key(request(el)));
+   else if(!el&&!inPanel(event.target))closeCardInspection();
+  },true);
+  document.addEventListener('click',event=>{
+   const el=source(event.target);if(!el){if(!inPanel(event.target))closeCardInspection();return;}
+   const r=request(el),isTouch=touch?.key===key(r),repeat=touch?.repeat;
+   touch=null;
+   if(isTouch&&!repeat){show(r,el,true,'touch');touchOpenKey=key(r);event.preventDefault();event.stopImmediatePropagation();return;}
+   if(r.kind==='board'){closeCardInspection(true,key(r));event.preventDefault();event.stopImmediatePropagation();return;}
+   if(r.kind==='hand')closeCardInspection(true,key(r));
+   else if(isTouch)show(r,el,true,'touch');
+  },true);
+  document.addEventListener('mouseover',enter);document.addEventListener('focusin',enter);
   const leave=event=>{
+   if(touchOpenKey)return;
    const el=source(event.target);if(!el&&!inPanel(event.target))return;
    if(el?.contains(event.relatedTarget)||inPanel(event.relatedTarget)||source(event.relatedTarget)){clearTimeout(dismissTimer);return;}
-   clearTimeout(dismissTimer);
-   dismissTimer=setTimeout(dismissCardInspection,160);
+   clearTimeout(dismissTimer);dismissTimer=setTimeout(()=>{const blocked=dismissedKey;closeCardInspection();dismissedKey=blocked;},160);
   };
-  // Une sélection remplace le DOM : ses événements de focus/souris synthétiques
-  // ne doivent pas rouvrir une fiche avant un vrai déplacement ou une tabulation.
-  document.addEventListener('pointermove',event=>{
-   const el=source(event.target);
-   if(event.pointerType!=='touch'&&dismissedKey!==null&&sourceKey(el)!==dismissedKey){dismissedKey=null;if(el)enter(event);}
-  });
-  document.addEventListener('keydown',event=>{if(event.key==='Tab')dismissedKey=null;});
-  document.addEventListener('pointerdown',event=>{const el=source(event.target);if(el)closeCardInspection(true,sourceKey(el));},true);
-  document.addEventListener('mouseover',enter);document.addEventListener('focusin',enter);
   document.addEventListener('mouseout',leave);document.addEventListener('focusout',leave);
-  document.addEventListener('click',event=>{
-   const el=source(event.target);
-   if(el)closeCardInspection(true,sourceKey(el));else if(!inPanel(event.target))closeCardInspection();
-  });
-  document.addEventListener('scroll',event=>{
-   if(!(event.target instanceof Element)||!event.target.matches('.battle-grid,.hand,.combat-stage'))return;
-   // Le scroll automatique du focus/survol ne doit pas fermer sa propre fiche.
-   if(trigger?.matches(':hover,:focus'))position();else dismissCardInspection();
-  },true);
-  window.addEventListener('resize',position);
+  document.addEventListener('scroll',position,true);window.addEventListener('resize',position);
  }
- return {inspectCard,inspectUnit,closeCardInspection,suppressCardInspection,bindCardInspection};
+ return {closeCardInspection,suppressCardInspection,bindCardInspection};
 }

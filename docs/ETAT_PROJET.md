@@ -1,22 +1,29 @@
 # État courant — 26 octobre 2026
 
-## Intégration Aube — étapes 1 à 4 terminées, PR non intégrée
+## Intégration Aube — étapes 1 à 5 préparées, PR non intégrée
 
 La [PR nº 53](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53)
-reste l'unique PR active sur `feat/aube-evolutions-fiche-universelle`, en brouillon.
-Le tableau maître Notion a été relu dans son édition du 26 octobre,
-08:37:43.944 UTC. Les défenses, attaques, soutiens et effets d'arrivée des dix
-Aube sont raccordés au moteur commun. Les 51 versions peuvent être testées
-au laboratoire, avec des niveaux 0–3 indépendants de la rareté ; son ancien
-pilote Milicien est retiré. L'IA lit les mêmes paramètres et statistiques.
+reste l’unique PR active sur `feat/aube-evolutions-fiche-universelle`, en brouillon.
+Le tableau maître Notion a été relu dans son édition du 26 octobre 2026,
+12:40:37.541 UTC. Les règles Aube correspondent au registre ; aucune nouvelle
+évolution des autres factions n’est intégrée par cette mission.
 
-Les règles futures ont une identité explicite pour les nouveaux instantanés,
-natifs Aube compris. Les anciens combattants gardent leurs règles et chiffres,
-sans migration. Les évolutions restent refusées en aventure : aucune obtention,
-quantité, progression ou récompense ajoutée. Les fiches universelles et les
-statuts de présentation de toutes les cartes restent à traiter à l'étape 5.
-Les images, le CSS et l'hébergement sont conservés. [Reprise et vérifications](REPRISE_INTEGRATION_AUBE.md) ;
-[contrat du moteur](AUBE_MOTEUR.md). Arrêt avant l'étape 5 ; aucune fusion ni publication.
+Les 51 versions Aube sont raccordées au moteur commun et testables au
+laboratoire, avec niveaux 0–3 indépendants. Les évolutions restent refusées
+en aventure et sans circuit d’obtention. Le profil, les achats, la maîtrise,
+l’économie et les anciennes batailles conservent leurs règles.
+
+L’étape 5 ajoute le modèle de présentation commun, les textes courts dérivés
+des capacités et un unique lecteur de fiche pour Collection, main, plateau des
+deux camps, decks, Atelier/Alchimie, paquets, récompenses et laboratoire.
+Les six cartes par unité sont conservées, avec leurs vrais chiffres et statuts.
+Sur mobile : toucher pour lire, retoucher la même carte de main pour sélectionner,
+puis choisir une case ; consulter une unité occupée n’active aucune pose.
+
+Contrôles, export exact et tête GitHub dans le [point de reprise](REPRISE_INTEGRATION_AUBE.md)
+et la description de PR. [Versions](AUBE_VERSIONS.md), [moteur](AUBE_MOTEUR.md),
+[présentation](AUBE_PRESENTATION.md). Arrêt avant la revue de l’étape 6,
+sans fusion ni publication.
 
 ## Jeu intégré sur main
 

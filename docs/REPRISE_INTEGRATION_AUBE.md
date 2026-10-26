@@ -1,17 +1,37 @@
 # Intégration Aube — reprise par étapes
 
-## Point de reprise — 26 octobre 2026, étape 4 terminée
+## Point de reprise — 26 octobre 2026, étape 5 préparée
 
-**Étapes 1 à 4 terminées sur le brouillon. Arrêt avant l'étape 5.**
+**Étapes 1 à 5 préparées sur le brouillon ; contrôles finaux de présentation en cours. Arrêt avant l’étape 6.**
 
-- Branche unique : `feat/aube-evolutions-fiche-universelle` ; [PR nº 53](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53), toujours brouillon. Dernière tête exacte, arbre Git, export et CI dans sa description après vérification.
-- Main relu : `cf8175002431e1714460f8be917665437a5b78c4` ; aucune autre PR ouverte. La nº 41 est archivée, fermée sans fusion. Aucune autorisation de fusion ou publication.
-- [Tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f) relu, édition `2026-10-26T08:37:43.944Z`. Les autres validations de Sylve ne sont pas intégrées par cette mission Aube.
-- Les dix Aube ont leurs attaques, soutiens et arrivées raccordés : portée, Perforation, tir arrière, Charge/Célérité, soins multi-cibles et interlignes, barrière du Prieur, Inspiration, Commandement et Intervention. Les mêmes primitives servent le jeu et le laboratoire.
-- `resolveRulesDefinition` dérive les règles futures du registre unique, natives Aube comprises. Les nouveaux instantanés ont un marqueur explicite ; aucun ancien combattant n'est recalculé, ni profil/deck/achat/maîtrise converti.
-- Les **51 versions sont testables dans le laboratoire**, niveaux **0–3 indépendants**, pour les deux camps. L'ancien pilote Milicien et ses niveaux forcés sont retirés. IA, prévisions et invocation utilisent les paramètres et statistiques communs.
-- **Les évolutions restent refusées en aventure**, même avec le marqueur optionnel. `status.engine` distingue le moteur prêt de `status.combat: pending`, conservé pour la livraison complète. Aucune obtention ni possession créée ; les API directes de récompense/progression refusent également les combats développeur sans mutation.
-- Le laboratoire affiche des libellés dérivés du registre. La fiche universelle et les descriptions de toutes les autres vues restent à faire à l'étape 5. [API](AUBE_VERSIONS.md), [contrat du moteur](AUBE_MOTEUR.md), [défenses](AUBE_DEFENSES.md).
+- Branche : `feat/aube-evolutions-fiche-universelle` ; [PR nº 53](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53), toujours brouillon. Tête, arbre, export et CI finale dans sa description après vérification.
+- Main vérifié : `cf8175002431e1714460f8be917665437a5b78c4` ; seule cette PR est ouverte. Aucune autorisation de fusion ou publication.
+- [Tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f) relu, édition `2026-10-26T12:40:37.541Z`. Les dix lignes Aube restent conformes aux définitions. Les validations d’autres factions ne sont pas intégrées ici.
+- Les 51 versions Aube ont leurs mécaniques communes et restent testables au laboratoire aux niveaux 0–3 indépendants, dans les deux camps. Les évolutions sont refusées en aventure, sans copie ou obtention ajoutée.
+- `card-presentation.js` résout version, statistiques, statut et fiche commune ; `ability-text.js` dérive les formats bref/détaillé. `card-inspection.js` est le seul lecteur de consultation ; l’ancien rendu et le contrôleur séparés de Collection sont remplacés par un adaptateur.
+- Collection, main, deux camps du plateau, Atelier/Alchimie, listes de decks, paquets, récompenses et laboratoire partagent la fiche. Miniature compacte, vrais nombres, rareté et règles de l’instantané ; aucun recalcul d’une ancienne unité ni état de lecture sauvegardé.
+- La Collection conserve six cartes par unité : 51 versions Aube définies, neuf rangs inexistants, autres évolutions à concevoir. Les évolutions connues portent « Testable au laboratoire · Obtention non définie », sans commande de deck ou possession inventée.
+- Survol/focus pour lire ; à la souris, clic de main pour sélectionner. Au toucher : première consultation, second contact sur la même carte de main pour sélectionner, puis pose distincte. Le ciblage des sorts reste explicite ; le clic sur une unité occupée ne remonte pas à une commande de pose.
+- Contrats : [versions](AUBE_VERSIONS.md), [moteur](AUBE_MOTEUR.md), [présentation](AUBE_PRESENTATION.md), [défenses](AUBE_DEFENSES.md).
+
+## Vérifications de l’étape 5
+
+- `npm test` : **418 tests réussis**, dont **8 nouveaux tests de présentation** couvrant les versions des deux camps, leurs invocations réelles, les chiffres, quotas, règles historiques et statuts, tous les contextes, les sorts, l’échappement et l’absence de mutation.
+- `npm run test:parity` : **60 scénarios identiques**, référence inchangée. Aucun changement aux règles, à l’IA, à l’économie ou à la progression.
+- Builds normal et test : **51 modules, 76 illustrations** ; résultats finaux et export GitHub exact à relever après les derniers parcours.
+- `browser_card_presentation.py` est appelé par `browser_card_preview.py`, déjà exécuté en CI. Il couvre les vrais éléments de Collection, decks, Atelier/Alchimie, paquet, récompense, laboratoire et les deux camps, souris/toucher/clavier et isolation. Les anciennes assertions des rangs à concevoir sont remplacées par les chiffres approuvés et les statuts distincts ; les neuf absences et les autres factions restent testées.
+- Le helper de pages diagnostiques charge directement le fichier construit après installation du même stockage fictif, au lieu de transmettre son HTML complet par CDP à chaque ouverture. Assertions et scénarios métier conservés ; aucun délai de test augmenté.
+- Avant modification, les deux CI de `c4a75ec` ont été vérifiées **success** : [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40299947293), [assemblage](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40299945946). Elles valident l’étape 4 ; distinguer les nouveaux contrôles de l’étape 5.
+
+## Prochaine étape : revue complète
+
+1. Relire instructions, état, contrats et tableau maître à jour ; vérifier main, PR et tête exacte.
+2. Examiner l’intégration des six étapes : correspondance entre définitions, effets, statistiques et présentation ; compatibilité historique, absence de doubles déclenchements, isolation du laboratoire, IA et économie.
+3. Vérifier les derniers résultats CI de la tête exacte et traiter les défauts pertinents. Aucun équilibrage humain ou test de téléphone physique n’est revendiqué par l’automatisation.
+4. Conserver l’obtention non définie sans inventer de copies ou de circuits économiques. Toute activation supplémentaire en aventure doit avoir un périmètre explicite.
+5. Pousser le résultat sur la même PR, puis présenter la livraison complète et ses limites. **Aucune fusion ni publication sans accord spécifique du propriétaire.** Si seule la CI reste à attendre, arrêter sans la surveiller activement.
+
+## Historique — étape 4
 
 ## Vérifications de l'étape 4
 
@@ -25,14 +45,6 @@
 - Export final généré par le [workflow ponctuel réussi](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40299695067) depuis `ede0b37e44931f0ef7544bcf61b4e5d645a94b42` : blob `170548e5197a80f85c640c947a7689f43f8ae62a`, **34 475 947 octets**, 50 modules et 76 illustrations. Le premier export de l’étape 4 (`ee36dc8`) a été remplacé après ajout du verrou métier de récompense ; aucun HTML édité à la main. L’export est enregistré dans `abe7cc1e61a054c6a38b1404268b110192f0c8b2` ; son arbre complet `18129d7a7fbe9d4bcc0880afa6c2f479af31313f` a été comparé au local, sans aucune différence. Le générateur est retiré avant la tête finale, sans modification permanente des workflows. Dernière tête, arbre final et CI dans la description de PR.
 - Les CI intermédiaires de `ef6477c` et `ede0b37` ont précédé l’enregistrement de leur nouvel export : les tests ont échoué au contrôle de synchronisation du HTML, et l’assemblage à la préparation du site. Ne pas les relancer : les sources et l’export sont réunis sur la tête finale, dont les nouveaux contrôles se déclenchent normalement.
 - Les deux CI de la tête précédente `ce8afd8` ont maintenant terminé **success** : [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40293136902) et [assemblage](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40293136747). Ce résultat valide l’étape 3, pas le nouveau code de l’étape 4. Vérifier la nouvelle tête après notification, sans surveillance active.
-
-## Prochaine étape : présentation universelle
-
-1. Relire `AGENTS.md`, l'état courant, ce checkpoint, les contrats et le tableau Notion à jour ; vérifier main et toutes les PR réelles.
-2. Réutiliser `ability-text.js`, le registre et les calculs de statistiques ; unifier textes courts et fiche concise pour main, deux camps du plateau, six cellules Collection, decks, Atelier/Alchimie, paquets, récompenses et laboratoire.
-3. Distinguer native, rang inférieur inexistant, moteur prêt et obtention non définie. Ne pas offrir de copies ou modifier l'économie pour rendre une version visible.
-4. Faire afficher les vrais paramètres et raretés des instantanés versionnés, sans reconstruire les chiffres sauvegardés. Survol/focus/toucher, sans bouton de fiche supplémentaire ni pose accidentelle.
-5. Après l'étape 5, arrêt avec code poussé et état vérifié. L'étape 6 reste la revue complète, les contrôles de la tête exacte et la livraison ; aucune fusion/publication automatique.
 
 ## Historique — audits et résultats des étapes 1 et 2 (25 octobre)
 
@@ -153,4 +165,4 @@ La programmation du registre d'étape 2 n'autorise pas une fiche à annoncer un 
 4. Réaliser **une seule étape suivante**, ses tests utiles et sa revue. Mettre à jour le point de reprise en tête, les contrôles et les limites ; pousser puis vérifier le commit sur GitHub.
 5. Si seule la CI reste en cours, fournir son lien et s'arrêter sans la consulter en boucle. Après notification, vérifier le résultat sur le commit exact.
 
-Instruction de reprise : **« Reprends l'étape 5 de l'intégration Aube sur la branche `feat/aube-evolutions-fiche-universelle`, lis `docs/REPRISE_INTEGRATION_AUBE.md`, poursuis la même PR puis arrête-toi à la fin de l'étape. »**
+Instruction de reprise : **« Reprends l'étape 6 de l'intégration Aube sur la branche `feat/aube-evolutions-fiche-universelle`, lis `docs/REPRISE_INTEGRATION_AUBE.md`, poursuis la même PR puis arrête-toi à la fin de l'étape. »**

@@ -1,6 +1,8 @@
 // Panneau de configuration du même combat que la campagne, sans second moteur.
 import {CARDS,FACTIONS,CLASSES} from '../data.js';
 import {AI_STYLES} from '../ai.js';
+import {cardPresentation,cardPreviewAttributes} from './card-presentation.js';
+import {generatedCardFace} from './generated-card.js';
 import {unitAbilitySummary} from '../cards/ability-text.js';
 import {labRarity,labLevel,labCardStats,labRanks} from '../engine/developer-lab.js';
 
@@ -11,10 +13,11 @@ export function developerLabUI(lab,{esc,btn}){
  const rarity=labRarity(lab,side,id),level=labLevel(lab,side,id);
  const stats=labCardStats(lab,side,id);
  const rankOptions=labRanks(id);
+ const presentation=cardPresentation({id,rarity},{definition:stats.definition,stats:stats.definition?{atk:stats.atk,maxhp:stats.hp,bonuses:[]}:null});
  const selections=Object.values(CARDS).filter(c=>!c.heroClass||c.heroClass===lab.heroClass)
   .map(c=>`<option value="${esc(c.id)}" ${c.id===id?'selected':''}>${esc(c.name)} · ${esc(FACTIONS[c.faction].short)}</option>`).join('');
  const option=(value,text,current)=>`<option value="${esc(value)}" ${value===current?'selected':''}>${esc(text)}</option>`;
- const deckRows=Object.entries(counts).map(([key,count])=>`<span class="lab-deck-card">${count}× ${esc(CARDS[key].name)}</span>`).join('');
+ const deckRows=Object.entries(counts).map(([key,count])=>`<span class="lab-deck-card" ${cardPreviewAttributes(key,labRarity(lab,side,key),'developer',esc)} data-side="${side}">${count}× ${esc(CARDS[key].name)}</span>`).join('');
  return `<section class="developer-lab">
   <div class="kicker">OUTIL TEMPORAIRE · SANS SAUVEGARDE</div>
   <h1 class="page-title">Laboratoire de combat</h1>
@@ -47,6 +50,7 @@ export function developerLabUI(lab,{esc,btn}){
     <label>Niveau d'amélioration
       <select data-lab-field="level">${[0,1,2,3].map(n=>option(String(n),n===0?'Base (aucun achat)':`Niveau ${n}`,String(level))).join('')}</select>
     </label>
+    <div class="lab-card-preview" ${cardPreviewAttributes(id,rarity,'developer',esc)} data-rarity="${rarity}" data-side="${side}">${generatedCardFace(presentation.card,{stats:presentation.stats,esc})}</div>
     <p class="lab-stats">Prévision en combat : <b>${card.type==='unité'?`${stats.atk} ATQ · ${stats.hp} PV`:'sort, valeurs inchangées'}</b></p>
     <p class="hint">${card.type==='unité'?`Version ${esc(rarity)} : déplacement ${stats.definition.geometry.steps}, portée ${stats.definition.geometry.range}. ${rankOptions.length>1?'Les évolutions définies sont testables ici ; leur obtention dans l’aventure reste à définir.':'Seule la version native est définie.'}`:'Les sorts conservent leurs effets actuels.'}</p>
     ${card.type==='unité'?`<p class="hint lab-abilities">${unitAbilitySummary(stats.definition).map(esc).join(' · ')||'Aucun pouvoir spécial.'}</p>`:''}

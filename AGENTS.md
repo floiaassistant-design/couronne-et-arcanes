@@ -51,8 +51,24 @@
   gardent leur plafond individuel et ne réduisent pas un surplus préexistant.
   Ne pas déplacer ces règles dans les vues ou dupliquer les chiffres de Notion.
 - `cards/ability-text.js` fournit les libellés brefs à partir des paramètres.
-  Le laboratoire les affiche ; la présentation universelle reste une étape
-  distincte. Lire [le contrat du moteur Aube](docs/AUBE_MOTEUR.md).
+  Le modèle commun et toutes les vues réutilisent ces libellés. Lire [le contrat du moteur Aube](docs/AUBE_MOTEUR.md).
+
+## Contrat — fiche et textes communs
+
+- `ui/card-presentation.js` résout identité, rareté, disponibilité et chiffres
+  depuis le registre et les calculs partagés, puis rend la fiche commune.
+  Les instantanés de plateau gardent leurs PV/ATQ réels et leurs règles explicites.
+- `ui/card-inspection.js` est l’unique lecteur pour toutes les vues et modales.
+  `collectionHoverContent` est un adaptateur de compatibilité, sans second lecteur.
+  Aucun bouton d’ouverture, état de lecture persistant ou effet métier.
+- Six cartes par unité : versions définies avec chiffres réels, évolutions sans
+  possession ni obtention inventée, rangs inexistants et inconnus sans chiffres.
+- Souris : survol pour lire, clic pour sélectionner la main. Toucher : premier
+  contact pour lire, second contact sur la même carte pour sélectionner ; pose
+  seulement sur une autre case libre. Le plateau n’active aucune pose par remontée
+  de clic. Le ciblage explicite d’un sort conserve sa confirmation.
+- Les nouveaux cas de `browser_card_presentation.py` font partie de la suite
+  `browser_card_preview.py` déjà exécutée en CI. Voir `docs/AUBE_PRESENTATION.md`.
 
 ## Contrat permanent — six raretés de Collection et fiche courte
 
@@ -271,8 +287,8 @@
   du combat, la collection le profil actuel. Préserver la parité et l'ordre des
   propriétés lors d'une refonte du constructeur de bataille.
 - `ui/card-inspection.js` et `assets/card-preview.css` portent l'aperçu commun
-  main/plateau. Survol ou focus pour lire ; clic/toucher ferme la fiche pendant
-  sélection et pose. Aucun épinglage, aucune action métier ni écriture en stockage
+  de toutes les vues. Le contrat de consultation actuel est décrit en tête ;
+  le toucher consulte d’abord, puis sélectionne explicitement la même carte. Aucun épinglage, aucune action métier ni écriture en stockage
   depuis le lecteur ; valeurs actuelles par uid, bonus et capacités lisibles.
 
 - Fonds d’interface : `UI_BACKGROUNDS`/`UI_ART_NAMES` dans `visuals.js`, registre

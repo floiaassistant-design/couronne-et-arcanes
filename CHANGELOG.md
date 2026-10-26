@@ -1,3 +1,16 @@
+## Préparé — Aube étape 5, PR nº 53 (26 octobre 2026)
+
+- Textes courts et fiche commune pour Collection, main, deux camps du plateau,
+  Atelier/Alchimie, decks, paquets, récompenses et laboratoire ; chiffres et
+  capacités résolus depuis les mêmes données et calculs que le moteur.
+- Six cartes de Collection : 51 versions Aube définies, neuf rangs inexistants,
+  autres évolutions encore à concevoir ; aucune possession ou obtention créée.
+- Un seul lecteur survol/focus/toucher. Sur mobile, lire puis retoucher la même
+  carte de main pour sélectionner ; aucune pose par clic sur une unité occupée.
+- Nouvelles vérifications de présentation et parcours universel dans la suite
+  navigateur existante. Contrôles finaux dans le point de reprise et la PR.
+- Arrêt avant l’étape 6 de revue complète, sans fusion ni publication.
+
 ## En préparation — Aube, moteur commun et laboratoire (26 octobre 2026)
 
 - Étape 4 : portée 3, Perforation, tir arrière protégé, Charge +3, Célérité,

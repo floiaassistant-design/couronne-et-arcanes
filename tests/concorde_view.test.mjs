@@ -83,10 +83,11 @@ test('Les deux camps affichent leur formation sans modifier les cinq champs de c
  }
 });
 
-test('La Collection explique la version jouable sans définir les futures évolutions',()=>{
+test('La Collection explique Concorde pour les versions définies seulement',()=>{
  const profile=freshProfile();
  assert.match(collectionHoverContent(profile,'militia','commun',esc),/concorde-description/);
- assert.doesNotMatch(collectionHoverContent(profile,'militia','divine',esc),/concorde-description/);
+ assert.match(collectionHoverContent(profile,'militia','divine',esc),/concorde-description/);
+ assert.doesNotMatch(collectionHoverContent(profile,'wolf','divine',esc),/concorde-description/);
  const card={...CARDS.militia,name:'<img>'};
  assert.doesNotMatch(cardInspectionContent(card,{wait:0},null,esc),/<img>/);
 });

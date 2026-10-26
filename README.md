@@ -69,7 +69,7 @@ Sites version 7 ont été vérifiées dans son bilan.
 
 ### Collection — six cartes et aperçu rapide
 
-Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions non jouables restent « À concevoir ». L'aperçu au survol de la main et du plateau ne change pas.
+Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube définies montrent leurs chiffres et le statut « Testable au laboratoire · Obtention non définie ». Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
 
 ## Progression et sauvegarde
 
@@ -79,7 +79,7 @@ sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les 
 et leurs niveaux 0 à 3, choisis indépendamment. Les autres unités conservent
 leur version native. Les nouvelles raretés ne sont pas offertes dans l’aventure ;
 leur obtention reste à définir. Cette préparation appartient à la PR Aube en
-brouillon, avec une présentation universelle encore à terminer.
+brouillon, avec une présentation commune préparée à l’étape 5 et une revue finale encore à effectuer.
 
 La sauvegarde est locale à l’appareil et à l’adresse utilisée. Guide permet
 l’export/import du profil. Les clés historiques et les combats repris sont

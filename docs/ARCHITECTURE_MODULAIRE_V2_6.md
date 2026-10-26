@@ -1,3 +1,14 @@
+## Présentation commune Aube — étape 5, PR 53 en brouillon
+
+`ui/card-presentation.js` porte le modèle de lecture et le rendu de fiche partagés.
+Il lit le registre et les calculs du moteur, avec les chiffres des instantanés
+pour le plateau. `cards/ability-text.js` dérive les formats bref/détaillé.
+`card-inspection.js` est le seul lecteur DOM pour les cartes et références de
+cartes de tous les écrans. Le rendu et le contrôleur séparés de Collection sont
+remplacés par un adaptateur vers ce modèle commun ; `generated-card.js` conserve
+les illustrations et leurs zones exactes. Pas de nouvelle règle ni de migration.
+[Contrat et interactions](AUBE_PRESENTATION.md).
+
 ## Moteur Aube et laboratoire — étape 4 terminée, 26 octobre 2026
 
 Le registre reste la seule saisie des paramètres. `resolveRulesDefinition`

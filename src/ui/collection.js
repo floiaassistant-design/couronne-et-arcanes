@@ -1,46 +1,27 @@
-import {generatedCardFace} from './generated-card.js';
-import {concordeDetails} from './concorde.js';
+import {CARD_RARITIES} from '../cards/schema.js';
+import {cardPresentation,cardInspectionContent} from './card-presentation.js';
 // Catalogue en lecture : les versions à concevoir ne créent jamais de cartes.
-import {CARDS,FACTIONS,cardTraits} from '../data.js';
-import {unitStatContext,unitStats} from '../engine/unit-stats.js';
-import {visualFor,artSrc,UI_BACKGROUNDS,cardTemplateFor,cardTemplateSrc} from '../visuals.js';
+import {CARDS,FACTIONS} from '../data.js';
+import {UI_BACKGROUNDS} from '../visuals.js';
 
-export const COLLECTION_RANKS=Object.freeze([
- {id:'commun',name:'Commune'},
- {id:'rare',name:'Rare'},
- {id:'épique',name:'Épique'},
- {id:'légendaire',name:'Légendaire'},
- {id:'divine',name:'Divine'},
- {id:'éveillée',name:'Éveillée'}
-]);
+export const COLLECTION_RANKS=Object.freeze(CARD_RARITIES.map(r=>Object.freeze({...r,name:({commun:'Commune',divine:'Divine','éveillée':'Éveillée'})[r.id]||r.name})));
 
 export function collectionEntries(profile,faction='all',ownedOnly=false){
  return Object.values(CARDS).filter(c=>(faction==='all'||c.faction===faction)&&
   (!ownedOnly||(profile.collection[c.id]||0)>0));
 }
 
-function futureCard(card,rarity,esc){
- if(cardTemplateFor(card))return `<div class="unit-card collection-future generated-template" data-rarity="${rarity}">${generatedCardFace(card,{delay:'—',description:rarity==='éveillée'?'Forme éveillée à concevoir.':'Évolution à concevoir.',esc})}</div>`;
- const visual=visualFor(card);
- return `<div class="unit-card collection-future" data-rarity="${rarity}">
-  <div class="portrait creature-portrait role-${visual.role}"><img class="creature-image" src="${artSrc(visual.art)}" alt="" loading="lazy" draggable="false" /><span class="portrait-emblem" aria-hidden="true">${card.icon}</span></div>
-  <div class="card-title">${esc(card.name)}</div>
-  <div class="card-detail">${rarity==='éveillée'?'Forme éveillée à concevoir.':'Évolution à concevoir.'}</div>
-  <div class="card-stats" aria-label="Attaque et vie à définir"><span class="stat atk">⚔ <b>—</b></span><span class="stat hp">♥ <b>—</b></span></div>
- </div>`;
-}
-
 function versionCell(profile,card,rank,{btn,cardUI,esc}){
+ const model=cardPresentation({id:card.id,rarity:rank.id},{profile});
  const current=rank.id===card.rarity,owned=current?(profile.collection[card.id]||0):0;
- const status=current?(owned?`✓ Possédée ×${owned}`:'Non possédée'):'À concevoir';
+ const status=current?(owned?`✓ Possédée ×${owned}`:'Non possédée'):model.availability;
  return `<td data-card-id="${card.id}" data-collection-rarity="${rank.id}" data-current-version="${current}">
-  <article class="collection-version ${current?'current-version':'future-version'}" aria-label="${esc(card.name)} · ${rank.name} · ${status}">
-   <div class="collection-card-visual" data-collection-preview data-card-id="${card.id}" data-rarity="${rank.id}" tabindex="0" aria-label="Aperçu de ${esc(card.name)}, ${rank.name}" aria-describedby="collection-hover-inspection"><span class="collection-delay" aria-label="${current?'Délai de base : '+card.delay:'Délai à définir'}">${current?card.delay:'—'}</span>
-    ${current?cardUI(card.id):futureCard(card,rank.id,esc)}
+  <article class="collection-version ${current?'current-version':'future-version'} ${model.known?'known-version':'unknown-version'}" aria-label="${esc(card.name)} · ${rank.name} · ${status}">
+   <div class="collection-card-visual" data-collection-preview data-card-id="${card.id}" data-rarity="${rank.id}" data-preview-context="collection" tabindex="0" aria-label="Aperçu de ${esc(card.name)}, ${rank.name}" aria-describedby="collection-hover-inspection">
+    ${cardUI({id:card.id,rarity:rank.id},{previewContext:'collection'})}
    </div>
    <div class="collection-possession ${owned?'is-owned':''}">${status}</div>
-   <div class="collection-card-actions">${current&&owned?`<span class="collection-deck-actions">${btn('+','deck-add',`data-id="${card.id}" aria-label="Ajouter ${esc(card.name)} au deck"`,'small')}${btn('−','deck-remove',`data-id="${card.id}" aria-label="Retirer ${esc(card.name)} du deck"`,'small ghost')}</span>`:''}
-   </div>
+   <div class="collection-card-actions">${current&&owned?`<span class="collection-deck-actions">${btn('+','deck-add',`data-id="${card.id}" aria-label="Ajouter ${esc(card.name)} au deck"`,'small')}${btn('−','deck-remove',`data-id="${card.id}" aria-label="Retirer ${esc(card.name)} du deck"`,'small ghost')}</span>`:''}</div>
   </article></td>`;
 }
 
@@ -55,7 +36,7 @@ export function renderCollectionCatalogue(profile,{faction='aube',ownedOnly=fals
   </header>
   <div class="collection-content"><nav class="collection-factions" aria-label="Ordres de la collection">${tabs.map(id=>`<button type="button" data-action="collection-faction" data-id="${id}" aria-pressed="${faction===id}">${id==='all'?'Tous':id==='sort'?'Sorts':esc(FACTIONS[id].short)}</button>`).join('')}</nav>
    <div class="library-toolbar collection-toolbar"><label class="small"><input type="checkbox" id="owned-only" ${ownedOnly?'checked':''} /> Mes cartes uniquement</label><span class="pill">${list.length} cartes affichées</span></div>
-   <section class="collection-catalogue" aria-labelledby="collection-order-title"><div class="collection-order-heading"><h2 id="collection-order-title">${esc(title)}</h2><p>Les versions « À concevoir » seront complétées au fil de la création des cartes.</p></div>
+   <section class="collection-catalogue" aria-labelledby="collection-order-title"><div class="collection-order-heading"><h2 id="collection-order-title">${esc(title)}</h2><p>Les évolutions prêtes sont testables au laboratoire ; leur obtention reste à définir. Les autres restent « À concevoir ».</p></div>
    ${units.length?`<div class="collection-table-scroll" role="region" aria-label="Évolutions des créatures ; défilement horizontal sur petit écran" tabindex="0"><table class="collection-table"><thead><tr><th scope="col">Personnage</th>${COLLECTION_RANKS.map(r=>`<th scope="col" data-rarity="${r.id}">${r.name}</th>`).join('')}</tr></thead><tbody>${units.map(c=>`<tr data-collection-character="${c.id}"><th scope="row" class="collection-character"><h3>${esc(c.name)}</h3><p>${esc(FACTIONS[c.faction].short)}</p></th>${COLLECTION_RANKS.map(r=>versionCell(profile,c,r,helpers)).join('')}</tr>`).join('')}</tbody></table></div>`:''}
    ${!units.length&&!spells.length?'<p class="hint">Aucune carte ne correspond à ce filtre.</p>':''}
    </section>
@@ -63,89 +44,9 @@ export function renderCollectionCatalogue(profile,{faction='aube',ownedOnly=fals
   </div>`;
 }
 
-// Aperçu bref pour les six raretés, sans créer de statistiques non intégrées.
+// Adaptateur de compatibilité : même modèle et même fiche que toutes les vues.
 export function collectionHoverContent(profile,id,rarity,esc){
- const card=CARDS[id],rank=COLLECTION_RANKS.find(r=>r.id===rarity);
- if(!card||!rank)return null;
- const current=card.rarity===rarity;
- const stats=current?unitStats(unitStatContext(profile),id):null;
- // Réutiliser l'image complète approuvée de la carte, jamais le SVG neutre.
- const template=cardTemplateFor(card);
- const art=template?cardTemplateSrc(template):artSrc(visualFor(card).art);
- const faction=FACTIONS[card.faction];
- const traits=current?cardTraits(id):[];
- return `<div class="card-preview collection-preview" data-rarity="${esc(rarity)}">
-  <div class="inspection-heading"><span class="inspection-context">COLLECTION · ${esc(rank.name)}</span></div>
-  <div class="inspection-feature">
-   <img class="inspection-art" src="${art}" alt="" loading="lazy" draggable="false">
-   <div class="inspection-identity"><h2>${esc(card.name)}</h2><span class="inspection-order">${esc(faction.name)}</span>
-    <span class="inspection-rarity">${esc(rank.name)}</span>
-    <div class="inspection-stats">${current?`<b>ATQ ${stats.atk} / PV ${stats.maxhp}</b>Délai ${card.delay}`:'Statistiques à concevoir'}</div>
-   </div>
-  </div>
-  <div class="inspection-body"><p class="inspection-description">${current?esc(card.description):'Évolution à concevoir. Non jouable.'}</p>
-   ${current?concordeDetails(card,esc):''}
-   ${traits.length?`<div class="inspection-traits">${traits.map(t=>`<span>${esc(t)}</span>`).join(' · ')}</div>`:''}
-  </div>
- </div>`;
-}
-
-// Le lecteur suit le survol comme en combat, mais reste indépendant des actions de jeu.
-export function bindCollectionHover(getContext,esc){
- let trigger=null,popup=null;
- const source=t=>t instanceof Element?t.closest('.collection-card-visual[data-collection-preview]'):null;
- const panel=()=>{
-  if(!popup){
-   popup=document.createElement('div');
-   popup.id='collection-hover-inspection';
-   popup.className='collection-hover-inspection illustrated-inspection';
-   popup.setAttribute('role','tooltip');
-   popup.hidden=true;
-   document.body.appendChild(popup);
-  }
-  return popup;
- };
- function close(){
-  trigger?.setAttribute('aria-expanded','false');
-  trigger=null;
-  if(popup){popup.hidden=true;popup.textContent='';}
- }
- function position(){
-  if(!trigger?.isConnected||!popup||popup.hidden){if(trigger&&!trigger.isConnected)close();return;}
-  const a=trigger.getBoundingClientRect(),width=popup.offsetWidth,height=popup.offsetHeight;
-  let left=a.right+12;
-  if(left+width>innerWidth-12)left=a.left-width-12;
-  if(left<12)left=Math.max(12,Math.min(innerWidth-width-12,a.left+(a.width-width)/2));
-  const top=Math.max(12,Math.min(Math.max(12,innerHeight-height-12),a.top));
-  popup.style.left=left+'px';popup.style.top=top+'px';
- }
- function show(el){
-  const context=getContext();
-  if(!el||context.screen!=='collection')return;
-  if(el===trigger&&popup&&!popup.hidden)return;
-  const html=collectionHoverContent(context.profile,el.dataset.cardId,el.dataset.rarity,esc);
-  if(!html)return;
-  close();trigger=el;trigger.setAttribute('aria-expanded','true');
-  panel().innerHTML=html;popup.hidden=false;position();
- }
- // Les contacts tactiles génèrent parfois des événements souris synthétiques.
- // Ne fermer sur une sortie que pour un pointeur qui sait réellement survoler.
- document.addEventListener('pointerover',e=>{if(e.pointerType!=='touch')show(source(e.target));});
- document.addEventListener('pointerout',e=>{
-  if(e.pointerType==='touch')return;
-  const el=source(e.target);if(el&&el===trigger&&!el.contains(e.relatedTarget))close();
- });
- document.addEventListener('focusin',e=>show(source(e.target)));
- document.addEventListener('focusout',e=>{
-  if(trigger&&trigger.contains(e.target)&&!trigger.contains(e.relatedTarget))close();
- });
- document.addEventListener('pointerdown',e=>{
-  const el=source(e.target);
-  if(e.pointerType==='touch'&&el)show(el);
-  else if(!el&&trigger)close();
- });
- document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
- document.addEventListener('scroll',position,true);
- window.addEventListener('resize',position);
- return close;
+ if(!COLLECTION_RANKS.some(r=>r.id===rarity))return null;
+ const presentation=cardPresentation({id,rarity},{profile});if(!presentation)return null;
+ return cardInspectionContent(presentation.card,{wait:0},presentation.stats,esc,{presentation,context:'collection'});
 }

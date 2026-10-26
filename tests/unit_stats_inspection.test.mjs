@@ -59,7 +59,7 @@ test('Fiche : capacité complète, attente réelle, bonus et statistiques partag
  const p=equippedProfile(),stats=unitStats(unitStatContext(p),'archer');
  const esc=s=>String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;');
  const html=cardInspectionContent(CARDS.archer,{wait:2},stats,esc);
- assert.match(html,/Peut attaquer à deux cases/);assert.match(html,/Attente 2 tours/);
+ assert.match(html,/Portée 2 cases/);assert.match(html,/Attente 2 tours/);
  assert.match(html,/ATQ 3 \/ PV 5/);assert.match(html,/Équipement \+1 ATQ/);assert.match(html,/Réputation \+1 PV/);
  const spell=cardInspectionContent(CARDS.firebolt,{wait:0},null,esc);
  assert.match(spell,/Prête à jouer/);assert.doesNotMatch(spell,/inspection-stats/);
