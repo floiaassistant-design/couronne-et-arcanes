@@ -49,22 +49,25 @@ test('Trois niveaux existants pour les autres cartes, sans fabriquer une rareté
  assert.equal(unitStats(b,'dragon','e').atk,CARDS.dragon.attack);
 });
 
-test('Milicien pilote : Commune et Divine ont la même illustration mais des stats et protections différentes',()=>{
+test('Milicien validé : rareté et achats indépendants, pouvoirs du registre dans le moteur commun',()=>{
  const lab=freshLab();
  const base=labCardStats(lab,'p','militia');
- assert.deepEqual({atk:base.atk,hp:base.hp,block:base.block},{atk:2,hp:5,block:0});
+ assert.deepEqual({atk:base.atk,hp:base.hp},{atk:2,hp:5});
  assert.equal(setLabLevel(lab,'p','militia',3).ok,true);
  assert.equal(setLabRarity(lab,'p','militia','divine').ok,true);
  assert.equal(setLabLevel(lab,'p','militia',2).ok,true);
  const exp=labCardStats(lab,'p','militia');
- assert.deepEqual({atk:exp.atk,hp:exp.hp,block:exp.block,counter:exp.counter},
-  {atk:5,hp:10,block:3,counter:true});
+ assert.deepEqual({atk:exp.atk,hp:exp.hp,block:exp.definition.abilities.firstHitReduction.amount,riposte:exp.definition.abilities.riposte.damageMode},
+  {atk:4,hp:10,block:3,riposte:'effective-attack'});
  const b=createLabBattle(lab,3);
- assert.deepEqual({atk:unitStats(b,'militia','p').atk,hp:unitStats(b,'militia','p').maxhp},{atk:5,hp:10});
+ assert.deepEqual({atk:unitStats(b,'militia','p').atk,hp:unitStats(b,'militia','p').maxhp},{atk:4,hp:10});
  b.heroes.p.hand=[{id:'militia',wait:0}];
  assert.equal(playPlayerCard(b,0,0,1).ok,true);
- assert.equal(b.board[0][1].labGuard.block,3);
- assert.equal(b.board[0][1].labGuard.counter,true);
+ assert.equal(b.board[0][1].labGuard,undefined);
+ assert.equal(b.board[0][1].rarity,'divine');assert.equal(b.board[0][1].cardRules,'aube-v1');
+ assert.equal(setLabLevel(lab,'p','militia',0).ok,true);
+ assert.equal(labCardStats(lab,'p','militia').atk,2);
+ assert.equal(labCardStats(lab,'p','militia').hp,8);
  assert.equal(unitStats(createBattle(freshProfile(),{id:'01',name:'Base',enemy:'IA',hp:26,difficulty:1,deck:Array(12).fill('militia')},3),'militia','p').maxhp,5);
 });
 

@@ -1,4 +1,4 @@
-"""Laboratoire intégré : progression pilote et sauvegardes identiques après essai hors ligne."""
+"""Laboratoire intégré : versions validées et sauvegardes identiques après essai hors ligne."""
 import asyncio
 from pathlib import Path
 from playwright.async_api import async_playwright
@@ -21,10 +21,24 @@ async def scenario(browser,label,viewport):
     await page.locator('[data-lab-field="cardId"]').select_option('dragon')
     await page.locator('[data-action="lab-add"]').click()
     assert 'Dragon des Sept Cieux' in await page.locator('.lab-deck-list').inner_text()
+    # Les rangs réels viennent du registre ; pas de rang inférieur inventé.
+    for card,ranks,attack,hp,power in [
+        ('shield',6,2,13,'Garde toutes lignes'),
+        ('dawnbastion',3,7,11,'Intervention : 4'),
+        ('cleric',5,1,6,'Soin 3 × 2'),
+        ('lancer',6,4,8,'Charge +3')
+    ]:
+        await page.locator('[data-lab-field="cardId"]').select_option(card)
+        assert await page.locator('[data-lab-field="rarity"] option').count()==ranks
+        await page.locator('[data-lab-field="rarity"]').select_option('éveillée')
+        await page.locator('[data-lab-field="level"]').select_option('0')
+        assert f'{attack} ATQ · {hp} PV' in await page.locator('.lab-stats').inner_text()
+        assert power in await page.locator('.lab-abilities').inner_text()
+    await page.screenshot(path=f'/tmp/ca-lab-versions-{label}.png',full_page=True)
     await page.locator('[data-lab-field="cardId"]').select_option('militia')
     await page.locator('[data-lab-field="rarity"]').select_option('divine')
     await page.locator('[data-lab-field="level"]').select_option('2')
-    assert '5 ATQ · 10 PV' in await page.locator('.lab-stats').inner_text()
+    assert '4 ATQ · 10 PV' in await page.locator('.lab-stats').inner_text()
     await page.locator('[data-action="lab-start"]').click()
     assert await page.locator('.combat-screen').count()==1
     assert 'TEST SANS RÉCOMPENSE' in await page.locator('.combat-titlebar').text_content()

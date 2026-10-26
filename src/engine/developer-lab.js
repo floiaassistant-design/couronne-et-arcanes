@@ -2,9 +2,11 @@
 import {CARDS,CAMPAIGN,CLASSES} from '../data.js';
 import {freshProfile} from './profile.js';
 import {createBattle} from './battle.js';
-import {labMilitiaBonus} from './unit-stats.js';
+import {versionUnitStats} from './unit-stats.js';
+import {unitVersions,resolveRulesDefinition,AUBE_RULESET} from '../cards/definitions.js';
+import {CARD_RARITIES} from '../cards/schema.js';
 
-export const LAB_RANKS=Object.freeze(['commun','rare','épique','légendaire','divine']);
+export const LAB_RANKS=Object.freeze(CARD_RARITIES.map(r=>r.id));
 export const LAB_SIDES=Object.freeze(['p','e']);
 
 export function freshLab(){
@@ -17,31 +19,27 @@ export function freshLab(){
 export function labRarity(lab,side,id){
  const card=CARDS[id];
  if(!card)return null;
- return id==='militia'?(lab.rarities?.[side]?.[id]||'commun'):card.rarity;
+ return lab.rarities?.[side]?.[id]||card.rarity;
 }
 export function labLevel(lab,side,id){return lab.levels?.[side]?.[id]||0;}
+export function labRanks(id){return CARDS[id]?.type==='unité'?unitVersions(id).map(d=>d.rarity):CARDS[id]?[CARDS[id].rarity]:[];}
 export function labCardStats(lab,side,id){
  const card=CARDS[id];if(!card)return null;
  const rarity=labRarity(lab,side,id),level=labLevel(lab,side,id);
- const upgrades=id==='militia'&&rarity!=='commun'?3:level;
- const bonus=id==='militia'?labMilitiaBonus(rarity,level):{hp:0,block:0,counter:false};
- return {atk:card.attack+(card.type==='unité'?upgrades:0),
-  hp:card.hp+(card.type==='unité'?upgrades:0)+bonus.hp,
-  rarity,level,block:bonus.block,counter:bonus.counter};
+ if(card.type!=='unité')return {rarity,level};
+ const context={mode:'developer',cardRules:AUBE_RULESET,labStats:{levels:lab.levels,rarities:lab.rarities}};
+ const stats=versionUnitStats(context,{id,rarity},side),definition=resolveRulesDefinition({id,rarity});
+ return stats?{atk:stats.atk,hp:stats.maxhp,rarity,level,definition}:null;
 }
 export function setLabRarity(lab,side,id,rarity){
  if(!LAB_SIDES.includes(side)||!CARDS[id])return {ok:false,reason:'Carte inconnue.'};
- if(id!=='militia'&&rarity!==CARDS[id].rarity)return {ok:false,reason:'Évolutions futures encore à concevoir.'};
- if(id==='militia'&&!LAB_RANKS.includes(rarity))return {ok:false,reason:'Rareté non disponible.'};
+ if(!labRanks(id).includes(rarity))return {ok:false,reason:'Cette version n’est pas définie.'};
  lab.rarities[side][id]=rarity;
- if(id==='militia'&&rarity!=='commun'&&labLevel(lab,side,id)===0)lab.levels[side][id]=1;
  return {ok:true};
 }
 export function setLabLevel(lab,side,id,level){
  if(!LAB_SIDES.includes(side)||!CARDS[id]||!Number.isInteger(level)||level<0||level>3)
   return {ok:false,reason:'Niveau invalide.'};
- if(id==='militia'&&labRarity(lab,side,id)!=='commun'&&level<1)
-  return {ok:false,reason:'Le niveau commence à 1 au-delà de Commune.'};
  lab.levels[side][id]=level;
  return {ok:true};
 }
@@ -69,6 +67,9 @@ export function createLabBattle(lab,seed=Date.now()){
    lab.decks[side].some(id=>!CARDS[id]||(CARDS[id].heroClass&&(side==='e'||CARDS[id].heroClass!==lab.heroClass))))
    throw Error('Deck de laboratoire invalide ou compétence de classe incompatible.');
  }
+ for(const side of LAB_SIDES)for(const id of lab.decks[side]){
+  if(!labRanks(id).includes(labRarity(lab,side,id))||!Number.isInteger(labLevel(lab,side,id))||labLevel(lab,side,id)<0||labLevel(lab,side,id)>3)throw Error('Version ou niveau de laboratoire invalide.');
+ }
  const p=freshProfile();
  p.heroClass=lab.heroClass;p.deck=[...lab.decks.p];
  p.collection=Object.fromEntries(p.deck.map(id=>[id,p.deck.filter(x=>x===id).length]));
@@ -76,7 +77,7 @@ export function createLabBattle(lab,seed=Date.now()){
  const m={...CAMPAIGN[0],id:'laboratoire',name:'Laboratoire de combat',enemy:'IA de test',
   hp:26,difficulty:2,boss:false,mode:'developer',aiStyle:lab.aiStyle,
   deck:[...lab.decks.e],unlock:null};
- const b=createBattle(p,m,seed,{turnFlow:'alternating'});
+ const b=createBattle(p,m,seed,{turnFlow:'alternating',cardRules:AUBE_RULESET});
  // Ces valeurs restent uniquement dans la bataille de test, jamais dans le stockage.
  b.labStats={levels:structuredClone(lab.levels),rarities:structuredClone(lab.rarities)};
  return b;

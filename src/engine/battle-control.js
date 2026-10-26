@@ -2,6 +2,7 @@
 // Aucun accès aux mains, pioches, profils, DOM ou stockage.
 import {CARDS,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
 import {versionUnitAbilities} from '../cards/definitions.js';
+import {unitAttackRange} from './unit-rules.js';
 import {laneCount,lastCell,crownColumn,entryColumn,validLane,trapColumns} from './board.js';
 const alive=u=>!!u&&u.hp>0;
 const direction=side=>side==='p'?1:-1;
@@ -11,7 +12,7 @@ export const activeAbility=(b,u)=>silenced(b,u)?'':u.ability;
 export function silenceValue(u){
  const value={heal:6,inspire:5,splash:6,poison:5,lifesteal:5,pierce:3,haste:3,silence:6,portal:4,trapper:4}[u?.ability]||0;
  const future=versionUnitAbilities(u);
- return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0);
+ return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0);
 }
 export function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 export function silenceTarget(b,side,lane){
@@ -46,12 +47,12 @@ export function teleportPlan(b,side,toLane){
 // Avantage public de position ; pas d'anticipation de cartes privées.
 function positionValue(b,side,u,lane,col){
  const foes=b.board[lane].map((v,c)=>({u:v,col:c})).filter(v=>alive(v.u)&&v.u.side!==side);
- const range=u.ranged?2:1;
+ const range=unitAttackRange(u);
  let value=0;
  for(const foe of foes){
   const ahead=(foe.col-col)*direction(side);
   if(ahead>0&&ahead<=range)value+=u.atk>=foe.u.hp?5:1;
-  if(Math.abs(foe.col-col)<= (foe.u.ranged?2:1))value-=foe.u.atk>=u.hp?9:3;
+  if(Math.abs(foe.col-col)<= unitAttackRange(foe.u))value-=foe.u.atk>=u.hp?9:3;
   const homeDistance=side==='p'?foe.col:crownColumn(b,'e')-foe.col;
   if(homeDistance<=2&&ahead>0)value+=6;
  }

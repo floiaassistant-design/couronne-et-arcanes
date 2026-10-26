@@ -1,63 +1,76 @@
-# Versions de cartes — contrat de données en préparation
+# Versions de cartes — contrat de données et du moteur Aube
 
-État de la PR Aube : définitions et compatibilité préparées ; défenses partiellement raccordées au moteur, versions futures toujours refusées à la pose. Les décisions restent dans le [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f), édition observée `2026-10-26T08:18:43.609Z`. Ce document décrit l'API, pas un nouveau tableau de décisions.
+Étapes 1 à 4 préparées dans la PR Aube en brouillon ; aucune nouvelle rareté
+obtenue dans l'aventure. [Tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
+édition relue `2026-10-26T08:37:43.944Z`. Ce fichier décrit l'API et ne remplace
+pas le tableau de décisions.
 
-## Responsabilités
+## Données et identités
 
-- `src/cards/schema.js` : six identifiants de rareté et leurs libellés, alias de lecture et gel récursif des données. Les IDs canoniques `divine`/`éveillée` préservent la convention historique de l'interface ; `divin`/`éveillé` sont des alias d'entrée.
-- `src/cards/aube.js` : gains validés par rang, avec des statistiques **totales**. Les natifs viennent de `CARDS`, sans deuxième saisie. Une propriété absente est héritée, une valeur fournie remplace la précédente. La provenance Notion est conservée.
-- `src/cards/abilities.js` : paramètres structurés du socle natif et héritage par clé de capacité. Un pouvoir amélioré reste un seul enregistrement ; aucun cumul de déclencheurs. Le moteur historique sera raccordé à ces paramètres lors des étapes de combat.
-- `src/cards/definitions.js` : résolveur immuable commun aux cinq factions, versions Aube et statuts explicites. Aucun profil, stockage, DOM, hasard, achat ou récompense.
-- `engine/unit-stats.js` : un calcul commun pour les statistiques natives et la prévision d'une version, avec les achats et bonus dans des lignes séparées.
-
-## Références et API
+- `cards/schema.js` : six raretés, normalisation des alias et gel récursif.
+- `cards/aube.js` : gains validés par rang et statistiques **totales**.
+  Les valeurs natives viennent uniquement de `CARDS`.
+- `cards/abilities.js` : socle natif, héritage par clé et politique future de
+  Garde. Un pouvoir amélioré reste un seul enregistrement.
+- `cards/definitions.js` : résolveur immuable par ID historique + rareté,
+  puis projection des règles futures. Aucune économie, mutation de profil,
+  UI, RNG ou sauvegarde dans ce registre.
 
 ```js
-resolveUnitDefinition('shield'); // Le natif historique, jamais une évolution implicite.
-resolveUnitDefinition('shield', 'rare');
+resolveUnitDefinition('shield'); // Définition native historique.
 resolveUnitDefinition({id:'shield', rarity:'rare'});
-unitVersionReference('shield', 'rare'); // {id:'shield', rarity:'rare'}, gelé.
-unitVersions('shield'); // Versions réellement définies, jamais les rangs inférieurs.
-versionUnitStats(unitStatContext(profile), {id:'shield', rarity:'rare'});
+resolveRulesDefinition({id:'shield', rarity:'commun'}); // Règles futures explicites.
+unitVersionReference('shield','rare'); // {id:'shield', rarity:'rare'}, gelé.
+unitVersions('shield');
 ```
 
-`id` reste l'identifiant historique du personnage. `versionId`, par exemple `shield:rare`, identifie la définition ; **ce n'est pas un nouvel ID de `CARDS` ni un format de deck**. Les decks, quantités, achats et maîtrises historiques ne changent pas.
+`versionId` (ex. `shield:rare`) n'est jamais un nouvel ID de `CARDS` ou de deck.
+Le catalogue économique conserve 76 natifs. Les dix Aube définissent 51 versions,
+dont 41 évolutions ; les neuf rangs inférieurs inexistants ne sont pas fabriqués.
+Une rareté explicite nulle, inconnue ou inférieure au natif est refusée.
 
-Sans rareté, une référence désigne le natif. Une rareté explicitement inconnue, nulle ou inférieure au natif renvoie `null`, sans repli silencieux. Les sorts sont hors de ce résolveur d'unités. `stats` contient ATQ/PV/délai de base ; `geometry` contient `steps` (déplacement) et `range` (attaque ordinaire). Les pouvoirs d'arrivée gardent leur propre portée.
+Sans marqueur de règles, une référence historique désigne le natif historique.
+`resolveRulesDefinition` dérive ses chiffres du même registre ; les règles
+validées de Garde et Riposte s'appliquent aussi aux natifs Aube de cette
+projection. `cardRules: 'aube-v1'` et une rareté explicite identifient un nouvel
+instantané de ce système. Aucun ancien combattant n'est enrichi ni recalculé.
+Les autres factions gardent leur socle natif historique.
 
-`versionUnitStats` est une **prévision pure**, pas une invocation. Son champ `base` indique les totaux de rareté ; `bonuses` détaille amélioration/difficulté, équipement, Forge, réputation et maîtrise. Les effets temporaires restent hors de ce calcul. Cette API ne consulte pas l'ancien pilote Milicien et ne force aucun niveau d'achat.
+## Statistiques et disponibilité
 
-## Disponibilité et compatibilité
+`unitStats` et `versionUnitStats` partagent le même calcul : base de rareté,
+puis achats/difficulté, équipement, Forge, réputation et maîtrise. Les totaux
+ne sont pas additionnés comme des bonus de palier. `versionUnitStats` expose
+`base` et `bonuses` séparément ; les effets temporaires restent hors de ce calcul.
 
-Les dix natifs Aube et leurs 41 évolutions ont une définition. Les neuf rangs inférieurs n'existent pas. Les autres factions conservent uniquement leurs versions natives.
+- `status.design: 'validated'` : conception validée ou catalogue natif.
+- `status.engine: 'implemented'` : capacités raccordées au moteur et couvertes
+  par les tests de l'étape 4 ; cela ne crée aucune possession.
+- `status.combat` : les natifs restent `implemented` ; les évolutions restent
+  `pending` en attendant la livraison complète, dont leurs fiches universelles.
+- `status.obtaining` : `existing` pour les natifs, `undefined` pour les évolutions.
+- `pendingDecisions` : les deux choix de Garde validés ont été retirés. Les
+  conventions techniques sont explicites dans le contrat du moteur.
 
-- `status.design: 'validated'` signifie que la définition est issue d'une conception validée ou du catalogue natif.
-- `status.combat: 'implemented'` est réservé aux natifs actuellement jouables ; les évolutions sont `'pending'` tant que leurs règles ne sont pas programmées et vérifiées.
-- `status.obtaining: 'existing'` conserve les circuits historiques du natif ; `'undefined'` n'invente aucun circuit pour une évolution.
-- Les décisions `guard-priority` et `guard-frequency` ont été validées le 26 octobre et retirées de `pendingDecisions`. La nouvelle édition Notion distingue les valeurs historiques natives des règles futures générales : les évolutions du Porte-égide, du Paladin et de l’Ange utilisent une Riposte effective ; les natifs conservent leur définition historique. Ce périmètre ne programme pas implicitement les quatre autres factions.
+Le point de pose utilise `unitCanPlay(context,reference,side)` avant toute
+consommation. Les évolutions sont refusées en aventure, même avec le marqueur
+optionnel de règles. Le laboratoire autorise les versions dont le moteur est
+prêt, sans possession réelle. Les références invalides restent refusées dans
+les deux camps, et le laboratoire valide ses réglages avant de lancer un combat.
 
-Le point d'entrée commun de pose refuse une référence explicite non jouable **avant consommation**. Le refus vaut aussi pour l'adversaire et le laboratoire. Les références historiques et les variantes natives explicites continuent de fonctionner.
+## Laboratoire et compatibilité
 
-À cette étape, aucune vue n'annonce les nouveaux pouvoirs, aucune sauvegarde n'est enrichie et aucune unité existante n'est recalculée. Le laboratoire garde temporairement son ancien pilote ; son remplacement est prévu avec le raccordement des pouvoirs, pas avec la seule présence des données. La Collection et sa fiche universelle seront traitées à leur étape dédiée.
+`createLabBattle` utilise `createBattle` avec `cardRules: AUBE_RULESET`. Les
+réglages de rareté et de niveau restent propres à chaque camp et personnage.
+Le laboratoire lit `versionUnitStats` et invoque par le point de pose commun ;
+aucun niveau forcé ou ancien calcul de pilote Milicien. Les niveaux 0–3 sont
+indépendants de la rareté, qui ne change pas le niveau choisi.
 
-Les prévisions utilisent les mêmes additions que les statistiques natives. `unitStats` conserve son résultat historique et son instantané de bataille. Les tests vérifient anciennes batailles 3×5, profils importés, decks, achats, maîtrise, économie, natifs des cinq factions dans les deux camps, et isolation du laboratoire.
+Les profils, achats, maîtrises, quantités et decks ne sont pas convertis. La
+campagne existante ne reçoit pas automatiquement le marqueur futur tant que
+la présentation complète n'est pas prête. Le laboratoire reste isolé des
+sauvegardes et des récompenses de l'aventure.
 
-## Branchement des étapes suivantes
-
-Réutiliser le résolveur pour la création des unités et leurs capacités ; ne pas recopier les valeurs de `aube.js` dans le moteur, l'IA ou les vues. Ne passer une version à `implemented` qu'après raccordement complet de ses pouvoirs, descriptions et tests. Résoudre les entrées `pendingDecisions` avant leur activation. Les contraintes de barrières par source et l'ordre des interactions doivent préserver les protections déjà présentes.
-
-Le builder découvre ces modules par les imports du moteur ; l'export autonome est généré avec les mêmes sources. Aucun fichier HTML de variante, catalogue de sauvegarde parallèle ou système d'obtention n'est ajouté.
-
-## Préparation défensive de l'étape 3
-
-`versionUnitAbilities(unit)` ne renvoie des paramètres que pour un instantané
-avec rareté future explicite et connue ; une unité historique ou une rareté
-native explicite reste sur le chemin historique. Cette API ne rend pas une
-version jouable et ne recalcule aucun chiffre sauvegardé. Les tests utilisent
-ces instantanés pour exercer les mêmes primitives de moteur.
-
-Les défenses et leurs quotas sont détaillés dans [AUBE_DEFENSES.md](AUBE_DEFENSES.md).
-Les barrières de soin sont prêtes mais leur raccordement aux soins effectifs
-multi-cibles appartient à l'étape 4. La Garde future est raccordée au moteur sur les instantanés versionnés :
-éligibilité, priorité centrale et interceptions tant que le gardien vit. Les
-versions restent `pending` : aucune nouvelle pose ou obtention n'est activée.
+[Contrat d'exécution](AUBE_MOTEUR.md), [défenses](AUBE_DEFENSES.md) et
+[point de reprise](REPRISE_INTEGRATION_AUBE.md). L'unique export `JOUER.html`
+embarque les mêmes modules que le web et reste généré par le builder.

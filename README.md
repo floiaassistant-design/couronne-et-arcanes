@@ -75,8 +75,11 @@ Pour chaque unité, la Collection conserve **six emplacements de rareté côte �
 
 La Collection, les classes, les maîtrises, équipements, talents et donjons sont
 conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteur,
-sans récompense ni écriture dans l’aventure. Les raretés futures hors pilote du
-laboratoire restent « À concevoir ».
+sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
+et leurs niveaux 0 à 3, choisis indépendamment. Les autres unités conservent
+leur version native. Les nouvelles raretés ne sont pas offertes dans l’aventure ;
+leur obtention reste à définir. Cette préparation appartient à la PR Aube en
+brouillon, avec une présentation universelle encore à terminer.
 
 La sauvegarde est locale à l’appareil et à l’adresse utilisée. Guide permet
 l’export/import du profil. Les clés historiques et les combats repris sont

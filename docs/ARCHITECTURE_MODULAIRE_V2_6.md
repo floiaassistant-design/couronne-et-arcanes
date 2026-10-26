@@ -1,3 +1,25 @@
+## Moteur Aube et laboratoire — étape 4 terminée, 26 octobre 2026
+
+Le registre reste la seule saisie des paramètres. `resolveRulesDefinition`
+est une projection immuable des règles futures, natives Aube comprises ; le
+marqueur explicite `cardRules` protège les anciens instantanés sans migration.
+`engine/unit-rules.js` partage références, pose autorisée, portée, déplacement,
+Charge, Perforation et Vol entre combat, IA et statistiques.
+
+`engine/unit-support.js` porte les sélecteurs et résolutions d'arrivée et de
+soutien : soins proportionnels sur plusieurs lignes, Inspiration, barrière
+après soin, Commandement et Intervention. Les frappes principales et secondaires
+restent dans `battle.js`, qui injecte les mêmes dégâts dans tous ces effets.
+`battle-defense.js` préserve les barrières de capacités lors d'un sort sans
+modifier le plafond individuel de celui-ci. Aucun moteur parallèle ou DOM.
+
+Le laboratoire lit le registre et `versionUnitStats`, avec niveaux indépendants
+0–3 ; son ancien calcul pilote est retiré. L'IA lit les mêmes statistiques et
+paramètres des unités versionnées, sans accès aux cartes privées du joueur.
+`cards/ability-text.js` rend des libellés dérivés pour le laboratoire ; le rendu
+universel de tous les écrans appartient à l'étape 5. Pas de nouvelle dépendance,
+CSS ou image. [Contrat d'exécution](AUBE_MOTEUR.md).
+
 ## Défenses versionnées — étape 3 terminée, 26 octobre 2026
 
 `engine/battle-defense.js` extrait la résolution de dégâts et Riposte de

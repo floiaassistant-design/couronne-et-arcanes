@@ -1,7 +1,7 @@
 # Aube — défenses préparées, étape 3 terminée
 
 Relecture du [tableau maître officiel](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
-édition `2026-10-26T08:18:43.609Z`. La [page des sorts et archives](https://app.notion.com/p/4026633072a881ed9768c615f538a929),
+édition `2026-10-26T08:37:43.944Z`. La [page des sorts et archives](https://app.notion.com/p/4026633072a881ed9768c615f538a929),
 édition `2026-10-25T22:11:46.891Z`, renvoie explicitement à ce tableau pour les unités.
 La PR nº 41, fermée sans fusion, n'est plus une source de décisions actives.
 
@@ -12,12 +12,12 @@ par les attaques, sorts, pièges et pouvoirs existants. Les paramètres futurs
 viennent de `versionUnitAbilities` et du registre central ; aucune constante
 ATQ/PV ou valeur de capacité recopiée par personnage dans le moteur.
 
-Une unité historique, même explicitement marquée avec sa rareté native, garde
-son instantané et ses règles historiques. Le nouveau chemin requiert une
-rareté future explicite connue. **La pose refuse toujours toutes ces versions
-`pending`**, dans les deux camps et le laboratoire. Les tests construisent ces
-instantanés pour vérifier les défenses sans ajouter de circuit d'obtention.
-Les nouvelles règles ne sont donc pas présentées comme jouables.
+Une unité historique sans marqueur de règles conserve son instantané et son
+fonctionnement. `cardRules: aube-v1` identifie les nouveaux instantanés des
+règles futures, natifs Aube compris ; les tests des seules évolutions explicites
+restent compatibles. Les évolutions `pending` restent refusées en aventure,
+mais sont désormais testables dans le laboratoire par le même point de pose.
+Aucune possession ni migration n'est créée.
 
 | Responsabilité | Préparation réelle |
 | --- | --- |
@@ -26,7 +26,7 @@ Les nouvelles règles ne sont donc pas présentées comme jouables.
 | Riposte | ATQ actuelle avec Concorde et Ralliement, sans Charge ; au contact, après survie, sans contre-chaîne ; Milicien une fois/invocation, autres évolutions une fois/tour |
 | Dernier Rempart | Sur un coup mortel après protections, survie une fois à `min(5, maxhp)` ; aucun kill provisoire ou double kill |
 | Paladin | Barrière après une Riposte autorisée, même absorbée par l'ennemi ; plafond propre de 2 |
-| Prieur | Primitive de barrière après soin effectif préparée ; raccordement au soin multi-cible à l'étape 4 |
+| Prieur | Barrière raccordée après soin effectif ; jamais après un soin nul |
 | Garde | Trois portées raccordées ; un gardien par frappe, même ligne puis proximité de sa couronne ; aucune limite par tour tant qu’il vit |
 
 ## Interactions techniques à examiner avant activation
@@ -45,8 +45,9 @@ nouvelles validations de conception consignées dans Notion :
   pièges et autres frappes qui passent par `hit` utilisent les protections.
 - Les points de barrière de capacités sont comptés par effet sur la cible,
   pas par lanceur. Ils sont consommés avant la protection extérieure ; un
-  nouveau gain ne diminue jamais une protection existante. Les barrières de
-  capacités doivent être réconciliées avec tous les sorts lors de l'étape 4.
+  nouveau gain ne diminue jamais une protection existante. Les sorts conservent
+  leur plafond individuel de barrière totale ; ils ne réduisent pas un surplus
+  acquis ailleurs et ne réattribuent pas les points d’une capacité.
 - `firstHitReductionUsed`, `lastStandUsed`, `riposteUsed`,
   `lastRiposteRound` et `abilityBarriers` appartiennent seulement aux
   instantanés concernés. Les quotas persistent après sauvegarde/reprise.
@@ -88,5 +89,7 @@ Le gardien ne change pas de case et ne riposte pas entre deux lignes, même
 si les colonnes semblent adjacentes. Au contact sur sa propre ligne, la Riposte
 et ses protections normales restent disponibles selon leur quota.
 
-L'étape 3 est terminée sur le brouillon. Les versions futures restent `pending`
-et fermées à la pose ; l'étape 4 traitera offensif, soutien, arrivée et laboratoire.
+Les étapes 3 et 4 sont terminées sur le brouillon. Les versions futures restent
+`pending` pour la livraison complète et fermées à la pose en aventure ; le
+laboratoire utilise désormais leurs pouvoirs communs. La fiche universelle
+reste à traiter à l'étape 5.

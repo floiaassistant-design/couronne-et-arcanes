@@ -16,6 +16,13 @@ export function grantAbilityBarrier(u,key,parameters){
  return added;
 }
 
+export function grantSharedBarrier(u,amount,cap){
+ if(!versionUnitAbilities(u)&&!u.abilityBarriers){u.barrier=Math.min(cap,(u.barrier||0)+amount);return;}
+ // Le plafond du sort porte sur la barrière totale ; ne jamais effacer un
+ // surplus déjà acquis via une autre source ni réattribuer ses points.
+ const total=u.barrier||0;u.barrier=Math.max(total,Math.min(cap,total+amount));
+}
+
 function absorbBarrier(u,damage){
  const absorbed=Math.min(u.barrier||0,damage);
  if((u.barrier||0)>0)u.barrier-=absorbed;

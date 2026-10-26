@@ -1,3 +1,17 @@
+## En préparation — Aube, moteur commun et laboratoire (26 octobre 2026)
+
+- Étape 4 : portée 3, Perforation, tir arrière protégé, Charge +3, Célérité,
+  soins multi-cibles et interlignes, barrières après soin, Inspiration,
+  Commandement et Intervention raccordés aux paramètres du registre.
+- Règles futures explicitement identifiées, natives Aube comprises, sans
+  recalcul des anciens instantanés. Campagne et économie non converties.
+- Les 51 versions sont testables dans le laboratoire ; niveaux 0–3 indépendants
+  de la rareté, ancien calcul expérimental Milicien retiré. IA et prévisions
+  partagent les mêmes paramètres ; aucune récompense ou possession offerte.
+- Libellés de test dérivés et tests métier/navigateur étendus. Les versions
+  futures restent en attente de livraison complète ; prochaine étape, fiche
+  universelle dans tous les écrans. PR toujours en brouillon, sans publication.
+
 ## En préparation — Aube, Garde validée et étape 3 terminée (26 octobre 2026)
 
 - Priorité et fréquence enregistrées dans le tableau maître Notion après accord

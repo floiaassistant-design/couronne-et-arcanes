@@ -1,36 +1,37 @@
 # Intégration Aube — reprise par étapes
 
-## Point de reprise — 26 octobre 2026, Garde validée
+## Point de reprise — 26 octobre 2026, étape 4 terminée
 
-**Étapes 1 à 3 terminées sur le brouillon. Arrêt avant l'étape 4.**
+**Étapes 1 à 4 terminées sur le brouillon. Arrêt avant l'étape 5.**
 
-- Branche unique : `feat/aube-evolutions-fiche-universelle` ; [PR nº 53](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53), toujours brouillon. Dernière tête exacte, arbre et CI dans sa description après vérification GitHub.
-- Main relu : `cf8175002431e1714460f8be917665437a5b78c4`, aucune autre PR ouverte. La nº 41 est archivée, fermée sans fusion ; aucune autorisation de fusion ou publication.
-- [Tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f) mis à jour puis relu, édition `2026-10-26T08:18:43.609Z` : le propriétaire a validé les deux règles de Garde proposées. Même ligne en priorité, puis gardien le plus proche de sa propre couronne ; égalité par ligne puis uid. Toutes les frappes éligibles sont interceptables tant qu'il vit, un seul gardien par frappe. Les 53 lignes du tableau n'ont pas été réécrites.
-- `FUTURE_GUARD_POLICY` centralise ces décisions ; le Porte-égide futur les hérite et ne garde plus les deux décisions en attente. `findCrownGuardian` raccorde les trois portées au moteur, réévalue après chaque frappe et conserve le repli historique sans Garde future éligible.
-- Les événements interlignes utilisent la vraie cible et `fromLane` ; le gardien reste sur sa case. Aucune fausse Riposte entre deux lignes ; au contact sur la même ligne, Riposte effective conservée.
-- Les natifs et anciens instantanés ne sont pas recalculés. Les combats mixtes appliquent la priorité validée aux candidats historiques et futurs dès qu'une Garde future est éligible. [Contrat et interactions](AUBE_DEFENSES.md).
-- **Les 41 évolutions restent `pending`, refusées à la pose**, y compris dans le laboratoire. Pas d'obtention, de migration, d'image, d'écran ou de fiche supplémentaire. Les soins multi-cibles, offensif, arrivée, IA et remplacement du pilote laboratoire appartiennent à l'étape 4.
+- Branche unique : `feat/aube-evolutions-fiche-universelle` ; [PR nº 53](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53), toujours brouillon. Dernière tête exacte, arbre Git, export et CI dans sa description après vérification.
+- Main relu : `cf8175002431e1714460f8be917665437a5b78c4` ; aucune autre PR ouverte. La nº 41 est archivée, fermée sans fusion. Aucune autorisation de fusion ou publication.
+- [Tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f) relu, édition `2026-10-26T08:37:43.944Z`. Les autres validations de Sylve ne sont pas intégrées par cette mission Aube.
+- Les dix Aube ont leurs attaques, soutiens et arrivées raccordés : portée, Perforation, tir arrière, Charge/Célérité, soins multi-cibles et interlignes, barrière du Prieur, Inspiration, Commandement et Intervention. Les mêmes primitives servent le jeu et le laboratoire.
+- `resolveRulesDefinition` dérive les règles futures du registre unique, natives Aube comprises. Les nouveaux instantanés ont un marqueur explicite ; aucun ancien combattant n'est recalculé, ni profil/deck/achat/maîtrise converti.
+- Les **51 versions sont testables dans le laboratoire**, niveaux **0–3 indépendants**, pour les deux camps. L'ancien pilote Milicien et ses niveaux forcés sont retirés. IA, prévisions et invocation utilisent les paramètres et statistiques communs.
+- **Les évolutions restent refusées en aventure**, même avec le marqueur optionnel. `status.engine` distingue le moteur prêt de `status.combat: pending`, conservé pour la livraison complète. Aucune obtention ni possession créée.
+- Le laboratoire affiche des libellés dérivés du registre. La fiche universelle et les descriptions de toutes les autres vues restent à faire à l'étape 5. [API](AUBE_VERSIONS.md), [contrat du moteur](AUBE_MOTEUR.md), [défenses](AUBE_DEFENSES.md).
 
-## Vérifications de cette finalisation de l'étape 3
+## Vérifications de l'étape 4
 
-- `npm test` : **387 tests réussis**, dont **19 nouveaux tests de Garde** après les 13 tests de défense précédents ; aucun scénario historique affaibli.
-- `npm run test:parity` : **60 scénarios identiques**, référence inchangée.
-- `npm run build` et `npm run build:test` : **réussis**, 47 modules et 76 illustrations, mêmes sources pour web et export hors réseau.
-- Cas de Garde : deux camps et deux géométries, priorité de ligne/proximité/égalité, frappes successives, mort et gardien suivant, dernier gardien mort puis couronne, une seule interception, vrais ancrages interlignes, absence de Riposte interligne, Riposte de contact, silence passif, protections réelles, cible unité non détournée, natifs des cinq factions, coexistence, coordonnées invalides et reprise.
-- `CONTROL_SEEDS=1 npm run control-balance` : **1 280 combats terminés**, maximum 34 tours, intégrité conservée. Ces simulations n'évaluent pas l'équilibrage humain des nouvelles évolutions encore fermées.
-- `browser_save_integrity_v211.py`, `browser_developer_lab.py` et `browser_combat_fx.py` : **réussis**. La suite des effets inclut désormais les interceptions interlignes sur bureau, portrait, paysage, mouvement réduit et animations désactivées, hors réseau avec sauvegarde/reprise. Le parcours Garde a été rejoué sur le dernier export exact après regroupement des imports ; les captures bureau et portrait ont été examinées. Aucun téléphone physique, Safari/Firefox ou équilibrage humain revendiqué.
-- Export GitHub vérifié : [génération ponctuelle réussie](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40292781388), commit `3a09001f9e57b49041e5202d62bf581bab410b91`, blob `8a9edc038d86ca0773b007407d3d2b75b8e2e5da` (34 464 880 octets), identique au fichier local testé ; arbre complet identique `b47a28fbee2f02d13a817c56293eddb386f84838` avant retrait du générateur. Le workflow temporaire est retiré du résultat final.
-- Les CI intermédiaires de `50bf06b` ont précédé l’enregistrement de l’export ; les tests ont échoué au contrôle de synchronisation, puis le builder a enregistré le bon export dans `3a09001`. Aucun ancien run à relancer ; lire la CI de la nouvelle tête finale depuis la description de PR.
-- Lors de la reprise, la CI des sources précédentes `a8b9e4f` avait son assemblage réussi et ses tests complets encore en cours. Elle ne valide pas le nouveau code. Les résultats de la nouvelle tête doivent être consultés après sa notification, sans surveillance active.
+- `npm test` : **409 tests réussis**, dont **22 nouveaux tests métier** de moteur/laboratoire. Les anciennes attentes du pilote sont remplacées par les chiffres validés et des assertions d'indépendance des niveaux ; les scénarios historiques restent intacts.
+- Une vérification couvre **51 versions × 4 niveaux × 2 camps = 408 invocations réelles** et leur égalité avec la prévision, sans niveau forcé. Les tests incluent l'absence des neuf rangs inférieurs et les refus sans consommation en aventure.
+- **48 batailles complètes déterministes** de laboratoire : six niveaux de rareté, quatre graines, deux passes ; même moteur, quotas et intégrité des unités, aucune modification des réglages/progression.
+- `npm run test:parity` : **60 scénarios identiques**, référence inchangée. `npm run build` et `npm run build:test` : **réussis**, 50 modules et 76 illustrations, mêmes sources pour web et hors réseau.
+- `CONTROL_SEEDS=1 npm run control-balance` : **1 280 combats terminés**, maximum 34 tours et contrôles d'intégrité réussis. Ces simulations ne démontrent pas l'équilibrage humain des évolutions.
+- Navigateur Chromium / Playwright 1.56 : `browser_developer_lab.py`, `browser_combat_fx.py`, `browser_save_integrity_v211.py`, `browser_maintenance.py` et `browser_card_capabilities.py` **réussis**. Bureau, portrait/paysage, sélection des rangs et niveau 0, vrais nombres/pouvoirs, contrôles, laboratoire isolé, interruption, reprise, HTTP, export sans réseau, mouvement réduit et animations désactivées selon les parcours. La suite des effets et le laboratoire ont été rejoués sur le dernier export exact. Captures du laboratoire bureau/mobile examinées. Aucun téléphone physique, Safari/Firefox ou équilibrage humain revendiqué.
+- Les assertions de la suite des effets sont conservées. Le bouton Passer est actionné atomiquement quand la lecture est active, afin de ne pas attendre un ancien bouton détaché après la fin naturelle des effets ; un cas séparé exige son activation pendant une lecture et vérifie résultat/commandes.
+- Export GitHub exact et CI finale : à relever après génération et retrait du workflow ponctuel, dans la description de PR.
+- Les deux CI de la tête précédente `ce8afd8` ont maintenant terminé **success** : [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40293136902) et [assemblage](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40293136747). Ce résultat valide l’étape 3, pas le nouveau code de l’étape 4. Vérifier la nouvelle tête après notification, sans surveillance active.
 
-## Prochaine étape autorisée lors d'une prochaine reprise
+## Prochaine étape : présentation universelle
 
-1. Relire `AGENTS.md`, l'état courant, ce checkpoint, les contrats de versions/défenses, le main et les PR réels, puis le tableau Notion si de nouvelles décisions y figurent.
-2. L'étape 4 traitera les capacités offensives, de soutien et d'arrivée, l'IA et le laboratoire commun. Conserver les nouvelles versions incomplètes fermées à la pose jusque-là.
-3. Avant activation, préparer la transition des **nouveaux natifs Aube** vers les règles générales validées, avec une identité de règles explicite préservant les anciens instantanés. Le repli natif historique de cette étape 3 est un contrat de compatibilité, pas une décision annulant les règles futures de Notion.
-4. Réconcilier les barrières par effet avec les sorts existants, brancher la barrière après soin effectif et vérifier les conventions techniques signalées dans `AUBE_DEFENSES.md`. Aucun pouvoir copié dans une vue ou une seconde implémentation de combat.
-5. Après l'étape 4, arrêt avec code poussé et état vérifié ; étapes 5 = fiche universelle, 6 = revue complète. Aucune fusion, publication ou étape suivante automatique.
+1. Relire `AGENTS.md`, l'état courant, ce checkpoint, les contrats et le tableau Notion à jour ; vérifier main et toutes les PR réelles.
+2. Réutiliser `ability-text.js`, le registre et les calculs de statistiques ; unifier textes courts et fiche concise pour main, deux camps du plateau, six cellules Collection, decks, Atelier/Alchimie, paquets, récompenses et laboratoire.
+3. Distinguer native, rang inférieur inexistant, moteur prêt et obtention non définie. Ne pas offrir de copies ou modifier l'économie pour rendre une version visible.
+4. Faire afficher les vrais paramètres et raretés des instantanés versionnés, sans reconstruire les chiffres sauvegardés. Survol/focus/toucher, sans bouton de fiche supplémentaire ni pose accidentelle.
+5. Après l'étape 5, arrêt avec code poussé et état vérifié. L'étape 6 reste la revue complète, les contrôles de la tête exacte et la livraison ; aucune fusion/publication automatique.
 
 ## Historique — audits et résultats des étapes 1 et 2 (25 octobre)
 

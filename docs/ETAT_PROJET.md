@@ -1,26 +1,22 @@
 # État courant — 26 octobre 2026
 
-## Intégration Aube — étape 3 terminée, PR non intégrée
+## Intégration Aube — étapes 1 à 4 terminées, PR non intégrée
 
 La [PR nº 53](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53)
-reste l'unique PR active, sur `feat/aube-evolutions-fiche-universelle`.
-Le tableau maître Notion a été relu dans son édition du 26 octobre 2026,
-08:18:43.609 UTC ; la PR nº 41 est désormais archivée, fermée sans fusion.
-Les défenses versionnées sont préparées dans le moteur commun : réduction
-initiale, Armure, Riposte effective, barrières et Dernier Rempart. Les tests
-instancient explicitement les versions futures ; aucune invocation en jeu ou
-nouvelle obtention n'est ouverte. Les 41 évolutions restent `pending`.
+reste l'unique PR active sur `feat/aube-evolutions-fiche-universelle`, en brouillon.
+Le tableau maître Notion a été relu dans son édition du 26 octobre,
+08:37:43.944 UTC. Les défenses, attaques, soutiens et effets d'arrivée des dix
+Aube sont raccordés au moteur commun. Les 51 versions peuvent être testées
+au laboratoire, avec des niveaux 0–3 indépendants de la rareté ; son ancien
+pilote Milicien est retiré. L'IA lit les mêmes paramètres et statistiques.
 
-**Garde terminée après validation du propriétaire :** même ligne en priorité,
-puis gardien le plus proche de sa couronne ; égalité par ligne/uid. Toutes
-les attaques éligibles sont interceptables tant que le gardien reste vivant,
-un seul gardien par attaque. Les trois portées sont raccordées au moteur,
-avec réévaluation après chaque coup, vraies coordonnées interlignes et aucune
-Riposte fictive entre lignes. Les natifs des cinq factions gardent leur
-comportement historique dans les combats sans Garde future éligible.
-Les versions incomplètes restent fermées à la pose. [Checkpoint et tests](REPRISE_INTEGRATION_AUBE.md) ;
-[contrat et interactions à examiner](AUBE_DEFENSES.md).
-Ne pas passer à l'étape 4 ni fusionner/publier sans l'accord correspondant.
+Les règles futures ont une identité explicite pour les nouveaux instantanés,
+natifs Aube compris. Les anciens combattants gardent leurs règles et chiffres,
+sans migration. Les évolutions restent refusées en aventure : aucune obtention,
+quantité, progression ou récompense ajoutée. Les fiches universelles et les
+statuts de présentation de toutes les cartes restent à traiter à l'étape 5.
+Les images, le CSS et l'hébergement sont conservés. [Reprise et vérifications](REPRISE_INTEGRATION_AUBE.md) ;
+[contrat du moteur](AUBE_MOTEUR.md). Arrêt avant l'étape 5 ; aucune fusion ni publication.
 
 ## Jeu intégré sur main
 

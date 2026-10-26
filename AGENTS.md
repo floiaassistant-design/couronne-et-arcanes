@@ -19,16 +19,40 @@
 
 - `engine/battle-defense.js` est l'unique résolution de `hit` et Riposte pour
   tous les appels du moteur. `versionUnitAbilities` lit le registre seulement
-  pour un instantané portant explicitement une rareté future ; les natifs et
-  anciens combattants gardent leurs valeurs et quotas historiques.
-- Les versions futures restent `pending` et refusées à la pose. Ne pas activer
-  une définition parce qu'une partie de ses défenses fonctionne dans les tests.
+  pour un instantané futur explicite ou marqué `cardRules: aube-v1`. Les
+  anciens combattants sans ce marqueur gardent leurs règles historiques.
+- Distinguer `status.engine` (moteur vérifié) de `status.combat` (livraison
+  complète). `unitCanPlay` est le contrôle contextuel de pose : les évolutions
+  restent refusées en aventure, mais les versions dont le moteur est prêt
+  sont testables dans le laboratoire avec le marqueur explicite de règles.
+  Aucune obtention, possession ou conversion de niveau implicite.
 - `engine/guard-candidates.js` énumère les gardiens éligibles et sélectionne
   un seul gardien selon la politique centrale validée : même ligne, proximité
   de sa couronne, puis ligne/uid. Aucune limite par tour tant qu’il reste vivant.
 - Les quotas réels d'une capacité doivent survivre à la sauvegarde ; les
   instantanés d'événements ne doivent pas partager un objet mutable de barrières.
   Voir [les défenses et leurs limites](docs/AUBE_DEFENSES.md).
+
+## Contrat — règles versionnées et laboratoire commun
+
+- `resolveRulesDefinition` est une projection immuable du registre unique,
+  pas un second catalogue saisi à la main. `AUBE_RULESET` identifie les règles
+  futures des nouveaux instantanés, y compris natifs Aube ; aucune inférence
+  à partir de la date d'une sauvegarde ou modification d'une ancienne unité.
+- `engine/unit-rules.js` partage références, autorisation de pose, portée,
+  déplacement, Charge, Vol et Perforation entre moteur, IA et prévisions.
+  `engine/unit-support.js` résout arrivée et soutiens avec les primitives du
+  même moteur. Les états d'arrivée et de soutien empêchent les répétitions.
+- Le laboratoire utilise `versionUnitStats` et les versions dont le moteur est
+  implémenté. Niveaux 0–3 indépendants de la rareté ; aucun niveau forcé ni
+  nouveau pilote spécifique au Milicien. Les anciens champs `labGuard` restent
+  seulement lisibles par le chemin de compatibilité, sans nouvelle création.
+- Les barrières de capacités gardent leurs plafonds par effet ; les sorts
+  gardent leur plafond individuel et ne réduisent pas un surplus préexistant.
+  Ne pas déplacer ces règles dans les vues ou dupliquer les chiffres de Notion.
+- `cards/ability-text.js` fournit les libellés brefs à partir des paramètres.
+  Le laboratoire les affiche ; la présentation universelle reste une étape
+  distincte. Lire [le contrat du moteur Aube](docs/AUBE_MOTEUR.md).
 
 ## Contrat permanent — six raretés de Collection et fiche courte
 

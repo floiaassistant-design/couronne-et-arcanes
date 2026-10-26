@@ -1,7 +1,7 @@
 // Catalogue de versions en lecture seule. Aucun ajout à CARDS, aucune possession ni règle activée.
 import {CARDS} from '../data.js';
 import {CARD_RARITIES,normalizeCardRarity,freezeCardData} from './schema.js';
-import {nativeUnitAbilities,inheritUnitAbilities} from './abilities.js';
+import {nativeUnitAbilities,inheritUnitAbilities,FUTURE_GUARD_POLICY} from './abilities.js';
 import {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE} from './aube.js';
 
 export const AUBE_UNIT_IDS=Object.freeze(Object.keys(AUBE_EVOLUTIONS));
@@ -27,7 +27,7 @@ for(const card of Object.values(CARDS)){
   const definition=freezeCardData({
    id:card.id,versionId:`${card.id}:${rank.id}`,rarity:rank.id,nativeRarity:card.rarity,
    stats:{...stats},geometry:{...geometry},abilities,
-   status:{design:'validated',combat:native?'implemented':'pending',obtaining:native?'existing':'undefined'},
+   status:{design:'validated',combat:native?'implemented':'pending',engine:'implemented',obtaining:native?'existing':'undefined'},
    pendingDecisions:[...pendingDecisions],source:native?null:AUBE_DESIGN_SOURCE
   });
   versions.push(definition);
@@ -56,9 +56,22 @@ export function unitVersionPlayable(reference){
  return resolveUnitDefinition(reference)?.status.combat==='implemented';
 }
 
-// Lecture des seuls instantanés futurs explicites ; aucun changement des références natives.
+// Identité explicite des règles futures. Les anciens instantanés restent historiques.
+export const AUBE_RULESET='aube-v1';
+const rulesDefinitions=new Map();
+for(const versions of definitions.values())for(const def of versions){
+ if(!AUBE_UNIT_IDS.includes(def.id))continue;
+ const changes={};
+ if(def.abilities.riposte&&def.id!=='militia')changes.riposte={damageMode:'effective-attack'};
+ if(def.abilities.guard)changes.guard={...FUTURE_GUARD_POLICY,scope:def.rarity===def.nativeRarity?'positioned':def.abilities.guard.scope,unitTargetPriority:false};
+ rulesDefinitions.set(def.versionId,freezeCardData({...def,cardRules:AUBE_RULESET,
+  abilities:inheritUnitAbilities(def.abilities,changes),source:AUBE_DESIGN_SOURCE}));
+}
+export function resolveRulesDefinition(reference){
+ const def=resolveUnitDefinition(reference);return def?rulesDefinitions.get(def.versionId)||def:null;
+}
 export function versionUnitAbilities(unit){
  if(!unit||!Object.hasOwn(unit,'rarity'))return null;
- const definition=resolveUnitDefinition(unit);
- return definition?.source?definition.abilities:null;
+ const d=unit.cardRules===AUBE_RULESET?resolveRulesDefinition(unit):resolveUnitDefinition(unit);
+ return d?.source?d.abilities:null;
 }
