@@ -1,6 +1,6 @@
 # Versions de cartes — contrat de données en préparation
 
-État de la PR Aube : définitions et compatibilité préparées ; défenses partiellement raccordées au moteur, versions futures toujours refusées à la pose. Les décisions restent dans le [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f), édition observée `2026-10-26T07:46:27.447Z`. Ce document décrit l'API, pas un nouveau tableau de décisions.
+État de la PR Aube : définitions et compatibilité préparées ; défenses partiellement raccordées au moteur, versions futures toujours refusées à la pose. Les décisions restent dans le [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f), édition observée `2026-10-26T08:18:43.609Z`. Ce document décrit l'API, pas un nouveau tableau de décisions.
 
 ## Responsabilités
 
@@ -34,7 +34,7 @@ Les dix natifs Aube et leurs 41 évolutions ont une définition. Les neuf rangs 
 - `status.design: 'validated'` signifie que la définition est issue d'une conception validée ou du catalogue natif.
 - `status.combat: 'implemented'` est réservé aux natifs actuellement jouables ; les évolutions sont `'pending'` tant que leurs règles ne sont pas programmées et vérifiées.
 - `status.obtaining: 'existing'` conserve les circuits historiques du natif ; `'undefined'` n'invente aucun circuit pour une évolution.
-- `pendingDecisions` signale désormais `guard-priority` et `guard-frequency` pour les futures versions du Porte-égide. La nouvelle édition Notion distingue les valeurs historiques natives des règles futures générales : les évolutions du Porte-égide, du Paladin et de l’Ange utilisent une Riposte effective ; les natifs conservent leur définition historique. Ce périmètre ne programme pas implicitement les quatre autres factions.
+- Les décisions `guard-priority` et `guard-frequency` ont été validées le 26 octobre et retirées de `pendingDecisions`. La nouvelle édition Notion distingue les valeurs historiques natives des règles futures générales : les évolutions du Porte-égide, du Paladin et de l’Ange utilisent une Riposte effective ; les natifs conservent leur définition historique. Ce périmètre ne programme pas implicitement les quatre autres factions.
 
 Le point d'entrée commun de pose refuse une référence explicite non jouable **avant consommation**. Le refus vaut aussi pour l'adversaire et le laboratoire. Les références historiques et les variantes natives explicites continuent de fonctionner.
 
@@ -58,5 +58,6 @@ ces instantanés pour exercer les mêmes primitives de moteur.
 
 Les défenses et leurs quotas sont détaillés dans [AUBE_DEFENSES.md](AUBE_DEFENSES.md).
 Les barrières de soin sont prêtes mais leur raccordement aux soins effectifs
-multi-cibles appartient à l'étape 4. La Garde future n'est pas activée : seul le
-calcul d'éligibilité est disponible, sans ordre ou fréquence décidé implicitement.
+multi-cibles appartient à l'étape 4. La Garde future est raccordée au moteur sur les instantanés versionnés :
+éligibilité, priorité centrale et interceptions tant que le gardien vit. Les
+versions restent `pending` : aucune nouvelle pose ou obtention n'est activée.

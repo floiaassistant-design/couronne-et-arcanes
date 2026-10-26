@@ -23,9 +23,9 @@
   anciens combattants gardent leurs valeurs et quotas historiques.
 - Les versions futures restent `pending` et refusées à la pose. Ne pas activer
   une définition parce qu'une partie de ses défenses fonctionne dans les tests.
-- `engine/guard-candidates.js` énumère seulement les gardiens éligibles. Aucun
-  choix entre gardiens ni quota d'interception n'est décidé par cette API ;
-  leur raccordement attend les décisions consignées dans le checkpoint.
+- `engine/guard-candidates.js` énumère les gardiens éligibles et sélectionne
+  un seul gardien selon la politique centrale validée : même ligne, proximité
+  de sa couronne, puis ligne/uid. Aucune limite par tour tant qu’il reste vivant.
 - Les quotas réels d'une capacité doivent survivre à la sauvegarde ; les
   instantanés d'événements ne doivent pas partager un objet mutable de barrières.
   Voir [les défenses et leurs limites](docs/AUBE_DEFENSES.md).

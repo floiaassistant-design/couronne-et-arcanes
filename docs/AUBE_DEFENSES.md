@@ -1,7 +1,7 @@
-# Aube — défenses préparées, étape 3 partielle
+# Aube — défenses préparées, étape 3 terminée
 
 Relecture du [tableau maître officiel](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
-édition `2026-10-26T07:46:27.447Z`. La [page des sorts et archives](https://app.notion.com/p/4026633072a881ed9768c615f538a929),
+édition `2026-10-26T08:18:43.609Z`. La [page des sorts et archives](https://app.notion.com/p/4026633072a881ed9768c615f538a929),
 édition `2026-10-25T22:11:46.891Z`, renvoie explicitement à ce tableau pour les unités.
 La PR nº 41, fermée sans fusion, n'est plus une source de décisions actives.
 
@@ -27,7 +27,7 @@ Les nouvelles règles ne sont donc pas présentées comme jouables.
 | Dernier Rempart | Sur un coup mortel après protections, survie une fois à `min(5, maxhp)` ; aucun kill provisoire ou double kill |
 | Paladin | Barrière après une Riposte autorisée, même absorbée par l'ennemi ; plafond propre de 2 |
 | Prieur | Primitive de barrière après soin effectif préparée ; raccordement au soin multi-cible à l'étape 4 |
-| Garde | Candidatures Normale, Divine et Éveillée énumérées ; aucune sélection, interception future ou quota activé |
+| Garde | Trois portées raccordées ; un gardien par frappe, même ligne puis proximité de sa couronne ; aucune limite par tour tant qu’il vit |
 
 ## Interactions techniques à examiner avant activation
 
@@ -56,26 +56,37 @@ nouvelles validations de conception consignées dans Notion :
 Les anciens combattants ne reçoivent pas ces champs par migration. Les
 statistiques sauvegardées ne sont pas reconstruites depuis Notion.
 
-## Garde : deux décisions encore absentes
+## Garde : décisions validées et raccordées le 26 octobre
 
-Notion précise « priorité entre plusieurs Gardes, fréquence des interceptions »
-comme éléments à étudier avant programmation. `crownGuardCandidates` renvoie
-l'ensemble des candidats avec **leur vraie ligne et colonne**, dans les deux
-sens du plateau et les géométries 3×5 ou dix cases. Elle ne protège que la
-couronne ; la normale exige une position entre l'attaquant et sa couronne,
-la Divine couvre sa ligne, l'Éveillée toutes les lignes. Les autres factions
-et la sélection de Garde historique du jeu ne sont pas modifiées.
+Le propriétaire a validé les deux propositions. Elles ont été inscrites puis
+relues dans le tableau maître Notion. `FUTURE_GUARD_POLICY` centralise leur
+représentation ; les évolutions du Porte-égide en héritent sans seconde copie.
+Les entrées `guard-priority` et `guard-frequency` ont été retirées des décisions
+en attente. Aucun autre pouvoir n'a été ajouté par cet accord.
 
-Deux choix sont nécessaires pour terminer son raccordement :
+1. Parmi les gardiens éligibles, priorité à la même ligne que l'attaque, puis
+   au gardien le plus proche de **sa propre couronne**. Égalité par ligne puis uid.
+2. Toutes les attaques éligibles peuvent être interceptées tant que le gardien
+   reste vivant ; un seul gardien par attaque. Le choix est refait à chaque
+   frappe : un mort ne bloque pas la frappe suivante et aucun dégât ne se
+   reporte du gardien sur la couronne au cours de la même attaque.
 
-1. Quel gardien intercepte si plusieurs sont éligibles ? Proposition à
-   examiner : même ligne en priorité, puis gardien le plus proche de sa
-   couronne ; égalité finale par ligne puis uid. Cette proposition n'est
-   **ni programmée ni validée**.
-2. Combien de frappes peut-il intercepter ? Proposition à examiner : toutes
-   les frappes tant qu'il reste vivant, avec une seule interception par
-   attaque. La portée améliorée remplace l'ancienne ; pas de double blocage.
-   Cette proposition n'est **ni programmée ni validée**.
+Garde normale : gardien entre attaquant et couronne sur sa ligne ; Divine :
+sa ligne même derrière l'attaquant ; Éveillée : toutes les lignes. Garde ne
+protège jamais une autre unité : une Garde future ne détourne donc plus le
+ciblage ordinaire d'une unité à distance.
 
-`pendingDecisions` garde `guard-priority` et `guard-frequency` sur les
-évolutions du Porte-égide. L'étape 3 reste partielle ; ne pas enchaîner l'étape 4.
+Les natifs conservent leur sélection historique quand aucune Garde future
+n'est éligible. Dans un combat mêlant nouveaux et anciens gardiens éligibles,
+la présence d'une Garde future applique la priorité validée à ces candidats.
+Un ancien gardien sur la ligne attaquée garde donc sa candidature historique.
+Cette coexistence est testée ; aucune conversion ou activation économique.
+
+Les coordonnées des événements emploient la vraie ligne du gardien en cible
+et `fromLane` pour l'attaquant. Le lecteur existant sait déjà les représenter.
+Le gardien ne change pas de case et ne riposte pas entre deux lignes, même
+si les colonnes semblent adjacentes. Au contact sur sa propre ligne, la Riposte
+et ses protections normales restent disponibles selon leur quota.
+
+L'étape 3 est terminée sur le brouillon. Les versions futures restent `pending`
+et fermées à la pose ; l'étape 4 traitera offensif, soutien, arrivée et laboratoire.

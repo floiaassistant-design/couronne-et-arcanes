@@ -1,6 +1,11 @@
 // Description structurée du socle natif. Le branchement des règles de combat suit aux étapes 3/4.
 import {FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
 
+// Politique future validée dans Notion ; réutilisable par chaque faction.
+export const FUTURE_GUARD_POLICY=Object.freeze({
+ priority:'same-line-then-own-crown',tieBreak:'lane-uid',frequency:'while-alive',maxPerAttack:1
+});
+
 export function nativeUnitAbilities(card){
  const abilities={};
  const primary={

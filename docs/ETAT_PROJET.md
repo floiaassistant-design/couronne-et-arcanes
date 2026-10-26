@@ -1,21 +1,24 @@
 # État courant — 26 octobre 2026
 
-## Intégration Aube — étape 3 partielle, non intégrée
+## Intégration Aube — étape 3 terminée, PR non intégrée
 
 La [PR nº 53](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53)
 reste l'unique PR active, sur `feat/aube-evolutions-fiche-universelle`.
 Le tableau maître Notion a été relu dans son édition du 26 octobre 2026,
-07:46:27.447 UTC ; la PR nº 41 est désormais archivée, fermée sans fusion.
+08:18:43.609 UTC ; la PR nº 41 est désormais archivée, fermée sans fusion.
 Les défenses versionnées sont préparées dans le moteur commun : réduction
 initiale, Armure, Riposte effective, barrières et Dernier Rempart. Les tests
 instancient explicitement les versions futures ; aucune invocation en jeu ou
 nouvelle obtention n'est ouverte. Les 41 évolutions restent `pending`.
 
-**Blocage pour terminer l'étape 3 :** Notion laisse à décider la priorité entre
-plusieurs gardiens et la fréquence des interceptions. Le code énumère les
-candidats Normale/Divine/Éveillée, sans choisir ces règles ni remplacer la Garde
-historique. Les natifs des cinq factions, anciennes sauvegardes, économie,
-images et écrans sont conservés. [Checkpoint et vérifications](REPRISE_INTEGRATION_AUBE.md) ;
+**Garde terminée après validation du propriétaire :** même ligne en priorité,
+puis gardien le plus proche de sa couronne ; égalité par ligne/uid. Toutes
+les attaques éligibles sont interceptables tant que le gardien reste vivant,
+un seul gardien par attaque. Les trois portées sont raccordées au moteur,
+avec réévaluation après chaque coup, vraies coordonnées interlignes et aucune
+Riposte fictive entre lignes. Les natifs des cinq factions gardent leur
+comportement historique dans les combats sans Garde future éligible.
+Les versions incomplètes restent fermées à la pose. [Checkpoint et tests](REPRISE_INTEGRATION_AUBE.md) ;
 [contrat et interactions à examiner](AUBE_DEFENSES.md).
 Ne pas passer à l'étape 4 ni fusionner/publier sans l'accord correspondant.
 

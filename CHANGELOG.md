@@ -1,3 +1,15 @@
+## En préparation — Aube, Garde validée et étape 3 terminée (26 octobre 2026)
+
+- Priorité et fréquence enregistrées dans le tableau maître Notion après accord
+  explicite : même ligne, gardien le plus proche de sa couronne, ligne/uid ;
+  interceptions tant qu'il reste vivant, un seul gardien par attaque.
+- Raccordement des trois portées de Garde sur les versions futures, sélection
+  réévaluée après chaque frappe, coordonnées d'animation interlignes et exclusion
+  des fausses Ripostes entre lignes. Aucun nouveau rang ouvert à la pose.
+- Priorité historique préservée sans Garde future éligible ; registres, profils,
+  images, économie et sauvegardes historiques conservés. Tests de moteur et
+  contrôles navigateur étendus. Arrêt avant l'étape 4 de la même PR brouillon.
+
 ## En préparation — Aube, défenses versionnées (26 octobre 2026)
 
 - Relecture du tableau maître Notion, édition du 26 octobre ; futures Garde

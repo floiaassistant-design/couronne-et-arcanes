@@ -132,11 +132,52 @@ async def check_laboratory_integration(browser):
  assert await page.evaluate("[localStorage.getItem('couronnes_arcanes_v1'),localStorage.getItem('couronnes_arcanes_bataille_v1')]")==snapshot
  assert not errors,errors
  await ctx.close();print('Effets + laboratoire : Milicien Divin II, vitesse, passage, sortie pendant lecture et victoire sans sauvegarde PASS')
+async def check_cross_lane_guard(browser,label,viewport,reduced=False,off=False):
+ ctx=await browser.new_context(viewport=viewport,offline=True,reduced_motion='reduce' if reduced else 'no-preference')
+ page=await ctx.new_page();errors=[];network=[]
+ page.on('pageerror',lambda e:errors.append(str(e)))
+ page.on('request',lambda r:network.append(r.url) if r.url.startswith(('http:','https:')) else None)
+ await page.goto((ROOT/'tests/JOUER.test.html').as_uri());await page.locator('[data-action="welcome-start"]').click()
+ await page.evaluate(SETUP)
+ await page.evaluate("""()=>{
+  battle.board[0][4]=null;battle.board[0][5]=null;
+  battle.board[0][10]={uid:900,id:'bone',side:'p',atk:5,hp:20,maxhp:20,armor:0,ranged:false,ability:'none',stun:0,poison:0,poisonTurns:0};
+  battle.board[1][9]={uid:901,id:'shield',rarity:'éveillée',side:'e',atk:2,hp:13,maxhp:13,armor:2,ranged:false,ability:'armor',stun:99,poison:0,poisonTurns:0};
+  persistBattle();render();
+ }""")
+ if off:await page.locator('[data-action="toggle-animations"]').click()
+ await page.locator('[data-action="end-turn"]').click()
+ if not reduced and not off:
+  await page.wait_for_selector('.combat-playing')
+  projection=await page.evaluate("""()=>{
+   const position=s=>{const e=document.querySelector(s)?.closest('.battle-cell');return e?[e.dataset.lane,e.dataset.col]:null;};
+   return {source:position('.fx-source'),target:position('.fx-target'),label:document.querySelector('.combat-action')?.textContent,paths:document.querySelectorAll('.combat-fx-path').length};
+  }""")
+  assert projection['source']==['0','10'],projection
+  assert projection['target']==['1','9'],projection
+  assert 'Porte-égide' in projection['label'],projection
+  assert '−3 PV' in projection['label'],projection
+  assert projection['paths']==1,projection
+  saved=json.loads(await page.evaluate('(k)=>localStorage.getItem(k)',KEY))
+  assert saved['board'][1][9]['hp']==10 and saved['heroes']['e']['hp']==100 and 'vfx' not in saved
+  await page.screenshot(path=f'/tmp/ca-guard-{label}.png')
+  await page.locator('[data-action="fx-skip"]').click()
+ await page.wait_for_function('battle.round===2');await idle(page)
+ state=await page.evaluate('({hp:battle.board[1][9].hp,uid:battle.board[1][9].uid,crown:battle.heroes.e.hp,attacker:battle.board[0][10].hp})')
+ assert state=={'hp':10,'uid':901,'crown':100,'attacker':20},state
+ await page.reload();await idle(page)
+ assert await page.evaluate('battle.board[1][9].hp')==10
+ assert await page.locator('[data-unit-id="901"]').evaluate('(e)=>[e.closest(".battle-cell").dataset.lane,e.closest(".battle-cell").dataset.col]')==['1','9']
+ assert not errors,errors
+ assert not network,network
+ await ctx.close();print(f'Garde {label}: attaque interligne, ancres exactes, dégâts, couronne, reprise et hors ligne PASS')
+
 async def main():
  async with async_playwright() as pw:
   b=await pw.chromium.launch(headless=True,args=['--no-sandbox'])
   for label,vp,reduce,off in [('desktop',{'width':1366,'height':900},False,False),('portrait',{'width':390,'height':844},False,False),('landscape',{'width':844,'height':390},False,False),('reduced',{'width':390,'height':844},True,False),('off',{'width':1366,'height':900},False,True)]:
    await run(b,label,vp,reduce,off)
+   await check_cross_lane_guard(b,label,vp,reduce,off)
   await check_effect_types(b)
   await check_laboratory_integration(b)
   await b.close()

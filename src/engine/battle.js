@@ -1,6 +1,7 @@
 import {castSpell} from './spell-casting.js';
-import {unitVersionPlayable} from '../cards/definitions.js';
+import {unitVersionPlayable,versionUnitAbilities} from '../cards/definitions.js';
 import {hit,resolveRetaliation} from './battle-defense.js';
+import {findCrownGuardian} from './guard-candidates.js';
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 import {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS} from '../data.js';
 import {frontEnemy} from './spell-targeting.js';
@@ -76,7 +77,7 @@ function findTarget(b,lane,col,unit){
  for(let d=1;d<=range;d++){
   const targetCol=col+forward(unit.side)*d;
   const target=enemyAt(b,lane,targetCol,unit.side);
-  if(target && isGuard(target))return {type:'unit',target,col:targetCol};
+  if(target && isGuard(target)&&!versionUnitAbilities(target))return {type:'unit',target,col:targetCol};
   if(target && !fallback)fallback={type:'unit',target,col:targetCol};
  }
  if(fallback)return fallback;
@@ -202,17 +203,9 @@ function moveUnits(b,sideFilter=null){
   }
  }
 }
-function findGuardianForHero(b,lane,heroSide){
- const guards=[];
- for(let col=1;col<=lastCell(b);col++){
-  const u=b.board[lane][col];
-  if(u&&u.side===heroSide&&isGuard(u))guards.push({u,col});
- }
- if(!guards.length)return null;
- return heroSide==='p'?guards.sort((a,z)=>z.col-a.col)[0]:guards.sort((a,z)=>a.col-z.col)[0];
-}
 
-function retaliate(b,defender,attacker,lane,defenderCol,attackerCol){
+function retaliate(b,defender,attacker,lane,defenderCol,attackerCol,defenderLane=lane){
+ if(defenderLane!==lane)return; // Une interception interligne ne crée pas de contact.
  const bonus=formationBonus(b,lane,defender)+(defender.rallyUntil>=b.round?1:0);
  resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,bonus,note);
 }
@@ -227,9 +220,10 @@ function resolveAttacks(b,sideFilter=null){
  }
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
-  const guardIntercept = target.type==='hero' ? findGuardianForHero(b,lane,target.side) : null;
+  const guardIntercept = target.type==='hero' ? findCrownGuardian(b,lane,target.side,intent.col) : null;
   const targetColForFx = guardIntercept?guardIntercept.col:(target.type==='hero'?crownColumn(b,target.side):target.col);
-  fx(b,{type:'attack',side:u.side,lane,from:intent.col,to:targetColForFx,ranged:!!u.ranged,magic:['splash','poison'].includes(ability),damage:atk,charged,icon:CARDS[u.id]?.icon||'⚔'});
+  const targetLane=guardIntercept?.lane??lane;
+  fx(b,{type:'attack',side:u.side,lane:targetLane,...(targetLane!==lane?{fromLane:lane}:{}),from:intent.col,to:targetColForFx,ranged:!!u.ranged,magic:['splash','poison'].includes(ability),damage:atk,charged,icon:CARDS[u.id]?.icon||'⚔'});
   if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +2 attaque sur la ligne ${lane+1}.`);
   if(target.type==='hero'){
    if(guardIntercept){
@@ -237,7 +231,7 @@ function resolveAttacks(b,sideFilter=null){
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
     if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
     if(ability==='poison'){guardIntercept.u.poison=1;guardIntercept.u.poisonTurns=Math.max(guardIntercept.u.poisonTurns,2);}
-    retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col);
+    retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}}
   } else {
    hit(b,target.target,atk,u.side,ability==='pierce');

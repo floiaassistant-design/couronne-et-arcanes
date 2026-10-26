@@ -1,10 +1,11 @@
-// Transcription du tableau maître, édition observée le 26/10/2026 à 07:46:27.447Z.
+// Transcription du tableau maître, édition observée le 26/10/2026 à 08:18:43.609Z.
 // Les chiffres remplacent les valeurs de base ; ce ne sont jamais des bonus à additionner.
 import {freezeCardData} from './schema.js';
+import {FUTURE_GUARD_POLICY} from './abilities.js';
 
 export const AUBE_DESIGN_SOURCE=freezeCardData({
  url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
- editedAt:'2026-10-26T07:46:27.447Z'
+ editedAt:'2026-10-26T08:18:43.609Z'
 });
 
 export const AUBE_EVOLUTIONS=freezeCardData({
@@ -16,7 +17,7 @@ export const AUBE_EVOLUTIONS=freezeCardData({
   'éveillée':{abilities:{lastStand:{hp:5,frequency:'invocation'}}}
  },
  shield:{
-  rare:{stats:{hp:11},abilities:{guard:{scope:'positioned',unitTargetPriority:false},riposte:{damageMode:'effective-attack'}},pendingDecisions:['guard-priority','guard-frequency']},
+  rare:{stats:{hp:11},abilities:{guard:{...FUTURE_GUARD_POLICY,scope:'positioned',unitTargetPriority:false},riposte:{damageMode:'effective-attack'}}},
   'épique':{stats:{attack:2}},
   'légendaire':{stats:{hp:13}},
   divine:{abilities:{guard:{scope:'line',unitTargetPriority:false}}},

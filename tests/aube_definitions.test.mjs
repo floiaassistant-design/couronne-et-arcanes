@@ -87,7 +87,7 @@ test('Milicien : réduction remplacée 1/2/2/3/3, 8 PV totaux, riposte et Rempar
  for(const d of defs){assert.deepEqual(d.geometry,{steps:1,range:1});assert(!d.abilities.guard);}
 });
 
-test('Porte-égide : Armure 2 héritée, Garde étendue sans duplication, ambiguïtés de règle explicites',()=>{
+test('Porte-égide : Armure 2 héritée, Garde étendue sans duplication, politique validée et natif historique',()=>{
  const defs=unitVersions('shield');
  assert.deepEqual(defs.map(d=>d.abilities.guard.scope),['legacy-line','positioned','positioned','positioned','line','all-lines']);
  for(const d of defs){
@@ -97,7 +97,7 @@ test('Porte-égide : Armure 2 héritée, Garde étendue sans duplication, ambigu
   assert.equal(d.abilities.riposte.damageMode,d.source?'effective-attack':'fixed');
  }
  assert.deepEqual(defs[0].pendingDecisions,[]);
- for(const d of defs.slice(1))assert.deepEqual(d.pendingDecisions,['guard-priority','guard-frequency']);
+ for(const d of defs.slice(1))assert.deepEqual(d.pendingDecisions,[]);
  assert.equal(defs[4].abilities.guard.unitTargetPriority,false);
 });
 

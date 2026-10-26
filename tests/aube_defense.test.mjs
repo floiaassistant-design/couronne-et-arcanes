@@ -160,12 +160,12 @@ test('Garde : éligibilité Normale/Divine/Éveillée symétrique, deux géomét
  }
 });
 
-test('Garde multiple : toutes les candidatures, aucune priorité ou limite inventée',()=>{
+test('Garde multiple : candidatures pures et décisions de priorité désormais validées',()=>{
  const b=combat();b.board[0][1]=unit('shield','éveillée');b.board[1][3]=unit('shield','éveillée');
  const before=JSON.stringify(b);
  for(let n=0;n<2;n++)assert.equal(crownGuardCandidates(b,0,'p',2).length,2);
  assert.equal(JSON.stringify(b),before);assert.deepEqual(crownGuardCandidates(b,8,'p',2),[]);
  assert.deepEqual(crownGuardCandidates(b,0,'e',2),[]);
  assert.deepEqual(crownGuardCandidates(b,0,'p',0),[]);
- assert.deepEqual(resolveUnitDefinition('shield','éveillée').pendingDecisions,['guard-priority','guard-frequency']);
+ assert.deepEqual(resolveUnitDefinition('shield','éveillée').pendingDecisions,[]);
 });

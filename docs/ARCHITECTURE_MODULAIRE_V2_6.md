@@ -1,4 +1,4 @@
-## Défenses versionnées — étape 3 partielle, 26 octobre 2026
+## Défenses versionnées — étape 3 terminée, 26 octobre 2026
 
 `engine/battle-defense.js` extrait la résolution de dégâts et Riposte de
 `battle.js` et partage les mêmes appels entre sorts, pièges, attaques et pouvoirs.
@@ -7,9 +7,14 @@ sans copie de paramètres dans le moteur. Le contrôle de silence lit cette
 même API pour reconnaître une Riposte future hors des IDs historiques.
 Le graphe reste dirigé vers les données et sans cycle ; aucun DOM dans le moteur.
 
-`engine/guard-candidates.js` ne fait qu'énumérer l'éligibilité positionnelle,
-de ligne ou de toutes lignes ; il ne remplace pas le sélecteur historique.
-Priorité et fréquence attendent une décision. Les fonctions de barrière gardent
+`engine/guard-candidates.js` énumère l'éligibilité positionnelle, de ligne
+ou de toutes lignes et sélectionne un seul gardien. `FUTURE_GUARD_POLICY`,
+dans `cards/abilities.js`, porte la priorité et la fréquence validées : même
+ligne, proximité de sa couronne, ligne/uid ; interceptions tant qu'il vit.
+`battle.js` réévalue ce choix à chaque frappe et conserve la priorité historique
+si aucune nouvelle Garde n'est éligible. Les événements interlignes emploient
+`fromLane` et la vraie ligne de cible, déjà reconnus par le lecteur commun.
+Aucune Riposte interligne ou déplacement réel du gardien n'est créé. Les fonctions de barrière gardent
 un plafond par effet et ne diminuent pas une protection déjà présente.
 Les instantanés explicitement versionnés utilisés par les tests gardent leurs
 quotas ; la pose de versions futures reste interdite. Aucun écran ou catalogue
