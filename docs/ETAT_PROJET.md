@@ -1,6 +1,6 @@
 # État courant — 26 octobre 2026
 
-## Intégration Aube — étapes 1 à 5 préparées, PR non intégrée
+## Intégration Aube — étapes 1 à 5 terminées, PR non intégrée
 
 La [PR nº 53](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53)
 reste l’unique PR active sur `feat/aube-evolutions-fiche-universelle`, en brouillon.

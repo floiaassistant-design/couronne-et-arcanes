@@ -1,8 +1,8 @@
 # Intégration Aube — reprise par étapes
 
-## Point de reprise — 26 octobre 2026, étape 5 préparée
+## Point de reprise — 26 octobre 2026, étape 5 terminée
 
-**Étapes 1 à 5 préparées sur le brouillon ; contrôles finaux de présentation en cours. Arrêt avant l’étape 6.**
+**Étapes 1 à 5 terminées sur le brouillon. Arrêt avant l’étape 6.**
 
 - Branche : `feat/aube-evolutions-fiche-universelle` ; [PR nº 53](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53), toujours brouillon. Tête, arbre, export et CI finale dans sa description après vérification.
 - Main vérifié : `cf8175002431e1714460f8be917665437a5b78c4` ; seule cette PR est ouverte. Aucune autorisation de fusion ou publication.
@@ -18,7 +18,12 @@
 
 - `npm test` : **418 tests réussis**, dont **8 nouveaux tests de présentation** couvrant les versions des deux camps, leurs invocations réelles, les chiffres, quotas, règles historiques et statuts, tous les contextes, les sorts, l’échappement et l’absence de mutation.
 - `npm run test:parity` : **60 scénarios identiques**, référence inchangée. Aucun changement aux règles, à l’IA, à l’économie ou à la progression.
-- Builds normal et test : **51 modules, 76 illustrations** ; résultats finaux et export GitHub exact à relever après les derniers parcours.
+- Builds normal et test **réussis** : **51 modules, 76 illustrations**. Export `JOUER.html` final : **34 485 745 octets**, blob `c7c765f6a33b55433184a36c6272955e38ddb07d`, identique entre les deux copies locales construites depuis les mêmes sources.
+- Les **26 suites navigateur de la CI ont réussi localement**, après corrections/reprises ciblées. La première matrice a relevé le cas de compatibilité souris après toucher sur la fiche d’un paquet et deux délais de chargement en concurrence. Le cas tactile est corrigé et couvert par un événement souris synthétique explicite ; les deux suites de chargement ont été rejouées en série, mêmes assertions et aucun délai augmenté.
+- Sur le dernier export exact : fiches universelles et aperçu classique bureau/portrait/paysage, classes V2.8, nouvelle partie, capacités et mission réelle, ciblage/sorts et repli, combat plein écran, sauvegardes V2.11 **réussis**. Les autres suites couvrent les 76 cadres et images épinglés, les cinq factions natives, le laboratoire, les effets, les rangs, le contrôle et l’arène. Collection modulaire sur HTTP **réussie** ; export sans réseau, vrais stockages et sauvegardes repris selon les parcours. Captures de fiche bureau/mobile examinées ; aucun téléphone physique, Safari/Firefox ou équilibrage humain revendiqué.
+- Les modales sont bornées à la hauteur du viewport avec défilement, pour garder les paquets et commandes accessibles en portrait/paysage. Cette correction de présentation ne modifie aucun effet de carte.
+- [Génération GitHub réussie](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40362342259) depuis `8c9072c92a998285c8268027c5e2b3af65c92275`, export enregistré dans `6c4acf61b1f6b5e6529f6c4b4632a965aac5fb1b`. Son arbre complet `a1f9854ad465250fe2867cc167fc6e77f86eb68b` a été comparé au local : aucune différence. Le workflow ponctuel est retiré avant livraison du checkpoint ; tête, arbre final et nouvelle CI dans la description de PR.
+- Les runs intermédiaires de `8c9072c` ont précédé l’export : les tests ont échoué au contrôle de synchronisation du HTML et l’assemblage à la préparation du site. Le générateur a ensuite enregistré le bon export. Les anciens runs ne sont pas à relancer ; vérifier les nouveaux contrôles de la tête finale après notification, sans surveillance active.
 - `browser_card_presentation.py` est appelé par `browser_card_preview.py`, déjà exécuté en CI. Il couvre les vrais éléments de Collection, decks, Atelier/Alchimie, paquet, récompense, laboratoire et les deux camps, souris/toucher/clavier et isolation. Les anciennes assertions des rangs à concevoir sont remplacées par les chiffres approuvés et les statuts distincts ; les neuf absences et les autres factions restent testées.
 - Le helper de pages diagnostiques charge directement le fichier construit après installation du même stockage fictif, au lieu de transmettre son HTML complet par CDP à chaque ouverture. Assertions et scénarios métier conservés ; aucun délai de test augmenté.
 - Avant modification, les deux CI de `c4a75ec` ont été vérifiées **success** : [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40299947293), [assemblage](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40299945946). Elles valident l’étape 4 ; distinguer les nouveaux contrôles de l’étape 5.

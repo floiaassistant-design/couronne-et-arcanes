@@ -66,7 +66,7 @@ le quota de pose atteint reste non sélectionnable.
 Cliquer ou toucher une unité déjà sur le plateau ne remonte jamais vers une
 commande de pose ; le ciblage explicite d’un sort conserve ses commandes et
 sa confirmation. Échap, fermeture ou navigation ferment la lecture. La miniature est compacte, avec les chiffres à côté. La fiche
-reste dans le viewport, avec défilement pour les capacités longues ; en paysage
+reste dans le viewport, avec défilement pour les capacités longues. Les modales de paquet sont également bornées et défilables pour garder leurs commandes accessibles ; en paysage
 court, son contenu peut défiler entièrement. Survol/focus/toucher ne créent
 aucune carte, ne dépensent rien, ne modifient ni bataille ni sauvegarde.
 
