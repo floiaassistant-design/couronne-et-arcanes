@@ -35,9 +35,10 @@ Chaque unité conserve **six cartes de rareté** dans la Collection, avec une fi
 
 ## Travail en parallèle
 
-**Relevé du 26 octobre : seule la PR nº 53 est ouverte. La PR nº 41 a été fermée sans fusion le 25 octobre et ne sert plus de suivi actif.** Le paragraphe suivant conserve le relevé historique antérieur.
-
-La [PR nº 41](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/41), audit des 76 descriptions et capacités, reste distincte et non fusionnée. Une décision de conception documentée ne devient pas une règle de jeu sans autre PR et accord spécifique. Les fusions de PR, y compris purement documentaires, requièrent toujours une autorisation explicite propre à chacune.
+Au relevé du 26 octobre, seule la PR nº 53 est ouverte. La PR nº 41, ancien
+audit documentaire, a été fermée sans fusion le 25 octobre. Le tableau maître
+Notion reste la référence de conception. Chaque fusion exige toujours un
+accord explicite propre à la PR concernée.
 
 ## Historique documentaire — relevés antérieurs, non normatifs
 
