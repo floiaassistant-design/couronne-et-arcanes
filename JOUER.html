@@ -4674,8 +4674,9 @@ Object.assign(__exports,{CLASS_SKILLS,CARDS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPO
 "src/engine/battle.js":function(__exports,__load){
 const {castSpell}=__load("src/engine/spell-casting.js");
 const {unitVersionPlayable}=__load("src/cards/definitions.js");
+const {hit,resolveRetaliation}=__load("src/engine/battle-defense.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
-const {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
+const {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS}=__load("src/data.js");
 const {frontEnemy}=__load("src/engine/spell-targeting.js");
 const {captureCombatFrame,recordCombatEvent}=__load("src/engine/combat-events.js");
 const {rankEnemyMoves}=__load("src/ai.js");
@@ -4687,6 +4688,7 @@ const {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,gearBonus}=__load
 const {unitStatContext,unitStats,labMilitiaBonus}=__load("src/engine/unit-stats.js");
 const {laneCount,lastCell,crownColumn,entryColumn,validDeploymentColumn,validLane,missionLayout}=__load("src/engine/board.js");
 Object.assign(__exports,__load("src/engine/board.js"));
+Object.assign(__exports,__load("src/engine/guard-candidates.js"));
 function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed/4294967296;}
 function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand(b)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function note(b,message){b.log.unshift(message);b.log=b.log.slice(0,12);}
@@ -4811,21 +4813,6 @@ function previewPlayerSpell(b,index,lane){
  const detail=ability==='spell_ranger_draw'?`Pioche : ${copy.heroes.p.hand.length-(b.heroes.p.hand.length-1)} carte(s).`:['spell_hasten','spell_slow'].includes(ability)?copy.log.find(s=>s.startsWith(ability==='spell_hasten'?'Élan des Heures :':'Nœud du Temps :'))||'':'';
  return {ok:true,before,after:captureCombatFrame(copy),detail,events:copy.vfx.map(e=>({...e,frame:e.frame}))};
 }
-function hit(b,u,raw,bySide,ignoreArmor=false){
- // Une attaque sur une unité déjà vaincue ne doit pas créer un second kill.
- if(!u||u.hp<=0)return 0;
- let dmg=Math.max(1,raw-(ignoreArmor?0:(u.armor||0)));
- if(u.labGuard?.block&&!u.labGuard.used&&bySide!==u.side){u.labGuard.used=true;dmg=Math.max(0,dmg-u.labGuard.block);}
- const barrier=u.barrier||0;
- if(barrier>0){const absorbed=Math.min(barrier,dmg);u.barrier=barrier-absorbed;dmg-=absorbed;}
- const before=u.hp;u.hp=Math.max(0,u.hp-dmg);
- if(bySide!==u.side&&u.hp<=0)b.stats[bySide==='p'?'playerKills':'enemyKills']++;
- if(Array.isArray(b.vfx)){
-  const lane=b.board.findIndex(row=>row.includes(u)),col=lane<0?-1:b.board[lane].indexOf(u);
-  fx(b,{type:'damage',side:u.side,lane,col,damage:before-u.hp,absorbed:barrier-(u.barrier||0),armor:ignoreArmor?0:Math.min(raw-1,u.armor||0)});
- }
- return dmg;
-}
 function sweepDead(b){
  for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
   const u=b.board[lane][col];if(u&&u.hp<=0){fx(b,{type:'death',lane,col,side:u.side,icon:CARDS[u.id]?.icon||'✦'});b.board[lane][col]=null;}
@@ -4900,18 +4887,8 @@ function findGuardianForHero(b,lane,heroSide){
 }
 
 function retaliate(b,defender,attacker,lane,defenderCol,attackerCol){
- // Riposte : seulement contre une attaque au contact, si les deux unités vivent.
- // Une seule riposte par tour et aucune contre-riposte en chaîne.
- const experimentalCounter=!!defender.labGuard?.counter&&!defender.labGuard.counterUsed;
- if((!RIPOSTE_IDS.has(defender.id)&&!experimentalCounter)||silenced(b,defender)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
-    defender.side===attacker.side||Math.abs(defenderCol-attackerCol)!==1||defender.lastRiposteRound===b.round)return;
- defender.lastRiposteRound=b.round;
- if(experimentalCounter)defender.labGuard.counterUsed=true;
- fx(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
- const dealt=hit(b,attacker,experimentalCounter?1:2,defender.side);
- if(dealt>0){
-  note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
- }
+ const bonus=formationBonus(b,lane,defender)+(defender.rallyUntil>=b.round?1:0);
+ resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,bonus,note);
 }
 
 function resolveAttacks(b,sideFilter=null){
@@ -5292,6 +5269,7 @@ Object.assign(__exports,{LANES,WIDTH,laneCount,lastCell,crownColumn,entryColumn,
 // Contrôle du plateau : règles pures, utilisées par le moteur, l'IA et les aperçus.
 // Aucun accès aux mains, pioches, profils, DOM ou stockage.
 const {CARDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {laneCount,lastCell,crownColumn,entryColumn,validLane,trapColumns}=__load("src/engine/board.js");
 const alive=u=>!!u&&u.hp>0;
 const direction=side=>side==='p'?1:-1;
@@ -5300,7 +5278,8 @@ const silenced=(b,u)=>alive(u)&&Number.isFinite(u.silenceUntil)&&u.silenceUntil>
 const activeAbility=(b,u)=>silenced(b,u)?'':u.ability;
 function silenceValue(u){
  const value={heal:6,inspire:5,splash:6,poison:5,lifesteal:5,pierce:3,haste:3,silence:6,portal:4,trapper:4}[u?.ability]||0;
- return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)?2:0);
+ const future=versionUnitAbilities(u);
+ return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0);
 }
 function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 function silenceTarget(b,side,lane){
@@ -5440,50 +5419,6 @@ function prepareControlUnits(b,hooks,sideFilter=null){
 Object.assign(__exports,{CONTROL_IDS,silenced,activeAbility,silenceValue,canSilence,silenceTarget,applySilence,teleportDestinationError,teleportPlan,teleportGain,teleportUnit,trapPlan,placeTrap,triggerTrap,expireControl,controlTargetError,resolveControlSpell,prepareControlUnits});
 
 },
-"src/engine/tempo.js":function(__exports,__load){
-// Compte à rebours tactique : règles indépendantes du DOM et des sauvegardes.
-const {CARDS}=__load("src/data.js");
-const TEMPO_IDS=Object.freeze(['hourglass_surge','time_bind']);
-const TEMPO_MAX_WAIT=6;
-const wait=c=>Number.isFinite(c?.wait)?Math.max(0,Math.trunc(c.wait)):0;
-const options=(hand,allow)=>(hand||[]).map((card,index)=>({card,index,wait:wait(card)})).filter(allow);
-// Choisir l'attente la plus longue, puis la carte la plus à gauche.
-function accelerationTarget(b,side){
- return options(b.heroes?.[side]?.hand,x=>x.wait>0).sort((a,z)=>z.wait-a.wait||a.index-z.index)[0]||null;
-}
-// Choisir la carte adverse la plus proche d'être jouable, sans communiquer son ID.
-function obstructionTarget(b,side){
- const other=side==='p'?'e':'p';
- return options(b.heroes?.[other]?.hand,x=>x.wait<TEMPO_MAX_WAIT).sort((a,z)=>a.wait-z.wait||a.index-z.index)[0]||null;
-}
-function tempoTargetError(b,side,card){
- if(card.ability==='spell_hasten'&&!accelerationTarget(b,side))return 'Aucune autre carte de votre main ne possède un compte à rebours à accélérer.';
- if(card.ability==='spell_slow'&&!obstructionTarget(b,side))return 'Aucune carte adverse ne peut être ralentie.';
- return '';
-}
-function resolveTempoSpell(b,side,card,note){
- if(card.ability==='spell_hasten'){
-  const target=accelerationTarget(b,side);if(!target)return false;
-  target.card.wait=Math.max(0,target.wait-2);
-  note(b,side==='p'
-   ? `Élan des Heures : ${CARDS[target.card.id]?.name||'une carte'} passe de ${target.wait} à ${target.card.wait} tour(s) d’attente.`
-   : 'L’ennemi accélère une carte de sa main.');
-  return true;
- }
- if(card.ability==='spell_slow'){
-  const target=obstructionTarget(b,side);if(!target)return false;
-  target.card.wait=Math.min(TEMPO_MAX_WAIT,target.wait+2);
-  note(b,side==='p'
-   ? 'Nœud du Temps : une carte de la main ennemie est retardée de 2 tours (maximum 6).'
-   : 'L’ennemi retarde une de vos cartes de 2 tours (maximum 6).');
-  return true;
- }
- return false;
-}
-
-Object.assign(__exports,{TEMPO_IDS,TEMPO_MAX_WAIT,accelerationTarget,obstructionTarget,tempoTargetError,resolveTempoSpell});
-
-},
 "src/cards/definitions.js":function(__exports,__load){
 // Catalogue de versions en lecture seule. Aucun ajout à CARDS, aucune possession ni règle activée.
 const {CARDS}=__load("src/data.js");
@@ -5542,7 +5477,14 @@ function unitVersionPlayable(reference){
  return resolveUnitDefinition(reference)?.status.combat==='implemented';
 }
 
-Object.assign(__exports,{AUBE_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable});
+// Lecture des seuls instantanés futurs explicites ; aucun changement des références natives.
+function versionUnitAbilities(unit){
+ if(!unit||!Object.hasOwn(unit,'rarity'))return null;
+ const definition=resolveUnitDefinition(unit);
+ return definition?.source?definition.abilities:null;
+}
+
+Object.assign(__exports,{AUBE_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable,versionUnitAbilities});
 
 },
 "src/cards/schema.js":function(__exports,__load){
@@ -5614,12 +5556,12 @@ Object.assign(__exports,{nativeUnitAbilities,inheritUnitAbilities});
 
 },
 "src/cards/aube.js":function(__exports,__load){
-// Transcription du tableau maître, édition observée le 25/10/2026 à 17:28:45.661Z.
+// Transcription du tableau maître, édition observée le 26/10/2026 à 07:46:27.447Z.
 // Les chiffres remplacent les valeurs de base ; ce ne sont jamais des bonus à additionner.
 const {freezeCardData}=__load("src/cards/schema.js");
 const AUBE_DESIGN_SOURCE=freezeCardData({
  url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
- editedAt:'2026-10-25T17:28:45.661Z'
+ editedAt:'2026-10-26T07:46:27.447Z'
 });
 
 const AUBE_EVOLUTIONS=freezeCardData({
@@ -5631,7 +5573,7 @@ const AUBE_EVOLUTIONS=freezeCardData({
   'éveillée':{abilities:{lastStand:{hp:5,frequency:'invocation'}}}
  },
  shield:{
-  rare:{stats:{hp:11},pendingDecisions:['guard-scope','riposte-damage']},
+  rare:{stats:{hp:11},abilities:{guard:{scope:'positioned',unitTargetPriority:false},riposte:{damageMode:'effective-attack'}},pendingDecisions:['guard-priority','guard-frequency']},
   'épique':{stats:{attack:2}},
   'légendaire':{stats:{hp:13}},
   divine:{abilities:{guard:{scope:'line',unitTargetPriority:false}}},
@@ -5651,7 +5593,7 @@ const AUBE_EVOLUTIONS=freezeCardData({
   'éveillée':{abilities:{heal:{scope:'all-lines'}}}
  },
  paladin:{
-  'légendaire':{stats:{hp:11},pendingDecisions:['riposte-damage']},
+  'légendaire':{stats:{hp:11},abilities:{riposte:{damageMode:'effective-attack'}}},
   divine:{abilities:{armor:{amount:3}}},
   'éveillée':{stats:{hp:13},abilities:{riposteBarrier:{amount:2,cap:2,frequency:'round',target:'self',trigger:'authorized-riposte'}}}
  },
@@ -5681,12 +5623,138 @@ const AUBE_EVOLUTIONS=freezeCardData({
   'éveillée':{geometry:{steps:2},abilities:{haste:{}}}
  },
  dawnbastion:{
-  divine:{abilities:{intervention:{amount:4,range:2,targets:1,scope:'line',direction:'forward',timing:'spawn',ignoreArmor:false}},pendingDecisions:['riposte-damage']},
+  divine:{abilities:{riposte:{damageMode:'effective-attack'},intervention:{amount:4,range:2,targets:1,scope:'line',direction:'forward',timing:'spawn',ignoreArmor:false}}},
   'éveillée':{stats:{attack:7}}
  }
 });
 
 Object.assign(__exports,{AUBE_DESIGN_SOURCE,AUBE_EVOLUTIONS});
+
+},
+"src/engine/tempo.js":function(__exports,__load){
+// Compte à rebours tactique : règles indépendantes du DOM et des sauvegardes.
+const {CARDS}=__load("src/data.js");
+const TEMPO_IDS=Object.freeze(['hourglass_surge','time_bind']);
+const TEMPO_MAX_WAIT=6;
+const wait=c=>Number.isFinite(c?.wait)?Math.max(0,Math.trunc(c.wait)):0;
+const options=(hand,allow)=>(hand||[]).map((card,index)=>({card,index,wait:wait(card)})).filter(allow);
+// Choisir l'attente la plus longue, puis la carte la plus à gauche.
+function accelerationTarget(b,side){
+ return options(b.heroes?.[side]?.hand,x=>x.wait>0).sort((a,z)=>z.wait-a.wait||a.index-z.index)[0]||null;
+}
+// Choisir la carte adverse la plus proche d'être jouable, sans communiquer son ID.
+function obstructionTarget(b,side){
+ const other=side==='p'?'e':'p';
+ return options(b.heroes?.[other]?.hand,x=>x.wait<TEMPO_MAX_WAIT).sort((a,z)=>a.wait-z.wait||a.index-z.index)[0]||null;
+}
+function tempoTargetError(b,side,card){
+ if(card.ability==='spell_hasten'&&!accelerationTarget(b,side))return 'Aucune autre carte de votre main ne possède un compte à rebours à accélérer.';
+ if(card.ability==='spell_slow'&&!obstructionTarget(b,side))return 'Aucune carte adverse ne peut être ralentie.';
+ return '';
+}
+function resolveTempoSpell(b,side,card,note){
+ if(card.ability==='spell_hasten'){
+  const target=accelerationTarget(b,side);if(!target)return false;
+  target.card.wait=Math.max(0,target.wait-2);
+  note(b,side==='p'
+   ? `Élan des Heures : ${CARDS[target.card.id]?.name||'une carte'} passe de ${target.wait} à ${target.card.wait} tour(s) d’attente.`
+   : 'L’ennemi accélère une carte de sa main.');
+  return true;
+ }
+ if(card.ability==='spell_slow'){
+  const target=obstructionTarget(b,side);if(!target)return false;
+  target.card.wait=Math.min(TEMPO_MAX_WAIT,target.wait+2);
+  note(b,side==='p'
+   ? 'Nœud du Temps : une carte de la main ennemie est retardée de 2 tours (maximum 6).'
+   : 'L’ennemi retarde une de vos cartes de 2 tours (maximum 6).');
+  return true;
+ }
+ return false;
+}
+
+Object.assign(__exports,{TEMPO_IDS,TEMPO_MAX_WAIT,accelerationTarget,obstructionTarget,tempoTargetError,resolveTempoSpell});
+
+},
+"src/engine/battle-defense.js":function(__exports,__load){
+// Résolution commune des dégâts et défenses. Aucun DOM, profil ou moteur parallèle.
+const {CARDS,RIPOSTE_IDS}=__load("src/data.js");
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
+const {silenced}=__load("src/engine/battle-control.js");
+const {recordCombatEvent}=__load("src/engine/combat-events.js");
+const barrierKeys=['healBarrier','riposteBarrier'];
+function grantAbilityBarrier(u,key,parameters){
+ if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
+ const sources={...u.abilityBarriers};
+ const remaining=Math.min(sources[key]||0,u.barrier||0);
+ const added=Math.max(0,Math.min(parameters.amount,parameters.cap-remaining));
+ if(!added)return 0;
+ sources[key]=remaining+added;u.abilityBarriers=sources;
+ u.barrier=(u.barrier||0)+added;
+ return added;
+}
+
+function absorbBarrier(u,damage){
+ const absorbed=Math.min(u.barrier||0,damage);
+ if((u.barrier||0)>0)u.barrier-=absorbed;
+ if(absorbed&&u.abilityBarriers){
+  let left=absorbed;const sources={...u.abilityBarriers};
+  // Les barrières de capacités sont consommées avant le reste du bouclier.
+  for(const key of barrierKeys){const used=Math.min(sources[key]||0,left);sources[key]=(sources[key]||0)-used;left-=used;}
+  u.abilityBarriers=sources;
+ }
+ return absorbed;
+}
+
+function hit(b,u,raw,bySide,ignoreArmor=false){
+ if(!u||u.hp<=0)return 0; // Une victime ne compte jamais deux fois.
+ const abilities=versionUnitAbilities(u);
+ const armor=abilities?.armor?.amount??u.armor??0;
+ let dmg=Math.max(1,raw-(ignoreArmor?0:armor));
+ const reduction=abilities?.firstHitReduction;
+ if(reduction&&!u.firstHitReductionUsed&&bySide!==u.side){
+  u.firstHitReductionUsed=true;dmg=Math.max(0,dmg-reduction.amount);
+ }
+ if(u.labGuard?.block&&!u.labGuard.used&&bySide!==u.side){u.labGuard.used=true;dmg=Math.max(0,dmg-u.labGuard.block);}
+ const absorbed=absorbBarrier(u,dmg);dmg-=absorbed;
+ const before=u.hp;u.hp=Math.max(0,u.hp-dmg);
+ // « Coup mortel » : les dégâts directs passent ici ; le poison garde sa résolution historique.
+ if(u.hp<=0&&abilities?.lastStand&&!u.lastStandUsed&&!silenced(b,{...u,hp:before})){
+  u.lastStandUsed=true;u.hp=Math.min(u.maxhp,abilities.lastStand.hp);
+ }
+ if(bySide!==u.side&&u.hp<=0)b.stats[bySide==='p'?'playerKills':'enemyKills']++;
+ if(Array.isArray(b.vfx)){
+  const lane=b.board.findIndex(row=>row.includes(u)),col=lane<0?-1:b.board[lane].indexOf(u);
+  recordCombatEvent(b,{type:'damage',side:u.side,lane,col,damage:Math.max(0,before-u.hp),absorbed,armor:ignoreArmor?0:Math.min(raw-1,armor)});
+ }
+ return dmg;
+}
+
+function resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,attackBonus=0,note=()=>{}){
+ const abilities=versionUnitAbilities(defender),riposte=abilities?.riposte;
+ const experimentalCounter=!!defender.labGuard?.counter&&!defender.labGuard.counterUsed;
+ const eligible=abilities?!!riposte:RIPOSTE_IDS.has(defender.id)||experimentalCounter;
+ const spent=riposte?.frequency==='invocation'?defender.riposteUsed:defender.lastRiposteRound===b.round;
+ if(!eligible||spent||silenced(b,defender)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
+    defender.side===attacker.side||Math.abs(defenderCol-attackerCol)!==1)return false;
+ if(riposte?.frequency==='invocation')defender.riposteUsed=true;
+ else defender.lastRiposteRound=b.round;
+ if(experimentalCounter)defender.labGuard.counterUsed=true;
+ recordCombatEvent(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
+ const raw=riposte?.damageMode==='effective-attack'?defender.atk+attackBonus:experimentalCounter?1:riposte?.amount??2;
+ const dealt=hit(b,attacker,raw,defender.side);
+ if(dealt>0)note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
+ if(abilities?.riposteBarrier)grantAbilityBarrier(defender,'riposteBarrier',abilities.riposteBarrier);
+ return true;
+}
+
+// Raccordé au soin multi-cible à l'étape 4 ; aucun gain pour un soin nul ou une autre cible.
+function grantHealBarrier(b,healer,target,healed){
+ const parameters=versionUnitAbilities(healer)?.healBarrier;
+ if(!parameters||healed<=0||healer.hp<=0||target?.side!==healer.side||silenced(b,healer))return 0;
+ return grantAbilityBarrier(target,'healBarrier',parameters);
+}
+
+Object.assign(__exports,{grantAbilityBarrier,hit,resolveRetaliation,grantHealBarrier});
 
 },
 "src/engine/combat-events.js":function(__exports,__load){
@@ -6245,6 +6313,26 @@ function calculateUnitStats(context,definition,side,level,experimentalHp=0){
 }
 
 Object.assign(__exports,{labMilitiaBonus,unitStatContext,unitStats,versionUnitStats});
+
+},
+"src/engine/guard-candidates.js":function(__exports,__load){
+// Éligibilité de la Garde future ; aucun choix implicite entre plusieurs gardiens.
+const {laneCount,lastCell,validLane}=__load("src/engine/board.js");
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
+function crownGuardCandidates(b,attackLane,heroSide,attackerCol){
+ if(!validLane(b,attackLane)||!Number.isInteger(attackerCol)||attackerCol<1||attackerCol>lastCell(b))return [];
+ const guards=[];
+ for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
+  const u=b.board[lane][col],guard=versionUnitAbilities(u)?.guard;
+  if(!guard||u.hp<=0||u.side!==heroSide||guard.target!=='own-crown')continue;
+  const sameLine=lane===attackLane;
+  const between=heroSide==='p'?col<attackerCol:col>attackerCol;
+  if(guard.scope==='all-lines'||sameLine&&(guard.scope==='line'||guard.scope==='positioned'&&between))guards.push({u,lane,col});
+ }
+ return guards;
+}
+
+Object.assign(__exports,{crownGuardCandidates});
 
 },
 "src/ui/markup.js":function(__exports,__load){
