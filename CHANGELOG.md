@@ -1,3 +1,20 @@
+## Préparé — construction manuelle du deck (27 octobre 2026)
+
+- Écran « Mon deck » accessible directement, cartes possédées avec recherche,
+  filtres, quantités et commandes +/− ; validation et sauvegarde automatiques.
+- Départ à vide confirmé, cartes conservées ; consultation pendant un combat,
+  propositions rapides facultatives. Aucun changement des règles ou profils.
+- Nouvelle PR indépendante sur `feat/deck-manuel-simple`, non fusionnée.
+  [Contrat](docs/DECK_MANUEL_2026_10_27.md).
+- 422 tests et 60 scénarios de parité réussis ; exports synchronisés et parcours
+  bureau/mobile, HTTP/hors réseau, création et reprise de deck validés localement.
+
+## Fusion autorisée — Aube, PR nº 53 (27 octobre 2026)
+
+- Fusion sur main `003c696870edd8238f5f74a1e73afc18d8198024`, arbre identique
+  à la tête validée `6d30a05` ; tests et assemblage main réussis. Les évolutions
+  restent au laboratoire. La publication est distincte.
+
 ## Revu — Aube étape 6, PR nº 53 (27 octobre 2026)
 
 - Tableau maître Notion relu ; revue de l'ensemble du registre, moteur,

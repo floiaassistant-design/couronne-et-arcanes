@@ -5,6 +5,9 @@ directement, sans `@import`, dépendance npm ni chargement conditionnel. Le buil
 lit cette même liste et remplace chaque lien par son contenu pour `JOUER.html`
 et son paquet diagnostic `tests/JOUER.test.html`.
 
+`pages/deck-builder.css` porte uniquement la construction manuelle du deck ;
+le catalogue à six raretés conserve ses styles de Collection.
+
 | Emplacement | Responsabilité |
 | --- | --- |
 | `../styles.css` | Variables, éléments HTML, navigation, ressources, typographie |

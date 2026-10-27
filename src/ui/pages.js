@@ -1,5 +1,6 @@
 import {cardPreviewAttributes} from './card-presentation.js';
 import { renderCollectionCatalogue } from './collection.js';
+import {renderManualDeck} from './deck-builder.js';
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 import { CARDS, CLASS_SKILLS, FACTIONS, CLASSES, CAMPAIGN, TOWER_MAX, towerMission } from '../data.js';
 import { AI_STYLES } from '../ai.js';
@@ -26,11 +27,11 @@ import {
 import { renderGuidePage } from './guide-page.js';
 
 export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
-  let profile, battle, collectionFilter, collectionOwned, previousGameAvailable;
+  let profile, battle, collectionFilter, collectionOwned, previousGameAvailable, deckFilters;
   const bind =
     (fn) =>
     (...args) => {
-      ({ profile, battle, collectionFilter, collectionOwned, previousGameAvailable } = getState());
+      ({ profile, battle, collectionFilter, collectionOwned, previousGameAvailable, deckFilters } = getState());
       return fn(...args);
     };
   function homeUI() {
@@ -146,6 +147,9 @@ export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
       )}</div>${busy ? '<div class="hint">Terminez le combat en cours avant de changer de composition.</div>' : ''}</section>`;
   }
 
+  function deckUI(){
+    return renderManualDeck(profile,{battle,filters:deckFilters},{btn,cardUI,esc,quickDecks:deckWorkshopUI(battle?.status==='active')});
+  }
   function collectionUI() {
     const counts = {};
     profile.deck.forEach((id) => (counts[id] = (counts[id] || 0) + 1));
@@ -248,6 +252,7 @@ export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
     towerUI: bind(towerUI),
     dungeonUI: bind(dungeonUI),
     collectionUI: bind(collectionUI),
+    deckUI: bind(deckUI),
     alchemyUI: bind(alchemyUI),
     forgeUI: bind(forgeUI),
     guideUI: bind(guideUI)
