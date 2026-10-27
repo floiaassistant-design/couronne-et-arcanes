@@ -54,3 +54,26 @@ Les résultats locaux, export exact, commit et contrôles GitHub finaux sont
 rapportés dans la PR de cette branche. Les tests navigateur couvrent Chromium,
 bureau et mobile simulé, HTTP et export hors réseau ; aucun téléphone physique,
 Safari/Firefox ou équilibrage humain n'est revendiqué.
+
+Résultats locaux de la livraison : **422 tests Node réussis** (quatre nouveaux),
+**60 scénarios de parité identiques**, builds normal/test réussis : **52 modules,
+76 illustrations**. Les suites existantes `card_study`, `deployment`,
+`card_preview`, `art_reset`, `collection`, `milicien`, `aube`, `sylve`, `ombre`,
+`forge`, `maintenance`, `class_skills_v28` et `save_integrity_v211` ont réussi.
+Le nouveau parcours manuel a également réussi sur bureau, portrait, paysage et
+web HTTP. Sur l'export final exact, le parcours manuel des quatre contextes et
+la maintenance web des trois formats ont été rejoués avec succès. Captures du
+constructeur bureau/mobile examinées ; aucune illustration modifiée.
+
+L'export officiel `JOUER.html` fait **34 497 768 octets**, blob
+`bd3a1c71b7c6170e8eeb4d4c08596ca004743578`. Le
+[générateur ponctuel réussi](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40467501555)
+l'a enregistré dans `d60349104a4bfdab8bea52dc5ba9f9dadab61040`, arbre
+`9cf06dca9b07ff87b692ee57a456243f3bda8714` identique au local testé.
+Le workflow temporaire est retiré avant la PR ; aucun workflow permanent modifié.
+La tête de livraison et ses contrôles exacts figurent dans la description de PR.
+
+Revue structurelle : **52 modules, 185 dépendances, aucun cycle** ; `battle.js`
+reste à 386 lignes, `app.js` à 357 et `pages.js` à 260. Moteur, catalogue natif,
+stockage et actifs approuvés inchangés. Les filtres, le rendu et les commandes
+gardent leurs responsabilités ; aucune seconde validation de deck.

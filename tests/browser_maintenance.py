@@ -203,7 +203,7 @@ async def modular():
     assert all(u.startswith(('http://127.0.0.1:','data:')) for u in requests),requests
     assert not errors,errors
     await context.close()
-    print('Web modulaire',label,': huit écrans, pose, reprise, mouvement réduit et images PASS')
+    print('Web modulaire',label,': neuf écrans, pose, reprise, mouvement réduit et images PASS')
    await browser.close()
  finally:server.shutdown();server.server_close()
 

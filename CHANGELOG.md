@@ -6,6 +6,8 @@
   propositions rapides facultatives. Aucun changement des règles ou profils.
 - Nouvelle PR indépendante sur `feat/deck-manuel-simple`, non fusionnée.
   [Contrat](docs/DECK_MANUEL_2026_10_27.md).
+- 422 tests et 60 scénarios de parité réussis ; exports synchronisés et parcours
+  bureau/mobile, HTTP/hors réseau, création et reprise de deck validés localement.
 
 ## Fusion autorisée — Aube, PR nº 53 (27 octobre 2026)
 
