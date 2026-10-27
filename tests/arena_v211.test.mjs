@@ -6,7 +6,7 @@ import {freshProfile,createBattle,playPlayerCard,endPlayerTurn,usePower,formatio
 import {laneCount,lastCell,crownColumn,entryColumn,supportedBoard} from '../src/engine/board.js';
 import {applySilence,teleportPlan,teleportDestinationError,placeTrap,trapPlan} from '../src/engine/battle-control.js';
 import {rankEnemyMoves,inspectEnemyLane} from '../src/ai.js';
-import {storeBattle,restoreBattle,BATTLE_KEY} from '../src/ui/storage.js';
+import {storeBattle,restoreBattle,storedBattleNeedsRestart,BATTLE_KEY} from '../src/ui/storage.js';
 import {arenaBackdrop} from '../src/ui/arena-art.js';
 const unit=(id,side,uid,extra={})=>({uid,id,side,atk:CARDS[id].attack,hp:20,maxhp:20,armor:CARDS[id].ability==='armor'?2:0,ranged:CARDS[id].ability==='ranged',ability:CARDS[id].ability,stun:0,poison:0,poisonTurns:0,...extra});
 function combat(lanes=2){
@@ -45,7 +45,7 @@ for(const lanes of [2,3,4]){
  });
  test(`V2.11 ${lanes}×10 ranged attack, Garde and sweep work at the far edge`,()=>{
   const b=combat(lanes);b.board[lanes-1][9]=unit('archer','p',1,{stun:0});b.board[lanes-1][4]=unit('shield','e',2,{stun:2});
-  const hp=b.board[lanes-1][4].hp;endPlayerTurn(b);assert.equal(b.heroes.e.hp,100);assert.ok(b.board[lanes-1][4].hp<hp);
+  const hp=b.board[lanes-1][4].hp;endPlayerTurn(b);assert.equal(b.heroes.e.hp,98);assert.equal(b.board[lanes-1][4].hp,hp,'gardien dépassé : aucune interception');
   const sweep=combat(lanes);sweep.board[lanes-1][10]=unit('bone','e',3,{hp:2,poison:2,poisonTurns:1});endPlayerTurn(sweep);assert.equal(sweep.board[lanes-1][10],null);
  });
  test(`V2.11 ${lanes}×10 silence, teleport and terrain work in the final lane`,()=>{
@@ -100,7 +100,7 @@ for(const lanes of [2,3,4]){
   const c=combat(lanes);c.board[lane][6]=unit('wolf','p',4);c.board[lane][8]=unit('shield','e',5,{stun:2});
   endPlayerTurn(c);assert.equal(c.board[lane][8].hp,20-(CARDS.wolf.attack+2-2));
   const r=combat(lanes);r.board[lane][7]=unit('militia','p',6);r.board[lane][8]=unit('shield','e',7);
-  endPlayerTurn(r);assert.equal(r.board[lane][8].lastRiposteRound,1);assert.equal(r.board[lane][7].hp,17);
+  endPlayerTurn(r);assert.equal(r.board[lane][8].lastRiposteRound,1);assert.equal(r.board[lane][7].hp,18);
  });
  test(`V2.11 ${lanes}×10 control creatures trigger on the far columns and final lane`,()=>{
   const b=combat(lanes),lane=lanes-1;b.board[lane][8]=unit('mist_inquisitor','p',1);b.board[lane][9]=unit('lich','e',2,{stun:3});b.vfx=[];
@@ -111,10 +111,10 @@ for(const lanes of [2,3,4]){
   endPlayerTurn(t);assert.ok(t.vfx.some(e=>e.type==='trap-place'&&e.lane===lane&&e.col===8));assert.equal(t.board[lane].find(u=>u?.uid===5).controlReadyRound,4);
  });
 }
-test('V2.11 authentic old V2.4 save retains its 3×5 board and resumes',()=>{
+test('V2.11 authentic old V2.4 save requests restart without changing its 3×5 snapshot',()=>{
  const entries=JSON.parse(readFileSync(new URL('./fixtures/refactor_baseline_v24.json',import.meta.url)));
  const b=JSON.parse(entries.find(e=>JSON.parse(e.battle).status==='active').battle);storage();storeBattle(b);
- const loaded=restoreBattle();assert.deepEqual(loaded,b);assert.equal(lastCell(loaded),5);assert.equal(laneCount(loaded),3);assert.equal(endPlayerTurn(loaded).ok,true);
+ const before=JSON.stringify(b);assert.equal(restoreBattle(),null);assert(storedBattleNeedsRestart());assert.equal(lastCell(b),5);assert.equal(laneCount(b),3);assert.equal(endPlayerTurn(b).ok,false);assert.equal(JSON.stringify(b),before);
 });
 test('V2.11 corrupt and ragged boards are rejected without touching the profile',()=>{
  const cache=storage(),b=combat();b.board[1].pop();cache.couronnes_arcanes_v1='profile stays intact';cache[BATTLE_KEY]=JSON.stringify(b);assert.equal(restoreBattle(),null);assert.equal(cache.couronnes_arcanes_v1,'profile stays intact');

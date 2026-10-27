@@ -20,7 +20,7 @@ export function cardPresentation(reference,{context={},profile=null,side='p',uni
  const rarity=explicit?normalizeCardRarity(reference.rarity):native.rarity;if(!rarity)return null;
  const ctx=profile?unitStatContext(profile):context;
  if(native.type==='unité'&&!definition){
-  definition=unit?(versionUnitAbilities(unit)?resolveRulesDefinition(unit):resolveUnitDefinition(id)):
+  definition=unit?resolveUnitDefinition(unit):
    explicit&&rarity!==native.rarity?resolveRulesDefinition({id,rarity}):battleUnitDefinition(ctx,reference,side);
  }
  const selected=definition?.rarity||rarity;
@@ -36,22 +36,22 @@ export function cardPresentation(reference,{context={},profile=null,side='p',uni
   {atk:unit.atk,hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);
  let effective=definition;
- if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(!versionUnitAbilities(unit)&&definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor||0}}:{})}};
- const aube=known&&native.type==='unité'&&AUBE_UNIT_IDS.includes(id);
- const description=!known?missing:aube?unitCardText(effective):brief(native.description);
+ if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor??definition.abilities.armor.amount}}:{})}};
+ const structured=known&&native.type==='unité'&&(AUBE_UNIT_IDS.includes(id)||effective?.abilities.guard||effective?.abilities.riposte);
+ const description=!known?missing:structured?unitCardText(effective):brief(native.description);
  const details=!known?[lower?'Aucune version sous la rareté native.':'Cette évolution reste à concevoir.']:
-  aube?unitAbilityDetails(effective):[native.description];
+  structured?unitAbilityDetails(effective):[native.description];
  const geometry=effective?.geometry;
  if(geometry)details.unshift(`Déplacement ${geometry.steps} case${geometry.steps>1?'s':''} · Portée ${geometry.range} case${geometry.range>1?'s':''}, devant sur sa ligne.`);
  return {card:{...native,rarity:selected,attack:known?(definition?.stats.attack??native.attack):undefined,hp:known?(definition?.stats.hp??native.hp):undefined,delay:known?(definition?.stats.delay??native.delay):'—',description},definition:effective,
-  stats,details,availability,known,future,lower,traits:aube?unitAbilitySummary(effective):known?cardTraits(id):[]};
+  stats,details,availability,known,future,lower,traits:structured?unitAbilitySummary(effective):known?cardTraits(id):[]};
 }
 
 export function boardInspectionData(battle,uid){
  for(let lane=0;lane<(battle?.board?.length||0);lane++)for(let col=1;col<battle.board[lane].length-1;col++){
   const u=battle.board[lane][col];if(!u||String(u.uid)!==String(uid))continue;
   const concord=formationBonus(battle,lane,u),rallied=u.rallyUntil>=battle.round?1:0;
-  const armor=versionUnitAbilities(u)?.armor?.amount??u.armor;
+  const armor=u.armor??versionUnitAbilities(u)?.armor?.amount;
   const statuses=[concord?'Concorde +1 ATQ':'',rallied?'Ralliement +1 ATQ':'',armor?'Armure '+armor:'',u.barrier?'Barrière '+u.barrier:'',u.poisonTurns?'Poison '+u.poisonTurns+' tour(s)':'',u.stun?'Immobilisation '+u.stun:'',silenced(battle,u)?'Silence : capacités déclenchées suspendues':''].filter(Boolean);
   if(u.firstHitReductionUsed)statuses.push('Réduction du premier coup consommée');
   if(u.riposteUsed)statuses.push('Riposte par invocation consommée');

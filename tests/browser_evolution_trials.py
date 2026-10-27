@@ -146,7 +146,7 @@ async def earned_flow(browser,scenario,label,viewport,*,full=False,touch=False,u
     await select(page,index,touch)
     await click(page.locator('[data-action="deploy"][data-lane="0"][data-col="1"]'),touch)
     snapshot=await stored(page,BATTLE);unit=snapshot['board'][0][1]
-    assert unit['id']==card_id and unit['rarity']==rarity and unit['cardRules']=='aube-v1'
+    assert unit['id']==card_id and unit['rarity']==rarity and unit['cardRules']=='cards-v2'
     assert unit['maxhp']=={'militia':5,'shield':11,'archer':4}[card_id]
     await page.screenshot(path=f'/tmp/ca-evolution-campaign-{label}-{scenario["id"]}.png')
     await page.reload();assert await stored(page,BATTLE)==snapshot

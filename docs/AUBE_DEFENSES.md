@@ -1,3 +1,9 @@
+> **Contrat remplacé pour les règles natives :** la correction
+> [Règles uniques](REGLES_CARTES_UNIQUES.md) applique Garde/Riposte validées
+> à tous les exemplaires concernés et impose la relance des anciens combats
+> actifs. Les mentions de règles natives historiques ci-dessous décrivent
+> les livraisons précédentes, pas le fonctionnement proposé sur cette branche.
+
 # Aube — défenses préparées, étape 3 terminée
 
 **Extension PR 55 :** les défenses communes sont utilisées par quatre versions

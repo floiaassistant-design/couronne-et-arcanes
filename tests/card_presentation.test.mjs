@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CARDS,CAMPAIGN} from '../src/data.js';
-import {AUBE_UNIT_IDS,unitVersions,AUBE_RULESET,resolveRulesDefinition} from '../src/cards/definitions.js';
+import {AUBE_UNIT_IDS,unitVersions,CARD_RULESET,resolveRulesDefinition} from '../src/cards/definitions.js';
 import {freshProfile,createBattle,playPlayerCard,playEnemyCard} from '../src/engine.js';
 import {freshLab,createLabBattle,setLabRarity,setLabLevel,labCardStats} from '../src/engine/developer-lab.js';
 import {cardPresentation,boardInspectionData,cardInspectionContent} from '../src/ui/card-presentation.js';
@@ -56,10 +56,10 @@ test('Toutes les cartes ont un texte bref et une fiche ; les sorts gardent leurs
  }
 });
 
-test('Définitions effectives : valeurs héritées, fréquence, zones, protections et règles historiques',()=>{
+test('Définitions effectives : valeurs héritées, fréquence, zones, protections et règles actuelles',()=>{
  const details=(id,rarity)=>cardPresentation({id,rarity}).details.join(' ');
  assert.match(details('militia','éveillée'),/−3 dégâts.*une fois par invocation.*ATQ effective.*sans Charge.*5 PV/);
- assert.match(details('shield','commun'),/Garde historique.*2 dégâts/);
+ assert.match(details('shield','commun'),/Garde :.*entre l’attaquant et la couronne.*ATQ effective/);
  assert.match(details('shield','éveillée'),/toutes les lignes.*ATQ effective/);
  assert.match(details('cleric','éveillée'),/3 PV.*2 alliés blessés distincts.*toutes les lignes/);
  assert.match(details('banner','divine'),/Tous les 3 tours.*\+2 ATQ.*2 autres alliés.*12/);
@@ -68,13 +68,13 @@ test('Définitions effectives : valeurs héritées, fréquence, zones, protectio
  assert.match(details('dawnbastion','éveillée'),/4 dégâts.*premier ennemi devant.*2 cases.*une seule frappe/);
 });
 
-test('Ancien combattant : instantané blessé et chiffres conservés, sans promotion aux règles Aube',()=>{
+test('Combattant blessé : instantané réel conservé, fiche des règles actuelles',()=>{
  const p=freshProfile(),b=createBattle(p,CAMPAIGN[0],23);
  b.heroes.p.hand=[{id:'shield',wait:0}];playPlayerCard(b,0,0);
  const u=b.board[0][1];Object.assign(u,{atk:17,hp:2,maxhp:22,armor:1,firstHitReductionUsed:true,lastStandUsed:true});
  const before=JSON.stringify({p,b}),model=boardInspectionData(b,u.uid);
  assert.equal(model.stats.atk,17);assert.equal(model.stats.hp,2);assert.equal(model.stats.maxhp,22);
- assert.match(model.details.join(' '),/Armure 1.*Garde historique.*2 dégâts/);
+ assert.match(model.details.join(' '),/Armure 1.*entre l’attaquant et la couronne.*ATQ effective/);
  assert.ok(model.board.statuses.includes('Dernier Rempart consommé'));
  assert.equal(JSON.stringify({p,b}),before);
 });
@@ -83,9 +83,9 @@ test('Natif Aube du laboratoire : la fiche suit son marqueur et les paramètres 
  const b=createLabBattle(freshLab(),6);b.heroes.p.hand=[{id:'shield',wait:0}];playPlayerCard(b,0,0);
  const u=b.board[0][1];u.armor=9;
  const model=boardInspectionData(b,u.uid);
- assert.equal(u.cardRules,AUBE_RULESET);
- assert.match(model.details.join(' '),/Armure 2.*entre l’attaquant et la couronne.*ATQ effective/);
- assert.doesNotMatch(model.details.join(' '),/Garde historique|Armure 9/);
+ assert.equal(u.cardRules,CARD_RULESET);
+ assert.match(model.details.join(' '),/Armure 9.*entre l’attaquant et la couronne.*ATQ effective/);
+ assert.doesNotMatch(model.details.join(' '),/Garde historique|2 dégâts/);
 });
 
 test('Le catalogue et les mains gardent chacun leur contexte de bonus et de version',()=>{

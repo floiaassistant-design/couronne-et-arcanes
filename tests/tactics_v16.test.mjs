@@ -50,7 +50,7 @@ test('V1.6 Riposte: a living defender counters a melee hit once',()=>{
  b.vfx=[];
  endPlayerTurn(b);
  assert.equal(b.board[1][2].hp,8,'3 melee minus 2 armor');
- assert.equal(b.board[1][3].hp,9,'1 shield attack + 2 riposte');
+ assert.equal(b.board[1][3].hp,10,'1 attaque + Riposte égale à son ATQ 1');
  assert.equal(b.vfx.filter(e=>e.riposte).length,1);
  assert.equal(b.board[1][2].lastRiposteRound,1);
 });

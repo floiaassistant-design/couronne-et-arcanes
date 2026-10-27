@@ -1,5 +1,31 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Priorité — règles uniques des cartes jouables, 27 octobre 2026
+
+Demande explicite du propriétaire : les cartes déjà possédées utilisent les
+règles validées, comme les nouvelles. Aucune variante permanente « historique »
+de Garde/Riposte. Lire [le contrat actuel](docs/REGLES_CARTES_UNIQUES.md).
+`cards/abilities.js` définit Garde normale positionnelle pour les cinq gardiens
+et Riposte à l'ATQ effective pour les sept natifs concernés, bonus compris,
+sans Charge. `definitions.js` expose un seul registre ; `resolveRulesDefinition`
+est un alias, jamais une seconde projection. `CARD_RULESET = cards-v2` identifie
+la révision du combat pour détecter une sauvegarde incompatible, sans choisir
+une autre règle. Mêmes capacités en aventure, dans les deux camps et au labo.
+Les profils/possessions/achats restent intacts ; aucun rang supplémentaire obtenu.
+
+Les anciens combats actifs ne reprennent plus : message explicite et fermeture
+sans défaite ni pénalité, puis relance depuis l'écran habituel. Aucune conversion
+silencieuse des unités blessées. Les anciens résultats terminés peuvent être
+réglés avec le reçu existant, sans rejouer leur combat. Une partie précédente
+reste récupérable même si seul son combat doit être relancé. Les vieux passages
+techniques ci-dessous sur les règles historiques sont remplacés par ce contrat.
+
+La PR 56 des défis reste indépendante et en attente. Son objectif de deux
+interceptions doit être revu après rebase sur la Garde normale : les coups
+visant directement un gardien interposé ne sont pas des interceptions de couronne.
+Ne pas réintroduire l'ancienne Garde pour rendre ce défi réalisable.
+Aucune fusion de cette correction ou de la PR 56 autorisée par « tu peux lancer ».
+
 ## Épreuves Aube — PR 55
 
 Lire [la reprise](docs/REPRISE_EPREUVES_EVOLUTION.md) et
@@ -43,9 +69,8 @@ Aucune fusion/publication de la PR 55 autorisée. Main de base : `1177160856`.
 ## Contrat — préparation des défenses versionnées
 
 - `engine/battle-defense.js` est l'unique résolution de `hit` et Riposte pour
-  tous les appels du moteur. `versionUnitAbilities` lit le registre seulement
-  pour un instantané futur explicite ou marqué `cardRules: aube-v1`. Les
-  anciens combattants sans ce marqueur gardent leurs règles historiques.
+  tous les appels du moteur. `versionUnitAbilities` lit le registre actuel pour tous les natifs et leurs
+  évolutions. Aucun ancien moteur sélectionné selon le contexte.
 - Distinguer `status.engine` (moteur vérifié) de `status.combat` (livraison
   complète). `unitCanPlay` contrôle la pose : seules les quatre versions des
   épreuves peuvent être jouées en aventure dans un nouveau combat compatible.
@@ -61,18 +86,16 @@ Aucune fusion/publication de la PR 55 autorisée. Main de base : `1177160856`.
 
 ## Contrat — règles versionnées et laboratoire commun
 
-- `resolveRulesDefinition` est une projection immuable du registre unique,
-  pas un second catalogue saisi à la main. `AUBE_RULESET` identifie les règles
-  futures des nouveaux instantanés, y compris natifs Aube ; aucune inférence
-  à partir de la date d'une sauvegarde ou modification d'une ancienne unité.
+- `resolveRulesDefinition` est un alias du résolveur unique. `CARD_RULESET`
+  identifie les combats actuels ; aucun contexte ne change les règles d'une
+  même carte. Une ancienne bataille active exige une relance explicite.
 - `engine/unit-rules.js` partage références, autorisation de pose, portée,
   déplacement, Charge, Vol et Perforation entre moteur, IA et prévisions.
   `engine/unit-support.js` résout arrivée et soutiens avec les primitives du
   même moteur. Les états d'arrivée et de soutien empêchent les répétitions.
 - Le laboratoire utilise `versionUnitStats` et les versions dont le moteur est
   implémenté. Niveaux 0–3 indépendants de la rareté ; aucun niveau forcé ni
-  nouveau pilote spécifique au Milicien. Les anciens champs `labGuard` restent
-  seulement lisibles par le chemin de compatibilité, sans nouvelle création.
+  nouveau pilote spécifique au Milicien. Les anciens champs `labGuard` ne sont plus résolus par le moteur.
 - Les barrières de capacités gardent leurs plafonds par effet ; les sorts
   gardent leur plafond individuel et ne réduisent pas un surplus préexistant.
   Ne pas déplacer ces règles dans les vues ou dupliquer les chiffres de Notion.
@@ -273,8 +296,9 @@ Aucune fusion/publication de la PR 55 autorisée. Main de base : `1177160856`.
   `tests/JOUER.test.html` est uniquement un paquet diagnostic non distribué.
 - Régénérer avec `npm run build` et `npm run build:test`. Les anciens documents
   mentionnant `ESSAI_CARTES.html`, `build:cards` ou quatre builds sont historiques.
-- Conserver règles, moteur, profils et sauvegardes historiques, y compris leurs
-  plateaux 3×5 ; ils utilisent désormais les cartes, sans conversion des données.
+- Conserver profils, possessions et présentation cartes. Un ancien combat actif
+  incompatible demande une relance, selon le contrat des règles uniques ; aucun
+  second moteur historique ni conversion silencieuse de ses unités.
 
 ## Entretien des vues — proposition indépendante du 23/10/2026
 

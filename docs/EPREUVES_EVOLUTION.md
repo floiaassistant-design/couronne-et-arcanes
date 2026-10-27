@@ -1,3 +1,9 @@
+> **Contrat remplacé pour les règles natives :** la correction
+> [Règles uniques](REGLES_CARTES_UNIQUES.md) applique Garde/Riposte validées
+> à tous les exemplaires concernés et impose la relance des anciens combats
+> actifs. Les mentions de règles natives historiques ci-dessous décrivent
+> les livraisons précédentes, pas le fonctionnement proposé sur cette branche.
+
 # Épreuves d’évolution Aube — contrat de la PR 55
 
 Branche `feat/epreuves-evolution-aube`, depuis main `1177160856` (PR 54).

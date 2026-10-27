@@ -80,18 +80,18 @@ test('Défaite, objectif manqué, mauvais camp/rang et appels hors épreuve ne c
  b.mode='evolution-trial';assert.equal(completeBattle(p,CAMPAIGN[0],b),null);assert.equal(grantBattleProgress(p,b).heroXp,0);assert.equal(JSON.stringify(p),before);
 });
 
-test('Moteur réel : seule la version gagnée est nouvelle ; natif historique, bonus, réduction et recyclage restent corrects',()=>{
+test('Moteur réel : règles uniques pour natifs et versions gagnées, bonus, réduction et recyclage restent corrects',()=>{
  const p=profile();p.upgrades.militia=2;p.mastery.militia=22;earn(p,'aube-militia-rare');
  const b=createBattle(p,{...CAMPAIGN[0],deck:[],hp:100},1,{turnFlow:'alternating'});
- assert.equal(b.evolutionsEnabled,true);assert.equal(b.cardRules,undefined);
+ assert.equal(b.evolutionsEnabled,true);assert.equal(b.cardRules,'cards-v2');
  const index=b.heroes.p.hand.findIndex(h=>h.rarity==='rare');assert.ok(index>=0);
  const stats=unitStats(b,b.heroes.p.hand[index]);assert.equal(playPlayerCard(b,index,0,1).ok,true);
- const u=b.board[0][1];assert.equal(u.rarity,'rare');assert.equal(u.cardRules,'aube-v1');
+ const u=b.board[0][1];assert.equal(u.rarity,'rare');assert.equal(u.cardRules,'cards-v2');
  assert.equal(u.atk,stats.atk);assert.equal(u.maxhp,stats.maxhp);assert.equal(u.atk,4);assert.equal(u.maxhp,8);
  hit(b,u,3,'e');assert.equal(u.hp,6);hit(b,u,3,'e');assert.equal(u.hp,3);
  assert.equal(u.firstHitReductionUsed,true);assert.deepEqual(b.heroes.p.discard,[{id:'militia',rarity:'rare'}]);
  b.heroes.p.hand=[];b.heroes.p.deck=[];endPlayerTurn(b);while(!playEnemyCard(b).done){}finishEnemyTurn(b);
- assert.equal(b.heroes.p.hand[0].rarity,'rare');assert.equal(b.heroes.p.hand[0].cardRules,'aube-v1');
+ assert.equal(b.heroes.p.hand[0].rarity,'rare');assert.equal(b.heroes.p.hand[0].cardRules,'cards-v2');
  const legacy=createBattle(freshProfile(),CAMPAIGN[0],1);assert.equal(legacy.evolutionsEnabled,undefined);
  legacy.heroes.p.hand=[{id:'militia',rarity:'rare',wait:0}];const snapshot=JSON.stringify(legacy);
  assert.equal(playPlayerCard(legacy,0,0,1).ok,false);assert.equal(JSON.stringify(legacy),snapshot);

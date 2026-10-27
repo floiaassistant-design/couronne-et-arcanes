@@ -1,3 +1,4 @@
+from browser_current_card_rules import run as current_rules_run
 """Aperçu au survol/focus uniquement ; clic sélectionne, premier toucher consulte sans sélectionner."""
 import asyncio
 from pathlib import Path
@@ -68,5 +69,6 @@ async def main():
         for label,vp in [('desktop',{'width':1366,'height':900}),('mobile',{'width':390,'height':844}),('landscape',{'width':844,'height':390})]:
             await run(browser,label,vp)
             await universal_run(browser,label,vp)
+            await current_rules_run(browser,label,vp)
         await browser.close()
 if __name__=='__main__':asyncio.run(main())
