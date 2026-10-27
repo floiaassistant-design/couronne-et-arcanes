@@ -22,7 +22,12 @@ async def run(browser,label,viewport):
             await page.wait_for_function("!document.querySelector('.combat-playing')")
             ready=page.locator('.hand-card.hand-ready:has(.stat.atk)').first
         before=await page.evaluate('(k)=>localStorage.getItem(k)',KEY)
-        await ready.click() if label=='desktop' else await ready.tap()
+        if label=='desktop':await ready.click()
+        else:
+            await ready.tap();assert await panel.is_visible()
+            assert await page.locator('.battle-cell.available').count()==0
+            assert await page.evaluate('(k)=>localStorage.getItem(k)',KEY)==before
+            await ready.tap()
         assert await panel.is_hidden(),(label,step,await panel.inner_text())
         await page.wait_for_timeout(220);assert await panel.is_hidden()
         assert await page.evaluate('(k)=>localStorage.getItem(k)',KEY)==before
@@ -45,8 +50,10 @@ async def run(browser,label,viewport):
     assert state['heroes']['p']['cardsPlayed']==2
     spare=page.locator('.hand-card.hand-ready').first
     if await spare.count():
+        await page.wait_for_function("!document.querySelector('.combat-playing')")
         before=await page.evaluate('(k)=>localStorage.getItem(k)',KEY)
-        await spare.tap();assert await panel.is_hidden()
+        await spare.tap();assert await panel.is_visible()
+        await page.locator('[data-action="close-inspection"]').click();assert await panel.is_hidden()
         assert await page.locator('.battle-cell.available').count()==0
         assert await page.evaluate('(k)=>localStorage.getItem(k)',KEY)==before
     await page.screenshot(path=f'/tmp/ca-deployment-{label}.png',full_page=False)

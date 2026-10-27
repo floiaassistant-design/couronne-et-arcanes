@@ -1,6 +1,11 @@
 import {castSpell} from './spell-casting.js';
+import {versionUnitAbilities,AUBE_RULESET} from '../cards/definitions.js';
+import {hit,resolveRetaliation} from './battle-defense.js';
+import {findCrownGuardian} from './guard-candidates.js';
+import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying} from './unit-rules.js';
+import {resolveUnitArrival,resolveUnitSupport} from './unit-support.js';
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
-import {CARDS,FACTIONS,FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
+import {CARDS,FACTIONS,GUARD_IDS} from '../data.js';
 import {frontEnemy} from './spell-targeting.js';
 import {captureCombatFrame,recordCombatEvent} from './combat-events.js';
 import {rankEnemyMoves} from '../ai.js';
@@ -9,9 +14,10 @@ import {silenced,activeAbility,controlTargetError,prepareControlUnits,triggerTra
 import {chosenTalents} from '../talents.js';
 import {tempoTargetError} from './tempo.js';
 import {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,gearBonus} from './profile.js';
-import {unitStatContext,unitStats,labMilitiaBonus} from './unit-stats.js';
+import {unitStatContext,unitStats} from './unit-stats.js';
 import {laneCount,lastCell,crownColumn,entryColumn,validDeploymentColumn,validLane,missionLayout} from './board.js';
 export * from './board.js';
+export * from './guard-candidates.js';
 function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed/4294967296;}
 function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand(b)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 export function note(b,message){b.log.unshift(message);b.log=b.log.slice(0,12);}
@@ -27,7 +33,8 @@ function draw(b,side,n=1){
    hero.deck=shuffle(b,hero.discard);hero.discard=[];
   }
   const id=hero.deck.pop();if(!CARDS[id])continue;
-  hero.hand.push({id,wait:Math.max(0,CARDS[id].delay-1)});
+  const definition=CARDS[id].type==='unité'?battleUnitDefinition(b,id,side):null;
+  hero.hand.push({id,wait:Math.max(0,(definition?.stats.delay??CARDS[id].delay)-1)});
  }
 }
 
@@ -43,6 +50,7 @@ export function createBattle(profile,mission,seed=Date.now(),options={}){
  aiStyle:mission.aiStyle||'equilibre',aiBoss:!!mission.boss,aiPhaseAnnounced:false,
  upgrades:bonuses.upgrades,mastery:bonuses.mastery,enemyDifficulty:mission.difficulty,mode:mission.mode||'campaign',stats:{playerKills:0,enemyKills:0}};
  if(options.turnFlow==='alternating')b.turnFlow='alternating';
+ if(options.cardRules===AUBE_RULESET)b.cardRules=AUBE_RULESET;
  b.heroes.p.deck=shuffle(b,p.deck);
  b.heroes.e.deck=shuffle(b,mission.deck);
  draw(b,'p',5+b.libraryBonus);draw(b,'e',5);
@@ -50,7 +58,7 @@ export function createBattle(profile,mission,seed=Date.now(),options={}){
  return b;
 }
 const forward=side=>side==='p'?1:-1;
-const isFlying=u=>!!u&&FLYING_IDS.has(u.id);
+const isFlying=unitFlying;
 const isGuard=u=>!!u&&GUARD_IDS.has(u.id) && u.hp>0;
 
 // Bonus de formation calculé à la volée : aucune modification permanente des statistiques.
@@ -68,34 +76,31 @@ export function formationBonus(b,lane,unit){
 }
 function enemyAt(b,lane,col,side){return col>=1&&col<=lastCell(b)&&b.board[lane][col]&&b.board[lane][col].side!==side?b.board[lane][col]:null;}
 function findTarget(b,lane,col,unit){
- const range=unit.ranged?2:1;
+ const range=unitAttackRange(unit);
  let fallback=null;
  for(let d=1;d<=range;d++){
   const targetCol=col+forward(unit.side)*d;
   const target=enemyAt(b,lane,targetCol,unit.side);
-  if(target && isGuard(target))return {type:'unit',target,col:targetCol};
+  if(target && isGuard(target)&&!versionUnitAbilities(target)&&!versionUnitAbilities(unit))return {type:'unit',target,col:targetCol};
   if(target && !fallback)fallback={type:'unit',target,col:targetCol};
  }
  if(fallback)return fallback;
  const heroDist=unit.side==='p'?crownColumn(b,'e')-col:col;
  return heroDist<=range?{type:'hero',side:unit.side==='p'?'e':'p'}:null;
 }
-function spawn(b,side,id,lane,col=entryColumn(b,side)){
- const c=CARDS[id];if(!c||c.type==='sort')return false;
+function spawn(b,side,reference,lane,col=entryColumn(b,side)){
+ const id=reference.id,c=CARDS[id];if(!c||c.type==='sort')return false;
  if(!validDeploymentColumn(b,side,col)||b.board[lane][col])return false;
- const stats=unitStats(b,id,side);
+ const definition=battleUnitDefinition(b,reference,side),stats=unitStats(b,reference,side);
  const u={uid:b.nextUnitId++,id,side,atk:stats.atk,maxhp:stats.maxhp,
   hp:stats.maxhp,armor:c.ability==='armor'?2:0,ranged:c.ability==='ranged',
   ability:c.ability,stun:0,poison:0,poisonTurns:0};
- if(b.mode==='developer'&&id==='militia'){
-  const rank=b.labStats?.rarities?.[side]?.[id]||'commun',level=b.labStats?.levels?.[side]?.[id]||0;
-  const bonus=labMilitiaBonus(rank,level);
-  if(bonus.block||bonus.counter)u.labGuard={block:bonus.block,used:false,counter:bonus.counter,counterUsed:false};
- }
+ if(b.cardRules===AUBE_RULESET){u.rarity=definition.rarity;u.cardRules=AUBE_RULESET;u.armor=definition.abilities.armor?.amount||0;u.ranged=!!definition.abilities.ranged;}
  b.board[lane][col]=u;
  fx(b,{type:'spawn',side,lane,col,icon:c.icon});
  if(formationBonus(b,lane,u))note(b,`Concorde de ${FACTIONS[c.faction].short} : +1 attaque aux alliés de cet ordre sur la ligne ${lane+1}.`);
- if(c.ability==='ward')b.heroes[side].shield=Math.min(20,b.heroes[side].shield+3);
+ if(!versionUnitAbilities(u)&&c.ability==='ward')b.heroes[side].shield=Math.min(20,b.heroes[side].shield+3);
+ resolveUnitArrival(b,u,lane,col,{hit,emit:fx,note});sweepDead(b);
  note(b,`${side==='p'?'Vous invoquez': 'L’ennemi invoque'} ${c.name} (ligne ${lane+1}).`);
  enterCell(b,u,lane,col);
  return true;
@@ -114,10 +119,11 @@ function play(b,side,index,lane,col=entryColumn(b,side)){
  if(hero.cardsPlayed>=2)return {ok:false,reason:'Limite de deux cartes par tour.'};
  const c=CARDS[hand.id];
  if(!c)return {ok:false,reason:'Carte inconnue.'};
+ if(c.type==='unité'&&!unitCanPlay(b,hand,side))return {ok:false,reason:'Cette version de la carte n’est pas encore jouable.'};
  if(c.heroClass&&(side!=='p'||c.heroClass!==b.heroClass))return {ok:false,reason:'Compétence réservée à une autre classe.'};
  const targetError=classSkillTargetError(b,side,c,lane)||controlTargetError(b,side,c,lane)||tempoTargetError(b,side,c);
  if(targetError)return {ok:false,reason:targetError};
- if(c.type==='unité'&&!spawn(b,side,hand.id,lane,col))return {ok:false,reason:'La case de déploiement est occupée.'};
+ if(c.type==='unité'&&!spawn(b,side,hand,lane,col))return {ok:false,reason:'La case de déploiement est occupée.'};
  const drawAfter=c.type==='sort'?castSpell(b,side,hand.id,lane,{emit:fx,hit,damageHero,sweepDead,checkOutcome,note,controlHooks}):0;
  if(side==='p'){if(!b.cardUses)b.cardUses={};b.cardUses[hand.id]=(b.cardUses[hand.id]||0)+1;}
  hero.discard.push(hand.id);hero.hand.splice(index,1);hero.cardsPlayed++;
@@ -134,21 +140,6 @@ export function previewPlayerSpell(b,index,lane){
  const ability=CARDS[b.heroes.p.hand[index].id].ability;
  const detail=ability==='spell_ranger_draw'?`Pioche : ${copy.heroes.p.hand.length-(b.heroes.p.hand.length-1)} carte(s).`:['spell_hasten','spell_slow'].includes(ability)?copy.log.find(s=>s.startsWith(ability==='spell_hasten'?'Élan des Heures :':'Nœud du Temps :'))||'':'';
  return {ok:true,before,after:captureCombatFrame(copy),detail,events:copy.vfx.map(e=>({...e,frame:e.frame}))};
-}
-function hit(b,u,raw,bySide,ignoreArmor=false){
- // Une attaque sur une unité déjà vaincue ne doit pas créer un second kill.
- if(!u||u.hp<=0)return 0;
- let dmg=Math.max(1,raw-(ignoreArmor?0:(u.armor||0)));
- if(u.labGuard?.block&&!u.labGuard.used&&bySide!==u.side){u.labGuard.used=true;dmg=Math.max(0,dmg-u.labGuard.block);}
- const barrier=u.barrier||0;
- if(barrier>0){const absorbed=Math.min(barrier,dmg);u.barrier=barrier-absorbed;dmg-=absorbed;}
- const before=u.hp;u.hp=Math.max(0,u.hp-dmg);
- if(bySide!==u.side&&u.hp<=0)b.stats[bySide==='p'?'playerKills':'enemyKills']++;
- if(Array.isArray(b.vfx)){
-  const lane=b.board.findIndex(row=>row.includes(u)),col=lane<0?-1:b.board[lane].indexOf(u);
-  fx(b,{type:'damage',side:u.side,lane,col,damage:before-u.hp,absorbed:barrier-(u.barrier||0),armor:ignoreArmor?0:Math.min(raw-1,u.armor||0)});
- }
- return dmg;
 }
 function sweepDead(b){
  for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
@@ -194,7 +185,7 @@ function moveUnits(b,sideFilter=null){
  for(const side of sideFilter?[sideFilter]:(b.round%2?['p','e']:['e','p']))for(let lane=0;lane<laneCount(b);lane++){
   const cols=Array.from({length:lastCell(b)},(_,i)=>side==='p'?lastCell(b)-i:i+1);
   for(const original of cols){const u=b.board[lane][original];if(!u||u.side!==side||u.stun>0)continue;
-   let col=original;const steps=activeAbility(b,u)==='haste'?2:1;
+   let col=original;const steps=unitMovementSteps(u,silenced(b,u));
    for(let step=0;step<steps;step++){
     if(findTarget(b,lane,col,u))break;
     const next=col+forward(side);
@@ -213,29 +204,21 @@ function moveUnits(b,sideFilter=null){
   }
  }
 }
-function findGuardianForHero(b,lane,heroSide){
- const guards=[];
- for(let col=1;col<=lastCell(b);col++){
-  const u=b.board[lane][col];
-  if(u&&u.side===heroSide&&isGuard(u))guards.push({u,col});
- }
- if(!guards.length)return null;
- return heroSide==='p'?guards.sort((a,z)=>z.col-a.col)[0]:guards.sort((a,z)=>a.col-z.col)[0];
+
+function retaliate(b,defender,attacker,lane,defenderCol,attackerCol,defenderLane=lane){
+ if(defenderLane!==lane)return; // Une interception interligne ne crée pas de contact.
+ const bonus=formationBonus(b,lane,defender)+(defender.rallyUntil>=b.round?1:0);
+ resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,bonus,note);
 }
 
-function retaliate(b,defender,attacker,lane,defenderCol,attackerCol){
- // Riposte : seulement contre une attaque au contact, si les deux unités vivent.
- // Une seule riposte par tour et aucune contre-riposte en chaîne.
- const experimentalCounter=!!defender.labGuard?.counter&&!defender.labGuard.counterUsed;
- if((!RIPOSTE_IDS.has(defender.id)&&!experimentalCounter)||silenced(b,defender)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
-    defender.side===attacker.side||Math.abs(defenderCol-attackerCol)!==1||defender.lastRiposteRound===b.round)return;
- defender.lastRiposteRound=b.round;
- if(experimentalCounter)defender.labGuard.counterUsed=true;
- fx(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
- const dealt=hit(b,attacker,experimentalCounter?1:2,defender.side);
- if(dealt>0){
-  note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
- }
+function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppressed=false){
+ const p=versionUnitAbilities(u)?.rearShot;if(!p||suppressed||lane!==targetLane)return;
+ const dir=u.side==='p'?1:-1;
+ // Une interception arrière/interligne ne crée pas de cible derrière le tireur.
+ if((targetCol-sourceCol)*dir<=0)return;
+ const col=targetCol+dir;if(col<1||col>lastCell(b))return;
+ const other=b.board[lane][col];
+ if(other&&other.hp>0&&other.side!==u.side)hit(b,other,p.amount,u.side,p.ignoreArmor);
 }
 
 function resolveAttacks(b,sideFilter=null){
@@ -243,48 +226,41 @@ function resolveAttacks(b,sideFilter=null){
  for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
   const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0||(sideFilter&&u.side!==sideFilter))continue;
   const target=findTarget(b,lane,col,u);
-  const charged=!silenced(b,u)&&CHARGE_IDS.has(u.id)&&!!u.movedThisRound;
-  if(target)intents.push({u,lane,col,target,atk:u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?2:0),ability:activeAbility(b,u),charged});
+  const charged=!silenced(b,u)&&unitChargeAmount(u)>0&&!!u.movedThisRound;
+  if(target)intents.push({u,lane,col,target,atk:u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0),ability:activeAbility(b,u),charged});
  }
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
-  const guardIntercept = target.type==='hero' ? findGuardianForHero(b,lane,target.side) : null;
+  const guardIntercept = target.type==='hero' ? findCrownGuardian(b,lane,target.side,intent.col) : null;
   const targetColForFx = guardIntercept?guardIntercept.col:(target.type==='hero'?crownColumn(b,target.side):target.col);
-  fx(b,{type:'attack',side:u.side,lane,from:intent.col,to:targetColForFx,ranged:!!u.ranged,magic:['splash','poison'].includes(ability),damage:atk,charged,icon:CARDS[u.id]?.icon||'⚔'});
-  if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +2 attaque sur la ligne ${lane+1}.`);
+  const targetLane=guardIntercept?.lane??lane;
+  fx(b,{type:'attack',side:u.side,lane:targetLane,...(targetLane!==lane?{fromLane:lane}:{}),from:intent.col,to:targetColForFx,ranged:!!u.ranged,magic:['splash','poison'].includes(ability),damage:atk,charged,icon:CARDS[u.id]?.icon||'⚔'});
+  if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +${unitChargeAmount(u)} attaque sur la ligne ${lane+1}.`);
   if(target.type==='hero'){
    if(guardIntercept){
-    hit(b,guardIntercept.u,atk,u.side,ability==='pierce');
+    hit(b,guardIntercept.u,atk,u.side,unitHasPierce(u,silenced(b,u)));
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
     if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
     if(ability==='poison'){guardIntercept.u.poison=1;guardIntercept.u.poisonTurns=Math.max(guardIntercept.u.poisonTurns,2);}
-    retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col);
+    resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
+    retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}}
   } else {
-   hit(b,target.target,atk,u.side,ability==='pierce');
+   hit(b,target.target,atk,u.side,unitHasPierce(u,silenced(b,u)));
    if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
    if(ability==='poison'){target.target.poison=1;target.target.poisonTurns=Math.max(target.target.poisonTurns,2);}
    if(ability==='splash'){
     const extra=b.board[lane].find(v=>v&&v.side!==u.side&&v.uid!==target.target.uid&&v.hp>0);
     if(extra)hit(b,extra,2,u.side);
    }
+   resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);
   }
  }
  // Le bonus de charge ne dure qu'un seul tour et doit survivre aux sauvegardes historiques.
  for(const row of b.board)for(const u of row)if(u&&(!sideFilter||u.side===sideFilter))u.movedThisRound=false;
  sweepDead(b);
- // Persistent support abilities trigger after combat.
- for(let lane=0;lane<laneCount(b);lane++)for(const u of b.board[lane])if(u&&u.hp>0&&(!sideFilter||u.side===sideFilter)){
-  if(activeAbility(b,u)==='heal'){
-   const allies=b.board[lane].filter(v=>v&&v.side===u.side&&v.hp<v.maxhp);
-   if(allies.length){allies.sort((a,z)=>(a.hp/a.maxhp)-(z.hp/z.maxhp));allies[0].hp=Math.min(allies[0].maxhp,allies[0].hp+2);const col=b.board[lane].indexOf(allies[0]);fx(b,{type:'heal',lane,col});}
-  }
-  if(activeAbility(b,u)==='inspire'){
-   const allies=b.board[lane].filter(v=>v&&v.side===u.side&&v.uid!==u.uid);
-   if(allies.length&&b.round%3===0){allies[0].atk=Math.min(allies[0].atk+1,12);}
-  }
- }
+ resolveUnitSupport(b,sideFilter,fx);
  for(const row of b.board)for(const u of row)if(u&&u.stun>0&&(!sideFilter||u.side===sideFilter))u.stun--;
  checkOutcome(b);
 }

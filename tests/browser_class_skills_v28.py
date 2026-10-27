@@ -1,24 +1,24 @@
 from browser_spell_actions import target_spell
 """V2.8 : compétences dans l'UI desktop/mobile, classe, combat et sauvegardes."""
-import asyncio
+import asyncio,json
 from pathlib import Path
 from playwright.async_api import async_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
-HTML=(ROOT/'tests/JOUER.test.html').read_text()
 
 async def make_page(browser,viewport,store,errors,*,touch=False):
     page=await browser.new_page(viewport=viewport,has_touch=touch,is_mobile=touch)
     page.on('pageerror',lambda error:errors.append(str(error)))
-    await page.evaluate('''saved=>{
+    # Charger le fichier directement évite de retransmettre 34 Mo par CDP à chaque page.
+    await page.add_init_script('(' + '''saved=>{
       const cache={...saved};window.__saves=cache;
       Object.defineProperty(window,'localStorage',{configurable:true,value:{
         getItem(k){return cache[k]??null},
         setItem(k,v){cache[k]=String(v)},
         removeItem(k){delete cache[k]}
       }});
-    }''',store)
-    await page.set_content(HTML,wait_until='load')
+    }''' + ')(' + json.dumps(store) + ')')
+    await page.goto((ROOT/'tests/JOUER.test.html').as_uri(),wait_until='load')
     return page
 
 async def run(browser,label,viewport):

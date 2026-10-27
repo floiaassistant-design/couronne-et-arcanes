@@ -26,7 +26,7 @@ async def exact(face,card_id,readable=True):
 
 async def exact_preview(popup,card_id):
     assert await popup.is_visible(),card_id
-    image=popup.locator('.inspection-art')
+    image=popup.locator('.inspection-art,.generated-card-image').first
     await image.evaluate('(e)=>e.decode()')
     assert await image.evaluate('(e)=>[e.naturalWidth,e.naturalHeight]')==[768,1152]
     src=await image.get_attribute('src')
@@ -49,8 +49,18 @@ async def run(browser,label,viewport,faction='aube'):
         row=page.locator(f'[data-collection-character="{card_id}"]')
         assert await row.locator('.generated-face').count()==6,card_id
         await exact(row.locator('[data-current-version="true"] .generated-face'),card_id)
-        assert await row.locator('[data-current-version="false"] .stat.hp b').all_inner_texts()==['—']*5
-        # La fiche suit directement la carte : aucun bouton « Fiche » ni copie de .generated-face.
+        expected={
+            'militia':[5,5,5,8,8,8],'shield':[9,11,11,13,13,13],
+            'archer':[3,4,4,4,4,4],'lancer':[5,6,6,8,8,8],
+            'cleric':[None,4,6,6,6,6],'banner':[None,6,8,8,8,8],
+            'scoutcaptain':[None,6,8,8,8,8],'sunpriest':[None,7,9,9,9,9],
+            'paladin':[None,None,9,11,11,13],'dawnbastion':[None,None,None,11,11,11]
+        }.get(card_id)
+        native=await row.locator('[data-current-version="true"]').get_attribute('data-collection-rarity')
+        ranks=['commun','rare','épique','légendaire','divine','éveillée']
+        values=[str(hp) if hp is not None else '—' for rank,hp in zip(ranks,expected) if rank!=native] if expected else ['—']*5
+        assert await row.locator('[data-current-version="false"] .stat.hp b').all_inner_texts()==values,card_id
+        # La fiche suit directement la carte : aucun bouton « Fiche », même rendu que la main et le plateau.
         preview=row.locator('[data-current-version="true"] [data-collection-preview]')
         await preview.hover()
         assert await preview.get_attribute('aria-expanded')=='true',card_id

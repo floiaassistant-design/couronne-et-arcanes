@@ -29,11 +29,11 @@ test('Seule la rareté réelle porte la possession et les actions de deck',()=>{
  assert.equal((row.match(/Possédée ×4/g)||[]).length,2); // label accessible + statut visible
  assert.equal((row.match(/data-action="deck-add"/g)||[]).length,1);
  assert.equal((row.match(/data-action="deck-remove"/g)||[]).length,1);
- assert.equal((row.match(/class="unit-card collection-future(?: generated-template)?"/g)||[]).length,5);
- assert.match(row,/À concevoir/);
+ assert.equal((row.match(/known-version/g)||[]).length,6);
+ assert.match(row,/Obtention non définie/);
  const future=row.match(/<td[^>]+data-collection-rarity="divine"([\s\S]*?)<\/td>/)[1];
  assert.doesNotMatch(future,/data-action="deck-(?:add|remove)"/);
- assert.match(future,/Attaque et vie à définir/);
+ assert.match(future,/stat hp[^]*?<b>8<\/b>/);
 });
 
 test('Les statistiques de la version actuelle réutilisent les bonus du profil',()=>{
@@ -55,13 +55,16 @@ test('Chaque rareté garde une carte survolable sans nouveau bouton de fiche',()
  assert.match(row,/data-action="deck-add"/);
 });
 
-test('Les aperçus concis des raretés inconnues n’inventent aucune statistique',()=>{
+test('Les versions définies montrent leurs chiffres, les autres restent sans statistiques',()=>{
  const profile=freshProfile(),before=JSON.stringify(profile);
  const future=collectionHoverContent(profile,'militia','éveillée',esc);
- assert.match(future,/Évolution à concevoir/);
- assert.match(future,/Statistiques à concevoir/);
+ assert.match(future,/Obtention non définie/);
+ assert.match(future,/ATQ 2 \/ PV 8/);
+ const unknown=collectionHoverContent(profile,'wolf','éveillée',esc);
+ assert.match(unknown,/À concevoir/);
+ assert.doesNotMatch(unknown,/ATQ [0-9]+ \/ PV [0-9]+/);
  assert.match(future,/milicien_aube_carte_v02\.webp/,'Le futur rang conserve l’illustration autorisée');
- assert.doesNotMatch(future,/ATQ [0-9]+ \/ PV [0-9]+/);
+
  assert.equal(collectionHoverContent(profile,'missing','rare',esc),null);
  assert.equal(collectionHoverContent(profile,'militia','unknown',esc),null);
  const present=collectionHoverContent(profile,'militia','commun',esc);

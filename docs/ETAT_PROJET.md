@@ -1,8 +1,37 @@
-# État courant — 25 octobre 2026
+# État courant — 27 octobre 2026
+
+## Intégration Aube — étapes 1 à 6 terminées, PR non intégrée
+
+La [PR nº 53](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53)
+reste l’unique PR active sur `feat/aube-evolutions-fiche-universelle`, en brouillon.
+Le tableau maître Notion a été relu dans son édition du 27 octobre 2026,
+05:48:45.318 UTC. Les règles Aube correspondent au registre ; aucune nouvelle
+évolution des autres factions n’est intégrée par cette mission.
+
+Les 51 versions Aube sont raccordées au moteur commun et testables au
+laboratoire, avec niveaux 0–3 indépendants. Les évolutions restent refusées
+en aventure et sans circuit d’obtention. Le profil, les achats, la maîtrise,
+l’économie et les anciennes batailles conservent leurs règles.
+
+L’étape 5 ajoute le modèle de présentation commun, les textes courts dérivés
+des capacités et un unique lecteur de fiche pour Collection, main, plateau des
+deux camps, decks, Atelier/Alchimie, paquets, récompenses et laboratoire.
+Les six cartes par unité sont conservées, avec leurs vrais chiffres et statuts.
+Sur mobile : toucher pour lire, retoucher la même carte de main pour sélectionner,
+puis choisir une case ; consulter une unité occupée n’active aucune pose.
+
+Contrôles, export exact et tête GitHub dans le [point de reprise](REPRISE_INTEGRATION_AUBE.md)
+et la description de PR. [Versions](AUBE_VERSIONS.md), [moteur](AUBE_MOTEUR.md),
+[présentation](AUBE_PRESENTATION.md). [Revue complète de l'étape 6](REVUE_AUBE_PR53_2026_10_27.md)
+terminée sans défaut bloquant identifié : 418 tests et 60 scénarios de parité
+rejoués, exports synchronisés et deux CI réussies sur le code `13be34f`.
+La clôture de revue ne modifie que la documentation. Aucune fusion ni publication.
 
 ## Jeu intégré sur main
 
-**Main vérifié :** [`1810b1518bc0e8d668ed11bc55042ae5161ae94e`](https://github.com/floiaassistant-design/couronne-et-arcanes/commit/1810b1518bc0e8d668ed11bc55042ae5161ae94e), fusion autorisée de la [PR nº 48](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/48) le 25 octobre 2026. La comparaison GitHub de ce merge à `main` est identique (aucun commit d'écart). La comparaison avec le commit PR `af048c1b` montre un commit de fusion **sans aucune différence de fichiers** : le code et `JOUER.html` sur main sont ceux qui ont été vérifiés.
+**Dernier main relu le 27 octobre :** `cf8175002431e1714460f8be917665437a5b78c4`, contenu commun à la base de la PR 53. Les détails de publication ci-dessous décrivent la dernière version publiée attestée, et non une publication de la PR Aube.
+
+**Jalon de publication vérifié le 25 octobre :** [`1810b1518bc0e8d668ed11bc55042ae5161ae94e`](https://github.com/floiaassistant-design/couronne-et-arcanes/commit/1810b1518bc0e8d668ed11bc55042ae5161ae94e), fusion autorisée de la [PR nº 48](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/48) le 25 octobre 2026. La comparaison GitHub de ce merge à `main` est identique (aucun commit d'écart). La comparaison avec le commit PR `af048c1b` montre un commit de fusion **sans aucune différence de fichiers** : le code et `JOUER.html` sur main sont ceux qui ont été vérifiés.
 
 **Contrôles réussis sur cet arbre :** [tests complets](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40210891590) (336 tests Node, 60 scénarios de parité et parcours navigateur bureau/mobile simulé, hors réseau, sauvegardes) ; [assemblage web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40210891602) (paquet de PR construit et contrôle de synchronisation `JOUER.html`). L'export officiel a été généré par le builder sur GitHub dans `e6475b6` ; le workflow ponctuel de génération a été supprimé. Les deux vérifications main post-fusion peuvent être réutilisées si leur arbre est identique ; ne pas confondre tests de PR et résultat des nouveaux jobs main.
 
@@ -14,7 +43,10 @@ Chaque unité conserve **six cartes de rareté** dans la Collection, avec une fi
 
 ## Travail en parallèle
 
-La [PR nº 41](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/41), audit des 76 descriptions et capacités, reste distincte et non fusionnée. Une décision de conception documentée ne devient pas une règle de jeu sans autre PR et accord spécifique. Les fusions de PR, y compris purement documentaires, requièrent toujours une autorisation explicite propre à chacune.
+Au relevé du 26 octobre, seule la PR nº 53 est ouverte. La PR nº 41, ancien
+audit documentaire, a été fermée sans fusion le 25 octobre. Le tableau maître
+Notion reste la référence de conception. Chaque fusion exige toujours un
+accord explicite propre à la PR concernée.
 
 ## Historique documentaire — relevés antérieurs, non normatifs
 

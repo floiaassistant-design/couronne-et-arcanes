@@ -21,7 +21,7 @@ async def run(browser,label,viewport,url=None):
     assert await row.locator('[data-current-version="true"]').count()==1
     assert 'Possédée ×4' in await row.inner_text()
     assert await row.locator('[data-action="deck-add"]').count()==1
-    assert await row.locator('[data-current-version="false"] .stat.atk b').all_inner_texts()==['—']*5
+    assert await row.locator('[data-current-version="false"] .stat.atk b').all_inner_texts()==['2']*5
     await row.locator('.creature-image').first.evaluate('(e)=>e.decode()')
     # Le fond réellement embarqué est une image JPEG, décodable sans réseau.
     dimensions=await page.locator('.collection-hero').evaluate('''async e=>{
@@ -47,8 +47,8 @@ async def run(browser,label,viewport,url=None):
         await future.evaluate("""el=>el.dispatchEvent(new PointerEvent('pointerout',{bubbles:true,pointerType:'touch',relatedTarget:null}))""")
         assert await popup.is_visible(), f'{label}: fiche tactile masquée par une sortie synthétique'
     assert await future.get_attribute('aria-expanded')=='true'
-    assert 'Évolution à concevoir' in await popup.inner_text()
-    assert 'Statistiques à concevoir' in await popup.inner_text()
+    assert 'Obtention non définie' in await popup.inner_text()
+    assert 'ATQ 2 / PV 8' in await popup.inner_text()
     assert await popup.locator('[data-action="deck-add"]').count()==0
     bounds=await popup.bounding_box()
     assert bounds and bounds['x']>=0 and bounds['y']>=0 and bounds['x']+bounds['width']<=viewport['width']+1 and bounds['y']+bounds['height']<=viewport['height']+1,bounds
@@ -105,7 +105,7 @@ async def run(browser,label,viewport,url=None):
     assert await description.is_visible(), f'{label}: description de la fiche masquée'
     await description.scroll_into_view_if_needed()
     actual=await description.inner_text()
-    assert 'Un soldat loyal' in actual, f'{label}: description inattendue: {actual!r} ; fiche: {await popup.inner_text()!r}'
+    assert 'Déplacement 1 case' in actual, f'{label}: description inattendue: {actual!r} ; fiche: {await popup.inner_text()!r}'
     await page.keyboard.press('Escape')
     assert await popup.is_hidden()
     await page.locator('.collection-hero').scroll_into_view_if_needed()

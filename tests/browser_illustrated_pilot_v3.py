@@ -31,7 +31,7 @@ async def run(browser,label,viewport):
     await page.keyboard.press('Tab')  # Reprendre la navigation après le rendu.
     await cards.first.focus()
     assert not await page.locator('#hand-card-inspection').is_hidden()
-    assert 'Peut attaquer à deux cases' in await page.locator('#hand-card-inspection').inner_text()
+    assert 'Portée 2' in await page.locator('#hand-card-inspection').inner_text()
     assert await page.evaluate('selectedCard')==-1
     await cards.first.press('Escape')
     assert await page.locator('#hand-card-inspection').is_hidden()
@@ -66,7 +66,7 @@ async def run(browser,label,viewport):
     assert await pilot.count()==1
     assert await pilot.locator('.illustrated-count b').inner_text()=='1'
     assert await pilot.locator('.illustrated-count').get_attribute('data-delay-kind')=='base'
-    assert 'Peut attaquer à deux cases' in await pilot.locator('.card-detail').inner_text()
+    assert 'Portée 2' in await pilot.locator('.card-detail').inner_text()
     assert await version.locator('[data-card-field="counter"] b').inner_text()=='1'
     assert await version.locator('[data-action="deck-add"]').count()==1
     assert not errors,errors

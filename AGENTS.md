@@ -1,5 +1,75 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Contrat — versions de rareté et compatibilité
+
+- `src/cards/definitions.js` résout une unité par son ID historique et une rareté
+  facultative. Le catalogue `CARDS` conserve ses natifs ; ne pas y ajouter les
+  variantes au risque de modifier paquets, rencontres et économie.
+- Les statistiques totales du rang remplacent la base. Achats, maîtrise,
+  équipement, bonus de profil et effets temporaires restent distincts.
+  Réutiliser le calcul de `engine/unit-stats.js`, sans conversion de niveaux.
+- Une définition future ne signifie pas que ses pouvoirs sont programmés.
+  Respecter les statuts de combat et les décisions en attente ; ne pas activer
+  une version incomplète. Les références natives historiques restent valides.
+- Préserver les IDs, decks, possessions, sauvegardes et chiffres des unités déjà
+  invoquées. Aucun recalcul à la reprise, aucune obtention ou migration implicite.
+  Voir le [contrat des versions](docs/AUBE_VERSIONS.md).
+
+## Contrat — préparation des défenses versionnées
+
+- `engine/battle-defense.js` est l'unique résolution de `hit` et Riposte pour
+  tous les appels du moteur. `versionUnitAbilities` lit le registre seulement
+  pour un instantané futur explicite ou marqué `cardRules: aube-v1`. Les
+  anciens combattants sans ce marqueur gardent leurs règles historiques.
+- Distinguer `status.engine` (moteur vérifié) de `status.combat` (livraison
+  complète). `unitCanPlay` est le contrôle contextuel de pose : les évolutions
+  restent refusées en aventure, mais les versions dont le moteur est prêt
+  sont testables dans le laboratoire avec le marqueur explicite de règles.
+  Aucune obtention, possession ou conversion de niveau implicite.
+- `engine/guard-candidates.js` énumère les gardiens éligibles et sélectionne
+  un seul gardien selon la politique centrale validée : même ligne, proximité
+  de sa couronne, puis ligne/uid. Aucune limite par tour tant qu’il reste vivant.
+- Les quotas réels d'une capacité doivent survivre à la sauvegarde ; les
+  instantanés d'événements ne doivent pas partager un objet mutable de barrières.
+  Voir [les défenses et leurs limites](docs/AUBE_DEFENSES.md).
+
+## Contrat — règles versionnées et laboratoire commun
+
+- `resolveRulesDefinition` est une projection immuable du registre unique,
+  pas un second catalogue saisi à la main. `AUBE_RULESET` identifie les règles
+  futures des nouveaux instantanés, y compris natifs Aube ; aucune inférence
+  à partir de la date d'une sauvegarde ou modification d'une ancienne unité.
+- `engine/unit-rules.js` partage références, autorisation de pose, portée,
+  déplacement, Charge, Vol et Perforation entre moteur, IA et prévisions.
+  `engine/unit-support.js` résout arrivée et soutiens avec les primitives du
+  même moteur. Les états d'arrivée et de soutien empêchent les répétitions.
+- Le laboratoire utilise `versionUnitStats` et les versions dont le moteur est
+  implémenté. Niveaux 0–3 indépendants de la rareté ; aucun niveau forcé ni
+  nouveau pilote spécifique au Milicien. Les anciens champs `labGuard` restent
+  seulement lisibles par le chemin de compatibilité, sans nouvelle création.
+- Les barrières de capacités gardent leurs plafonds par effet ; les sorts
+  gardent leur plafond individuel et ne réduisent pas un surplus préexistant.
+  Ne pas déplacer ces règles dans les vues ou dupliquer les chiffres de Notion.
+- `cards/ability-text.js` fournit les libellés brefs à partir des paramètres.
+  Le modèle commun et toutes les vues réutilisent ces libellés. Lire [le contrat du moteur Aube](docs/AUBE_MOTEUR.md).
+
+## Contrat — fiche et textes communs
+
+- `ui/card-presentation.js` résout identité, rareté, disponibilité et chiffres
+  depuis le registre et les calculs partagés, puis rend la fiche commune.
+  Les instantanés de plateau gardent leurs PV/ATQ réels et leurs règles explicites.
+- `ui/card-inspection.js` est l’unique lecteur pour toutes les vues et modales.
+  `collectionHoverContent` est un adaptateur de compatibilité, sans second lecteur.
+  Aucun bouton d’ouverture, état de lecture persistant ou effet métier.
+- Six cartes par unité : versions définies avec chiffres réels, évolutions sans
+  possession ni obtention inventée, rangs inexistants et inconnus sans chiffres.
+- Souris : survol pour lire, clic pour sélectionner la main. Toucher : premier
+  contact pour lire, second contact sur la même carte pour sélectionner ; pose
+  seulement sur une autre case libre. Le plateau n’active aucune pose par remontée
+  de clic. Le ciblage explicite d’un sort conserve sa confirmation.
+- Les nouveaux cas de `browser_card_presentation.py` font partie de la suite
+  `browser_card_preview.py` déjà exécutée en CI. Voir `docs/AUBE_PRESENTATION.md`.
+
 ## Contrat permanent — six raretés de Collection et fiche courte
 
 - La Collection conserve **six cartes côte à côte pour chaque personnage** (Commune, Rare, Épique, Légendaire, Divine, Éveillée), et non une vignette unique. Le remplacement de six cartes par une seule était une proposition documentaire annulée par le propriétaire.
@@ -217,8 +287,8 @@
   du combat, la collection le profil actuel. Préserver la parité et l'ordre des
   propriétés lors d'une refonte du constructeur de bataille.
 - `ui/card-inspection.js` et `assets/card-preview.css` portent l'aperçu commun
-  main/plateau. Survol ou focus pour lire ; clic/toucher ferme la fiche pendant
-  sélection et pose. Aucun épinglage, aucune action métier ni écriture en stockage
+  de toutes les vues. Le contrat de consultation actuel est décrit en tête ;
+  le toucher consulte d’abord, puis sélectionne explicitement la même carte. Aucun épinglage, aucune action métier ni écriture en stockage
   depuis le lecteur ; valeurs actuelles par uid, bonus et capacités lisibles.
 
 - Fonds d’interface : `UI_BACKGROUNDS`/`UI_ART_NAMES` dans `visuals.js`, registre

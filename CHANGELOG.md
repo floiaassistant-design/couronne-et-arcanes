@@ -1,3 +1,76 @@
+## Revu — Aube étape 6, PR nº 53 (27 octobre 2026)
+
+- Tableau maître Notion relu ; revue de l'ensemble du registre, moteur,
+  laboratoire, compatibilité, économie et présentation, sans défaut bloquant identifié.
+- 418 tests et 60 scénarios de parité rejoués, deux exports réussis et synchronisés ;
+  deux CI réussies sur le dernier code `13be34f`. Clôture documentaire uniquement.
+- Six étapes terminées et bilan de livraison enregistré. Évolutions toujours
+  réservées au laboratoire, obtention non définie ; PR en brouillon, sans fusion
+  ni publication. [Revue](docs/REVUE_AUBE_PR53_2026_10_27.md).
+
+## Préparé — Aube étape 5, PR nº 53 (26 octobre 2026)
+
+- Textes courts et fiche commune pour Collection, main, deux camps du plateau,
+  Atelier/Alchimie, decks, paquets, récompenses et laboratoire ; chiffres et
+  capacités résolus depuis les mêmes données et calculs que le moteur.
+- Six cartes de Collection : 51 versions Aube définies, neuf rangs inexistants,
+  autres évolutions encore à concevoir ; aucune possession ou obtention créée.
+- Un seul lecteur survol/focus/toucher. Sur mobile, lire puis retoucher la même
+  carte de main pour sélectionner ; aucune pose par clic sur une unité occupée.
+- Nouvelles vérifications de présentation et parcours universel dans la suite
+  navigateur existante. Contrôles finaux dans le point de reprise et la PR.
+- Arrêt avant l’étape 6 de revue complète, sans fusion ni publication.
+
+## En préparation — Aube, moteur commun et laboratoire (26 octobre 2026)
+
+- Étape 4 : portée 3, Perforation, tir arrière protégé, Charge +3, Célérité,
+  soins multi-cibles et interlignes, barrières après soin, Inspiration,
+  Commandement et Intervention raccordés aux paramètres du registre.
+- Règles futures explicitement identifiées, natives Aube comprises, sans
+  recalcul des anciens instantanés. Campagne et économie non converties.
+- Les 51 versions sont testables dans le laboratoire ; niveaux 0–3 indépendants
+  de la rareté, ancien calcul expérimental Milicien retiré. IA et prévisions
+  partagent les mêmes paramètres ; aucune récompense ou possession offerte.
+- API de récompense/progression également verrouillées pour le laboratoire,
+  sans mutation en cas d’appel direct. Libellés de test dérivés et tests
+  métier/navigateur étendus. Les versions
+  futures restent en attente de livraison complète ; prochaine étape, fiche
+  universelle dans tous les écrans. PR toujours en brouillon, sans publication.
+
+## En préparation — Aube, Garde validée et étape 3 terminée (26 octobre 2026)
+
+- Priorité et fréquence enregistrées dans le tableau maître Notion après accord
+  explicite : même ligne, gardien le plus proche de sa couronne, ligne/uid ;
+  interceptions tant qu'il reste vivant, un seul gardien par attaque.
+- Raccordement des trois portées de Garde sur les versions futures, sélection
+  réévaluée après chaque frappe, coordonnées d'animation interlignes et exclusion
+  des fausses Ripostes entre lignes. Aucun nouveau rang ouvert à la pose.
+- Priorité historique préservée sans Garde future éligible ; registres, profils,
+  images, économie et sauvegardes historiques conservés. Tests de moteur et
+  contrôles navigateur étendus. Arrêt avant l'étape 4 de la même PR brouillon.
+
+## En préparation — Aube, défenses versionnées (26 octobre 2026)
+
+- Relecture du tableau maître Notion, édition du 26 octobre ; futures Garde
+  positionnelle/Divine/Éveillée et Riposte effective retranscrites dans le registre.
+- Résolution de dégâts et Riposte extraite dans le moteur commun : réduction
+  initiale, Armure, barrières par effet, Dernier Rempart et quotas persistants.
+- Éligibilité de Garde testée, sans arbitrage entre gardiens ni quota inventé.
+  **Étape 3 partielle** ; ses deux décisions restent nécessaires avant raccordement.
+- Natifs et anciennes sauvegardes conservés ; aucune nouvelle rareté jouable,
+  obtention, fiche, image ou publication. PR nº 41 archivée ; PR nº 53 unique.
+
+## En préparation — Aube, définitions et compatibilité (25 octobre 2026)
+
+- Registre central de 51 versions Aube : identités par personnage/rareté,
+  statistiques totales, héritage des capacités et décisions restant à résoudre.
+- Prévisions partageant le calcul des bonus natifs ; achats et maîtrise restent
+  indépendants. Aucun nouveau rang obtenu ni activé dans le jeu.
+- Refus sans consommation d'une version non programmée ; sauvegardes, decks,
+  économie, autres factions et ancien laboratoire conservés.
+- Tests des définitions et de compatibilité, export généré depuis les sources.
+  PR unique en brouillon ; [reprise par étapes](docs/REPRISE_INTEGRATION_AUBE.md).
+
 ## Fusion validée — Collection six raretés, PR nº 48 (25 octobre 2026)
 
 - [PR nº 48](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/48) **fusionnée sur main** au commit `1810b1518bc0e8d668ed11bc55042ae5161ae94e` après autorisation explicite. Le contenu de main est identique à l'arbre testé de la PR `af048c1b` (zéro fichier différent).

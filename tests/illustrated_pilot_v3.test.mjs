@@ -1,3 +1,4 @@
+import {cardPresentation} from '../src/ui/card-presentation.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -13,7 +14,7 @@ test('compteur unique et fiche indépendante des gestes de pose',()=>{
  const a=readFileSync(new URL('../src/app.js',import.meta.url),'utf8');
  const b=readFileSync(new URL('../src/ui/battle-view.js',import.meta.url),'utf8');
  assert.match(v,/data-delay-kind/);assert.match(v,/inHand\s*\?\s*cooldown\s*:\s*c\.delay/);
- assert.match(v,/Portée 2/);assert.doesNotMatch(v,/data-action="inspect-card"/);
+ assert.match(v,/cardPresentation/);assert.equal(cardPresentation('archer').card.description,'Portée 2');assert.doesNotMatch(v,/data-action="inspect-card"/);
  assert.match(a,/suppressCardInspection\(i\)/);
  assert.doesNotMatch(a,/inspectCard\(i,true\)/);
  assert.match(a,/!event\.target\.closest\('button'\)/);

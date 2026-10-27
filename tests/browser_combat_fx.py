@@ -13,6 +13,16 @@ SETUP=r'''()=>{
  persistBattle();render();
 }'''
 async def idle(page):await page.wait_for_function("!document.querySelector('.combat-playing')")
+async def skip_if_playing(page):
+ # La lecture peut finir entre deux appels Playwright ; cliquer le contrôle
+ # courant en une opération évite de viser un ancien bouton détaché.
+ return await page.evaluate("""()=>{
+  if(!document.querySelector('.combat-playing'))return false;
+  const button=document.querySelector('[data-action="fx-skip"]');
+  if(!button||button.hidden||button.disabled)throw Error('Passer indisponible pendant une lecture active');
+  button.click();return true;
+ }""")
+
 async def run(browser,label,viewport,reduced=False,off=False):
  ctx=await browser.new_context(viewport=viewport,offline=True,reduced_motion='reduce' if reduced else 'no-preference')
  page=await ctx.new_page();errors=[];network=[]
@@ -41,7 +51,7 @@ async def run(browser,label,viewport,reduced=False,off=False):
   await page.screenshot(path=f'/tmp/ca-combat-fx-{label}.png')
   await page.locator('[data-action="fx-speed"]').click()
   assert await page.locator('[data-action="fx-speed"]').inner_text()=='×2'
-  await page.locator('[data-action="fx-skip"]').click()
+  await skip_if_playing(page)
  await page.wait_for_function('battle.round===2');await idle(page)
  assert await page.locator('[data-unit-id="901"]').count()==0
  assert await page.locator('[data-action="end-turn"]').is_enabled()
@@ -76,7 +86,7 @@ async def check_effect_types(browser):
   await page.locator('[data-action="end-turn"]').click()
   await page.wait_for_selector('.combat-fx-projectile.'+kind)
   assert ('Tir à distance' if kind=='ranged' else 'Attaque magique') in await page.locator('.combat-action').inner_text()
-  await page.locator('[data-action="fx-skip"]').click();await page.wait_for_function('battle.round===2');await idle(page)
+  await skip_if_playing(page);await page.wait_for_function('battle.round===2');await idle(page)
  for card in ['firebolt','healing']:
   await page.evaluate(SETUP)
   await page.evaluate("id=>{battle.heroes.p.hand=[{id,wait:0}];if(id==='healing'){battle.board[0][5]=null;battle.board[0][4].hp=7;battle.heroes.p.hp=99}else battle.board[0][4]=null;persistBattle();render()}",card)
@@ -94,7 +104,7 @@ async def check_effect_types(browser):
  await page.locator('[data-action="end-turn"]').click()
  await page.wait_for_function("document.querySelector('.combat-action')?.textContent.includes('Poison')")
  assert '−1 PV' in await page.locator('.combat-action').inner_text()
- await page.locator('[data-action="fx-skip"]').click();await page.wait_for_function('battle.round===2');await idle(page)
+ await skip_if_playing(page);await page.wait_for_function('battle.round===2');await idle(page)
  assert not errors,errors
  await ctx.close();print('Effets distincts : tir, magie, sort nommé, soins partiels et poison plafonné PASS')
 async def check_laboratory_integration(browser):
@@ -114,8 +124,8 @@ async def check_laboratory_integration(browser):
  await page.wait_for_selector('.combat-playing')
  await page.locator('[data-action="fx-speed"]').click()
  assert await page.locator('[data-action="fx-speed"]').inner_text()=='×2'
- await page.locator('[data-action="fx-skip"]').click();await idle(page)
- assert await page.evaluate("({atk:battle.board[0][1].atk,hp:battle.board[0][1].hp,block:battle.board[0][1].labGuard.block})")=={'atk':5,'hp':10,'block':3}
+ await skip_if_playing(page);await idle(page)
+ assert await page.evaluate("({atk:battle.board[0][1].atk,hp:battle.board[0][1].hp,rarity:battle.board[0][1].rarity,legacy:Boolean(battle.board[0][1].labGuard)})")=={'atk':4,'hp':10,'rarity':'divine','legacy':False}
  await page.locator('[data-action="end-turn"]').click();await page.wait_for_selector('.combat-playing')
  await page.locator('[data-action="lab-back"]').first.click()
  assert await page.locator('.developer-lab').count()==1
@@ -124,19 +134,73 @@ async def check_laboratory_integration(browser):
  await page.locator('[data-action="lab-start"]').click()
  await page.evaluate("()=>{battle.heroes.p.hand=[{id:'militia',wait:0}];battle.heroes.e.hand=[];battle.heroes.e.deck=[];playPlayerCard(battle,0,0,1);battle.board[0][10]=battle.board[0][1];battle.board[0][1]=null;battle.heroes.e.hp=1;battle.heroes.e.shield=0;render()}")
  await page.locator('[data-action="end-turn"]').click();await page.wait_for_selector('.combat-playing')
- await page.locator('[data-action="fx-skip"]').click();await idle(page)
+ await skip_if_playing(page);await idle(page)
  await page.locator('.modal').wait_for()
  assert 'TEST TERMINÉ' in await page.locator('.modal').inner_text()
  assert await page.evaluate('battle.status')=='victory'
  await page.locator('.modal [data-action="lab-exit"]').click()
  assert await page.evaluate("[localStorage.getItem('couronnes_arcanes_v1'),localStorage.getItem('couronnes_arcanes_bataille_v1')]")==snapshot
  assert not errors,errors
- await ctx.close();print('Effets + laboratoire : Milicien Divin II, vitesse, passage, sortie pendant lecture et victoire sans sauvegarde PASS')
+ await ctx.close();print('Effets + laboratoire : Milicien Divin niveau 2, vitesse, passage, sortie pendant lecture et victoire sans sauvegarde PASS')
+async def check_cross_lane_guard(browser,label,viewport,reduced=False,off=False):
+ ctx=await browser.new_context(viewport=viewport,offline=True,reduced_motion='reduce' if reduced else 'no-preference')
+ page=await ctx.new_page();errors=[];network=[]
+ page.on('pageerror',lambda e:errors.append(str(e)))
+ page.on('request',lambda r:network.append(r.url) if r.url.startswith(('http:','https:')) else None)
+ await page.goto((ROOT/'tests/JOUER.test.html').as_uri());await page.locator('[data-action="welcome-start"]').click()
+ await page.evaluate(SETUP)
+ await page.evaluate("""()=>{
+  battle.board[0][4]=null;battle.board[0][5]=null;
+  battle.board[0][10]={uid:900,id:'bone',side:'p',atk:5,hp:20,maxhp:20,armor:0,ranged:false,ability:'none',stun:0,poison:0,poisonTurns:0};
+  battle.board[1][9]={uid:901,id:'shield',rarity:'éveillée',side:'e',atk:2,hp:13,maxhp:13,armor:2,ranged:false,ability:'armor',stun:99,poison:0,poisonTurns:0};
+  persistBattle();render();
+ }""")
+ if off:await page.locator('[data-action="toggle-animations"]').click()
+ await page.locator('[data-action="end-turn"]').click()
+ if not reduced and not off:
+  await page.wait_for_selector('.combat-playing')
+  projection=await page.evaluate("""()=>{
+   const position=s=>{const e=document.querySelector(s)?.closest('.battle-cell');return e?[e.dataset.lane,e.dataset.col]:null;};
+   return {source:position('.fx-source'),target:position('.fx-target'),label:document.querySelector('.combat-action')?.textContent,paths:document.querySelectorAll('.combat-fx-path').length};
+  }""")
+  assert projection['source']==['0','10'],projection
+  assert projection['target']==['1','9'],projection
+  assert 'Porte-égide' in projection['label'],projection
+  assert '−3 PV' in projection['label'],projection
+  assert projection['paths']==1,projection
+  saved=json.loads(await page.evaluate('(k)=>localStorage.getItem(k)',KEY))
+  assert saved['board'][1][9]['hp']==10 and saved['heroes']['e']['hp']==100 and 'vfx' not in saved
+  await page.screenshot(path=f'/tmp/ca-guard-{label}.png')
+  await skip_if_playing(page)
+ await page.wait_for_function('battle.round===2');await idle(page)
+ state=await page.evaluate('({hp:battle.board[1][9].hp,uid:battle.board[1][9].uid,crown:battle.heroes.e.hp,attacker:battle.board[0][10].hp})')
+ assert state=={'hp':10,'uid':901,'crown':100,'attacker':20},state
+ await page.reload();await idle(page)
+ assert await page.evaluate('battle.board[1][9].hp')==10
+ assert await page.locator('[data-unit-id="901"]').evaluate('(e)=>[e.closest(".battle-cell").dataset.lane,e.closest(".battle-cell").dataset.col]')==['1','9']
+ assert not errors,errors
+ assert not network,network
+ await ctx.close();print(f'Garde {label}: attaque interligne, ancres exactes, dégâts, couronne, reprise et hors ligne PASS')
+
+async def check_skip_while_active(browser):
+ ctx=await browser.new_context(viewport={'width':1366,'height':900},offline=True)
+ page=await ctx.new_page()
+ await page.goto((ROOT/'tests/JOUER.test.html').as_uri());await page.locator('[data-action="welcome-start"]').click()
+ await page.evaluate(SETUP);await page.locator('[data-action="end-turn"]').click()
+ await page.wait_for_selector('.combat-playing')
+ assert await skip_if_playing(page),'le bouton doit arrêter une lecture encore active'
+ await page.wait_for_function('battle.round===2');await idle(page)
+ assert await page.locator('[data-action="end-turn"]').is_enabled()
+ assert await page.evaluate('battle.board[0][5]===null')
+ await ctx.close();print('Passer : contrôle actif réellement déclenché, résultat conservé et commandes rétablies PASS')
+
 async def main():
  async with async_playwright() as pw:
   b=await pw.chromium.launch(headless=True,args=['--no-sandbox'])
   for label,vp,reduce,off in [('desktop',{'width':1366,'height':900},False,False),('portrait',{'width':390,'height':844},False,False),('landscape',{'width':844,'height':390},False,False),('reduced',{'width':390,'height':844},True,False),('off',{'width':1366,'height':900},False,True)]:
    await run(b,label,vp,reduce,off)
+   await check_cross_lane_guard(b,label,vp,reduce,off)
+  await check_skip_while_active(b)
   await check_effect_types(b)
   await check_laboratory_integration(b)
   await b.close()

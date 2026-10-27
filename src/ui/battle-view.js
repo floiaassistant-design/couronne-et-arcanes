@@ -1,6 +1,7 @@
+import {cardPresentation} from './card-presentation.js';
 import {spellSelection,spellCardState,spellTargetingUI} from './spell-targeting.js';
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
-import { CARDS, FACTIONS, CLASSES, cardTraits } from '../data.js';
+import { CARDS, FACTIONS, CLASSES } from '../data.js';
 import { AI_STYLES, aiStyle, aiEnraged } from '../ai.js';
 import { silenced, teleportPlan, controlTargetError } from '../engine/battle-control.js';
 import { TALENT_TREE } from '../talents.js';
@@ -22,12 +23,12 @@ export function createBattleView(getState, { btn, cardUI, esc }) {
   function battleUnit(u, lane) {
     const silent = silenced(battle, u),
       remaining = silent ? u.silenceUntil - battle.round + 1 : 0;
-    const card = u ? CARDS[u.id] : null;
     const concord = u ? formationBonus(battle, lane, u) : 0;
     const rallied = u && u.rallyUntil >= battle.round ? 1 : 0;
     const targeting=selection?spellCardState(selection,u.uid):null;
     const attack = u ? u.atk + concord + rallied : 0;
-    return `<div class="unit-on-board ${u.side === 'e' ? 'enemy' : 'ally'} ${silent ? 'silenced' : ''}" data-actor-id="${u.uid}" data-facing="${u.side === 'p' ? 'right' : 'left'}" data-animation-state="idle" data-owner="${u.side}" data-rarity="${esc(card.rarity)}" style="--tone:${FACTIONS[card.faction].tone}" data-unit-summary="${u.side === 'p' ? 'Votre unité' : 'Unité adverse'} · ${esc(FACTIONS[card.faction].name)} · ${esc(card.rarity)} · ${esc(card.name)} · ${esc(cardTraits(u.id).join(', '))} · Attaque ${attack}${concord ? ' (dont +1 Concorde)' : ''}${rallied ? ' (dont +1 Ralliement)' : ''} · PV ${u.hp}/${u.maxhp}${u.barrier ? ' · Barrière ' + u.barrier : ''}${silent ? ' · Silence : ' + remaining + ' résolution(s)' : ''}">${silent ? `<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>` : ''}${boardCard(u, attack, selection?{...targeting,lane}:null,battle.round,!!concord)}</div>`;
+    const card=cardPresentation(u,{unit:u,stats:{atk:attack,hp:u.hp,maxhp:u.maxhp}}).card;
+    return `<div class="unit-on-board ${u.side === 'e' ? 'enemy' : 'ally'} ${silent ? 'silenced' : ''}" data-actor-id="${u.uid}" data-facing="${u.side === 'p' ? 'right' : 'left'}" data-animation-state="idle" data-owner="${u.side}" data-rarity="${esc(card.rarity)}" style="--tone:${FACTIONS[card.faction].tone}" data-unit-summary="${u.side === 'p' ? 'Votre unité' : 'Unité adverse'} · ${esc(FACTIONS[card.faction].name)} · ${esc(card.rarity)} · ${esc(card.name)} · ${esc(card.description)} · Attaque ${attack}${concord ? ' (dont +1 Concorde)' : ''}${rallied ? ' (dont +1 Ralliement)' : ''} · PV ${u.hp}/${u.maxhp}${u.barrier ? ' · Barrière ' + u.barrier : ''}${silent ? ' · Silence : ' + remaining + ' résolution(s)' : ''}">${silent ? `<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>` : ''}${boardCard(u, attack, selection?{...targeting,lane}:null,battle.round,!!concord)}</div>`;
   }
 
   function battleCell(u, lane, col, visualLane = null) {
@@ -82,9 +83,9 @@ export function createBattleView(getState, { btn, cardUI, esc }) {
  <p class="arena-scroll-hint">Sur petit écran, faites glisser le plateau pour voir toutes les cases. Les couronnes sont hors de la grille.</p><div class="vfx-controls"><span>Attaques, déplacements et effets du combat.</span><button type="button" class="vfx-toggle" data-action="toggle-animations" aria-pressed="${animationsEnabled}">${animationsEnabled ? '✦ ' : ''}Animations ${animationsEnabled ? 'activées' : 'désactivées'}</button></div>
  ${battle.mode === 'dungeon' ? `<div class="dungeon-battle-banner">♛ DONJON · ${battle.dungeonBonus ? 'Épreuve bonus' : 'Salle ' + (battle.dungeonStage + 1) + '/3'} · Les PV du héros sont conservés entre les combats (+6 PV après victoire).</div>` : ''}
  <p class="control-tip">⊘ Silence : capacités déclenchées suspendues, attaques et traits passifs conservés. ✧ Téléportation : autre ligne, même colonne. ⌁ Pièges publics : déclenchés à l’arrivée d’un ennemi, deux par camp. ◷ Tempo : accélérez vos cartes ou ralentissez une carte adverse.</p>${preview ? `<p class="teleport-preview" role="status">${preview}</p>` : ''}
- <p class="formation-tip">✦ CONCORDE : deux alliés du même Ordre sur la même ligne gagnent chacun +1 attaque ; leur emblème s’éclaire. ⚡ CHARGE : +2 attaque après déplacement. ↶ RIPOSTE : 2 dégâts avant armure, une fois par tour au contact.</p>
+ <p class="formation-tip">✦ CONCORDE : deux alliés du même Ordre sur la même ligne gagnent chacun +1 attaque ; leur emblème s’éclaire. ⚡ Charge après déplacement · ↶ Riposte au contact. Valeurs et fréquence sur la fiche de chaque version.</p>
  <div class="battle-tip"><span>← VOTRE COURONNE · VOS UNITÉS AVANCENT →</span><span>← L’ENNEMI AVANCE · COURONNE ADVERSE →</span></div>
- ${immersive ? '' : '</section>'}<div class="combat-hand-dock" role="region" aria-label="Main de cartes et actions de combat"><div class="hand-panel"><div class="combat-hand-tray"><div class="hand-header"><div><div class="section-caption">Votre main · ${p.hand.length} cartes</div><div class="selection-guide">${selectedCard >= 0 ? (selection?'✦ Sort sélectionné : cliquez une cible, puis confirmez.':'✦ Carte sélectionnée : choisissez une des trois premières cases libres.') : 'Survolez pour lire ; cliquez pour sélectionner puis choisissez une case de départ.'}</div></div><span class="pill">${p.cardsPlayed}/2 jouées</span></div><div class="hand">${p.hand.map((c, i) => cardUI(c.id, { compact: true, index: i, select: selectedCard === i, cooldown: c.wait })).join('') || '<div class="hint">Votre main est vide. Terminez le tour.</div>'}</div></div>
+ ${immersive ? '' : '</section>'}<div class="combat-hand-dock" role="region" aria-label="Main de cartes et actions de combat"><div class="hand-panel"><div class="combat-hand-tray"><div class="hand-header"><div><div class="section-caption">Votre main · ${p.hand.length} cartes</div><div class="selection-guide">${selectedCard >= 0 ? (selection?'✦ Sort sélectionné : cliquez une cible, puis confirmez.':'✦ Carte sélectionnée : choisissez une des trois premières cases libres.') : 'Survol : lire. Toucher : lire, puis retoucher pour sélectionner.'}</div></div><span class="pill">${p.cardsPlayed}/2 jouées</span></div><div class="hand">${p.hand.map((c, i) => cardUI(c.id, { compact: true, index: i, select: selectedCard === i, cooldown: c.wait })).join('') || '<div class="hint">Votre main est vide. Terminez le tour.</div>'}</div></div>
  ${battleActions(immersive)}</div></div>${immersive ? '</section>' : ''}${inspectionPanel}</div>`;
   }
 

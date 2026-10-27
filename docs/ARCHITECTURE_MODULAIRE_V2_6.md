@@ -1,3 +1,79 @@
+## Revue Aube — étape 6 terminée, PR 53 en brouillon
+
+[Revue du 27 octobre 2026](REVUE_AUBE_PR53_2026_10_27.md) : mêmes sources web
+et export, 51 modules sans cycle. Les six étapes sont terminées ; les évolutions
+restent réservées au laboratoire, sans obtention ni activation en aventure.
+Les sections suivantes retracent les étapes de l'architecture.
+
+## Présentation commune Aube — étape 5, PR 53 en brouillon
+
+`ui/card-presentation.js` porte le modèle de lecture et le rendu de fiche partagés.
+Il lit le registre et les calculs du moteur, avec les chiffres des instantanés
+pour le plateau. `cards/ability-text.js` dérive les formats bref/détaillé.
+`card-inspection.js` est le seul lecteur DOM pour les cartes et références de
+cartes de tous les écrans. Le rendu et le contrôleur séparés de Collection sont
+remplacés par un adaptateur vers ce modèle commun ; `generated-card.js` conserve
+les illustrations et leurs zones exactes. Pas de nouvelle règle ni de migration.
+[Contrat et interactions](AUBE_PRESENTATION.md).
+
+## Moteur Aube et laboratoire — étape 4 terminée, 26 octobre 2026
+
+Le registre reste la seule saisie des paramètres. `resolveRulesDefinition`
+est une projection immuable des règles futures, natives Aube comprises ; le
+marqueur explicite `cardRules` protège les anciens instantanés sans migration.
+`engine/unit-rules.js` partage références, pose autorisée, portée, déplacement,
+Charge, Perforation et Vol entre combat, IA et statistiques.
+
+`engine/unit-support.js` porte les sélecteurs et résolutions d'arrivée et de
+soutien : soins proportionnels sur plusieurs lignes, Inspiration, barrière
+après soin, Commandement et Intervention. Les frappes principales et secondaires
+restent dans `battle.js`, qui injecte les mêmes dégâts dans tous ces effets.
+`battle-defense.js` préserve les barrières de capacités lors d'un sort sans
+modifier le plafond individuel de celui-ci. Aucun moteur parallèle ou DOM.
+
+Le laboratoire lit le registre et `versionUnitStats`, avec niveaux indépendants
+0–3 ; son ancien calcul pilote est retiré. L'IA lit les mêmes statistiques et
+paramètres des unités versionnées, sans accès aux cartes privées du joueur.
+`cards/ability-text.js` rend des libellés dérivés pour le laboratoire ; le rendu
+universel de tous les écrans appartient à l'étape 5. Pas de nouvelle dépendance,
+CSS ou image. [Contrat d'exécution](AUBE_MOTEUR.md).
+
+## Défenses versionnées — étape 3 terminée, 26 octobre 2026
+
+`engine/battle-defense.js` extrait la résolution de dégâts et Riposte de
+`battle.js` et partage les mêmes appels entre sorts, pièges, attaques et pouvoirs.
+Les règles futures se lisent par `cards/definitions.js:versionUnitAbilities`,
+sans copie de paramètres dans le moteur. Le contrôle de silence lit cette
+même API pour reconnaître une Riposte future hors des IDs historiques.
+Le graphe reste dirigé vers les données et sans cycle ; aucun DOM dans le moteur.
+
+`engine/guard-candidates.js` énumère l'éligibilité positionnelle, de ligne
+ou de toutes lignes et sélectionne un seul gardien. `FUTURE_GUARD_POLICY`,
+dans `cards/abilities.js`, porte la priorité et la fréquence validées : même
+ligne, proximité de sa couronne, ligne/uid ; interceptions tant qu'il vit.
+`battle.js` réévalue ce choix à chaque frappe et conserve la priorité historique
+si aucune nouvelle Garde n'est éligible. Les événements interlignes emploient
+`fromLane` et la vraie ligne de cible, déjà reconnus par le lecteur commun.
+Aucune Riposte interligne ou déplacement réel du gardien n'est créé. Les fonctions de barrière gardent
+un plafond par effet et ne diminuent pas une protection déjà présente.
+Les instantanés explicitement versionnés utilisés par les tests gardent leurs
+quotas ; la pose de versions futures reste interdite. Aucun écran ou catalogue
+économique ajouté. [Règles exécutées et limites](AUBE_DEFENSES.md).
+
+## Versions de rareté — préparation sur la branche Aube
+
+`cards/schema.js` porte les identifiants et l'immuabilité ; `cards/aube.js` les
+gains validés par rareté ; `cards/abilities.js` les capacités structurées et leur
+héritage ; `cards/definitions.js` le résolveur par ID historique et rareté.
+La dépendance va du moteur vers ce registre, puis vers les données natives,
+jamais vers le DOM ou le stockage. `unit-stats.js` partage les additions de
+bonus entre natif et prévision de version. Le point d'entrée de pose refuse les
+versions dont les pouvoirs ne sont pas intégrés, sans consommation.
+Le catalogue économique et les schémas sauvegardés restent inchangés.
+Ces modules sont embarqués par découverte d'imports ; aucun second moteur ni
+nouvel écran actif. [API et limites actuelles](AUBE_VERSIONS.md).
+Cette préparation appartient à la PR Aube en brouillon et n'est pas sur main.
+
 ## Collection intégrée — PR nº 48 fusionnée (25 octobre 2026)
 
 `ui/collection.js` garde le catalogue en lecture seule : six cellules par unité et un lecteur `bindCollectionHover` éphémère, déclenché par événements délégués souris, clavier ou tactile. La fiche compacte vit sur `document.body` afin de ne pas être rognée par le défilement horizontal. `app.js` la ferme lors des rerendus ; les chiffres existants viennent de `unitStats`, le bonus de `ui/concorde.js`, et les évolutions futures n'inventent aucune donnée. `assets/collection.css` est inclus dans l'unique `JOUER.html` généré. Aucun nouveau module, état sauvegardé, calcul moteur ou dépendance. `tests/browser_collection.py` vérifie les gestes et l'absence de l'ancien bouton.

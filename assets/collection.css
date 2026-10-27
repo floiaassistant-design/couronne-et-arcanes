@@ -56,14 +56,14 @@ body.collection-mode #view{max-width:none;padding:0 0 36px;min-width:0}
 .collection-card-visual[data-collection-preview]:hover>.unit-card,
 .collection-card-visual[data-collection-preview]:focus-visible>.unit-card{box-shadow:inset 0 0 0 1px #b3965733,0 0 0 2px #ffedb477,0 4px 12px #0008}
 .collection-hover-inspection:not([hidden]){
- position:fixed;z-index:80;display:flex;flex-direction:column;
- width:min(312px,calc(100vw - 24px));max-height:calc(100dvh - 24px);
- overflow:hidden;pointer-events:none;border:1px solid #cfb47b;border-radius:12px;
+ position:fixed;z-index:1100;display:flex;flex-direction:column;
+ width:min(312px,calc(100vw - 24px));max-height:var(--preview-max-height,calc(100dvh - 24px));
+ overflow:hidden;pointer-events:auto;border:1px solid #cfb47b;border-radius:12px;
  background:linear-gradient(135deg,#234154,#102737 44%,#0a1a2b);
  box-shadow:0 12px 38px #020711b8,0 0 0 3px #07121dcc;
  color:#fff0d2;font:12px/1.4 system-ui,sans-serif;
 }
-.collection-hover-inspection .card-preview{max-height:calc(100dvh - 26px)}
+.collection-hover-inspection .card-preview{max-height:var(--preview-max-height,calc(100dvh - 26px))}
 .collection-hover-inspection .inspection-heading{padding:10px 13px 6px;min-height:28px}
 .collection-hover-inspection .inspection-feature{grid-template-columns:90px minmax(0,1fr);gap:10px;padding:4px 12px 11px}
 .collection-hover-inspection .inspection-art{width:90px;height:134px}
@@ -91,3 +91,8 @@ body.collection-mode #view{max-width:none;padding:0 0 36px;min-width:0}
 }
 @media(pointer:coarse){.collection-card-actions .btn{min-width:44px;min-height:44px}.collection-table-scroll{scroll-snap-type:x proximity}}
 @media(prefers-reduced-motion:reduce){.collection-screen *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.collection-version.known-version .generated-card-image{opacity:1}
+.collection-version.unknown-version .generated-card-image{opacity:.5;filter:grayscale(.8)!important}
+.collection-version.unknown-version .unit-card{opacity:.8}
+.collection-possession{flex-wrap:wrap;text-align:center}

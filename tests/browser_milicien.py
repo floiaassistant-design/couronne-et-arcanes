@@ -30,8 +30,8 @@ async def run(browser,label,vp):
     before=await page.evaluate('JSON.stringify(profile)')
     await image_exact(row.locator('[data-current-version="true"] .generated-face'))
     assert await row.locator('.generated-face').count()==6
-    assert await row.locator('[data-current-version="false"] .stat.hp b').all_inner_texts()==['—']*5
-    # La fiche ne possède plus de bouton ni de carte dupliquée : survol ou toucher.
+    assert await row.locator('[data-current-version="false"] .stat.hp b').all_inner_texts()==['5','5','8','8','8']
+    # La fiche commune se consulte au survol ou au toucher, sans bouton pour l’ouvrir.
     preview=row.locator('[data-current-version="true"] [data-collection-preview]')
     if label=='desktop':
         await preview.hover()
@@ -40,7 +40,7 @@ async def run(browser,label,vp):
     popup=page.locator('#collection-hover-inspection')
     assert await popup.is_visible()
     assert await preview.get_attribute('aria-expanded')=='true'
-    image=popup.locator('.inspection-art')
+    image=popup.locator('.inspection-art,.generated-card-image').first
     await image.evaluate('(e)=>e.decode()')
     assert await image.evaluate('(e)=>[e.naturalWidth,e.naturalHeight]')==[768,1152]
     src=await image.get_attribute('src')

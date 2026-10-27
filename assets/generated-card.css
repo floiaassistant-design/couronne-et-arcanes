@@ -20,7 +20,7 @@
 .collection-version:has(.generated-template) .collection-delay{display:none}
 .collection-version .unit-card.generated-template{border-width:2px;height:auto;align-self:start;width:100%}
 .collection-version .generated-face .card-detail{min-height:0!important}
-.collection-version.future-version .generated-face .generated-card-image{opacity:.68}
+.collection-version.unknown-version .generated-face .generated-card-image{opacity:.68}
 .collection-inspection-card:has(.generated-template){max-width:min(330px,calc((100dvh - 230px)*2/3))}
 .collection-inspection-card .unit-card.generated-template{max-height:none;overflow:visible}
 .card-combat-mode .board-card.generated-board::after{display:none}
@@ -32,11 +32,11 @@
 .card-combat-mode .board-card.generated-board .generated-face:is([data-generated-layout="sylve"],[data-generated-layout="ombre"],[data-generated-layout="forge"],[data-generated-layout="ether"]) .stat b{font-size:14cqw!important}
 .card-combat-mode [data-card-layout=true] .unit-card.generated-template.hand-card{flex-basis:calc(var(--tray-height)*.55);width:calc(var(--tray-height)*.55)}
 .unit-card.generated-template.hand-card .generated-face{max-height:100%}
-.illustrated-inspection .inspection-feature.inspection-generated-feature{display:block;padding:0 12px 8px}
-.inspection-generated-feature>.generated-face{width:min(220px,calc((var(--preview-max-height,100dvh) - 230px)*2/3));margin:0 auto 8px}
-.inspection-generated-feature .inspection-identity{display:block;padding:0}
+.illustrated-inspection .inspection-feature.inspection-generated-feature{display:grid;grid-template-columns:90px minmax(0,1fr);gap:10px;padding:0 12px 10px}
+.inspection-generated-feature>.generated-face{width:90px;max-width:100%;margin:0}
+.inspection-generated-feature .inspection-identity{display:flex;gap:5px;padding:0}
 .inspection-generated-feature .inspection-identity h2{font-size:15px;margin-bottom:4px}
-.inspection-generated-feature .inspection-order,.inspection-generated-feature .inspection-rarity,.inspection-generated-feature .inspection-readiness{display:inline;font-size:10px;margin-right:6px}
+.inspection-generated-feature .inspection-order,.inspection-generated-feature .inspection-rarity,.inspection-generated-feature .inspection-readiness{display:block;font-size:10px;margin-right:6px}
 .inspection-generated-feature .inspection-stats{margin-top:5px}
 @media(prefers-reduced-motion:reduce){.generated-face *{animation:none!important;transition:none!important}}
 

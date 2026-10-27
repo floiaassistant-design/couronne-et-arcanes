@@ -1,6 +1,6 @@
+import {cardPreviewAttributes} from './ui/card-presentation.js';
 import {createSpellController} from './ui/spell-controller.js';
 import {esc} from './ui/markup.js';
-import {bindCollectionHover} from './ui/collection.js';
 import {createViews} from './ui/views.js';
 import {developerLabUI} from './ui/developer-lab.js';
 import {freshLab,editLabDeck,setLabLevel,setLabRarity,createLabBattle} from './engine/developer-lab.js';
@@ -21,8 +21,7 @@ const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='aube',collectionOwned=false;
 let displayBattle=null,combatReport=null;
 let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null,developer=null;
-const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({battle:displayBattle||battle,screen:isBattleFxPlaying()||CARDS[battle?.heroes.p.hand[selectedCard]?.id]?.type==='sort'?'resolving':screen}),esc);
-const closeCollectionHover=bindCollectionHover(()=>({profile,screen}),esc);
+const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({profile,developer,battle:displayBattle||battle,screen:isBattleFxPlaying()?'resolving':screen}),esc);
 const {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying}=createCombatFx(()=>({animationsEnabled,screen}));
 const {spellState,handleSpell,resetSpell}=createSpellController(()=>({battle,selectedCard}),{refresh:()=>render(),launch:(index,lane)=>withBattleFx(()=>playPlayerCard(battle,index,lane)),closeInspection:()=>closeCardInspection(true)});
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
@@ -79,8 +78,9 @@ function cancelEnemyTimer(){if(enemyTimer!==null)clearTimeout(enemyTimer);enemyT
 
 function num(n){return Math.round(n).toLocaleString('fr-FR');}
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2900);}
-function showModal(html){$('modal-root').innerHTML=`<div class="modal-backdrop"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;}
-function hideModal(){$('modal-root').innerHTML='';}
+function showModal(html){closeCardInspection(true);$('modal-root').innerHTML=`<div class="modal-backdrop"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;}
+function hideModal(){closeCardInspection(true);$('modal-root').innerHTML='';}
+const cardName=(id,context)=>`<span ${cardPreviewAttributes(id,CARDS[id].rarity,context,esc)}>${esc(CARDS[id].name)}</span>`;
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une case de départ sur une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
 function render({frameUpdate=false}={}){
  if(!frameUpdate){stopBattleFx();displayBattle=null;}
@@ -91,7 +91,6 @@ function render({frameUpdate=false}={}){
  const handScroll=document.querySelector('.combat-hand-dock .hand')?.scrollLeft||0;
  const stageScroll=document.querySelector('.combat-stage')?.scrollTop||0;
  closeCardInspection(true,'render');
- closeCollectionHover();
  document.body.classList.toggle('animations-off',!animationsEnabled);
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
  $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
@@ -138,11 +137,11 @@ function settle({deferModal=false}={}){
    <p>${victory?reward.finished?'Le boss final est vaincu. Vous avez terminé cette expédition.':reward.choicePending?`Votre souverain reprend son souffle : ${reward.retainedHp} PV. Choisissez une halte avant la prochaine salle.`:`Épreuve remportée : ${reward.retainedHp} PV conservés pour la prochaine salle.`:'Le donjon s’achève ici. Les ressources remportées lors des salles précédentes sont conservées.'}</p>
    <div class="stat-row"><div class="stat-box"><strong>+${reward.gold}</strong><small>Or</small></div><div class="stat-box"><strong>+${reward.shards}</strong><small>Éclats</small></div></div>
    ${reward.heroXp?`<p class="gold">♛ +${reward.heroXp} XP de héros${reward.levelAfter>reward.levelBefore?` · Niveau ${reward.levelAfter} atteint !`:''}${reward.mastered?.length?` · ${reward.mastered.length} carte(s) ont progressé en maîtrise`:''}</p>`:''}
-   ${reward.card?`<p class="gold">✦ Première victoire : ${esc(CARDS[reward.card].name)} obtenue !</p>`:''}
+   ${reward.card?`<p class="gold">✦ Première victoire : ${cardName(reward.card,'reward')} obtenue !</p>`:''}
    <div class="button-row">${victory&&!reward.finished?(reward.choicePending?btn('✦ Choisir un événement','dungeon-choice-open','','primary'):btn('⚔ Salle suivante','dungeon-next','','primary')):''}${btn('Retour aux donjons','dungeon-exit','','ghost')}</div>`);
   return;
  }
- showResult(`<div class="kicker">${victory?'VICTOIRE REMPORTÉE':'LE COMBAT EST TERMINÉ'}</div><h2>${victory?'La couronne est vôtre !':'Vos troupes se replient.'}</h2><p>${victory?`Vous avez vaincu <b>${esc(mission.enemy)}</b>. Votre armée gagne en expérience et de nouvelles terres s’ouvrent à vous.`:'Vous recevez quelques ressources pour préparer votre revanche. Modifiez votre deck et réessayez.'}</p><div class="stat-row"><div class="stat-box"><strong>+${reward.gold}</strong><small>Or</small></div>${victory?`<div class="stat-box"><strong>+${reward.shards}</strong><small>Éclats</small></div>`:''}</div>${reward.heroXp?`<p class="gold">♛ +${reward.heroXp} XP de héros${reward.levelAfter>reward.levelBefore?` · Niveau ${reward.levelAfter} atteint !`:''}${reward.mastered?.length?` · ${reward.mastered.length} progression(s) de maîtrise`:''}</p>`:''}${reward.card?`<p class="gold">✦ Nouvelle carte obtenue : ${esc(CARDS[reward.card].name)}</p>`:''}${reward.reputation?.length?`<p class="page-sub">Réputation : ${reward.reputation.map(([f,n])=>esc(FACTIONS[f].short)+' +'+n).join(' · ')}</p>`:''}<div class="button-row">${btn(battle.mode==='tower'?'Retour à la Tour':'Continuer la campagne','battle-exit','','primary')}${btn('Modifier mon deck','battle-deck','','ghost')}</div>`);
+ showResult(`<div class="kicker">${victory?'VICTOIRE REMPORTÉE':'LE COMBAT EST TERMINÉ'}</div><h2>${victory?'La couronne est vôtre !':'Vos troupes se replient.'}</h2><p>${victory?`Vous avez vaincu <b>${esc(mission.enemy)}</b>. Votre armée gagne en expérience et de nouvelles terres s’ouvrent à vous.`:'Vous recevez quelques ressources pour préparer votre revanche. Modifiez votre deck et réessayez.'}</p><div class="stat-row"><div class="stat-box"><strong>+${reward.gold}</strong><small>Or</small></div>${victory?`<div class="stat-box"><strong>+${reward.shards}</strong><small>Éclats</small></div>`:''}</div>${reward.heroXp?`<p class="gold">♛ +${reward.heroXp} XP de héros${reward.levelAfter>reward.levelBefore?` · Niveau ${reward.levelAfter} atteint !`:''}${reward.mastered?.length?` · ${reward.mastered.length} progression(s) de maîtrise`:''}</p>`:''}${reward.card?`<p class="gold">✦ Nouvelle carte obtenue : ${cardName(reward.card,'reward')}</p>`:''}${reward.reputation?.length?`<p class="page-sub">Réputation : ${reward.reputation.map(([f,n])=>esc(FACTIONS[f].short)+' +'+n).join(' · ')}</p>`:''}<div class="button-row">${btn(battle.mode==='tower'?'Retour à la Tour':'Continuer la campagne','battle-exit','','primary')}${btn('Modifier mon deck','battle-deck','','ghost')}</div>`);
 }
 function openDeveloper(){
  if(developer){screen='developer';render();return;}
@@ -246,7 +245,7 @@ case 'lab-open':openDeveloper();break;
   const proposal=proposeDeck(profile,id);
   if(!proposal.ok){toast(proposal.reason);break;}
   const counts=proposal.overview.counts;
-  showModal(`<div class="kicker">COMPOSITION PROPOSÉE</div><h2>${esc(DECK_STYLES[id].name)}</h2><p>${esc(DECK_STYLES[id].description)} ${proposal.overview.total} cartes dont ${proposal.overview.units} unités et ${proposal.overview.spells} sorts. Aucune carte ne sera créée ou dépensée.</p><div class="deck-preview-list">${Object.entries(counts).map(([cardId,count])=>`<div><b class="gold">${count}×</b> ${esc(CARDS[cardId].name)}</div>`).join('')}</div><p class="hint">Votre deck actuel (${profile.deck.length} cartes) sera remplacé. Confirmez uniquement si cette composition vous convient ; les cartes restent dans votre collection.</p><div class="button-row">${btn('Appliquer cette composition','deck-apply',`data-id="${id}"`,'primary')}${btn('Annuler','close-modal','','ghost')}</div>`);
+  showModal(`<div class="kicker">COMPOSITION PROPOSÉE</div><h2>${esc(DECK_STYLES[id].name)}</h2><p>${esc(DECK_STYLES[id].description)} ${proposal.overview.total} cartes dont ${proposal.overview.units} unités et ${proposal.overview.spells} sorts. Aucune carte ne sera créée ou dépensée.</p><div class="deck-preview-list">${Object.entries(counts).map(([cardId,count])=>`<div><b class="gold">${count}×</b> ${cardName(cardId,'deck')}</div>`).join('')}</div><p class="hint">Votre deck actuel (${profile.deck.length} cartes) sera remplacé. Confirmez uniquement si cette composition vous convient ; les cartes restent dans votre collection.</p><div class="button-row">${btn('Appliquer cette composition','deck-apply',`data-id="${id}"`,'primary')}${btn('Annuler','close-modal','','ghost')}</div>`);
   break;
  }
  case 'deck-apply':{
@@ -287,7 +286,7 @@ case 'lab-open':openDeveloper();break;
  case 'extract-card':{const result=extractCard(profile,id);if(result.ok){save();render();toast(`Carte extraite : +${result.shards} éclats.`);}else toast(result.reason);break;}
  case 'card-upgrade':const up=upgradeCard(profile,id);if(up.ok){save();render();toast('Carte améliorée !');}else toast(up.reason);break;
  case 'building-upgrade':const bu=upgradeBuilding(profile,id);if(bu.ok){save();render();toast('Bâtiment amélioré !');}else toast(bu.reason);break;
- case 'buy-pack':const pack=buyPack(profile);if(!pack.ok){toast(pack.reason);break;}save();render();showModal(`<div class="kicker">PAQUET MYSTIQUE</div><h2>Trois nouvelles découvertes</h2><p>Ces cartes rejoignent votre collection. Ajoutez-les à votre deck pour les utiliser.</p><div class="three-grid">${pack.cards.map(id=>cardUI(id)).join('')}</div><div class="button-row">${btn('Voir ma collection','pack-collection','','primary')}${btn('Fermer','close-modal','','ghost')}</div>`);break;
+ case 'buy-pack':const pack=buyPack(profile);if(!pack.ok){toast(pack.reason);break;}save();render();showModal(`<div class="kicker">PAQUET MYSTIQUE</div><h2>Trois nouvelles découvertes</h2><p>Ces cartes rejoignent votre collection. Ajoutez-les à votre deck pour les utiliser.</p><div class="three-grid">${pack.cards.map(id=>cardUI(id,{previewContext:'pack'})).join('')}</div><div class="button-row">${btn('Voir ma collection','pack-collection','','primary')}${btn('Fermer','close-modal','','ghost')}</div>`);break;
  case 'pack-collection':hideModal();navigate('collection');break;
  case 'export-save':{const blob=new Blob([JSON.stringify(profile,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='couronnes_et_arcanes_sauvegarde.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Sauvegarde exportée.');break;}
  case 'import-save':$('import-file')?.click();break;

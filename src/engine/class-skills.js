@@ -1,6 +1,7 @@
 // Effets des compétences de classe : règles isolées du DOM et de la sauvegarde.
 // Les unités anciennes sans barrier/rallyUntil restent totalement compatibles.
 import {validLane} from './board.js';
+import {grantSharedBarrier} from './battle-defense.js';
 const own=(u,side)=>u&&u.hp>0&&u.side===side;
 export function classSkillAllies(b,side,lane){return b.board[lane].filter(u=>own(u,side));}
 export function classSkillEnemies(b,side,lane){
@@ -30,7 +31,7 @@ export function blessingTarget(b,side,lane){
 export function resolveClassSkill(b,side,card,lane,hit){
  const friends=classSkillAllies(b,side,lane),foes=classSkillEnemies(b,side,lane),ability=card.ability;
  if(ability==='spell_guard_wall'){
-  for(const u of friends)u.barrier=Math.min(4,(u.barrier||0)+2);
+  for(const u of friends)grantSharedBarrier(u,2,4);
  }else if(ability==='spell_guard_rally'){
   for(const u of friends)u.rallyUntil=Math.max(u.rallyUntil||0,b.round+1);
  }else if(ability==='spell_arc_freeze'){
@@ -47,7 +48,7 @@ export function resolveClassSkill(b,side,card,lane,hit){
   for(const u of friends)u.hp=Math.min(u.maxhp,u.hp+3);
  }else if(ability==='spell_cleric_bless'){
   const target=blessingTarget(b,side,lane);
-  target.barrier=Math.min(6,(target.barrier||0)+4);
+  grantSharedBarrier(target,4,6);
  }
  return 0;
 }

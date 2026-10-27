@@ -146,6 +146,9 @@
   background: linear-gradient(150deg, #21374b, #101c29);
   padding: 37px;
   max-width: 570px;
+  max-height: calc(100dvh - 34px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   width: 100%;
   box-shadow: 0 30px 100px #000a;
 }
