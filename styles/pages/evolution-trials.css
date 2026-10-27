@@ -13,8 +13,13 @@
 .trial-start .btn { min-height: 44px; }
 .trial-result-card { width: min(210px,100%); margin: 16px auto; }
 .evolution-unlock { color: var(--gold); font-size: 12px; line-height: 1.5; }
-.trial-combat-objective { margin: 5px 0 0; max-width: 600px; color: #ecd7aa; font-size: 11px; line-height: 1.4; }
+.trial-combat-objective { position: relative; flex: none; color: #ecd7aa; font-size: 11px; line-height: 1.4; }
+.trial-combat-objective summary { cursor: pointer; list-style: none; padding: 8px; min-height: 40px; display: flex; align-items: center; border: 1px solid var(--gold); border-radius: 5px; }
+.trial-combat-objective summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.trial-objective-panel { position: absolute; z-index: 25; top: calc(100% + 8px); left: 0; width: min(320px,calc(100vw - 32px)); max-height: min(250px,45dvh); overflow: auto; padding: 12px; border: 1px solid var(--gold); border-radius: 6px; background: #102637fa; box-shadow: 0 5px 20px #0009; }
+.trial-objective-panel p { margin: 0 0 8px; }
+.combat-readout:has(.spell-targeting) > .trial-combat-objective { display: none; }
 @media(max-width: 700px) {
  .trial-grid { grid-template-columns: minmax(0,1fr); }
- .trial-combat-objective { max-width: 220px; font-size: 10px; }
+ .trial-combat-objective { font-size: 10px; }
 }

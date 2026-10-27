@@ -1,6 +1,21 @@
 # AGENTS.md — Couronnes & Arcanes
 
-## Épreuves Aube — PR 55
+## Suite — objectifs personnels d’épreuve
+
+Branche `feat/objectifs-epreuves-aube`, depuis `b58ea3f0`. Lire
+[le contrat](docs/OBJECTIFS_EPREUVES.md). Nouvelle PR indépendante, aucune
+fusion autorisée pour cette suite. `engine/trial-objectives.js` centralise
+les faits comptés, les objectifs enregistrés au départ et leur lecture pure.
+`battle.js` signale seulement les attaques/interceptions résolues et les tours.
+Les compteurs sont attachés au uid et à la rareté d'un exemplaire vivant ; ne
+pas additionner plusieurs unités ni transmettre l'exploit à une réinvocation.
+Le champ facultatif `battle.trialChallenge` appartient à la bataille, pas au
+profil. Une ancienne épreuve sans ce champ garde son objectif de survie.
+`ui/evolution-trials.js` partage la fiche et le compteur de combat ; les vues
+n'attribuent rien et ne recalculent pas les exploits. Aucun chiffre/pouvoir de
+carte, deck adverse, prix ou récompense supplémentaire dans cette suite.
+
+## Épreuves Aube — intégrées par la PR 55
 
 Lire [la reprise](docs/REPRISE_EPREUVES_EVOLUTION.md) et
 [le contrat](docs/EPREUVES_EVOLUTION.md) avant de poursuivre la branche
@@ -11,7 +26,8 @@ et inventaire facultatif ; les natifs restent des chaînes d'ID. Pas de migratio
 copie offerte ou activation globale des règles Aube dans un ancien combat.
 `engine/evolution-progress.js` porte accès, création et transformation uniques.
 L'interface réutilise la clôture récupérable avec reçu avant nettoyage du combat.
-Aucune fusion/publication de la PR 55 autorisée. Main de base : `1177160856`.
+PR 55 fusionnée sur accord explicite au main `b58ea3f0` après ses deux CI réussies.
+Publication du site distincte, non vérifiée ici.
 
 ## Contrat — construction manuelle du deck
 

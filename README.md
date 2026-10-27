@@ -1,7 +1,7 @@
 # Couronnes & Arcanes
 
-> PR 55 — quatre épreuves d’évolution Aube proposées : [contrat](docs/EPREUVES_EVOLUTION.md)
-> et [reprise/vérifications](docs/REPRISE_EPREUVES_EVOLUTION.md). Pas encore fusionnées.
+> PR 55 fusionnée : quatre évolutions obtenables par épreuve. Cette branche propose
+> des [objectifs personnels et leur compteur](docs/OBJECTIFS_EPREUVES.md), dans une nouvelle PR.
 
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
 quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle.
@@ -12,9 +12,9 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 - `JOUER.html` : **unique export jouable**, complet et autonome sans réseau.
 - `tests/JOUER.test.html` : diagnostic automatisé seulement, jamais distribué.
 
-Sur cette branche, « Épreuves » annonce les conditions et récompenses de trois
-évolutions Rares, puis du Milicien Épique après le premier boss. Gagner avec le
-personnage au rang demandé encore vivant transforme un seul exemplaire et
+« Épreuves » annonce les conditions et récompenses de trois
+évolutions Rares, puis du Milicien Épique après le premier boss. Sur cette branche, accomplir son défi et gagner avec le même
+exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
 sont utilisables en campagne ; les 37 autres évolutions Aube restent au labo.
 

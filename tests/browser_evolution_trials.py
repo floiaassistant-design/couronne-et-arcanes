@@ -94,7 +94,11 @@ async def earned_flow(browser,scenario,label,viewport,*,full=False,touch=False,u
         await page.screenshot(path=f'/tmp/ca-evolution-{label}-{scenario["id"]}.png')
         await click(trial.locator('[data-action="trial-start"]'),touch)
         assert (await stored(page,BATTLE))['missionId']==scenario['id']
+        await click(page.locator('.trial-combat-objective summary'),touch)
         assert scenario['trial']['objective'] in await page.locator('.trial-combat-objective').inner_text()
+        assert f'0/{scenario["initial"]["trialChallenge"]["target"]}' in await page.locator('.trial-combat-objective summary').inner_text()
+        await page.screenshot(path=f'/tmp/ca-trial-objective-{label}-{scenario["id"]}.png')
+        await click(page.locator('.trial-combat-objective summary'),touch)
         snapshot=await stored(page,BATTLE)
         await page.reload()
         # La reprise doit être peinte avant les actions ; count() ne l'attend pas.
@@ -103,6 +107,8 @@ async def earned_flow(browser,scenario,label,viewport,*,full=False,touch=False,u
         assert await stored(page,BATTLE)==snapshot,'Le combat sauvegardé a changé pendant la reprise.'
         await replay(page,scenario,touch)
     else:await page.locator('.modal h2').filter(has_text='Évolution obtenue').wait_for()
+    target=scenario['initial']['trialChallenge']['target']
+    assert f'{target}/{target}' in await page.locator('.trial-combat-objective summary').inner_text()
     result=await stored(page)
     assert without_receipt(result)==scenario['expected'],(label,scenario['id'],result)
     assert await stored(page,BATTLE) is None
@@ -194,6 +200,15 @@ async def recovery(browser):
         assert await stored(page,BATTLE) is None
         assert not errors,errors
         await ctx.close()
+    # Une ancienne épreuve active garde ses conditions, sans nouvel objectif imposé.
+    legacy=copy.deepcopy(s['initial']);del legacy['trialChallenge']
+    ctx,page,errors,_=await case(browser,s,vp,terminal=legacy)
+    await page.locator('.trial-combat-objective summary').click()
+    assert s['trial']['legacyObjective'] in await page.locator('.trial-objective-panel').inner_text()
+    assert 'Personnage vivant' in await page.locator('.trial-objective-panel').inner_text()
+    await page.reload();assert await stored(page,BATTLE)==legacy
+    assert not errors,errors
+    await ctx.close()
     # Le boss et l'épreuve précédente sont des conditions distinctes.
     locked=copy.deepcopy(SCENARIOS[1]);locked['profile']['completed']=['01','02']
     ctx,page,errors,_=await case(browser,locked,vp)
@@ -203,7 +218,7 @@ async def recovery(browser):
     assert 'Gardien du Bosquet' in await epic.inner_text()
     assert not errors,errors
     await ctx.close()
-    print('Épreuves: échec profil, coupure après reçu, objectif manqué/défaite sans coût et verrou boss PASS',flush=True)
+    print('Épreuves: échec profil, coupure après reçu, objectif manqué/défaite sans coût, ancienne épreuve et verrou boss PASS',flush=True)
 
 async def main():
     class Quiet(SimpleHTTPRequestHandler):

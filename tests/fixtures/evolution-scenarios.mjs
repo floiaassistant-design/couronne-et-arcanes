@@ -25,7 +25,7 @@ for(const id of ['aube-militia-rare','aube-militia-epic','aube-shield-rare','aub
   }
   if(b.status==='active')throw Error('Combat sans fin');
   const next=structuredClone(profile),reward=settleEvolutionTrial(next,structuredClone(b));
-  if(reward.evolved)found={id,trial,seed,profile:structuredClone(profile),initial,terminal:b,actions,expected:next};
+  if(reward.evolved)found={id,trial:{...trial,legacyObjective:trial.objective,objective:initial.trialChallenge.text},seed,profile:structuredClone(profile),initial,terminal:b,actions,expected:next};
  }
  if(!found)throw Error('Aucun parcours complet réussi : '+id);
  const edited=structuredClone(found.expected),index=edited.deck.findIndex(ref=>ref?.id===trial.cardId&&ref.rarity===trial.to);

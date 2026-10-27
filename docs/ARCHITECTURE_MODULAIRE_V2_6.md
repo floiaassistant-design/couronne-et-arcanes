@@ -1,3 +1,14 @@
+## Objectifs personnels des épreuves — suite de la PR 55
+
+`engine/trial-objectives.js` centralise création/validation de l'objectif
+sauvegardé, comptage des faits résolus et projection du meilleur exemplaire
+vivant. `battle.js` rapporte interceptions, pertes réelles de PV à distance
+et validation des tours ; `evolution-progress.js` consulte l'objectif pour
+attribuer. Aucune dépendance DOM ni lecture de sauvegarde dans le moteur.
+`ui/evolution-trials.js` partage le compteur et la fiche compacte de combat ;
+`battle-view.js` ne recalcule aucune progression. `storage.js` valide le champ
+facultatif sans enrichir les anciens combats. [Contrat](OBJECTIFS_EPREUVES.md).
+
 ## Épreuves d'évolution — PR 55, 27 octobre 2026
 
 `evolution-trials.js` porte les quatre rencontres, conditions et transformations.

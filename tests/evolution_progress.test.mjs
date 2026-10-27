@@ -18,6 +18,10 @@ function won(p,id){
  const ref=cardReference({id:t.cardId,rarity:t.from});
  b.heroes.p.hand=[{id:t.cardId,...(typeof ref==='object'?{rarity:ref.rarity}:{}),wait:0}];
  assert.equal(playPlayerCard(b,0,0,1).ok,true);
+ // Instantané de clôture pour les tests d'attribution ; les combats complets
+ // ci-dessous atteignent les objectifs par les seules actions du moteur.
+ const q=b.trialChallenge,u=b.board[0][1];
+ if(q.metric==='firstHit')u.firstHitReductionUsed=true;else q.counts[u.uid]=q.target;
  b.status='victory';b.phase='finished';return b;
 }
 function earn(p,id){const b=won(p,id),r=settleEvolutionTrial(p,b);assert.equal(r.evolved,true,r.reason);return {b,r};}
@@ -164,7 +168,7 @@ test('Combats complets des quatre épreuves : fin et intégrité déterministes,
  for(const trial of EVOLUTION_TRIALS){
   const p=profile();if(trial.previous)earn(p,trial.previous);
   const before=JSON.stringify(p);let achieved=0;
-  for(const seed of [1,2,3,4,7,11,21,41]){
+  for(const seed of [...Array.from({length:32},(_,i)=>i+1),41]){
    const a=run(p,trial.id,seed),b=run(p,trial.id,seed);assert.deepEqual(a,b);assert.equal(JSON.stringify(p),before);
    const copy=structuredClone(p),result=settleEvolutionTrial(copy,a);if(result.evolved)achieved++;
   }

@@ -1,3 +1,8 @@
+> PR 55 fusionnée sur accord explicite au commit `b58ea3f0`, après les deux CI
+> réussies de `d20b731e` (tests `40525189206`, web `40525189091`).
+> La suite active est décrite dans [OBJECTIFS_EPREUVES.md](OBJECTIFS_EPREUVES.md).
+> Les paragraphes ci-dessous conservent le bilan de préparation de la PR 55.
+
 # Reprise — épreuves d’évolution Aube, PR 55
 
 La pause du 27 octobre a été levée par le propriétaire. Continuer sur cette

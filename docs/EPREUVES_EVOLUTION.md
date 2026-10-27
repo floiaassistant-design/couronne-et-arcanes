@@ -1,10 +1,12 @@
 # Épreuves d’évolution Aube — contrat de la PR 55
 
-Branche `feat/epreuves-evolution-aube`, depuis main `1177160856` (PR 54).
+PR 55 fusionnée sur accord explicite au commit `b58ea3f0`, après les deux CI
+réussies de la tête `d20b731e`. La [suite sur les objectifs](OBJECTIFS_EPREUVES.md)
+conserve les récompenses et les conditions des anciennes batailles.
 Le propriétaire demande de commencer l'obtention par épreuves et boss. Les
 recettes et rencontres ci-dessous sont proposées dans cette PR ; elles ne
 constituent pas une nouvelle validation inscrite dans Notion. Aucune écriture
-Notion, fusion ou publication effectuée pour ce pilote.
+Notion. La publication du site reste distincte de la fusion.
 
 ## Parcours et récompenses
 
@@ -16,8 +18,9 @@ Notion, fusion ou publication effectuée pour ce pilote.
 | Le rempart du Bosquet | Mission 03 et première épreuve du Milicien terminées | Milicien Rare → Épique |
 
 Posséder un exemplaire du rang de départ et l'inclure dans un deck valide.
-Remporter la bataille avec au moins une unité alliée correspondante, à ce rang
-exact, encore vivante. Une carte dans la main ou une unité ennemie ne suffit pas.
+Objectif original de la PR 55 : remporter la bataille avec au moins une unité
+alliée correspondante, à ce rang exact, encore vivante. Les nouveaux départs
+sur la branche suivante demandent aussi le défi personnel décrit dans son contrat. Une carte dans la main ou une unité ennemie ne suffit pas.
 Les conditions et la récompense garantie sont annoncées avant le combat.
 
 La première réussite transforme un seul exemplaire et remplace un slot

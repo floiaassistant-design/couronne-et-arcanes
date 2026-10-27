@@ -1,4 +1,12 @@
-## Proposé — épreuves d’évolution Aube, PR 55 (27 octobre 2026)
+## Proposé — objectifs personnels des épreuves (27 octobre 2026)
+
+- Défis propres aux quatre versions de départ, avec victoire et survie du même
+  exemplaire ; compteur visible et fiche dans le combat.
+- Comptage par uid, sans somme entre copies ni héritage lors d'une réinvocation ;
+  reprise des compteurs et conditions d'origine conservées pour les anciennes épreuves.
+- Aucun changement de carte, rencontre, prix ou butin. [Contrat](docs/OBJECTIFS_EPREUVES.md).
+
+## Fusion autorisée — épreuves d’évolution Aube, PR 55 (27 octobre 2026)
 
 - Quatre épreuves à récompense annoncée et unique : un exemplaire transformé,
   slot conservé, aucune consommation sur défaite/objectif manqué. Le premier
@@ -9,7 +17,7 @@
   l'écrasement d'une récompense en attente et absence de double attribution.
 - 432 tests réussis, 60 scénarios historiques identiques ; vérification finale
   navigateur réussie (bureau, portrait, paysage, HTTP/hors réseau, coupures). [Contrat](docs/EPREUVES_EVOLUTION.md) et
-  [résultats](docs/REPRISE_EPREUVES_EVOLUTION.md). Aucune fusion/publication.
+  [résultats](docs/REPRISE_EPREUVES_EVOLUTION.md). Fusion `b58ea3f0`, après les deux CI réussies. Publication distincte.
 
 ## Fusion autorisée — construction manuelle du deck, PR 54 (27 octobre 2026)
 

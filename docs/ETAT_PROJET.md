@@ -1,22 +1,28 @@
 # État courant — 27 octobre 2026
 
-## PR 55 — épreuves d’évolution Aube proposées
+## Objectifs personnels — suite proposée
 
-Branche `feat/epreuves-evolution-aube`, base main
-`1177160856b5162eb06c7df109d479eb41441926`. Quatre récompenses uniques :
-Milicien Rare, Porte-égide Rare, Arbalétrière Rare, Milicien Épique après le
-premier boss. Les cartes gagnées sont disponibles en Collection, deck manuel
-et nouveaux combats ; les 37 autres évolutions restent au laboratoire.
+Branche `feat/objectifs-epreuves-aube`, depuis main `b58ea3f0`. Les nouvelles
+épreuves demandent trois tours de survie au Milicien Commun, deux interceptions
+au Porte-égide, quatre dégâts à distance à l'Arbalétrière et une réduction du
+premier coup au Milicien Rare, toujours avec victoire et survie du même uid.
+Le compteur et la fiche sont visibles dans le combat. Les anciennes épreuves
+restent compatibles sans objectif ajouté après leur départ.
 
-Le blocage de simulation Épique est corrigé : l'épreuve n'hérite plus des
-quatre lignes et de la furie du vrai boss. Celui-ci reste inchangé. Les
-432 tests passent ; les 60 scénarios historiques restent identiques. La
-vérification navigateur et la clôture après coupure ont réussi localement.
-Les deux CI de la tête finale restent à vérifier sur GitHub.
-[Contrat](EPREUVES_EVOLUTION.md), [résultats et reprise](REPRISE_EPREUVES_EVOLUTION.md).
-Aucune fusion ni publication de cette PR autorisée.
+441 tests réussis, 60 scénarios historiques identiques ; parcours navigateur
+nouveaux et ciblés en cours. [Contrat et reprise](OBJECTIFS_EPREUVES.md).
+Aucune fusion ni publication autorisée pour cette nouvelle PR.
 
-## Main actuel — deck manuel intégré par la PR 54
+## PR 55 — fusionnée après vérification
+
+Fusion autorisée au commit `b58ea3f00330d5f1db3675a2611ddcca8374e699`, arbre
+`d785c9fd939f5764d6ed7e85d9ee36be9fbfcd7d` identique à la tête validée
+`d20b731e`. Les deux CI ont réussi : [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40525189206)
+et [web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40525189091).
+Quatre évolutions obtenables par épreuve et utilisables dans les decks/combats ;
+les 37 autres évolutions Aube restent au laboratoire. Publication du site distincte.
+
+## Jalon précédent — deck manuel intégré par la PR 54
 
 Fusion autorisée au commit `1177160856` après ses deux CI réussies.
 « Mon deck » propose cartes possédées, recherche/filtres, quantités et commandes
