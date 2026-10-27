@@ -71,20 +71,34 @@ aucune récompense rétroactive ni seconde réussite d'une épreuve terminée.
   terminés/déterministes, avec au moins une vraie réussite par épreuve.
 - Les fixtures d'attribution complètes sont distinctes des combats simulés :
   ceux-ci doivent toujours atteindre les objectifs par les actions du moteur.
-- Parcours navigateur complet et contrôles ciblés en cours au checkpoint :
-  compteur 0/seuil avant combat et seuil/seuil en victoire, bureau/portrait/
-  paysage, HTTP/hors réseau, inventaire/deck/campagne et reprise ancienne/nouvelle.
+- Suite navigateur complète réussie : 13 parcours, dont sept combats complets
+  par les vrais boutons, bureau/portrait/paysage et web HTTP ; export hors réseau,
+  inventaire, deck, export/import, invocation en campagne et reprise.
+- Contrôle complémentaire des quatre compteurs finaux en portrait : seuil/seuil
+  affiché après chaque clôture, sans variables de diagnostic dans l'export.
+- Ancienne épreuve active reprise avec sa condition de survie seule ; coupures
+  avant/après sauvegarde de récompense et absence de doublon vérifiées.
+- Sept suites ciblées réussies : sauvegardes, fiche universelle, effets/attaques,
+  géométries, laboratoire, capacités et maintenance web. Captures bureau/portrait/
+  paysage des nouvelles fiches examinées. Aucun actif graphique changé.
+- Builds normal, diagnostic et web réussis, export reconstruit sans variation.
 
-Résultats et tête exacte dans la description de la nouvelle PR. Les logs locaux
+Export `JOUER.html` : **34 523 446 octets**, blob
+`d768dbf859b9c341e3d6c0f337081532c0ec9dc1`. Le générateur ponctuel
+[40534370907](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40534370907)
+l'a enregistré dans `0c468254a0a46114609bd2c5504605897745977c`, arbre
+`7bcdafc03ccda641dca6b51b4010daf17cdf33d5`, identique au local préparé.
+Son parent source `76db031c` a également été comparé avant envoi. Le générateur
+est retiré dans la clôture de revue. Tête finale et CI dans la description de PR. Les logs locaux
 peuvent disparaître : `/tmp/ca-personal-all.log`, `ca-personal-browser.log` et
 `ca-personal-regression.log`. Playwright 1.56/Chromium 1194 disponibles via
 `/tmp/ca-evolution-pw` si encore présents. Ne pas reconstruire les HTML pendant
 que les navigateurs les lisent.
 
-Avant livraison : terminer les parcours, examiner les captures des trois formats,
-valider le paquet web, synchroniser l'unique `JOUER.html` et supprimer le générateur
-temporaire s'il a été utilisé. Vérifier les arbres GitHub/local et les deux CI de
-la tête exacte. Si seule la CI reste, arrêter sans surveillance active.
+Suite à donner : consulter les deux CI de la tête exacte et le main courant,
+présenter cette PR au propriétaire pour revue/essai et garder son accord de fusion
+séparé de celui de la PR 55. Ne pas réutiliser une ancienne CI ; si seule la CI
+reste, arrêter sans surveillance active. Les réglages des défis sont un pilote.
 
 Limites : Chromium simulé, aucun téléphone physique/Safari/Firefox ; la réussite
 du robot démontre une possibilité, sans garantir un équilibrage humain exhaustif.

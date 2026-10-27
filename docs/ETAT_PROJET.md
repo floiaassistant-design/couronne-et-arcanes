@@ -9,8 +9,8 @@ premier coup au Milicien Rare, toujours avec victoire et survie du même uid.
 Le compteur et la fiche sont visibles dans le combat. Les anciennes épreuves
 restent compatibles sans objectif ajouté après leur départ.
 
-441 tests réussis, 60 scénarios historiques identiques ; parcours navigateur
-nouveaux et ciblés en cours. [Contrat et reprise](OBJECTIFS_EPREUVES.md).
+441 tests réussis, 60 scénarios historiques identiques ; 13 parcours navigateur
+et sept suites ciblées réussis, compteurs finaux contrôlés sur les quatre clôtures. [Contrat et reprise](OBJECTIFS_EPREUVES.md).
 Aucune fusion ni publication autorisée pour cette nouvelle PR.
 
 ## PR 55 — fusionnée après vérification

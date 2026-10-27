@@ -97,7 +97,7 @@ async def earned_flow(browser,scenario,label,viewport,*,full=False,touch=False,u
         await click(page.locator('.trial-combat-objective summary'),touch)
         assert scenario['trial']['objective'] in await page.locator('.trial-combat-objective').inner_text()
         assert f'0/{scenario["initial"]["trialChallenge"]["target"]}' in await page.locator('.trial-combat-objective summary').inner_text()
-        await page.screenshot(path=f'/tmp/ca-trial-objective-{label}-{scenario["id"]}.png')
+        await page.screenshot(path=f'/tmp/ca-evolution-objective-{label}-{scenario["id"]}.png')
         await click(page.locator('.trial-combat-objective summary'),touch)
         snapshot=await stored(page,BATTLE)
         await page.reload()
