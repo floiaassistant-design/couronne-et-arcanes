@@ -45,6 +45,17 @@ Le test du découpage compare leur union exacte avec le plan initial indépendan
 y compris les formats, le toucher et le caractère complet de chaque combat.
 Les fonctions d'assertion de la suite navigateur sont intactes.
 
+Le premier passage distant a révélé une reprise intermittente d'un état de test
+antérieur dans le parcours mobile, également observée localement. La préparation
+des fixtures est désormais séparée du document testé : chargement initial,
+écriture unique du profil et du combat, puis chargement du parcours. Le hook
+réinstallé à chaque document contient seulement l'horloge et les pannes simulées.
+Aucune réinjection de fixture pendant les rechargements vérifiés, aucune
+restauration corrective, attente arbitraire ou relance automatique. Les mêmes
+comparaisons exactes du profil et du combat restent obligatoires. La cause
+interne au navigateur n'est pas établie ; le résultat du nouveau passage doit
+être vérifié sur le commit exact et consigné dans la PR.
+
 Les suites ont été examinées : lecture du dépôt seulement, contextes navigateur
 isolés, fixtures déterministes générées sur stdout, serveurs HTTP sur des ports
 éphémères. Aucun état de test n'est transmis d'un groupe à un autre. Les profils
@@ -144,6 +155,14 @@ Validation préparée : tests de couverture/verdict négatifs, `actionlint` 1.7.
 (source officielle et archive vérifiée par SHA-256), tests Node, parité, builds
 et simulations. Les quatre vrais groupes navigateur et la CI du commit exact
 sont vérifiés et rapportés dans la PR ; aucun succès anticipé.
+
+Premier essai distant, tête `1a61de3` : [run 40577512835](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40577512835),
+**7 min 13 s** entre le premier démarrage et le verdict, mais **rouge**.
+Catalogue, combat, moteur et assemblage web réussis ; portrait en échec de
+reprise. Le verdict final a bien refusé `needs.tests.result = failure`.
+Somme des durées des cinq jobs : **23 min 30 s de runner**, distincte du temps
+d'attente de 7 min 13 s. La parallélisation réduit l'attente, pas nécessairement
+la somme des minutes machines. Ce passage incomplet ne valide pas le gain final.
 
 Après ouverture : finir les tâches utiles indépendantes du résultat distant,
 puis laisser GitHub notifier la fin s'il ne reste que la CI. Lire les durées des

@@ -21,11 +21,10 @@ async def case(browser,scenario,viewport,*,touch=False,url=None,terminal=None,fa
     page.on('request',lambda r:external.append(r.url) if r.url.startswith(('http:','https:')) and not r.url.startswith('http://127.0.0.1:') else None)
     payload={SAVE:json.dumps(scenario['profile']),'couronnes_arcanes_animations_v13':'off','evolution-test-failure':failure or ''}
     if terminal is not None:payload[BATTLE]=json.dumps(terminal)
-    await page.add_init_script('''([data,seed])=>{
-      if(!localStorage.getItem('evolution-test-loaded')){
-        for(const [key,value] of Object.entries(data))localStorage.setItem(key,value);
-        localStorage.setItem('evolution-test-loaded','yes');
-      }
+    # Seuls l'horloge et les pannes simulées se réinstallent à chaque document.
+    # La fixture est écrite une seule fois, avant le document réellement testé :
+    # aucun rechargement du parcours ne peut réinjecter une sauvegarde de départ.
+    await page.add_init_script('''(seed)=>{
       Date.now=()=>seed;
       const write=Storage.prototype.setItem,remove=Storage.prototype.removeItem;
       Storage.prototype.setItem=function(k,v){
@@ -36,8 +35,10 @@ async def case(browser,scenario,viewport,*,touch=False,url=None,terminal=None,fa
         if(k==='couronnes_arcanes_bataille_v1'&&this.getItem('evolution-test-failure')==='cleanup')throw Error('coupure simulée');
         return remove.call(this,k);
       };
-    }'''.replace('([data,seed])=>','(([data,seed])=>')+')('+json.dumps([payload,scenario['seed']])+')')
+    }'''.replace('(seed)=>','((seed)=>')+')('+json.dumps(scenario['seed'])+')')
     await page.goto(url or (ROOT/'JOUER.html').as_uri())
+    await page.evaluate('(data)=>{for(const [key,value] of Object.entries(data))localStorage.setItem(key,value)}',payload)
+    await page.reload()
     return context,page,errors,external
 
 async def click(locator,touch=False):
