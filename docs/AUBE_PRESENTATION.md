@@ -6,7 +6,7 @@ accomplie sans exemplaire restant. Les quantités et commandes de deck suivent
 chaque version possédée. Les 37 autres évolutions gardent l'indication labo.
 Le bilan de l'étape 5 ci-dessous décrit sa livraison historique par la PR 53.
 
-## Source et portée
+## Archive — source et portée de l’étape 5
 
 Le tableau maître Notion a été relu dans son édition du 26 octobre 2026,
 12:40:37.541 UTC. Les dix lignes Aube conservent les décisions transcrites

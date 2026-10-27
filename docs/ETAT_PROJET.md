@@ -11,7 +11,8 @@ et nouveaux combats ; les 37 autres évolutions restent au laboratoire.
 Le blocage de simulation Épique est corrigé : l'épreuve n'hérite plus des
 quatre lignes et de la furie du vrai boss. Celui-ci reste inchangé. Les
 432 tests passent ; les 60 scénarios historiques restent identiques. La
-vérification finale navigateur et la clôture après coupure sont en cours.
+vérification navigateur et la clôture après coupure ont réussi localement.
+Les deux CI de la tête finale restent à vérifier sur GitHub.
 [Contrat](EPREUVES_EVOLUTION.md), [résultats et reprise](REPRISE_EPREUVES_EVOLUTION.md).
 Aucune fusion ni publication de cette PR autorisée.
 

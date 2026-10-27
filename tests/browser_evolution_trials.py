@@ -158,6 +158,7 @@ async def recovery(browser):
         if failure=='profile':
             assert await stored(page)==s['profile']
             assert not (await stored(page,BATTLE)).get('progressionGranted')
+            await page.locator('.combat-menu-link').click()
             await page.locator('#nav [data-page="trials"]').click()
             await page.locator('[data-trial-id="aube-shield-rare"] [data-action="trial-start"]').click()
             assert (await stored(page,BATTLE))['missionId']==s['id']

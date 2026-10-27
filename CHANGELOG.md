@@ -8,7 +8,7 @@
 - Clôture récupérable : profil sauvegardé avant nettoyage, protection contre
   l'écrasement d'une récompense en attente et absence de double attribution.
 - 432 tests réussis, 60 scénarios historiques identiques ; vérification finale
-  navigateur en cours. [Contrat](docs/EPREUVES_EVOLUTION.md) et
+  navigateur réussie (bureau, portrait, paysage, HTTP/hors réseau, coupures). [Contrat](docs/EPREUVES_EVOLUTION.md) et
   [résultats](docs/REPRISE_EPREUVES_EVOLUTION.md). Aucune fusion/publication.
 
 ## Fusion autorisée — construction manuelle du deck, PR 54 (27 octobre 2026)

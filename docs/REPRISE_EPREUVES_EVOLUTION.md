@@ -39,36 +39,59 @@ exécuter l'action qui avait demandé cette récupération.
 - Builds normal/test réussis : **56 modules, 76 illustrations**.
 - Revue du graphe : **216 dépendances, aucun cycle** ; moteur sans DOM.
   `app.js` 371 lignes, `battle.js` 390, nouveaux modules métier 48/54 lignes.
-- Quatre parcours complets bureau réussis : bataille par les vrais boutons,
-  récompense, Collection, deck manuel, export/import, invocation en campagne
-  et reprise. Parcours Milicien Rare tactile portrait également réussi.
-- Simulations historiques `control-balance` et `arena-balance` exécutées.
+- Nouvelle suite vérifiée en deux parties sur le même export stabilisé :
+  **13 parcours d'obtention** (quatre par format bureau/portrait/paysage et un
+  web), dont **sept combats complets par les vrais boutons** (quatre bureau,
+  un portrait, un paysage, un web) ; les autres démarrent sur une clôture issue
+  d'un vrai combat simulé. Collection, six cellules, quantités, deck +/−,
+  export/import, vraie invocation en campagne et reprise vérifiés dans chacun.
+- `recovery()` a ensuite réussi : échec d'écriture du profil, tentative de
+  commencer une autre épreuve sans écraser la récompense en attente, récupération
+  sans nouvelle bataille parasite, coupure après reçu, absence de doublon,
+  défaite/objectif manqué sans coût et verrou du premier boss.
+- **26 suites navigateur existantes réussies** : Concorde, ciblage, effets,
+  cartes/pose/aperçu (dont présentation commune), remise à zéro graphique,
+  laboratoire, maintenance web, Collection (dont deck manuel), Milicien,
+  Aube/Sylve/Ombre/Forge/Éther, sorts, compétences V2.8, nouvelle aventure,
+  contrôles V2.9, pilote illustré, capacités, géométrie, plein écran, décor peint
+  et intégrité des sauvegardes. Captures des épreuves bureau/portrait/paysage
+  et invocation future examinées ; aucune illustration changée.
+- Simulations historiques `control-balance` et `arena-balance` réussies.
+- Le workflow de test permanent exécute la nouvelle suite en plus des contrôles
+  existants. Une erreur dans le parcours du test de reprise a été corrigée :
+  il ouvre le menu Citadelle avant la navigation, comme le joueur.
 
-Les autres suites navigateur et la vérification complète sur l'export final
-sont en cours lors de ce checkpoint de travail. Ne pas annoncer cette CI verte.
-Les fichiers de `/tmp` sont éphémères ; les résultats finaux doivent être
-reportés ici et dans la PR. Logs de session : `ca-evolution-final-browser.log`,
-`ca-evolution-regression.log`, `ca-evolution-tests.log`, `ca-evolution-control.log`
-et `ca-evolution-arena.log` dans `/tmp`. Playwright 1.56/Chromium 1194 installés
-via `/tmp/ca-evolution-pw` si encore présents.
+## Export et provenance
 
-## Avant livraison de cette même PR
+`JOUER.html` : **34 517 925 octets**, blob
+`b2550711a00d5e9b93098f4ac2ee923c58f903b2`. Le générateur ponctuel
+[40520075186](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40520075186)
+a réussi et l'a enregistré dans `f2621e47904ff1d0a6e11469d5aeaaf7f607fcc8`,
+arbre `6039efac5288fe02e415dd8f1f30c4c7ec87fad6`, identique au local préparé.
+Son parent source `bf13cb07` avait lui aussi été comparé au local avant envoi.
+Le workflow temporaire est retiré dans la clôture de revue. Le build web est
+recontrôlé sans variation du blob ; aucun HTML diagnostic n'est distribué.
+La tête finale et son arbre sont consignés dans la description de PR pour
+éviter une référence circulaire à ce document.
 
-1. Terminer `browser_evolution_trials.py` : quatre combats complets bureau,
-   un portrait et un paysage, autres clôtures dans les trois formats, parcours
-   web modulaire, imports, invocation future, deux interruptions de clôture,
-   objectif manqué/défaite et verrou de boss. Ne pas affaiblir les assertions.
-2. Terminer les suites navigateur du workflow, examiner leurs captures et
-   corriger tout échec pertinent ; compléter le bilan exact.
-3. Rejouer les contrôles affectés par les derniers correctifs. Le builder ne
-   doit pas réécrire les HTML pendant qu'un navigateur les lit.
-4. Synchroniser `JOUER.html` depuis les mêmes sources. Le générateur temporaire
-   `.github/workflows/evolution-checkpoint.yml` doit être retiré avant livraison.
-   Comparer blob, arbre complet et tête GitHub aux fichiers locaux testés.
-5. Mettre à jour la PR et ce bilan. Les contrats Aube, deck, AGENTS, architecture,
-   README et changelog ont été réconciliés avec les quatre versions pilotes.
-6. Si seule la CI reste, arrêter sans surveillance active. Fusion et publication
-   demandent un accord spécifique ; ne pas le déduire d'un « continue ».
+Les logs de `/tmp` sont éphémères : `ca-evolution-final-browser.log` contient
+les 13 parcours, `ca-evolution-recovery.log` leur complément de récupération,
+`ca-evolution-regression.log` les 26 suites et `ca-evolution-final-tests.log`
+les 432 tests. Playwright 1.56/Chromium 1194 installés via
+`/tmp/ca-evolution-pw` si encore présents. Le builder ne doit pas réécrire
+les HTML pendant qu'un navigateur les lit.
+
+## Suite à donner
+
+1. Consulter les **deux CI du commit final exact**, son arbre et le main actuel.
+   Ne pas réutiliser une ancienne tête ; les contrôles distants sont distincts
+   des vérifications locales. La PR reste en brouillon tant que la revue n'est
+   pas conclue. Pas de surveillance active si seule la CI reste.
+2. Présenter la PR au propriétaire pour son essai/revue. Les réglages des quatre
+   rencontres sont un pilote, sans équilibrage humain exhaustif.
+3. Fusion et publication demandent un accord spécifique ; ne pas les déduire
+   d'un « continue ». Après accord, revérifier tête/base, conflits et CI, puis
+   confirmer séparément la publication effective.
 
 Limites : Chromium bureau/mobile simulé, sans téléphone physique, Safari/Firefox,
 ni équilibrage humain exhaustif. La publication du site après PR 54 n'est pas
