@@ -1,5 +1,10 @@
 # Aube — défenses préparées, étape 3 terminée
 
+**Extension PR 55 :** les défenses communes sont utilisées par quatre versions
+obtenues en [épreuve](EPREUVES_EVOLUTION.md). Les 37 autres évolutions restent
+fermées en aventure ; les anciens instantanés sont préservés. Le bilan des
+étapes 3–4 ci-dessous est historique et ne redéfinit pas cette disponibilité.
+
 Relecture du [tableau maître officiel](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
 édition `2026-10-26T08:37:43.944Z`. La [page des sorts et archives](https://app.notion.com/p/4026633072a881ed9768c615f538a929),
 édition `2026-10-25T22:11:46.891Z`, renvoie explicitement à ce tableau pour les unités.
@@ -89,7 +94,6 @@ Le gardien ne change pas de case et ne riposte pas entre deux lignes, même
 si les colonnes semblent adjacentes. Au contact sur sa propre ligne, la Riposte
 et ses protections normales restent disponibles selon leur quota.
 
-Les étapes 3 et 4 sont terminées sur le brouillon. Les versions futures restent
-`pending` pour la livraison complète et fermées à la pose en aventure ; le
-laboratoire utilise désormais leurs pouvoirs communs. La fiche universelle
-reste à traiter à l'étape 5.
+Les étapes 3 et 4 ont été intégrées par la PR 53, avec la fiche universelle de
+l'étape 5. La PR 55 ouvre uniquement les quatre versions des épreuves. Le labo
+continue d'utiliser les 51 versions et les mêmes pouvoirs communs.

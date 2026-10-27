@@ -1,5 +1,11 @@
 # Construction manuelle du deck — 27 octobre 2026
 
+La PR 54 a été fusionnée au commit `1177160856` après ses CI réussies.
+**Extension PR 55 :** les [évolutions gagnées](EPREUVES_EVOLUTION.md) sont
+proposées dans « Mon deck » avec leurs stocks par rang. Les natifs gardent
+leurs chaînes d'ID ; les versions utilisent `{id,rarity}`. Les limites et
+confirmations restent communes. Le bilan ci-dessous est celui de la PR 54.
+
 ## Demande et comportement
 
 Le propriétaire veut composer simplement son deck et garder les compositions

@@ -1,8 +1,9 @@
 # Versions de cartes — contrat de données et du moteur Aube
 
-Étapes 1 à 6 préparées et revues dans la PR Aube en brouillon ; aucune nouvelle rareté
-obtenue dans l'aventure. [Tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
-édition relue `2026-10-27T05:48:45.318Z`, décisions Aube inchangées. Ce fichier décrit l'API et ne remplace
+Étapes 1 à 6 intégrées par la PR 53. La PR 55 propose quatre obtentions par
+[épreuve](EPREUVES_EVOLUTION.md), sans ouvrir les 37 autres évolutions.
+[Tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
+édition relue `2026-10-27T06:13:46.581Z`, décisions Aube inchangées. Ce fichier décrit l'API et ne remplace
 pas le tableau de décisions.
 
 ## Données et identités
@@ -46,16 +47,18 @@ ne sont pas additionnés comme des bonus de palier. `versionUnitStats` expose
 - `status.design: 'validated'` : conception validée ou catalogue natif.
 - `status.engine: 'implemented'` : capacités raccordées au moteur et couvertes
   par les tests de l'étape 4 ; cela ne crée aucune possession.
-- `status.combat` : les natifs restent `implemented` ; les évolutions restent
-  `pending` pour l'activation en aventure. Leurs fiches universelles sont prêtes ;
-  la revue technique ne change pas leur disponibilité ni leur obtention.
-- `status.obtaining` : `existing` pour les natifs, `undefined` pour les évolutions.
+- `status.combat` : natifs et quatre versions des épreuves `implemented` ;
+  les 37 autres évolutions restent `pending` pour l'aventure.
+- `status.obtaining` : `existing` pour les natifs, `trial` pour les quatre
+  récompenses pilotes, `undefined` pour les autres évolutions.
 - `pendingDecisions` : les deux choix de Garde validés ont été retirés. Les
   conventions techniques sont explicites dans le contrat du moteur.
 
 Le point de pose utilise `unitCanPlay(context,reference,side)` avant toute
-consommation. Les évolutions sont refusées en aventure, même avec le marqueur
-optionnel de règles. Le laboratoire autorise les versions dont le moteur est
+consommation. Les quatre versions gagnées sont autorisées côté joueur dans un
+nouveau combat `evolutionsEnabled: true`. Le deck et les exemplaires sont
+validés à la création ; ce marqueur n'active pas les autres versions.
+Le laboratoire autorise les versions dont le moteur est
 prêt, sans possession réelle. Les références invalides restent refusées dans
 les deux camps, et le laboratoire valide ses réglages avant de lancer un combat.
 
@@ -67,9 +70,11 @@ Le laboratoire lit `versionUnitStats` et invoque par le point de pose commun ;
 aucun niveau forcé ou ancien calcul de pilote Milicien. Les niveaux 0–3 sont
 indépendants de la rareté, qui ne change pas le niveau choisi.
 
-Les profils, achats, maîtrises, quantités et decks ne sont pas convertis. La
-campagne existante ne reçoit pas automatiquement le marqueur futur ; son
-activation demande un périmètre explicite. Le laboratoire reste isolé des
+Les anciens profils, achats, maîtrises, quantités et decks ne sont pas convertis.
+L'inventaire `evolvedCollection` et `completedTrials` sont facultatifs ; les
+références de deck évoluées sont des objets `{id,rarity}`, pas des chaînes de
+version. Seuls leurs nouveaux instantanés portent `cardRules: aube-v1` ; les
+natifs du même combat restent historiques. Le laboratoire reste isolé des
 sauvegardes et des récompenses de l'aventure.
 
 [Contrat d'exécution](AUBE_MOTEUR.md), [défenses](AUBE_DEFENSES.md) et

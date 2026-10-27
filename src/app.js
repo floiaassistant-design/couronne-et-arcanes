@@ -1,4 +1,6 @@
 import {cardPreviewAttributes} from './ui/card-presentation.js';
+import {cardId,cardRarity,cardFromKey} from './cards/references.js';
+import {evolutionTrialResult} from './ui/evolution-trials.js';
 import {createSpellController} from './ui/spell-controller.js';
 import {esc} from './ui/markup.js';
 import {createViews} from './ui/views.js';
@@ -13,7 +15,7 @@ import {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfil
 import {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission} from './data.js';
 
 import {dungeonStageMission} from './dungeons.js';
-import {DECK_STYLES,proposeDeck,applyDeckStyle,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,buyPack,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon} from './engine.js';
+import {DECK_STYLES,proposeDeck,applyDeckStyle,createEvolutionTrial,settleEvolutionTrial,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,buyPack,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon} from './engine.js';
 const VFX_KEY='couronnes_arcanes_animations_v13';
 let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}catch{return true;}})();
 
@@ -25,7 +27,7 @@ let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null,developer=
 const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({profile,developer,battle:displayBattle||battle,screen:isBattleFxPlaying()?'resolving':screen}),esc);
 const {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying}=createCombatFx(()=>({animationsEnabled,screen}));
 const {spellState,handleSpell,resetSpell}=createSpellController(()=>({battle,selectedCard}),{refresh:()=>render(),launch:(index,lane)=>withBattleFx(()=>playPlayerCard(battle,index,lane)),closeInspection:()=>closeCardInspection(true)});
-const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,deckUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,deckFilters,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
+const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,deckUI,trialsUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,deckFilters,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
 function save(){if(developer)return;if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
@@ -81,7 +83,7 @@ function num(n){return Math.round(n).toLocaleString('fr-FR');}
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2900);}
 function showModal(html){closeCardInspection(true);$('modal-root').innerHTML=`<div class="modal-backdrop"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;}
 function hideModal(){closeCardInspection(true);$('modal-root').innerHTML='';}
-const cardName=(id,context)=>`<span ${cardPreviewAttributes(id,CARDS[id].rarity,context,esc)}>${esc(CARDS[id].name)}</span>`;
+const cardName=(reference,context)=>{const ref=typeof reference==='string'?cardFromKey(reference):reference,id=cardId(ref);return `<span ${cardPreviewAttributes(id,cardRarity(ref),context,esc)}>${esc(CARDS[id].name)}${typeof ref==='object'?' · '+esc(cardRarity(ref)):''}</span>`;};
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une case de départ sur une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
 function render({frameUpdate=false}={}){
  if(!frameUpdate){stopBattleFx();displayBattle=null;}
@@ -94,7 +96,7 @@ function render({frameUpdate=false}={}){
  closeCardInspection(true,'render');
  document.body.classList.toggle('animations-off',!animationsEnabled);
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
- $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='deck'?deckUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
+ $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='deck'?deckUI():screen==='trials'?trialsUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
  mountPaintedArena();syncFxControls();
  if(fxFocus)document.querySelector(`[data-action="${fxFocus}"]`)?.focus({preventScroll:true});
  const arena=document.querySelector('.battle-grid');if(arena){arena.scrollLeft=arenaScroll;arena.scrollTop=arenaVertical;}
@@ -117,10 +119,10 @@ function settle({deferModal=false}={}){
  if(profile.lastBattleSettlementId===battle.settlementId){
   battle.rewardGiven=true;persistBattle();return;
  }
- const dungeon=battle.mode==='dungeon';
+ const dungeon=battle.mode==='dungeon',trial=battle.mode==='evolution-trial';
  const mission=dungeon?dungeonStageMission(battle.dungeonId,battle.dungeonStage):battle.mode==='tower'?towerMission(Number(battle.missionId.slice(1))):CAMPAIGN.find(m=>m.id===battle.missionId);
  const nextProfile=JSON.parse(JSON.stringify(profile)),nextBattle=JSON.parse(JSON.stringify(battle));
- const reward=dungeon?settleDungeonBattle(nextProfile,nextBattle):completeBattle(nextProfile,mission,nextBattle);
+ const reward=trial?settleEvolutionTrial(nextProfile,nextBattle):dungeon?settleDungeonBattle(nextProfile,nextBattle):completeBattle(nextProfile,mission,nextBattle);
  nextProfile.lastBattleSettlementId=battle.settlementId;
  if(!saveProfile(nextProfile)){
   toast('Récompense non enregistrée : libérez le stockage et rechargez la page pour réessayer.');
@@ -131,6 +133,7 @@ function settle({deferModal=false}={}){
  if(!deferModal)render();
  const showResult=html=>{if(deferModal)deferredBattleModal=html;else showModal(html);};
  if(!reward?.ok&&dungeon){showResult(`<h2>Expédition interrompue</h2><p>Le combat ne correspond plus à une expédition valide. Aucun butin n'a été versé.</p><div class="button-row">${btn('Retour aux donjons','dungeon-exit','','primary')}</div>`);return;}
+ if(trial){showResult(evolutionTrialResult(reward,{btn,cardUI,esc}));return;}
  const victory=reward.victory;
  if(dungeon){
   const subtitle=victory?reward.finished?'Donjon terminé !':reward.bonus?'Embuscade vaincue !':'Salle remportée !':'Expédition échouée';
@@ -217,13 +220,18 @@ function refreshManualDeck(filtersOnly=false){
 }
 function navigate(page){
  if(page==='developer'){openDeveloper();return;}
- if(!['home','campaign','tower','dungeons','collection','deck','alchemy','forge','guide','battle'].includes(page))return;
+ if(!['home','campaign','tower','dungeons','collection','deck','trials','alchemy','forge','guide','battle'].includes(page))return;
  if(developer){exitDeveloper(page);return;}
  if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();
  cancelEnemyTimer();screen=page;selectedCard=-1;render();if(page==='battle')scheduleEnemyStep();window.scrollTo(0,0);
 }
 function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();window.scrollTo(0,0);}
 function act(action,dataset){const {id,index,lane,col,page}=dataset;
+ // Une clôture non sauvée ne doit pas être écrasée par une autre épreuve/action.
+ if(!developer&&battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven&&
+  !['nav','home','close-modal','close-inspection','collection-faction','export-save','toggle-animations'].includes(action)){
+  settle();return;
+ }
  if(developer&&screen==='developer'&&!['lab-add','lab-remove','lab-start','lab-back','lab-exit','lab-open','nav','home'].includes(action))return;
  if(developer&&screen==='battle'&&!action.startsWith('spell-')&&!['lab-back','lab-exit','lab-start','nav','home','select-card','deploy','end-turn','hero-power','toggle-animations','fx-skip','fx-speed','retreat','confirm-retreat','close-modal','close-inspection'].includes(action))return;
  if(isBattleFxPlaying()&&(action.startsWith('spell-')||['select-card','deploy','end-turn','hero-power'].includes(action)))return;
@@ -259,6 +267,12 @@ case 'lab-open':openDeveloper();break;
  case 'dungeon-quit':showModal(`<div class="kicker">QUITTER LE DONJON</div><h2>Abandonner cette expédition ?</h2><p>Les ressources déjà gagnées seront conservées mais vous devrez recommencer au premier combat.</p><div class="button-row">${btn('Confirmer l’abandon','confirm-dungeon-quit','','danger')}${btn('Continuer','close-modal','','ghost')}</div>`);break;
  case 'confirm-dungeon-quit':hideModal();abandonDungeon(profile);if(battle?.mode==='dungeon'){battle=null;persistBattle();}save();navigate('dungeons');break;
  case 'start-tower':startTower(id);break;
+ case 'trial-start':{
+  if(battle?.status==='active'){toast('Terminez le combat en cours.');break;}
+  const result=createEvolutionTrial(profile,id);if(!result.ok){toast(result.reason);break;}
+  battle=result.battle;persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);break;
+ }
+ case 'trial-exit':hideModal();battle=null;persistBattle();navigate(page==='deck'?'deck':'trials');break;
  case 'deck-preview':{
   if(battle?.status==='active'){toast('Terminez le combat avant de modifier votre deck.');break;}
   const proposal=proposeDeck(profile,id);
@@ -284,7 +298,7 @@ case 'lab-open':openDeveloper();break;
   hideModal();save();render();$('manual-current-title')?.focus({preventScroll:true});break;
  case 'deck-add':case 'deck-remove':
   if(battle?.status==='active'){toast('Terminez le combat avant de modifier votre deck.');break;}
-  if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();if(screen==='deck')refreshManualDeck();else render();}else toast('Impossible de modifier ce deck davantage.');break;
+  if(modifyDeck(profile,cardFromKey(id),action==='deck-add'?1:-1)){save();if(screen==='deck')refreshManualDeck();else render();}else toast('Impossible de modifier ce deck davantage.');break;
  case 'close-inspection':closeCardInspection(true);break;
  case 'select-card':{
   if(!battle||battle.status!=='active'||battle.phase!=='player')break;
@@ -352,6 +366,6 @@ document.addEventListener('change',async event=>{
   else if(key==='aiStyle')d.aiStyle=value;
   render();return;
  }
- if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
+ if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;if(battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven){settle();return;}try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
 render();if(battle&&battle.status!=='active')settle();else {welcome();scheduleEnemyStep();}
 

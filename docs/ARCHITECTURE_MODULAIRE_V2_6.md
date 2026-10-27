@@ -1,4 +1,21 @@
-## Deck manuel — préparation du 27 octobre 2026
+## Épreuves d'évolution — PR 55, 27 octobre 2026
+
+`evolution-trials.js` porte les quatre rencontres, conditions et transformations.
+`cards/references.js` partage identité, stock par version et validation de
+l'inventaire facultatif. Le registre conserve les 76 IDs natifs ; aucun second
+catalogue de chiffres ou de pouvoirs. `engine/evolution-progress.js` réutilise
+profil, validation et `createBattle` pour les épreuves et leurs gains uniques.
+Les dépendances restent dirigées vers données/références, sans DOM dans le moteur.
+
+`ui/evolution-trials.js` rend l'accès, les objectifs et les résultats ;
+`styles/pages/evolution-trials.css` reste limité à ces éléments. Les vues de
+Collection/deck lisent les mêmes références. `app.js` orchestre la clôture sur
+copies, reçu sauvegardé puis nettoyage, sans calculer la transformation.
+Les mains et piles conservent `{id,rarity}` ; les anciens profils et combattants
+ne sont pas migrés. Les quatre versions sont autorisées dans de nouveaux combats,
+sans activer les règles versionnées des natifs. [Contrat](EPREUVES_EVOLUTION.md).
+
+## Deck manuel — intégré par la PR 54, 27 octobre 2026
 
 `ui/deck-builder.js` rend le choix manuel des cartes possédées et le deck actif,
 avec les mêmes commandes/validations du moteur. `pages.js` adapte le rendu et

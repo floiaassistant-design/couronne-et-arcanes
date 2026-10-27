@@ -1,10 +1,11 @@
 // Gains de mission, récompenses et économie interne (sans paiement réel).
 import {CARDS,CLASS_SKILLS,TOWER_MAX} from '../data.js';
-import {ownedCopies,grantBattleProgress,heroLevel} from './profile.js';
+import {grantBattleProgress,heroLevel} from './profile.js';
 import {CONTROL_IDS} from './battle-control.js';
 import {TEMPO_IDS} from './tempo.js';
+import {cardId,totalOwnedCopies} from '../cards/references.js';
 export function completeBattle(profile,mission,b){
- if(b.mode==='developer')return null;
+ if(b.mode==='developer'||b.mode==='evolution-trial')return null;
  if(b.status!=='victory'&&b.status!=='defeat')return null;
  if(b.progressionGranted)return {victory:b.status==='victory',gold:0,shards:0,card:null,reputation:[],heroXp:0,levelShards:0,mastered:[]};
  const reward={victory:b.status==='victory',gold:0,shards:0,card:null,reputation:[]};
@@ -21,7 +22,7 @@ export function completeBattle(profile,mission,b){
    if(mission.unlock)profile.collection[mission.unlock]=(profile.collection[mission.unlock]||0)+1;
    profile.unlocked=Math.min(12,Math.max(profile.unlocked,Number(mission.id)+1));
   }else reward.card=null;
-  for(const faction of Object.keys(profile.reputation)){const copies=profile.deck.filter(id=>CARDS[id]?.faction===faction).length;
+  for(const faction of Object.keys(profile.reputation)){const copies=profile.deck.filter(ref=>CARDS[cardId(ref)]?.faction===faction).length;
    if(!copies)continue;const gained=Math.ceil(copies/4)+(profile.equipped?.relique==='sceau'?2:0);
    profile.reputation[faction]+=gained;reward.reputation.push([faction,gained]);
   }
@@ -43,7 +44,7 @@ export function buyPack(profile,random=Math.random){
  return {ok:true,cards:result};
 }
 export function upgradeCard(profile,id){
- if(!CARDS[id]||!ownedCopies(profile,id))return {ok:false,reason:'Vous ne possédez pas cette carte.'};
+ if(!CARDS[id]||!totalOwnedCopies(profile,id))return {ok:false,reason:'Vous ne possédez pas cette carte.'};
  if(CARDS[id].type==='sort')return {ok:false,reason:'Les sorts ne sont pas améliorables dans cette version.'};
  const level=profile.upgrades[id]||0;if(level>=3)return {ok:false,reason:'Niveau maximum atteint.'};
  const cost=(level+1)*35;if(profile.shards<cost)return {ok:false,reason:`Il faut ${cost} éclats.`};

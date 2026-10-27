@@ -4,6 +4,7 @@ import { generatedCardFace } from './generated-card.js';
 import { createPages } from './pages.js';
 import { createBattleView } from './battle-view.js';
 import { unitStatContext } from '../engine/unit-stats.js';
+import {ownedCardCopies,totalOwnedCopies,cardKey} from '../cards/references.js';
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 import { FACTIONS, CLASSES } from '../data.js';
 
@@ -47,6 +48,7 @@ export function createViews(getState) {
     const pages = [
       ['home', 'Citadelle', '♜'],
       ['deck', 'Mon deck', '▤'],
+      ['trials', 'Épreuves', '⚑'],
       ['campaign', 'Campagne', '⚑'],
       ['tower', 'Tour', '♛'],
       ['dungeons', 'Donjons', '⚔'],
@@ -89,7 +91,7 @@ export function createViews(getState) {
     if(!presentation)return '';
     const c=presentation.card;
     const tone = FACTIONS[c.faction].tone,
-      owned = profile.collection[id] || 0,
+      owned = upgradable?totalOwnedCopies(profile,id):ownedCardCopies(profile,actualReference),
       visual = visualFor(c, { cards: true }),
       masteryXp = profile.mastery?.[id] || 0;
     const waiting = inHand && cooldown > 0,
@@ -123,7 +125,7 @@ export function createViews(getState) {
 
  ${fullCard && !inHand && (bonus || rank) ? `<div class="generated-card-progress">${bonus ? 'Amélioration +' + bonus : ''}${bonus && rank ? ' · ' : ''}${rank ? 'Maîtrise ' + rank + '/3' : ''}</div>` : ''}
  ${(canEdit || upgradable) && owned ? `<div class="mastery-progress" title="Maîtrise gagnée en jouant cette carte"><span>Maîtrise ${rank}/3 · ${masteryXp}${rank === 3 ? ' (MAX)' : ' / ' + MASTERY_THRESHOLDS[rank + 1]} XP</span><div class="mastery-track"><i style="width:${rank === 3 ? 100 : Math.min(100, (masteryXp / MASTERY_THRESHOLDS[rank + 1]) * 100)}%"></i></div></div>` : ''}
- ${canEdit ? `<div class="card-actions"><span class="tiny muted">Possédées : ${owned}</span><span>${btn('+', 'deck-add', `data-id="${id}" aria-label="Ajouter ${esc(c.name)}"`, 'small')}${btn('−', 'deck-remove', `data-id="${id}" aria-label="Retirer ${esc(c.name)}"`, 'small ghost')}</span></div>` : ''}
+ ${canEdit ? `<div class="card-actions"><span class="tiny muted">Possédées : ${owned}</span><span>${btn('+', 'deck-add', `data-id="${cardKey(actualReference)}" aria-label="Ajouter ${esc(c.name)}"`, 'small')}${btn('−', 'deck-remove', `data-id="${cardKey(actualReference)}" aria-label="Retirer ${esc(c.name)}"`, 'small ghost')}</span></div>` : ''}
  ${upgradable && c.type === 'unité' ? `<div class="card-actions"><span class="tiny muted">Niv. ${bonus}/3</span>${btn(bonus === 3 ? 'MAX' : `+1 · ${(bonus + 1) * 35} ✧`, 'card-upgrade', `data-id="${id}" ${!owned || bonus === 3 ? 'disabled' : ''}`, 'small')}</div>` : ''}
  ${waiting ? `<div class="cooldown-stamp" aria-hidden="true"><b>${cooldown}</b><small>${cooldown === 1 ? 'TOUR' : 'TOURS'}</small></div>` : ''}</div>`;
   }

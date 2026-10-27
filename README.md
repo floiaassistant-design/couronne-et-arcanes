@@ -1,5 +1,8 @@
 # Couronnes & Arcanes
 
+> PR 55 — quatre épreuves d’évolution Aube proposées : [contrat](docs/EPREUVES_EVOLUTION.md)
+> et [reprise/vérifications](docs/REPRISE_EPREUVES_EVOLUTION.md). Pas encore fusionnées.
+
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
 quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle.
 
@@ -8,6 +11,12 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 - `index.html` / `npm run dev` : jeu web modulaire ; publication sur Sites après fusion.
 - `JOUER.html` : **unique export jouable**, complet et autonome sans réseau.
 - `tests/JOUER.test.html` : diagnostic automatisé seulement, jamais distribué.
+
+Sur cette branche, « Épreuves » annonce les conditions et récompenses de trois
+évolutions Rares, puis du Milicien Épique après le premier boss. Gagner avec le
+personnage au rang demandé encore vivant transforme un seul exemplaire et
+conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
+sont utilisables en campagne ; les 37 autres évolutions Aube restent au labo.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
@@ -69,7 +78,7 @@ Sites version 7 ont été vérifiées dans son bilan.
 
 ### Collection — six cartes et aperçu rapide
 
-Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube définies montrent leurs chiffres et le statut « Testable au laboratoire · Obtention non définie ». Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
+Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube définies montrent leurs chiffres : quatre évolutions portent le statut des épreuves et leurs vrais exemplaires ; les 37 autres indiquent « Testable au laboratoire · Obtention non définie ». Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
 
 ## Progression et sauvegarde
 
@@ -85,8 +94,8 @@ La Collection, les classes, les maîtrises, équipements, talents et donjons son
 conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteur,
 sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
 et leurs niveaux 0 à 3, choisis indépendamment. Les autres unités conservent
-leur version native. Les nouvelles raretés ne sont pas offertes dans l’aventure ;
-leur obtention reste à définir. La PR Aube nº 53, avec sa présentation commune et sa
+leur version native. Les quatre récompenses pilotes se gagnent dans les Épreuves ;
+les autres évolutions ne sont pas offertes dans l’aventure. La PR Aube nº 53, avec sa présentation commune et sa
 [revue finale](docs/REVUE_AUBE_PR53_2026_10_27.md), a été fusionnée sur accord du
 propriétaire le 27 octobre 2026. La publication du site reste une opération distincte.
 
@@ -104,6 +113,7 @@ npm run build:test
 python3 tests/browser_concorde.py
 python3 tests/browser_spell_targeting.py
 python3 tests/browser_combat_fx.py
+python3 tests/browser_evolution_trials.py
 ```
 
 La CI couvre également images, interfaces bureau/mobile simulé, anciennes

@@ -3,6 +3,8 @@
 // Déterministe, indépendant de l'interface et sans modification avant confirmation.
 import {CARDS,CHARGE_IDS,GUARD_IDS} from '../data.js';
 import {validateDeck} from './profile.js';
+import {cardId,cardKey,ownedCardEntries} from '../cards/references.js';
+import {resolveUnitDefinition} from '../cards/definitions.js';
 
 export const DECK_STYLES=Object.freeze({
  equilibre:{name:'Équilibré',description:'Une armée polyvalente : unités, soutien et sorts.',size:18,spells:4},
@@ -33,21 +35,21 @@ const spellBonuses={
  arcanes:{spell_bolt:13,spell_heal:5,spell_buff:10,spell_storm:17,spell_root:16,spell_ward:5}
 };
 function candidateCards(profile,style){
- const owned=profile?.collection||{};
  const cards=[];
- for(const [id,quantity] of Object.entries(owned)){
-  const c=CARDS[id];if(!c||(c.heroClass&&c.heroClass!==profile.heroClass))continue;
+ for(const {reference,quantity} of ownedCardEntries(profile)){
+  const id=cardId(reference),native=CARDS[id],d=typeof reference==='object'?resolveUnitDefinition(reference):null;
+  const c=d?{...native,attack:d.stats.attack,hp:d.stats.hp,delay:d.stats.delay}:native;if(!c||(c.heroClass&&c.heroClass!==profile.heroClass))continue;
   const n=Number(quantity);
   const count=Number.isFinite(n)?Math.min(24,Math.max(0,Math.floor(n))):0;
   const base=c.type==='sort'?8+(spellBonuses[style]?.[c.ability]||0)-c.delay*.65:unitScore(c,style);
-  for(let i=0;i<count;i++)cards.push({id,type:c.type,score:base-Math.max(0,i-1)*1.1});
+  for(let i=0;i<count;i++)cards.push({id,reference,type:c.type,score:base-Math.max(0,i-1)*1.1});
  }
- return cards.sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));
+ return cards.sort((a,b)=>b.score-a.score||cardKey(a.reference).localeCompare(cardKey(b.reference)));
 }
 export function deckOverview(deck){
  const counts={},factions={};let units=0,spells=0,guards=0,quick=0;
- for(const id of deck||[]){const c=CARDS[id];if(!c)continue;
-  counts[id]=(counts[id]||0)+1;
+ for(const ref of deck||[]){const id=cardId(ref),key=cardKey(ref),c=CARDS[id];if(!c)continue;
+  counts[key]=(counts[key]||0)+1;
   if(c.type==='sort')spells++;else{units++;factions[c.faction]=(factions[c.faction]||0)+1;if(GUARD_IDS.has(id))guards++;if(c.delay===1)quick++;}
  }
  const dominant=Object.entries(factions).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))[0]?.[0]||null;
@@ -58,7 +60,7 @@ export function proposeDeck(profile,style){
  const candidates=candidateCards(profile,style);
  if(candidates.length<12)return {ok:false,reason:'Il vous faut au moins 12 cartes possédées pour préparer un deck.'};
  const size=Math.min(config.size,candidates.length),chosen=[],used=new Set();
- function pick(pool,limit){for(const card of pool){if(chosen.length>=limit)break;if(used.has(card))continue;chosen.push(card.id);used.add(card);}}
+ function pick(pool,limit){for(const card of pool){if(chosen.length>=limit)break;if(used.has(card))continue;chosen.push(card.reference);used.add(card);}}
  pick(candidates.filter(c=>c.type==='sort'),Math.min(config.spells,size));
  pick(candidates.filter(c=>c.type==='unité'),size);
  pick(candidates,size);

@@ -1,12 +1,29 @@
 # État courant — 27 octobre 2026
 
-## Deck manuel — nouvelle évolution en préparation
+## PR 55 — épreuves d’évolution Aube proposées
 
-La branche `feat/deck-manuel-simple` ajoute « Mon deck » dans la navigation :
-cartes possédées, recherche/filtres, quantités et commandes +/−, compteur et
-validation de 12–24 cartes. Les propositions restent facultatives ; sauvegarde
-historique conservée et modifications bloquées pendant un combat. Cette
-évolution n'est pas fusionnée. [Contrat et contrôles](DECK_MANUEL_2026_10_27.md).
+Branche `feat/epreuves-evolution-aube`, base main
+`1177160856b5162eb06c7df109d479eb41441926`. Quatre récompenses uniques :
+Milicien Rare, Porte-égide Rare, Arbalétrière Rare, Milicien Épique après le
+premier boss. Les cartes gagnées sont disponibles en Collection, deck manuel
+et nouveaux combats ; les 37 autres évolutions restent au laboratoire.
+
+Le blocage de simulation Épique est corrigé : l'épreuve n'hérite plus des
+quatre lignes et de la furie du vrai boss. Celui-ci reste inchangé. Les
+432 tests passent ; les 60 scénarios historiques restent identiques. La
+vérification navigateur et la clôture après coupure ont réussi localement.
+Les deux CI de la tête finale restent à vérifier sur GitHub.
+[Contrat](EPREUVES_EVOLUTION.md), [résultats et reprise](REPRISE_EPREUVES_EVOLUTION.md).
+Aucune fusion ni publication de cette PR autorisée.
+
+## Main actuel — deck manuel intégré par la PR 54
+
+Fusion autorisée au commit `1177160856` après ses deux CI réussies.
+« Mon deck » propose cartes possédées, recherche/filtres, quantités et commandes
++/−, compteur et validation de 12–24 cartes. Les propositions restent facultatives ;
+modifications bloquées pendant le combat. [Contrat](DECK_MANUEL_2026_10_27.md).
+La publication du site après cette fusion n'est pas vérifiée ici.
+Les sections ci-dessous retracent les livraisons précédentes.
 
 ## Intégration Aube — étapes 1 à 6 terminées et fusionnées
 
@@ -40,7 +57,7 @@ préparation. La publication de cette version du site reste à confirmer sépar�
 
 ## Jeu intégré sur main
 
-**Dernier main relu le 27 octobre :** `003c696870edd8238f5f74a1e73afc18d8198024`, incluant la PR 53. Les détails de publication ci-dessous décrivent la dernière version publiée attestée, et non une publication de la PR Aube.
+**Jalon précédent :** `003c696870edd8238f5f74a1e73afc18d8198024`, incluant la PR 53. Le main actuel est indiqué en tête de document. Les détails de publication ci-dessous décrivent la dernière version publiée attestée, et non une publication de la PR Aube.
 
 **Jalon de publication vérifié le 25 octobre :** [`1810b1518bc0e8d668ed11bc55042ae5161ae94e`](https://github.com/floiaassistant-design/couronne-et-arcanes/commit/1810b1518bc0e8d668ed11bc55042ae5161ae94e), fusion autorisée de la [PR nº 48](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/48) le 25 octobre 2026. La comparaison GitHub de ce merge à `main` est identique (aucun commit d'écart). La comparaison avec le commit PR `af048c1b` montre un commit de fusion **sans aucune différence de fichiers** : le code et `JOUER.html` sur main sont ceux qui ont été vérifiés.
 

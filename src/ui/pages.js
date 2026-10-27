@@ -1,6 +1,9 @@
 import {cardPreviewAttributes} from './card-presentation.js';
 import { renderCollectionCatalogue } from './collection.js';
 import {renderManualDeck} from './deck-builder.js';
+import {cardId,cardFromKey,cardRarity,ownedCardEntries,totalOwnedCopies} from '../cards/references.js';
+import {bossEvolutionUnlocks} from '../engine/evolution-progress.js';
+import {renderEvolutionTrials} from './evolution-trials.js';
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 import { CARDS, CLASS_SKILLS, FACTIONS, CLASSES, CAMPAIGN, TOWER_MAX, towerMission } from '../data.js';
 import { AI_STYLES } from '../ai.js';
@@ -39,7 +42,7 @@ export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
     const cleared = profile.completed.length;
     return `<section class="hero-banner"><div class="hero-copy"><div class="kicker">UN MONDE À RECONQUÉRIR · CHAPITRE I</div><h1>Forgez votre <em>légende.</em></h1><p>Cinq ordres se disputent les frontières du royaume. Collectionnez des créatures, assemblez votre deck et menez vos troupes à la victoire dans des combats tactiques sur deux à quatre lignes.</p><div class="button-row">${btn('⚔ Continuer la campagne', 'start-next', '', 'primary')}${btn('Découvrir les règles', 'nav', 'data-page="guide"', 'ghost')}${btn('Nouvelle partie · choisir une classe', 'new-game', '', 'ghost')}${previousGameAvailable ? btn('↶ Partie précédente', 'restore-previous-game', '', 'ghost') : ''}</div></div><div class="hero-crest"><div class="crest-ring"><span>♜</span></div><div class="crest-sub">LE SERMENT DES COURONNES</div></div></section>
  <section class="spaced"><div class="card-panel progression-panel"><div class="split-head"><div><div class="section-caption">PROGRESSION DU SOUVERAIN</div><h2 class="section-title">Niveau ${heroLevel(profile)} / ${HERO_MAX_LEVEL}</h2></div><span class="pill">Bouclier de vétéran +${heroShieldBonus(profile)}</span></div><p class="page-sub">${heroLevel(profile) === HERO_MAX_LEVEL ? 'Maîtrise héroïque maximale atteinte.' : `${heroProgress(profile).shown} / ${heroProgress(profile).needed} XP vers le prochain niveau.`} Les niveaux améliorent progressivement la protection, sans ajouter d’attaque aux cartes.</p><div class="progressbar"><span style="width:${heroLevel(profile) === HERO_MAX_LEVEL ? 100 : Math.min(100, heroProgress(profile).percent)}%"></span></div></div></section>
- <section class="spaced stat-row"><div class="stat-box"><strong>${cleared}/12</strong><small>Missions accomplies</small></div><div class="stat-box"><strong>${Object.keys(profile.collection).filter((k) => profile.collection[k] > 0).length}/${Object.keys(CARDS).length}</strong><small>Cartes découvertes</small></div><div class="stat-box"><strong>${profile.wins}</strong><small>Victoires</small></div><div class="stat-box"><strong>${profile.deck.length}</strong><small>Cartes du deck</small></div></section>
+ <section class="spaced stat-row"><div class="stat-box"><strong>${cleared}/12</strong><small>Missions accomplies</small></div><div class="stat-box"><strong>${new Set(ownedCardEntries(profile).map(e=>cardId(e.reference))).size}/${Object.keys(CARDS).length}</strong><small>Cartes découvertes</small></div><div class="stat-box"><strong>${profile.wins}</strong><small>Victoires</small></div><div class="stat-box"><strong>${profile.deck.length}</strong><small>Cartes du deck</small></div></section>
  <section class="spaced"><div class="split-head"><div><div class="section-caption">Votre prochain défi</div><h2 class="section-title" style="margin-top:8px">${esc(next.name)}</h2></div><span class="pill">Région · ${esc(next.region)}</span></div><div class="card-panel"><p class="page-sub">${esc(next.story)} Affrontez <strong class="gold">${esc(next.enemy)}</strong> et gagnez ${next.reward} pièces d’or et ${next.shards} éclats.</p><div class="progressbar"><span style="width:${(cleared / 12) * 100}%"></span></div><div class="button-row">${btn('Jouer cette mission', 'start-mission', `data-id="${next.id}"`, 'primary')}${btn('Voir la campagne', 'nav', 'data-page="campaign"', 'ghost')}</div></div></section>
  <section class="spaced"><h2 class="section-title">Les trois piliers de votre aventure</h2><div class="three-grid"><div class="feature-card"><div class="feature-icon">♜</div><h3>Stratégie vivante</h3><p>Vos créatures avancent et combattent automatiquement. Choisissez le bon moment et la bonne ligne.</p></div><div class="feature-card"><div class="feature-icon">✧</div><h3>Collection & évolution</h3><p>Créez des combinaisons entre factions, améliorez vos unités et débloquez de nouveaux pouvoirs.</p></div><div class="feature-card"><div class="feature-icon">⚑</div><h3>Campagne, Tour & donjons</h3><p>Parcourez douze missions, vingt étages et trois donjons successifs avec des boss.</p></div></div></section>`;
   }
@@ -54,7 +57,7 @@ export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
          .map((m) => {
            const locked = Number(m.id) > profile.unlocked,
              done = profile.completed.includes(m.id);
-           return `<article class="mission ${locked ? 'locked' : ''} ${done ? 'completed' : ''}"><div class="mission-top"><span>MISSION ${m.id} · ${'✦'.repeat(m.difficulty)}</span><span>${done ? '✓ TERMINÉE' : locked ? '⌁ VERROUILLÉE' : m.boss ? '♛ BOSS' : 'À DÉCOUVRIR'}</span></div><h3>${esc(m.name)}</h3><p>${esc(m.story)}</p><p class="enemy-style-tag">Stratégie : ${esc(AI_STYLES[m.aiStyle]?.name || 'Équilibré')}${m.boss ? ' · Boss à deux phases' : ''}</p><div class="reward">◈ ${m.reward} or &nbsp; ✧ ${m.shards} éclats</div>${btn(locked ? 'Inaccessible' : done ? 'Rejouer la bataille' : 'Lancer le combat', 'start-mission', `data-id="${m.id}" ${locked ? 'disabled' : ''}`, locked ? 'ghost' : 'primary')}</article>`;
+           return `<article class="mission ${locked ? 'locked' : ''} ${done ? 'completed' : ''}"><div class="mission-top"><span>MISSION ${m.id} · ${'✦'.repeat(m.difficulty)}</span><span>${done ? '✓ TERMINÉE' : locked ? '⌁ VERROUILLÉE' : m.boss ? '♛ BOSS' : 'À DÉCOUVRIR'}</span></div><h3>${esc(m.name)}</h3><p>${esc(m.story)}</p><p class="enemy-style-tag">Stratégie : ${esc(AI_STYLES[m.aiStyle]?.name || 'Équilibré')}${m.boss ? ' · Boss à deux phases' : ''}</p><div class="reward">◈ ${m.reward} or &nbsp; ✧ ${m.shards} éclats</div>${bossEvolutionUnlocks(m.id).map(t=>`<p class="evolution-unlock">${done?'Épreuve débloquée':'Débloque une épreuve'} : ${esc(CARDS[t.cardId].name)} ${esc(t.to)}.</p>`).join('')}${btn(locked ? 'Inaccessible' : done ? 'Rejouer la bataille' : 'Lancer le combat', 'start-mission', `data-id="${m.id}" ${locked ? 'disabled' : ''}`, locked ? 'ghost' : 'primary')}</article>`;
          })
          .join('')}</div></section>`
    )
@@ -150,9 +153,9 @@ export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
   function deckUI(){
     return renderManualDeck(profile,{battle,filters:deckFilters},{btn,cardUI,esc,quickDecks:deckWorkshopUI(battle?.status==='active')});
   }
+  function trialsUI(){return renderEvolutionTrials(profile,battle,{btn,cardUI,esc});}
   function collectionUI() {
-    const counts = {};
-    profile.deck.forEach((id) => (counts[id] = (counts[id] || 0) + 1));
+    const counts=deckOverview(profile.deck).counts;
     const invalid = validateDeck(profile);
     const overview = deckOverview(profile.deck),
       busy = battle?.status === 'active';
@@ -163,8 +166,10 @@ export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
       counts
     )
       .map(
-        ([id, count]) =>
-          `<div class="deck-item"><span ${cardPreviewAttributes(id,CARDS[id].rarity,'deck',esc)}><span class="gold">${count}×</span> ${esc(CARDS[id].name)}</span><button class="remove" aria-label="Retirer ${esc(CARDS[id].name)}" data-action="deck-remove" data-id="${id}">×</button></div>`
+        ([key,count])=>{
+          const ref=cardFromKey(key),c=CARDS[cardId(ref)];
+          return `<div class="deck-item"><span ${cardPreviewAttributes(c.id,cardRarity(ref),'deck',esc)}><span class="gold">${count}×</span> ${esc(c.name)}${typeof ref==='object'?' · '+esc(cardRarity(ref)):''}</span><button class="remove" aria-label="Retirer ${esc(c.name)}" data-action="deck-remove" data-id="${key}">×</button></div>`;
+        }
       )
       .join(
         ''
@@ -181,7 +186,8 @@ export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
  <section class="spaced"><h2 class="section-title">Extraire les cartes en surplus</h2><p class="page-sub">Les exemplaires utilisés dans votre deck sont protégés ; seuls les exemplaires supplémentaires peuvent être extraits.</p>${expendables.length ? `<div class="card-grid">${expendables.map((c) => `<div class="alchemy-recipe">${cardUI(c.id)}<div class="alchemy-action">${btn(`Extraire · +${EXTRACTION_SHARDS[c.rarity]} ✧`, 'extract-card', `data-id="${c.id}"`, 'ghost')}</div></div>`).join('')}</div>` : '<div class="hint">Aucune carte en surplus. Gagnez des cartes ou retirez-en du deck pour pouvoir les extraire.</div>'}</section>`;
   }
   function forgeUI() {
-    const own = Object.values(CARDS).filter((c) => profile.collection[c.id] > 0 && c.type === 'unité');
+    const entries=ownedCardEntries(profile);
+    const own = Object.values(CARDS).filter((c) => totalOwnedCopies(profile,c.id)>0 && c.type === 'unité');
     return `<div class="kicker">AMÉLIORATIONS · ARTISANAT · HÉROS</div><h1 class="page-title">L’Atelier des Couronnes</h1><p class="page-sub">Développez la cité, renforcez vos cartes et choisissez la spécialité de votre héros. Chaque amélioration est conservée dans votre sauvegarde.</p>
  <section class="spaced"><div class="section-caption">PROGRESSION DU HÉROS</div><h2 class="section-title">Niveau ${heroLevel(profile)} / ${HERO_MAX_LEVEL}</h2><p class="page-sub">Expérience : ${profile.heroXp} XP. ${heroLevel(profile) === HERO_MAX_LEVEL ? 'Niveau maximum atteint.' : `Prochain niveau dans ${heroProgress(profile).needed - heroProgress(profile).shown} XP.`} Bouclier de départ : +${heroShieldBonus(profile)} aux niveaux 5 et 9. Les cartes deviennent maîtresses en étant jouées : les unités obtiennent au maximum +1 PV au rang 3 ; les sorts gagnent des insignes sans bonus de dégâts.</p><div class="progressbar"><span style="width:${heroLevel(profile) === HERO_MAX_LEVEL ? 100 : Math.min(100, heroProgress(profile).percent)}%"></span></div></section>
  <section class="spaced"><div class="section-caption">Les trois édifices</div><h2 class="section-title" style="margin-top:8px">Améliorer votre bastion</h2><div class="forge-grid">${Object.entries(
@@ -239,7 +245,7 @@ export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
        `<article class="forge-tile"><h3>${esc(f.name)}</h3><div class="pill">${profile.reputation[k]} points · Niveau ${reputationLevel(profile, k)}/3</div><p>Bonus actuel : +${reputationLevel(profile, k)} PV par créature de cet ordre.</p></article>`
    )
    .join('')}</div></section>
- <section class="spaced"><div class="split-head"><div><div class="section-caption">Les fragments d’âme</div><h2 class="section-title" style="margin-top:8px">Renforcer vos unités</h2></div><span class="pill">✧ ${profile.shards} éclats disponibles</span></div><div class="card-grid">${own.map((c) => cardUI(c.id, { upgradable: true })).join('')}</div></section>
+ <section class="spaced"><div class="split-head"><div><div class="section-caption">Les fragments d’âme</div><h2 class="section-title" style="margin-top:8px">Renforcer vos unités</h2></div><span class="pill">✧ ${profile.shards} éclats disponibles</span></div><div class="card-grid">${own.map((c) => cardUI(entries.find(e=>cardId(e.reference)===c.id).reference, { upgradable: true })).join('')}</div></section>
  <section class="spaced"><div class="card-panel"><div class="section-caption">Le comptoir du marchand</div><h2 class="section-title" style="margin-top:8px">Paquet mystique</h2><p class="page-sub">Recevez 3 cartes aléatoires pour 95 pièces d’or. Aucun paiement réel, aucune connexion requise.</p>${btn('Ouvrir un paquet · 95 ◈', 'buy-pack', `${profile.gold < 95 ? 'disabled' : ''}`, 'primary')}</div></section>`;
   }
   function guideUI() {
@@ -253,6 +259,7 @@ export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
     dungeonUI: bind(dungeonUI),
     collectionUI: bind(collectionUI),
     deckUI: bind(deckUI),
+    trialsUI: bind(trialsUI),
     alchemyUI: bind(alchemyUI),
     forgeUI: bind(forgeUI),
     guideUI: bind(guideUI)
