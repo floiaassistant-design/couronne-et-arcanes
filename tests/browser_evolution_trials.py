@@ -95,7 +95,12 @@ async def earned_flow(browser,scenario,label,viewport,*,full=False,touch=False,u
         await click(trial.locator('[data-action="trial-start"]'),touch)
         assert (await stored(page,BATTLE))['missionId']==scenario['id']
         assert scenario['trial']['objective'] in await page.locator('.trial-combat-objective').inner_text()
+        snapshot=await stored(page,BATTLE)
         await page.reload()
+        # La reprise doit être peinte avant les actions ; count() ne l'attend pas.
+        # Contrôler aussi les octets métier, pour ne pas masquer une perte d'état.
+        await page.locator('.combat-screen').wait_for()
+        assert await stored(page,BATTLE)==snapshot,'Le combat sauvegardé a changé pendant la reprise.'
         await replay(page,scenario,touch)
     else:await page.locator('.modal h2').filter(has_text='Évolution obtenue').wait_for()
     result=await stored(page)

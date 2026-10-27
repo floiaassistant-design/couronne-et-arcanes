@@ -81,6 +81,20 @@ les 432 tests. Playwright 1.56/Chromium 1194 installés via
 `/tmp/ca-evolution-pw` si encore présents. Le builder ne doit pas réécrire
 les HTML pendant qu'un navigateur les lit.
 
+## Reprise de la vérification distante
+
+Le contrôle GitHub `40521939853` du commit `110666be` s'est terminé en échec
+sur la nouvelle suite : écran Citadelle observé au lieu du combat après la
+première reprise. Node, parité, builds et les contrôles précédents avaient réussi.
+L'assemblage web `40521939648` avait également réussi. Cet échec n'a pas été
+reproduit sur 18 créations/reprises locales, dont six avec survol et capture.
+
+Le test attend désormais l'écran de combat après rechargement et compare
+strictement le combat sauvegardé avant/après. Les conditions de victoire,
+les stocks et les assertions de récompense restent inchangés. Aucune règle du
+jeu ni export modifié. Consulter la PR pour les résultats de cette nouvelle
+tête : ne pas annoncer sa CI réussie avant vérification et ne pas fusionner.
+
 ## Suite à donner
 
 1. Consulter les **deux CI du commit final exact**, son arbre et le main actuel.
