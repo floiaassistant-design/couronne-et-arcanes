@@ -976,6 +976,29 @@ main {
 
 </style>
 <style>
+/* Épreuves : objectifs et récompenses visibles avant de lancer un combat. */
+.evolution-trials { max-width: 1360px; margin: auto; }
+.evolution-trials > header { margin-bottom: 24px; }
+.trial-boss-gate { margin-bottom: 24px; }
+.trial-boss-gate p { color: var(--muted); line-height: 1.6; }
+.trial-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+.trial-card { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.trial-card h2 { color: var(--gold); font: normal 25px Georgia,serif; margin: 5px 0; }
+.trial-card p { line-height: 1.6; margin: 3px 0; }
+.trial-reward-card { max-width: 210px; width: 100%; align-self: center; margin: 8px 0; }
+.trial-objective { color: #f0ddb8; border-left: 2px solid var(--gold); padding: 9px 12px; background: #ffffff05; }
+.trial-start { margin-top: auto; padding-top: 12px; }
+.trial-start .btn { min-height: 44px; }
+.trial-result-card { width: min(210px,100%); margin: 16px auto; }
+.evolution-unlock { color: var(--gold); font-size: 12px; line-height: 1.5; }
+.trial-combat-objective { margin: 5px 0 0; max-width: 600px; color: #ecd7aa; font-size: 11px; line-height: 1.4; }
+@media(max-width: 700px) {
+ .trial-grid { grid-template-columns: minmax(0,1fr); }
+ .trial-combat-objective { max-width: 220px; font-size: 10px; }
+}
+
+</style>
+<style>
 /* Atelier : classes, forge, alchimie, maîtrise et talents. */
 .forge-grid {
   display: grid;
@@ -4195,6 +4218,8 @@ body.card-combat-mode [data-card-layout=true] .combat-stage{overflow:clip;overfl
 const __factories={
 "src/app.js":function(__exports,__load){
 const {cardPreviewAttributes}=__load("src/ui/card-presentation.js");
+const {cardId,cardRarity,cardFromKey}=__load("src/cards/references.js");
+const {evolutionTrialResult}=__load("src/ui/evolution-trials.js");
 const {createSpellController}=__load("src/ui/spell-controller.js");
 const {esc}=__load("src/ui/markup.js");
 const {createViews}=__load("src/ui/views.js");
@@ -4208,7 +4233,7 @@ const {createCardInspection}=__load("src/ui/card-inspection.js");
 const {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure}=__load("src/ui/storage.js");
 const {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission}=__load("src/data.js");
 const {dungeonStageMission}=__load("src/dungeons.js");
-const {DECK_STYLES,proposeDeck,applyDeckStyle,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,buyPack,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
+const {DECK_STYLES,proposeDeck,applyDeckStyle,createEvolutionTrial,settleEvolutionTrial,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,buyPack,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
 const VFX_KEY='couronnes_arcanes_animations_v13';
 let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}catch{return true;}})();
 
@@ -4220,7 +4245,7 @@ let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null,developer=
 const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({profile,developer,battle:displayBattle||battle,screen:isBattleFxPlaying()?'resolving':screen}),esc);
 const {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying}=createCombatFx(()=>({animationsEnabled,screen}));
 const {spellState,handleSpell,resetSpell}=createSpellController(()=>({battle,selectedCard}),{refresh:()=>render(),launch:(index,lane)=>withBattleFx(()=>playPlayerCard(battle,index,lane)),closeInspection:()=>closeCardInspection(true)});
-const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,deckUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,deckFilters,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
+const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,deckUI,trialsUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,deckFilters,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
 function save(){if(developer)return;if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
@@ -4276,7 +4301,7 @@ function num(n){return Math.round(n).toLocaleString('fr-FR');}
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2900);}
 function showModal(html){closeCardInspection(true);$('modal-root').innerHTML=`<div class="modal-backdrop"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;}
 function hideModal(){closeCardInspection(true);$('modal-root').innerHTML='';}
-const cardName=(id,context)=>`<span ${cardPreviewAttributes(id,CARDS[id].rarity,context,esc)}>${esc(CARDS[id].name)}</span>`;
+const cardName=(reference,context)=>{const ref=typeof reference==='string'?cardFromKey(reference):reference,id=cardId(ref);return `<span ${cardPreviewAttributes(id,cardRarity(ref),context,esc)}>${esc(CARDS[id].name)}${typeof ref==='object'?' · '+esc(cardRarity(ref)):''}</span>`;};
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une case de départ sur une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
 function render({frameUpdate=false}={}){
  if(!frameUpdate){stopBattleFx();displayBattle=null;}
@@ -4289,7 +4314,7 @@ function render({frameUpdate=false}={}){
  closeCardInspection(true,'render');
  document.body.classList.toggle('animations-off',!animationsEnabled);
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
- $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='deck'?deckUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
+ $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='deck'?deckUI():screen==='trials'?trialsUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
  mountPaintedArena();syncFxControls();
  if(fxFocus)document.querySelector(`[data-action="${fxFocus}"]`)?.focus({preventScroll:true});
  const arena=document.querySelector('.battle-grid');if(arena){arena.scrollLeft=arenaScroll;arena.scrollTop=arenaVertical;}
@@ -4312,10 +4337,10 @@ function settle({deferModal=false}={}){
  if(profile.lastBattleSettlementId===battle.settlementId){
   battle.rewardGiven=true;persistBattle();return;
  }
- const dungeon=battle.mode==='dungeon';
+ const dungeon=battle.mode==='dungeon',trial=battle.mode==='evolution-trial';
  const mission=dungeon?dungeonStageMission(battle.dungeonId,battle.dungeonStage):battle.mode==='tower'?towerMission(Number(battle.missionId.slice(1))):CAMPAIGN.find(m=>m.id===battle.missionId);
  const nextProfile=JSON.parse(JSON.stringify(profile)),nextBattle=JSON.parse(JSON.stringify(battle));
- const reward=dungeon?settleDungeonBattle(nextProfile,nextBattle):completeBattle(nextProfile,mission,nextBattle);
+ const reward=trial?settleEvolutionTrial(nextProfile,nextBattle):dungeon?settleDungeonBattle(nextProfile,nextBattle):completeBattle(nextProfile,mission,nextBattle);
  nextProfile.lastBattleSettlementId=battle.settlementId;
  if(!saveProfile(nextProfile)){
   toast('Récompense non enregistrée : libérez le stockage et rechargez la page pour réessayer.');
@@ -4326,6 +4351,7 @@ function settle({deferModal=false}={}){
  if(!deferModal)render();
  const showResult=html=>{if(deferModal)deferredBattleModal=html;else showModal(html);};
  if(!reward?.ok&&dungeon){showResult(`<h2>Expédition interrompue</h2><p>Le combat ne correspond plus à une expédition valide. Aucun butin n'a été versé.</p><div class="button-row">${btn('Retour aux donjons','dungeon-exit','','primary')}</div>`);return;}
+ if(trial){showResult(evolutionTrialResult(reward,{btn,cardUI,esc}));return;}
  const victory=reward.victory;
  if(dungeon){
   const subtitle=victory?reward.finished?'Donjon terminé !':reward.bonus?'Embuscade vaincue !':'Salle remportée !':'Expédition échouée';
@@ -4412,7 +4438,7 @@ function refreshManualDeck(filtersOnly=false){
 }
 function navigate(page){
  if(page==='developer'){openDeveloper();return;}
- if(!['home','campaign','tower','dungeons','collection','deck','alchemy','forge','guide','battle'].includes(page))return;
+ if(!['home','campaign','tower','dungeons','collection','deck','trials','alchemy','forge','guide','battle'].includes(page))return;
  if(developer){exitDeveloper(page);return;}
  if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();
  cancelEnemyTimer();screen=page;selectedCard=-1;render();if(page==='battle')scheduleEnemyStep();window.scrollTo(0,0);
@@ -4454,6 +4480,12 @@ case 'lab-open':openDeveloper();break;
  case 'dungeon-quit':showModal(`<div class="kicker">QUITTER LE DONJON</div><h2>Abandonner cette expédition ?</h2><p>Les ressources déjà gagnées seront conservées mais vous devrez recommencer au premier combat.</p><div class="button-row">${btn('Confirmer l’abandon','confirm-dungeon-quit','','danger')}${btn('Continuer','close-modal','','ghost')}</div>`);break;
  case 'confirm-dungeon-quit':hideModal();abandonDungeon(profile);if(battle?.mode==='dungeon'){battle=null;persistBattle();}save();navigate('dungeons');break;
  case 'start-tower':startTower(id);break;
+ case 'trial-start':{
+  if(battle?.status==='active'){toast('Terminez le combat en cours.');break;}
+  const result=createEvolutionTrial(profile,id);if(!result.ok){toast(result.reason);break;}
+  battle=result.battle;persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);break;
+ }
+ case 'trial-exit':hideModal();battle=null;persistBattle();navigate(page==='deck'?'deck':'trials');break;
  case 'deck-preview':{
   if(battle?.status==='active'){toast('Terminez le combat avant de modifier votre deck.');break;}
   const proposal=proposeDeck(profile,id);
@@ -4479,7 +4511,7 @@ case 'lab-open':openDeveloper();break;
   hideModal();save();render();$('manual-current-title')?.focus({preventScroll:true});break;
  case 'deck-add':case 'deck-remove':
   if(battle?.status==='active'){toast('Terminez le combat avant de modifier votre deck.');break;}
-  if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();if(screen==='deck')refreshManualDeck();else render();}else toast('Impossible de modifier ce deck davantage.');break;
+  if(modifyDeck(profile,cardFromKey(id),action==='deck-add'?1:-1)){save();if(screen==='deck')refreshManualDeck();else render();}else toast('Impossible de modifier ce deck davantage.');break;
  case 'close-inspection':closeCardInspection(true);break;
  case 'select-card':{
   if(!battle||battle.status!=='active'||battle.phase!=='player')break;
@@ -4582,7 +4614,7 @@ function cardPresentation(reference,{context={},profile=null,side='p',unit=null,
  const known=native.type==='sort'||!!definition;
  const missing=lower?'Rang inexistant':'À concevoir';
  const future=known&&selected!==native.rarity;
- const availability=!known?missing:future?'Testable au laboratoire · Obtention non définie':'Version native';
+ const availability=!known?missing:future?(definition?.status.obtaining==='trial'?'À gagner en épreuve':'Testable au laboratoire · Obtention non définie'):'Version native';
  if(stats===undefined)stats=native.type==='sort'||!known?null:unit?
   {atk:unit.atk,hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);
@@ -4864,6 +4896,7 @@ const {CARDS}=__load("src/data.js");
 const {CARD_RARITIES,normalizeCardRarity,freezeCardData}=__load("src/cards/schema.js");
 const {nativeUnitAbilities,inheritUnitAbilities,FUTURE_GUARD_POLICY}=__load("src/cards/abilities.js");
 const {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE}=__load("src/cards/aube.js");
+const {evolutionTrialFor}=__load("src/evolution-trials.js");
 const AUBE_UNIT_IDS=Object.freeze(Object.keys(AUBE_EVOLUTIONS));
 const definitions=new Map();
 const noVersions=Object.freeze([]);
@@ -4887,7 +4920,7 @@ for(const card of Object.values(CARDS)){
   const definition=freezeCardData({
    id:card.id,versionId:`${card.id}:${rank.id}`,rarity:rank.id,nativeRarity:card.rarity,
    stats:{...stats},geometry:{...geometry},abilities,
-   status:{design:'validated',combat:native?'implemented':'pending',engine:'implemented',obtaining:native?'existing':'undefined'},
+   status:{design:'validated',combat:native||evolutionTrialFor(card.id,rank.id)?'implemented':'pending',engine:'implemented',obtaining:native?'existing':evolutionTrialFor(card.id,rank.id)?'trial':'undefined'},
    pendingDecisions:[...pendingDecisions],source:native?null:AUBE_DESIGN_SOURCE
   });
   versions.push(definition);
@@ -5060,6 +5093,30 @@ const AUBE_EVOLUTIONS=freezeCardData({
 Object.assign(__exports,{AUBE_DESIGN_SOURCE,AUBE_EVOLUTIONS});
 
 },
+"src/evolution-trials.js":function(__exports,__load){
+// Premier parcours d'obtention : références de versions, objectifs et rencontres.
+// Les chiffres et pouvoirs restent exclusivement dans le registre de cartes.
+const {freezeCardData}=__load("src/cards/schema.js");
+const EVOLUTION_TRIALS=freezeCardData([
+ {id:'aube-militia-rare',name:'Tenir jusqu’à l’aube',cardId:'militia',from:'commun',to:'rare',mission:'01',
+  objective:'Remporter la bataille avec au moins un Milicien Commun encore vivant.',
+  enemy:'Patrouille des Brumes',difficulty:1,hp:16,aiStyle:'equilibre',deck:['militia','militia','shield','archer','militia','healing','militia','archer']},
+ {id:'aube-shield-rare',name:'Le serment du Porte-égide',cardId:'shield',from:'commun',to:'rare',mission:'02',
+  objective:'Remporter la bataille avec au moins un Porte-égide Commun encore vivant.',
+  enemy:'Éclaireurs des Brumes',difficulty:1,hp:18,aiStyle:'assaut',deck:['militia','ranger','militia','wolf','militia','healing','ranger','militia']},
+ {id:'aube-archer-rare',name:'La dernière volée',cardId:'archer',from:'commun',to:'rare',mission:'02',
+  objective:'Remporter la bataille avec au moins une Arbalétrière Commune encore vivante.',
+  enemy:'Gardes du chemin',difficulty:1,hp:18,aiStyle:'bastion',deck:['shield','militia','shield','militia','healing','militia','archer','militia']},
+ {id:'aube-militia-epic',name:'Le rempart du Bosquet',cardId:'militia',from:'rare',to:'épique',mission:'03',previous:'aube-militia-rare',
+  objective:'Remporter la bataille avec au moins un Milicien Rare encore vivant.',
+  enemy:'Gardien de l’épreuve du Bosquet',difficulty:2,hp:22,aiStyle:'bastion',boss:true,deck:['treant','militia','ranger','dryad','shield','wolf','militia','healing','archer','militia','shield','ranger']}
+]);
+const evolutionTrial=id=>EVOLUTION_TRIALS.find(t=>t.id===id)||null;
+const evolutionTrialFor=(id,rarity)=>EVOLUTION_TRIALS.find(t=>t.cardId===id&&t.to===rarity)||null;
+
+Object.assign(__exports,{EVOLUTION_TRIALS,evolutionTrial,evolutionTrialFor});
+
+},
 "src/cards/ability-text.js":function(__exports,__load){
 // Libellés brefs dérivés des paramètres ; aucune règle ni valeur métier recopiée.
 function unitAbilitySummary(definition){
@@ -5147,12 +5204,14 @@ function battleUnitReference(context,reference,side='p'){
 }
 function battleUnitDefinition(context,reference,side='p'){
  const ref=battleUnitReference(context,reference,side);
- return context.cardRules===AUBE_RULESET?resolveRulesDefinition(ref):resolveUnitDefinition(ref);
+ const native=CARDS[ref?.id]?.rarity;
+ return context.cardRules===AUBE_RULESET||ref?.rarity!==undefined&&ref.rarity!==native?resolveRulesDefinition(ref):resolveUnitDefinition(ref);
 }
 function unitCanPlay(context,reference,side='p'){
  const d=battleUnitDefinition(context,reference,side);if(!d)return false;
  if(d.rarity===d.nativeRarity)return true;
- return context.mode==='developer'&&context.cardRules===AUBE_RULESET&&d.status.engine==='implemented';
+ if(context.mode==='developer')return context.cardRules===AUBE_RULESET&&d.status.engine==='implemented';
+ return side==='p'&&context.evolutionsEnabled===true&&d.status.combat==='implemented';
 }
 function unitAttackRange(u){
  const d=versionUnitAbilities(u);
@@ -5223,10 +5282,11 @@ Object.assign(__exports,{unitStatContext,unitStats,versionUnitStats});
 const {CARDS,CLASSES,TOWER_MAX}=__load("src/data.js");
 const {dungeonById}=__load("src/dungeons.js");
 const {TALENT_LEVELS,talentInfo,normalizeTalentChoices}=__load("src/talents.js");
+const {cardId,cardReference,cardKey,playableCardReference,ownedCardCopies,normalizeEvolutionInventory,completedEvolutionTrials}=__load("src/cards/references.js");
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 const safeCount=(n,fallback=0,max=1000000000)=>Number.isSafeInteger(n)&&n>=0?Math.min(n,max):fallback;
 const objectOf=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{};
-const ownedCopies=(meta,id)=>meta.collection[id]||0;
+const ownedCopies=ownedCardCopies;
 function freshProfile(){return {
  version:1,name:'Souverain des Couronnes',heroClass:'gardien',gold:110,shards:50,stars:0,heroXp:0,mastery:{},talents:{},
  unlocked:1,towerUnlocked:1,towerCleared:[],dungeonCleared:[],dungeonRun:null,reputation:{aube:0,sylve:0,ombre:0,forge:0,ether:0},equipmentOwned:[],equipped:{arme:null,armure:null,relique:null},wins:0,losses:0,collection:{militia:4,shield:2,archer:2,ranger:2,wolf:2,firebolt:2,healing:2,smith:1,spark:1,bone:1,drill:1,thorn:1},
@@ -5268,7 +5328,9 @@ function normalizeProfile(raw){
   ?{id:run.id,stage:run.stage,hp:Number.isFinite(run.hp)?Math.max(1,Math.floor(run.hp)):null,maxhp:Number.isFinite(run.maxhp)?Math.max(1,Math.floor(run.maxhp)):null,phase:['ready','choice','bonus'].includes(run.phase)&&run.stage>0?run.phase:'ready'}
   :null;
  for(const slot of ['arme','armure','relique'])if(!p.equipmentOwned.includes(p.equipped[slot])||EQUIPMENT[p.equipped[slot]]?.slot!==slot)p.equipped[slot]=null;
- p.deck=(Array.isArray(raw.deck)?raw.deck:base.deck).filter(id=>CARDS[id]).slice(0,24);
+ if(raw.evolvedCollection!==undefined)p.evolvedCollection=normalizeEvolutionInventory(raw.evolvedCollection);
+ if(raw.completedTrials!==undefined)p.completedTrials=completedEvolutionTrials(raw.completedTrials);
+ p.deck=(Array.isArray(raw.deck)?raw.deck:base.deck).map(cardReference).filter(playableCardReference).slice(0,24);
  if(!['gardien','arcaniste','rodeur','clerc'].includes(p.heroClass))p.heroClass='gardien';
  p.unlocked=clamp(Number(p.unlocked)||1,1,12);
  if(!Array.isArray(p.completed))p.completed=[];
@@ -5307,7 +5369,7 @@ function masteryRank(profile,id){
 }
 function grantBattleProgress(profile,b){
  const none={heroXp:0,levelBefore:heroLevel(profile),levelAfter:heroLevel(profile),levelShards:0,mastered:[]};
- if(b.mode==='developer'||b.progressionGranted)return none;
+ if(b.mode==='developer'||b.mode==='evolution-trial'||b.progressionGranted)return none;
  b.progressionGranted=true;
  const victory=b.status==='victory';
  // Une retraite immédiate ne donne pas d'XP : pas de gain à la boucle abandon/recommencer.
@@ -5330,25 +5392,26 @@ function grantBattleProgress(profile,b){
 }
 function validateDeck(profile){
  if(!Array.isArray(profile.deck)||profile.deck.length<12||profile.deck.length>24)return 'Le deck doit contenir entre 12 et 24 cartes.';
- const counts={};for(const id of profile.deck)counts[id]=(counts[id]||0)+1;
- for(const [id,n] of Object.entries(counts)){
-  const c=CARDS[id];if(!c)return 'Carte inconnue dans le deck.';
+ const counts={};for(const ref of profile.deck){if(!playableCardReference(ref))return 'Carte ou évolution indisponible dans le deck.';const key=cardKey(ref);counts[key]=(counts[key]||0)+1;}
+ for(const ref of profile.deck){
+  const c=CARDS[cardId(ref)],n=counts[cardKey(ref)];if(!c)return 'Carte inconnue dans le deck.';
   if(c.heroClass&&c.heroClass!==profile.heroClass)return `${c.name} est réservée à la classe ${CLASSES[c.heroClass].name}.`;
-  if(n>ownedCopies(profile,id))return `Trop d’exemplaires : ${c.name}.`;
+  if(n>ownedCopies(profile,ref))return `Trop d’exemplaires : ${c.name}.`;
  }
  return '';
 }
 function changeHeroClass(profile,id){
  if(!CLASSES[id])return {ok:false,reason:'Classe inconnue.'};
- const restricted=profile.deck.map(cardId=>CARDS[cardId]).find(card=>card?.heroClass&&card.heroClass!==id);
+ const restricted=profile.deck.map(ref=>CARDS[cardId(ref)]).find(card=>card?.heroClass&&card.heroClass!==id);
  if(restricted)return {ok:false,reason:`Retirez d’abord ${restricted.name} de votre deck pour changer de classe.`};
  profile.heroClass=id;return {ok:true};
 }
-function modifyDeck(profile,id,delta){
- if(!CARDS[id]||(delta>0&&CARDS[id].heroClass&&CARDS[id].heroClass!==profile.heroClass))return false;
- const count=profile.deck.filter(x=>x===id).length;
- if(delta>0&&count<ownedCopies(profile,id)&&profile.deck.length<24){profile.deck.push(id);return true;}
- if(delta<0&&count>0){profile.deck.splice(profile.deck.indexOf(id),1);return true;}
+function modifyDeck(profile,reference,delta){
+ const ref=cardReference(reference),id=cardId(ref);
+ if(!ref||!playableCardReference(ref)||(delta>0&&CARDS[id].heroClass&&CARDS[id].heroClass!==profile.heroClass))return false;
+ const key=cardKey(ref),index=profile.deck.findIndex(x=>cardKey(x)===key),count=profile.deck.filter(x=>cardKey(x)===key).length;
+ if(delta>0&&count<ownedCopies(profile,ref)&&profile.deck.length<24){profile.deck.push(ref);return true;}
+ if(delta<0&&index>=0){profile.deck.splice(index,1);return true;}
  return false;
 }
 const EQUIPMENT={
@@ -5478,6 +5541,64 @@ function chosenTalents(profile,level){
 Object.assign(__exports,{TALENT_LEVELS,TALENT_TREE,talentInfo,normalizeTalentChoices,chosenTalents});
 
 },
+"src/cards/references.js":function(__exports,__load){
+// Identité et inventaire : les anciens ID restent des chaînes, les évolutions
+// sont des références {id,rarity}. Jamais de nouvelle entrée dans CARDS.
+const {CARDS}=__load("src/data.js");
+const {resolveUnitDefinition}=__load("src/cards/definitions.js");
+const {EVOLUTION_TRIALS,evolutionTrialFor,evolutionTrial}=__load("src/evolution-trials.js");
+const cardId=ref=>typeof ref==='string'?ref:ref?.id;
+function cardReference(ref){
+ const id=cardId(ref);if(typeof id!=='string'||!Object.hasOwn(CARDS,id))return null;const c=CARDS[id];
+ if(typeof ref==='string'||ref.rarity===undefined)return id;
+ if(c.type==='sort')return ref.rarity===c.rarity?id:null;
+ const d=resolveUnitDefinition(ref);if(!d)return null;
+ return d.rarity===c.rarity?id:Object.freeze({id,rarity:d.rarity});
+}
+function cardKey(ref){const r=cardReference(ref);return typeof r==='string'?r:r?`${r.id}:${r.rarity}`:'';}
+function cardFromKey(key){
+ if(typeof key!=='string')return null;
+ if(Object.hasOwn(CARDS,key))return key;
+ const parts=key.split(':');return parts.length===2?cardReference({id:parts[0],rarity:parts[1]}):null;
+}
+function cardRarity(ref){const r=cardReference(ref);return typeof r==='string'?CARDS[r].rarity:r?.rarity;}
+function playableCardReference(ref){
+ const r=cardReference(ref);return !!r&&(typeof r==='string'||!!evolutionTrialFor(r.id,r.rarity));
+}
+function ownedCardCopies(profile,ref){
+ const r=cardReference(ref);return !r?0:typeof r==='string'?(profile.collection?.[r]||0):(playableCardReference(r)?profile.evolvedCollection?.[cardKey(r)]||0:0);
+}
+function ownedCardEntries(profile){
+ const list=Object.entries(profile.collection||{}).filter(([id,n])=>Object.hasOwn(CARDS,id)&&Number.isSafeInteger(n)&&n>0).map(([reference,quantity])=>({reference,quantity}));
+ for(const [key,quantity] of Object.entries(profile.evolvedCollection||{})){
+  const reference=cardFromKey(key);if(typeof reference==='object'&&reference&&playableCardReference(reference)&&quantity>0)list.push({reference,quantity});
+ }
+ return list;
+}
+const totalOwnedCopies=(profile,id)=>ownedCardEntries(profile).filter(e=>cardId(e.reference)===id).reduce((n,e)=>n+e.quantity,0);
+function normalizeEvolutionInventory(raw){
+ const result={};if(!raw||typeof raw!=='object'||Array.isArray(raw))return result;
+ for(const [key,n] of Object.entries(raw)){
+  const r=cardFromKey(key);if(r&&typeof r==='object'&&playableCardReference(r)&&Number.isSafeInteger(n)&&n>=0)result[cardKey(r)]=Math.min(n,100000);
+ }
+ return result;
+}
+function evolutionProfileError(raw){
+ if(raw.evolvedCollection!==undefined){
+  if(!raw.evolvedCollection||typeof raw.evolvedCollection!=='object'||Array.isArray(raw.evolvedCollection))return 'Inventaire d’évolutions invalide.';
+  for(const [key,n] of Object.entries(raw.evolvedCollection)){
+   const r=cardFromKey(key);
+   if(!r||typeof r!=='object'||!playableCardReference(r)||!Number.isSafeInteger(n)||n<0)return 'Version ou quantité d’évolution invalide.';
+  }
+ }
+ if(raw.completedTrials!==undefined&&(!Array.isArray(raw.completedTrials)||!raw.completedTrials.every(id=>!!evolutionTrial(id))))return 'Épreuves terminées invalides.';
+ return '';
+}
+const completedEvolutionTrials=raw=>[...new Set(Array.isArray(raw)?raw.filter(id=>EVOLUTION_TRIALS.some(t=>t.id===id)):[])];
+
+Object.assign(__exports,{cardId,cardReference,cardKey,cardFromKey,cardRarity,playableCardReference,ownedCardCopies,ownedCardEntries,totalOwnedCopies,normalizeEvolutionInventory,evolutionProfileError,completedEvolutionTrials});
+
+},
 "src/engine.js":function(__exports,__load){
 // Interface publique stable : les anciennes importations ne changent pas.
 Object.assign(__exports,__load("src/engine/profile.js"));
@@ -5485,6 +5606,7 @@ Object.assign(__exports,__load("src/engine/battle.js"));
 Object.assign(__exports,__load("src/engine/dungeon-run.js"));
 Object.assign(__exports,__load("src/engine/economy.js"));
 Object.assign(__exports,__load("src/engine/deck-builder.js"));
+Object.assign(__exports,__load("src/engine/evolution-progress.js"));
 Object.assign(__exports,{});
 
 },
@@ -5506,6 +5628,7 @@ const {chosenTalents}=__load("src/talents.js");
 const {tempoTargetError}=__load("src/engine/tempo.js");
 const {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,gearBonus}=__load("src/engine/profile.js");
 const {unitStatContext,unitStats}=__load("src/engine/unit-stats.js");
+const {cardId}=__load("src/cards/references.js");
 const {laneCount,lastCell,crownColumn,entryColumn,validDeploymentColumn,validLane,missionLayout}=__load("src/engine/board.js");
 Object.assign(__exports,__load("src/engine/board.js"));
 Object.assign(__exports,__load("src/engine/guard-candidates.js"));
@@ -5523,9 +5646,11 @@ function draw(b,side,n=1){
    if(!hero.discard.length)break;
    hero.deck=shuffle(b,hero.discard);hero.discard=[];
   }
-  const id=hero.deck.pop();if(!CARDS[id])continue;
-  const definition=CARDS[id].type==='unité'?battleUnitDefinition(b,id,side):null;
-  hero.hand.push({id,wait:Math.max(0,(definition?.stats.delay??CARDS[id].delay)-1)});
+  const reference=hero.deck.pop(),id=cardId(reference);if(!CARDS[id])continue;
+  const definition=CARDS[id].type==='unité'?battleUnitDefinition(b,reference,side):null;
+  const entry={id,wait:Math.max(0,(definition?.stats.delay??CARDS[id].delay)-1)};
+  if(typeof reference==='object'){entry.rarity=reference.rarity;entry.cardRules=AUBE_RULESET;}
+  hero.hand.push(entry);
  }
 }
 
@@ -5542,6 +5667,7 @@ function createBattle(profile,mission,seed=Date.now(),options={}){
  upgrades:bonuses.upgrades,mastery:bonuses.mastery,enemyDifficulty:mission.difficulty,mode:mission.mode||'campaign',stats:{playerKills:0,enemyKills:0}};
  if(options.turnFlow==='alternating')b.turnFlow='alternating';
  if(options.cardRules===AUBE_RULESET)b.cardRules=AUBE_RULESET;
+ if(p.deck.some(ref=>typeof ref==='object'))b.evolutionsEnabled=true;
  b.heroes.p.deck=shuffle(b,p.deck);
  b.heroes.e.deck=shuffle(b,mission.deck);
  draw(b,'p',5+b.libraryBonus);draw(b,'e',5);
@@ -5586,7 +5712,7 @@ function spawn(b,side,reference,lane,col=entryColumn(b,side)){
  const u={uid:b.nextUnitId++,id,side,atk:stats.atk,maxhp:stats.maxhp,
   hp:stats.maxhp,armor:c.ability==='armor'?2:0,ranged:c.ability==='ranged',
   ability:c.ability,stun:0,poison:0,poisonTurns:0};
- if(b.cardRules===AUBE_RULESET){u.rarity=definition.rarity;u.cardRules=AUBE_RULESET;u.armor=definition.abilities.armor?.amount||0;u.ranged=!!definition.abilities.ranged;}
+ if(b.cardRules===AUBE_RULESET||reference.rarity!==undefined){u.rarity=definition.rarity;u.cardRules=AUBE_RULESET;u.armor=definition.abilities.armor?.amount||0;u.ranged=!!definition.abilities.ranged;}
  b.board[lane][col]=u;
  fx(b,{type:'spawn',side,lane,col,icon:c.icon});
  if(formationBonus(b,lane,u))note(b,`Concorde de ${FACTIONS[c.faction].short} : +1 attaque aux alliés de cet ordre sur la ligne ${lane+1}.`);
@@ -5617,7 +5743,7 @@ function play(b,side,index,lane,col=entryColumn(b,side)){
  if(c.type==='unité'&&!spawn(b,side,hand,lane,col))return {ok:false,reason:'La case de déploiement est occupée.'};
  const drawAfter=c.type==='sort'?castSpell(b,side,hand.id,lane,{emit:fx,hit,damageHero,sweepDead,checkOutcome,note,controlHooks}):0;
  if(side==='p'){if(!b.cardUses)b.cardUses={};b.cardUses[hand.id]=(b.cardUses[hand.id]||0)+1;}
- hero.discard.push(hand.id);hero.hand.splice(index,1);hero.cardsPlayed++;
+ hero.discard.push(hand.rarity===undefined?hand.id:{id:hand.id,rarity:hand.rarity});hero.hand.splice(index,1);hero.cardsPlayed++;
  if(drawAfter)draw(b,side,drawAfter);
  return {ok:true};
 }
@@ -6819,11 +6945,12 @@ Object.assign(__exports,{dungeonUnlocked,beginDungeon,chooseDungeonEvent,nextDun
 "src/engine/economy.js":function(__exports,__load){
 // Gains de mission, récompenses et économie interne (sans paiement réel).
 const {CARDS,CLASS_SKILLS,TOWER_MAX}=__load("src/data.js");
-const {ownedCopies,grantBattleProgress,heroLevel}=__load("src/engine/profile.js");
+const {grantBattleProgress,heroLevel}=__load("src/engine/profile.js");
 const {CONTROL_IDS}=__load("src/engine/battle-control.js");
 const {TEMPO_IDS}=__load("src/engine/tempo.js");
+const {cardId,totalOwnedCopies}=__load("src/cards/references.js");
 function completeBattle(profile,mission,b){
- if(b.mode==='developer')return null;
+ if(b.mode==='developer'||b.mode==='evolution-trial')return null;
  if(b.status!=='victory'&&b.status!=='defeat')return null;
  if(b.progressionGranted)return {victory:b.status==='victory',gold:0,shards:0,card:null,reputation:[],heroXp:0,levelShards:0,mastered:[]};
  const reward={victory:b.status==='victory',gold:0,shards:0,card:null,reputation:[]};
@@ -6840,7 +6967,7 @@ function completeBattle(profile,mission,b){
    if(mission.unlock)profile.collection[mission.unlock]=(profile.collection[mission.unlock]||0)+1;
    profile.unlocked=Math.min(12,Math.max(profile.unlocked,Number(mission.id)+1));
   }else reward.card=null;
-  for(const faction of Object.keys(profile.reputation)){const copies=profile.deck.filter(id=>CARDS[id]?.faction===faction).length;
+  for(const faction of Object.keys(profile.reputation)){const copies=profile.deck.filter(ref=>CARDS[cardId(ref)]?.faction===faction).length;
    if(!copies)continue;const gained=Math.ceil(copies/4)+(profile.equipped?.relique==='sceau'?2:0);
    profile.reputation[faction]+=gained;reward.reputation.push([faction,gained]);
   }
@@ -6862,7 +6989,7 @@ function buyPack(profile,random=Math.random){
  return {ok:true,cards:result};
 }
 function upgradeCard(profile,id){
- if(!CARDS[id]||!ownedCopies(profile,id))return {ok:false,reason:'Vous ne possédez pas cette carte.'};
+ if(!CARDS[id]||!totalOwnedCopies(profile,id))return {ok:false,reason:'Vous ne possédez pas cette carte.'};
  if(CARDS[id].type==='sort')return {ok:false,reason:'Les sorts ne sont pas améliorables dans cette version.'};
  const level=profile.upgrades[id]||0;if(level>=3)return {ok:false,reason:'Niveau maximum atteint.'};
  const cost=(level+1)*35;if(profile.shards<cost)return {ok:false,reason:`Il faut ${cost} éclats.`};
@@ -6921,6 +7048,8 @@ Object.assign(__exports,{completeBattle,buyPack,upgradeCard,learnClassSkill,FUSI
 // Déterministe, indépendant de l'interface et sans modification avant confirmation.
 const {CARDS,CHARGE_IDS,GUARD_IDS}=__load("src/data.js");
 const {validateDeck}=__load("src/engine/profile.js");
+const {cardId,cardKey,ownedCardEntries}=__load("src/cards/references.js");
+const {resolveUnitDefinition}=__load("src/cards/definitions.js");
 const DECK_STYLES=Object.freeze({
  equilibre:{name:'Équilibré',description:'Une armée polyvalente : unités, soutien et sorts.',size:18,spells:4},
  assaut:{name:'Assaut rapide',description:'Des unités vives et des sorts offensifs.',size:16,spells:2},
@@ -6950,21 +7079,21 @@ const spellBonuses={
  arcanes:{spell_bolt:13,spell_heal:5,spell_buff:10,spell_storm:17,spell_root:16,spell_ward:5}
 };
 function candidateCards(profile,style){
- const owned=profile?.collection||{};
  const cards=[];
- for(const [id,quantity] of Object.entries(owned)){
-  const c=CARDS[id];if(!c||(c.heroClass&&c.heroClass!==profile.heroClass))continue;
+ for(const {reference,quantity} of ownedCardEntries(profile)){
+  const id=cardId(reference),native=CARDS[id],d=typeof reference==='object'?resolveUnitDefinition(reference):null;
+  const c=d?{...native,attack:d.stats.attack,hp:d.stats.hp,delay:d.stats.delay}:native;if(!c||(c.heroClass&&c.heroClass!==profile.heroClass))continue;
   const n=Number(quantity);
   const count=Number.isFinite(n)?Math.min(24,Math.max(0,Math.floor(n))):0;
   const base=c.type==='sort'?8+(spellBonuses[style]?.[c.ability]||0)-c.delay*.65:unitScore(c,style);
-  for(let i=0;i<count;i++)cards.push({id,type:c.type,score:base-Math.max(0,i-1)*1.1});
+  for(let i=0;i<count;i++)cards.push({id,reference,type:c.type,score:base-Math.max(0,i-1)*1.1});
  }
- return cards.sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));
+ return cards.sort((a,b)=>b.score-a.score||cardKey(a.reference).localeCompare(cardKey(b.reference)));
 }
 function deckOverview(deck){
  const counts={},factions={};let units=0,spells=0,guards=0,quick=0;
- for(const id of deck||[]){const c=CARDS[id];if(!c)continue;
-  counts[id]=(counts[id]||0)+1;
+ for(const ref of deck||[]){const id=cardId(ref),key=cardKey(ref),c=CARDS[id];if(!c)continue;
+  counts[key]=(counts[key]||0)+1;
   if(c.type==='sort')spells++;else{units++;factions[c.faction]=(factions[c.faction]||0)+1;if(GUARD_IDS.has(id))guards++;if(c.delay===1)quick++;}
  }
  const dominant=Object.entries(factions).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))[0]?.[0]||null;
@@ -6975,7 +7104,7 @@ function proposeDeck(profile,style){
  const candidates=candidateCards(profile,style);
  if(candidates.length<12)return {ok:false,reason:'Il vous faut au moins 12 cartes possédées pour préparer un deck.'};
  const size=Math.min(config.size,candidates.length),chosen=[],used=new Set();
- function pick(pool,limit){for(const card of pool){if(chosen.length>=limit)break;if(used.has(card))continue;chosen.push(card.id);used.add(card);}}
+ function pick(pool,limit){for(const card of pool){if(chosen.length>=limit)break;if(used.has(card))continue;chosen.push(card.reference);used.add(card);}}
  pick(candidates.filter(c=>c.type==='sort'),Math.min(config.spells,size));
  pick(candidates.filter(c=>c.type==='unité'),size);
  pick(candidates,size);
@@ -6993,6 +7122,58 @@ function applyDeckStyle(profile,style){
 }
 
 Object.assign(__exports,{DECK_STYLES,deckOverview,proposeDeck,applyDeckStyle});
+
+},
+"src/engine/evolution-progress.js":function(__exports,__load){
+// Épreuves : accès, création d'un combat normal et transformation unique.
+const {CARDS,CAMPAIGN}=__load("src/data.js");
+const {evolutionTrial,EVOLUTION_TRIALS}=__load("src/evolution-trials.js");
+const {cardReference,cardKey,ownedCardCopies}=__load("src/cards/references.js");
+const {createBattle}=__load("src/engine/battle.js");
+const {validateDeck}=__load("src/engine/profile.js");
+const trialSource=t=>cardReference({id:t.cardId,rarity:t.from});
+const trialReward=t=>cardReference({id:t.cardId,rarity:t.to});
+function evolutionTrialAccess(profile,id){
+ const t=evolutionTrial(id);if(!t)return {ok:false,reason:'Épreuve inconnue.'};
+ if(profile.completedTrials?.includes(id))return {ok:false,completed:true,reason:'Évolution déjà obtenue : une seule récompense par épreuve.'};
+ const mission=CAMPAIGN.find(m=>m.id===t.mission);
+ if(!profile.completed.includes(t.mission))return {ok:false,reason:`Vaincre ${mission.enemy} dans « ${mission.name} ».`};
+ if(t.previous&&!profile.completedTrials?.includes(t.previous))return {ok:false,reason:`Terminer l’épreuve « ${evolutionTrial(t.previous).name} ».`};
+ const required=trialSource(t),name=CARDS[t.cardId].name;
+ if(ownedCardCopies(profile,required)<1)return {ok:false,reason:`Posséder ${name} au rang ${t.from}.`};
+ if(!profile.deck.some(ref=>cardKey(ref)===cardKey(required)))return {ok:false,reason:`Ajouter ${name} ${t.from} au deck.`};
+ const invalid=validateDeck(profile);if(invalid)return {ok:false,reason:invalid};
+ return {ok:true,trial:t};
+}
+function createEvolutionTrial(profile,id,seed=Date.now()){
+ const access=evolutionTrialAccess(profile,id);if(!access.ok)return access;
+ const t=access.trial;
+ const battle=createBattle(profile,{id:t.id,name:t.name,enemy:t.enemy,difficulty:t.difficulty,hp:t.hp,aiStyle:t.aiStyle,boss:!!t.boss,deck:t.deck,mode:'evolution-trial'},seed,{turnFlow:'alternating'});
+ return {ok:true,battle};
+}
+function settleEvolutionTrial(profile,b){
+ const t=evolutionTrial(b?.missionId);
+ if(!t||b.mode!=='evolution-trial'||!['victory','defeat'].includes(b.status))return {ok:false,reason:'Ce combat ne correspond pas à une épreuve terminée.'};
+ const empty={ok:true,victory:b.status==='victory',gold:0,shards:0,card:null,evolved:false};
+ if(b.progressionGranted)return {...empty,reason:'Ce combat a déjà été réglé.'};
+ b.progressionGranted=true;
+ if(profile.completedTrials?.includes(t.id))return {...empty,reason:'Évolution déjà obtenue.'};
+ if(b.status!=='victory')return {...empty,reason:'Épreuve à retenter. Aucun exemplaire consommé.'};
+ const alive=b.board.some(row=>row.some(u=>u&&u.side==='p'&&u.hp>0&&u.id===t.cardId&&(u.rarity||CARDS[u.id].rarity)===t.from));
+ if(!alive)return {...empty,reason:'Victoire, mais l’objectif de l’épreuve n’est pas rempli. Aucun exemplaire consommé.'};
+ const access=evolutionTrialAccess(profile,t.id);if(!access.ok)return {...empty,reason:access.reason};
+ const source=trialSource(t),reward=trialReward(t),key=cardKey(source);
+ // Seul un exemplaire est transformé ; le slot éventuel du deck reste en place.
+ if(typeof source==='string')profile.collection[source]--;else profile.evolvedCollection[key]--;
+ profile.evolvedCollection??={};
+ const target=cardKey(reward);profile.evolvedCollection[target]=(profile.evolvedCollection[target]||0)+1;
+ const index=profile.deck.findIndex(ref=>cardKey(ref)===key);if(index>=0)profile.deck[index]=reward;
+ profile.completedTrials??=[];profile.completedTrials.push(t.id);b.progressionGranted=true;
+ return {...empty,card:reward,evolved:true,from:source,trial:t};
+}
+const bossEvolutionUnlocks=missionId=>EVOLUTION_TRIALS.filter(t=>t.previous&&t.mission===missionId);
+
+Object.assign(__exports,{trialSource,trialReward,evolutionTrialAccess,createEvolutionTrial,settleEvolutionTrial,bossEvolutionUnlocks});
 
 },
 "src/ui/generated-card.js":function(__exports,__load){
@@ -7188,6 +7369,32 @@ function concordeDetails(card,esc,active=null){
 Object.assign(__exports,{concordeLight,concordeDescription,concordeDetails});
 
 },
+"src/ui/evolution-trials.js":function(__exports,__load){
+// Épreuves et résultat : lecture du moteur et des cartes, aucune attribution ici.
+const {CARDS,CAMPAIGN}=__load("src/data.js");
+const {EVOLUTION_TRIALS}=__load("src/evolution-trials.js");
+const {evolutionTrialAccess,trialReward}=__load("src/engine/evolution-progress.js");
+function renderEvolutionTrials(profile,battle,{btn,cardUI,esc}){
+ const busy=battle?.status==='active',boss=CAMPAIGN.find(m=>m.id==='03');
+ return `<section class="evolution-trials"><header><div class="kicker">LES ÉPREUVES DE L’AUBE</div><h1 class="page-title">Méritez vos évolutions</h1><p class="page-sub">Remportez une épreuve avec le personnage demandé encore vivant. Un seul exemplaire évolue ; sa place dans votre deck est conservée.</p>${btn('Préparer mon deck','nav','data-page="deck"','ghost')}</header>
+  <div class="card-panel trial-boss-gate"><h2 class="section-title">Le premier boss ouvre la suite</h2><p>Vaincre ${esc(boss.enemy)} dans « ${esc(boss.name)} » ouvre l’épreuve du Milicien Épique, après celle du Milicien Rare.</p><span class="pill">${profile.completed.includes(boss.id)?'✓ Boss déjà vaincu':'Boss à vaincre en campagne'}</span></div>
+  ${busy?'<div class="hint red">Terminez le combat en cours avant de commencer une épreuve.</div>':''}
+  <div class="trial-grid">${EVOLUTION_TRIALS.map(t=>{
+   const access=evolutionTrialAccess(profile,t.id),name=CARDS[t.cardId].name;
+   return `<article class="card-panel trial-card" data-trial-id="${t.id}"><div class="section-caption">${access.completed?'✓ ÉVOLUTION OBTENUE':access.ok?'ÉPREUVE DISPONIBLE':'ÉPREUVE VERROUILLÉE'}</div><h2>${esc(t.name)}</h2><div class="trial-reward-card">${cardUI(trialReward(t),{previewContext:'reward'})}</div><p class="trial-objective">${esc(t.objective)}</p><p><b>Récompense garantie :</b> 1 ${esc(name)} ${esc(t.from)} devient ${esc(t.to)}.</p><p class="hint">Une seule récompense. Aucun coût, aucun tirage, aucun exemplaire consommé en cas d’échec. Pas d’or, d’éclats ou d’XP accordés par ces épreuves.</p><div class="trial-start">${access.ok?'<p class="hint green">Objectif et récompense annoncés : à vous de jouer.</p>':`<p class="hint">${esc(access.reason)}</p>`}${btn(access.completed?'Évolution obtenue':'Commencer l’épreuve','trial-start',`data-id="${t.id}" ${!access.ok||busy?'disabled':''}`,'primary')}</div></article>`;
+  }).join('')}</div>
+ </section>`;
+}
+
+function evolutionTrialResult(reward,{btn,cardUI,esc}){
+ return `<div class="kicker">ÉPREUVE DE L’AUBE</div><h2>${reward.evolved?'Évolution obtenue !':reward.victory?'Objectif à retenter':'Épreuve perdue'}</h2>
+  ${reward.evolved?`<p>Un exemplaire a été transformé. Il est disponible dans votre Collection et le deck a été mis à jour.</p><div class="trial-result-card">${cardUI(reward.card,{previewContext:'reward'})}</div>`:`<p>${esc(reward.reason||'Épreuve non validée. Aucun exemplaire consommé.')}</p>`}
+  <div class="button-row">${btn('Retour aux épreuves','trial-exit','data-page="trials"','primary')}${btn('Voir mon deck','trial-exit','data-page="deck"','ghost')}</div>`;
+}
+
+Object.assign(__exports,{renderEvolutionTrials,evolutionTrialResult});
+
+},
 "src/ui/spell-controller.js":function(__exports,__load){
 // Sélection transitoire : jamais ajoutée au combat ou à sa sauvegarde.
 const {CARDS}=__load("src/data.js");
@@ -7254,6 +7461,7 @@ const { generatedCardFace }=__load("src/ui/generated-card.js");
 const { createPages }=__load("src/ui/pages.js");
 const { createBattleView }=__load("src/ui/battle-view.js");
 const { unitStatContext }=__load("src/engine/unit-stats.js");
+const {ownedCardCopies,totalOwnedCopies,cardKey}=__load("src/cards/references.js");
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 const { FACTIONS, CLASSES }=__load("src/data.js");
 const { visualFor, artSrc, cardTemplateFor }=__load("src/visuals.js");
@@ -7294,6 +7502,7 @@ function createViews(getState) {
     const pages = [
       ['home', 'Citadelle', '♜'],
       ['deck', 'Mon deck', '▤'],
+      ['trials', 'Épreuves', '⚑'],
       ['campaign', 'Campagne', '⚑'],
       ['tower', 'Tour', '♛'],
       ['dungeons', 'Donjons', '⚔'],
@@ -7336,7 +7545,7 @@ function createViews(getState) {
     if(!presentation)return '';
     const c=presentation.card;
     const tone = FACTIONS[c.faction].tone,
-      owned = profile.collection[id] || 0,
+      owned = upgradable?totalOwnedCopies(profile,id):ownedCardCopies(profile,actualReference),
       visual = visualFor(c, { cards: true }),
       masteryXp = profile.mastery?.[id] || 0;
     const waiting = inHand && cooldown > 0,
@@ -7370,7 +7579,7 @@ function createViews(getState) {
 
  ${fullCard && !inHand && (bonus || rank) ? `<div class="generated-card-progress">${bonus ? 'Amélioration +' + bonus : ''}${bonus && rank ? ' · ' : ''}${rank ? 'Maîtrise ' + rank + '/3' : ''}</div>` : ''}
  ${(canEdit || upgradable) && owned ? `<div class="mastery-progress" title="Maîtrise gagnée en jouant cette carte"><span>Maîtrise ${rank}/3 · ${masteryXp}${rank === 3 ? ' (MAX)' : ' / ' + MASTERY_THRESHOLDS[rank + 1]} XP</span><div class="mastery-track"><i style="width:${rank === 3 ? 100 : Math.min(100, (masteryXp / MASTERY_THRESHOLDS[rank + 1]) * 100)}%"></i></div></div>` : ''}
- ${canEdit ? `<div class="card-actions"><span class="tiny muted">Possédées : ${owned}</span><span>${btn('+', 'deck-add', `data-id="${id}" aria-label="Ajouter ${esc(c.name)}"`, 'small')}${btn('−', 'deck-remove', `data-id="${id}" aria-label="Retirer ${esc(c.name)}"`, 'small ghost')}</span></div>` : ''}
+ ${canEdit ? `<div class="card-actions"><span class="tiny muted">Possédées : ${owned}</span><span>${btn('+', 'deck-add', `data-id="${cardKey(actualReference)}" aria-label="Ajouter ${esc(c.name)}"`, 'small')}${btn('−', 'deck-remove', `data-id="${cardKey(actualReference)}" aria-label="Retirer ${esc(c.name)}"`, 'small ghost')}</span></div>` : ''}
  ${upgradable && c.type === 'unité' ? `<div class="card-actions"><span class="tiny muted">Niv. ${bonus}/3</span>${btn(bonus === 3 ? 'MAX' : `+1 · ${(bonus + 1) * 35} ✧`, 'card-upgrade', `data-id="${id}" ${!owned || bonus === 3 ? 'disabled' : ''}`, 'small')}</div>` : ''}
  ${waiting ? `<div class="cooldown-stamp" aria-hidden="true"><b>${cooldown}</b><small>${cooldown === 1 ? 'TOUR' : 'TOURS'}</small></div>` : ''}</div>`;
   }
@@ -7393,6 +7602,9 @@ Object.assign(__exports,{createViews});
 const {cardPreviewAttributes}=__load("src/ui/card-presentation.js");
 const { renderCollectionCatalogue }=__load("src/ui/collection.js");
 const {renderManualDeck}=__load("src/ui/deck-builder.js");
+const {cardId,cardFromKey,cardRarity,ownedCardEntries,totalOwnedCopies}=__load("src/cards/references.js");
+const {bossEvolutionUnlocks}=__load("src/engine/evolution-progress.js");
+const {renderEvolutionTrials}=__load("src/ui/evolution-trials.js");
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 const { CARDS, CLASS_SKILLS, FACTIONS, CLASSES, CAMPAIGN, TOWER_MAX, towerMission }=__load("src/data.js");
 const { AI_STYLES }=__load("src/ai.js");
@@ -7428,7 +7640,7 @@ function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
     const cleared = profile.completed.length;
     return `<section class="hero-banner"><div class="hero-copy"><div class="kicker">UN MONDE À RECONQUÉRIR · CHAPITRE I</div><h1>Forgez votre <em>légende.</em></h1><p>Cinq ordres se disputent les frontières du royaume. Collectionnez des créatures, assemblez votre deck et menez vos troupes à la victoire dans des combats tactiques sur deux à quatre lignes.</p><div class="button-row">${btn('⚔ Continuer la campagne', 'start-next', '', 'primary')}${btn('Découvrir les règles', 'nav', 'data-page="guide"', 'ghost')}${btn('Nouvelle partie · choisir une classe', 'new-game', '', 'ghost')}${previousGameAvailable ? btn('↶ Partie précédente', 'restore-previous-game', '', 'ghost') : ''}</div></div><div class="hero-crest"><div class="crest-ring"><span>♜</span></div><div class="crest-sub">LE SERMENT DES COURONNES</div></div></section>
  <section class="spaced"><div class="card-panel progression-panel"><div class="split-head"><div><div class="section-caption">PROGRESSION DU SOUVERAIN</div><h2 class="section-title">Niveau ${heroLevel(profile)} / ${HERO_MAX_LEVEL}</h2></div><span class="pill">Bouclier de vétéran +${heroShieldBonus(profile)}</span></div><p class="page-sub">${heroLevel(profile) === HERO_MAX_LEVEL ? 'Maîtrise héroïque maximale atteinte.' : `${heroProgress(profile).shown} / ${heroProgress(profile).needed} XP vers le prochain niveau.`} Les niveaux améliorent progressivement la protection, sans ajouter d’attaque aux cartes.</p><div class="progressbar"><span style="width:${heroLevel(profile) === HERO_MAX_LEVEL ? 100 : Math.min(100, heroProgress(profile).percent)}%"></span></div></div></section>
- <section class="spaced stat-row"><div class="stat-box"><strong>${cleared}/12</strong><small>Missions accomplies</small></div><div class="stat-box"><strong>${Object.keys(profile.collection).filter((k) => profile.collection[k] > 0).length}/${Object.keys(CARDS).length}</strong><small>Cartes découvertes</small></div><div class="stat-box"><strong>${profile.wins}</strong><small>Victoires</small></div><div class="stat-box"><strong>${profile.deck.length}</strong><small>Cartes du deck</small></div></section>
+ <section class="spaced stat-row"><div class="stat-box"><strong>${cleared}/12</strong><small>Missions accomplies</small></div><div class="stat-box"><strong>${new Set(ownedCardEntries(profile).map(e=>cardId(e.reference))).size}/${Object.keys(CARDS).length}</strong><small>Cartes découvertes</small></div><div class="stat-box"><strong>${profile.wins}</strong><small>Victoires</small></div><div class="stat-box"><strong>${profile.deck.length}</strong><small>Cartes du deck</small></div></section>
  <section class="spaced"><div class="split-head"><div><div class="section-caption">Votre prochain défi</div><h2 class="section-title" style="margin-top:8px">${esc(next.name)}</h2></div><span class="pill">Région · ${esc(next.region)}</span></div><div class="card-panel"><p class="page-sub">${esc(next.story)} Affrontez <strong class="gold">${esc(next.enemy)}</strong> et gagnez ${next.reward} pièces d’or et ${next.shards} éclats.</p><div class="progressbar"><span style="width:${(cleared / 12) * 100}%"></span></div><div class="button-row">${btn('Jouer cette mission', 'start-mission', `data-id="${next.id}"`, 'primary')}${btn('Voir la campagne', 'nav', 'data-page="campaign"', 'ghost')}</div></div></section>
  <section class="spaced"><h2 class="section-title">Les trois piliers de votre aventure</h2><div class="three-grid"><div class="feature-card"><div class="feature-icon">♜</div><h3>Stratégie vivante</h3><p>Vos créatures avancent et combattent automatiquement. Choisissez le bon moment et la bonne ligne.</p></div><div class="feature-card"><div class="feature-icon">✧</div><h3>Collection & évolution</h3><p>Créez des combinaisons entre factions, améliorez vos unités et débloquez de nouveaux pouvoirs.</p></div><div class="feature-card"><div class="feature-icon">⚑</div><h3>Campagne, Tour & donjons</h3><p>Parcourez douze missions, vingt étages et trois donjons successifs avec des boss.</p></div></div></section>`;
   }
@@ -7443,7 +7655,7 @@ function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
          .map((m) => {
            const locked = Number(m.id) > profile.unlocked,
              done = profile.completed.includes(m.id);
-           return `<article class="mission ${locked ? 'locked' : ''} ${done ? 'completed' : ''}"><div class="mission-top"><span>MISSION ${m.id} · ${'✦'.repeat(m.difficulty)}</span><span>${done ? '✓ TERMINÉE' : locked ? '⌁ VERROUILLÉE' : m.boss ? '♛ BOSS' : 'À DÉCOUVRIR'}</span></div><h3>${esc(m.name)}</h3><p>${esc(m.story)}</p><p class="enemy-style-tag">Stratégie : ${esc(AI_STYLES[m.aiStyle]?.name || 'Équilibré')}${m.boss ? ' · Boss à deux phases' : ''}</p><div class="reward">◈ ${m.reward} or &nbsp; ✧ ${m.shards} éclats</div>${btn(locked ? 'Inaccessible' : done ? 'Rejouer la bataille' : 'Lancer le combat', 'start-mission', `data-id="${m.id}" ${locked ? 'disabled' : ''}`, locked ? 'ghost' : 'primary')}</article>`;
+           return `<article class="mission ${locked ? 'locked' : ''} ${done ? 'completed' : ''}"><div class="mission-top"><span>MISSION ${m.id} · ${'✦'.repeat(m.difficulty)}</span><span>${done ? '✓ TERMINÉE' : locked ? '⌁ VERROUILLÉE' : m.boss ? '♛ BOSS' : 'À DÉCOUVRIR'}</span></div><h3>${esc(m.name)}</h3><p>${esc(m.story)}</p><p class="enemy-style-tag">Stratégie : ${esc(AI_STYLES[m.aiStyle]?.name || 'Équilibré')}${m.boss ? ' · Boss à deux phases' : ''}</p><div class="reward">◈ ${m.reward} or &nbsp; ✧ ${m.shards} éclats</div>${bossEvolutionUnlocks(m.id).map(t=>`<p class="evolution-unlock">${done?'Épreuve débloquée':'Débloque une épreuve'} : ${esc(CARDS[t.cardId].name)} ${esc(t.to)}.</p>`).join('')}${btn(locked ? 'Inaccessible' : done ? 'Rejouer la bataille' : 'Lancer le combat', 'start-mission', `data-id="${m.id}" ${locked ? 'disabled' : ''}`, locked ? 'ghost' : 'primary')}</article>`;
          })
          .join('')}</div></section>`
    )
@@ -7539,9 +7751,9 @@ function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
   function deckUI(){
     return renderManualDeck(profile,{battle,filters:deckFilters},{btn,cardUI,esc,quickDecks:deckWorkshopUI(battle?.status==='active')});
   }
+  function trialsUI(){return renderEvolutionTrials(profile,battle,{btn,cardUI,esc});}
   function collectionUI() {
-    const counts = {};
-    profile.deck.forEach((id) => (counts[id] = (counts[id] || 0) + 1));
+    const counts=deckOverview(profile.deck).counts;
     const invalid = validateDeck(profile);
     const overview = deckOverview(profile.deck),
       busy = battle?.status === 'active';
@@ -7552,8 +7764,10 @@ function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
       counts
     )
       .map(
-        ([id, count]) =>
-          `<div class="deck-item"><span ${cardPreviewAttributes(id,CARDS[id].rarity,'deck',esc)}><span class="gold">${count}×</span> ${esc(CARDS[id].name)}</span><button class="remove" aria-label="Retirer ${esc(CARDS[id].name)}" data-action="deck-remove" data-id="${id}">×</button></div>`
+        ([key,count])=>{
+          const ref=cardFromKey(key),c=CARDS[cardId(ref)];
+          return `<div class="deck-item"><span ${cardPreviewAttributes(c.id,cardRarity(ref),'deck',esc)}><span class="gold">${count}×</span> ${esc(c.name)}${typeof ref==='object'?' · '+esc(cardRarity(ref)):''}</span><button class="remove" aria-label="Retirer ${esc(c.name)}" data-action="deck-remove" data-id="${key}">×</button></div>`;
+        }
       )
       .join(
         ''
@@ -7570,7 +7784,8 @@ function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
  <section class="spaced"><h2 class="section-title">Extraire les cartes en surplus</h2><p class="page-sub">Les exemplaires utilisés dans votre deck sont protégés ; seuls les exemplaires supplémentaires peuvent être extraits.</p>${expendables.length ? `<div class="card-grid">${expendables.map((c) => `<div class="alchemy-recipe">${cardUI(c.id)}<div class="alchemy-action">${btn(`Extraire · +${EXTRACTION_SHARDS[c.rarity]} ✧`, 'extract-card', `data-id="${c.id}"`, 'ghost')}</div></div>`).join('')}</div>` : '<div class="hint">Aucune carte en surplus. Gagnez des cartes ou retirez-en du deck pour pouvoir les extraire.</div>'}</section>`;
   }
   function forgeUI() {
-    const own = Object.values(CARDS).filter((c) => profile.collection[c.id] > 0 && c.type === 'unité');
+    const entries=ownedCardEntries(profile);
+    const own = Object.values(CARDS).filter((c) => totalOwnedCopies(profile,c.id)>0 && c.type === 'unité');
     return `<div class="kicker">AMÉLIORATIONS · ARTISANAT · HÉROS</div><h1 class="page-title">L’Atelier des Couronnes</h1><p class="page-sub">Développez la cité, renforcez vos cartes et choisissez la spécialité de votre héros. Chaque amélioration est conservée dans votre sauvegarde.</p>
  <section class="spaced"><div class="section-caption">PROGRESSION DU HÉROS</div><h2 class="section-title">Niveau ${heroLevel(profile)} / ${HERO_MAX_LEVEL}</h2><p class="page-sub">Expérience : ${profile.heroXp} XP. ${heroLevel(profile) === HERO_MAX_LEVEL ? 'Niveau maximum atteint.' : `Prochain niveau dans ${heroProgress(profile).needed - heroProgress(profile).shown} XP.`} Bouclier de départ : +${heroShieldBonus(profile)} aux niveaux 5 et 9. Les cartes deviennent maîtresses en étant jouées : les unités obtiennent au maximum +1 PV au rang 3 ; les sorts gagnent des insignes sans bonus de dégâts.</p><div class="progressbar"><span style="width:${heroLevel(profile) === HERO_MAX_LEVEL ? 100 : Math.min(100, heroProgress(profile).percent)}%"></span></div></section>
  <section class="spaced"><div class="section-caption">Les trois édifices</div><h2 class="section-title" style="margin-top:8px">Améliorer votre bastion</h2><div class="forge-grid">${Object.entries(
@@ -7628,7 +7843,7 @@ function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
        `<article class="forge-tile"><h3>${esc(f.name)}</h3><div class="pill">${profile.reputation[k]} points · Niveau ${reputationLevel(profile, k)}/3</div><p>Bonus actuel : +${reputationLevel(profile, k)} PV par créature de cet ordre.</p></article>`
    )
    .join('')}</div></section>
- <section class="spaced"><div class="split-head"><div><div class="section-caption">Les fragments d’âme</div><h2 class="section-title" style="margin-top:8px">Renforcer vos unités</h2></div><span class="pill">✧ ${profile.shards} éclats disponibles</span></div><div class="card-grid">${own.map((c) => cardUI(c.id, { upgradable: true })).join('')}</div></section>
+ <section class="spaced"><div class="split-head"><div><div class="section-caption">Les fragments d’âme</div><h2 class="section-title" style="margin-top:8px">Renforcer vos unités</h2></div><span class="pill">✧ ${profile.shards} éclats disponibles</span></div><div class="card-grid">${own.map((c) => cardUI(entries.find(e=>cardId(e.reference)===c.id).reference, { upgradable: true })).join('')}</div></section>
  <section class="spaced"><div class="card-panel"><div class="section-caption">Le comptoir du marchand</div><h2 class="section-title" style="margin-top:8px">Paquet mystique</h2><p class="page-sub">Recevez 3 cartes aléatoires pour 95 pièces d’or. Aucun paiement réel, aucune connexion requise.</p>${btn('Ouvrir un paquet · 95 ◈', 'buy-pack', `${profile.gold < 95 ? 'disabled' : ''}`, 'primary')}</div></section>`;
   }
   function guideUI() {
@@ -7642,6 +7857,7 @@ function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
     dungeonUI: bind(dungeonUI),
     collectionUI: bind(collectionUI),
     deckUI: bind(deckUI),
+    trialsUI: bind(trialsUI),
     alchemyUI: bind(alchemyUI),
     forgeUI: bind(forgeUI),
     guideUI: bind(guideUI)
@@ -7657,24 +7873,25 @@ const {cardPresentation,cardInspectionContent}=__load("src/ui/card-presentation.
 // Catalogue en lecture : les versions à concevoir ne créent jamais de cartes.
 const {CARDS,FACTIONS}=__load("src/data.js");
 const {UI_BACKGROUNDS}=__load("src/visuals.js");
+const {cardKey,ownedCardCopies,totalOwnedCopies}=__load("src/cards/references.js");
 const COLLECTION_RANKS=Object.freeze(CARD_RARITIES.map(r=>Object.freeze({...r,name:({commun:'Commune',divine:'Divine','éveillée':'Éveillée'})[r.id]||r.name})));
 
 function collectionEntries(profile,faction='all',ownedOnly=false){
  return Object.values(CARDS).filter(c=>(faction==='all'||c.faction===faction)&&
-  (!ownedOnly||(profile.collection[c.id]||0)>0));
+  (!ownedOnly||totalOwnedCopies(profile,c.id)>0));
 }
 
 function versionCell(profile,card,rank,{btn,cardUI,esc}){
  const model=cardPresentation({id:card.id,rarity:rank.id},{profile});
- const current=rank.id===card.rarity,owned=current?(profile.collection[card.id]||0):0;
- const status=current?(owned?`✓ Possédée ×${owned}`:'Non possédée'):model.availability;
+ const current=rank.id===card.rarity,reference={id:card.id,rarity:rank.id},owned=ownedCardCopies(profile,reference),key=cardKey(reference);
+ const status=owned?`✓ Possédée ×${owned}`:current?'Non possédée':model.availability;
  return `<td data-card-id="${card.id}" data-collection-rarity="${rank.id}" data-current-version="${current}">
   <article class="collection-version ${current?'current-version':'future-version'} ${model.known?'known-version':'unknown-version'}" aria-label="${esc(card.name)} · ${rank.name} · ${status}">
    <div class="collection-card-visual" data-collection-preview data-card-id="${card.id}" data-rarity="${rank.id}" data-preview-context="collection" tabindex="0" aria-label="Aperçu de ${esc(card.name)}, ${rank.name}" aria-describedby="collection-hover-inspection">
     ${cardUI({id:card.id,rarity:rank.id},{previewContext:'collection'})}
    </div>
    <div class="collection-possession ${owned?'is-owned':''}">${status}</div>
-   <div class="collection-card-actions">${current&&owned?`<span class="collection-deck-actions">${btn('+','deck-add',`data-id="${card.id}" aria-label="Ajouter ${esc(card.name)} au deck"`,'small')}${btn('−','deck-remove',`data-id="${card.id}" aria-label="Retirer ${esc(card.name)} du deck"`,'small ghost')}</span>`:''}</div>
+   <div class="collection-card-actions">${owned?`<span class="collection-deck-actions">${btn('+','deck-add',`data-id="${key}" aria-label="Ajouter ${esc(card.name)} au deck"`,'small')}${btn('−','deck-remove',`data-id="${key}" aria-label="Retirer ${esc(card.name)} du deck"`,'small ghost')}</span>`:''}</div>
   </article></td>`;
 }
 
@@ -7685,11 +7902,11 @@ function renderCollectionCatalogue(profile,{faction='aube',ownedOnly=false}={},h
  const title=faction==='all'?'Les cinq ordres':FACTIONS[faction]?.name||'Les cinq ordres';
  return `<header class="collection-hero" data-collection-background="${UI_BACKGROUNDS.collection}">
    <div><div class="kicker">LES ARCHIVES DES CINQ ORDRES</div><h1 class="page-title">Votre collection</h1><p class="page-sub">Chaque créature sur sa ligne, toutes ses évolutions côte à côte.</p></div>
-   <div class="button-row">${btn('Construire mon deck','nav','data-page="deck"','primary')}<a class="btn ghost" href="#collection-deck">Compétences et compositions ↓</a></div>
+   <div class="button-row">${btn('Construire mon deck','nav','data-page="deck"','primary')}${btn('Épreuves d’évolution','nav','data-page="trials"','ghost')}<a class="btn ghost" href="#collection-deck">Compétences et compositions ↓</a></div>
   </header>
   <div class="collection-content"><nav class="collection-factions" aria-label="Ordres de la collection">${tabs.map(id=>`<button type="button" data-action="collection-faction" data-id="${id}" aria-pressed="${faction===id}">${id==='all'?'Tous':id==='sort'?'Sorts':esc(FACTIONS[id].short)}</button>`).join('')}</nav>
    <div class="library-toolbar collection-toolbar"><label class="small"><input type="checkbox" id="owned-only" ${ownedOnly?'checked':''} /> Mes cartes uniquement</label><span class="pill">${list.length} cartes affichées</span></div>
-   <section class="collection-catalogue" aria-labelledby="collection-order-title"><div class="collection-order-heading"><h2 id="collection-order-title">${esc(title)}</h2><p>Les évolutions prêtes sont testables au laboratoire ; leur obtention reste à définir. Les autres restent « À concevoir ».</p></div>
+   <section class="collection-catalogue" aria-labelledby="collection-order-title"><div class="collection-order-heading"><h2 id="collection-order-title">${esc(title)}</h2><p>Les premières évolutions Aube se gagnent dans les Épreuves. Les autres versions définies restent testables au laboratoire ; les versions inconnues restent « À concevoir ».</p></div>
    ${units.length?`<div class="collection-table-scroll" role="region" aria-label="Évolutions des créatures ; défilement horizontal sur petit écran" tabindex="0"><table class="collection-table"><thead><tr><th scope="col">Personnage</th>${COLLECTION_RANKS.map(r=>`<th scope="col" data-rarity="${r.id}">${r.name}</th>`).join('')}</tr></thead><tbody>${units.map(c=>`<tr data-collection-character="${c.id}"><th scope="row" class="collection-character"><h3>${esc(c.name)}</h3><p>${esc(FACTIONS[c.faction].short)}</p></th>${COLLECTION_RANKS.map(r=>versionCell(profile,c,r,helpers)).join('')}</tr>`).join('')}</tbody></table></div>`:''}
    ${!units.length&&!spells.length?'<p class="hint">Aucune carte ne correspond à ce filtre.</p>':''}
    </section>
@@ -7712,10 +7929,11 @@ Object.assign(__exports,{COLLECTION_RANKS,collectionEntries,renderCollectionCata
 const {CARDS,FACTIONS}=__load("src/data.js");
 const {deckOverview,modifyDeck,validateDeck}=__load("src/engine.js");
 const {cardPreviewAttributes}=__load("src/ui/card-presentation.js");
+const {cardId,cardKey,cardFromKey,cardRarity,ownedCardEntries,ownedCardCopies}=__load("src/cards/references.js");
 const searchable=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr');
 function manualDeckCards(profile,{query='',faction='all',type='all'}={}){
  const needle=searchable(query).trim();
- return Object.values(CARDS).filter(c=>(profile.collection[c.id]||0)>0&&
+ return ownedCardEntries(profile).map(({reference})=>({...CARDS[cardId(reference)],rarity:cardRarity(reference),reference})).filter(c=>
   (!c.heroClass||c.heroClass===profile.heroClass)&&
   (faction==='all'||c.faction===faction)&&(type==='all'||c.type===type)&&
   (!needle||searchable(c.name+' '+c.description+' '+FACTIONS[c.faction].name).includes(needle)));
@@ -7725,9 +7943,10 @@ function renderManualDeck(profile,{battle=null,filters={}}={}, {btn,cardUI,esc,q
  const {query='',faction='all',type='all'}=filters,busy=battle?.status==='active';
  const overview=deckOverview(profile.deck),invalid=validateDeck(profile),cards=manualDeckCards(profile,filters);
  // Le même validateur de modification décide des ajouts, sur une copie éphémère.
- const canAdd=id=>!busy&&modifyDeck({...profile,deck:[...profile.deck]},id,1);
+ const canAdd=id=>!busy&&modifyDeck({...profile,deck:[...profile.deck]},cardFromKey(id),1);
  function controls(id){
-  const used=overview.counts[id]||0,owned=profile.collection[id]||0,name=esc(CARDS[id].name);
+  const ref=cardFromKey(id),base=CARDS[cardId(ref)];
+  const used=overview.counts[id]||0,owned=ownedCardCopies(profile,ref),name=esc(base.name+(typeof ref==='object'?' '+cardRarity(ref):''));
   return `<div class="manual-card-controls">${btn('−','deck-remove',`data-id="${id}" aria-label="Retirer un exemplaire de ${name}" ${busy||!used?'disabled':''}`,'small ghost')}<span><b>${used}</b> dans le deck<small>${owned} possédé${owned>1?'s':''}</small></span>${btn('+','deck-add',`data-id="${id}" aria-label="Ajouter un exemplaire de ${name}" ${canAdd(id)?'':'disabled'}`,'small')}</div>`;
  }
  const options=Object.entries(FACTIONS).map(([id,f])=>`<option value="${id}" ${faction===id?'selected':''}>${esc(f.short)}</option>`).join('');
@@ -7738,13 +7957,13 @@ function renderManualDeck(profile,{battle=null,filters={}}={}, {btn,cardUI,esc,q
    <section class="manual-card-library" aria-labelledby="manual-library-title"><h2 class="section-title" id="manual-library-title">Mes cartes disponibles</h2>
     <div class="manual-deck-filters"><label>Rechercher<input type="search" data-deck-field="query" value="${esc(query)}" placeholder="Nom d’une carte…" autocomplete="off"></label><label>Ordre<select data-deck-field="faction"><option value="all">Tous les ordres</option>${options}</select></label><label>Type<select data-deck-field="type"><option value="all">Unités et sorts</option><option value="unité" ${type==='unité'?'selected':''}>Unités</option><option value="sort" ${type==='sort'?'selected':''}>Sorts</option></select></label></div>
     <div class="manual-deck-results"><p class="hint">${cards.length} carte${cards.length>1?'s':''} différente${cards.length>1?'s':''} · Seules vos cartes possédées et compatibles avec votre classe sont proposées.</p>
-    <div class="card-grid manual-card-grid" data-deck-zone="library">${cards.map(c=>`<article class="manual-card-entry" data-deck-card="${c.id}">${cardUI(c.id,{previewContext:'deck'})}${controls(c.id)}</article>`).join('')}</div>
+    <div class="card-grid manual-card-grid" data-deck-zone="library">${cards.map(c=>`<article class="manual-card-entry" data-deck-card="${cardKey(c.reference)}">${cardUI(c.reference,{previewContext:'deck'})}${controls(cardKey(c.reference))}</article>`).join('')}</div>
     ${cards.length?'':'<div class="card-panel">Aucune carte ne correspond à ces filtres. Essayez un autre nom ou un autre ordre.</div>'}</div>
    </section>
    <aside class="card-panel manual-deck-aside" aria-labelledby="manual-current-title"><div class="section-caption">VOTRE COMPOSITION</div><h2 class="section-title" id="manual-current-title" tabindex="-1">Deck actif</h2>
     <div class="manual-deck-count"><strong>${overview.total}<small> / 24 cartes</small></strong><span>${overview.units} unités · ${overview.spells} sorts</span></div>
     <div class="hint ${invalid?'red':'green'}" role="status">${esc(invalid||'Deck prêt au combat.')}</div><p class="hint">Entre 12 et 24 cartes. Chaque exemplaire vient de votre Collection.</p>
-    <div class="manual-deck-list" data-deck-zone="current">${Object.entries(overview.counts).map(([id,count])=>`<div class="manual-deck-row" data-deck-card="${id}"><span ${cardPreviewAttributes(id,CARDS[id].rarity,'deck',esc)}><b>${count}×</b> ${esc(CARDS[id].name)}</span>${controls(id)}</div>`).join('')||'<p class="hint">Votre deck est vide. Ajoutez vos premières cartes avec +.</p>'}</div>
+    <div class="manual-deck-list" data-deck-zone="current">${Object.entries(overview.counts).map(([id,count])=>`<div class="manual-deck-row" data-deck-card="${id}"><span ${cardPreviewAttributes(cardId(cardFromKey(id)),cardRarity(cardFromKey(id)),'deck',esc)}><b>${count}×</b> ${esc(CARDS[cardId(cardFromKey(id))].name)}${typeof cardFromKey(id)==='object'?' · '+esc(cardRarity(cardFromKey(id))):''}</span>${controls(id)}</div>`).join('')||'<p class="hint">Votre deck est vide. Ajoutez vos premières cartes avec +.</p>'}</div>
     <div class="button-row">${btn('Aller en campagne','nav',`data-page="campaign" ${invalid?'disabled':''}`,'primary')}${btn('Repartir de zéro','deck-clear',busy||!overview.total?'disabled':'','ghost')}</div>
     <p class="hint">Les cartes retirées restent dans votre Collection.</p>
    </aside>
@@ -7837,6 +8056,7 @@ Object.assign(__exports,{renderGuidePage});
 
 },
 "src/ui/battle-view.js":function(__exports,__load){
+const {evolutionTrial}=__load("src/evolution-trials.js");
 const {cardPresentation}=__load("src/ui/card-presentation.js");
 const {spellSelection,spellCardState,spellTargetingUI}=__load("src/ui/spell-targeting.js");
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
@@ -7912,7 +8132,7 @@ function createBattleView(getState, { btn, cardUI, esc }) {
       cells === 10
         ? paintedArena(lanes, (lane, col, visual) => battleCell(battle.board[lane][col], lane, col, visual))
         : `<div class="arena-sky" aria-hidden="true"></div>${Array.from({ length: lanes }, (_, lane) => `<div class="lane-row" data-crown-col="${cells + 1}"><div class="lane-label">${['I', 'II', 'III', 'IV'][lane]}</div><div class="lane-gate" aria-label="Votre couronne"><span class="pixel-tower" aria-hidden="true"></span><b>♜</b></div>${Array.from({ length: cells }, (_, i) => battleCell(battle.board[lane][i + 1], lane, i + 1)).join('')}<div class="lane-gate enemy" aria-label="Couronne adverse"><span class="pixel-tower" aria-hidden="true"></span><b>♛</b></div></div>`).join('')}`;
-    return `<div class="combat-screen" data-painted-arena="${cells === 10}" data-card-layout="${immersive}"><div class="split-head combat-titlebar"><div><div class="kicker">${battle.mode==='developer'?'TEST SANS RÉCOMPENSE':'COMBAT TACTIQUE'} · ${esc(battle.missionName)}</div><h1 class="combat-mission-name">${esc(battle.missionName)}</h1></div><span class="pill">2 cartes maximum par tour</span><button type="button" class="combat-menu-link" data-action="${battle.mode==='developer'?'lab-back':'nav'}" data-page="home" aria-label="${battle.mode==='developer'?'Retourner au laboratoire':'Revenir à la Citadelle sans abandonner la bataille'}">${battle.mode==='developer'?'⚙ Laboratoire':'☷ Citadelle'}</button></div>
+    return `<div class="combat-screen" data-painted-arena="${cells === 10}" data-card-layout="${immersive}"><div class="split-head combat-titlebar"><div><div class="kicker">${battle.mode==='developer'?'TEST SANS RÉCOMPENSE':'COMBAT TACTIQUE'} · ${esc(battle.missionName)}</div><h1 class="combat-mission-name">${esc(battle.missionName)}</h1>${battle.mode==='evolution-trial'?`<p class="trial-combat-objective">${esc(evolutionTrial(battle.missionId)?.objective||'')}</p>`:''}</div><span class="pill">2 cartes maximum par tour</span><button type="button" class="combat-menu-link" data-action="${battle.mode==='developer'?'lab-back':'nav'}" data-page="home" aria-label="${battle.mode==='developer'?'Retourner au laboratoire':'Revenir à la Citadelle sans abandonner la bataille'}">${battle.mode==='developer'?'⚙ Laboratoire':'☷ Citadelle'}</button></div>
  <section class="battle-panel arena-lofi combat-stage">${battleHud(p, e)}
  <div class="combat-readout" aria-label="Lecture des actions du combat"><div class="combat-readout-copy" role="status" aria-live="polite" aria-atomic="true"><b class="combat-phase">${selection?'Ciblage du sort':battle.phase === 'enemy' ? 'Tour adverse' : 'À vous de jouer'}</b><span class="combat-action">${selection?'Cliquez une cible autorisée, puis confirmez dans l’aperçu.':battle.phase === 'enemy' ? 'L’IA prépare ses cartes.' : 'Posez vos cartes, puis validez vos actions.'}</span></div><button type="button" data-action="fx-speed" aria-label="Vitesse de lecture des actions">×1</button><button type="button" data-action="fx-skip" hidden>Passer</button>${spellTargetingUI(selection,spellTarget,spellPreview,esc)}</div>
  <div class="arena-caption"><span>${selectedCard >= 0 ? (selection?'✦ CHOISISSEZ LA CIBLE DU SORT':'✦ CHOISISSEZ UNE CASE DE DÉPART') : '✧ ARÈNE DES SERMENTS'}</span><span>${lanes} lignes · ${cells} cases par ligne</span></div><div class="battle-grid ${cells === 10 ? 'arena-structured arena-painted' : ''}" tabindex="0" role="region" aria-label="Plateau de combat : ${lanes} lignes de ${cells} cases" style="--cells:${cells};--arena-scene:url('${arenaBackdrop()}')">${arena}</div>
@@ -8669,17 +8889,18 @@ Object.assign(__exports,{previewPosition,createCardInspection});
 const {freshProfile,normalizeProfile,validateDeck}=__load("src/engine.js");
 const {supportedBoard,lastCell}=__load("src/engine/board.js");
 const {CARDS,CLASSES}=__load("src/data.js");
+const {playableCardReference,cardReference,evolutionProfileError}=__load("src/cards/references.js");
 const SAVE_KEY='couronnes_arcanes_v1';
 const BATTLE_KEY='couronnes_arcanes_bataille_v1';
 const hasCard=id=>typeof id==='string'&&Object.prototype.hasOwnProperty.call(CARDS,id);
 const nonNegative=n=>Number.isFinite(n)&&n>=0;
-const validPile=p=>Array.isArray(p)&&p.every(hasCard);
-const validHand=h=>Array.isArray(h)&&h.every(c=>c&&hasCard(c.id)&&Number.isInteger(c.wait)&&c.wait>=0&&c.wait<=100);
+const validPile=p=>Array.isArray(p)&&p.every(playableCardReference);
+const validHand=h=>Array.isArray(h)&&h.every(c=>c&&hasCard(c.id)&&playableCardReference(c)&&Number.isInteger(c.wait)&&c.wait>=0&&c.wait<=100);
 const validHero=h=>h&&typeof h.name==='string'&&nonNegative(h.hp)&&Number.isFinite(h.maxhp)&&h.maxhp>0&&
  nonNegative(h.shield)&&validPile(h.deck)&&validPile(h.discard)&&validHand(h.hand)&&Number.isInteger(h.cardsPlayed)&&h.cardsPlayed>=0&&h.cardsPlayed<=2;
 const validUnit=u=>u===null||(u&&typeof u==='object'&&hasCard(u.id)&&CARDS[u.id].type==='unité'&&
  ['p','e'].includes(u.side)&&Number.isInteger(u.uid)&&u.uid>=0&&nonNegative(u.hp)&&Number.isFinite(u.maxhp)&&u.maxhp>0&&
- Number.isFinite(u.atk)&&nonNegative(u.armor||0)&&nonNegative(u.stun||0)&&nonNegative(u.poison||0)&&nonNegative(u.poisonTurns||0));
+ Number.isFinite(u.atk)&&nonNegative(u.armor||0)&&nonNegative(u.stun||0)&&nonNegative(u.poison||0)&&nonNegative(u.poisonTurns||0)&&!!cardReference(u));
 function validStoredBattle(b){
  if(!b||!['active','victory','defeat'].includes(b.status)||b.rewardGiven||
   !['player','enemy','resolving','finished'].includes(b.phase)||!Number.isInteger(b.round)||b.round<1||
@@ -8687,6 +8908,9 @@ function validStoredBattle(b){
   !validHero(b.heroes?.p)||!validHero(b.heroes?.e)||
   !Array.isArray(b.log)||!b.log.every(x=>typeof x==='string'))return false;
  if(!b.board.every(row=>row.every(validUnit)))return false;
+ const refs=[...b.heroes.p.deck,...b.heroes.p.discard,...b.heroes.p.hand,...b.heroes.e.deck,...b.heroes.e.discard,...b.heroes.e.hand];
+ if(refs.some(ref=>typeof cardReference(ref)==='object')&&b.evolutionsEnabled!==true)return false;
+ if(b.evolutionsEnabled!==undefined&&b.evolutionsEnabled!==true)return false;
  if(b.traps!==undefined&&(!Array.isArray(b.traps)||!b.traps.every(t=>t&&['p','e'].includes(t.owner)&&
    Number.isInteger(t.lane)&&t.lane>=0&&t.lane<b.board.length&&
    Number.isInteger(t.col)&&t.col>=1&&t.col<=lastCell(b)&&nonNegative(t.damage))))return false;
@@ -8698,7 +8922,8 @@ function validateImportedProfile(raw){
  for(const key of ['gold','shards','stars','wins','losses','heroXp']){
   if(raw[key]!==undefined&&(!Number.isSafeInteger(raw[key])||raw[key]<0))throw Error('Montant ou progression invalide : '+key);
  }
- if(raw.deck.length<12||raw.deck.length>24||!raw.deck.every(hasCard))throw Error('Cartes du deck invalides.');
+ if(raw.deck.length<12||raw.deck.length>24||!raw.deck.every(playableCardReference))throw Error('Cartes du deck invalides.');
+ const evolutionError=evolutionProfileError(raw);if(evolutionError)throw Error(evolutionError);
  for(const amount of Object.values(raw.collection))if(!Number.isSafeInteger(amount)||amount<0)throw Error('Quantité de cartes invalide.');
  const p=normalizeProfile(raw),error=validateDeck(p);
  if(error)throw Error(error);
