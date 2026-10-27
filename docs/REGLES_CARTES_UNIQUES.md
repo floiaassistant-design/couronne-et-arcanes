@@ -107,8 +107,51 @@ lisibles à côté. Le script refuse toute réécriture d'une référence exista
 Les tests métier indépendants vérifient les décisions de gameplay ; cette nouvelle
 référence sert ensuite aux non-régressions, sans faire passer l'ancien moteur.
 
-Validation en cours : résultats réellement terminés dans la PR et l'état final
-de cette section ; aucun succès distant annoncé par anticipation.
+Contrôles locaux terminés :
+
+- **440 tests Node réussis**, dont huit nouveaux cas dans `current_card_rules`.
+  Les suites existantes continuent de couvrir les 408 invocations de rang/niveau,
+  la reprise, les bonus, le ciblage, les épreuves et les 53 natifs des deux camps.
+- **120 scénarios déterministes** conformes à la nouvelle référence ; archive
+  historique inchangée, sans revendication de parité avec les anciennes règles.
+- Simulations de contrôle : **5 120 combats**, quatre graines par configuration,
+  sans dépassement de limite de tours, de pièges ou d'identifiants d'unités.
+- Comparaison avant/après au main `b58ea3f0` : **1 536 combats par version**,
+  mêmes deux graines, profils/classes/styles/rencontres, 3×5 et géométrie actuelle.
+  Deux passes identiques par version ; aucun plateau invalide ; 35 tours maximum.
+  Sur 10 cases, le robot passe de 428/768 victoires (55,73 %) à 412/768 (53,65 %).
+  Sur 3×5, 462/768 (60,16 %) à 442/768 (57,55 %). Cela mesure le changement de
+  règles/lecture de l'IA, pas un équilibrage humain final. Aucune statistique
+  native ou rencontre modifiée pour compenser les résultats.
+- Nouveau parcours navigateur passé en bureau/portrait/paysage : fiches des cinq
+  gardiens, consultation sans mutation, export officiel sans diagnostic ni réseau,
+  message de relance, stockage conservé jusqu'à fermeture, profil intact, vrai
+  tour, sauvegarde et reprise exacte aux règles actuelles. Captures examinées.
+- Builds autonome, diagnostic et web réussis. **56 modules, 212 dépendances,
+  aucun cycle** ; `battle.js` 391 lignes, `app.js` 377, résolveur 64, stockage 108.
+  Aucun nouveau module de production, aucune dépendance, image ou feuille de style.
+
+Les **27 suites navigateur du workflow ont toutes réussi** : Concorde, ciblage,
+effets, cartes/pose/aperçus, graphismes, laboratoire, maintenance HTTP, Collection
+et deck manuel, épreuves et récupération, les cinq factions, les 23 sorts,
+compétences, nouvelle partie, contrôle, pilote, capacités, géométries, plein écran,
+arène peinte et clôture. Les nouveaux parcours font partie de `browser_card_preview`
+déjà exécuté en CI ; aucun workflow permanent ajouté. La suite d'épreuves a
+réussi ses 13 parcours, dont sept combats UI entiers, et ses coupures de sauvegarde.
+Aucun succès CI complet de la tête finale annoncé par anticipation.
+Limites : Chromium et tactile simulé, aucun téléphone physique/Safari/Firefox ni
+campagne humaine exhaustive ; l'équilibrage doit encore être essayé en jouant.
+
+## Export vérifié
+
+`JOUER.html` officiel reconstruit depuis les sources : **34 515 035 octets**,
+blob **`ff20987b6abb3e8e92187b79b4d3c18b91531ab9`**, 56 modules et 76 illustrations.
+Génération ponctuelle [réussie](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40569579285)
+sur `6a7f0449174a4ba2f836bc8cb67c2a89215ab30e`, export enregistré dans
+`8659451ca9b6c253da0a324ea358be44ff8cf444`. Son arbre complet
+`3c810c1fcb6d0b0b316892aecba6a6344167fa31` est identique au local préparé.
+Le générateur est retiré avant la PR, sans modification de workflow permanent.
+Les résultats CI de la tête finale seront distincts de cette génération.
 
 ## Réconciliation de la PR 56 et reprise
 
