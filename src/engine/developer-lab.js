@@ -3,7 +3,7 @@ import {CARDS,CAMPAIGN,CLASSES} from '../data.js';
 import {freshProfile} from './profile.js';
 import {createBattle} from './battle.js';
 import {versionUnitStats} from './unit-stats.js';
-import {unitVersions,resolveRulesDefinition,AUBE_RULESET} from '../cards/definitions.js';
+import {unitVersions,resolveRulesDefinition,CARD_RULESET} from '../cards/definitions.js';
 import {CARD_RARITIES} from '../cards/schema.js';
 
 export const LAB_RANKS=Object.freeze(CARD_RARITIES.map(r=>r.id));
@@ -27,7 +27,7 @@ export function labCardStats(lab,side,id){
  const card=CARDS[id];if(!card)return null;
  const rarity=labRarity(lab,side,id),level=labLevel(lab,side,id);
  if(card.type!=='unité')return {rarity,level};
- const context={mode:'developer',cardRules:AUBE_RULESET,labStats:{levels:lab.levels,rarities:lab.rarities}};
+ const context={mode:'developer',cardRules:CARD_RULESET,labStats:{levels:lab.levels,rarities:lab.rarities}};
  const stats=versionUnitStats(context,{id,rarity},side),definition=resolveRulesDefinition({id,rarity});
  return stats?{atk:stats.atk,hp:stats.maxhp,rarity,level,definition}:null;
 }
@@ -77,7 +77,7 @@ export function createLabBattle(lab,seed=Date.now()){
  const m={...CAMPAIGN[0],id:'laboratoire',name:'Laboratoire de combat',enemy:'IA de test',
   hp:26,difficulty:2,boss:false,mode:'developer',aiStyle:lab.aiStyle,
   deck:[...lab.decks.e],unlock:null};
- const b=createBattle(p,m,seed,{turnFlow:'alternating',cardRules:AUBE_RULESET});
+ const b=createBattle(p,m,seed,{turnFlow:'alternating',cardRules:CARD_RULESET});
  // Ces valeurs restent uniquement dans la bataille de test, jamais dans le stockage.
  b.labStats={levels:structuredClone(lab.levels),rarities:structuredClone(lab.rarities)};
  return b;

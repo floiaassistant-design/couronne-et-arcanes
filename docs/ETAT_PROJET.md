@@ -1,5 +1,21 @@
 # État courant — 27 octobre 2026
 
+## Correction proposée — règles uniques des cartes jouables
+
+Branche `fix/regles-cartes-jouables`, depuis le main vérifié `b58ea3f0`.
+Les cinq gardiens et les sept natifs à Riposte appliquent les règles communes
+validées dans Notion, dans les deux camps ; même registre qu’au laboratoire.
+Les anciens combats actifs demandent une relance sans pénalité. Les profils et
+possessions sont conservés. [Contrat et reprise](REGLES_CARTES_UNIQUES.md).
+**440 tests Node**, **120 scénarios de non-régression**, 27 suites navigateur et
+nouveau parcours de relance/fiches dans les trois formats réussis. 5 120 combats
+de contrôle, comparaison avant/après de 1 536 combats par version. Builds autonomes
+et web réussis ; 56 modules/212 dépendances sans cycle. Export exact dans le contrat.
+La parité avec les anciennes règles n'est plus revendiquée ; référence V2.4 intacte.
+La PR 56 reste indépendante et en attente, en particulier son défi d’interceptions.
+Aucune fusion ni publication autorisée pour cette correction.
+
+
 ## PR 55 — épreuves d’évolution Aube proposées
 
 Branche `feat/epreuves-evolution-aube`, base main

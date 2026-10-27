@@ -4230,7 +4230,7 @@ const {buildCombatSteps}=__load("src/ui/combat-steps.js");
 const {captureCombatFrame}=__load("src/engine/combat-events.js");
 const {mountPaintedArena}=__load("src/ui/painted-arena.js");
 const {createCardInspection}=__load("src/ui/card-inspection.js");
-const {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure}=__load("src/ui/storage.js");
+const {loadProfile,saveProfile,restoreBattle,storeBattle,storedBattleNeedsRestart,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure}=__load("src/ui/storage.js");
 const {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission}=__load("src/data.js");
 const {dungeonStageMission}=__load("src/dungeons.js");
 const {DECK_STYLES,proposeDeck,applyDeckStyle,createEvolutionTrial,settleEvolutionTrial,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,buyPack,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
@@ -4303,6 +4303,11 @@ function showModal(html){closeCardInspection(true);$('modal-root').innerHTML=`<d
 function hideModal(){closeCardInspection(true);$('modal-root').innerHTML='';}
 const cardName=(reference,context)=>{const ref=typeof reference==='string'?cardFromKey(reference):reference,id=cardId(ref);return `<span ${cardPreviewAttributes(id,cardRarity(ref),context,esc)}>${esc(CARDS[id].name)}${typeof ref==='object'?' · '+esc(cardRarity(ref)):''}</span>`;};
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une case de départ sur une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
+function notifyBattleUpdate(){
+ if(!storedBattleNeedsRestart())return false;
+ showModal(`<div class="kicker">MISE À JOUR DES CARTES</div><h2>Ce combat doit être relancé</h2><p>Les règles des cartes ont été mises à jour. Recommencez ce combat depuis son écran habituel pour les utiliser.</p><p>Votre collection, votre deck et votre progression sont conservés. Aucune défaite ni pénalité n’est comptée. Dans un donjon, la salle en cours peut être rejouée.</p><div class="button-row">${btn('Revenir au jeu','dismiss-battle-update','','primary')}</div>`);
+ return true;
+}
 function render({frameUpdate=false}={}){
  if(!frameUpdate){stopBattleFx();displayBattle=null;}
  const fxFocus=frameUpdate?document.activeElement?.closest('.combat-readout button')?.dataset.action:null;
@@ -4443,7 +4448,7 @@ function navigate(page){
  if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();
  cancelEnemyTimer();screen=page;selectedCard=-1;render();if(page==='battle')scheduleEnemyStep();window.scrollTo(0,0);
 }
-function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();window.scrollTo(0,0);}
+function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();notifyBattleUpdate();window.scrollTo(0,0);}
 function act(action,dataset){const {id,index,lane,col,page}=dataset;
  // Une clôture non sauvée ne doit pas être écrasée par une autre épreuve/action.
  if(!developer&&battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven&&
@@ -4536,6 +4541,7 @@ case 'lab-open':openDeveloper();break;
  case 'retreat':if(developer){showModal(`<h2>Quitter ce test ?</h2><p>Aucune pénalité et aucune récompense.</p><div class="button-row">${btn('Retour au laboratoire','lab-back','','primary')}${btn('Continuer','close-modal','','ghost')}</div>`);break;}showModal(`<div class="kicker">RETRAITE</div><h2>Abandonner la bataille ?</h2><p>Cette décision compte comme une défaite. Dans un donjon, elle met fin à l’expédition.</p><div class="button-row">${btn('Oui, battre en retraite','confirm-retreat','','danger')}${btn('Rester au combat','close-modal','','ghost')}</div>`);break;
  case 'confirm-retreat':if(battle?.status==='active'){cancelEnemyTimer();battle.status='defeat';battle.phase='finished';hideModal();persistBattle();settle();}break;
  case 'close-modal':hideModal();break;
+ case 'dismiss-battle-update':if(!storedBattleNeedsRestart()){hideModal();break;}if(!storeBattle(null)){toast('Nettoyage impossible : vérifiez le stockage local.');break;}hideModal();welcome();break;
  case 'battle-exit':const previousMode=battle?.mode;hideModal();battle=null;persistBattle();navigate(previousMode==='tower'?'tower':previousMode==='dungeon'?'dungeons':'campaign');break;
  case 'battle-deck':hideModal();battle=null;persistBattle();navigate('collection');break;
  case 'choose-class':{if(battle?.status==='active'){toast('Terminez le combat avant de changer de classe.');break;}const result=changeHeroClass(profile,id);if(!result.ok){toast(result.reason);break;}save();render();toast('Nouvelle classe sélectionnée.');break;}
@@ -4585,7 +4591,7 @@ document.addEventListener('change',async event=>{
   render();return;
  }
  if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;if(battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven){settle();return;}try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
-render();if(battle&&battle.status!=='active')settle();else {welcome();scheduleEnemyStep();}
+render();if(battle&&battle.status!=='active')settle();else if(!notifyBattleUpdate()){welcome();scheduleEnemyStep();}
 
 
 Object.assign(__exports,{});
@@ -4613,7 +4619,7 @@ function cardPresentation(reference,{context={},profile=null,side='p',unit=null,
  const rarity=explicit?normalizeCardRarity(reference.rarity):native.rarity;if(!rarity)return null;
  const ctx=profile?unitStatContext(profile):context;
  if(native.type==='unité'&&!definition){
-  definition=unit?(versionUnitAbilities(unit)?resolveRulesDefinition(unit):resolveUnitDefinition(id)):
+  definition=unit?resolveUnitDefinition(unit):
    explicit&&rarity!==native.rarity?resolveRulesDefinition({id,rarity}):battleUnitDefinition(ctx,reference,side);
  }
  const selected=definition?.rarity||rarity;
@@ -4629,22 +4635,22 @@ function cardPresentation(reference,{context={},profile=null,side='p',unit=null,
   {atk:unit.atk,hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);
  let effective=definition;
- if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(!versionUnitAbilities(unit)&&definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor||0}}:{})}};
- const aube=known&&native.type==='unité'&&AUBE_UNIT_IDS.includes(id);
- const description=!known?missing:aube?unitCardText(effective):brief(native.description);
+ if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor??definition.abilities.armor.amount}}:{})}};
+ const structured=known&&native.type==='unité'&&(AUBE_UNIT_IDS.includes(id)||effective?.abilities.guard||effective?.abilities.riposte);
+ const description=!known?missing:structured?unitCardText(effective):brief(native.description);
  const details=!known?[lower?'Aucune version sous la rareté native.':'Cette évolution reste à concevoir.']:
-  aube?unitAbilityDetails(effective):[native.description];
+  structured?unitAbilityDetails(effective):[native.description];
  const geometry=effective?.geometry;
  if(geometry)details.unshift(`Déplacement ${geometry.steps} case${geometry.steps>1?'s':''} · Portée ${geometry.range} case${geometry.range>1?'s':''}, devant sur sa ligne.`);
  return {card:{...native,rarity:selected,attack:known?(definition?.stats.attack??native.attack):undefined,hp:known?(definition?.stats.hp??native.hp):undefined,delay:known?(definition?.stats.delay??native.delay):'—',description},definition:effective,
-  stats,details,availability,known,future,lower,traits:aube?unitAbilitySummary(effective):known?cardTraits(id):[]};
+  stats,details,availability,known,future,lower,traits:structured?unitAbilitySummary(effective):known?cardTraits(id):[]};
 }
 
 function boardInspectionData(battle,uid){
  for(let lane=0;lane<(battle?.board?.length||0);lane++)for(let col=1;col<battle.board[lane].length-1;col++){
   const u=battle.board[lane][col];if(!u||String(u.uid)!==String(uid))continue;
   const concord=formationBonus(battle,lane,u),rallied=u.rallyUntil>=battle.round?1:0;
-  const armor=versionUnitAbilities(u)?.armor?.amount??u.armor;
+  const armor=u.armor??versionUnitAbilities(u)?.armor?.amount;
   const statuses=[concord?'Concorde +1 ATQ':'',rallied?'Ralliement +1 ATQ':'',armor?'Armure '+armor:'',u.barrier?'Barrière '+u.barrier:'',u.poisonTurns?'Poison '+u.poisonTurns+' tour(s)':'',u.stun?'Immobilisation '+u.stun:'',silenced(battle,u)?'Silence : capacités déclenchées suspendues':''].filter(Boolean);
   if(u.firstHitReductionUsed)statuses.push('Réduction du premier coup consommée');
   if(u.riposteUsed)statuses.push('Riposte par invocation consommée');
@@ -4901,10 +4907,10 @@ Object.assign(__exports,{freezeCardData,CARD_RARITIES,normalizeCardRarity});
 
 },
 "src/cards/definitions.js":function(__exports,__load){
-// Catalogue de versions en lecture seule. Aucun ajout à CARDS, aucune possession ni règle activée.
+// Registre unique des règles actuelles ; aucune possession ajoutée au catalogue.
 const {CARDS}=__load("src/data.js");
 const {CARD_RARITIES,normalizeCardRarity,freezeCardData}=__load("src/cards/schema.js");
-const {nativeUnitAbilities,inheritUnitAbilities,FUTURE_GUARD_POLICY}=__load("src/cards/abilities.js");
+const {nativeUnitAbilities,inheritUnitAbilities}=__load("src/cards/abilities.js");
 const {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE}=__load("src/cards/aube.js");
 const {evolutionTrialFor}=__load("src/evolution-trials.js");
 const AUBE_UNIT_IDS=Object.freeze(Object.keys(AUBE_EVOLUTIONS));
@@ -4959,34 +4965,20 @@ function unitVersionPlayable(reference){
  return resolveUnitDefinition(reference)?.status.combat==='implemented';
 }
 
-// Identité explicite des règles futures. Les anciens instantanés restent historiques.
-const AUBE_RULESET='aube-v1';
-const rulesDefinitions=new Map();
-for(const versions of definitions.values())for(const def of versions){
- if(!AUBE_UNIT_IDS.includes(def.id))continue;
- const changes={};
- if(def.abilities.riposte&&def.id!=='militia')changes.riposte={damageMode:'effective-attack'};
- if(def.abilities.guard)changes.guard={...FUTURE_GUARD_POLICY,scope:def.rarity===def.nativeRarity?'positioned':def.abilities.guard.scope,unitTargetPriority:false};
- rulesDefinitions.set(def.versionId,freezeCardData({...def,cardRules:AUBE_RULESET,
-  abilities:inheritUnitAbilities(def.abilities,changes),source:AUBE_DESIGN_SOURCE}));
-}
-function resolveRulesDefinition(reference){
- const def=resolveUnitDefinition(reference);return def?rulesDefinitions.get(def.versionId)||def:null;
-}
-function versionUnitAbilities(unit){
- if(!unit||!Object.hasOwn(unit,'rarity'))return null;
- const d=unit.cardRules===AUBE_RULESET?resolveRulesDefinition(unit):resolveUnitDefinition(unit);
- return d?.source?d.abilities:null;
-}
+// Révision du combat, pas une variante sélectionnable de ses règles.
+const CARD_RULESET='cards-v2';
+// Même registre pour aventure, laboratoire, fiches et références natives.
+const resolveRulesDefinition=resolveUnitDefinition;
+function versionUnitAbilities(unit){return unit?resolveUnitDefinition(unit)?.abilities||null:null;}
 
-Object.assign(__exports,{AUBE_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable,AUBE_RULESET,resolveRulesDefinition,versionUnitAbilities});
+Object.assign(__exports,{AUBE_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable,CARD_RULESET,resolveRulesDefinition,versionUnitAbilities});
 
 },
 "src/cards/abilities.js":function(__exports,__load){
-// Description structurée du socle natif. Le branchement des règles de combat suit aux étapes 3/4.
+// Capacités communes actuelles, héritées par chaque évolution.
 const {FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
-// Politique future validée dans Notion ; réutilisable par chaque faction.
-const FUTURE_GUARD_POLICY=Object.freeze({
+// Politique validée dans Notion, identique pour les cinq factions.
+const GUARD_POLICY=Object.freeze({
  priority:'same-line-then-own-crown',tieBreak:'lane-uid',frequency:'while-alive',maxPerAttack:1
 });
 
@@ -5008,9 +5000,9 @@ function nativeUnitAbilities(card){
  };
  if(card.ability&&Object.hasOwn(primary,card.ability))abilities[card.ability]=primary[card.ability];
  if(FLYING_IDS.has(card.id))abilities.flying={over:'ally',landing:'free'};
- if(GUARD_IDS.has(card.id))abilities.guard={scope:'legacy-line',target:'own-crown',unitTargetPriority:true};
+ if(GUARD_IDS.has(card.id))abilities.guard={...GUARD_POLICY,scope:'positioned',target:'own-crown',unitTargetPriority:false};
  if(CHARGE_IDS.has(card.id))abilities.charge={amount:2,condition:'moved-before-attack'};
- if(RIPOSTE_IDS.has(card.id))abilities.riposte={damageMode:'fixed',amount:2,frequency:'round',trigger:'melee-attack'};
+ if(RIPOSTE_IDS.has(card.id))abilities.riposte={damageMode:'effective-attack',frequency:'round',trigger:'melee-attack'};
  return abilities;
 }
 
@@ -5023,17 +5015,16 @@ function inheritUnitAbilities(previous,changes={}){
  return result;
 }
 
-Object.assign(__exports,{FUTURE_GUARD_POLICY,nativeUnitAbilities,inheritUnitAbilities});
+Object.assign(__exports,{GUARD_POLICY,nativeUnitAbilities,inheritUnitAbilities});
 
 },
 "src/cards/aube.js":function(__exports,__load){
 // Transcription du tableau maître, édition observée le 26/10/2026 à 08:37:43.944Z.
 // Les chiffres remplacent les valeurs de base ; ce ne sont jamais des bonus à additionner.
 const {freezeCardData}=__load("src/cards/schema.js");
-const {FUTURE_GUARD_POLICY}=__load("src/cards/abilities.js");
 const AUBE_DESIGN_SOURCE=freezeCardData({
  url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
- editedAt:'2026-10-26T08:37:43.944Z'
+ editedAt:'2026-10-27T06:13:46.581Z'
 });
 
 const AUBE_EVOLUTIONS=freezeCardData({
@@ -5045,7 +5036,7 @@ const AUBE_EVOLUTIONS=freezeCardData({
   'éveillée':{abilities:{lastStand:{hp:5,frequency:'invocation'}}}
  },
  shield:{
-  rare:{stats:{hp:11},abilities:{guard:{...FUTURE_GUARD_POLICY,scope:'positioned',unitTargetPriority:false},riposte:{damageMode:'effective-attack'}}},
+  rare:{stats:{hp:11}},
   'épique':{stats:{attack:2}},
   'légendaire':{stats:{hp:13}},
   divine:{abilities:{guard:{scope:'line',unitTargetPriority:false}}},
@@ -5065,7 +5056,7 @@ const AUBE_EVOLUTIONS=freezeCardData({
   'éveillée':{abilities:{heal:{scope:'all-lines'}}}
  },
  paladin:{
-  'légendaire':{stats:{hp:11},abilities:{riposte:{damageMode:'effective-attack'}}},
+  'légendaire':{stats:{hp:11}},
   divine:{abilities:{armor:{amount:3}}},
   'éveillée':{stats:{hp:13},abilities:{riposteBarrier:{amount:2,cap:2,frequency:'round',target:'self',trigger:'authorized-riposte'}}}
  },
@@ -5095,7 +5086,7 @@ const AUBE_EVOLUTIONS=freezeCardData({
   'éveillée':{geometry:{steps:2},abilities:{haste:{}}}
  },
  dawnbastion:{
-  divine:{abilities:{riposte:{damageMode:'effective-attack'},intervention:{amount:4,range:2,targets:1,scope:'line',direction:'forward',timing:'spawn',ignoreArmor:false}}},
+  divine:{abilities:{intervention:{amount:4,range:2,targets:1,scope:'line',direction:'forward',timing:'spawn',ignoreArmor:false}}},
   'éveillée':{stats:{attack:7}}
  }
 });
@@ -5192,7 +5183,7 @@ function unitAbilitySummary(definition){
  const a=definition.abilities,lines=[],scope=p=>p.scope==='all-lines'?'toutes lignes':'sa ligne';
  if(a.armor)lines.push(`Armure ${a.armor.amount}`);
  if(a.firstHitReduction)lines.push(`Premier coup : −${a.firstHitReduction.amount}`);
- if(a.guard)lines.push(`Garde ${a.guard.scope==='all-lines'?'toutes lignes':a.guard.scope==='line'?'de ligne':a.guard.scope==='legacy-line'?'historique':'positionnelle'}`);
+ if(a.guard)lines.push(`Garde ${a.guard.scope==='all-lines'?'toutes lignes':a.guard.scope==='line'?'de ligne':'positionnelle'}`);
  if(a.riposte)lines.push(`Riposte : ${a.riposte.damageMode==='effective-attack'?'ATQ':a.riposte.amount}, ${a.riposte.frequency==='invocation'?'1 fois':'1/tour'}`);
  if(a.lastStand)lines.push(`Dernier Rempart : ${a.lastStand.hp} PV, 1 fois`);
  if(a.riposteBarrier)lines.push(`Barrière après Riposte : ${a.riposteBarrier.amount}`);
@@ -5239,7 +5230,7 @@ function unitAbilityDetails(d){
  const a=d.abilities,lines=[],scope=p=>p.scope==='all-lines'?'toutes les lignes':'sa ligne';
  if(a.armor)lines.push(`Armure ${a.armor.amount} : réduit les dégâts, minimum ${a.armor.minimumDamage}.`);
  if(a.firstHitReduction)lines.push(`Premier coup reçu : −${a.firstHitReduction.amount} dégâts, une fois par invocation.`);
- if(a.guard)lines.push(a.guard.scope==='legacy-line'?'Garde historique : intercepte sur sa ligne, avec priorité au ciblage.':`Garde : protège sa couronne ${a.guard.scope==='all-lines'?'depuis toutes les lignes':a.guard.scope==='line'?'depuis toute sa ligne, même dépassé':'sur sa ligne, entre l’attaquant et la couronne'} ; ${a.guard.maxPerAttack} gardien par frappe, tant qu’il vit.`);
+ if(a.guard)lines.push(`Garde : protège sa couronne ${a.guard.scope==='all-lines'?'depuis toutes les lignes':a.guard.scope==='line'?'depuis toute sa ligne, même dépassé':'sur sa ligne, entre l’attaquant et la couronne'} ; ${a.guard.maxPerAttack} gardien par frappe, tant qu’il vit.`);
  if(a.riposte)lines.push(`Riposte au contact après survie : ${a.riposte.damageMode==='effective-attack'?'ATQ effective, bonus compris, sans Charge':a.riposte.amount+' dégâts'}, ${a.riposte.frequency==='invocation'?'une fois par invocation':'au plus une fois par tour'}.`);
  if(a.lastStand)lines.push(`Dernier Rempart : survit au premier coup mortel avec ${a.lastStand.hp} PV au plus, sans dépasser ses PV maximum ; une fois par invocation.`);
  if(a.riposteBarrier)lines.push(`Après une Riposte autorisée : barrière personnelle +${a.riposteBarrier.amount}, plafond ${a.riposteBarrier.cap} pour cet effet.`);
@@ -5261,8 +5252,8 @@ Object.assign(__exports,{unitAbilitySummary,unitCardText,unitAbilityDetails});
 },
 "src/engine/unit-rules.js":function(__exports,__load){
 // Lecture commune des paramètres de combat, sans moteur, DOM ou accès au profil.
-const {CARDS,CHARGE_IDS,FLYING_IDS}=__load("src/data.js");
-const {resolveUnitDefinition,resolveRulesDefinition,versionUnitAbilities,AUBE_RULESET}=__load("src/cards/definitions.js");
+const {CARDS}=__load("src/data.js");
+const {resolveUnitDefinition,versionUnitAbilities,CARD_RULESET}=__load("src/cards/definitions.js");
 function battleUnitReference(context,reference,side='p'){
  const entry=typeof reference==='string'?{id:reference}:reference;
  if(!entry||!CARDS[entry.id])return null;
@@ -5271,36 +5262,34 @@ function battleUnitReference(context,reference,side='p'){
  return rarity===undefined?{id:entry.id}:{id:entry.id,rarity};
 }
 function battleUnitDefinition(context,reference,side='p'){
- const ref=battleUnitReference(context,reference,side);
- const native=CARDS[ref?.id]?.rarity;
- return context.cardRules===AUBE_RULESET||ref?.rarity!==undefined&&ref.rarity!==native?resolveRulesDefinition(ref):resolveUnitDefinition(ref);
+ return resolveUnitDefinition(battleUnitReference(context,reference,side));
 }
 function unitCanPlay(context,reference,side='p'){
  const d=battleUnitDefinition(context,reference,side);if(!d)return false;
  if(d.rarity===d.nativeRarity)return true;
- if(context.mode==='developer')return context.cardRules===AUBE_RULESET&&d.status.engine==='implemented';
+ if(context.mode==='developer')return d.status.engine==='implemented';
  return side==='p'&&context.evolutionsEnabled===true&&d.status.combat==='implemented';
 }
 function unitAttackRange(u){
- const d=versionUnitAbilities(u);
- return d?resolveRulesDefinition(u).geometry.range:u.ranged?2:1;
+ return u?.ranged?Math.max(2,resolveUnitDefinition(u)?.geometry.range||0):1;
 }
 function unitMovementSteps(u,suppressed=false){
- const abilities=versionUnitAbilities(u);
- return abilities?(abilities.haste&&!suppressed?resolveRulesDefinition(u).geometry.steps:1):!suppressed&&u.ability==='haste'?2:1;
+ const d=resolveUnitDefinition(u);
+ return d?.abilities.haste&&!suppressed?d.geometry.steps:1;
 }
-function unitChargeAmount(u){return versionUnitAbilities(u)?.charge?.amount??(CHARGE_IDS.has(u.id)?2:0);}
-function unitHasPierce(u,suppressed=false){return !suppressed&&(versionUnitAbilities(u)?!!versionUnitAbilities(u).pierce?.ignoreArmor:u.ability==='pierce');}
-function unitFlying(u){return !!u&&(versionUnitAbilities(u)?!!versionUnitAbilities(u).flying:FLYING_IDS.has(u.id));}
+function unitChargeAmount(u){return versionUnitAbilities(u)?.charge?.amount||0;}
+function unitHasPierce(u,suppressed=false){return !suppressed&&!!versionUnitAbilities(u)?.pierce?.ignoreArmor;}
+function unitFlying(u){return !!versionUnitAbilities(u)?.flying;}
 
-Object.assign(__exports,{battleUnitReference,battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying});
+const battleRulesError=b=>b?.cardRules===CARD_RULESET?'':'Ce combat doit être relancé après la mise à jour des cartes.';
+
+Object.assign(__exports,{battleUnitReference,battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError});
 
 },
 "src/engine/unit-stats.js":function(__exports,__load){
 // Statistiques d'invocation partagées par le moteur et les aperçus, sans mutation.
 const {CARDS,FACTIONS}=__load("src/data.js");
 const {gearBonus,masteryRank,reputationLevel}=__load("src/engine/profile.js");
-const {resolveUnitDefinition}=__load("src/cards/definitions.js");
 const {battleUnitDefinition}=__load("src/engine/unit-rules.js");
 function unitStatContext(profile){
  return {
@@ -5320,7 +5309,7 @@ function unitStats(context,reference,side='p'){
 // Prévision pure des versions définies : ne rend aucune évolution jouable et n'écrit aucun état.
 // Le laboratoire utilise la même définition et les mêmes bonus que la vraie invocation.
 function versionUnitStats(context,reference,side='p'){
- const definition=context.cardRules?battleUnitDefinition(context,reference,side):resolveUnitDefinition(reference);if(!definition)return null;
+ const definition=battleUnitDefinition(context,reference,side);if(!definition)return null;
  const level=context.mode==='developer'?(context.labStats?.levels?.[side]?.[definition.id]||0):
   side==='p'?(context.upgrades?.[definition.id]||0):Math.max(0,context.enemyDifficulty-3);
  return {versionId:definition.versionId,base:{...definition.stats},
@@ -5622,13 +5611,13 @@ Object.assign(__exports,{});
 },
 "src/engine/battle.js":function(__exports,__load){
 const {castSpell}=__load("src/engine/spell-casting.js");
-const {versionUnitAbilities,AUBE_RULESET}=__load("src/cards/definitions.js");
+const {versionUnitAbilities,CARD_RULESET}=__load("src/cards/definitions.js");
 const {hit,resolveRetaliation}=__load("src/engine/battle-defense.js");
 const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
-const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying}=__load("src/engine/unit-rules.js");
+const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError}=__load("src/engine/unit-rules.js");
 const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
-const {CARDS,FACTIONS,GUARD_IDS}=__load("src/data.js");
+const {CARDS,FACTIONS}=__load("src/data.js");
 const {frontEnemy}=__load("src/engine/spell-targeting.js");
 const {captureCombatFrame,recordCombatEvent}=__load("src/engine/combat-events.js");
 const {rankEnemyMoves}=__load("src/ai.js");
@@ -5659,7 +5648,7 @@ function draw(b,side,n=1){
   const reference=hero.deck.pop(),id=cardId(reference);if(!CARDS[id])continue;
   const definition=CARDS[id].type==='unité'?battleUnitDefinition(b,reference,side):null;
   const entry={id,wait:Math.max(0,(definition?.stats.delay??CARDS[id].delay)-1)};
-  if(typeof reference==='object'){entry.rarity=reference.rarity;entry.cardRules=AUBE_RULESET;}
+  if(typeof reference==='object'){entry.rarity=reference.rarity;entry.cardRules=CARD_RULESET;}
   hero.hand.push(entry);
  }
 }
@@ -5676,7 +5665,7 @@ function createBattle(profile,mission,seed=Date.now(),options={}){
  aiStyle:mission.aiStyle||'equilibre',aiBoss:!!mission.boss,aiPhaseAnnounced:false,
  upgrades:bonuses.upgrades,mastery:bonuses.mastery,enemyDifficulty:mission.difficulty,mode:mission.mode||'campaign',stats:{playerKills:0,enemyKills:0}};
  if(options.turnFlow==='alternating')b.turnFlow='alternating';
- if(options.cardRules===AUBE_RULESET)b.cardRules=AUBE_RULESET;
+ b.cardRules=CARD_RULESET;
  if(p.deck.some(ref=>typeof ref==='object'))b.evolutionsEnabled=true;
  b.heroes.p.deck=shuffle(b,p.deck);
  b.heroes.e.deck=shuffle(b,mission.deck);
@@ -5686,7 +5675,6 @@ function createBattle(profile,mission,seed=Date.now(),options={}){
 }
 const forward=side=>side==='p'?1:-1;
 const isFlying=unitFlying;
-const isGuard=u=>!!u&&GUARD_IDS.has(u.id) && u.hp>0;
 
 // Bonus de formation calculé à la volée : aucune modification permanente des statistiques.
 // Deux unités vivantes du même Ordre, du même camp et sur la même ligne
@@ -5708,7 +5696,6 @@ function findTarget(b,lane,col,unit){
  for(let d=1;d<=range;d++){
   const targetCol=col+forward(unit.side)*d;
   const target=enemyAt(b,lane,targetCol,unit.side);
-  if(target && isGuard(target)&&!versionUnitAbilities(target)&&!versionUnitAbilities(unit))return {type:'unit',target,col:targetCol};
   if(target && !fallback)fallback={type:'unit',target,col:targetCol};
  }
  if(fallback)return fallback;
@@ -5720,13 +5707,11 @@ function spawn(b,side,reference,lane,col=entryColumn(b,side)){
  if(!validDeploymentColumn(b,side,col)||b.board[lane][col])return false;
  const definition=battleUnitDefinition(b,reference,side),stats=unitStats(b,reference,side);
  const u={uid:b.nextUnitId++,id,side,atk:stats.atk,maxhp:stats.maxhp,
-  hp:stats.maxhp,armor:c.ability==='armor'?2:0,ranged:c.ability==='ranged',
-  ability:c.ability,stun:0,poison:0,poisonTurns:0};
- if(b.cardRules===AUBE_RULESET||reference.rarity!==undefined){u.rarity=definition.rarity;u.cardRules=AUBE_RULESET;u.armor=definition.abilities.armor?.amount||0;u.ranged=!!definition.abilities.ranged;}
+  hp:stats.maxhp,armor:definition.abilities.armor?.amount||0,ranged:!!definition.abilities.ranged,
+  ability:c.ability,stun:0,poison:0,poisonTurns:0,rarity:definition.rarity,cardRules:CARD_RULESET};
  b.board[lane][col]=u;
  fx(b,{type:'spawn',side,lane,col,icon:c.icon});
  if(formationBonus(b,lane,u))note(b,`Concorde de ${FACTIONS[c.faction].short} : +1 attaque aux alliés de cet ordre sur la ligne ${lane+1}.`);
- if(!versionUnitAbilities(u)&&c.ability==='ward')b.heroes[side].shield=Math.min(20,b.heroes[side].shield+3);
  resolveUnitArrival(b,u,lane,col,{hit,emit:fx,note});sweepDead(b);
  note(b,`${side==='p'?'Vous invoquez': 'L’ennemi invoque'} ${c.name} (ligne ${lane+1}).`);
  enterCell(b,u,lane,col);
@@ -5738,6 +5723,7 @@ function damageHero(b,side,amount){
  fx(b,{type:'hero-damage',side,damage:before-h.hp,absorbed});
 }
 function play(b,side,index,lane,col=entryColumn(b,side)){
+ const rulesError=battleRulesError(b);if(rulesError)return {ok:false,reason:rulesError};
  if(b.status!=='active'||!Number.isInteger(lane)||!validLane(b,lane))return {ok:false,reason:'Combat terminé ou ligne invalide.'};
  if(!validDeploymentColumn(b,side,col))return {ok:false,reason:'Choisissez une case de votre zone de déploiement.'};
  const hero=b.heroes[side],hand=hero.hand[index];
@@ -5893,6 +5879,7 @@ function resolveAttacks(b,sideFilter=null){
 }
 const hasBattleTalent=(b,id)=>Array.isArray(b.heroTalents)&&b.heroTalents.includes(id);
 function usePower(b){
+ const rulesError=battleRulesError(b);if(rulesError)return {ok:false,reason:rulesError};
  if(b.phase!=='player'||b.status!=='active')return {ok:false,reason:'Action impossible.'};
  if(b.powerCooldown>0)return {ok:false,reason:`Pouvoir disponible dans ${b.powerCooldown} tour(s).`};
  b.powerCooldown=3;
@@ -5943,6 +5930,7 @@ function usePower(b){
 }
 // Un tour alternatif ne modifie pas les combats déjà sauvegardés sans ce mode.
 function playEnemyCard(b){
+ const rulesError=battleRulesError(b);if(rulesError)return {ok:false,reason:rulesError};
  if(b.turnFlow!=='alternating'||b.phase!=='enemy'||b.status!=='active')return {ok:false,reason:'Ce n’est pas le tour adverse.'};
  if(b.heroes.e.cardsPlayed>=2)return {ok:true,done:true};
  const h=b.heroes.e;
@@ -5959,6 +5947,7 @@ function playEnemyCard(b){
  return {ok:true,done:true};
 }
 function finishEnemyTurn(b){
+ const rulesError=battleRulesError(b);if(rulesError)return {ok:false,reason:rulesError};
  if(b.turnFlow!=='alternating'||b.phase!=='enemy'||b.status!=='active')return {ok:false,reason:'Ce n’est pas le tour adverse.'};
  resolvePoison(b,'e');prepareControlUnits(b,controlHooks,'e');moveUnits(b,'e');resolveAttacks(b,'e');expireControl(b,fx);
  if(b.round>=17&&b.status==='active'){
@@ -5980,6 +5969,7 @@ function finishEnemyTurn(b){
  return {ok:true};
 }
 function endPlayerTurn(b){
+ const rulesError=battleRulesError(b);if(rulesError)return {ok:false,reason:rulesError};
  if(b.phase!=='player'||b.status!=='active')return {ok:false,reason:'Le tour est terminé.'};
  if(b.turnFlow==='alternating'){
   b.phase='enemy';
@@ -6218,7 +6208,7 @@ Object.assign(__exports,{LANES,WIDTH,laneCount,lastCell,crownColumn,entryColumn,
 },
 "src/engine/battle-defense.js":function(__exports,__load){
 // Résolution commune des dégâts et défenses. Aucun DOM, profil ou moteur parallèle.
-const {CARDS,RIPOSTE_IDS}=__load("src/data.js");
+const {CARDS}=__load("src/data.js");
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {silenced}=__load("src/engine/battle-control.js");
 const {recordCombatEvent}=__load("src/engine/combat-events.js");
@@ -6235,7 +6225,6 @@ function grantAbilityBarrier(u,key,parameters){
 }
 
 function grantSharedBarrier(u,amount,cap){
- if(!versionUnitAbilities(u)&&!u.abilityBarriers){u.barrier=Math.min(cap,(u.barrier||0)+amount);return;}
  // Le plafond du sort porte sur la barrière totale ; ne jamais effacer un
  // surplus déjà acquis via une autre source ni réattribuer ses points.
  const total=u.barrier||0;u.barrier=Math.max(total,Math.min(cap,total+amount));
@@ -6256,13 +6245,12 @@ function absorbBarrier(u,damage){
 function hit(b,u,raw,bySide,ignoreArmor=false){
  if(!u||u.hp<=0)return 0; // Une victime ne compte jamais deux fois.
  const abilities=versionUnitAbilities(u);
- const armor=abilities?.armor?.amount??u.armor??0;
+ const armor=u.armor??abilities?.armor?.amount??0;
  let dmg=Math.max(1,raw-(ignoreArmor?0:armor));
  const reduction=abilities?.firstHitReduction;
  if(reduction&&!u.firstHitReductionUsed&&bySide!==u.side){
   u.firstHitReductionUsed=true;dmg=Math.max(0,dmg-reduction.amount);
  }
- if(u.labGuard?.block&&!u.labGuard.used&&bySide!==u.side){u.labGuard.used=true;dmg=Math.max(0,dmg-u.labGuard.block);}
  const absorbed=absorbBarrier(u,dmg);dmg-=absorbed;
  const before=u.hp;u.hp=Math.max(0,u.hp-dmg);
  // « Coup mortel » : les dégâts directs passent ici ; le poison garde sa résolution historique.
@@ -6279,16 +6267,14 @@ function hit(b,u,raw,bySide,ignoreArmor=false){
 
 function resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,attackBonus=0,note=()=>{}){
  const abilities=versionUnitAbilities(defender),riposte=abilities?.riposte;
- const experimentalCounter=!!defender.labGuard?.counter&&!defender.labGuard.counterUsed;
- const eligible=abilities?!!riposte:RIPOSTE_IDS.has(defender.id)||experimentalCounter;
+ const eligible=!!riposte;
  const spent=riposte?.frequency==='invocation'?defender.riposteUsed:defender.lastRiposteRound===b.round;
  if(!eligible||spent||silenced(b,defender)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
     defender.side===attacker.side||Math.abs(defenderCol-attackerCol)!==1)return false;
  if(riposte?.frequency==='invocation')defender.riposteUsed=true;
  else defender.lastRiposteRound=b.round;
- if(experimentalCounter)defender.labGuard.counterUsed=true;
  recordCombatEvent(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
- const raw=riposte?.damageMode==='effective-attack'?defender.atk+attackBonus:experimentalCounter?1:riposte?.amount??2;
+ const raw=defender.atk+attackBonus;
  const dealt=hit(b,attacker,raw,defender.side);
  if(dealt>0)note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
  if(abilities?.riposteBarrier)grantAbilityBarrier(defender,'riposteBarrier',abilities.riposteBarrier);
@@ -6530,8 +6516,6 @@ Object.assign(__exports,{TEMPO_IDS,TEMPO_MAX_WAIT,accelerationTarget,obstruction
 // Protection des couronnes : éligibilité et priorité validées, sans mutation.
 const {laneCount,lastCell,validLane,crownColumn}=__load("src/engine/board.js");
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
-const {GUARD_IDS}=__load("src/data.js");
-const {FUTURE_GUARD_POLICY}=__load("src/cards/abilities.js");
 function crownGuardCandidates(b,attackLane,heroSide,attackerCol){
  if(!['p','e'].includes(heroSide)||!validLane(b,attackLane)||!Number.isInteger(attackerCol)||attackerCol<1||attackerCol>lastCell(b))return [];
  const guards=[];
@@ -6545,22 +6529,11 @@ function crownGuardCandidates(b,attackLane,heroSide,attackerCol){
  return guards;
 }
 
-// Sans nouvelle version éligible, conserver exactement la priorité historique.
-// Dans un combat mêlant les deux systèmes, tous les candidats éligibles suivent
-// la priorité validée dès qu'une Garde versionnée entre dans la sélection.
+// Un seul choix, même ligne puis proximité de sa couronne ; aucune limite par tour.
 function findCrownGuardian(b,attackLane,heroSide,attackerCol){
- if(!['p','e'].includes(heroSide)||!validLane(b,attackLane)||!Number.isInteger(attackerCol)||attackerCol<1||attackerCol>lastCell(b))return null;
- const future=crownGuardCandidates(b,attackLane,heroSide,attackerCol);
- const historical=[];
- for(let col=1;col<=lastCell(b);col++){
-  const u=b.board[attackLane][col];
-  if(u&&u.hp>0&&u.side===heroSide&&GUARD_IDS.has(u.id)&&!versionUnitAbilities(u))historical.push({u,lane:attackLane,col});
- }
- if(!future.length)return historical.sort((a,z)=>heroSide==='p'?z.col-a.col:a.col-z.col)[0]||null;
- const policy=versionUnitAbilities(future[0].u).guard;
- if(policy.priority!==FUTURE_GUARD_POLICY.priority||policy.frequency!==FUTURE_GUARD_POLICY.frequency||policy.maxPerAttack!==1)return null;
+ const guards=crownGuardCandidates(b,attackLane,heroSide,attackerCol);
  const crown=crownColumn(b,heroSide);
- return [...future,...historical].sort((a,z)=>
+ return guards.sort((a,z)=>
   Number(a.lane!==attackLane)-Number(z.lane!==attackLane)||
   Math.abs(a.col-crown)-Math.abs(z.col-crown)||a.lane-z.lane||a.u.uid-z.u.uid)[0]||null;
 }
@@ -6572,7 +6545,7 @@ Object.assign(__exports,{crownGuardCandidates,findCrownGuardian});
 // Soutiens et arrivée du moteur commun ; les capacités viennent du registre.
 const {CARDS}=__load("src/data.js");
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
-const {silenced,activeAbility}=__load("src/engine/battle-control.js");
+const {silenced}=__load("src/engine/battle-control.js");
 const {lastCell}=__load("src/engine/board.js");
 const {grantHealBarrier}=__load("src/engine/battle-defense.js");
 function allies(b,u,lane,parameters){
@@ -6612,18 +6585,6 @@ function resolveUnitSupport(b,sideFilter,emit){
  for(let lane=0;lane<b.board.length;lane++)for(const u of b.board[lane]){
   if(!u||u.hp<=0||(sideFilter&&u.side!==sideFilter))continue;
   const a=versionUnitAbilities(u);
-  if(!a){
-   // Repli historique inchangé : une cible, ordre stable du tableau.
-   if(activeAbility(b,u)==='heal'){
-    const targets=b.board[lane].filter(v=>v&&v.side===u.side&&v.hp<v.maxhp);
-    if(targets.length){targets.sort((x,z)=>x.hp/x.maxhp-z.hp/z.maxhp);targets[0].hp=Math.min(targets[0].maxhp,targets[0].hp+2);emit(b,{type:'heal',lane,col:b.board[lane].indexOf(targets[0])});}
-   }
-   if(activeAbility(b,u)==='inspire'&&b.round%3===0){
-    const targets=b.board[lane].filter(v=>v&&v.side===u.side&&v.uid!==u.uid);
-    if(targets.length)targets[0].atk=Math.min(targets[0].atk+1,12);
-   }
-   continue;
-  }
   if(silenced(b,u))continue;
   if(a.heal&&u.lastHealRound!==b.round){
    const p=a.heal,targets=allies(b,u,lane,p).filter(t=>t.u.hp<t.u.maxhp)
@@ -6645,7 +6606,6 @@ Object.assign(__exports,{resolveUnitArrival,resolveUnitSupport});
 // IA tactique V1.7 — heuristique déterministe, sans accès aux cartes cachées du joueur.
 // Évalue l'état public du plateau et les cartes réellement présentes dans sa propre main.
 const {CARDS,GUARD_IDS}=__load("src/data.js");
-const {AUBE_RULESET}=__load("src/cards/definitions.js");
 const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount}=__load("src/engine/unit-rules.js");
 const {unitStats}=__load("src/engine/unit-stats.js");
 const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
@@ -6686,14 +6646,13 @@ function inspectEnemyLane(b,lane){
 // Estimation limitée au plateau public : une unité interposée ou un gardien
 // empêche de compter un coup direct sur la couronne au prochain combat.
 function crownRisk(b,laneInfo){
- if(laneInfo.guard&&b.cardRules!==AUBE_RULESET)return 0;
  return laneInfo.threats.reduce((sum,{u,col})=>{
   const steps=crownColumn(b,'e')-col;
-  if((u.stun||0)>0||!(b.cardRules===AUBE_RULESET?steps<=unitAttackRange(u)+unitMovementSteps(u,silenced(b,u)):steps<=2||(steps===3&&u.ability==='haste')))return sum;
-  if(b.cardRules===AUBE_RULESET&&findCrownGuardian(b,laneInfo.lane,'e',col))return sum;
+  if((u.stun||0)>0||!(steps<=unitAttackRange(u)+unitMovementSteps(u,silenced(b,u))))return sum;
+  if(findCrownGuardian(b,laneInfo.lane,'e',col))return sum;
   const range=unitAttackRange(u);
   if(laneInfo.friends.some(x=>x.col>col&&x.col-col<=range))return sum;
-  return sum+Math.max(1,u.atk)+((unitChargeAmount(u)>0)&&col<lastCell(b)&&(b.cardRules!==AUBE_RULESET||!silenced(b,u))?unitChargeAmount(u):0);
+  return sum+Math.max(1,u.atk)+((unitChargeAmount(u)>0)&&col<lastCell(b)&&!silenced(b,u)?unitChargeAmount(u):0);
  },0);
 }
 
@@ -6771,7 +6730,7 @@ function scoreOption(b,card,laneInfo,context){
   const target=accelerationTarget(b,'e');
   if(target){
    let pending=CARDS[target.card.id];
-   if(pending?.type==='unité'&&b.cardRules===AUBE_RULESET){const stats=unitStats(b,target.card,'e');pending={...pending,attack:stats.atk,hp:stats.maxhp};}
+   if(pending?.type==='unité'){const stats=unitStats(b,target.card,'e');pending={...pending,attack:stats.atk,hp:stats.maxhp};}
    const slots=Math.max(0,2-(hero.cardsPlayed||0));
    const canFollow=slots>=2&&target.wait<=2;
    score=5+Math.min(2,target.wait)*2.4;
@@ -6846,16 +6805,14 @@ function rankEnemyMoves(b){
  if(!b||b.status!=='active'||!b.heroes?.e)return [];
  const rows=Array.from({length:laneCount(b)},(_,lane)=>inspectEnemyLane(b,lane));
  const results=[];
- // Pas de changement des décisions des rencontres historiques sans sort V2.10.
- // Les nouvelles priorités s'activent uniquement avec du tempo dans NOTRE main.
- const hasTempo=b.cardRules===AUBE_RULESET||b.heroes.e.hand.some(x=>x.id==='hourglass_surge'||x.id==='time_bind');
- const risks=rows.map(row=>hasTempo?crownRisk(b,row):0),incoming=risks.reduce((sum,n)=>sum+n,0);
+ // Même lecture des règles et des statistiques que l'invocation réelle.
+ const risks=rows.map(row=>crownRisk(b,row)),incoming=risks.reduce((sum,n)=>sum+n,0);
  const hero=b.heroes.e;
  const context={rows,risks,incoming,lethal:incoming>=Math.max(1,hero.hp+(hero.shield||0))};
  b.heroes.e.hand.forEach((entry,index)=>{
   let card=CARDS[entry.id];if(!card||entry.wait>0) return;
   if(card.type==='unité'&&!unitCanPlay(b,entry,'e'))return;
-  if(card.type==='unité'&&b.cardRules===AUBE_RULESET){const stats=unitStats(b,entry,'e'),d=battleUnitDefinition(b,entry,'e');card={...card,attack:stats.atk,hp:stats.maxhp,versionDefinition:d};}
+  if(card.type==='unité'){const stats=unitStats(b,entry,'e'),d=battleUnitDefinition(b,entry,'e');card={...card,attack:stats.atk,hp:stats.maxhp,versionDefinition:d};}
   rows.forEach(row=>{
    const rank=scoreOption(b,card,row,context);
    if(rank&&rank.score+personalityBonus(b,card,row)>0)results.push({index,lane:row.lane,...(lastCell(b)===10&&card.type==='unité'?{col:row.deploymentCol}:{}),id:entry.id,...rank,score:rank.score+personalityBonus(b,card,row)});
@@ -8007,7 +7964,7 @@ function renderGuidePage({ btn, previousGameAvailable }) {
       ],
       [
         'Validez vos actions',
-        'Cliquez « Valider mes actions ». Vos unités avancent et attaquent, puis l’IA joue ses cartes et fait agir les siennes. Les anciens combats sauvegardés conservent leur résolution commune.'
+        'Cliquez « Valider mes actions ». Vos unités avancent et attaquent, puis l’IA joue ses cartes et fait agir les siennes.'
       ],
       [
         'Protégez votre couronne',
@@ -8059,7 +8016,7 @@ function renderGuidePage({ btn, previousGameAvailable }) {
       ]
     ];
     return `<div class="kicker">LES LOIS DU ROYAUME</div><h1 class="page-title">Apprendre à jouer</h1><p class="page-sub">Pas besoin d’avoir déjà joué à un jeu de cartes tactique. Le principe est simple : poser une carte au bon moment, sur la bonne ligne, puis laisser vos troupes agir.</p><div class="guide-list spaced">${steps.map(([title, desc], i) => `<div class="guide-step"><div class="step-num">${String(i + 1).padStart(2, '0')}</div><div><h3>${title}</h3><p>${desc}</p></div></div>`).join('')}</div>
- <div class="card-panel spaced"><div class="section-caption">RÈGLES AVANCÉES</div><div class="two-grid" style="margin-top:17px"><div><h3>Plateau et capacités</h3><p class="page-sub">Chaque ligne contient <b>10 cases jouables</b>, entre les deux couronnes : 2 lignes en duel, 3 pour les rencontres avancées, 4 contre les boss. Posez vos créatures sur une case libre parmi les trois premières de chaque ligne : 1, 2 ou 3. La zone adverse est symétrique : 10, 9 ou 8. Les anciens combats de 3 lignes de 5 cases conservent leur case d’entrée unique.</p><p class="page-sub"><b>Armure</b> réduit les dégâts. <b>Portée</b> fixe la distance d’attaque. <b>Rapidité</b> accélère le déplacement. <b>Poison</b> inflige des dégâts différés. <b>Soin</b> restaure un allié. <b>Éclaboussure</b> touche une seconde cible. <b>Charge</b> renforce une attaque après déplacement. <b>Riposte</b> répond à un adversaire adjacent après une attaque au contact. Les valeurs, zones et fréquences de chaque version sont précisées sur sa fiche.</p></div><div><h3>Composition du deck</h3><p class="page-sub">Vous pouvez jouer au plus <b>deux cartes par tour</b>. Les cartes lentes sont puissantes mais doivent patienter dans votre main. Mélangez unités rapides, défenses, soutiens et sorts. Les cartes utilisées reviennent lorsque le paquet se reforme.</p></div></div></div><div class="card-panel spaced"><div class="section-caption">SAUVEGARDE & TRANSPORT</div><h2 class="section-title" style="margin-top:9px">Conserver votre progression</h2><p class="page-sub">La partie est enregistrée dans ce navigateur. Vous pouvez aussi exporter un fichier de sauvegarde et l’importer sur un autre appareil. « Nouvelle partie » conserve seulement un emplacement précédent sur cet appareil : exportez votre profil avant de multiplier les essais.</p><div class="button-row">${btn('↓ Exporter ma sauvegarde', 'export-save', '', 'primary')}${btn('↑ Importer une sauvegarde', 'import-save', '', 'ghost')}${previousGameAvailable ? btn('↶ Reprendre la partie précédente', 'restore-previous-game', '', 'ghost') : ''}<input id="import-file" type="file" accept="application/json,.json" hidden /></div></div><div class="button-row">${btn('Commencer la première mission', 'start-mission', 'data-id="01"', 'primary')}</div>`;
+ <div class="card-panel spaced"><div class="section-caption">RÈGLES AVANCÉES</div><div class="two-grid" style="margin-top:17px"><div><h3>Plateau et capacités</h3><p class="page-sub">Chaque ligne contient <b>10 cases jouables</b>, entre les deux couronnes : 2 lignes en duel, 3 pour les rencontres avancées, 4 contre les boss. Posez vos créatures sur une case libre parmi les trois premières de chaque ligne : 1, 2 ou 3. La zone adverse est symétrique : 10, 9 ou 8.</p><p class="page-sub"><b>Armure</b> réduit les dégâts. <b>Portée</b> fixe la distance d’attaque. <b>Rapidité</b> accélère le déplacement. <b>Poison</b> inflige des dégâts différés. <b>Soin</b> restaure un allié. <b>Éclaboussure</b> touche une seconde cible. <b>Charge</b> renforce une attaque après déplacement. <b>Garde</b> protège uniquement sa couronne : sur sa ligne, le gardien doit se trouver entre l’attaquant et elle. <b>Riposte</b> répond au contact après survie avec l’ATQ actuelle, bonus compris, sans Charge ; une fois par tour sauf indication contraire sur la fiche. Les valeurs, zones et fréquences de chaque version sont précisées sur sa fiche.</p></div><div><h3>Composition du deck</h3><p class="page-sub">Vous pouvez jouer au plus <b>deux cartes par tour</b>. Les cartes lentes sont puissantes mais doivent patienter dans votre main. Mélangez unités rapides, défenses, soutiens et sorts. Les cartes utilisées reviennent lorsque le paquet se reforme.</p></div></div></div><div class="card-panel spaced"><div class="section-caption">SAUVEGARDE & TRANSPORT</div><h2 class="section-title" style="margin-top:9px">Conserver votre progression</h2><p class="page-sub">La partie est enregistrée dans ce navigateur. Vous pouvez aussi exporter un fichier de sauvegarde et l’importer sur un autre appareil. « Nouvelle partie » conserve seulement un emplacement précédent sur cet appareil : exportez votre profil avant de multiplier les essais.</p><div class="button-row">${btn('↓ Exporter ma sauvegarde', 'export-save', '', 'primary')}${btn('↑ Importer une sauvegarde', 'import-save', '', 'ghost')}${previousGameAvailable ? btn('↶ Reprendre la partie précédente', 'restore-previous-game', '', 'ghost') : ''}<input id="import-file" type="file" accept="application/json,.json" hidden /></div></div><div class="button-row">${btn('Commencer la première mission', 'start-mission', 'data-id="01"', 'primary')}</div>`;
   }
 
 Object.assign(__exports,{renderGuidePage});
@@ -8491,7 +8448,7 @@ const {CARDS,CAMPAIGN,CLASSES}=__load("src/data.js");
 const {freshProfile}=__load("src/engine/profile.js");
 const {createBattle}=__load("src/engine/battle.js");
 const {versionUnitStats}=__load("src/engine/unit-stats.js");
-const {unitVersions,resolveRulesDefinition,AUBE_RULESET}=__load("src/cards/definitions.js");
+const {unitVersions,resolveRulesDefinition,CARD_RULESET}=__load("src/cards/definitions.js");
 const {CARD_RARITIES}=__load("src/cards/schema.js");
 const LAB_RANKS=Object.freeze(CARD_RARITIES.map(r=>r.id));
 const LAB_SIDES=Object.freeze(['p','e']);
@@ -8514,7 +8471,7 @@ function labCardStats(lab,side,id){
  const card=CARDS[id];if(!card)return null;
  const rarity=labRarity(lab,side,id),level=labLevel(lab,side,id);
  if(card.type!=='unité')return {rarity,level};
- const context={mode:'developer',cardRules:AUBE_RULESET,labStats:{levels:lab.levels,rarities:lab.rarities}};
+ const context={mode:'developer',cardRules:CARD_RULESET,labStats:{levels:lab.levels,rarities:lab.rarities}};
  const stats=versionUnitStats(context,{id,rarity},side),definition=resolveRulesDefinition({id,rarity});
  return stats?{atk:stats.atk,hp:stats.maxhp,rarity,level,definition}:null;
 }
@@ -8564,7 +8521,7 @@ function createLabBattle(lab,seed=Date.now()){
  const m={...CAMPAIGN[0],id:'laboratoire',name:'Laboratoire de combat',enemy:'IA de test',
   hp:26,difficulty:2,boss:false,mode:'developer',aiStyle:lab.aiStyle,
   deck:[...lab.decks.e],unlock:null};
- const b=createBattle(p,m,seed,{turnFlow:'alternating',cardRules:AUBE_RULESET});
+ const b=createBattle(p,m,seed,{turnFlow:'alternating',cardRules:CARD_RULESET});
  // Ces valeurs restent uniquement dans la bataille de test, jamais dans le stockage.
  b.labStats={levels:structuredClone(lab.levels),rarities:structuredClone(lab.rarities)};
  return b;
@@ -8900,6 +8857,7 @@ const {freshProfile,normalizeProfile,validateDeck}=__load("src/engine.js");
 const {supportedBoard,lastCell}=__load("src/engine/board.js");
 const {CARDS,CLASSES}=__load("src/data.js");
 const {playableCardReference,cardReference,evolutionProfileError}=__load("src/cards/references.js");
+const {CARD_RULESET}=__load("src/cards/definitions.js");
 const SAVE_KEY='couronnes_arcanes_v1';
 const BATTLE_KEY='couronnes_arcanes_bataille_v1';
 const hasCard=id=>typeof id==='string'&&Object.prototype.hasOwnProperty.call(CARDS,id);
@@ -8911,7 +8869,7 @@ const validHero=h=>h&&typeof h.name==='string'&&nonNegative(h.hp)&&Number.isFini
 const validUnit=u=>u===null||(u&&typeof u==='object'&&hasCard(u.id)&&CARDS[u.id].type==='unité'&&
  ['p','e'].includes(u.side)&&Number.isInteger(u.uid)&&u.uid>=0&&nonNegative(u.hp)&&Number.isFinite(u.maxhp)&&u.maxhp>0&&
  Number.isFinite(u.atk)&&nonNegative(u.armor||0)&&nonNegative(u.stun||0)&&nonNegative(u.poison||0)&&nonNegative(u.poisonTurns||0)&&!!cardReference(u));
-function validStoredBattle(b){
+function validBattleSnapshot(b){
  if(!b||!['active','victory','defeat'].includes(b.status)||b.rewardGiven||
   !['player','enemy','resolving','finished'].includes(b.phase)||!Number.isInteger(b.round)||b.round<1||
   (b.turnFlow!==undefined&&b.turnFlow!=='alternating')||typeof b.missionId!=='string'||!supportedBoard(b.board)||
@@ -8926,6 +8884,12 @@ function validStoredBattle(b){
    Number.isInteger(t.col)&&t.col>=1&&t.col<=lastCell(b)&&nonNegative(t.damage))))return false;
  return true;
 }
+// Un ancien résultat peut encore être réglé ; aucun ancien combat actif ne reprend.
+function validStoredBattle(b){return validBattleSnapshot(b)&&(b.status!=='active'||b.cardRules===CARD_RULESET);}
+function storedBattleNeedsRestart(){try{
+ const b=JSON.parse(localStorage.getItem(BATTLE_KEY)||'null');
+ return !!(validBattleSnapshot(b)&&b.status==='active'&&b.cardRules!==CARD_RULESET);
+}catch{return false;}}
 function validateImportedProfile(raw){
  if(!raw||typeof raw!=='object'||Array.isArray(raw)||!Array.isArray(raw.deck)||
   !raw.collection||typeof raw.collection!=='object'||Array.isArray(raw.collection))throw Error('Format de profil invalide.');
@@ -8989,7 +8953,7 @@ function hasPreviousAdventure(){
   const saved=JSON.parse(localStorage.getItem(PREVIOUS_GAME_KEY)||'null');
   if(typeof saved?.profile!=='string'||!(saved.battle===null||typeof saved.battle==='string'))return false;
   validateImportedProfile(JSON.parse(saved.profile));
-  return saved.battle===null||validStoredBattle(JSON.parse(saved.battle));
+  return saved.battle===null||validBattleSnapshot(JSON.parse(saved.battle));
  }catch{return false;}
 }
 function restorePreviousAdventure(){
@@ -8997,7 +8961,7 @@ function restorePreviousAdventure(){
  try{return switchGame(JSON.parse(localStorage.getItem(PREVIOUS_GAME_KEY)));}catch{return false;}
 }
 
-Object.assign(__exports,{SAVE_KEY,BATTLE_KEY,validStoredBattle,validateImportedProfile,loadProfile,saveProfile,restoreBattle,storeBattle,PREVIOUS_GAME_KEY,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure});
+Object.assign(__exports,{SAVE_KEY,BATTLE_KEY,validStoredBattle,storedBattleNeedsRestart,validateImportedProfile,loadProfile,saveProfile,restoreBattle,storeBattle,PREVIOUS_GAME_KEY,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure});
 
 }
 };

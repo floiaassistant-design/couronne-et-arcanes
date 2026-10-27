@@ -1,7 +1,7 @@
 // Soutiens et arrivée du moteur commun ; les capacités viennent du registre.
 import {CARDS} from '../data.js';
 import {versionUnitAbilities} from '../cards/definitions.js';
-import {silenced,activeAbility} from './battle-control.js';
+import {silenced} from './battle-control.js';
 import {lastCell} from './board.js';
 import {grantHealBarrier} from './battle-defense.js';
 
@@ -42,18 +42,6 @@ export function resolveUnitSupport(b,sideFilter,emit){
  for(let lane=0;lane<b.board.length;lane++)for(const u of b.board[lane]){
   if(!u||u.hp<=0||(sideFilter&&u.side!==sideFilter))continue;
   const a=versionUnitAbilities(u);
-  if(!a){
-   // Repli historique inchangé : une cible, ordre stable du tableau.
-   if(activeAbility(b,u)==='heal'){
-    const targets=b.board[lane].filter(v=>v&&v.side===u.side&&v.hp<v.maxhp);
-    if(targets.length){targets.sort((x,z)=>x.hp/x.maxhp-z.hp/z.maxhp);targets[0].hp=Math.min(targets[0].maxhp,targets[0].hp+2);emit(b,{type:'heal',lane,col:b.board[lane].indexOf(targets[0])});}
-   }
-   if(activeAbility(b,u)==='inspire'&&b.round%3===0){
-    const targets=b.board[lane].filter(v=>v&&v.side===u.side&&v.uid!==u.uid);
-    if(targets.length)targets[0].atk=Math.min(targets[0].atk+1,12);
-   }
-   continue;
-  }
   if(silenced(b,u))continue;
   if(a.heal&&u.lastHealRound!==b.round){
    const p=a.heal,targets=allies(b,u,lane,p).filter(t=>t.u.hp<t.u.maxhp)

@@ -64,7 +64,7 @@ test('Milicien validé : rareté et achats indépendants, pouvoirs du registre d
  b.heroes.p.hand=[{id:'militia',wait:0}];
  assert.equal(playPlayerCard(b,0,0,1).ok,true);
  assert.equal(b.board[0][1].labGuard,undefined);
- assert.equal(b.board[0][1].rarity,'divine');assert.equal(b.board[0][1].cardRules,'aube-v1');
+ assert.equal(b.board[0][1].rarity,'divine');assert.equal(b.board[0][1].cardRules,'cards-v2');
  assert.equal(setLabLevel(lab,'p','militia',0).ok,true);
  assert.equal(labCardStats(lab,'p','militia').atk,2);
  assert.equal(labCardStats(lab,'p','militia').hp,8);

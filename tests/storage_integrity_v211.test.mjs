@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {freshProfile,normalizeProfile,createBattle} from '../src/engine.js';
 import {CAMPAIGN} from '../src/data.js';
-import {loadProfile,restoreBattle,storeBattle,saveProfile,validateImportedProfile,BATTLE_KEY,SAVE_KEY} from '../src/ui/storage.js';
+import {loadProfile,restoreBattle,storeBattle,saveProfile,validateImportedProfile,BATTLE_KEY,SAVE_KEY,storedBattleNeedsRestart} from '../src/ui/storage.js';
 const mock=()=>{const cache={};globalThis.localStorage={
  getItem:key=>cache[key]??null,setItem:(key,value)=>{cache[key]=String(value);},removeItem:key=>delete cache[key]
 };return cache;};
@@ -30,14 +30,14 @@ test('a completed unclaimed battle persists for recovery and cannot be rewarded 
  assert.equal(JSON.parse(cache[BATTLE_KEY]).vfx,undefined);
  b.rewardGiven=true;assert.equal(storeBattle(b),true);assert.equal(restoreBattle(),null);
 });
-test('historical active 3x5 saves resume, malformed heroes and units are rejected nondestructively',()=>{
+test('historical active saves need restart, current corrupted saves are rejected nondestructively',()=>{
  const original=JSON.parse(readFileSync(new URL('./fixtures/refactor_baseline_v24.json',import.meta.url)))
   .map(entry=>JSON.parse(entry.battle)).find(b=>b.status==='active');
- const cache=mock();assert.equal(storeBattle(original),true);assert.deepEqual(restoreBattle(),original);
+ const cache=mock();assert.equal(storeBattle(original),true);assert.equal(restoreBattle(),null);assert(storedBattleNeedsRestart());assert.equal(cache[BATTLE_KEY],JSON.stringify(original));
  cache[SAVE_KEY]=JSON.stringify(freshProfile());
  for(const damage of [b=>b.heroes.p.hand=null,b=>b.heroes.e.hp='bad',b=>b.board[0][1]={id:'not-a-card',side:'p',hp:1},
   b=>b.heroes.p.deck=['missing-id'],b=>b.round='one']){
-  const bad=JSON.parse(JSON.stringify(original));damage(bad);cache[BATTLE_KEY]=JSON.stringify(bad);
+  const bad=createBattle(freshProfile(),CAMPAIGN[0],9);damage(bad);cache[BATTLE_KEY]=JSON.stringify(bad);
   assert.equal(restoreBattle(),null);assert.ok(cache[BATTLE_KEY]);
  }
  assert.equal(loadProfile().gold,110);

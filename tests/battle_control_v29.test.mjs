@@ -80,7 +80,7 @@ test('V2.9 silence retains flying, guard interception, armor and dynamic Concord
  const b=combat();b.heroes.p.hand=[];
  const guard=unit('sentinel','e',3,{armor:2,silenceUntil:1});
  b.board[0][3]=guard;b.board[0][1]=unit('ironwraith','e',4,{stun:2});b.board[0][5]=unit('archer','p',5);
- endPlayerTurn(b);assert.equal(b.heroes.e.hp,100);assert.equal(guard.hp,19);assert.equal(guard.armor,2);assert.equal(guard.atk,2);
+ endPlayerTurn(b);assert.equal(b.heroes.e.hp,98);assert.equal(guard.hp,20);assert.equal(guard.armor,2);assert.equal(guard.atk,2);
 });
 test('V2.9 Inquisitor and Trapper have bounded cooldown and obey silence/stun',()=>{
  const b=combat('mist_inquisitor');b.board[0][4]=unit('lich','e',2,{stun:5});

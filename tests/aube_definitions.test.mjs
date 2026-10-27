@@ -88,14 +88,14 @@ test('Milicien : réduction remplacée 1/2/2/3/3, 8 PV totaux, riposte et Rempar
  for(const d of defs){assert.deepEqual(d.geometry,{steps:1,range:1});assert(!d.abilities.guard);}
 });
 
-test('Porte-égide : Armure 2 héritée, Garde étendue sans duplication, politique validée et natif historique',()=>{
+test('Porte-égide : Armure 2 héritée, Garde étendue sans duplication, politique validée dès le natif',()=>{
  const defs=unitVersions('shield');
- assert.deepEqual(defs.map(d=>d.abilities.guard.scope),['legacy-line','positioned','positioned','positioned','line','all-lines']);
+ assert.deepEqual(defs.map(d=>d.abilities.guard.scope),['positioned','positioned','positioned','positioned','line','all-lines']);
  for(const d of defs){
   assert.deepEqual(d.abilities.armor,{amount:2,minimumDamage:1});
   assert.deepEqual(Object.keys(d.abilities).sort(),['armor','guard','riposte']);
   assert.deepEqual(d.geometry,{steps:1,range:1});
-  assert.equal(d.abilities.riposte.damageMode,d.source?'effective-attack':'fixed');
+  assert.equal(d.abilities.riposte.damageMode,'effective-attack');
  }
  assert.deepEqual(defs[0].pendingDecisions,[]);
  for(const d of defs.slice(1))assert.deepEqual(d.pendingDecisions,[]);
@@ -132,7 +132,7 @@ test('Sœur et Prieur : montant, cibles et lignes hérités ; barrière uniqueme
 test('Paladin : Armure 3 remplace 2, barrière personnelle plafonnée après Riposte autorisée',()=>{
  const defs=unitVersions('paladin');
  assert.deepEqual(defs.map(d=>d.abilities.armor.amount),[2,2,3,3]);
- for(const d of defs){assert.equal(d.abilities.riposte.frequency,'round');assert.equal(d.abilities.riposte.damageMode,d.source?'effective-attack':'fixed');}
+ for(const d of defs){assert.equal(d.abilities.riposte.frequency,'round');assert.equal(d.abilities.riposte.damageMode,'effective-attack');}
  assert.deepEqual(defs[3].abilities.riposteBarrier,
   {amount:2,cap:2,frequency:'round',target:'self',trigger:'authorized-riposte'});
  for(const d of defs.slice(1))assert.deepEqual(d.pendingDecisions,[]);

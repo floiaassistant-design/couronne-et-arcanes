@@ -1,3 +1,11 @@
+> **Correction proposée — règles uniques des cartes jouables.**
+> Garde positionnelle pour les cinq gardiens et Riposte à l'ATQ actuelle pour
+> toutes les unités concernées, exemplaires déjà possédés inclus, dans les deux
+> camps. Les anciens combats actifs demandent une relance sans pénalité ; profils
+> et progression conservés. [Contrat et reprise](docs/REGLES_CARTES_UNIQUES.md).
+> Branche `fix/regles-cartes-jouables`, depuis `b58ea3f0` ; aucune fusion effectuée.
+> La PR 56 des défis reste en attente de réconciliation.
+
 # Couronnes & Arcanes
 
 > PR 55 — quatre épreuves d’évolution Aube proposées : [contrat](docs/EPREUVES_EVOLUTION.md)

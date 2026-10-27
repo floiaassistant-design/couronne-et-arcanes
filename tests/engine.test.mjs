@@ -251,7 +251,7 @@ test('V1.5 flight is blocked by enemy contact and cannot overwrite enemies',()=>
  assert.equal(b.board[0][2]?.uid,1101,'enemy is not replaced by flying movement');
 });
 
-test('V1.5 guard protects AI crown and is lane-specific',()=>{
+test('Garde normale dépassée : la couronne est exposée, sans protection depuis une autre ligne',()=>{
  const b=mk(304);
  b.heroes.e.hand=[];b.heroes.e.deck=[];b.heroes.e.discard=[];
  b.heroes.p.hand=[];b.heroes.p.deck=[];b.heroes.p.discard=[];
@@ -260,8 +260,8 @@ test('V1.5 guard protects AI crown and is lane-specific',()=>{
  b.board[2][1]={uid:1202,id:'golem',side:'e',atk:2,hp:12,maxhp:12,armor:2,ranged:false,ability:'armor',stun:2,poison:0,poisonTurns:0};
  const before=b.heroes.e.hp;
  endPlayerTurn(b);
- assert.equal(b.heroes.e.hp,before,'guard protects hero from attack on same lane');
- assert.equal(b.board[0][1]?.hp,11,'guard absorbs attack and armor');
+ assert.equal(b.heroes.e.hp,before-3,'gardien dépassé : la couronne reçoit la frappe');
+ assert.equal(b.board[0][1]?.hp,12,'le gardien dépassé ne reçoit pas la frappe');
  assert.equal(b.board[2][1]?.hp,12,'guard in another lane unaffected');
  b.board[0][1]=null;
  const health=b.heroes.e.hp;

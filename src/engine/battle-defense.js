@@ -1,5 +1,5 @@
 // Résolution commune des dégâts et défenses. Aucun DOM, profil ou moteur parallèle.
-import {CARDS,RIPOSTE_IDS} from '../data.js';
+import {CARDS} from '../data.js';
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {silenced} from './battle-control.js';
 import {recordCombatEvent} from './combat-events.js';
@@ -17,7 +17,6 @@ export function grantAbilityBarrier(u,key,parameters){
 }
 
 export function grantSharedBarrier(u,amount,cap){
- if(!versionUnitAbilities(u)&&!u.abilityBarriers){u.barrier=Math.min(cap,(u.barrier||0)+amount);return;}
  // Le plafond du sort porte sur la barrière totale ; ne jamais effacer un
  // surplus déjà acquis via une autre source ni réattribuer ses points.
  const total=u.barrier||0;u.barrier=Math.max(total,Math.min(cap,total+amount));
@@ -38,13 +37,12 @@ function absorbBarrier(u,damage){
 export function hit(b,u,raw,bySide,ignoreArmor=false){
  if(!u||u.hp<=0)return 0; // Une victime ne compte jamais deux fois.
  const abilities=versionUnitAbilities(u);
- const armor=abilities?.armor?.amount??u.armor??0;
+ const armor=u.armor??abilities?.armor?.amount??0;
  let dmg=Math.max(1,raw-(ignoreArmor?0:armor));
  const reduction=abilities?.firstHitReduction;
  if(reduction&&!u.firstHitReductionUsed&&bySide!==u.side){
   u.firstHitReductionUsed=true;dmg=Math.max(0,dmg-reduction.amount);
  }
- if(u.labGuard?.block&&!u.labGuard.used&&bySide!==u.side){u.labGuard.used=true;dmg=Math.max(0,dmg-u.labGuard.block);}
  const absorbed=absorbBarrier(u,dmg);dmg-=absorbed;
  const before=u.hp;u.hp=Math.max(0,u.hp-dmg);
  // « Coup mortel » : les dégâts directs passent ici ; le poison garde sa résolution historique.
@@ -61,16 +59,14 @@ export function hit(b,u,raw,bySide,ignoreArmor=false){
 
 export function resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,attackBonus=0,note=()=>{}){
  const abilities=versionUnitAbilities(defender),riposte=abilities?.riposte;
- const experimentalCounter=!!defender.labGuard?.counter&&!defender.labGuard.counterUsed;
- const eligible=abilities?!!riposte:RIPOSTE_IDS.has(defender.id)||experimentalCounter;
+ const eligible=!!riposte;
  const spent=riposte?.frequency==='invocation'?defender.riposteUsed:defender.lastRiposteRound===b.round;
  if(!eligible||spent||silenced(b,defender)||defender.hp<=0||attacker.hp<=0||attacker.ranged||
     defender.side===attacker.side||Math.abs(defenderCol-attackerCol)!==1)return false;
  if(riposte?.frequency==='invocation')defender.riposteUsed=true;
  else defender.lastRiposteRound=b.round;
- if(experimentalCounter)defender.labGuard.counterUsed=true;
  recordCombatEvent(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
- const raw=riposte?.damageMode==='effective-attack'?defender.atk+attackBonus:experimentalCounter?1:riposte?.amount??2;
+ const raw=defender.atk+attackBonus;
  const dealt=hit(b,attacker,raw,defender.side);
  if(dealt>0)note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
  if(abilities?.riposteBarrier)grantAbilityBarrier(defender,'riposteBarrier',abilities.riposteBarrier);

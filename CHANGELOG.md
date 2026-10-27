@@ -1,3 +1,17 @@
+## Proposition — règles uniques des cartes jouables, 27 octobre 2026
+
+- Garde normale positionnelle pour les cinq gardiens, priorité près de sa
+  couronne ; aucun détournement d'attaque visant une autre unité.
+- Riposte selon ATQ effective pour les sept natifs concernés, bonus actifs
+  compris, sans Charge ; une fois par tour, fréquence spéciale du Milicien conservée.
+- Registre unique, mêmes règles pour cartes possédées, nouvelles, ennemies et labo.
+  Anciennes branches de Garde/Riposte et pilote `labGuard` retirés.
+- Relance explicite d'un ancien combat actif, sans défaite ni coût ; profil,
+  partie précédente et récupération unique des anciens résultats conservés.
+- Fiches et Guide alignés ; aucun changement des statistiques natives, stocks,
+  circuits d'obtention, illustrations, prix ou disponibilité des évolutions.
+- PR 56 indépendante, à réconcilier après la correction ; aucune fusion autorisée.
+
 ## Proposé — épreuves d’évolution Aube, PR 55 (27 octobre 2026)
 
 - Quatre épreuves à récompense annoncée et unique : un exemplaire transformé,

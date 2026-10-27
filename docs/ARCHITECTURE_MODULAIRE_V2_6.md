@@ -1,3 +1,21 @@
+## Règles uniques — correction du 27 octobre 2026
+
+`cards/abilities.js` porte les règles natives communes, Garde et Riposte incluses.
+`cards/definitions.js` garde un seul registre ; les deux noms de résolution
+pointent vers les mêmes objets immuables. `engine/unit-rules.js` lit ces règles
+et contrôle la révision active. Garde, dégâts, soutiens et IA suppriment les
+branches historiques ; aucune sélection de moteur selon le contexte.
+
+`ui/storage.js` distingue profil conservé, ancien combat actif à relancer et
+résultat terminé à régler. `app.js` rend le message de mise à jour et ferme le
+combat obsolète à la demande, sans toucher au profil. La partie précédente peut
+récupérer son profil même si son combat exige la même relance.
+La fiche commune décrit aussi les gardiens et unités à Riposte hors Aube.
+Aucun module de production, CSS, dépendance ou actif ajouté.
+[Contrat actuel et contrôles](REGLES_CARTES_UNIQUES.md).
+
+Les sections ci-dessous retracent les livraisons précédentes.
+
 ## Épreuves d'évolution — PR 55, 27 octobre 2026
 
 `evolution-trials.js` porte les quatre rencontres, conditions et transformations.
