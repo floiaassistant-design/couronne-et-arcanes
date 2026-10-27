@@ -1,8 +1,8 @@
 # Versions de cartes — contrat de données et du moteur Aube
 
-Étapes 1 à 4 préparées dans la PR Aube en brouillon ; aucune nouvelle rareté
+Étapes 1 à 6 préparées et revues dans la PR Aube en brouillon ; aucune nouvelle rareté
 obtenue dans l'aventure. [Tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
-édition relue `2026-10-26T08:37:43.944Z`. Ce fichier décrit l'API et ne remplace
+édition relue `2026-10-27T05:48:45.318Z`, décisions Aube inchangées. Ce fichier décrit l'API et ne remplace
 pas le tableau de décisions.
 
 ## Données et identités
@@ -47,7 +47,8 @@ ne sont pas additionnés comme des bonus de palier. `versionUnitStats` expose
 - `status.engine: 'implemented'` : capacités raccordées au moteur et couvertes
   par les tests de l'étape 4 ; cela ne crée aucune possession.
 - `status.combat` : les natifs restent `implemented` ; les évolutions restent
-  `pending` en attendant la livraison complète, dont leurs fiches universelles.
+  `pending` pour l'activation en aventure. Leurs fiches universelles sont prêtes ;
+  la revue technique ne change pas leur disponibilité ni leur obtention.
 - `status.obtaining` : `existing` pour les natifs, `undefined` pour les évolutions.
 - `pendingDecisions` : les deux choix de Garde validés ont été retirés. Les
   conventions techniques sont explicites dans le contrat du moteur.
@@ -67,8 +68,8 @@ aucun niveau forcé ou ancien calcul de pilote Milicien. Les niveaux 0–3 sont
 indépendants de la rareté, qui ne change pas le niveau choisi.
 
 Les profils, achats, maîtrises, quantités et decks ne sont pas convertis. La
-campagne existante ne reçoit pas automatiquement le marqueur futur tant que
-la présentation complète n'est pas prête. Le laboratoire reste isolé des
+campagne existante ne reçoit pas automatiquement le marqueur futur ; son
+activation demande un périmètre explicite. Le laboratoire reste isolé des
 sauvegardes et des récompenses de l'aventure.
 
 [Contrat d'exécution](AUBE_MOTEUR.md), [défenses](AUBE_DEFENSES.md) et

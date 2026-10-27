@@ -1,3 +1,13 @@
+## Revu — Aube étape 6, PR nº 53 (27 octobre 2026)
+
+- Tableau maître Notion relu ; revue de l'ensemble du registre, moteur,
+  laboratoire, compatibilité, économie et présentation, sans défaut bloquant identifié.
+- 418 tests et 60 scénarios de parité rejoués, deux exports réussis et synchronisés ;
+  deux CI réussies sur le dernier code `13be34f`. Clôture documentaire uniquement.
+- Six étapes terminées et bilan de livraison enregistré. Évolutions toujours
+  réservées au laboratoire, obtention non définie ; PR en brouillon, sans fusion
+  ni publication. [Revue](docs/REVUE_AUBE_PR53_2026_10_27.md).
+
 ## Préparé — Aube étape 5, PR nº 53 (26 octobre 2026)
 
 - Textes courts et fiche commune pour Collection, main, deux camps du plateau,

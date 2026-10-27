@@ -1,11 +1,11 @@
-# État courant — 26 octobre 2026
+# État courant — 27 octobre 2026
 
-## Intégration Aube — étapes 1 à 5 terminées, PR non intégrée
+## Intégration Aube — étapes 1 à 6 terminées, PR non intégrée
 
 La [PR nº 53](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53)
 reste l’unique PR active sur `feat/aube-evolutions-fiche-universelle`, en brouillon.
-Le tableau maître Notion a été relu dans son édition du 26 octobre 2026,
-12:40:37.541 UTC. Les règles Aube correspondent au registre ; aucune nouvelle
+Le tableau maître Notion a été relu dans son édition du 27 octobre 2026,
+05:48:45.318 UTC. Les règles Aube correspondent au registre ; aucune nouvelle
 évolution des autres factions n’est intégrée par cette mission.
 
 Les 51 versions Aube sont raccordées au moteur commun et testables au
@@ -22,12 +22,14 @@ puis choisir une case ; consulter une unité occupée n’active aucune pose.
 
 Contrôles, export exact et tête GitHub dans le [point de reprise](REPRISE_INTEGRATION_AUBE.md)
 et la description de PR. [Versions](AUBE_VERSIONS.md), [moteur](AUBE_MOTEUR.md),
-[présentation](AUBE_PRESENTATION.md). Arrêt avant la revue de l’étape 6,
-sans fusion ni publication.
+[présentation](AUBE_PRESENTATION.md). [Revue complète de l'étape 6](REVUE_AUBE_PR53_2026_10_27.md)
+terminée sans défaut bloquant identifié : 418 tests et 60 scénarios de parité
+rejoués, exports synchronisés et deux CI réussies sur le code `13be34f`.
+La clôture de revue ne modifie que la documentation. Aucune fusion ni publication.
 
 ## Jeu intégré sur main
 
-**Dernier main relu le 26 octobre :** `cf8175002431e1714460f8be917665437a5b78c4`, contenu commun à la base de la PR 53. Les détails de publication ci-dessous décrivent la dernière version publiée attestée, et non une publication de la PR Aube.
+**Dernier main relu le 27 octobre :** `cf8175002431e1714460f8be917665437a5b78c4`, contenu commun à la base de la PR 53. Les détails de publication ci-dessous décrivent la dernière version publiée attestée, et non une publication de la PR Aube.
 
 **Jalon de publication vérifié le 25 octobre :** [`1810b1518bc0e8d668ed11bc55042ae5161ae94e`](https://github.com/floiaassistant-design/couronne-et-arcanes/commit/1810b1518bc0e8d668ed11bc55042ae5161ae94e), fusion autorisée de la [PR nº 48](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/48) le 25 octobre 2026. La comparaison GitHub de ce merge à `main` est identique (aucun commit d'écart). La comparaison avec le commit PR `af048c1b` montre un commit de fusion **sans aucune différence de fichiers** : le code et `JOUER.html` sur main sont ceux qui ont été vérifiés.
 

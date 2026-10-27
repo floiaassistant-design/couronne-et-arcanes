@@ -11,8 +11,8 @@ implémentées par cette mission. Le registre central reste la source des
 Cette étape présente les pouvoirs déjà raccordés à l’étape 4. Elle ne change
 ni règles, ni IA, ni obtention, ni possessions, ni achats, ni maîtrise.
 Les évolutions restent testables au laboratoire et refusées en aventure.
-`status.engine` reste distinct de la livraison complète `status.combat` ;
-la revue de livraison demeure l’étape 6.
+`status.engine` reste distinct de l'activation en aventure `status.combat` ;
+la [revue de livraison de l'étape 6](REVUE_AUBE_PR53_2026_10_27.md) est terminée.
 
 ## Une présentation et un lecteur
 
@@ -77,4 +77,4 @@ Les résultats finaux des tests, exports exacts et contrôles GitHub sont dans
 Le nouveau parcours universel est appelé par `browser_card_preview.py`, déjà
 exécuté par la CI : aucun workflow permanent supplémentaire.
 
-Arrêt avant l’étape 6 ; aucune fusion ni publication automatique.
+Revue de l'étape 6 terminée le 27 octobre 2026 ; aucune fusion ni publication.

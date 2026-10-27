@@ -1,3 +1,10 @@
+## Revue Aube — étape 6 terminée, PR 53 en brouillon
+
+[Revue du 27 octobre 2026](REVUE_AUBE_PR53_2026_10_27.md) : mêmes sources web
+et export, 51 modules sans cycle. Les six étapes sont terminées ; les évolutions
+restent réservées au laboratoire, sans obtention ni activation en aventure.
+Les sections suivantes retracent les étapes de l'architecture.
+
 ## Présentation commune Aube — étape 5, PR 53 en brouillon
 
 `ui/card-presentation.js` porte le modèle de lecture et le rendu de fiche partagés.

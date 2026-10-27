@@ -79,7 +79,7 @@ sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les 
 et leurs niveaux 0 à 3, choisis indépendamment. Les autres unités conservent
 leur version native. Les nouvelles raretés ne sont pas offertes dans l’aventure ;
 leur obtention reste à définir. Cette préparation appartient à la PR Aube en
-brouillon, avec une présentation commune préparée à l’étape 5 et une revue finale encore à effectuer.
+brouillon, avec une présentation commune et une [revue finale terminée](docs/REVUE_AUBE_PR53_2026_10_27.md). La PR attend la décision du propriétaire ; elle n'est ni fusionnée ni publiée.
 
 La sauvegarde est locale à l’appareil et à l’adresse utilisée. Guide permet
 l’export/import du profil. Les clés historiques et les combats repris sont

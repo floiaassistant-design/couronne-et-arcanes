@@ -1,7 +1,7 @@
 # Aube — contrat du moteur et du laboratoire, étape 4
 
 Conception : [tableau maître officiel](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
-édition relue `2026-10-26T08:37:43.944Z`. Ce document décrit les choix techniques,
+édition relue `2026-10-27T05:48:45.318Z`, décisions Aube inchangées. Ce document décrit les choix techniques,
 les responsabilités et les limites du brouillon ; aucune seconde matrice de
 statistiques ou validation de conception.
 
@@ -72,13 +72,14 @@ aucune lecture de la main, pioche ou collection privées du joueur. Les styles,
 limites de pose et géométries restent ceux du moteur commun.
 
 `status.engine` indique la disponibilité technique ; les évolutions gardent
-`status.combat: pending` pour la livraison complète et une obtention non définie.
+`status.combat: pending` pour l'activation en aventure et une obtention non définie.
 `unitCanPlay` autorise ces versions seulement dans le laboratoire ; la campagne
 n'est pas convertie et ne reçoit pas automatiquement le marqueur futur.
 
-`ability-text.js` fournit les libellés de test à partir des paramètres, sans
-recopier les valeurs. L'unification de tous les textes, cartes et fiches dans
-les autres écrans reste l'étape 5. Aucun nouvel actif ou circuit économique.
+`ability-text.js` fournit les textes à partir des paramètres, sans recopier les
+valeurs. L'étape 5 a unifié cartes et fiches dans les autres écrans ; la
+[revue de l'étape 6](REVUE_AUBE_PR53_2026_10_27.md) est terminée. Aucun nouvel
+actif ou circuit économique.
 
 Les API `completeBattle` et `grantBattleProgress` refusent aussi directement
 les batailles `mode: developer`, sans modifier le profil ou l'état de test.

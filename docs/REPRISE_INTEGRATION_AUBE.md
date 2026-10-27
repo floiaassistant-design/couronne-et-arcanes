@@ -1,12 +1,16 @@
 # Intégration Aube — reprise par étapes
 
-## Point de reprise — 26 octobre 2026, étape 5 terminée
+## Point de reprise — 27 octobre 2026, étape 6 terminée
 
-**Étapes 1 à 5 terminées sur le brouillon. Arrêt avant l’étape 6.**
+**Étapes 1 à 6 terminées sur le brouillon. Revue prête à examiner ; aucune fusion ni publication.**
+
+- [Revue finale](REVUE_AUBE_PR53_2026_10_27.md) : aucun défaut bloquant identifié ; clôture uniquement documentaire, code/UI/export inchangés depuis `13be34f8b134e52cfafd00f9915e850ddb19bea1`.
+- À l'étape 6 : 418 tests Node, 60 scénarios de parité et les deux builds rejoués avec succès ; export identique au fichier suivi. Les deux CI de ce code sont réussies : [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40363691764), [web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40363691591).
+- Les 41 évolutions restent au laboratoire, sans obtention ni activation en aventure. `status.combat: pending` reste conservé ; fiches et revue ne sont plus des tâches manquantes.
 
 - Branche : `feat/aube-evolutions-fiche-universelle` ; [PR nº 53](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53), toujours brouillon. Tête, arbre, export et CI finale dans sa description après vérification.
 - Main vérifié : `cf8175002431e1714460f8be917665437a5b78c4` ; seule cette PR est ouverte. Aucune autorisation de fusion ou publication.
-- [Tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f) relu, édition `2026-10-26T12:40:37.541Z`. Les dix lignes Aube restent conformes aux définitions. Les validations d’autres factions ne sont pas intégrées ici.
+- [Tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f) relu, édition `2026-10-27T05:48:45.318Z`. Les dix lignes Aube restent conformes aux définitions. Les validations d’autres factions ne sont pas intégrées ici.
 - Les 51 versions Aube ont leurs mécaniques communes et restent testables au laboratoire aux niveaux 0–3 indépendants, dans les deux camps. Les évolutions sont refusées en aventure, sans copie ou obtention ajoutée.
 - `card-presentation.js` résout version, statistiques, statut et fiche commune ; `ability-text.js` dérive les formats bref/détaillé. `card-inspection.js` est le seul lecteur de consultation ; l’ancien rendu et le contrôleur séparés de Collection sont remplacés par un adaptateur.
 - Collection, main, deux camps du plateau, Atelier/Alchimie, listes de decks, paquets, récompenses et laboratoire partagent la fiche. Miniature compacte, vrais nombres, rareté et règles de l’instantané ; aucun recalcul d’une ancienne unité ni état de lecture sauvegardé.
@@ -28,13 +32,12 @@
 - Le helper de pages diagnostiques charge directement le fichier construit après installation du même stockage fictif, au lieu de transmettre son HTML complet par CDP à chaque ouverture. Assertions et scénarios métier conservés ; aucun délai de test augmenté.
 - Avant modification, les deux CI de `c4a75ec` ont été vérifiées **success** : [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40299947293), [assemblage](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40299945946). Elles valident l’étape 4 ; distinguer les nouveaux contrôles de l’étape 5.
 
-## Prochaine étape : revue complète
+## Suite après la revue
 
-1. Relire instructions, état, contrats et tableau maître à jour ; vérifier main, PR et tête exacte.
-2. Examiner l’intégration des six étapes : correspondance entre définitions, effets, statistiques et présentation ; compatibilité historique, absence de doubles déclenchements, isolation du laboratoire, IA et économie.
-3. Vérifier les derniers résultats CI de la tête exacte et traiter les défauts pertinents. Aucun équilibrage humain ou test de téléphone physique n’est revendiqué par l’automatisation.
-4. Conserver l’obtention non définie sans inventer de copies ou de circuits économiques. Toute activation supplémentaire en aventure doit avoir un périmètre explicite.
-5. Pousser le résultat sur la même PR, puis présenter la livraison complète et ses limites. **Aucune fusion ni publication sans accord spécifique du propriétaire.** Si seule la CI reste à attendre, arrêter sans la surveiller activement.
+1. Présenter la PR et le bilan au propriétaire ; conserver le brouillon et l'obtention non définie. Aucun équilibrage humain ou téléphone physique n'est revendiqué.
+2. Après notification, vérifier les contrôles de la dernière tête documentaire. Le code et l'export sont identiques à la tête déjà validée ; distinguer les deux commits dans le compte rendu.
+3. Toute activation en aventure ou conception d'obtention demande un périmètre explicite, sans copies ou conversion implicites.
+4. **Aucune fusion ni publication sans accord spécifique du propriétaire.** Avant une action autorisée, relire Notion, vérifier main, tête, conflits et contrôles exacts. Si seule la CI reste à attendre, arrêter sans la surveiller activement.
 
 ## Historique — étape 4
 
@@ -170,4 +173,4 @@ La programmation du registre d'étape 2 n'autorise pas une fiche à annoncer un 
 4. Réaliser **une seule étape suivante**, ses tests utiles et sa revue. Mettre à jour le point de reprise en tête, les contrôles et les limites ; pousser puis vérifier le commit sur GitHub.
 5. Si seule la CI reste en cours, fournir son lien et s'arrêter sans la consulter en boucle. Après notification, vérifier le résultat sur le commit exact.
 
-Instruction de reprise : **« Reprends l'étape 6 de l'intégration Aube sur la branche `feat/aube-evolutions-fiche-universelle`, lis `docs/REPRISE_INTEGRATION_AUBE.md`, poursuis la même PR puis arrête-toi à la fin de l'étape. »**
+Instruction de reprise : **« Lis `docs/REPRISE_INTEGRATION_AUBE.md` et la revue finale de la PR 53 ; vérifie la dernière tête et ses contrôles avant l'action précisément demandée. Les six étapes sont terminées ; ne pas recommencer l'intégration ni activer les évolutions en aventure implicitement. »**
