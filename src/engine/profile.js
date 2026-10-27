@@ -2,10 +2,11 @@
 import {CARDS,CLASSES,TOWER_MAX} from '../data.js';
 import {dungeonById} from '../dungeons.js';
 import {TALENT_LEVELS,talentInfo,normalizeTalentChoices} from '../talents.js';
+import {cardId,cardReference,cardKey,playableCardReference,ownedCardCopies,normalizeEvolutionInventory,completedEvolutionTrials} from '../cards/references.js';
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 const safeCount=(n,fallback=0,max=1000000000)=>Number.isSafeInteger(n)&&n>=0?Math.min(n,max):fallback;
 const objectOf=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{};
-export const ownedCopies=(meta,id)=>meta.collection[id]||0;
+export const ownedCopies=ownedCardCopies;
 export function freshProfile(){return {
  version:1,name:'Souverain des Couronnes',heroClass:'gardien',gold:110,shards:50,stars:0,heroXp:0,mastery:{},talents:{},
  unlocked:1,towerUnlocked:1,towerCleared:[],dungeonCleared:[],dungeonRun:null,reputation:{aube:0,sylve:0,ombre:0,forge:0,ether:0},equipmentOwned:[],equipped:{arme:null,armure:null,relique:null},wins:0,losses:0,collection:{militia:4,shield:2,archer:2,ranger:2,wolf:2,firebolt:2,healing:2,smith:1,spark:1,bone:1,drill:1,thorn:1},
@@ -47,7 +48,9 @@ export function normalizeProfile(raw){
   ?{id:run.id,stage:run.stage,hp:Number.isFinite(run.hp)?Math.max(1,Math.floor(run.hp)):null,maxhp:Number.isFinite(run.maxhp)?Math.max(1,Math.floor(run.maxhp)):null,phase:['ready','choice','bonus'].includes(run.phase)&&run.stage>0?run.phase:'ready'}
   :null;
  for(const slot of ['arme','armure','relique'])if(!p.equipmentOwned.includes(p.equipped[slot])||EQUIPMENT[p.equipped[slot]]?.slot!==slot)p.equipped[slot]=null;
- p.deck=(Array.isArray(raw.deck)?raw.deck:base.deck).filter(id=>CARDS[id]).slice(0,24);
+ if(raw.evolvedCollection!==undefined)p.evolvedCollection=normalizeEvolutionInventory(raw.evolvedCollection);
+ if(raw.completedTrials!==undefined)p.completedTrials=completedEvolutionTrials(raw.completedTrials);
+ p.deck=(Array.isArray(raw.deck)?raw.deck:base.deck).map(cardReference).filter(playableCardReference).slice(0,24);
  if(!['gardien','arcaniste','rodeur','clerc'].includes(p.heroClass))p.heroClass='gardien';
  p.unlocked=clamp(Number(p.unlocked)||1,1,12);
  if(!Array.isArray(p.completed))p.completed=[];
@@ -86,7 +89,7 @@ export function masteryRank(profile,id){
 }
 export function grantBattleProgress(profile,b){
  const none={heroXp:0,levelBefore:heroLevel(profile),levelAfter:heroLevel(profile),levelShards:0,mastered:[]};
- if(b.mode==='developer'||b.progressionGranted)return none;
+ if(b.mode==='developer'||b.mode==='evolution-trial'||b.progressionGranted)return none;
  b.progressionGranted=true;
  const victory=b.status==='victory';
  // Une retraite immédiate ne donne pas d'XP : pas de gain à la boucle abandon/recommencer.
@@ -109,25 +112,26 @@ export function grantBattleProgress(profile,b){
 }
 export function validateDeck(profile){
  if(!Array.isArray(profile.deck)||profile.deck.length<12||profile.deck.length>24)return 'Le deck doit contenir entre 12 et 24 cartes.';
- const counts={};for(const id of profile.deck)counts[id]=(counts[id]||0)+1;
- for(const [id,n] of Object.entries(counts)){
-  const c=CARDS[id];if(!c)return 'Carte inconnue dans le deck.';
+ const counts={};for(const ref of profile.deck){if(!playableCardReference(ref))return 'Carte ou évolution indisponible dans le deck.';const key=cardKey(ref);counts[key]=(counts[key]||0)+1;}
+ for(const ref of profile.deck){
+  const c=CARDS[cardId(ref)],n=counts[cardKey(ref)];if(!c)return 'Carte inconnue dans le deck.';
   if(c.heroClass&&c.heroClass!==profile.heroClass)return `${c.name} est réservée à la classe ${CLASSES[c.heroClass].name}.`;
-  if(n>ownedCopies(profile,id))return `Trop d’exemplaires : ${c.name}.`;
+  if(n>ownedCopies(profile,ref))return `Trop d’exemplaires : ${c.name}.`;
  }
  return '';
 }
 export function changeHeroClass(profile,id){
  if(!CLASSES[id])return {ok:false,reason:'Classe inconnue.'};
- const restricted=profile.deck.map(cardId=>CARDS[cardId]).find(card=>card?.heroClass&&card.heroClass!==id);
+ const restricted=profile.deck.map(ref=>CARDS[cardId(ref)]).find(card=>card?.heroClass&&card.heroClass!==id);
  if(restricted)return {ok:false,reason:`Retirez d’abord ${restricted.name} de votre deck pour changer de classe.`};
  profile.heroClass=id;return {ok:true};
 }
-export function modifyDeck(profile,id,delta){
- if(!CARDS[id]||(delta>0&&CARDS[id].heroClass&&CARDS[id].heroClass!==profile.heroClass))return false;
- const count=profile.deck.filter(x=>x===id).length;
- if(delta>0&&count<ownedCopies(profile,id)&&profile.deck.length<24){profile.deck.push(id);return true;}
- if(delta<0&&count>0){profile.deck.splice(profile.deck.indexOf(id),1);return true;}
+export function modifyDeck(profile,reference,delta){
+ const ref=cardReference(reference),id=cardId(ref);
+ if(!ref||!playableCardReference(ref)||(delta>0&&CARDS[id].heroClass&&CARDS[id].heroClass!==profile.heroClass))return false;
+ const key=cardKey(ref),index=profile.deck.findIndex(x=>cardKey(x)===key),count=profile.deck.filter(x=>cardKey(x)===key).length;
+ if(delta>0&&count<ownedCopies(profile,ref)&&profile.deck.length<24){profile.deck.push(ref);return true;}
+ if(delta<0&&index>=0){profile.deck.splice(index,1);return true;}
  return false;
 }
 export const EQUIPMENT={

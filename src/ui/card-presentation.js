@@ -26,7 +26,7 @@ export function cardPresentation(reference,{context={},profile=null,side='p',uni
  const known=native.type==='sort'||!!definition;
  const missing=lower?'Rang inexistant':'À concevoir';
  const future=known&&selected!==native.rarity;
- const availability=!known?missing:future?'Testable au laboratoire · Obtention non définie':'Version native';
+ const availability=!known?missing:future?(definition?.status.obtaining==='trial'?'À gagner en épreuve':'Testable au laboratoire · Obtention non définie'):'Version native';
  if(stats===undefined)stats=native.type==='sort'||!known?null:unit?
   {atk:unit.atk,hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);

@@ -1,0 +1,20 @@
+/* Épreuves : objectifs et récompenses visibles avant de lancer un combat. */
+.evolution-trials { max-width: 1360px; margin: auto; }
+.evolution-trials > header { margin-bottom: 24px; }
+.trial-boss-gate { margin-bottom: 24px; }
+.trial-boss-gate p { color: var(--muted); line-height: 1.6; }
+.trial-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+.trial-card { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.trial-card h2 { color: var(--gold); font: normal 25px Georgia,serif; margin: 5px 0; }
+.trial-card p { line-height: 1.6; margin: 3px 0; }
+.trial-reward-card { max-width: 210px; width: 100%; align-self: center; margin: 8px 0; }
+.trial-objective { color: #f0ddb8; border-left: 2px solid var(--gold); padding: 9px 12px; background: #ffffff05; }
+.trial-start { margin-top: auto; padding-top: 12px; }
+.trial-start .btn { min-height: 44px; }
+.trial-result-card { width: min(210px,100%); margin: 16px auto; }
+.evolution-unlock { color: var(--gold); font-size: 12px; line-height: 1.5; }
+.trial-combat-objective { margin: 5px 0 0; max-width: 600px; color: #ecd7aa; font-size: 11px; line-height: 1.4; }
+@media(max-width: 700px) {
+ .trial-grid { grid-template-columns: minmax(0,1fr); }
+ .trial-combat-objective { max-width: 220px; font-size: 10px; }
+}

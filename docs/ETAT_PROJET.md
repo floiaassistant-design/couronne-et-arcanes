@@ -1,5 +1,17 @@
 # État courant — 27 octobre 2026
 
+## Pause — épreuves d’évolution Aube en brouillon
+
+Branche `feat/epreuves-evolution-aube`, basée sur main `1177160856b5162eb06c7df109d479eb41441926`.
+Le code pilote est commencé ; **430 tests sur 431 réussis**, une simulation de
+l'épreuve Milicien Épique reste en échec. Parité 60 scénarios préservée et builds
+réussis, nouveaux parcours navigateur non exécutés. Lire impérativement
+[le checkpoint complet](REPRISE_EPREUVES_EVOLUTION.md). Ne pas fusionner/publier.
+
+La PR 54 (deck manuel) est désormais fusionnée sur accord conditionnel du
+propriétaire, après réussite de ses deux CI, au main indiqué ci-dessus.
+Les sections plus bas conservent l'état de préparation précédent.
+
 ## Deck manuel — nouvelle évolution en préparation
 
 La branche `feat/deck-manuel-simple` ajoute « Mon deck » dans la navigation :

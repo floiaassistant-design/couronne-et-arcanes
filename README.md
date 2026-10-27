@@ -1,5 +1,8 @@
 # Couronnes & Arcanes
 
+> Travail en cours sur les épreuves d’évolution : [point de reprise](docs/REPRISE_EPREUVES_EVOLUTION.md).
+> Brouillon incomplet, avec un test en échec ; aucune fusion autorisée.
+
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
 quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle.
 

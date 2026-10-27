@@ -1,5 +1,15 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Reprise prioritaire — épreuves Aube en brouillon
+
+Lire [le checkpoint](docs/REPRISE_EPREUVES_EVOLUTION.md) avant de poursuivre la
+branche `feat/epreuves-evolution-aube`. Le propriétaire a demandé une pause.
+Une simulation est encore en échec ; aucune fusion/publication autorisée.
+Ce pilote introduit quatre obtentions par épreuve et des références `{id,rarity}`
+pour les seules évolutions, avec inventaire facultatif séparé. Les natifs et
+anciennes sauvegardes restent inchangés. Les anciens contrats « labo seulement »
+doivent être réconciliés avec ce périmètre explicite avant la revue finale.
+
 ## Contrat — construction manuelle du deck
 
 - `ui/deck-builder.js` rend les cartes possédées et le deck actif ; réutiliser

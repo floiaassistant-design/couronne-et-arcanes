@@ -33,7 +33,7 @@ test('La Collection expose 51 définitions, distingue les 9 rangs inexistants et
  for(const d of definitions){
   const html=collectionHoverContent(p,d.id,d.rarity,esc);
   assert.match(html,new RegExp(`ATQ ${d.stats.attack} / PV ${d.stats.hp}`));
-  if(d.rarity!==d.nativeRarity)assert.match(html,/Obtention non définie/);
+  if(d.rarity!==d.nativeRarity)assert.match(html,d.status.obtaining==='trial'?/À gagner en épreuve/:/Obtention non définie/);
  }
  let missing=0;
  for(const id of AUBE_UNIT_IDS)for(const rarity of ['commun','rare','épique','légendaire','divine','éveillée']){

@@ -15,6 +15,7 @@ import {chosenTalents} from '../talents.js';
 import {tempoTargetError} from './tempo.js';
 import {normalizeProfile,validateDeck,heroLevel,heroShieldBonus,gearBonus} from './profile.js';
 import {unitStatContext,unitStats} from './unit-stats.js';
+import {cardId} from '../cards/references.js';
 import {laneCount,lastCell,crownColumn,entryColumn,validDeploymentColumn,validLane,missionLayout} from './board.js';
 export * from './board.js';
 export * from './guard-candidates.js';
@@ -32,9 +33,11 @@ function draw(b,side,n=1){
    if(!hero.discard.length)break;
    hero.deck=shuffle(b,hero.discard);hero.discard=[];
   }
-  const id=hero.deck.pop();if(!CARDS[id])continue;
-  const definition=CARDS[id].type==='unité'?battleUnitDefinition(b,id,side):null;
-  hero.hand.push({id,wait:Math.max(0,(definition?.stats.delay??CARDS[id].delay)-1)});
+  const reference=hero.deck.pop(),id=cardId(reference);if(!CARDS[id])continue;
+  const definition=CARDS[id].type==='unité'?battleUnitDefinition(b,reference,side):null;
+  const entry={id,wait:Math.max(0,(definition?.stats.delay??CARDS[id].delay)-1)};
+  if(typeof reference==='object'){entry.rarity=reference.rarity;entry.cardRules=AUBE_RULESET;}
+  hero.hand.push(entry);
  }
 }
 
@@ -51,6 +54,7 @@ export function createBattle(profile,mission,seed=Date.now(),options={}){
  upgrades:bonuses.upgrades,mastery:bonuses.mastery,enemyDifficulty:mission.difficulty,mode:mission.mode||'campaign',stats:{playerKills:0,enemyKills:0}};
  if(options.turnFlow==='alternating')b.turnFlow='alternating';
  if(options.cardRules===AUBE_RULESET)b.cardRules=AUBE_RULESET;
+ if(p.deck.some(ref=>typeof ref==='object'))b.evolutionsEnabled=true;
  b.heroes.p.deck=shuffle(b,p.deck);
  b.heroes.e.deck=shuffle(b,mission.deck);
  draw(b,'p',5+b.libraryBonus);draw(b,'e',5);
@@ -95,7 +99,7 @@ function spawn(b,side,reference,lane,col=entryColumn(b,side)){
  const u={uid:b.nextUnitId++,id,side,atk:stats.atk,maxhp:stats.maxhp,
   hp:stats.maxhp,armor:c.ability==='armor'?2:0,ranged:c.ability==='ranged',
   ability:c.ability,stun:0,poison:0,poisonTurns:0};
- if(b.cardRules===AUBE_RULESET){u.rarity=definition.rarity;u.cardRules=AUBE_RULESET;u.armor=definition.abilities.armor?.amount||0;u.ranged=!!definition.abilities.ranged;}
+ if(b.cardRules===AUBE_RULESET||reference.rarity!==undefined){u.rarity=definition.rarity;u.cardRules=AUBE_RULESET;u.armor=definition.abilities.armor?.amount||0;u.ranged=!!definition.abilities.ranged;}
  b.board[lane][col]=u;
  fx(b,{type:'spawn',side,lane,col,icon:c.icon});
  if(formationBonus(b,lane,u))note(b,`Concorde de ${FACTIONS[c.faction].short} : +1 attaque aux alliés de cet ordre sur la ligne ${lane+1}.`);
@@ -126,7 +130,7 @@ function play(b,side,index,lane,col=entryColumn(b,side)){
  if(c.type==='unité'&&!spawn(b,side,hand,lane,col))return {ok:false,reason:'La case de déploiement est occupée.'};
  const drawAfter=c.type==='sort'?castSpell(b,side,hand.id,lane,{emit:fx,hit,damageHero,sweepDead,checkOutcome,note,controlHooks}):0;
  if(side==='p'){if(!b.cardUses)b.cardUses={};b.cardUses[hand.id]=(b.cardUses[hand.id]||0)+1;}
- hero.discard.push(hand.id);hero.hand.splice(index,1);hero.cardsPlayed++;
+ hero.discard.push(hand.rarity===undefined?hand.id:{id:hand.id,rarity:hand.rarity});hero.hand.splice(index,1);hero.cardsPlayed++;
  if(drawAfter)draw(b,side,drawAfter);
  return {ok:true};
 }

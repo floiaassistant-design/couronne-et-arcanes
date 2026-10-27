@@ -11,12 +11,14 @@ export function battleUnitReference(context,reference,side='p'){
 }
 export function battleUnitDefinition(context,reference,side='p'){
  const ref=battleUnitReference(context,reference,side);
- return context.cardRules===AUBE_RULESET?resolveRulesDefinition(ref):resolveUnitDefinition(ref);
+ const native=CARDS[ref?.id]?.rarity;
+ return context.cardRules===AUBE_RULESET||ref?.rarity!==undefined&&ref.rarity!==native?resolveRulesDefinition(ref):resolveUnitDefinition(ref);
 }
 export function unitCanPlay(context,reference,side='p'){
  const d=battleUnitDefinition(context,reference,side);if(!d)return false;
  if(d.rarity===d.nativeRarity)return true;
- return context.mode==='developer'&&context.cardRules===AUBE_RULESET&&d.status.engine==='implemented';
+ if(context.mode==='developer')return context.cardRules===AUBE_RULESET&&d.status.engine==='implemented';
+ return side==='p'&&context.evolutionsEnabled===true&&d.status.combat==='implemented';
 }
 export function unitAttackRange(u){
  const d=versionUnitAbilities(u);
