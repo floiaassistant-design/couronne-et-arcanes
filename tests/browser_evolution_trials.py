@@ -1,9 +1,10 @@
 """Épreuves : vrai parcours UI, récompenses, inventaire et clôture récupérable."""
-import asyncio,copy,json,subprocess,threading
+import argparse,asyncio,copy,json,subprocess,threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
 from playwright.async_api import async_playwright
+from evolution_ci_plan import PARTS,evolution_cases
 
 ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
@@ -205,7 +206,7 @@ async def recovery(browser):
     await ctx.close()
     print('Épreuves: échec profil, coupure après reçu, objectif manqué/défaite sans coût et verrou boss PASS',flush=True)
 
-async def main():
+async def main(part=None):
     class Quiet(SimpleHTTPRequestHandler):
         def log_message(self,*args):pass
     server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT)))
@@ -213,12 +214,16 @@ async def main():
     try:
         async with async_playwright() as pw:
             browser=await pw.chromium.launch(headless=True,args=['--no-sandbox'])
-            for label,vp,touch in [('desktop',{'width':1440,'height':1000},False),('portrait',{'width':390,'height':844},True),('landscape',{'width':844,'height':390},True)]:
-                for i,s in enumerate(SCENARIOS):
-                    await earned_flow(browser,s,label,vp,touch=touch,full=label=='desktop' or i==(0 if label=='portrait' else 1))
-            await earned_flow(browser,SCENARIOS[0],'web',{'width':1366,'height':900},full=True,url=f'http://127.0.0.1:{server.server_port}/index.html')
-            await recovery(browser)
+            for case in evolution_cases(len(SCENARIOS),part):
+                if case['kind']=='earned':
+                    await earned_flow(browser,SCENARIOS[case['index']],case['label'],case['viewport'],touch=case['touch'],full=case['full'])
+                elif case['kind']=='web':
+                    await earned_flow(browser,SCENARIOS[0],'web',{'width':1366,'height':900},full=True,url=f'http://127.0.0.1:{server.server_port}/index.html')
+                else:await recovery(browser)
             await browser.close()
     finally:server.shutdown();server.server_close()
 
-if __name__=='__main__':asyncio.run(main())
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--part',choices=PARTS)
+    asyncio.run(main(parser.parse_args().part))
