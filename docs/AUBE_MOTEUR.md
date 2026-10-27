@@ -1,5 +1,10 @@
 # Aube — contrat du moteur et du laboratoire, étape 4
 
+**Extension PR 55 :** quatre versions gagnées par [épreuve](EPREUVES_EVOLUTION.md)
+sont jouables côté joueur dans les nouveaux combats compatibles. Les 37 autres
+évolutions restent au laboratoire ; les natifs de l'aventure gardent leurs
+règles historiques. Les descriptions des étapes ci-dessous retracent la PR 53.
+
 Conception : [tableau maître officiel](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
 édition relue `2026-10-27T05:48:45.318Z`, décisions Aube inchangées. Ce document décrit les choix techniques,
 les responsabilités et les limites du brouillon ; aucune seconde matrice de
@@ -71,10 +76,12 @@ publiques. Les décisions historiques restent identiques sans marqueur futur ;
 aucune lecture de la main, pioche ou collection privées du joueur. Les styles,
 limites de pose et géométries restent ceux du moteur commun.
 
-`status.engine` indique la disponibilité technique ; les évolutions gardent
-`status.combat: pending` pour l'activation en aventure et une obtention non définie.
-`unitCanPlay` autorise ces versions seulement dans le laboratoire ; la campagne
-n'est pas convertie et ne reçoit pas automatiquement le marqueur futur.
+`status.engine` indique la disponibilité technique. Depuis la PR 55, seules
+les quatre récompenses des épreuves ont `status.combat: implemented` et
+obtention `trial`. Les autres évolutions restent `pending`, limitées au labo.
+`unitCanPlay` vérifie ce statut et le contexte. La campagne n'est pas convertie ;
+un nouveau deck avec évolution active `evolutionsEnabled`, sans marqueur global
+de règles Aube et sans recalcul des autres unités.
 
 `ability-text.js` fournit les textes à partir des paramètres, sans recopier les
 valeurs. L'étape 5 a unifié cartes et fiches dans les autres écrans ; la

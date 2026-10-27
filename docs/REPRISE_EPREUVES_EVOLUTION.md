@@ -1,130 +1,75 @@
-# Reprise — épreuves d’évolution Aube
+# Reprise — épreuves d’évolution Aube, PR 55
 
-**Pause demandée par le propriétaire pour préserver le quota, le 27 octobre 2026.**
-Ce travail est un brouillon incomplet. Ne pas fusionner ni publier. Reprendre
-la même branche et la même PR ; ne pas recommencer depuis une ancienne copie.
-
-## Dépôt, base et décisions
+La pause du 27 octobre a été levée par le propriétaire. Continuer sur cette
+même branche/PR, sans fusion ni publication autorisée.
 
 - Dépôt : `floiaassistant-design/couronne-et-arcanes`.
-- Branche : `feat/epreuves-evolution-aube` ; PR de reprise en brouillon, lien
-  et tête exacte dans sa description.
-- Base main : `1177160856b5162eb06c7df109d479eb41441926`, fusion autorisée de
-  la PR 54. Arbre `8d888451cf4da0b887d3f68853e7af040935c814`, identique au
-  contenu testé de la PR 54 (`f5385a8`). Les deux CI de cette PR ont réussi :
-  [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40468034445),
-  [web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40468034414).
-  Publication du site non vérifiée ici. La PR 53 était déjà fusionnée.
+- Branche : `feat/epreuves-evolution-aube`.
+- [PR 55](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/55) :
+  tête exacte, export et résultats distants dans sa description.
+- Main relu : `1177160856b5162eb06c7df109d479eb41441926` (PR 54 fusionnée sur
+  accord après ses deux CI réussies). La PR 53 était déjà intégrée.
 - [Notion officiel](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f)
-  relu, édition `2026-10-27T06:13:46.581Z`. Chiffres/pouvoirs Aube inchangés.
-  Aucune modification de Notion par ce travail.
-- Le propriétaire a demandé de commencer les épreuves et récompenses de boss
-  dans une nouvelle PR. Il n'a pas autorisé sa fusion. Les réglages pilotes
-  ci-dessous sont une implémentation proposée à examiner, pas une validation
-  déjà enregistrée dans Notion.
+  relu, édition `2026-10-27T06:13:46.581Z`, décisions Aube inchangées.
+  Aucune écriture Notion. Les recettes de ce pilote sont proposées à la revue.
 
-## Premier périmètre implémenté, à terminer de vérifier
+## Périmètre et code
 
-| Épreuve | Accès | Transformation unique proposée |
-| --- | --- | --- |
-| Tenir jusqu’à l’aube | Mission 01 terminée | Milicien Commun → Rare |
-| Le serment du Porte-égide | Mission 02 terminée | Porte-égide Commun → Rare |
-| La dernière volée | Mission 02 terminée | Arbalétrière Commune → Rare |
-| Le rempart du Bosquet | Premier boss, mission 03, et épreuve Milicien Rare terminés | Milicien Rare → Épique |
+Lire [EPREUVES_EVOLUTION.md](EPREUVES_EVOLUTION.md) pour le contrat complet,
+les quatre transformations, prérequis et responsabilités. Les 37 autres
+évolutions restent au laboratoire. Les natifs restent des chaînes d'ID ;
+seules les évolutions utilisent `{id,rarity}`, avec inventaire facultatif
+`evolvedCollection` et suivi `completedTrials`. Les anciennes sauvegardes,
+achats, maîtrise et clés restent compatibles.
 
-Objectif : gagner avec au moins un exemplaire du personnage **au rang demandé**
-encore vivant. Un exemplaire est transformé, pas ajouté gratuitement ; un slot
-de deck correspondant est remplacé, sans changer sa taille. Aucun exemplaire
-consommé sur défaite/objectif manqué ; récompense une seule fois. Ces épreuves
-n'accordent pas d'or, éclats ou XP. Le boss existant ne change pas de statistiques :
-sa victoire ouvre la dernière épreuve, ce qui est annoncé dans la campagne.
+Le test auparavant rouge pour `aube-militia-epic` est corrigé sans retirer
+son assertion. L'épreuve ne porte plus le statut de boss (quatre lignes/furie) ;
+son deck et son objectif sont conservés. Le vrai boss de campagne reste inchangé.
+Les simulations du parcours trouvent une réussite sans forcer le résultat.
 
-Pas de nouveaux paquets, fusion de doublons, marchand, contrats de faction ou
-autres évolutions dans ce pilote. Les 37 autres évolutions Aube restent au labo.
+La clôture utilise les copies et le reçu de profil existants. Une récompense
+non sauvegardée reste récupérable ; une autre action ne peut pas écraser le
+combat terminé. Une récupération réussie affiche d'abord son résultat, sans
+exécuter l'action qui avait demandé cette récupération.
 
-## Code présent
+## Vérifications acquises
 
-- `src/evolution-trials.js` : quatre définitions, prérequis, objectifs et decks
-  adverses ; pas de copie de statistiques/pouvoirs des cartes.
-- `src/cards/references.js` : identité, clés de vue et inventaire. Les natifs
-  restent des chaînes d'ID. Les évolutions dans les decks sont `{id,rarity}`,
-  jamais un nouvel ID de `CARDS`.
-- Profil : ajouts facultatifs `evolvedCollection` (ex. `{'militia:rare':1}`)
-  et `completedTrials`. Aucun ajout automatique sur un ancien profil ; les
-  anciennes chaînes, quantités, achats, maîtrises et clés de sauvegarde restent.
-- `engine/evolution-progress.js` : accès, création via le moteur normal,
-  attribution et transformation uniques. `completeBattle`/`grantBattleProgress`
-  refusent les gains génériques pour `mode: evolution-trial`.
-- Les quatre versions pilotes ont `status.combat: implemented` et obtention
-  `trial`. Les autres restent en attente. Les attentes de tests de statuts ont
-  été ajustées uniquement pour ces quatre références explicites.
-- Nouveau combat avec référence future : `evolutionsEnabled: true` ; main,
-  recyclage et invocation conservent la rareté. Seules les unités futures
-  gagnées portent `cardRules: aube-v1` ; les natifs du même combat gardent leurs
-  règles historiques. Le marqueur global du labo reste indépendant.
-- Deck manuel, propositions, Collection six cellules, Atelier, cartes/fiches,
-  réputation et import/export adaptés aux références. Les quantités par rang
-  sont distinctes ; l'entraînement reste attaché au personnage.
-- `ui/evolution-trials.js` et `styles/pages/evolution-trials.css` : écran Épreuves,
-  récompense annoncée, objectifs, accès et résultat. Navigation et `settle()`
-  réutilisent le journal de clôture existant (copies profil/bataille puis reçu).
-- Les anciens instantanés défensifs restent lisibles, y compris les unités
-  versionnées de tests antérieurs. Ne pas restreindre leur lecture aux quatre
-  nouvelles versions : les tests de quotas/reprise doivent rester intacts.
+- **432 tests Node réussis**, dont dix cas dédiés aux épreuves.
+- **60 scénarios de parité identiques**.
+- Builds normal/test réussis : **56 modules, 76 illustrations**.
+- Revue du graphe : **216 dépendances, aucun cycle** ; moteur sans DOM.
+  `app.js` 371 lignes, `battle.js` 390, nouveaux modules métier 48/54 lignes.
+- Quatre parcours complets bureau réussis : bataille par les vrais boutons,
+  récompense, Collection, deck manuel, export/import, invocation en campagne
+  et reprise. Parcours Milicien Rare tactile portrait également réussi.
+- Simulations historiques `control-balance` et `arena-balance` exécutées.
 
-## Tests réellement exécutés et blocage connu
+Les autres suites navigateur et la vérification complète sur l'export final
+sont en cours lors de ce checkpoint de travail. Ne pas annoncer cette CI verte.
+Les fichiers de `/tmp` sont éphémères ; les résultats finaux doivent être
+reportés ici et dans la PR. Logs de session : `ca-evolution-final-browser.log`,
+`ca-evolution-regression.log`, `ca-evolution-tests.log`, `ca-evolution-control.log`
+et `ca-evolution-arena.log` dans `/tmp`. Playwright 1.56/Chromium 1194 installés
+via `/tmp/ca-evolution-pw` si encore présents.
 
-Dernier `npm test` : **431 tests, 430 réussis, 1 échec**. Les 422 tests précédents
-passent après mise à jour des attentes de disponibilité. Le nouveau fichier
-`tests/evolution_progress.test.mjs` contient neuf tests : huit réussissent
-(identités, accès, transformation, unicité, échecs sans consommation, moteur,
-recyclage, decks, imports, sauvegardes, lecture des vues).
+## Avant livraison de cette même PR
 
-**Échec à traiter en priorité :**
-`Combats complets des quatre épreuves : fin et intégrité déterministes, objectifs réalisables`.
-Pour `aube-militia-epic`, le bot générique n'obtient jamais l'objectif sur les
-graines `[1,2,3,4,7,11,21,41]`. Les combats terminent et restent déterministes,
-mais aucun résultat ne satisfait le test. Cela ne prouve pas encore que
-l'épreuve est impossible pour un humain. Examiner défaite/victoire, placement,
-survie du Milicien Rare, stratégie du bot et difficulté de la rencontre.
-**Ne pas enlever l'assertion ni annoncer les tests verts.**
+1. Terminer `browser_evolution_trials.py` : quatre combats complets bureau,
+   un portrait et un paysage, autres clôtures dans les trois formats, parcours
+   web modulaire, imports, invocation future, deux interruptions de clôture,
+   objectif manqué/défaite et verrou de boss. Ne pas affaiblir les assertions.
+2. Terminer les suites navigateur du workflow, examiner leurs captures et
+   corriger tout échec pertinent ; compléter le bilan exact.
+3. Rejouer les contrôles affectés par les derniers correctifs. Le builder ne
+   doit pas réécrire les HTML pendant qu'un navigateur les lit.
+4. Synchroniser `JOUER.html` depuis les mêmes sources. Le générateur temporaire
+   `.github/workflows/evolution-checkpoint.yml` doit être retiré avant livraison.
+   Comparer blob, arbre complet et tête GitHub aux fichiers locaux testés.
+5. Mettre à jour la PR et ce bilan. Les contrats Aube, deck, AGENTS, architecture,
+   README et changelog ont été réconciliés avec les quatre versions pilotes.
+6. Si seule la CI reste, arrêter sans surveillance active. Fusion et publication
+   demandent un accord spécifique ; ne pas le déduire d'un « continue ».
 
-La parité historique de **60 scénarios reste identique**. Les deux builds
-passent (56 modules, 76 illustrations). Aucun parcours navigateur du nouveau
-flux n'a encore été exécuté. Les suites de la PR 54 sont des résultats de la
-version précédente, pas une validation de ce nouveau pilote.
-
-Les logs scratch peuvent disparaître ; résultats utiles retranscrits ici :
-`/tmp/ca-trial-new-tests.log`, `/tmp/ca-trial-all-tests.log`,
-`/tmp/ca-trial-checkpoint-parity.log`, `/tmp/ca-trial-checkpoint-build.log`.
-Playwright 1.56 est dans `/tmp/ca-deck-pw` et Chromium 1194 dans le cache si
-encore présents ; les recréer selon le workflow existant si nécessaire.
-
-## Prochaines étapes, dans cet ordre
-
-1. Relire AGENTS, cet état, la PR, Notion et le main actuels. Vérifier le commit
-   exact et les autres PR. La nouvelle PR n'a aucune autorisation de fusion.
-2. Corriger/investiguer le test de l'épreuve Épique ; tester aussi la lisibilité
-   des conditions et la possibilité réelle de réussir chaque défi.
-3. Ajouter le parcours navigateur des trois formats et HTTP/hors réseau :
-   accès/verrou boss, objectif raté, victoire, consommation exacte, récompense
-   une fois, résultat, Collection, deck manuel, invocation future en campagne,
-   reprise et export/import.
-4. Vérifier particulièrement la transaction de `settle()` : simuler un échec
-   d'écriture du profil après victoire, recharger la bataille terminée puis
-   attribuer exactement une fois, sans consommer avant sauvegarde réussie.
-5. Revue des règles d'accès, appels directs, profils sans exemplaire, rangs
-   interdits, changements de classe, mélange natifs/futurs et quotas persistants.
-   La lecture/survol ne doit jamais transformer ou attribuer une carte.
-6. Actualiser les contrats Aube, AGENTS, README, architecture et changelog autour
-   de l'état final : plusieurs anciennes sections décrivent encore toutes les
-   évolutions comme réservées au laboratoire.
-7. Rejouer tests, parité, builds, simulations et suites navigateur pertinentes.
-   Revoir les captures. Générer/synchroniser l'unique `JOUER.html`, supprimer
-   tout générateur temporaire avant livraison et comparer les arbres distants.
-8. Mettre à jour cette même PR, résultats et limites exacts. Si seule la CI reste
-   à attendre, arrêter sans surveillance active. Aucune fusion ni publication
-   sans accord spécifique du propriétaire.
-
-Le checkpoint et l'état de l'export GitHub figurent dans la description de PR.
-Ne pas prendre ce brouillon pour la version finale jouable validée.
+Limites : Chromium bureau/mobile simulé, sans téléphone physique, Safari/Firefox,
+ni équilibrage humain exhaustif. La publication du site après PR 54 n'est pas
+vérifiée dans cette mission.

@@ -13,7 +13,7 @@ export const EVOLUTION_TRIALS=freezeCardData([
   enemy:'Gardes du chemin',difficulty:1,hp:18,aiStyle:'bastion',deck:['shield','militia','shield','militia','healing','militia','archer','militia']},
  {id:'aube-militia-epic',name:'Le rempart du Bosquet',cardId:'militia',from:'rare',to:'épique',mission:'03',previous:'aube-militia-rare',
   objective:'Remporter la bataille avec au moins un Milicien Rare encore vivant.',
-  enemy:'Gardien de l’épreuve du Bosquet',difficulty:2,hp:22,aiStyle:'bastion',boss:true,deck:['treant','militia','ranger','dryad','shield','wolf','militia','healing','archer','militia','shield','ranger']}
+  enemy:'Gardien de l’épreuve du Bosquet',difficulty:2,hp:22,aiStyle:'bastion',deck:['treant','militia','ranger','dryad','shield','wolf','militia','healing','archer','militia','shield','ranger']}
 ]);
 export const evolutionTrial=id=>EVOLUTION_TRIALS.find(t=>t.id===id)||null;
 export const evolutionTrialFor=(id,rarity)=>EVOLUTION_TRIALS.find(t=>t.cardId===id&&t.to===rarity)||null;

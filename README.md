@@ -1,7 +1,7 @@
 # Couronnes & Arcanes
 
-> Travail en cours sur les épreuves d’évolution : [point de reprise](docs/REPRISE_EPREUVES_EVOLUTION.md).
-> Brouillon incomplet, avec un test en échec ; aucune fusion autorisée.
+> PR 55 — quatre épreuves d’évolution Aube proposées : [contrat](docs/EPREUVES_EVOLUTION.md)
+> et [reprise/vérifications](docs/REPRISE_EPREUVES_EVOLUTION.md). Pas encore fusionnées.
 
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
 quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle.
@@ -11,6 +11,12 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 - `index.html` / `npm run dev` : jeu web modulaire ; publication sur Sites après fusion.
 - `JOUER.html` : **unique export jouable**, complet et autonome sans réseau.
 - `tests/JOUER.test.html` : diagnostic automatisé seulement, jamais distribué.
+
+Sur cette branche, « Épreuves » annonce les conditions et récompenses de trois
+évolutions Rares, puis du Milicien Épique après le premier boss. Gagner avec le
+personnage au rang demandé encore vivant transforme un seul exemplaire et
+conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
+sont utilisables en campagne ; les 37 autres évolutions Aube restent au labo.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche

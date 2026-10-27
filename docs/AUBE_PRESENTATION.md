@@ -1,5 +1,11 @@
 # Aube — présentation commune des cartes, étape 5
 
+**Extension PR 55 :** les quatre récompenses des [épreuves](EPREUVES_EVOLUTION.md)
+affichent « À gagner en épreuve », « Évolution obtenue » ou l'épreuve déjà
+accomplie sans exemplaire restant. Les quantités et commandes de deck suivent
+chaque version possédée. Les 37 autres évolutions gardent l'indication labo.
+Le bilan de l'étape 5 ci-dessous décrit sa livraison historique par la PR 53.
+
 ## Source et portée
 
 Le tableau maître Notion a été relu dans son édition du 26 octobre 2026,

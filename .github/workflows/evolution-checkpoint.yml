@@ -19,7 +19,7 @@ jobs:
       - name: Générer uniquement l’export sur la branche de travail
         run: |
           npm run build
-          test "$(git hash-object JOUER.html)" = "d87187520fca7de203567d53987a4086db31c67b"
+          test "$(git hash-object JOUER.html)" = "b2550711a00d5e9b93098f4ac2ee923c58f903b2"
           git fetch origin feat/epreuves-evolution-aube
           test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
           if git diff --quiet -- JOUER.html; then exit 0; fi

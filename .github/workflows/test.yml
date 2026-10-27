@@ -71,6 +71,9 @@ jobs:
       - name: Collection pleine largeur, exemplaires réels et reprise
         if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_collection.py
+      - name: Épreuves, récompenses uniques et sauvegarde après coupure
+        if: steps.scope.outputs.docs_only != 'true'
+        run: python3 tests/browser_evolution_trials.py
       - name: Milicien v02, champs dynamiques, pose et reprise hors réseau
         if: steps.scope.outputs.docs_only != 'true'
         run: python3 tests/browser_milicien.py
@@ -150,5 +153,7 @@ jobs:
             /tmp/ca-card-study-*.png
             /tmp/ca-card-preview-*.png
             /tmp/ca-deployment-*.png
+            /tmp/ca-evolution-*.png
+            /tmp/ca-manual-deck-*.png
           if-no-files-found: warn
           retention-days: 2

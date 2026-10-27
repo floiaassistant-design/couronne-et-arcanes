@@ -1,10 +1,23 @@
-## Préparé — construction manuelle du deck (27 octobre 2026)
+## Proposé — épreuves d’évolution Aube, PR 55 (27 octobre 2026)
+
+- Quatre épreuves à récompense annoncée et unique : un exemplaire transformé,
+  slot conservé, aucune consommation sur défaite/objectif manqué. Le premier
+  boss ouvre l'accès au Milicien Épique ; ses règles restent inchangées.
+- Stocks et decks par version gagnée, invocation et recyclage par le moteur
+  commun, six cartes de Collection et fiche partagée conservées.
+- Clôture récupérable : profil sauvegardé avant nettoyage, protection contre
+  l'écrasement d'une récompense en attente et absence de double attribution.
+- 432 tests réussis, 60 scénarios historiques identiques ; vérification finale
+  navigateur en cours. [Contrat](docs/EPREUVES_EVOLUTION.md) et
+  [résultats](docs/REPRISE_EPREUVES_EVOLUTION.md). Aucune fusion/publication.
+
+## Fusion autorisée — construction manuelle du deck, PR 54 (27 octobre 2026)
 
 - Écran « Mon deck » accessible directement, cartes possédées avec recherche,
   filtres, quantités et commandes +/− ; validation et sauvegarde automatiques.
 - Départ à vide confirmé, cartes conservées ; consultation pendant un combat,
   propositions rapides facultatives. Aucun changement des règles ou profils.
-- Nouvelle PR indépendante sur `feat/deck-manuel-simple`, non fusionnée.
+- PR 54 fusionnée après ses CI réussies au commit `1177160856`.
   [Contrat](docs/DECK_MANUEL_2026_10_27.md).
 - 422 tests et 60 scénarios de parité réussis ; exports synchronisés et parcours
   bureau/mobile, HTTP/hors réseau, création et reprise de deck validés localement.

@@ -6,10 +6,11 @@ import {cardReference,cardId,cardKey,cardFromKey,ownedCardCopies} from '../src/c
 import {freshProfile,normalizeProfile,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,createEvolutionTrial,settleEvolutionTrial,evolutionTrialAccess,proposeDeck,completeBattle,grantBattleProgress,upgradeCard} from '../src/engine.js';
 import {resolveRulesDefinition} from '../src/cards/definitions.js';
 import {hit} from '../src/engine/battle-defense.js';
-import {validateImportedProfile,validStoredBattle,storeBattle,restoreBattle} from '../src/ui/storage.js';
+import {validateImportedProfile,validStoredBattle,storeBattle,restoreBattle,saveProfile,loadProfile,startNewAdventure,restorePreviousAdventure} from '../src/ui/storage.js';
 import {chooseSimulatedMove} from '../scripts/lib/battle_runner.mjs';
 import {unitStats} from '../src/engine/unit-stats.js';
 import {createViews} from '../src/ui/views.js';
+import {cardPresentation} from '../src/ui/card-presentation.js';
 
 function profile(){const p=freshProfile();p.completed=['01','02','03'];return p;}
 function won(p,id){
@@ -57,8 +58,13 @@ test('Victoire : un exemplaire exact transformé, slot conservé, aucun coût ni
  const once=JSON.stringify(p);assert.equal(settleEvolutionTrial(p,b).evolved,false);assert.equal(JSON.stringify(p),once);
  assert.equal(createEvolutionTrial(p,'aube-militia-rare').ok,false);
  assert.equal(evolutionTrialAccess(p,'aube-militia-epic').ok,true);
+ const epic=createEvolutionTrial(p,'aube-militia-epic',3).battle;
+ assert.equal(epic.aiBoss,false);assert.equal(epic.board.length,2);
+ const boss=createBattle(p,CAMPAIGN[2],3);assert.equal(boss.aiBoss,true);assert.equal(boss.board.length,4);
  earn(p,'aube-militia-epic');assert.equal(p.evolvedCollection['militia:rare'],0);assert.equal(p.evolvedCollection['militia:épique'],1);
  assert.equal(p.collection.militia,3);assert.equal(cardKey(p.deck[0]),'militia:épique');assert.equal(validateDeck(p),'');
+ assert.equal(cardPresentation({id:'militia',rarity:'rare'},{profile:p}).availability,'Épreuve accomplie · Aucun exemplaire à ce rang');
+ assert.equal(cardPresentation({id:'militia',rarity:'épique'},{profile:p}).availability,'Évolution obtenue');
 });
 
 test('Défaite, objectif manqué, mauvais camp/rang et appels hors épreuve ne consomment et ne récompensent rien',()=>{
@@ -129,6 +135,18 @@ test('Collection et constructeur : version gagnée visible, six cellules conserv
  assert.equal((row.match(/<td /g)||[]).length,6);assert.match(row,/Possédée ×1/);assert.match(row,/data-id="archer:rare"/);
  assert.match(v.deckUI(),/data-deck-card="archer:rare"/);assert.match(v.forgeUI(),/data-rarity="rare"/);
  assert.match(v.trialsUI(),/ÉVOLUTION OBTENUE/);assert.equal(JSON.stringify(p),before);
+});
+
+test('Deux combats terminés ne doublent pas une évolution ; partie précédente et exemplaire manquant restent sûrs',()=>{
+ const p=profile(),a=won(p,'aube-militia-rare'),b=structuredClone(a);
+ assert.equal(settleEvolutionTrial(p,a).evolved,true);
+ const once=structuredClone(p);assert.equal(settleEvolutionTrial(p,b).evolved,false);assert.deepEqual(p,once);
+ const cache={};globalThis.localStorage={getItem:k=>cache[k]??null,setItem:(k,v)=>{cache[k]=String(v)},removeItem:k=>{delete cache[k]}};
+ assert.equal(saveProfile(p),true);assert.equal(startNewAdventure('clerc'),true);
+ assert.equal(loadProfile().evolvedCollection,undefined);
+ assert.equal(restorePreviousAdventure(),true);assert.deepEqual(loadProfile(),p);
+ const missing=profile(),pending=won(missing,'aube-shield-rare');missing.collection.shield=0;
+ const before=structuredClone(missing);assert.equal(settleEvolutionTrial(missing,pending).evolved,false);assert.deepEqual(missing,before);
 });
 
 test('Combats complets des quatre épreuves : fin et intégrité déterministes, objectifs réalisables',()=>{

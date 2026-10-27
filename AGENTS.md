@@ -1,24 +1,29 @@
 # AGENTS.md — Couronnes & Arcanes
 
-## Reprise prioritaire — épreuves Aube en brouillon
+## Épreuves Aube — PR 55
 
-Lire [le checkpoint](docs/REPRISE_EPREUVES_EVOLUTION.md) avant de poursuivre la
-branche `feat/epreuves-evolution-aube`. Le propriétaire a demandé une pause.
-Une simulation est encore en échec ; aucune fusion/publication autorisée.
-Ce pilote introduit quatre obtentions par épreuve et des références `{id,rarity}`
-pour les seules évolutions, avec inventaire facultatif séparé. Les natifs et
-anciennes sauvegardes restent inchangés. Les anciens contrats « labo seulement »
-doivent être réconciliés avec ce périmètre explicite avant la revue finale.
+Lire [la reprise](docs/REPRISE_EPREUVES_EVOLUTION.md) et
+[le contrat](docs/EPREUVES_EVOLUTION.md) avant de poursuivre la branche
+`feat/epreuves-evolution-aube`. Quatre évolutions sont proposées à l'obtention
+par épreuve ; les 37 autres évolutions Aube restent au laboratoire.
+`cards/references.js` porte les références `{id,rarity}`, quantités par version
+et inventaire facultatif ; les natifs restent des chaînes d'ID. Pas de migration,
+copie offerte ou activation globale des règles Aube dans un ancien combat.
+`engine/evolution-progress.js` porte accès, création et transformation uniques.
+L'interface réutilise la clôture récupérable avec reçu avant nettoyage du combat.
+Aucune fusion/publication de la PR 55 autorisée. Main de base : `1177160856`.
 
 ## Contrat — construction manuelle du deck
 
 - `ui/deck-builder.js` rend les cartes possédées et le deck actif ; réutiliser
   `modifyDeck`, `validateDeck` et `deckOverview`, sans copier les règles du moteur.
-- Les filtres et le focus restent éphémères ; conserver les chaînes d'ID et les
-  clés de sauvegarde existantes. Modifications hors combat uniquement.
+- Les filtres et le focus restent éphémères ; conserver les chaînes d'ID natives
+  et les clés de sauvegarde. Les évolutions gagnées utilisent `{id,rarity}`.
+  Modifications hors combat uniquement.
 - Les propositions sont facultatives et confirmées avant remplacement. Garder
-  les six versions de Collection et la fiche universelle ; aucune évolution
-  future obtenue ou activée par le constructeur. Voir [le contrat](docs/DECK_MANUEL_2026_10_27.md).
+  les six versions de Collection et la fiche universelle ; le constructeur ne
+  crée aucune possession et utilise seulement les versions déjà gagnées.
+  Voir [le contrat](docs/DECK_MANUEL_2026_10_27.md).
 
 ## Contrat — versions de rareté et compatibilité
 
@@ -42,9 +47,10 @@ doivent être réconciliés avec ce périmètre explicite avant la revue finale.
   pour un instantané futur explicite ou marqué `cardRules: aube-v1`. Les
   anciens combattants sans ce marqueur gardent leurs règles historiques.
 - Distinguer `status.engine` (moteur vérifié) de `status.combat` (livraison
-  complète). `unitCanPlay` est le contrôle contextuel de pose : les évolutions
-  restent refusées en aventure, mais les versions dont le moteur est prêt
-  sont testables dans le laboratoire avec le marqueur explicite de règles.
+  complète). `unitCanPlay` contrôle la pose : seules les quatre versions des
+  épreuves peuvent être jouées en aventure dans un nouveau combat compatible.
+  Les autres versions restent testables seulement au laboratoire avec le
+  marqueur explicite de règles.
   Aucune obtention, possession ou conversion de niveau implicite.
 - `engine/guard-candidates.js` énumère les gardiens éligibles et sélectionne
   un seul gardien selon la politique centrale validée : même ligne, proximité
