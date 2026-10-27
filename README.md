@@ -73,13 +73,22 @@ Pour chaque unité, la Collection conserve **six emplacements de rareté côte �
 
 ## Progression et sauvegarde
 
+### Composer son deck
+
+**Mon deck** dans la navigation permet de choisir librement ses cartes possédées :
+recherche, filtres par Ordre/type et boutons +/−, quantités disponibles et compteur
+de 12 à 24 cartes. Le deck s'enregistre automatiquement. Les compositions proposées
+restent une aide facultative, repliée en bas de l'écran. Les modifications sont
+bloquées pendant un combat. [Fonctionnement](docs/DECK_MANUEL_2026_10_27.md).
+
 La Collection, les classes, les maîtrises, équipements, talents et donjons sont
 conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteur,
 sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
 et leurs niveaux 0 à 3, choisis indépendamment. Les autres unités conservent
 leur version native. Les nouvelles raretés ne sont pas offertes dans l’aventure ;
-leur obtention reste à définir. Cette préparation appartient à la PR Aube en
-brouillon, avec une présentation commune et une [revue finale terminée](docs/REVUE_AUBE_PR53_2026_10_27.md). La PR attend la décision du propriétaire ; elle n'est ni fusionnée ni publiée.
+leur obtention reste à définir. La PR Aube nº 53, avec sa présentation commune et sa
+[revue finale](docs/REVUE_AUBE_PR53_2026_10_27.md), a été fusionnée sur accord du
+propriétaire le 27 octobre 2026. La publication du site reste une opération distincte.
 
 La sauvegarde est locale à l’appareil et à l’adresse utilisée. Guide permet
 l’export/import du profil. Les clés historiques et les combats repris sont

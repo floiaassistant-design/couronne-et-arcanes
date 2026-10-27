@@ -2,6 +2,7 @@
 import asyncio,json,os
 from pathlib import Path
 from playwright.async_api import async_playwright
+from browser_manual_deck import run_manual_deck
 
 ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
@@ -140,8 +141,10 @@ async def main():
         browser=await pw.chromium.launch(headless=True,args=['--no-sandbox'])
         for label,vp in [('desktop',{'width':1440,'height':1000}),('portrait',{'width':390,'height':844}),('landscape',{'width':844,'height':390})]:
             await run(browser,label,vp)
+            await run_manual_deck(browser,label,vp)
         if os.environ.get('CA_HTTP_URL'):
             await run(browser,'web',{'width':1366,'height':900},os.environ['CA_HTTP_URL'])
+            await run_manual_deck(browser,'web',{'width':1366,'height':900},os.environ['CA_HTTP_URL'])
         await browser.close()
 
 if __name__=='__main__':asyncio.run(main())

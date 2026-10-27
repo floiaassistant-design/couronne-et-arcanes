@@ -1,5 +1,15 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Contrat — construction manuelle du deck
+
+- `ui/deck-builder.js` rend les cartes possédées et le deck actif ; réutiliser
+  `modifyDeck`, `validateDeck` et `deckOverview`, sans copier les règles du moteur.
+- Les filtres et le focus restent éphémères ; conserver les chaînes d'ID et les
+  clés de sauvegarde existantes. Modifications hors combat uniquement.
+- Les propositions sont facultatives et confirmées avant remplacement. Garder
+  les six versions de Collection et la fiche universelle ; aucune évolution
+  future obtenue ou activée par le constructeur. Voir [le contrat](docs/DECK_MANUEL_2026_10_27.md).
+
 ## Contrat — versions de rareté et compatibilité
 
 - `src/cards/definitions.js` résout une unité par son ID historique et une rareté

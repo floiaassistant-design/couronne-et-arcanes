@@ -1,4 +1,15 @@
-## Revue Aube — étape 6 terminée, PR 53 en brouillon
+## Deck manuel — préparation du 27 octobre 2026
+
+`ui/deck-builder.js` rend le choix manuel des cartes possédées et le deck actif,
+avec les mêmes commandes/validations du moteur. `pages.js` adapte le rendu et
+réutilise les propositions existantes ; `app.js` orchestre filtres éphémères,
+focus et sauvegarde. `styles/pages/deck-builder.css` ne cible que ce nouvel écran.
+Aucune migration de deck/profil. [Contrat](DECK_MANUEL_2026_10_27.md).
+
+Les sections Aube ci-dessous décrivent la préparation historique de la PR 53,
+fusionnée le 27 octobre 2026 au commit `003c6968`.
+
+## Revue Aube — étape 6 terminée, PR 53 en brouillon lors de la revue
 
 [Revue du 27 octobre 2026](REVUE_AUBE_PR53_2026_10_27.md) : mêmes sources web
 et export, 51 modules sans cycle. Les six étapes sont terminées ; les évolutions

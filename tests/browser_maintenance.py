@@ -180,7 +180,7 @@ async def modular():
     await page.locator('[data-action="welcome-start"]').click()
     assert await page.locator('.battle-cell').count()==20
     await page.locator('.combat-menu-link').click()
-    for screen_name in ['campaign','tower','dungeons','collection','alchemy','forge','guide','home']:
+    for screen_name in ['campaign','tower','dungeons','collection','deck','alchemy','forge','guide','home']:
      await page.locator(f'#nav [data-page="{screen_name}"]').click()
      assert await page.locator('#view').inner_text()
     await page.locator('#nav [data-page="battle"]').click()

@@ -46,6 +46,7 @@ export function createViews(getState) {
   function navUI() {
     const pages = [
       ['home', 'Citadelle', '♜'],
+      ['deck', 'Mon deck', '▤'],
       ['campaign', 'Campagne', '⚑'],
       ['tower', 'Tour', '♛'],
       ['dungeons', 'Donjons', '⚔'],

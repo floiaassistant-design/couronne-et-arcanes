@@ -1,11 +1,21 @@
 # État courant — 27 octobre 2026
 
-## Intégration Aube — étapes 1 à 6 terminées, PR non intégrée
+## Deck manuel — nouvelle évolution en préparation
+
+La branche `feat/deck-manuel-simple` ajoute « Mon deck » dans la navigation :
+cartes possédées, recherche/filtres, quantités et commandes +/−, compteur et
+validation de 12–24 cartes. Les propositions restent facultatives ; sauvegarde
+historique conservée et modifications bloquées pendant un combat. Cette
+évolution n'est pas fusionnée. [Contrat et contrôles](DECK_MANUEL_2026_10_27.md).
+
+## Intégration Aube — étapes 1 à 6 terminées et fusionnées
 
 La [PR nº 53](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/53)
-reste l’unique PR active sur `feat/aube-evolutions-fiche-universelle`, en brouillon.
+a été fusionnée sur accord explicite le 27 octobre 2026 au commit
+`003c696870edd8238f5f74a1e73afc18d8198024`. Son arbre est identique à la tête
+validée `6d30a05`. Les tests et l’assemblage post-fusion ont également réussi.
 Le tableau maître Notion a été relu dans son édition du 27 octobre 2026,
-05:48:45.318 UTC. Les règles Aube correspondent au registre ; aucune nouvelle
+06:13:46.581 UTC avant fusion. Les règles Aube correspondent au registre ; aucune nouvelle
 évolution des autres factions n’est intégrée par cette mission.
 
 Les 51 versions Aube sont raccordées au moteur commun et testables au
@@ -25,11 +35,12 @@ et la description de PR. [Versions](AUBE_VERSIONS.md), [moteur](AUBE_MOTEUR.md),
 [présentation](AUBE_PRESENTATION.md). [Revue complète de l'étape 6](REVUE_AUBE_PR53_2026_10_27.md)
 terminée sans défaut bloquant identifié : 418 tests et 60 scénarios de parité
 rejoués, exports synchronisés et deux CI réussies sur le code `13be34f`.
-La clôture de revue ne modifie que la documentation. Aucune fusion ni publication.
+La fusion est attestée dans la PR ; les documents de revue datés décrivent sa
+préparation. La publication de cette version du site reste à confirmer séparément.
 
 ## Jeu intégré sur main
 
-**Dernier main relu le 27 octobre :** `cf8175002431e1714460f8be917665437a5b78c4`, contenu commun à la base de la PR 53. Les détails de publication ci-dessous décrivent la dernière version publiée attestée, et non une publication de la PR Aube.
+**Dernier main relu le 27 octobre :** `003c696870edd8238f5f74a1e73afc18d8198024`, incluant la PR 53. Les détails de publication ci-dessous décrivent la dernière version publiée attestée, et non une publication de la PR Aube.
 
 **Jalon de publication vérifié le 25 octobre :** [`1810b1518bc0e8d668ed11bc55042ae5161ae94e`](https://github.com/floiaassistant-design/couronne-et-arcanes/commit/1810b1518bc0e8d668ed11bc55042ae5161ae94e), fusion autorisée de la [PR nº 48](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/48) le 25 octobre 2026. La comparaison GitHub de ce merge à `main` est identique (aucun commit d'écart). La comparaison avec le commit PR `af048c1b` montre un commit de fusion **sans aucune différence de fichiers** : le code et `JOUER.html` sur main sont ceux qui ont été vérifiés.
 

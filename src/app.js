@@ -20,11 +20,12 @@ let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}ca
 const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='aube',collectionOwned=false;
 let displayBattle=null,combatReport=null;
+const deckFilters={query:'',faction:'all',type:'all'};
 let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null,developer=null;
 const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({profile,developer,battle:displayBattle||battle,screen:isBattleFxPlaying()?'resolving':screen}),esc);
 const {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying}=createCombatFx(()=>({animationsEnabled,screen}));
 const {spellState,handleSpell,resetSpell}=createSpellController(()=>({battle,selectedCard}),{refresh:()=>render(),launch:(index,lane)=>withBattleFx(()=>playPlayerCard(battle,index,lane)),closeInspection:()=>closeCardInspection(true)});
-const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
+const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,deckUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,deckFilters,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
 function save(){if(developer)return;if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
@@ -93,7 +94,7 @@ function render({frameUpdate=false}={}){
  closeCardInspection(true,'render');
  document.body.classList.toggle('animations-off',!animationsEnabled);
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
- $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
+ $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='deck'?deckUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
  mountPaintedArena();syncFxControls();
  if(fxFocus)document.querySelector(`[data-action="${fxFocus}"]`)?.focus({preventScroll:true});
  const arena=document.querySelector('.battle-grid');if(arena){arena.scrollLeft=arenaScroll;arena.scrollTop=arenaVertical;}
@@ -179,7 +180,7 @@ function startDungeonStage(){
   if(battle.mode==='dungeon'&&battle.dungeonId===profile.dungeonRun.id&&battle.dungeonStage===profile.dungeonRun.stage){screen='battle';render();return;}
   toast('Terminez le combat actuel avant de poursuivre le donjon.');navigate('battle');return;
  }
- const error=validateDeck(profile);if(error){toast(error);navigate('collection');return;}
+ const error=validateDeck(profile);if(error){toast(error);navigate('deck');return;}
  try{battle=nextDungeonBattle(profile,Date.now(),{turnFlow:'alternating'});persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);}catch(e){toast(e.message);navigate('dungeons');}
 }
 function startDungeon(id){
@@ -190,15 +191,33 @@ function startDungeon(id){
 function startTower(floor){
  if(battle?.status==='active'){toast('Terminez le combat en cours.');navigate('battle');return;}
  const n=Number(floor);if(!Number.isInteger(n)||n<1||n>profile.towerUnlocked||n>TOWER_MAX){toast('Cet étage n’est pas accessible.');return;}
- const invalid=validateDeck(profile);if(invalid){toast(invalid);navigate('collection');return;}
+ const invalid=validateDeck(profile);if(invalid){toast(invalid);navigate('deck');return;}
  battle=createBattle(profile,towerMission(n),Date.now(),{turnFlow:'alternating'});persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);
 }
 function startMission(id){if(battle?.status==='active'){toast('Terminez le combat en cours.');navigate('battle');return;}const mission=CAMPAIGN.find(x=>x.id===id);if(!mission||Number(id)>profile.unlocked){toast('Cette mission n’est pas encore débloquée.');return;}
- const invalid=validateDeck(profile);if(invalid){toast(invalid);screen='collection';render();return;}
+ const invalid=validateDeck(profile);if(invalid){toast(invalid);navigate('deck');return;}
  try{battle=createBattle(profile,mission,Date.now(),{turnFlow:'alternating'});persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);}catch(e){toast(e.message);}}
+// Conserver le clavier, la recherche et le défilement lors des retouches du deck.
+function refreshManualDeck(filtersOnly=false){
+ if(filtersOnly){
+  const template=document.createElement('template');template.innerHTML=deckUI();
+  closeCardInspection(true);
+  document.querySelector('.manual-deck-results')?.replaceWith(template.content.querySelector('.manual-deck-results'));
+  return;
+ }
+ const active=document.activeElement,field=active?.dataset.deckField;
+ const id=active?.closest('[data-deck-card]')?.dataset.deckCard,zone=active?.closest('[data-deck-zone]')?.dataset.deckZone,action=active?.dataset.action;
+ const selection=field==='query'?[active.selectionStart,active.selectionEnd]:null;
+ const listScroll=document.querySelector('.manual-deck-list')?.scrollTop||0;
+ render();
+ let target=field?document.querySelector(`[data-deck-field="${field}"]`):null;
+ if(id&&zone){const row=document.querySelector(`[data-deck-zone="${zone}"] [data-deck-card="${id}"]`);target=row?.querySelector(`[data-action="${action}"]:not(:disabled)`)||row?.querySelector('button:not(:disabled)')||$('manual-current-title');}
+ target?.focus({preventScroll:true});if(selection)target?.setSelectionRange(...selection);
+ const list=document.querySelector('.manual-deck-list');if(list)list.scrollTop=listScroll;
+}
 function navigate(page){
  if(page==='developer'){openDeveloper();return;}
- if(!['home','campaign','tower','dungeons','collection','alchemy','forge','guide','battle'].includes(page))return;
+ if(!['home','campaign','tower','dungeons','collection','deck','alchemy','forge','guide','battle'].includes(page))return;
  if(developer){exitDeveloper(page);return;}
  if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();
  cancelEnemyTimer();screen=page;selectedCard=-1;render();if(page==='battle')scheduleEnemyStep();window.scrollTo(0,0);
@@ -256,7 +275,16 @@ case 'lab-open':openDeveloper();break;
   break;
  }
  case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}const result=learnClassSkill(profile,id);if(result.ok){save();render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}else toast(result.reason);break;}
- case 'deck-add':case 'deck-remove':if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();render();}else toast('Impossible de modifier ce deck davantage.');break;
+ case 'deck-clear':
+  if(battle?.status==='active'){toast('Terminez le combat avant de modifier votre deck.');break;}
+  showModal(`<div class="kicker">REFAIRE MON DECK</div><h2>Repartir de zéro ?</h2><p>Les ${profile.deck.length} cartes seront retirées du deck. Elles resteront toutes dans votre Collection.</p><div class="button-row">${btn('Vider mon deck','deck-clear-confirm','','primary')}${btn('Garder mon deck','close-modal','','ghost')}</div>`);break;
+ case 'deck-clear-confirm':
+  if(battle?.status==='active'){hideModal();toast('Terminez le combat avant de modifier votre deck.');break;}
+  for(const cardId of [...profile.deck])modifyDeck(profile,cardId,-1);
+  hideModal();save();render();$('manual-current-title')?.focus({preventScroll:true});break;
+ case 'deck-add':case 'deck-remove':
+  if(battle?.status==='active'){toast('Terminez le combat avant de modifier votre deck.');break;}
+  if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();if(screen==='deck')refreshManualDeck();else render();}else toast('Impossible de modifier ce deck davantage.');break;
  case 'close-inspection':closeCardInspection(true);break;
  case 'select-card':{
   if(!battle||battle.status!=='active'||battle.phase!=='player')break;
@@ -303,7 +331,17 @@ document.addEventListener('keydown',event=>{
  }
 });
 bindCardInspection();
+document.addEventListener('input',event=>{
+ if(screen!=='deck'||event.target.dataset.deckField!=='query')return;
+ deckFilters.query=event.target.value;refreshManualDeck(true);
+});
 document.addEventListener('change',async event=>{
+ if(screen==='deck'&&event.target.dataset.deckField){
+  const field=event.target.dataset.deckField,value=event.target.value;
+  if(field==='query')return;
+  if(field==='faction'&&(value==='all'||FACTIONS[value])||field==='type'&&['all','unité','sort'].includes(value))deckFilters[field]=value;
+  refreshManualDeck(true);return;
+ }
  if(developer&&event.target.dataset.labField){
   const d=developer.draft,key=event.target.dataset.labField,value=event.target.value;
   if(key==='side'&&['p','e'].includes(value))d.side=value;

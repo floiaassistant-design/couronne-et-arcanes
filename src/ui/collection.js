@@ -32,7 +32,7 @@ export function renderCollectionCatalogue(profile,{faction='aube',ownedOnly=fals
  const title=faction==='all'?'Les cinq ordres':FACTIONS[faction]?.name||'Les cinq ordres';
  return `<header class="collection-hero" data-collection-background="${UI_BACKGROUNDS.collection}">
    <div><div class="kicker">LES ARCHIVES DES CINQ ORDRES</div><h1 class="page-title">Votre collection</h1><p class="page-sub">Chaque créature sur sa ligne, toutes ses évolutions côte à côte.</p></div>
-   <a class="btn ghost" href="#collection-deck">Mon deck et mes compétences ↓</a>
+   <div class="button-row">${btn('Construire mon deck','nav','data-page="deck"','primary')}<a class="btn ghost" href="#collection-deck">Compétences et compositions ↓</a></div>
   </header>
   <div class="collection-content"><nav class="collection-factions" aria-label="Ordres de la collection">${tabs.map(id=>`<button type="button" data-action="collection-faction" data-id="${id}" aria-pressed="${faction===id}">${id==='all'?'Tous':id==='sort'?'Sorts':esc(FACTIONS[id].short)}</button>`).join('')}</nav>
    <div class="library-toolbar collection-toolbar"><label class="small"><input type="checkbox" id="owned-only" ${ownedOnly?'checked':''} /> Mes cartes uniquement</label><span class="pill">${list.length} cartes affichées</span></div>
