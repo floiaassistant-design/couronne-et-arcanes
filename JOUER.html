@@ -924,6 +924,58 @@ main {
 
 </style>
 <style>
+/* Construction manuelle : catalogue possédé et deck actif toujours distincts. */
+.manual-deck-screen { max-width: 1440px; margin: auto; }
+.manual-deck-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 24px; }
+.manual-deck-header .page-title { margin-bottom: 10px; }
+.manual-deck-layout { display: grid; grid-template-columns: minmax(0,1fr) 340px; gap: 24px; align-items: start; }
+.manual-card-library { min-width: 0; }
+.manual-deck-filters { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+.manual-deck-filters label { display: grid; gap: 7px; min-width: 120px; color: var(--muted); font-size: 13px; }
+.manual-deck-filters label:first-child { flex: 1; }
+.manual-deck-filters input,.manual-deck-filters select { width: 100%; min-width: 0; min-height: 44px; padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: #142532; color: #f6e8cb; font: inherit; }
+.manual-card-grid { grid-template-columns: repeat(auto-fill,minmax(170px,1fr)); align-items: stretch; }
+.manual-card-entry { min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #142330; }
+.manual-card-entry > .unit-card { border: 0; border-radius: 0; margin: 0; flex: 1; }
+.manual-card-controls { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px; }
+.manual-card-controls .btn { min-width: 44px; min-height: 44px; padding: 6px; font-size: 22px; flex-shrink: 0; }
+.manual-card-controls span { text-align: center; font-size: 11px; line-height: 1.5; }
+.manual-card-controls small { display: block; color: var(--muted); }
+.manual-deck-aside { position: sticky; top: 14px; min-width: 0; }
+.manual-deck-count { display: grid; gap: 8px; margin: 18px 0; }
+.manual-deck-count strong { font-size: 32px; color: var(--gold); }
+.manual-deck-count strong small { font: normal 15px Georgia,serif; }
+.manual-deck-count > span { font-size: 13px; color: var(--muted); }
+.manual-deck-list { display: grid; gap: 8px; max-height: 46vh; overflow: auto; margin: 18px 0; }
+.manual-deck-row { border: 1px solid var(--line); border-radius: 8px; background: #142330; }
+.manual-deck-row > span { display: block; padding: 10px 12px 0; font-size: 14px; }
+.manual-deck-row > span b { color: var(--gold); }
+.manual-deck-row .manual-card-controls { padding-top: 6px; }
+.manual-deck-help { margin-top: 28px; border-top: 1px solid var(--line); padding-top: 18px; }
+.manual-deck-help > summary { cursor: pointer; padding: 12px 0; color: var(--gold); }
+.manual-deck-screen :focus-visible { outline: 2px solid #f1d590; outline-offset: 3px; }
+@media(max-width: 900px) {
+ .manual-deck-layout { grid-template-columns: minmax(0,1fr) 290px; gap: 16px; }
+}
+@media(max-width: 700px) {
+ .manual-deck-header { align-items: flex-start; flex-direction: column; gap: 10px; }
+ .manual-deck-layout { display: flex; flex-direction: column; }
+ .manual-deck-aside { position: static; order: -1; width: 100%; }
+ .manual-deck-list { max-height: 230px; }
+ .manual-card-library { width: 100%; }
+ .manual-deck-filters label:first-child { flex-basis: 100%; }
+ .manual-deck-filters label { flex: 1; }
+ .manual-card-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+ .manual-card-controls { padding: 8px 5px; gap: 3px; }
+
+}
+
+@media(max-width: 360px) {
+ .manual-card-grid { grid-template-columns: minmax(0,1fr); }
+}
+
+</style>
+<style>
 /* Atelier : classes, forge, alchimie, maîtrise et talents. */
 .forge-grid {
   display: grid;
@@ -4163,11 +4215,12 @@ let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}ca
 const $=id=>document.getElementById(id);
 let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='aube',collectionOwned=false;
 let displayBattle=null,combatReport=null;
+const deckFilters={query:'',faction:'all',type:'all'};
 let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null,developer=null;
 const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCardInspection(()=>({profile,developer,battle:displayBattle||battle,screen:isBattleFxPlaying()?'resolving':screen}),esc);
 const {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying}=createCombatFx(()=>({animationsEnabled,screen}));
 const {spellState,handleSpell,resetSpell}=createSpellController(()=>({battle,selectedCard}),{refresh:()=>render(),launch:(index,lane)=>withBattleFx(()=>playPlayerCard(battle,index,lane)),closeInspection:()=>closeCardInspection(true)});
-const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
+const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,deckUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,deckFilters,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
 function load(){return loadProfile();}
 function save(){if(developer)return;if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
@@ -4236,7 +4289,7 @@ function render({frameUpdate=false}={}){
  closeCardInspection(true,'render');
  document.body.classList.toggle('animations-off',!animationsEnabled);
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
- $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
+ $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='deck'?deckUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
  mountPaintedArena();syncFxControls();
  if(fxFocus)document.querySelector(`[data-action="${fxFocus}"]`)?.focus({preventScroll:true});
  const arena=document.querySelector('.battle-grid');if(arena){arena.scrollLeft=arenaScroll;arena.scrollTop=arenaVertical;}
@@ -4322,7 +4375,7 @@ function startDungeonStage(){
   if(battle.mode==='dungeon'&&battle.dungeonId===profile.dungeonRun.id&&battle.dungeonStage===profile.dungeonRun.stage){screen='battle';render();return;}
   toast('Terminez le combat actuel avant de poursuivre le donjon.');navigate('battle');return;
  }
- const error=validateDeck(profile);if(error){toast(error);navigate('collection');return;}
+ const error=validateDeck(profile);if(error){toast(error);navigate('deck');return;}
  try{battle=nextDungeonBattle(profile,Date.now(),{turnFlow:'alternating'});persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);}catch(e){toast(e.message);navigate('dungeons');}
 }
 function startDungeon(id){
@@ -4333,15 +4386,33 @@ function startDungeon(id){
 function startTower(floor){
  if(battle?.status==='active'){toast('Terminez le combat en cours.');navigate('battle');return;}
  const n=Number(floor);if(!Number.isInteger(n)||n<1||n>profile.towerUnlocked||n>TOWER_MAX){toast('Cet étage n’est pas accessible.');return;}
- const invalid=validateDeck(profile);if(invalid){toast(invalid);navigate('collection');return;}
+ const invalid=validateDeck(profile);if(invalid){toast(invalid);navigate('deck');return;}
  battle=createBattle(profile,towerMission(n),Date.now(),{turnFlow:'alternating'});persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);
 }
 function startMission(id){if(battle?.status==='active'){toast('Terminez le combat en cours.');navigate('battle');return;}const mission=CAMPAIGN.find(x=>x.id===id);if(!mission||Number(id)>profile.unlocked){toast('Cette mission n’est pas encore débloquée.');return;}
- const invalid=validateDeck(profile);if(invalid){toast(invalid);screen='collection';render();return;}
+ const invalid=validateDeck(profile);if(invalid){toast(invalid);navigate('deck');return;}
  try{battle=createBattle(profile,mission,Date.now(),{turnFlow:'alternating'});persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);}catch(e){toast(e.message);}}
+// Conserver le clavier, la recherche et le défilement lors des retouches du deck.
+function refreshManualDeck(filtersOnly=false){
+ if(filtersOnly){
+  const template=document.createElement('template');template.innerHTML=deckUI();
+  closeCardInspection(true);
+  document.querySelector('.manual-deck-results')?.replaceWith(template.content.querySelector('.manual-deck-results'));
+  return;
+ }
+ const active=document.activeElement,field=active?.dataset.deckField;
+ const id=active?.closest('[data-deck-card]')?.dataset.deckCard,zone=active?.closest('[data-deck-zone]')?.dataset.deckZone,action=active?.dataset.action;
+ const selection=field==='query'?[active.selectionStart,active.selectionEnd]:null;
+ const listScroll=document.querySelector('.manual-deck-list')?.scrollTop||0;
+ render();
+ let target=field?document.querySelector(`[data-deck-field="${field}"]`):null;
+ if(id&&zone){const row=document.querySelector(`[data-deck-zone="${zone}"] [data-deck-card="${id}"]`);target=row?.querySelector(`[data-action="${action}"]:not(:disabled)`)||row?.querySelector('button:not(:disabled)')||$('manual-current-title');}
+ target?.focus({preventScroll:true});if(selection)target?.setSelectionRange(...selection);
+ const list=document.querySelector('.manual-deck-list');if(list)list.scrollTop=listScroll;
+}
 function navigate(page){
  if(page==='developer'){openDeveloper();return;}
- if(!['home','campaign','tower','dungeons','collection','alchemy','forge','guide','battle'].includes(page))return;
+ if(!['home','campaign','tower','dungeons','collection','deck','alchemy','forge','guide','battle'].includes(page))return;
  if(developer){exitDeveloper(page);return;}
  if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();
  cancelEnemyTimer();screen=page;selectedCard=-1;render();if(page==='battle')scheduleEnemyStep();window.scrollTo(0,0);
@@ -4399,7 +4470,16 @@ case 'lab-open':openDeveloper();break;
   break;
  }
  case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}const result=learnClassSkill(profile,id);if(result.ok){save();render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}else toast(result.reason);break;}
- case 'deck-add':case 'deck-remove':if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();render();}else toast('Impossible de modifier ce deck davantage.');break;
+ case 'deck-clear':
+  if(battle?.status==='active'){toast('Terminez le combat avant de modifier votre deck.');break;}
+  showModal(`<div class="kicker">REFAIRE MON DECK</div><h2>Repartir de zéro ?</h2><p>Les ${profile.deck.length} cartes seront retirées du deck. Elles resteront toutes dans votre Collection.</p><div class="button-row">${btn('Vider mon deck','deck-clear-confirm','','primary')}${btn('Garder mon deck','close-modal','','ghost')}</div>`);break;
+ case 'deck-clear-confirm':
+  if(battle?.status==='active'){hideModal();toast('Terminez le combat avant de modifier votre deck.');break;}
+  for(const cardId of [...profile.deck])modifyDeck(profile,cardId,-1);
+  hideModal();save();render();$('manual-current-title')?.focus({preventScroll:true});break;
+ case 'deck-add':case 'deck-remove':
+  if(battle?.status==='active'){toast('Terminez le combat avant de modifier votre deck.');break;}
+  if(modifyDeck(profile,id,action==='deck-add'?1:-1)){save();if(screen==='deck')refreshManualDeck();else render();}else toast('Impossible de modifier ce deck davantage.');break;
  case 'close-inspection':closeCardInspection(true);break;
  case 'select-card':{
   if(!battle||battle.status!=='active'||battle.phase!=='player')break;
@@ -4446,7 +4526,17 @@ document.addEventListener('keydown',event=>{
  }
 });
 bindCardInspection();
+document.addEventListener('input',event=>{
+ if(screen!=='deck'||event.target.dataset.deckField!=='query')return;
+ deckFilters.query=event.target.value;refreshManualDeck(true);
+});
 document.addEventListener('change',async event=>{
+ if(screen==='deck'&&event.target.dataset.deckField){
+  const field=event.target.dataset.deckField,value=event.target.value;
+  if(field==='query')return;
+  if(field==='faction'&&(value==='all'||FACTIONS[value])||field==='type'&&['all','unité','sort'].includes(value))deckFilters[field]=value;
+  refreshManualDeck(true);return;
+ }
  if(developer&&event.target.dataset.labField){
   const d=developer.draft,key=event.target.dataset.labField,value=event.target.value;
   if(key==='side'&&['p','e'].includes(value))d.side=value;
@@ -7203,6 +7293,7 @@ function createViews(getState) {
   function navUI() {
     const pages = [
       ['home', 'Citadelle', '♜'],
+      ['deck', 'Mon deck', '▤'],
       ['campaign', 'Campagne', '⚑'],
       ['tower', 'Tour', '♛'],
       ['dungeons', 'Donjons', '⚔'],
@@ -7301,6 +7392,7 @@ Object.assign(__exports,{createViews});
 "src/ui/pages.js":function(__exports,__load){
 const {cardPreviewAttributes}=__load("src/ui/card-presentation.js");
 const { renderCollectionCatalogue }=__load("src/ui/collection.js");
+const {renderManualDeck}=__load("src/ui/deck-builder.js");
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 const { CARDS, CLASS_SKILLS, FACTIONS, CLASSES, CAMPAIGN, TOWER_MAX, towerMission }=__load("src/data.js");
 const { AI_STYLES }=__load("src/ai.js");
@@ -7324,11 +7416,11 @@ const {
 }=__load("src/engine.js");
 const { renderGuidePage }=__load("src/ui/guide-page.js");
 function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
-  let profile, battle, collectionFilter, collectionOwned, previousGameAvailable;
+  let profile, battle, collectionFilter, collectionOwned, previousGameAvailable, deckFilters;
   const bind =
     (fn) =>
     (...args) => {
-      ({ profile, battle, collectionFilter, collectionOwned, previousGameAvailable } = getState());
+      ({ profile, battle, collectionFilter, collectionOwned, previousGameAvailable, deckFilters } = getState());
       return fn(...args);
     };
   function homeUI() {
@@ -7444,6 +7536,9 @@ function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
       )}</div>${busy ? '<div class="hint">Terminez le combat en cours avant de changer de composition.</div>' : ''}</section>`;
   }
 
+  function deckUI(){
+    return renderManualDeck(profile,{battle,filters:deckFilters},{btn,cardUI,esc,quickDecks:deckWorkshopUI(battle?.status==='active')});
+  }
   function collectionUI() {
     const counts = {};
     profile.deck.forEach((id) => (counts[id] = (counts[id] || 0) + 1));
@@ -7546,6 +7641,7 @@ function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
     towerUI: bind(towerUI),
     dungeonUI: bind(dungeonUI),
     collectionUI: bind(collectionUI),
+    deckUI: bind(deckUI),
     alchemyUI: bind(alchemyUI),
     forgeUI: bind(forgeUI),
     guideUI: bind(guideUI)
@@ -7589,7 +7685,7 @@ function renderCollectionCatalogue(profile,{faction='aube',ownedOnly=false}={},h
  const title=faction==='all'?'Les cinq ordres':FACTIONS[faction]?.name||'Les cinq ordres';
  return `<header class="collection-hero" data-collection-background="${UI_BACKGROUNDS.collection}">
    <div><div class="kicker">LES ARCHIVES DES CINQ ORDRES</div><h1 class="page-title">Votre collection</h1><p class="page-sub">Chaque créature sur sa ligne, toutes ses évolutions côte à côte.</p></div>
-   <a class="btn ghost" href="#collection-deck">Mon deck et mes compétences ↓</a>
+   <div class="button-row">${btn('Construire mon deck','nav','data-page="deck"','primary')}<a class="btn ghost" href="#collection-deck">Compétences et compositions ↓</a></div>
   </header>
   <div class="collection-content"><nav class="collection-factions" aria-label="Ordres de la collection">${tabs.map(id=>`<button type="button" data-action="collection-faction" data-id="${id}" aria-pressed="${faction===id}">${id==='all'?'Tous':id==='sort'?'Sorts':esc(FACTIONS[id].short)}</button>`).join('')}</nav>
    <div class="library-toolbar collection-toolbar"><label class="small"><input type="checkbox" id="owned-only" ${ownedOnly?'checked':''} /> Mes cartes uniquement</label><span class="pill">${list.length} cartes affichées</span></div>
@@ -7609,6 +7705,55 @@ function collectionHoverContent(profile,id,rarity,esc){
 }
 
 Object.assign(__exports,{COLLECTION_RANKS,collectionEntries,renderCollectionCatalogue,collectionHoverContent});
+
+},
+"src/ui/deck-builder.js":function(__exports,__load){
+// Construction manuelle : catalogue possédé et commandes du moteur existant.
+const {CARDS,FACTIONS}=__load("src/data.js");
+const {deckOverview,modifyDeck,validateDeck}=__load("src/engine.js");
+const {cardPreviewAttributes}=__load("src/ui/card-presentation.js");
+const searchable=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr');
+function manualDeckCards(profile,{query='',faction='all',type='all'}={}){
+ const needle=searchable(query).trim();
+ return Object.values(CARDS).filter(c=>(profile.collection[c.id]||0)>0&&
+  (!c.heroClass||c.heroClass===profile.heroClass)&&
+  (faction==='all'||c.faction===faction)&&(type==='all'||c.type===type)&&
+  (!needle||searchable(c.name+' '+c.description+' '+FACTIONS[c.faction].name).includes(needle)));
+}
+
+function renderManualDeck(profile,{battle=null,filters={}}={}, {btn,cardUI,esc,quickDecks}){
+ const {query='',faction='all',type='all'}=filters,busy=battle?.status==='active';
+ const overview=deckOverview(profile.deck),invalid=validateDeck(profile),cards=manualDeckCards(profile,filters);
+ // Le même validateur de modification décide des ajouts, sur une copie éphémère.
+ const canAdd=id=>!busy&&modifyDeck({...profile,deck:[...profile.deck]},id,1);
+ function controls(id){
+  const used=overview.counts[id]||0,owned=profile.collection[id]||0,name=esc(CARDS[id].name);
+  return `<div class="manual-card-controls">${btn('−','deck-remove',`data-id="${id}" aria-label="Retirer un exemplaire de ${name}" ${busy||!used?'disabled':''}`,'small ghost')}<span><b>${used}</b> dans le deck<small>${owned} possédé${owned>1?'s':''}</small></span>${btn('+','deck-add',`data-id="${id}" aria-label="Ajouter un exemplaire de ${name}" ${canAdd(id)?'':'disabled'}`,'small')}</div>`;
+ }
+ const options=Object.entries(FACTIONS).map(([id,f])=>`<option value="${id}" ${faction===id?'selected':''}>${esc(f.short)}</option>`).join('');
+ return `<div class="manual-deck-screen">
+  <header class="manual-deck-header"><div><div class="kicker">VOTRE ARMÉE, VOS CHOIX</div><h1 class="page-title" id="manual-deck-title" tabindex="-1">Mon deck</h1><p class="page-sub">Choisissez vos cartes avec + et −. Votre deck s’enregistre automatiquement.</p></div>${btn('Voir toute la Collection','nav','data-page="collection"','ghost')}</header>
+  ${busy?'<div class="hint red" role="status">Combat en cours : vous pouvez consulter vos cartes. Terminez ce combat pour modifier votre deck.</div>':''}
+  <div class="manual-deck-layout">
+   <section class="manual-card-library" aria-labelledby="manual-library-title"><h2 class="section-title" id="manual-library-title">Mes cartes disponibles</h2>
+    <div class="manual-deck-filters"><label>Rechercher<input type="search" data-deck-field="query" value="${esc(query)}" placeholder="Nom d’une carte…" autocomplete="off"></label><label>Ordre<select data-deck-field="faction"><option value="all">Tous les ordres</option>${options}</select></label><label>Type<select data-deck-field="type"><option value="all">Unités et sorts</option><option value="unité" ${type==='unité'?'selected':''}>Unités</option><option value="sort" ${type==='sort'?'selected':''}>Sorts</option></select></label></div>
+    <div class="manual-deck-results"><p class="hint">${cards.length} carte${cards.length>1?'s':''} différente${cards.length>1?'s':''} · Seules vos cartes possédées et compatibles avec votre classe sont proposées.</p>
+    <div class="card-grid manual-card-grid" data-deck-zone="library">${cards.map(c=>`<article class="manual-card-entry" data-deck-card="${c.id}">${cardUI(c.id,{previewContext:'deck'})}${controls(c.id)}</article>`).join('')}</div>
+    ${cards.length?'':'<div class="card-panel">Aucune carte ne correspond à ces filtres. Essayez un autre nom ou un autre ordre.</div>'}</div>
+   </section>
+   <aside class="card-panel manual-deck-aside" aria-labelledby="manual-current-title"><div class="section-caption">VOTRE COMPOSITION</div><h2 class="section-title" id="manual-current-title" tabindex="-1">Deck actif</h2>
+    <div class="manual-deck-count"><strong>${overview.total}<small> / 24 cartes</small></strong><span>${overview.units} unités · ${overview.spells} sorts</span></div>
+    <div class="hint ${invalid?'red':'green'}" role="status">${esc(invalid||'Deck prêt au combat.')}</div><p class="hint">Entre 12 et 24 cartes. Chaque exemplaire vient de votre Collection.</p>
+    <div class="manual-deck-list" data-deck-zone="current">${Object.entries(overview.counts).map(([id,count])=>`<div class="manual-deck-row" data-deck-card="${id}"><span ${cardPreviewAttributes(id,CARDS[id].rarity,'deck',esc)}><b>${count}×</b> ${esc(CARDS[id].name)}</span>${controls(id)}</div>`).join('')||'<p class="hint">Votre deck est vide. Ajoutez vos premières cartes avec +.</p>'}</div>
+    <div class="button-row">${btn('Aller en campagne','nav',`data-page="campaign" ${invalid?'disabled':''}`,'primary')}${btn('Repartir de zéro','deck-clear',busy||!overview.total?'disabled':'','ghost')}</div>
+    <p class="hint">Les cartes retirées restent dans votre Collection.</p>
+   </aside>
+  </div>
+  <details class="manual-deck-help"><summary>Besoin d’un point de départ ? Voir les compositions proposées</summary>${quickDecks}</details>
+ </div>`;
+}
+
+Object.assign(__exports,{manualDeckCards,renderManualDeck});
 
 },
 "src/ui/guide-page.js":function(__exports,__load){
