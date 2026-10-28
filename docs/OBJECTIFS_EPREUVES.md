@@ -83,7 +83,15 @@ transformations uniques, Riposte/quotas, Silence, mort, copies et reprise.
 Simulations `control-balance` et `arena-balance` réussies. Builds autonome,
 diagnostic et web réussis ; 57 modules, 76 illustrations.
 
-Résultats navigateur, commit/arbre exacts et CI finale :
+Les **27 suites navigateur** (30 entrées réparties dans les quatre groupes) ont
+réussi localement : bureau, portrait, paysage, HTTP et export hors réseau.
+Les épreuves couvrent **13 parcours dont sept combats UI complets**, objectif
+visible avant combat et compteur final, stocks/deck/export/import, invocation
+future, reprise exacte, ancienne épreuve sans nouvel objectif, coupures avant
+et après reçu, verrou du boss et absence de doublon. Captures des fiches/compteurs
+examinées dans les trois formats. Aucun actif graphique modifié.
+
+Commit/arbre exacts et CI finale :
 [PR 56](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/56).
 Les bilans de l'ancienne tête `6dc30bae` ne valident pas cette nouvelle version.
 
@@ -95,6 +103,17 @@ La matrice couvre donc 34 graines × 4 épreuves × 2 répétitions = **272 comb
 Le générateur navigateur cherche au plus 256 graines et conserve un vrai succès
 par défi ; les actions sont rejouées avec les boutons du jeu. Cela prouve la
 possibilité, sans garantir la facilité du défi pour un joueur humain.
+
+## Export et provenance
+
+`JOUER.html` reconstruit : **34 520 499 octets**, blob
+`6fbe2f7eb8c085459a5e5c421d97faf327054029`, identique en local et sur GitHub.
+Le [générateur ponctuel](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40665284799)
+a réussi sur `5170958ee61fcf1a662ce8a49596b395fdad93fd` et enregistré l'export
+au commit `cd976ec`. L'arbre source `033da52d526fb4979dd90631e0a173d1afd74dc0`
+a été comparé au local avant envoi. Le générateur est retiré avant la livraison ;
+les workflows permanents sont ceux de main. Les anciennes CI de préparation
+ne valident pas la tête finale ; lire les deux passages associés dans la PR.
 
 ## Reprise et limites
 
