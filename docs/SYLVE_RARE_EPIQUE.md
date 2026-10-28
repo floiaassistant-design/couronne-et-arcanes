@@ -75,12 +75,14 @@ les pools par faction. Aucun moteur, actif, CSS, bibliothèque ni schéma parall
   et deux camps au labo ; stocks, deck, bonus, arrivée et quotas vérifiés.
 - 120 scénarios de parité identiques, référence historique V2.4 intacte.
 - Builds autonome, diagnostic et web vérifiés ; diagnostic non distribué.
-- 26 autres suites navigateur réussies, dont Sylve aux trois formats après mise
+- 25 autres suites navigateur réussies, dont Sylve aux trois formats après mise
   à jour de ses anciennes attentes de cases vides. Les quatre parcours de paquet
   Sylve ont réussi : achat réel d'une Luciole Épique, fusion des Rares,
   export/import, pose en campagne, bouclier 5 et reprise exacte. Quatre parties
   d'épreuves existantes conservées, sans nouveau job ni retrait d'assertion ;
-  leurs résultats finaux sont consignés dans la PR.
+  leurs résultats finaux sont consignés dans la PR. Le contrôle natif du Trappeur
+  vérifie maintenant le libellé bref exact puis la fréquence, la durée, les dégâts
+  et le blocage dans sa fiche ; son parcours complet est consigné dans la PR.
 - Le premier essai Sylve a révélé le second clic actionnant la Collection :
   corrigé dans le routeur puis revérifié avec le vrai double clic et les mêmes
   assertions. Après les deux corrections de texte finales, achat Sylve bureau,

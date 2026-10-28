@@ -87,7 +87,16 @@ async def run(browser,label,viewport):
         await page.locator(f'[data-action="deck-add"][data-id="{id}"]').click()
         assert await page.evaluate('(id)=>profile.deck.includes(id)',id)
         card=page.locator(f'[data-collection-character="{id}"] [data-current-version="true"] .unit-card, .collection-spells .unit-card:has([data-action="deck-add"][data-id="{id}"])')
-        assert len(await card.locator('.card-detail').inner_text())>50
+        text=await card.locator('.card-detail').inner_text()
+        if id=='sylvan_trapper':
+            assert text=='Piège 1 / 3 tours'
+            await card.hover()
+            detail=await page.locator('#collection-hover-inspection:not([hidden])').inner_text()
+            for phrase in ['Tous les 3 tours','Piège visible pendant 3 tours','1 dégât','déplacement et attaque bloqués']:
+                assert phrase in detail,phrase
+            await page.keyboard.press('Escape')
+        else:
+            assert len(text)>50
     await page.locator('#nav [data-page="campaign"]').click()
     await page.locator('[data-action="start-mission"][data-id="01"]').click()
     await check_hand_countdowns(page,label)
