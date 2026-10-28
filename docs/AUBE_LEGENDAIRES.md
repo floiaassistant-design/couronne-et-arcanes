@@ -99,8 +99,13 @@ la CI du commit exact seront consignés dans la PR après vérification.
 
 `JOUER.html` reconstruit depuis les mêmes sources : **34 539 145 octets**, blob
 `21224fe275f8a6f5db63a39f575f309c96a2f6eb`. Ne pas éditer l'export à la main.
-Vérifier l'identité des arbres et de ce blob après enregistrement GitHub.
-Les workflows permanents et le plan à quatre groupes restent ceux de main.
+L'arbre source `2e9a6f10a3ca6312d12c9bcd06ca71351a39cc51` a été vérifié identique
+en local et sur GitHub avant génération. Le [générateur ponctuel](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40723362080)
+a réussi sur `642ae08c1e4bbbe04d4e2097fc4cae18e2a7d839`, puis enregistré l'export
+dans `8a574c0373519c697cb294c84b3db03dc4dfa12a` : blob identique au local.
+Le générateur est retiré avant ouverture de la PR. Les workflows permanents
+et le plan à quatre groupes restent ceux de main. La tête/arbre finale et les
+résultats complets sont consignés dans la PR, sans réécrire un hash dans lui-même.
 
 Terminer la revue/captures et les contrôles indépendants, pousser la branche,
 ouvrir la PR puis lire la CI si elle est déjà terminée. Aucun contrôle en cours
