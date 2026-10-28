@@ -1005,6 +1005,13 @@ main {
 </style>
 <style>
 /* Atelier : classes, forge, alchimie, maîtrise et talents. */
+.evolution-fusion-recipe { min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 10px; background: #172733; padding: 10px; }
+.evolution-fusion-recipe .unit-card { width: 100%; }
+.evolution-fusion-action { padding: 8px; display: flex; flex: 1; flex-direction: column; gap: 8px; }
+.evolution-fusion-action h3 { margin: 0; font-size: 15px; }
+.evolution-fusion-action p { margin: 0; font-size: 12px; line-height: 1.5; }
+.evolution-fusion-action .btn { margin-top: auto; min-height: 44px; white-space: normal; }
+.fusion-result-card { width: min(180px,100%); margin: 12px auto; }
 .forge-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -4225,6 +4232,7 @@ const __factories={
 const {cardPreviewAttributes}=__load("src/ui/card-presentation.js");
 const {cardId,cardRarity,cardFromKey}=__load("src/cards/references.js");
 const {evolutionTrialResult}=__load("src/ui/evolution-trials.js");
+const {createEvolutionFusionController}=__load("src/ui/evolution-fusion-controller.js");
 const {createSpellController}=__load("src/ui/spell-controller.js");
 const {esc}=__load("src/ui/markup.js");
 const {createViews}=__load("src/ui/views.js");
@@ -4251,6 +4259,7 @@ const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCard
 const {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying}=createCombatFx(()=>({animationsEnabled,screen}));
 const {spellState,handleSpell,resetSpell}=createSpellController(()=>({battle,selectedCard}),{refresh:()=>render(),launch:(index,lane)=>withBattleFx(()=>playPlayerCard(battle,index,lane)),closeInspection:()=>closeCardInspection(true)});
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,deckUI,trialsUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,deckFilters,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
+const handleEvolutionFusion=createEvolutionFusionController(()=>({profile,battle}),{btn,cardUI,esc,showModal,hideModal,refresh:()=>render(),toast,commitProfile:next=>{if(developer||!saveProfile(next))return false;profile=next;return true;}});
 function load(){return loadProfile();}
 function save(){if(developer)return;if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
@@ -4464,6 +4473,7 @@ function act(action,dataset){const {id,index,lane,col,page}=dataset;
  if(developer&&screen==='battle'&&!action.startsWith('spell-')&&!['lab-back','lab-exit','lab-start','nav','home','select-card','deploy','end-turn','hero-power','toggle-animations','fx-skip','fx-speed','retreat','confirm-retreat','close-modal','close-inspection'].includes(action))return;
  if(isBattleFxPlaying()&&(action.startsWith('spell-')||['select-card','deploy','end-turn','hero-power'].includes(action)))return;
  if(action==='spell-cancel'){resetSpell();selectedCard=-1;render();return;}
+ if(handleEvolutionFusion(action,dataset))return;
  if(handleSpell(action,dataset))return;
  switch(action){
 
@@ -4609,6 +4619,7 @@ const {CARD_RARITIES,normalizeCardRarity}=__load("src/cards/schema.js");
 const {resolveUnitDefinition,resolveRulesDefinition,versionUnitAbilities,AUBE_UNIT_IDS}=__load("src/cards/definitions.js");
 const {ownedCardCopies}=__load("src/cards/references.js");
 const {evolutionTrialFor}=__load("src/evolution-trials.js");
+const {evolutionFusionFor}=__load("src/evolution-fusion.js");
 const {unitCardText,unitAbilityDetails,unitAbilitySummary}=__load("src/cards/ability-text.js");
 const {battleUnitDefinition,unitAttackRange,unitMovementSteps}=__load("src/engine/unit-rules.js");
 const {unitStatContext,unitStats,versionUnitStats}=__load("src/engine/unit-stats.js");
@@ -4633,9 +4644,10 @@ function cardPresentation(reference,{context={},profile=null,side='p',unit=null,
  const missing=lower?'Rang inexistant':'À concevoir';
  const future=known&&selected!==native.rarity;
  const trial=future?evolutionTrialFor(id,selected):null;
+ const fusion=future?evolutionFusionFor(id,selected):null;
  const trialStatus=profile&&ownedCardCopies(profile,{id,rarity:selected})>0?'Évolution obtenue':
-  profile?.completedTrials?.includes(trial?.id)?'Épreuve accomplie · Aucun exemplaire à ce rang':'À gagner en épreuve';
- const availability=!known?missing:future?(trial?trialStatus:'Testable au laboratoire · Obtention non définie'):'Version native';
+  profile?.completedTrials?.includes(trial?.id)?'Épreuve accomplie · Aucun exemplaire à ce rang':fusion?(trial?'À obtenir par fusion ou épreuve':'À obtenir par fusion'):'À gagner en épreuve';
+ const availability=!known?missing:future?(trial||fusion?trialStatus:'Testable au laboratoire · Obtention non définie'):'Version native';
  if(stats===undefined)stats=native.type==='sort'||!known?null:unit?
   {atk:unit.atk,hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);
@@ -4918,6 +4930,7 @@ const {CARD_RARITIES,normalizeCardRarity,freezeCardData}=__load("src/cards/schem
 const {nativeUnitAbilities,inheritUnitAbilities}=__load("src/cards/abilities.js");
 const {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE}=__load("src/cards/aube.js");
 const {evolutionTrialFor}=__load("src/evolution-trials.js");
+const {evolutionFusionFor}=__load("src/evolution-fusion.js");
 const AUBE_UNIT_IDS=Object.freeze(Object.keys(AUBE_EVOLUTIONS));
 const definitions=new Map();
 const noVersions=Object.freeze([]);
@@ -4938,10 +4951,11 @@ for(const card of Object.values(CARDS)){
   geometry={...geometry,...patch?.geometry};
   abilities=inheritUnitAbilities(abilities,patch?.abilities);
   pendingDecisions=patch?.pendingDecisions||pendingDecisions;
+  const trial=evolutionTrialFor(card.id,rank.id),fusion=evolutionFusionFor(card.id,rank.id);
   const definition=freezeCardData({
    id:card.id,versionId:`${card.id}:${rank.id}`,rarity:rank.id,nativeRarity:card.rarity,
    stats:{...stats},geometry:{...geometry},abilities,
-   status:{design:'validated',combat:native||evolutionTrialFor(card.id,rank.id)?'implemented':'pending',engine:'implemented',obtaining:native?'existing':evolutionTrialFor(card.id,rank.id)?'trial':'undefined'},
+   status:{design:'validated',combat:native||trial||fusion?'implemented':'pending',engine:'implemented',obtaining:native?'existing':trial&&fusion?'trial-or-fusion':trial?'trial':fusion?'fusion':'undefined'},
    pendingDecisions:[...pendingDecisions],source:native?null:AUBE_DESIGN_SOURCE
   });
   versions.push(definition);
@@ -5127,12 +5141,29 @@ const evolutionTrialFor=(id,rarity)=>EVOLUTION_TRIALS.find(t=>t.cardId===id&&t.t
 Object.assign(__exports,{EVOLUTION_TRIALS,evolutionTrial,evolutionTrialFor});
 
 },
+"src/evolution-fusion.js":function(__exports,__load){
+// Recettes d'obtention uniquement ; statistiques et pouvoirs restent dans le registre.
+const {CARDS}=__load("src/data.js");
+const {AUBE_EVOLUTIONS}=__load("src/cards/aube.js");
+const {CARD_RARITIES,freezeCardData}=__load("src/cards/schema.js");
+const EVOLUTION_FUSION_COPIES=3;
+const EVOLUTION_FUSIONS=freezeCardData(Object.entries(AUBE_EVOLUTIONS).flatMap(([cardId,versions])=>{
+ const native=CARD_RARITIES.findIndex(r=>r.id===CARDS[cardId].rarity);
+ return CARD_RARITIES.flatMap((rank,index)=>index>native&&['rare','épique'].includes(rank.id)&&versions[rank.id]
+  ?[{id:`${cardId}:${rank.id}`,cardId,from:CARD_RARITIES[index-1].id,to:rank.id,copies:EVOLUTION_FUSION_COPIES,mission:rank.id==='rare'?'01':'03'}]:[]);
+}));
+const evolutionFusion=id=>EVOLUTION_FUSIONS.find(r=>r.id===id)||null;
+const evolutionFusionFor=(id,rarity)=>EVOLUTION_FUSIONS.find(r=>r.cardId===id&&r.to===rarity)||null;
+
+Object.assign(__exports,{EVOLUTION_FUSION_COPIES,EVOLUTION_FUSIONS,evolutionFusion,evolutionFusionFor});
+
+},
 "src/cards/references.js":function(__exports,__load){
 // Identité et inventaire : les anciens ID restent des chaînes, les évolutions
 // sont des références {id,rarity}. Jamais de nouvelle entrée dans CARDS.
 const {CARDS}=__load("src/data.js");
-const {resolveUnitDefinition}=__load("src/cards/definitions.js");
-const {EVOLUTION_TRIALS,evolutionTrialFor,evolutionTrial}=__load("src/evolution-trials.js");
+const {resolveUnitDefinition,unitVersionPlayable}=__load("src/cards/definitions.js");
+const {EVOLUTION_TRIALS,evolutionTrial}=__load("src/evolution-trials.js");
 const cardId=ref=>typeof ref==='string'?ref:ref?.id;
 function cardReference(ref){
  const id=cardId(ref);if(typeof id!=='string'||!Object.hasOwn(CARDS,id))return null;const c=CARDS[id];
@@ -5149,7 +5180,7 @@ function cardFromKey(key){
 }
 function cardRarity(ref){const r=cardReference(ref);return typeof r==='string'?CARDS[r].rarity:r?.rarity;}
 function playableCardReference(ref){
- const r=cardReference(ref);return !!r&&(typeof r==='string'||!!evolutionTrialFor(r.id,r.rarity));
+ const r=cardReference(ref);return !!r&&(typeof r==='string'||unitVersionPlayable(r));
 }
 function ownedCardCopies(profile,ref){
  const r=cardReference(ref);return !r?0:typeof r==='string'?(profile.collection?.[r]||0):(playableCardReference(r)?profile.evolvedCollection?.[cardKey(r)]||0:0);
@@ -5615,6 +5646,7 @@ Object.assign(__exports,__load("src/engine/dungeon-run.js"));
 Object.assign(__exports,__load("src/engine/economy.js"));
 Object.assign(__exports,__load("src/engine/deck-builder.js"));
 Object.assign(__exports,__load("src/engine/evolution-progress.js"));
+Object.assign(__exports,__load("src/engine/evolution-fusion.js"));
 Object.assign(__exports,{});
 
 },
@@ -7215,6 +7247,41 @@ const bossEvolutionUnlocks=missionId=>EVOLUTION_TRIALS.filter(t=>t.previous&&t.m
 Object.assign(__exports,{trialSource,trialReward,evolutionTrialAccess,createEvolutionTrial,settleEvolutionTrial,bossEvolutionUnlocks});
 
 },
+"src/engine/evolution-fusion.js":function(__exports,__load){
+// Fusion déterministe des seuls exemplaires libres, après revérification complète.
+const {CARDS,CAMPAIGN}=__load("src/data.js");
+const {evolutionFusion}=__load("src/evolution-fusion.js");
+const {resolveUnitDefinition,unitVersionPlayable}=__load("src/cards/definitions.js");
+const {cardReference,cardKey,ownedCardCopies}=__load("src/cards/references.js");
+function previewEvolutionFusion(profile,id,battle=null){
+ const recipe=evolutionFusion(id);if(!recipe)return {ok:false,reason:'Recette d’évolution inconnue.'};
+ const source=cardReference({id:recipe.cardId,rarity:recipe.from}),target=cardReference({id:recipe.cardId,rarity:recipe.to});
+ const owned=ownedCardCopies(profile,source),used=profile.deck.filter(ref=>cardKey(ref)===cardKey(source)).length;
+ const available=owned-used,output=ownedCardCopies(profile,target),definition=resolveUnitDefinition(target);
+ const state={recipe,source,target,owned,used,available,output};
+ let reason='';
+ if(battle&&(!battle.rewardGiven||battle.status==='active'))reason='Terminez le combat et récupérez son résultat avant de fusionner.';
+ else if(!definition||!unitVersionPlayable(target)||definition.pendingDecisions.length)reason='Cette évolution n’est pas disponible.';
+ else if(!Number.isSafeInteger(owned)||owned<0||owned>100000||!Number.isSafeInteger(output)||output<0||output>=100000)reason='Quantité d’exemplaires invalide ou limite atteinte.';
+ else if(!profile.completed.includes(recipe.mission)){
+  const mission=CAMPAIGN.find(m=>m.id===recipe.mission);
+  reason=`Vaincre ${mission.enemy} dans « ${mission.name} » pour accéder à ce rang.`;
+ }else if(available<recipe.copies)reason=`Il faut ${recipe.copies} exemplaires ${recipe.from} libres : ${Math.max(0,available)} disponibles, ${used} dans le deck.`;
+ return {...state,ok:!reason,reason};
+}
+
+function fuseEvolutionCopies(profile,id,battle=null){
+ const plan=previewEvolutionFusion(profile,id,battle);if(!plan.ok)return plan;
+ const {recipe,source,target,owned,output}=plan;
+ if(typeof source==='string')profile.collection[source]=owned-recipe.copies;
+ else profile.evolvedCollection[cardKey(source)]=owned-recipe.copies;
+ profile.evolvedCollection??={};profile.evolvedCollection[cardKey(target)]=output+1;
+ return {ok:true,source,target,consumed:recipe.copies,name:CARDS[recipe.cardId].name};
+}
+
+Object.assign(__exports,{previewEvolutionFusion,fuseEvolutionCopies});
+
+},
 "src/ui/generated-card.js":function(__exports,__load){
 // Carte dessinée complète : zones normalisées, valeurs fournies par les vues.
 const {cardTemplateFor,cardTemplateSrc}=__load("src/visuals.js");
@@ -7440,6 +7507,55 @@ function evolutionTrialResult(reward,{btn,cardUI,esc}){
 Object.assign(__exports,{trialBattleObjective,renderEvolutionTrials,evolutionTrialResult});
 
 },
+"src/ui/evolution-fusion-controller.js":function(__exports,__load){
+// Une confirmation = une transaction ; sauvegarder la copie avant de l'adopter.
+const {previewEvolutionFusion,fuseEvolutionCopies}=__load("src/engine/evolution-fusion.js");
+const {evolutionFusionConfirmation}=__load("src/ui/evolution-fusion.js");
+function createEvolutionFusionController(getState,{btn,cardUI,esc,showModal,hideModal,commitProfile,refresh,toast}){
+ let pending=null;
+ return function handleEvolutionFusion(action,{id}={}){
+  if(action==='evolution-fusion-preview'){
+   pending=null;const {profile,battle}=getState(),plan=previewEvolutionFusion(profile,id,battle);
+   if(!plan.ok){toast(plan.reason);return true;}
+   pending=id;showModal(evolutionFusionConfirmation(plan,{btn,cardUI,esc}));return true;
+  }
+  if(action==='evolution-fusion-confirm'){
+   if(!pending)return true;
+   const recipe=pending;pending=null;
+   const {profile,battle}=getState(),next=structuredClone(profile),result=fuseEvolutionCopies(next,recipe,battle);
+   hideModal();
+   if(!result.ok){toast(result.reason);return true;}
+   if(!commitProfile(next)){toast('Fusion non enregistrée : aucun exemplaire consommé. Vérifiez le stockage local.');return true;}
+   refresh();toast(`${result.name} : évolution obtenue. Ajoutez-la dans Mon deck.`);return true;
+  }
+  if(action!=='close-inspection')pending=null;
+  return false;
+ };
+}
+
+Object.assign(__exports,{createEvolutionFusionController});
+
+},
+"src/ui/evolution-fusion.js":function(__exports,__load){
+// Présentation des recettes, sans mutation du profil ni des stocks.
+const {CARDS}=__load("src/data.js");
+const {EVOLUTION_FUSIONS,EVOLUTION_FUSION_COPIES}=__load("src/evolution-fusion.js");
+const {previewEvolutionFusion}=__load("src/engine/evolution-fusion.js");
+function renderEvolutionFusions(profile,battle,{btn,cardUI,esc}){
+ return `<section class="spaced evolution-fusions" aria-labelledby="evolution-fusion-title"><h2 class="section-title" id="evolution-fusion-title">Faire évoluer mes doublons</h2><p class="page-sub">${EVOLUTION_FUSION_COPIES} exemplaires du même personnage et du même rang deviennent 1 exemplaire du rang suivant. Aucun coût en or ou éclats, aucune chance d’échec. Seuls les exemplaires hors du deck sont consommés. Les rangs Rares s’ouvrent après la mission 01 ; les Épiques après le premier boss.</p><p class="hint">Évolutions de l’Aube jusqu’à Épique. La carte obtenue rejoint la Collection ; ajoutez-la ensuite dans Mon deck.</p><div class="card-grid">${EVOLUTION_FUSIONS.map(recipe=>{
+  const plan=previewEvolutionFusion(profile,recipe.id,battle);
+  return `<article class="evolution-fusion-recipe" data-fusion-id="${esc(recipe.id)}">${cardUI(plan.target,{previewContext:'alchemy'})}<div class="evolution-fusion-action"><h3>${esc(CARDS[recipe.cardId].name)}</h3><p>${recipe.copies} × ${esc(recipe.from)} → 1 × ${esc(recipe.to)}</p><p class="hint">${plan.owned} possédés · ${plan.used} dans le deck · ${Math.max(0,plan.available)} libres</p>${!plan.ok?`<p class="hint">${esc(plan.reason)}</p>`:''}${btn('Préparer la fusion','evolution-fusion-preview',`data-id="${esc(recipe.id)}" ${!plan.ok?'disabled':''}`,'primary')}</div></article>`;
+ }).join('')}</div></section>`;
+}
+
+function evolutionFusionConfirmation(plan,{btn,cardUI,esc}){
+ const {recipe}=plan;
+ return `<div class="kicker">FUSION DE DOUBLONS</div><h2>Confirmer cette évolution ?</h2><p><b>${recipe.copies} exemplaires ${esc(recipe.from)} de ${esc(CARDS[recipe.cardId].name)}</b> seront consommés pour créer <b>1 exemplaire ${esc(recipe.to)}</b>. Cette fusion est définitive.</p><div class="fusion-result-card">${cardUI(plan.target,{previewContext:'alchemy'})}</div><p>${plan.owned} → ${plan.owned-recipe.copies} exemplaires au rang de départ. Les ${plan.used} exemplaires dans votre deck sont conservés. Aucun or ni éclat dépensé.</p><div class="button-row">${btn(`Fusionner ces ${recipe.copies} exemplaires`,'evolution-fusion-confirm','','primary')}${btn('Annuler','close-modal','','ghost')}</div>`;
+}
+
+Object.assign(__exports,{renderEvolutionFusions,evolutionFusionConfirmation});
+
+},
 "src/ui/spell-controller.js":function(__exports,__load){
 // Sélection transitoire : jamais ajoutée au combat ou à sa sauvegarde.
 const {CARDS}=__load("src/data.js");
@@ -7650,6 +7766,7 @@ const {renderManualDeck}=__load("src/ui/deck-builder.js");
 const {cardId,cardFromKey,cardRarity,ownedCardEntries,totalOwnedCopies}=__load("src/cards/references.js");
 const {bossEvolutionUnlocks}=__load("src/engine/evolution-progress.js");
 const {renderEvolutionTrials}=__load("src/ui/evolution-trials.js");
+const {renderEvolutionFusions}=__load("src/ui/evolution-fusion.js");
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 const { CARDS, CLASS_SKILLS, FACTIONS, CLASSES, CAMPAIGN, TOWER_MAX, towerMission }=__load("src/data.js");
 const { AI_STYLES }=__load("src/ai.js");
@@ -7823,9 +7940,10 @@ function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
     const expendables = Object.values(CARDS).filter(
       (c) => (profile.collection[c.id] || 0) > profile.deck.filter((id) => id === c.id).length
     );
-    return `<div class="kicker">LABORATOIRE · CRÉATION DE CARTES</div><h1 class="page-title">L'Alchimie des Arcanes</h1><p class="page-sub">Extrayez vos cartes en trop pour récupérer des éclats et fusionnez-les avec de l'or pour fabriquer des cartes choisies. <b>Aucun tirage aléatoire, aucune chance d'échec et aucun paiement réel.</b></p>
+    return `<div class="kicker">LABORATOIRE · CRÉATION DE CARTES</div><h1 class="page-title">L'Alchimie des Arcanes</h1><p class="page-sub">Faites évoluer vos doublons, fabriquez des cartes avec vos ressources ou extrayez vos surplus. <b>Aucun tirage aléatoire, aucune chance d'échec et aucun paiement réel.</b></p>
  <section class="spaced stat-row"><div class="stat-box"><strong>${num(profile.gold)}</strong><small>Or disponible</small></div><div class="stat-box"><strong>${num(profile.shards)}</strong><small>Éclats disponibles</small></div></section>
- <section class="spaced"><h2 class="section-title">Fusionner une carte</h2><p class="page-sub">Choisissez une recette connue. Les unités et sorts fabriqués rejoignent immédiatement votre collection.</p><div class="card-grid">${recipes.map((c) => `<div class="alchemy-recipe">${cardUI(c.id)}<div class="alchemy-action">${btn(`Fabriquer · ${FUSION_COSTS[c.rarity].gold} ◈ / ${FUSION_COSTS[c.rarity].shards} ✧`, 'fuse-card', `data-id="${c.id}" ${profile.gold < FUSION_COSTS[c.rarity].gold || profile.shards < FUSION_COSTS[c.rarity].shards ? 'disabled' : ''}`, 'primary')}</div></div>`).join('')}</div></section>
+ ${renderEvolutionFusions(profile,battle,{btn,cardUI,esc})}
+ <section class="spaced"><h2 class="section-title">Fabriquer une carte avec des ressources</h2><p class="page-sub">Choisissez une recette connue. Les unités et sorts fabriqués rejoignent immédiatement votre collection.</p><div class="card-grid">${recipes.map((c) => `<div class="alchemy-recipe">${cardUI(c.id)}<div class="alchemy-action">${btn(`Fabriquer · ${FUSION_COSTS[c.rarity].gold} ◈ / ${FUSION_COSTS[c.rarity].shards} ✧`, 'fuse-card', `data-id="${c.id}" ${profile.gold < FUSION_COSTS[c.rarity].gold || profile.shards < FUSION_COSTS[c.rarity].shards ? 'disabled' : ''}`, 'primary')}</div></div>`).join('')}</div></section>
  <section class="spaced"><h2 class="section-title">Extraire les cartes en surplus</h2><p class="page-sub">Les exemplaires utilisés dans votre deck sont protégés ; seuls les exemplaires supplémentaires peuvent être extraits.</p>${expendables.length ? `<div class="card-grid">${expendables.map((c) => `<div class="alchemy-recipe">${cardUI(c.id)}<div class="alchemy-action">${btn(`Extraire · +${EXTRACTION_SHARDS[c.rarity]} ✧`, 'extract-card', `data-id="${c.id}"`, 'ghost')}</div></div>`).join('')}</div>` : '<div class="hint">Aucune carte en surplus. Gagnez des cartes ou retirez-en du deck pour pouvoir les extraire.</div>'}</section>`;
   }
   function forgeUI() {
