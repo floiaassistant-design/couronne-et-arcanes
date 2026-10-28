@@ -102,6 +102,18 @@ Playwright pour les tests Node. Aucun nouveau job ou appel de modèle.
 Les 27 suites et les contrôles moteur restent obligatoires. Résultats finaux
 locaux et CI du commit exact sont consignés dans la PR.
 
+## Export et provenance
+
+L'export officiel reconstruit compte **34 538 813 octets**, blob
+`24472e7b46c391430da5089dd0d8ed473217edc4`, identique en local et sur GitHub.
+Le [générateur ponctuel](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40714123131)
+a réussi sur `020e4bdfcc565be1149417438e1024f6968b00ca` et enregistré le
+fichier dans `7c7d4166620a088c43182e6e566931916c7748a3`. L'arbre source
+`c450689ae9969e0069658856054abe418a9145d0` a été comparé au local avant envoi.
+Le générateur est retiré avant ouverture de la PR. Les captures des paquets
+réutilisent le préfixe `ca-evolution-packs-*` déjà collecté en cas d'échec/revue,
+sans modifier les workflows, rétention ou quotas de stockage.
+
 ## Reprise et limites
 
 Vérifier main, tête/arbre et export exacts, achever les régressions pertinentes,

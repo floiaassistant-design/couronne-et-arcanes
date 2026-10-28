@@ -44,11 +44,11 @@ async def run_card_packs(browser,label,viewport,url=None):
     for word in ['190 or','60 %','35 %','5 %','tirages indépendants','aucun rang garanti']:assert word in text,word
     assert await offer.locator('.pack-rates li').count()==3
     assert await offer.locator('.pack-content').get_attribute('open') is None
-    await offer.scroll_into_view_if_needed();await page.screenshot(path=f'/tmp/ca-packs-{label}.png')
+    await offer.scroll_into_view_if_needed();await page.screenshot(path=f'/tmp/ca-evolution-packs-{label}.png')
     assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
     await prepare();assert await saved()==baseline
     assert '190 or seront dépensés' in await page.locator('.modal').inner_text()
-    await page.screenshot(path=f'/tmp/ca-packs-confirm-{label}.png')
+    await page.screenshot(path=f'/tmp/ca-evolution-packs-confirm-{label}.png')
     await close();assert await saved()==baseline
     # Échec de sauvegarde après tirage : ni débit, ni carte, ni résultat annoncé.
     await page.evaluate('''()=>{const write=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='couronnes_arcanes_v1')throw Error('quota simulé');return write.call(this,k,v)}}''')
