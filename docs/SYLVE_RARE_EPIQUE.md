@@ -75,11 +75,24 @@ les pools par faction. Aucun moteur, actif, CSS, bibliothèque ni schéma parall
   et deux camps au labo ; stocks, deck, bonus, arrivée et quotas vérifiés.
 - 120 scénarios de parité identiques, référence historique V2.4 intacte.
 - Builds autonome, diagnostic et web vérifiés ; diagnostic non distribué.
-- Vérification navigateur finale en cours : quatre groupes existants, sans
-  nouveau job ni retrait d'assertion. Le parcours Sylve achète réellement une
-  Luciole Épique, fusionne des Rares, exporte/importe, pose en campagne et vérifie
-  le bouclier 5 et la reprise exacte, bureau/portrait/paysage/HTTP.
+- 26 autres suites navigateur réussies, dont Sylve aux trois formats après mise
+  à jour de ses anciennes attentes de cases vides. Les quatre parcours de paquet
+  Sylve ont réussi : achat réel d'une Luciole Épique, fusion des Rares,
+  export/import, pose en campagne, bouclier 5 et reprise exacte. Quatre parties
+  d'épreuves existantes conservées, sans nouveau job ni retrait d'assertion ;
+  leurs résultats finaux sont consignés dans la PR.
+- Le premier essai Sylve a révélé le second clic actionnant la Collection :
+  corrigé dans le routeur puis revérifié avec le vrai double clic et les mêmes
+  assertions. Après les deux corrections de texte finales, achat Sylve bureau,
+  Collection Sylve aux trois formats et laboratoire ont été revérifiés ; onze
+  tests ciblés de présentation/laboratoire ont aussi réussi.
+- Simulations communes réussies : 20 480 combats de contrôle et 6 144 d'arène,
+  aucun plateau invalide. Elles ne remplacent pas l'appréciation humaine.
 
-Les résultats navigateur, l'empreinte de l'export et la tête distante seront
-complétés avant livraison. Aucun téléphone physique, équilibrage humain exhaustif,
-succès CI anticipé ou publication revendiqué.
+Export final : **34 550 415 octets**, blob
+`f2ded472eaf544e4fcffa205948b0ee8a19b2f5f`, identique local/distant.
+Arbre source comparé avant génération ; générateur temporaire limité à la branche,
+empreinte attendue obligatoire, retiré avant ouverture de la PR. Tête et arbre
+finaux, résultats CI exacts et provenance de génération sont consignés dans la PR.
+Aucun téléphone physique, équilibrage humain exhaustif, succès CI anticipé ou
+publication revendiqué.
