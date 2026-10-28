@@ -4,6 +4,7 @@ import {renderManualDeck} from './deck-builder.js';
 import {cardId,cardFromKey,cardRarity,ownedCardEntries,totalOwnedCopies} from '../cards/references.js';
 import {bossEvolutionUnlocks} from '../engine/evolution-progress.js';
 import {renderEvolutionTrials} from './evolution-trials.js';
+import {renderEvolutionFusions} from './evolution-fusion.js';
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 import { CARDS, CLASS_SKILLS, FACTIONS, CLASSES, CAMPAIGN, TOWER_MAX, towerMission } from '../data.js';
 import { AI_STYLES } from '../ai.js';
@@ -180,9 +181,10 @@ export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
     const expendables = Object.values(CARDS).filter(
       (c) => (profile.collection[c.id] || 0) > profile.deck.filter((id) => id === c.id).length
     );
-    return `<div class="kicker">LABORATOIRE · CRÉATION DE CARTES</div><h1 class="page-title">L'Alchimie des Arcanes</h1><p class="page-sub">Extrayez vos cartes en trop pour récupérer des éclats et fusionnez-les avec de l'or pour fabriquer des cartes choisies. <b>Aucun tirage aléatoire, aucune chance d'échec et aucun paiement réel.</b></p>
+    return `<div class="kicker">LABORATOIRE · CRÉATION DE CARTES</div><h1 class="page-title">L'Alchimie des Arcanes</h1><p class="page-sub">Faites évoluer vos doublons, fabriquez des cartes avec vos ressources ou extrayez vos surplus. <b>Aucun tirage aléatoire, aucune chance d'échec et aucun paiement réel.</b></p>
  <section class="spaced stat-row"><div class="stat-box"><strong>${num(profile.gold)}</strong><small>Or disponible</small></div><div class="stat-box"><strong>${num(profile.shards)}</strong><small>Éclats disponibles</small></div></section>
- <section class="spaced"><h2 class="section-title">Fusionner une carte</h2><p class="page-sub">Choisissez une recette connue. Les unités et sorts fabriqués rejoignent immédiatement votre collection.</p><div class="card-grid">${recipes.map((c) => `<div class="alchemy-recipe">${cardUI(c.id)}<div class="alchemy-action">${btn(`Fabriquer · ${FUSION_COSTS[c.rarity].gold} ◈ / ${FUSION_COSTS[c.rarity].shards} ✧`, 'fuse-card', `data-id="${c.id}" ${profile.gold < FUSION_COSTS[c.rarity].gold || profile.shards < FUSION_COSTS[c.rarity].shards ? 'disabled' : ''}`, 'primary')}</div></div>`).join('')}</div></section>
+ ${renderEvolutionFusions(profile,battle,{btn,cardUI,esc})}
+ <section class="spaced"><h2 class="section-title">Fabriquer une carte avec des ressources</h2><p class="page-sub">Choisissez une recette connue. Les unités et sorts fabriqués rejoignent immédiatement votre collection.</p><div class="card-grid">${recipes.map((c) => `<div class="alchemy-recipe">${cardUI(c.id)}<div class="alchemy-action">${btn(`Fabriquer · ${FUSION_COSTS[c.rarity].gold} ◈ / ${FUSION_COSTS[c.rarity].shards} ✧`, 'fuse-card', `data-id="${c.id}" ${profile.gold < FUSION_COSTS[c.rarity].gold || profile.shards < FUSION_COSTS[c.rarity].shards ? 'disabled' : ''}`, 'primary')}</div></div>`).join('')}</div></section>
  <section class="spaced"><h2 class="section-title">Extraire les cartes en surplus</h2><p class="page-sub">Les exemplaires utilisés dans votre deck sont protégés ; seuls les exemplaires supplémentaires peuvent être extraits.</p>${expendables.length ? `<div class="card-grid">${expendables.map((c) => `<div class="alchemy-recipe">${cardUI(c.id)}<div class="alchemy-action">${btn(`Extraire · +${EXTRACTION_SHARDS[c.rarity]} ✧`, 'extract-card', `data-id="${c.id}"`, 'ghost')}</div></div>`).join('')}</div>` : '<div class="hint">Aucune carte en surplus. Gagnez des cartes ou retirez-en du deck pour pouvoir les extraire.</div>'}</section>`;
   }
   function forgeUI() {

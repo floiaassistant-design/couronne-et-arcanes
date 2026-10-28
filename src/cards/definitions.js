@@ -4,6 +4,7 @@ import {CARD_RARITIES,normalizeCardRarity,freezeCardData} from './schema.js';
 import {nativeUnitAbilities,inheritUnitAbilities} from './abilities.js';
 import {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE} from './aube.js';
 import {evolutionTrialFor} from '../evolution-trials.js';
+import {evolutionFusionFor} from '../evolution-fusion.js';
 
 export const AUBE_UNIT_IDS=Object.freeze(Object.keys(AUBE_EVOLUTIONS));
 const definitions=new Map();
@@ -25,10 +26,11 @@ for(const card of Object.values(CARDS)){
   geometry={...geometry,...patch?.geometry};
   abilities=inheritUnitAbilities(abilities,patch?.abilities);
   pendingDecisions=patch?.pendingDecisions||pendingDecisions;
+  const trial=evolutionTrialFor(card.id,rank.id),fusion=evolutionFusionFor(card.id,rank.id);
   const definition=freezeCardData({
    id:card.id,versionId:`${card.id}:${rank.id}`,rarity:rank.id,nativeRarity:card.rarity,
    stats:{...stats},geometry:{...geometry},abilities,
-   status:{design:'validated',combat:native||evolutionTrialFor(card.id,rank.id)?'implemented':'pending',engine:'implemented',obtaining:native?'existing':evolutionTrialFor(card.id,rank.id)?'trial':'undefined'},
+   status:{design:'validated',combat:native||trial||fusion?'implemented':'pending',engine:'implemented',obtaining:native?'existing':trial&&fusion?'trial-or-fusion':trial?'trial':fusion?'fusion':'undefined'},
    pendingDecisions:[...pendingDecisions],source:native?null:AUBE_DESIGN_SOURCE
   });
   versions.push(definition);

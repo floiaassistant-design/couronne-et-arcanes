@@ -1,0 +1,136 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {EVOLUTION_FUSIONS} from '../src/evolution-fusion.js';
+import {freshProfile,previewEvolutionFusion,fuseEvolutionCopies,createBattle,playPlayerCard,modifyDeck,validateDeck,createEvolutionTrial,settleEvolutionTrial} from '../src/engine.js';
+import {CAMPAIGN} from '../src/data.js';
+import {cardKey,cardReference,ownedCardCopies,playableCardReference} from '../src/cards/references.js';
+import {resolveUnitDefinition} from '../src/cards/definitions.js';
+import {loadProfile,saveProfile,validateImportedProfile,storeBattle,restoreBattle} from '../src/ui/storage.js';
+import {createEvolutionFusionController} from '../src/ui/evolution-fusion-controller.js';
+import {simulateBattle} from '../scripts/lib/battle_runner.mjs';
+
+const expected={militia:{rare:[2,5],'épique':[2,5]},shield:{rare:[1,11],'épique':[2,11]},archer:{rare:[2,4],'épique':[3,4]},lancer:{rare:[3,6],'épique':[4,6]},cleric:{'épique':[1,6]},banner:{'épique':[2,8]},scoutcaptain:{'épique':[3,8]},sunpriest:{'épique':[2,9]}};
+const ready=()=>{const p=freshProfile();p.completed=['01','02','03'];return p;};
+function stocked(recipe){
+ const p=ready(),source=cardReference({id:recipe.cardId,rarity:recipe.from});
+ const used=p.deck.filter(ref=>cardKey(ref)===cardKey(source)).length;
+ if(typeof source==='string')p.collection[source]=used+3;
+ else p.evolvedCollection={[cardKey(source)]:used+3};
+ return p;
+}
+function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v)},removeItem:k=>{delete data[k]}};return data;}
+
+test('12 recettes explicites, transitions adjacentes, rangs supérieurs et autres factions fermés',()=>{
+ assert.equal(EVOLUTION_FUSIONS.length,12);
+ assert.deepEqual(EVOLUTION_FUSIONS.map(r=>r.id).sort(),Object.entries(expected).flatMap(([id,ranks])=>Object.keys(ranks).map(rank=>id+':'+rank)).sort());
+ for(const recipe of EVOLUTION_FUSIONS){assert.equal(recipe.copies,3);assert.equal(recipe.from,recipe.to==='rare'?'commun':'rare');assert.equal(recipe.mission,recipe.to==='rare'?'01':'03');}
+ const p=ready();
+ for(const id of ['militia:divine','militia:légendaire','ranger:rare','firebolt:rare','militia:commun','constructor']){
+  const before=structuredClone(p);assert.equal(fuseEvolutionCopies(p,id).ok,false);assert.deepEqual(p,before,id);
+ }
+ for(const ref of [{id:'militia',rarity:'légendaire'},{id:'ranger',rarity:'rare'}])assert.equal(playableCardReference(ref),false);
+});
+
+test('Chaque recette consomme 3 stocks du rang exact, crée 1 carte jouable et protège le deck et toute autre progression',()=>{
+ for(const recipe of EVOLUTION_FUSIONS){
+  const p=stocked(recipe),before=structuredClone(p),preview=previewEvolutionFusion(p,recipe.id);
+  assert.equal(preview.ok,true);assert.equal(preview.available,3);assert.deepEqual(p,before);
+  const result=fuseEvolutionCopies(p,recipe.id);assert.equal(result.ok,true);
+  assert.equal(ownedCardCopies(p,result.source),preview.used);assert.equal(ownedCardCopies(p,result.target),1);
+  const desired=structuredClone(before);
+  if(typeof result.source==='string')desired.collection[result.source]-=3;
+  else desired.evolvedCollection[cardKey(result.source)]-=3;
+  desired.evolvedCollection??={};desired.evolvedCollection[recipe.id]=1;
+  assert.deepEqual(p,desired);assert.equal(validateDeck(p),'');assert.equal(p.completedTrials,undefined);
+  assert.deepEqual(validateImportedProfile(p),p);assert.equal(modifyDeck(p,result.target,1),true);
+  const b=createBattle(p,CAMPAIGN[0],1);b.heroes.p.hand=[{...result.target,wait:0}];
+  assert.equal(playPlayerCard(b,0,0,1).ok,true,recipe.id);
+  const u=b.board[0][1];assert.deepEqual([u.atk,u.maxhp],expected[recipe.cardId][recipe.to],recipe.id);
+  assert.equal(u.rarity,recipe.to);assert.equal(u.cardRules,'cards-v2');
+  storage();assert(storeBattle(b));assert.deepEqual(restoreBattle(),b);
+ }
+});
+
+test('Rangs distincts, copies du deck et manque de doublons : aucun prélèvement ou mélange implicite',()=>{
+ const p=ready();p.evolvedCollection={'militia:rare':2,'militia:épique':3};
+ const before=structuredClone(p);
+ assert.equal(previewEvolutionFusion(p,'militia:rare').available,0);
+ assert.equal(fuseEvolutionCopies(p,'militia:rare').ok,false);
+ assert.equal(fuseEvolutionCopies(p,'militia:épique').ok,false);assert.deepEqual(p,before);
+ p.evolvedCollection['militia:rare']=3;p.deck[0]={id:'militia',rarity:'rare'};
+ const held=structuredClone(p);assert.equal(fuseEvolutionCopies(p,'militia:épique').ok,false);assert.deepEqual(p,held);
+});
+
+test('192 combats avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
+ for(const recipe of EVOLUTION_FUSIONS){
+  const p=stocked(recipe),result=fuseEvolutionCopies(p,recipe.id);modifyDeck(p,result.target,1);
+  const before=structuredClone(p);
+  for(let seed=1;seed<=8;seed++){
+   const observe=b=>{const units=b.board.flat().filter(Boolean);assert.ok(units.every(u=>u.hp>0&&Number.isFinite(u.atk)));assert.equal(new Set(units.map(u=>u.uid)).size,units.length);};
+   const mission=CAMPAIGN[seed%3];
+   assert.deepEqual(simulateBattle(p,mission,seed,{observe}),simulateBattle(p,mission,seed,{observe}));
+   assert.deepEqual(p,before);
+  }
+ }
+});
+
+test('Progression de campagne, résultat non récupéré et combat actif bloquent sans mutation ; aucune épreuve obligatoire',()=>{
+ const recipe=EVOLUTION_FUSIONS.find(r=>r.id==='shield:épique');
+ const p=stocked(recipe);p.completed=['01','02'];let before=structuredClone(p);
+ assert.match(fuseEvolutionCopies(p,recipe.id).reason,/Gardien du Bosquet/);assert.deepEqual(p,before);
+ p.completed.push('03');before=structuredClone(p);
+ for(const battle of [{status:'active'},{status:'victory'},{status:'defeat'}]){assert.equal(fuseEvolutionCopies(p,recipe.id,battle).ok,false);assert.deepEqual(p,before);}
+ assert.equal(fuseEvolutionCopies(p,recipe.id,{status:'victory',rewardGiven:true}).ok,true);
+ assert.equal(p.completedTrials,undefined);
+ const rare=stocked(EVOLUTION_FUSIONS[0]);rare.completed=[];before=structuredClone(rare);
+ assert.equal(fuseEvolutionCopies(rare,EVOLUTION_FUSIONS[0].id).ok,false);assert.deepEqual(rare,before);
+});
+
+test('Stocks invalides ou saturés refusés, jamais de copie créée par normalisation d’un profil ancien',()=>{
+ const recipe=EVOLUTION_FUSIONS[0];
+ for(const qty of [-1,3.5,Infinity,100001]){
+  const p=stocked(recipe);p.collection.militia=qty;const before=structuredClone(p);
+  assert.equal(fuseEvolutionCopies(p,recipe.id).ok,false);assert.deepEqual(p,before);
+ }
+ const p=stocked(recipe);p.evolvedCollection={'militia:rare':100000};const before=structuredClone(p);
+ assert.equal(fuseEvolutionCopies(p,recipe.id).ok,false);assert.deepEqual(p,before);
+ storage();const old=freshProfile();saveProfile(old);assert.deepEqual(loadProfile(),old);assert.equal(loadProfile().evolvedCollection,undefined);
+});
+
+test('Fusion répétable puis épreuve unique : stocks séparés, ni boucle gratuite ni épreuve marquée par la fusion',()=>{
+ const p=ready();p.collection.militia=13;
+ for(let i=0;i<3;i++)assert.equal(fuseEvolutionCopies(p,'militia:rare').ok,true);
+ assert.equal(p.collection.militia,4);assert.equal(p.evolvedCollection['militia:rare'],3);
+ assert.equal(fuseEvolutionCopies(p,'militia:épique').ok,true);assert.equal(p.evolvedCollection['militia:rare'],0);
+ assert.equal(p.evolvedCollection['militia:épique'],1);assert.equal(p.completedTrials,undefined);
+ const b=createEvolutionTrial(p,'aube-militia-rare',1).battle;b.heroes.p.hand=[{id:'militia',wait:0}];
+ playPlayerCard(b,0,0);b.trialChallenge.counts[b.board[0][1].uid]=3;b.status='victory';b.phase='finished';
+ assert.equal(settleEvolutionTrial(p,b).evolved,true);assert.equal(p.collection.militia,3);
+ assert.equal(p.evolvedCollection['militia:rare'],1);assert.equal(p.evolvedCollection['militia:épique'],1);
+ const once=structuredClone(p);assert.equal(settleEvolutionTrial(p,structuredClone(b)).evolved,false);assert.deepEqual(p,once);
+});
+
+function controller(){
+ let profile=stocked(EVOLUTION_FUSIONS[0]),battle=null,fail=false,saves=0,modal='',message='';
+ const api={btn:()=>'',cardUI:()=>'',esc:s=>s,showModal:s=>{modal=s},hideModal:()=>{modal=''},refresh:()=>{},toast:s=>{message=s},commitProfile:next=>{saves++;if(fail)return false;profile=next;return true;}};
+ const handle=createEvolutionFusionController(()=>({profile,battle}),api);
+ return {handle,get profile(){return profile},get saves(){return saves},get modal(){return modal},get message(){return message},set fail(v){fail=v},set battle(v){battle=v}};
+}
+
+test('Confirmation : annulation, double clic et répétition sans prévisualisation ne consomment pas de copies',()=>{
+ const c=controller(),before=structuredClone(c.profile);
+ c.handle('evolution-fusion-confirm');assert.equal(c.saves,0);
+ c.handle('evolution-fusion-preview',{id:'militia:rare'});assert.match(c.modal,/3 exemplaires/);assert.deepEqual(c.profile,before);
+ c.handle('close-modal');c.handle('evolution-fusion-confirm');assert.equal(c.saves,0);
+ c.handle('evolution-fusion-preview',{id:'militia:rare'});c.handle('evolution-fusion-confirm');const once=structuredClone(c.profile);
+ c.handle('evolution-fusion-confirm');assert.equal(c.saves,1);assert.deepEqual(c.profile,once);
+});
+
+test('Sauvegarde en échec, manque de copies ou début de combat après prévisualisation : transaction sans perte',()=>{
+ for(const change of ['storage','stock','battle']){
+  const c=controller();c.handle('evolution-fusion-preview',{id:'militia:rare'});
+  if(change==='storage')c.fail=true;if(change==='stock')c.profile.collection.militia=4;if(change==='battle')c.battle={status:'active'};
+  const before=structuredClone(c.profile);c.handle('evolution-fusion-confirm');assert.deepEqual(c.profile,before,change);
+  assert.equal(c.saves,change==='storage'?1:0);assert.ok(c.message);
+ }
+});

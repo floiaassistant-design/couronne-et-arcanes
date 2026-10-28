@@ -1,3 +1,17 @@
+# Fusion de doublons — proposition du 28 octobre 2026
+
+Main vérifié `736fd7d4f3b70c142ed8c4001a7acb5abc8d3a06` : PR 56 fusionnée,
+quatre défis pilotes intégrés après six contrôles réussis. La suite est isolée
+sur `feat/fusion-doublons-evolutions` : douze recettes Aube jusqu'à Épique,
+3 exemplaires libres d'un rang → 1 du rang suivant, sans or/éclats. Aucun
+prélèvement dans le deck ; confirmation et sauvegarde avant adoption du profil.
+Huit nouvelles versions deviennent obtenables via leurs règles déjà programmées ;
+29 évolutions Aube restent au labo. Aucun nouveau paquet ou défi difficile ici.
+[Contrat, validation et reprise](FUSION_DOUBLONS.md). Ratio et accès proposés à
+la revue ; aucune fusion de cette branche ou publication autorisée.
+
+Les comptes et statuts des bilans suivants sont historiques.
+
 # Reprise vérifiée — 28 octobre 2026
 
 Main actuel `a0726d4408d6ffc4c767fdb1e51be0582ce01445` : PR 57 (règles

@@ -3,6 +3,7 @@ import asyncio,json,os
 from pathlib import Path
 from playwright.async_api import async_playwright
 from browser_manual_deck import run_manual_deck
+from browser_evolution_fusion import run_fusion_cases
 
 ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
@@ -145,6 +146,7 @@ async def main():
         if os.environ.get('CA_HTTP_URL'):
             await run(browser,'web',{'width':1366,'height':900},os.environ['CA_HTTP_URL'])
             await run_manual_deck(browser,'web',{'width':1366,'height':900},os.environ['CA_HTTP_URL'])
+        await run_fusion_cases(browser)
         await browser.close()
 
 if __name__=='__main__':asyncio.run(main())

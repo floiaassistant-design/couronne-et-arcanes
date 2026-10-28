@@ -4,6 +4,7 @@ import {CARD_RARITIES,normalizeCardRarity} from '../cards/schema.js';
 import {resolveUnitDefinition,resolveRulesDefinition,versionUnitAbilities,AUBE_UNIT_IDS} from '../cards/definitions.js';
 import {ownedCardCopies} from '../cards/references.js';
 import {evolutionTrialFor} from '../evolution-trials.js';
+import {evolutionFusionFor} from '../evolution-fusion.js';
 import {unitCardText,unitAbilityDetails,unitAbilitySummary} from '../cards/ability-text.js';
 import {battleUnitDefinition,unitAttackRange,unitMovementSteps} from '../engine/unit-rules.js';
 import {unitStatContext,unitStats,versionUnitStats} from '../engine/unit-stats.js';
@@ -29,9 +30,10 @@ export function cardPresentation(reference,{context={},profile=null,side='p',uni
  const missing=lower?'Rang inexistant':'À concevoir';
  const future=known&&selected!==native.rarity;
  const trial=future?evolutionTrialFor(id,selected):null;
+ const fusion=future?evolutionFusionFor(id,selected):null;
  const trialStatus=profile&&ownedCardCopies(profile,{id,rarity:selected})>0?'Évolution obtenue':
-  profile?.completedTrials?.includes(trial?.id)?'Épreuve accomplie · Aucun exemplaire à ce rang':'À gagner en épreuve';
- const availability=!known?missing:future?(trial?trialStatus:'Testable au laboratoire · Obtention non définie'):'Version native';
+  profile?.completedTrials?.includes(trial?.id)?'Épreuve accomplie · Aucun exemplaire à ce rang':fusion?(trial?'À obtenir par fusion ou épreuve':'À obtenir par fusion'):'À gagner en épreuve';
+ const availability=!known?missing:future?(trial||fusion?trialStatus:'Testable au laboratoire · Obtention non définie'):'Version native';
  if(stats===undefined)stats=native.type==='sort'||!known?null:unit?
   {atk:unit.atk,hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);

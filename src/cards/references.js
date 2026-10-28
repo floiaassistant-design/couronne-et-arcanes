@@ -1,8 +1,8 @@
 // Identité et inventaire : les anciens ID restent des chaînes, les évolutions
 // sont des références {id,rarity}. Jamais de nouvelle entrée dans CARDS.
 import {CARDS} from '../data.js';
-import {resolveUnitDefinition} from './definitions.js';
-import {EVOLUTION_TRIALS,evolutionTrialFor,evolutionTrial} from '../evolution-trials.js';
+import {resolveUnitDefinition,unitVersionPlayable} from './definitions.js';
+import {EVOLUTION_TRIALS,evolutionTrial} from '../evolution-trials.js';
 
 export const cardId=ref=>typeof ref==='string'?ref:ref?.id;
 export function cardReference(ref){
@@ -20,7 +20,7 @@ export function cardFromKey(key){
 }
 export function cardRarity(ref){const r=cardReference(ref);return typeof r==='string'?CARDS[r].rarity:r?.rarity;}
 export function playableCardReference(ref){
- const r=cardReference(ref);return !!r&&(typeof r==='string'||!!evolutionTrialFor(r.id,r.rarity));
+ const r=cardReference(ref);return !!r&&(typeof r==='string'||unitVersionPlayable(r));
 }
 export function ownedCardCopies(profile,ref){
  const r=cardReference(ref);return !r?0:typeof r==='string'?(profile.collection?.[r]||0):(playableCardReference(r)?profile.evolvedCollection?.[cardKey(r)]||0:0);
