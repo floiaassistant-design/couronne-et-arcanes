@@ -8350,7 +8350,7 @@ function renderCollectionCatalogue(profile,{faction='aube',ownedOnly=false}={},h
   </header>
   <div class="collection-content"><nav class="collection-factions" aria-label="Ordres de la collection">${tabs.map(id=>`<button type="button" data-action="collection-faction" data-id="${id}" aria-pressed="${faction===id}">${id==='all'?'Tous':id==='sort'?'Sorts':esc(FACTIONS[id].short)}</button>`).join('')}</nav>
    <div class="library-toolbar collection-toolbar"><label class="small"><input type="checkbox" id="owned-only" ${ownedOnly?'checked':''} /> Mes cartes uniquement</label><span class="pill">${list.length} cartes affichées</span></div>
-   <section class="collection-catalogue" aria-labelledby="collection-order-title"><div class="collection-order-heading"><h2 id="collection-order-title">${esc(title)}</h2><p>Les premières évolutions Aube se gagnent dans les Épreuves. Les autres versions définies restent testables au laboratoire ; les versions inconnues restent « À concevoir ».</p></div>
+   <section class="collection-catalogue" aria-labelledby="collection-order-title"><div class="collection-order-heading"><h2 id="collection-order-title">${esc(title)}</h2><p>La fiche de chaque carte indique ses voies d’obtention : fusion, paquet ou épreuve. Le laboratoire permet de tester les versions définies ; les versions inconnues restent « À concevoir ».</p></div>
    ${units.length?`<div class="collection-table-scroll" role="region" aria-label="Évolutions des créatures ; défilement horizontal sur petit écran" tabindex="0"><table class="collection-table"><thead><tr><th scope="col">Personnage</th>${COLLECTION_RANKS.map(r=>`<th scope="col" data-rarity="${r.id}">${r.name}</th>`).join('')}</tr></thead><tbody>${units.map(c=>`<tr data-collection-character="${c.id}"><th scope="row" class="collection-character"><h3>${esc(c.name)}</h3><p>${esc(FACTIONS[c.faction].short)}</p></th>${COLLECTION_RANKS.map(r=>versionCell(profile,c,r,helpers)).join('')}</tr>`).join('')}</tbody></table></div>`:''}
    ${!units.length&&!spells.length?'<p class="hint">Aucune carte ne correspond à ce filtre.</p>':''}
    </section>
@@ -8905,7 +8905,7 @@ function developerLabUI(lab,{esc,btn}){
     </label>
     <div class="lab-card-preview" ${cardPreviewAttributes(id,rarity,'developer',esc)} data-rarity="${rarity}" data-side="${side}">${generatedCardFace(presentation.card,{stats:presentation.stats,esc})}</div>
     <p class="lab-stats">Prévision en combat : <b>${card.type==='unité'?`${stats.atk} ATQ · ${stats.hp} PV`:'sort, valeurs inchangées'}</b></p>
-    <p class="hint">${card.type==='unité'?`Version ${esc(rarity)} : déplacement ${stats.definition.geometry.steps}, portée ${stats.definition.geometry.range}. ${rankOptions.length>1?'Les évolutions définies sont testables ici ; leur obtention dans l’aventure reste à définir.':'Seule la version native est définie.'}`:'Les sorts conservent leurs effets actuels.'}</p>
+    <p class="hint">${card.type==='unité'?`Version ${esc(rarity)} : déplacement ${stats.definition.geometry.steps}, portée ${stats.definition.geometry.range}. ${rankOptions.length>1?'Les évolutions définies sont testables ici ; leur fiche précise les voies d’obtention dans l’aventure.':'Seule la version native est définie.'}`:'Les sorts conservent leurs effets actuels.'}</p>
     ${card.type==='unité'?`<p class="hint lab-abilities">${unitAbilitySummary(stats.definition).map(esc).join(' · ')||'Aucun pouvoir spécial.'}</p>`:''}
     <p class="hint">Une même carte partage ces réglages entre tous ses exemplaires du camp choisi. Le cadre et l’illustration restent inchangés.</p>
    </div>
@@ -8916,6 +8916,7 @@ function developerLabUI(lab,{esc,btn}){
   </div>
  </section>`;
 }
+
 Object.assign(__exports,{developerLabUI});
 
 },
