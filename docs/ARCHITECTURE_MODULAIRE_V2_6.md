@@ -1,3 +1,21 @@
+## Sylve Rare/Épique — 28 octobre 2026
+
+`cards/sylve.js` porte les quinze patches de statistiques/capacités avec leur
+provenance. `cards/evolutions.js` réunit les familles Aube/Sylve ; registre et
+recettes lisent ces mêmes familles, sans nouvelle copie des pouvoirs/chiffres.
+Les capacités natives sont héritées, seul le paramètre de bouclier de Luciole
+Épique est remplacé. Les rangs absents n'ont aucune définition jouable.
+`card-packs.js` filtre les pools d'évolution par faction et partage la forme
+des deux produits ciblés. Le paquet mystique garde ses pools et six tirages.
+Les vues lisent les 56 recettes et les accès réels ; les fiches utilisent les
+capacités structurées pour les 21 personnages Aube/Sylve, poison et pièges inclus.
+Le résultat de paquet marque ses boutons : le routeur ignore leur second clic
+d'un double clic de confirmation pour garder le résultat visible, sans modifier
+la sélection de main au toucher. Achat/débit/sauvegarde restent dans leurs modules.
+68 modules, aucun moteur parallèle, CSS, image, dépendance ou schéma ajouté.
+Cette branche dépend de la PR 62. [Contrat](SYLVE_RARE_EPIQUE.md).
+Les sections suivantes sont historiques.
+
 ## Ascensions communes Aube — 28 octobre 2026
 
 `evolution-trials.js` garde les quatre pilotes dans `EVOLUTION_TRIALS` et ajoute

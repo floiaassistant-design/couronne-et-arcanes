@@ -5,9 +5,10 @@ sont intégrés. [Règles](docs/REGLES_CARTES_UNIQUES.md) · [CI](docs/CI_PARALL
 
 > Les quatre défis pilotes (PR 56) et la fusion de doublons (PR 59) sont intégrés.
 > Le [paquet d’évolution Aube](docs/PAQUETS_EVOLUTION.md) est intégré par PR 60.
-> Les neuf Légendaires Aube sont intégrées par PR 61. Cette branche termine
-> les [41 évolutions Aube](docs/ASCENSIONS_AUBE.md) avec **deux grandes ascensions**
-> ouvrant les fusions Divines et Éveillées pour tout l’Ordre.
+> Les neuf Légendaires Aube sont intégrées par PR 61. La PR 62, verte et ouverte,
+> propose les [41 évolutions Aube](docs/ASCENSIONS_AUBE.md) avec deux ascensions.
+> Cette branche en dépend et ajoute [15 évolutions Sylve Rare/Épique](docs/SYLVE_RARE_EPIQUE.md),
+> leur paquet et leurs fusions. Les 33 évolutions Sylve supérieures restent à intégrer.
 
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
 quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle.
@@ -22,7 +23,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 évolutions Rares, puis du Milicien Épique après le premier boss. Sur cette branche, accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; la fusion ouvre ici 41 évolutions Aube ; les vingt Divines/Éveillées exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
+sont utilisables en campagne ; la fusion ouvre ici 41 évolutions Aube et 15 Sylve ; les vingt Divines/Éveillées Aube exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
@@ -99,9 +100,9 @@ bloquées pendant un combat. [Fonctionnement](docs/DECK_MANUEL_2026_10_27.md).
 La Collection, les classes, les maîtrises, équipements, talents et donjons sont
 conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteur,
 sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
-et leurs niveaux 0 à 3, choisis indépendamment. Les autres unités conservent
-leur version native. Les quatre récompenses pilotes se gagnent dans les Épreuves ;
-les 41 évolutions sont proposées à l’obtention sur cette branche ; deux grandes ascensions ouvrent les vingt Divines/Éveillées, sans carte offerte ni consommation du deck. [Prochaines factions](docs/REPRISE_MIGRATION_CARTES.md). La PR Aube nº 53, avec sa présentation commune et sa
+et les **26 versions Sylve** jusqu'à Épique, à leurs niveaux 0 à 3 choisis indépendamment.
+Les autres unités conservent leur version native. Les quatre récompenses pilotes se gagnent dans les Épreuves ;
+les 56 évolutions sont proposées à l’obtention sur cette branche ; deux grandes ascensions ouvrent les vingt Divines/Éveillées Aube, sans carte offerte ni consommation du deck. Le paquet Sylve propose 3 cartes pour 190 or après le premier boss, avec les mêmes taux par groupe que l'Aube : 60/35/5. [Prochaines factions](docs/REPRISE_MIGRATION_CARTES.md). La PR Aube nº 53, avec sa présentation commune et sa
 [revue finale](docs/REVUE_AUBE_PR53_2026_10_27.md), a été fusionnée sur accord du
 propriétaire le 27 octobre 2026. La publication du site reste une opération distincte.
 

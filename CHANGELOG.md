@@ -1,3 +1,16 @@
+## Proposition — quinze évolutions Sylve Rare/Épique, 28 octobre 2026
+
+- Quinze évolutions validées utilisables dans Collection, deck, laboratoire et
+  combats : fusion de trois copies libres, Rare après mission 01, Épique après 03.
+- Paquet Sylve : 190 or/3 cartes après le premier boss ; groupes 60/35/5 et
+  choix uniformes dans 9 bases Commune/Rare, 6 évolutions Rares et 9 Épiques.
+- Familles et provenance communes au registre et aux recettes ; statistiques
+  natives, mécanique du moteur, pools Aube et paquet mystique conservés.
+- Luciole Épique : bouclier d'arrivée 5, plafond 20 ; textes poison/pièges
+  issus des paramètres. Les 33 évolutions supérieures restent à intégrer.
+- Branche dépendante de la PR 62, ouverte et verte ; aucune fusion/publication.
+  [Contrat et reprise](docs/SYLVE_RARE_EPIQUE.md).
+
 ## Proposition — ascensions communes et fin de migration Aube, 28 octobre 2026
 
 - Deux défis de boss communs à l'Ordre ouvrent les dix fusions Divines et les dix

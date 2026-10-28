@@ -14,7 +14,7 @@ const kind=ref=>typeof ref==='string'?'native':ref.rarity;
 function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v)},removeItem:k=>{delete data[k]}};return data;}
 
 test('Catalogue : ancien paquet conservé, nouveau contenu explicite et seuls les douze rangs Aube déjà jouables',()=>{
- assert.equal(CARD_PACKS.length,2);
+ assert.equal(CARD_PACKS.length,3);
  const pack=cardPack('aube-evolution');assert.deepEqual([pack.cost,pack.count,pack.mission],[190,3,'03']);
  assert.deepEqual(pack.groups.map(g=>g.weight),[60,35,5]);assert.deepEqual(pack.groups.map(g=>g.cards.length),[8,4,8]);
  assert.deepEqual(pack.groups[0].cards.slice().sort(),['militia','shield','archer','lancer','cleric','banner','scoutcaptain','sunpriest'].sort());
@@ -90,8 +90,8 @@ test('Chaque évolution peut réellement être tirée, mise au deck, invoquée e
   storage();assert(storeBattle(b));assert.deepEqual(restoreBattle(),b);
  }
  assert.ok(pack.groups.every(g=>g.cards.every(ref=>typeof ref==='string'||ref.rarity!=='légendaire')));
- assert.equal(playableCardReference({id:'ranger',rarity:'rare'}),false);
- assert.equal(playableCardReference({id:'wolf',rarity:'rare'}),false);
+ assert.equal(playableCardReference({id:'ranger',rarity:'légendaire'}),false);
+ assert.equal(playableCardReference({id:'wolf',rarity:'légendaire'}),false);
 });
 
 test('Les doublons de paquet alimentent la fusion, sans épreuve accomplie ni gain supplémentaire',()=>{
