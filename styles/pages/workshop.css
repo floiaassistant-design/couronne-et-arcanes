@@ -1,4 +1,12 @@
 /* Atelier : classes, forge, alchimie, maîtrise et talents. */
+.pack-shop-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.pack-offer { min-width: 0; padding: 20px; }
+.pack-rates { padding: 0; list-style: none; font-size: 13px; }
+.pack-rates li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; }
+.pack-rates b { white-space: nowrap; color: var(--gold); }
+.pack-content { font-size: 12px; line-height: 1.5; margin-bottom: 16px; }
+.pack-content summary { cursor: pointer; min-height: 40px; display: flex; align-items: center; }
+@media(max-width:700px) { .pack-shop-grid { grid-template-columns: minmax(0,1fr); } }
 .evolution-fusion-recipe { min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 10px; background: #172733; padding: 10px; }
 .evolution-fusion-recipe .unit-card { width: 100%; }
 .evolution-fusion-action { padding: 8px; display: flex; flex: 1; flex-direction: column; gap: 8px; }

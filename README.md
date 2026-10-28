@@ -3,10 +3,10 @@
 Garde/Riposte uniques (PR 57) et quatre groupes de tests parallèles (PR 58)
 sont intégrés. [Règles](docs/REGLES_CARTES_UNIQUES.md) · [CI](docs/CI_PARALLELE.md).
 
-> Les quatre défis pilotes (PR 56) sont intégrés sur main `736fd7d`.
-> Cette branche propose la [fusion de doublons](docs/FUSION_DOUBLONS.md) en Alchimie :
-> **3 exemplaires libres identiques → 1 rang suivant**, Aube jusqu'à Épique.
-> Le deck est protégé ; confirmation avant consommation, aucune dépense d'or/éclats.
+> Les quatre défis pilotes (PR 56) et la fusion de doublons (PR 59) sont intégrés.
+> Cette branche propose un [paquet d’évolution Aube](docs/PAQUETS_EVOLUTION.md)
+> après le premier boss : **190 or, 3 cartes, 5 % d’évolution Épique par carte**.
+> Les taux détaillés, les cartes possibles et une confirmation précèdent l’achat.
 
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
 quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle.

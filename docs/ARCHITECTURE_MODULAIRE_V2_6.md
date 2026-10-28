@@ -1,3 +1,22 @@
+## Paquets d'évolution — proposition du 28 octobre 2026
+
+`card-packs.js` porte les deux produits, leurs groupes pondérés et listes de
+références, depuis CARDS et les évolutions déjà livrées. Il ne porte aucun chiffre
+de combat. `engine/card-packs.js` valide accès, tirages et gains cumulés avant le
+débit ; `economy.js` réexporte la même API historique `buyPack`, sans second moteur.
+Les vues lisent le même catalogue pour prix, taux, contenu et résultats.
+
+`ui/card-packs.js` rend le comptoir, la confirmation et le résultat commun ;
+`ui/card-pack-controller.js` gère une ouverture transitoire et sa sauvegarde sur
+copie. `app.js` partage l'adaptateur `commitProfile` avec la fusion, sans y déplacer
+les règles. La fiche commune lit l'appartenance au catalogue pour décrire le paquet.
+La permission des versions reste celle du registre livré : aucune nouvelle rareté
+activée par l'achat. Les inventaires existants sont réutilisés.
+
+65 modules, aucun cycle ; app 383 lignes, pages 270. Le plan pur
+`card_pack_cases` partage les nouveaux tests entre les quatre parties de la suite
+Épreuves, sans nouveau job ou double exécution. [Contrat](PAQUETS_EVOLUTION.md).
+
 ## Fusion de doublons — proposition du 28 octobre 2026
 
 `evolution-fusion.js` contient uniquement les douze recettes Aube et le ratio.

@@ -5,6 +5,7 @@ from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
 from playwright.async_api import async_playwright
 from evolution_ci_plan import PARTS,evolution_cases
+from browser_card_packs import run_card_pack_cases
 
 ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
@@ -236,6 +237,7 @@ async def main(part=None):
                 elif case['kind']=='web':
                     await earned_flow(browser,SCENARIOS[0],'web',{'width':1366,'height':900},full=True,url=f'http://127.0.0.1:{server.server_port}/index.html')
                 else:await recovery(browser)
+            await run_card_pack_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html')
             await browser.close()
     finally:server.shutdown();server.server_close()
 
