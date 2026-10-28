@@ -11,13 +11,21 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tests'))
-from evolution_ci_plan import PARTS, evolution_cases, card_pack_cases
+from evolution_ci_plan import PARTS, evolution_cases, card_pack_cases, ascension_cases
 spec = importlib.util.spec_from_file_location('runner', ROOT / 'scripts/run_browser_group.py')
 runner = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(runner)
 
 
 class Pipeline(unittest.TestCase):
+    def test_ascensions_distributed_once_with_both_real_combats(self):
+        full = ascension_cases()
+        self.assertEqual([c for part in PARTS for c in ascension_cases(part)], full)
+        self.assertEqual([c['label'] for c in full], ['desktop', 'portrait', 'landscape', 'web'])
+        self.assertEqual([c['index'] for c in full if c['full']], [0, 1])
+        with self.assertRaises(ValueError):
+            ascension_cases('inconnu')
+
     def test_pack_cases_are_distributed_once_across_four_groups(self):
         full = card_pack_cases()
         split = [c for part in PARTS for c in card_pack_cases(part)]

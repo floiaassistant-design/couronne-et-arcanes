@@ -1,11 +1,13 @@
 // Objectifs d'épreuve : faits résolus du moteur et lecture pure des survivants.
 import {CARDS} from '../data.js';
 import {evolutionTrial} from '../evolution-trials.js';
+import {ascensionObjectiveText,createAscensionChallenge,validAscensionChallenge,ascensionObjectiveState} from './ascension-objectives.js';
 
 const metrics=['turns','rangedDamage','ripostes','firstHit'];
 const labels={turns:'Tours de survie',rangedDamage:'Dégâts à distance',ripostes:'Ripostes déclenchées',firstHit:'Premier coup réduit'};
 const eligible=(q,u)=>u&&u.side==='p'&&u.hp>0&&u.id===q.cardId&&(u.rarity||CARDS[u.id]?.rarity)===q.rarity;
 export function trialObjectiveText(t){
+ if(t?.kind==='ascension')return ascensionObjectiveText(t);
  if(!t?.goal)return t?.objective||'';
  const {metric,target}=t.goal,name=CARDS[t.cardId].name;
  const task=metric==='turns'?`Rester en vie pendant ${target} tours`:
@@ -14,11 +16,13 @@ export function trialObjectiveText(t){
  return `${name} · rang ${t.from} : ${task}. Remporter ensuite la bataille avec ce même exemplaire encore vivant.`;
 }
 export function createTrialChallenge(t){
+ if(t.kind==='ascension')return createAscensionChallenge(t);
  return {version:1,cardId:t.cardId,rarity:t.from,metric:t.goal.metric,target:t.goal.target,text:trialObjectiveText(t),counts:{}};
 }
 export function validTrialChallenge(b){
- const q=b.trialChallenge;if(q===undefined)return true;
  const t=evolutionTrial(b.missionId);
+ if(t?.kind==='ascension')return validAscensionChallenge(b,t);
+ const q=b.trialChallenge;if(q===undefined)return true;
  return !!q&&b.mode==='evolution-trial'&&!!t&&q.version===1&&q.cardId===t.cardId&&q.rarity===t.from&&
   metrics.includes(q.metric)&&Number.isSafeInteger(q.target)&&q.target>0&&q.target<=10000&&
   (q.metric!=='firstHit'||q.target===1)&&
@@ -40,6 +44,7 @@ export function recordTrialTurn(b){
 }
 export function trialObjectiveState(b){
  const t=evolutionTrial(b?.missionId);if(!t||b.mode!=='evolution-trial')return null;
+ if(t.kind==='ascension')return ascensionObjectiveState(b,t);
  const q=b.trialChallenge;
  if(q===undefined){
   const alive=b.board.flat().some(u=>eligible({cardId:t.cardId,rarity:t.from},u));

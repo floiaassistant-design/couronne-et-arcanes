@@ -1,3 +1,22 @@
+## Ascensions communes Aube — 28 octobre 2026
+
+`evolution-trials.js` garde les quatre pilotes dans `EVOLUTION_TRIALS` et ajoute
+les deux rencontres `EVOLUTION_ASCENSIONS` ; `ALL_EVOLUTION_TRIALS` est la lecture
+générale. Les accès de fusion hauts rangs dérivent leurs missions de ces rencontres.
+`engine/ascension-objectives.js` est un lecteur pur des conditions composites :
+diversité vivante, rang vivant, PV de couronne, tour limite. Instantané v2 validé,
+sans compteur ni modification de combat ; `trial-objectives.js` distribue v1/v2.
+`engine/evolution-progress.js` partage accès/création et attribue soit la carte
+pilote, soit l'autorisation unique. Aucun métier supplémentaire dans `app.js` :
+le reçu et la sauvegarde sur copies restent le chemin commun. `references.js`
+préserve les six identifiants lors de la normalisation et des imports.
+Le contrôleur de fusion existant couvre 41 recettes, vingt verrouillées par
+ascension. Rendus Épreuves/Alchimie/Collection communs ; annonce des accès sur
+les boss de campagne. Aucun nouveau profil, CSS, image ou bibliothèque.
+66 modules, sans cycle ; app 382 lignes, pages 270. Les quatre nouveaux parcours
+sont répartis une fois dans les parties existantes, 27 suites conservées.
+[Contrat](ASCENSIONS_AUBE.md). Les sections suivantes sont historiques.
+
 ## Migration Aube Légendaire — 28 octobre 2026
 
 Le catalogue `evolution-fusion.js` porte 21 recettes et les trois accès par rang

@@ -3,6 +3,7 @@ import {CARDS,CAMPAIGN} from '../data.js';
 import {evolutionFusion} from '../evolution-fusion.js';
 import {resolveUnitDefinition,unitVersionPlayable} from '../cards/definitions.js';
 import {cardReference,cardKey,ownedCardCopies} from '../cards/references.js';
+import {evolutionTrial} from '../evolution-trials.js';
 
 export function previewEvolutionFusion(profile,id,battle=null){
  const recipe=evolutionFusion(id);if(!recipe)return {ok:false,reason:'Recette d’évolution inconnue.'};
@@ -17,7 +18,8 @@ export function previewEvolutionFusion(profile,id,battle=null){
  else if(!profile.completed.includes(recipe.mission)){
   const mission=CAMPAIGN.find(m=>m.id===recipe.mission);
   reason=`Vaincre ${mission.enemy} dans « ${mission.name} » pour accéder à ce rang.`;
- }else if(available<recipe.copies)reason=`Il faut ${recipe.copies} exemplaires ${recipe.from} libres : ${Math.max(0,available)} disponibles, ${used} dans le deck.`;
+ }else if(recipe.ascension&&!profile.completedTrials?.includes(recipe.ascension))reason=`Réussir l’ascension « ${evolutionTrial(recipe.ascension).name} » pour débloquer ces fusions.`;
+ else if(available<recipe.copies)reason=`Il faut ${recipe.copies} exemplaires ${recipe.from} libres : ${Math.max(0,available)} disponibles, ${used} dans le deck.`;
  return {...state,ok:!reason,reason};
 }
 

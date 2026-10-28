@@ -49,7 +49,7 @@ async def run(browser,label,viewport,url=None):
         await future.evaluate("""el=>el.dispatchEvent(new PointerEvent('pointerout',{bubbles:true,pointerType:'touch',relatedTarget:null}))""")
         assert await popup.is_visible(), f'{label}: fiche tactile masquée par une sortie synthétique'
     assert await future.get_attribute('aria-expanded')=='true'
-    assert 'Obtention non définie' in await popup.inner_text()
+    assert 'Ascension requise' in await popup.inner_text()
     assert 'ATQ 2 / PV 8' in await popup.inner_text()
     assert await popup.locator('[data-action="deck-add"]').count()==0
     bounds=await popup.bounding_box()

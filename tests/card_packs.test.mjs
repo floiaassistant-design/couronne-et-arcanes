@@ -90,7 +90,7 @@ test('Chaque évolution peut réellement être tirée, mise au deck, invoquée e
   storage();assert(storeBattle(b));assert.deepEqual(restoreBattle(),b);
  }
  assert.ok(pack.groups.every(g=>g.cards.every(ref=>typeof ref==='string'||ref.rarity!=='légendaire')));
- assert.equal(playableCardReference({id:'militia',rarity:'divine'}),false);
+ assert.equal(playableCardReference({id:'ranger',rarity:'rare'}),false);
  assert.equal(playableCardReference({id:'wolf',rarity:'rare'}),false);
 });
 

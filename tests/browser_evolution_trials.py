@@ -6,6 +6,7 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 from evolution_ci_plan import PARTS,evolution_cases
 from browser_card_packs import run_card_pack_cases
+from browser_ascensions import run_ascension_cases
 
 ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
@@ -51,7 +52,7 @@ async def select(page,index,touch):
     await click(card,touch)
     if touch:await click(card,touch)
 
-async def replay(page,scenario,touch):
+async def replay(page,scenario,touch,result_title='Évolution obtenue'):
     for action in scenario['actions']:
         assert await page.locator('.combat-screen').count()==1,(action,(await page.locator('#view').inner_text())[:400])
         if action['type']=='power':await click(page.locator('[data-action="hero-power"]'),touch)
@@ -75,7 +76,7 @@ async def replay(page,scenario,touch):
                 elif await lanes.count():await click(lanes.first,touch)
                 await click(page.locator('[data-action="spell-confirm"]'),touch)
         await page.wait_for_function("!document.querySelector('.combat-playing')")
-    await page.locator('.modal h2').filter(has_text='Évolution obtenue').wait_for()
+    await page.locator('.modal h2').filter(has_text=result_title).wait_for()
 
 def without_receipt(profile):
     return {k:v for k,v in profile.items() if k!='lastBattleSettlementId'}
@@ -140,7 +141,7 @@ async def earned_flow(browser,scenario,label,viewport,*,full=False,touch=False,u
         await click(page.locator('[data-action="export-save"]'),touch)
     exported=json.loads(Path(await (await download_info.value).path()).read_text())
     assert exported==changed
-    invalid=copy.deepcopy(exported);invalid['evolvedCollection']['militia:divine']=1
+    invalid=copy.deepcopy(exported);invalid['evolvedCollection']['wolf:divine']=1
     await page.locator('#import-file').set_input_files({'name':'invalide.json','mimeType':'application/json','buffer':json.dumps(invalid).encode()})
     assert await stored(page)==changed
     await page.locator('#import-file').set_input_files({'name':'profil.json','mimeType':'application/json','buffer':json.dumps(exported).encode()})
@@ -174,7 +175,7 @@ async def recovery(browser):
             assert not (await stored(page,BATTLE)).get('progressionGranted')
             await page.locator('.combat-menu-link').click()
             await page.locator('#nav [data-page="trials"]').click()
-            await page.locator('[data-trial-id="aube-shield-rare"] [data-action="trial-start"]').click()
+            assert await page.locator('[data-trial-id="aube-shield-rare"] [data-action="trial-start"]').is_disabled()
             assert (await stored(page,BATTLE))['missionId']==s['id']
             assert await stored(page)==s['profile']
         else:
@@ -182,7 +183,9 @@ async def recovery(browser):
             assert await stored(page,BATTLE) is not None
         await page.evaluate("localStorage.setItem('evolution-test-failure','')")
         if failure=='profile':
-            await page.locator('[data-trial-id="aube-shield-rare"] [data-action="trial-start"]').click()
+            # La navigation réessaie la clôture ; les départs restent bloqués
+            # tant que son résultat n'a pas été enregistré.
+            await page.locator('#nav [data-page="trials"]').click()
             await page.locator('.modal h2').filter(has_text='Évolution obtenue').wait_for()
             assert await stored(page,BATTLE) is None
         await page.reload()
@@ -231,13 +234,14 @@ async def main(part=None):
     try:
         async with async_playwright() as pw:
             browser=await pw.chromium.launch(headless=True,args=['--no-sandbox'])
-            for case in evolution_cases(len(SCENARIOS),part):
-                if case['kind']=='earned':
-                    await earned_flow(browser,SCENARIOS[case['index']],case['label'],case['viewport'],touch=case['touch'],full=case['full'])
-                elif case['kind']=='web':
+            for task in evolution_cases(len(SCENARIOS),part):
+                if task['kind']=='earned':
+                    await earned_flow(browser,SCENARIOS[task['index']],task['label'],task['viewport'],touch=task['touch'],full=task['full'])
+                elif task['kind']=='web':
                     await earned_flow(browser,SCENARIOS[0],'web',{'width':1366,'height':900},full=True,url=f'http://127.0.0.1:{server.server_port}/index.html')
                 else:await recovery(browser)
             await run_card_pack_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html')
+            await run_ascension_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',make_case=case,click=click,select=select,replay=replay,stored=stored)
             await browser.close()
     finally:server.shutdown();server.server_close()
 

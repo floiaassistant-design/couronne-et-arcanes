@@ -2,7 +2,7 @@
 // sont des références {id,rarity}. Jamais de nouvelle entrée dans CARDS.
 import {CARDS} from '../data.js';
 import {resolveUnitDefinition,unitVersionPlayable} from './definitions.js';
-import {EVOLUTION_TRIALS,evolutionTrial} from '../evolution-trials.js';
+import {evolutionTrial} from '../evolution-trials.js';
 
 export const cardId=ref=>typeof ref==='string'?ref:ref?.id;
 export function cardReference(ref){
@@ -51,4 +51,4 @@ export function evolutionProfileError(raw){
  if(raw.completedTrials!==undefined&&(!Array.isArray(raw.completedTrials)||!raw.completedTrials.every(id=>!!evolutionTrial(id))))return 'Épreuves terminées invalides.';
  return '';
 }
-export const completedEvolutionTrials=raw=>[...new Set(Array.isArray(raw)?raw.filter(id=>EVOLUTION_TRIALS.some(t=>t.id===id)):[])];
+export const completedEvolutionTrials=raw=>[...new Set(Array.isArray(raw)?raw.filter(id=>!!evolutionTrial(id)):[])];
