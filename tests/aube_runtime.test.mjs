@@ -5,7 +5,7 @@ import {freshProfile,grantBattleProgress} from '../src/engine/profile.js';
 import {completeBattle} from '../src/engine/economy.js';
 import {createBattle,playPlayerCard,playEnemyCard,endPlayerTurn,finishEnemyTurn} from '../src/engine/battle.js';
 import {freshLab,setLabRarity,setLabLevel,createLabBattle,labCardStats,labRanks} from '../src/engine/developer-lab.js';
-import {AUBE_UNIT_IDS,AUBE_RULESET,unitVersions,resolveRulesDefinition,versionUnitAbilities} from '../src/cards/definitions.js';
+import {AUBE_UNIT_IDS,CARD_RULESET,unitVersions,resolveRulesDefinition,versionUnitAbilities} from '../src/cards/definitions.js';
 import {unitStats} from '../src/engine/unit-stats.js';
 import {resolveUnitSupport,resolveUnitArrival} from '../src/engine/unit-support.js';
 import {hit,grantAbilityBarrier,grantSharedBarrier} from '../src/engine/battle-defense.js';
@@ -16,12 +16,12 @@ import {unitAbilitySummary} from '../src/cards/ability-text.js';
 let uid=12000;
 function unit(id,rarity,side='p',extra={}){
  const d=resolveRulesDefinition({id,rarity});
- return {uid:++uid,id,side,rarity,cardRules:AUBE_RULESET,atk:d.stats.attack,hp:d.stats.hp,maxhp:d.stats.hp,
+ return {uid:++uid,id,side,rarity,cardRules:CARD_RULESET,atk:d.stats.attack,hp:d.stats.hp,maxhp:d.stats.hp,
   armor:d.abilities.armor?.amount||0,ranged:!!d.abilities.ranged,ability:CARDS[id].ability,
   stun:0,poison:0,poisonTurns:0,...extra};
 }
 function combat(){
- const b=createBattle(freshProfile(),{...CAMPAIGN[0],deck:[]},421,{turnFlow:'alternating',cardRules:AUBE_RULESET});
+ const b=createBattle(freshProfile(),{...CAMPAIGN[0],deck:[]},421,{turnFlow:'alternating',cardRules:CARD_RULESET});
  for(const h of Object.values(b.heroes))Object.assign(h,{hp:100,maxhp:100,hand:[],deck:[],discard:[]});
  b.vfx=[];return b;
 }
@@ -37,7 +37,7 @@ test('51 versions × 4 niveaux × 2 camps : vraie invocation, prévision identiq
   const u=b.board.flat().find(u=>u?.id===id&&u.side===side);assert(u,d.versionId);
   assert.equal(u.atk,d.stats.attack+level);assert.equal(u.maxhp,d.stats.hp+level);
   assert.equal(u.atk,expected.atk);assert.equal(u.hp,expected.hp);assert.equal(u.rarity,d.rarity);
-  assert.equal(u.cardRules,AUBE_RULESET);assert.equal(u.labGuard,undefined);
+  assert.equal(u.cardRules,CARD_RULESET);assert.equal(u.labGuard,undefined);
   assert.deepEqual(unitStats(b,id,side),{atk:expected.atk,maxhp:expected.hp,bonuses:level?[{label:side==='p'?'Amélioration':'Difficulté',atk:level,hp:level}]:[]});
  }
 });
@@ -52,7 +52,7 @@ test('Laboratoire : six rangs définis, rangs inférieurs absents, réglages inv
 });
 
 test('Campagne : aucune possession future créée et références futures refusées même avec les nouvelles règles',()=>{
- for(const options of [{},{cardRules:AUBE_RULESET}]){
+ for(const options of [{},{cardRules:CARD_RULESET}]){
   const b=createBattle(freshProfile(),CAMPAIGN[0],4,options);b.heroes.p.hand=[{id:'militia',rarity:'éveillée',wait:0}];
   const before=structuredClone(b);assert.equal(playPlayerCard(b,0,0).ok,false);assert.deepEqual(b,before);
  }
@@ -210,9 +210,9 @@ test('Arrivée : état persistant une fois par invocation, piège appliqué apr�
  assert.equal(trapped.board[0][5].hp,16);assert.equal(trapped.heroes.p.shield,3);
 });
 
-test('Natifs futurs : règles explicites de Garde/Riposte, aucun changement des anciennes définitions ou instantanés',()=>{
+test('Natifs : mêmes Garde/Riposte avec ou sans marqueur, lecture sans mutation',()=>{
  const old={id:'shield',atk:17,hp:7,maxhp:23,side:'p'};
- const before=structuredClone(old);assert.equal(versionUnitAbilities(old),null);assert.deepEqual(old,before);
+ const before=structuredClone(old);assert.equal(versionUnitAbilities(old).guard.scope,'positioned');assert.deepEqual(old,before);
  const newNative=unit('shield','commun');assert.equal(versionUnitAbilities(newNative).guard.scope,'positioned');
  assert.equal(versionUnitAbilities(newNative).riposte.damageMode,'effective-attack');
 });

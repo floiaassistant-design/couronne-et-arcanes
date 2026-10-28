@@ -47,13 +47,41 @@ test('Un mort ou une nouvelle invocation ne reprend pas les exploits du précéd
  assert.equal(settleEvolutionTrial(p,b).evolved,false);assert.deepEqual(p,before);
 });
 
-test('Porte-égide natif : seules les vraies interceptions de couronne comptent',()=>{
- const {b}=trial('aube-shield-rare'),u=ally(b,'shield',0,3);enemy(b,'archer',0,2,100,2);
+test('Porte-égide : deux vraies Ripostes sur deux tours, compteur et quota conservés à la reprise',()=>{
+ const {b}=trial('aube-shield-rare'),u=ally(b,'shield',0,3);enemy(b,'militia',0,4,100,2);
+ endPlayerTurn(b);finishEnemyTurn(b);
+ assert.equal(b.trialChallenge.counts[u.uid],1);assert.equal(trialObjectiveState(b).achieved,false);
+ const copy=persist(b);assert.deepEqual(copy.trialChallenge,b.trialChallenge);
+ assert.equal(copy.board[0][3].lastRiposteRound,u.lastRiposteRound);
+ endPlayerTurn(copy);finishEnemyTurn(copy);
+ assert.equal(copy.heroes.p.hp,26);assert.equal(copy.trialChallenge.counts[u.uid],2);
+ assert.equal(trialObjectiveState(copy).achieved,true);assert.ok(copy.board[0][3].hp<u.maxhp);
+});
+
+test('Porte-égide : ni tirs, sorts, Silence ou coup mortel ; Garde dépassée ne protège pas la couronne',()=>{
+ for(const setup of ['tir','silence','mort']){
+  const {b}=trial('aube-shield-rare'),u=ally(b,'shield',0,3);
+  enemy(b,setup==='tir'?'archer':'militia',0,setup==='tir'?5:4,100,setup==='mort'?99:2);
+  if(setup==='silence')u.silenceUntil=99;
+  hit(b,u,1,'e');assert.equal(trialObjectiveState(b).value,0,'un dégât seul ne déclenche pas de Riposte');
+  endPlayerTurn(b);finishEnemyTurn(b);
+  assert.equal(trialObjectiveState(b).value,0,setup);assert.deepEqual(b.trialChallenge.counts,{});
+ }
+ const {b}=trial('aube-shield-rare'),guard=ally(b,'shield',0,3);enemy(b,'archer',0,2,100,2);
  for(let i=0;i<2;i++){endPlayerTurn(b);finishEnemyTurn(b);}
- assert.equal(b.heroes.p.hp,26);assert.equal(b.trialChallenge.counts[u.uid],2);assert.equal(trialObjectiveState(b).achieved,true);
- const direct=trial('aube-shield-rare').b,guard=ally(direct,'shield',0,3);enemy(direct,'militia',0,4,100,2);
- endPlayerTurn(direct);finishEnemyTurn(direct);
- assert.ok(guard.hp<guard.maxhp);assert.equal(trialObjectiveState(direct).value,0);
+ assert.equal(b.heroes.p.hp,22);assert.equal(guard.hp,guard.maxhp);assert.equal(trialObjectiveState(b).value,0);
+});
+
+test('Porte-égide : pas de cumul entre exemplaires, mort et réinvocation réinitialisent la candidature',()=>{
+ const {p,b}=trial('aube-shield-rare');
+ for(let lane=0;lane<2;lane++){ally(b,'shield',lane,3);enemy(b,'militia',lane,4,100,2);}
+ endPlayerTurn(b);finishEnemyTurn(b);
+ assert.deepEqual(Object.values(b.trialChallenge.counts),[1,1]);assert.equal(trialObjectiveState(b).value,1);
+ const guard=b.board[0][3];endPlayerTurn(b);finishEnemyTurn(b);assert.equal(trialObjectiveState(b).achieved,true);
+ b.board[0][3]=null;b.board[1][3]=null;const next=ally(b,'shield');
+ assert.notEqual(next.uid,guard.uid);assert.equal(trialObjectiveState(b).value,0);
+ b.status='victory';b.phase='finished';const before=structuredClone(p);
+ assert.equal(settleEvolutionTrial(p,b).evolved,false);assert.deepEqual(p,before);
 });
 
 test('Arbalétrière : dégâts effectifs à deux cases, surdégâts plafonnés et contact exclu',()=>{

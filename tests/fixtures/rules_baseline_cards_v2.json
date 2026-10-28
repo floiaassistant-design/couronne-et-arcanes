@@ -1,0 +1,1805 @@
+{
+  "rules": "cards-v2",
+  "scenarios": [
+    {
+      "layout": "3x5",
+      "seed": 10,
+      "mission": "T11",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 5,
+        "enemyHp": 30,
+        "playerKills": 5,
+        "enemyKills": 6
+      },
+      "battleHash": "b90c330ff3725489ef11cc49584afd28e2a55888ffaa554c0bad04e996e5fd4f",
+      "profileHash": "a99c54138a61110ea3faad830173219ce8ae2a52bf785860b5a7a63b9add7924"
+    },
+    {
+      "layout": "3x5",
+      "seed": 11,
+      "mission": "12",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 3,
+        "enemyHp": 38,
+        "playerKills": 1,
+        "enemyKills": 6
+      },
+      "battleHash": "6576d87a7526c529f3a07f5d78d5aa41ed5c62ba22cf2dcfde0fab1fd7bc5465",
+      "profileHash": "5bacfe55ebbecb022654666df454d5b6dbcb75efbd5b30cbb06335721bba1490"
+    },
+    {
+      "layout": "3x5",
+      "seed": 12,
+      "mission": "T13",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 23,
+        "enemyHp": 32,
+        "playerKills": 3,
+        "enemyKills": 7
+      },
+      "battleHash": "7f249e8775a785f91bf3e12d70dbceb45770e4d74dfffbdc6067f31879a5bebd",
+      "profileHash": "c75f75730a47d3de6b9cbfdc3bd9d0f53578a8d3b8e714f8f2bd4fae759febe7"
+    },
+    {
+      "layout": "3x5",
+      "seed": 13,
+      "mission": "02",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 18,
+        "playerKills": 9,
+        "enemyKills": 4
+      },
+      "battleHash": "3c47dd2256057c199ec695ec7288b3858da9d7ebc3ebf6aca3b87e62bf52c038",
+      "profileHash": "9b875c09cb8ba364e31478e9898b91ef88aebae035e8168ebcc7c45b0e97c45a"
+    },
+    {
+      "layout": "3x5",
+      "seed": 14,
+      "mission": "T15",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 5,
+        "enemyHp": 40,
+        "playerKills": 2,
+        "enemyKills": 5
+      },
+      "battleHash": "e38c0db0011562d0799756ee0da0f8edda3b8c71fd9ea2e75fe6d5042ce3eb9d",
+      "profileHash": "60ad0b3fff1b536324c284d6088bcecd76c4bd3bf15622707cc34cbe8c4f8dc5"
+    },
+    {
+      "layout": "3x5",
+      "seed": 15,
+      "mission": "04",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 21,
+        "playerKills": 5,
+        "enemyKills": 3
+      },
+      "battleHash": "494f90487eea01961e9c8a1d688db5f1e6e07a93959aabe8c4e9e8bdbf10c3f2",
+      "profileHash": "5c6bca4f24a0b18f29e0bf71ac9270b53871cf0cfdeda6fbaa6023840637798b"
+    },
+    {
+      "layout": "3x5",
+      "seed": 16,
+      "mission": "T17",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 3,
+        "enemyHp": 37,
+        "playerKills": 1,
+        "enemyKills": 7
+      },
+      "battleHash": "ced3773b058956b1c5ae098a36fbfb6d920c51f83c265a64f6c1617f775be1f1",
+      "profileHash": "a676c885d023b71b0fd6d5f6fafed5b556327df4bf2544b289413b4a102259e8"
+    },
+    {
+      "layout": "3x5",
+      "seed": 17,
+      "mission": "06",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 19,
+        "enemyHp": 26,
+        "playerKills": 3,
+        "enemyKills": 5
+      },
+      "battleHash": "eab5a743c7f87fa51d1c797e01061c5ea7c1ba11b0ad47a19fbb0ae2d8ad29b3",
+      "profileHash": "994e5093aca6e60c46ee643531acd339be75de0035f08054da02d72b2327c40a"
+    },
+    {
+      "layout": "3x5",
+      "seed": 18,
+      "mission": "T19",
+      "outcome": {
+        "status": "defeat",
+        "round": 6,
+        "playerHp": 0,
+        "enemyHp": 39,
+        "playerKills": 2,
+        "enemyKills": 6
+      },
+      "battleHash": "1301f50fd0b6b052dd12095c486689167477b60f0453678c12f7033ad64466e6",
+      "profileHash": "a952664c720f5b4ef20fabd58730f4714f1a95b3b4b68b8ea69af3bd02312cad"
+    },
+    {
+      "layout": "3x5",
+      "seed": 19,
+      "mission": "08",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 21,
+        "enemyHp": 28,
+        "playerKills": 4,
+        "enemyKills": 7
+      },
+      "battleHash": "d06d5f8b5b3d51d07ee1b1c8d3a5368ebf2fe1a4f8ae6b46bd745798741d2436",
+      "profileHash": "3065a55cbaac3de8fbef000690182dd20d3d3e5f60f9e2a9f3a0742593743585"
+    },
+    {
+      "layout": "3x5",
+      "seed": 20,
+      "mission": "T01",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 17,
+        "playerKills": 4,
+        "enemyKills": 6
+      },
+      "battleHash": "8a3d06e2591a20ce43c04dc5e8c8ccd718bd99a70395f496136a2909a0c23f1f",
+      "profileHash": "2e07bb0f0a5ad6cf7606daac8f26826e17885e8329b1c1f940d72de7b81f1886"
+    },
+    {
+      "layout": "3x5",
+      "seed": 21,
+      "mission": "10",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 10,
+        "enemyHp": 32,
+        "playerKills": 5,
+        "enemyKills": 8
+      },
+      "battleHash": "de57a071e6c6c0ee3d55c4cfb01310b7d698ad521b1d143cad7704dd59677277",
+      "profileHash": "fd509f258daf538fe64247a57f97add3bc9bc6c6bb746563f07d327dbcedfe25"
+    },
+    {
+      "layout": "3x5",
+      "seed": 22,
+      "mission": "T03",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 22,
+        "enemyHp": 19,
+        "playerKills": 4,
+        "enemyKills": 3
+      },
+      "battleHash": "7e1c93019d327e8108e5f8172c96013c1e87ef3b2f49449566a39eb196a46113",
+      "profileHash": "2e47bf2e917695832fd195b1f4c30a356b684e0150b568f368f176174f96f204"
+    },
+    {
+      "layout": "3x5",
+      "seed": 23,
+      "mission": "12",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 19,
+        "enemyHp": 40,
+        "playerKills": 1,
+        "enemyKills": 9
+      },
+      "battleHash": "bd04ccbdad805c6dc47880e62a03b45722509a0e90d0ce5b9d70e5aff40a8bfb",
+      "profileHash": "84f14fb679fd18da7d1f421717e20dd434b3004cbb4137dfc7f2a12573d71463"
+    },
+    {
+      "layout": "3x5",
+      "seed": 24,
+      "mission": "T05",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 21,
+        "enemyHp": 28,
+        "playerKills": 3,
+        "enemyKills": 3
+      },
+      "battleHash": "ee90d30a966ed2f9e2d4b76f39f3cc3f5000ae1c00abeea09b335d808fc03da4",
+      "profileHash": "595afb0c6b09c422dd79c8d893374d126c34dd0d5a260f3fbf4da859ce7cbe78"
+    },
+    {
+      "layout": "3x5",
+      "seed": 25,
+      "mission": "02",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 16,
+        "enemyHp": 12,
+        "playerKills": 6,
+        "enemyKills": 3
+      },
+      "battleHash": "0ae73f355964104841a96b09a1ea7fed088d08c72ccf0f6386046e4fbf6c433e",
+      "profileHash": "d6e0ec9a06a00bf746558c18456fc898ea7e49e618c2b73bf1c96c448fc60a87"
+    },
+    {
+      "layout": "3x5",
+      "seed": 26,
+      "mission": "T07",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 3,
+        "enemyHp": 14,
+        "playerKills": 3,
+        "enemyKills": 0
+      },
+      "battleHash": "793150798668701da6cb1bd55f39406f8c2dc4c4c9fbc5f90896902ef721425f",
+      "profileHash": "1aa28c959a03cb3dc1ec86f21f54b5598356dd8094895da090d2b006802c019a"
+    },
+    {
+      "layout": "3x5",
+      "seed": 27,
+      "mission": "04",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 5,
+        "enemyHp": 21,
+        "playerKills": 3,
+        "enemyKills": 4
+      },
+      "battleHash": "8ec105bc1488fe2fb36c97e9992aeeefe8f9254ebdbb727afaf886692d606ca1",
+      "profileHash": "87ceb7190b438adaaa8d80b32c588255a227edcbfdf2ae338df6b6fb25e1607e"
+    },
+    {
+      "layout": "3x5",
+      "seed": 28,
+      "mission": "T09",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 3,
+        "playerKills": 3,
+        "enemyKills": 5
+      },
+      "battleHash": "ffff509bd5db8a1858aa58ff236ffd5ca7daf1124d59b4d39e0d96d1567f0ce5",
+      "profileHash": "bc2f5d0e663e1cdbf43a8e411504f45a4591adc69b16ee204cc4930f3262e02d"
+    },
+    {
+      "layout": "3x5",
+      "seed": 29,
+      "mission": "06",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 11,
+        "enemyHp": 22,
+        "playerKills": 2,
+        "enemyKills": 6
+      },
+      "battleHash": "088274737b84d4f306f8bf7e39c471809a43221448f139a2c653e32d0a78a298",
+      "profileHash": "90bd426237abc451e5fe0d61ecd1e873fcb5222d08e0a994801050ddcd4a4416"
+    },
+    {
+      "layout": "3x5",
+      "seed": 30,
+      "mission": "T11",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 28,
+        "playerKills": 6,
+        "enemyKills": 7
+      },
+      "battleHash": "2fe3165b31a92883ff0c5090d966a27d3a11b3bf8dca39281bcdb357195e5b69",
+      "profileHash": "e386325dc5ab94270e72606ad6811d54abaa85cc08c4eeeebd751da40cee0dd0"
+    },
+    {
+      "layout": "3x5",
+      "seed": 31,
+      "mission": "08",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 5,
+        "enemyHp": 28,
+        "playerKills": 3,
+        "enemyKills": 6
+      },
+      "battleHash": "95ec1fb730ceb8b53fba77d0843fef9abd980524515ddf76bfeacde8d4f3ea95",
+      "profileHash": "b5a132db1743000447552b5ee800c38314b9559c67869615444945c489b2e7c1"
+    },
+    {
+      "layout": "3x5",
+      "seed": 32,
+      "mission": "T13",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 9,
+        "enemyHp": 32,
+        "playerKills": 0,
+        "enemyKills": 8
+      },
+      "battleHash": "8d669b6db534cee496c4858f2aac79a1ff3ee2a5ca776b6261036a1a707a057e",
+      "profileHash": "31b0eabf340b02e3730ed326b76fb2b8d3224f31788af06a4a6261fabe518c91"
+    },
+    {
+      "layout": "3x5",
+      "seed": 33,
+      "mission": "10",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 4,
+        "enemyHp": 28,
+        "playerKills": 0,
+        "enemyKills": 7
+      },
+      "battleHash": "c0f9205a79923dc7cbfd54742be56ea6d52668d8531ea1818e33e64cfce56cb9",
+      "profileHash": "8e3dfec0fe62b23d6c1ee242cd656d575b185b2af59867c11588cd53b706c388"
+    },
+    {
+      "layout": "3x5",
+      "seed": 34,
+      "mission": "T15",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 17,
+        "enemyHp": 38,
+        "playerKills": 2,
+        "enemyKills": 6
+      },
+      "battleHash": "33381aac86f6c85e7b50150e2dd811b4f79b38e363835cae05a8779128d7a3d2",
+      "profileHash": "dd2996a93d5ba3ce8711da37b40718f6b446e13cd4f19090ca0355dd243805c6"
+    },
+    {
+      "layout": "3x5",
+      "seed": 35,
+      "mission": "12",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 18,
+        "enemyHp": 34,
+        "playerKills": 1,
+        "enemyKills": 6
+      },
+      "battleHash": "826a323ee8aa7aa8a79a1323f05fe01de6565c8a25e587ac2b675ecfaa08d541",
+      "profileHash": "8349df0d96d3d01fdb622fbea4b468b33ec0e52b20154888e1040fcbd239ebc2"
+    },
+    {
+      "layout": "3x5",
+      "seed": 36,
+      "mission": "T17",
+      "outcome": {
+        "status": "defeat",
+        "round": 7,
+        "playerHp": 0,
+        "enemyHp": 37,
+        "playerKills": 1,
+        "enemyKills": 9
+      },
+      "battleHash": "00461267d903f2d7a116d13316620fac601436f4dd2eddc30517c729112aec81",
+      "profileHash": "3a835c05a9eba0f810ef246e4a109cb7e7df1deb67182b9aad67ce0a5ca8fc5d"
+    },
+    {
+      "layout": "3x5",
+      "seed": 37,
+      "mission": "02",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 20,
+        "playerKills": 8,
+        "enemyKills": 6
+      },
+      "battleHash": "a584589047bc674e52d3b9b0e6c5c364e9b803a8167acbad589b1afbe5edc781",
+      "profileHash": "3ada70bdcc271dbee679f1d645010e32c3a9127778bb8b427420a4ceffaa9f3d"
+    },
+    {
+      "layout": "3x5",
+      "seed": 38,
+      "mission": "T19",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 15,
+        "enemyHp": 37,
+        "playerKills": 4,
+        "enemyKills": 8
+      },
+      "battleHash": "9bf601f0cbbbf9dec44f5c1506c94bed2174a7571459f87b735a598ddddf7f35",
+      "profileHash": "f26185156f4e291b51973cbd5e44aa83d75e11679b625464bb5e64efc53d5aa0"
+    },
+    {
+      "layout": "3x5",
+      "seed": 39,
+      "mission": "04",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 20,
+        "enemyHp": 21,
+        "playerKills": 3,
+        "enemyKills": 3
+      },
+      "battleHash": "43c519c02a690c35db6063677f986ccc5fdef67a4c61ae7f4fece4fb08a38660",
+      "profileHash": "bd89eeef0342886b525fed36ed375d844e72c1e9b96b61550f80c96bc3d9c805"
+    },
+    {
+      "layout": "3x5",
+      "seed": 40,
+      "mission": "T01",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 17,
+        "playerKills": 5,
+        "enemyKills": 4
+      },
+      "battleHash": "74539e26b1996364c5950f2f4c1b7d481fb8a8f5071dab5e85aaf22e5e438f88",
+      "profileHash": "bfa12b7afe900d94ca700de353734476169e90b2ff35dc3ec0535c58ab07ac98"
+    },
+    {
+      "layout": "3x5",
+      "seed": 41,
+      "mission": "06",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 10,
+        "enemyHp": 28,
+        "playerKills": 1,
+        "enemyKills": 5
+      },
+      "battleHash": "b5b91a3dbb785755375be0bdd1b0e03adba201160d80587c92bca91d6b41a1f5",
+      "profileHash": "346a8c80a1eee9b6aeb6c5000137ca55548917ce780d3d0f6893802904cf4b46"
+    },
+    {
+      "layout": "3x5",
+      "seed": 42,
+      "mission": "T03",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 19,
+        "playerKills": 5,
+        "enemyKills": 4
+      },
+      "battleHash": "7ad5f4cc4fba31b38ac7c1cede0603ac6d68cad168256139ade1c1b5c58db094",
+      "profileHash": "82ea50466b6f11001cb0bb11c0ad092dc6d52aa7f0fc73319ff8e7601134c738"
+    },
+    {
+      "layout": "3x5",
+      "seed": 43,
+      "mission": "08",
+      "outcome": {
+        "status": "defeat",
+        "round": 7,
+        "playerHp": 0,
+        "enemyHp": 26,
+        "playerKills": 1,
+        "enemyKills": 5
+      },
+      "battleHash": "e2e4b1bb7f3f7f06f178809545b8ae2fa8249ab598edd65989ddc24eb516d497",
+      "profileHash": "091414c7aabca09d793f833afcf43fb1f64b5f56152504adc51d4198663c882e"
+    },
+    {
+      "layout": "3x5",
+      "seed": 44,
+      "mission": "T05",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 7,
+        "enemyHp": 13,
+        "playerKills": 1,
+        "enemyKills": 3
+      },
+      "battleHash": "9f70948a843c15b44e749143fbe46c007d6efaf61c9f4ca4926f40ca40c10ea2",
+      "profileHash": "8b53a26140347df2e1d21be1cc5f6ad32bdc75db8dfa60c29b01a061628b9131"
+    },
+    {
+      "layout": "3x5",
+      "seed": 45,
+      "mission": "10",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 30,
+        "playerKills": 5,
+        "enemyKills": 6
+      },
+      "battleHash": "f61fe3b9d8ebd3fc76363d294a363df51ee4ef4c222878433633d6283e9750a8",
+      "profileHash": "2613607038989a11e0cf600bc90a033339346f426f8b8e6001a7ddacc4929521"
+    },
+    {
+      "layout": "3x5",
+      "seed": 46,
+      "mission": "T07",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 17,
+        "enemyHp": 26,
+        "playerKills": 2,
+        "enemyKills": 4
+      },
+      "battleHash": "a3c0e4677dafe0f56560707e01d32c8e027c3f4f7c3d26b429be75e20657e7e4",
+      "profileHash": "f6b6759470f5e1623f292e16dbfc77b2118ba6a8590ca318656f5d4a71d6057c"
+    },
+    {
+      "layout": "3x5",
+      "seed": 47,
+      "mission": "12",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 18,
+        "enemyHp": 42,
+        "playerKills": 1,
+        "enemyKills": 9
+      },
+      "battleHash": "79cfc5d186f29c294e2d0e9ae91daf869e4d433c8599273362aad6c5123d2643",
+      "profileHash": "02c3964b4e1d6974400f024ff9a98eecc245a30153979fcbc4cc7ea8f47c02f0"
+    },
+    {
+      "layout": "3x5",
+      "seed": 48,
+      "mission": "T09",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 26,
+        "playerKills": 3,
+        "enemyKills": 7
+      },
+      "battleHash": "ec5d0e146b60b4f765d6b893ce0e3f05a5b1278d091468c80da7598d22fba969",
+      "profileHash": "f9b5a87bc84d2835e3241dcc5d285a79a0bd8a9b123f7fa9d5509c31113157ac"
+    },
+    {
+      "layout": "3x5",
+      "seed": 49,
+      "mission": "02",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 8,
+        "playerKills": 6,
+        "enemyKills": 5
+      },
+      "battleHash": "97bb108335318d4ff6560dccebffa4e5702937d70d8bff4c0f9aa2c75ffb487a",
+      "profileHash": "54a192a3df69e679484d17f63408bf4b0e4eeb69c85216ea77e31e90b059f736"
+    },
+    {
+      "layout": "3x5",
+      "seed": 50,
+      "mission": "T11",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 22,
+        "enemyHp": 20,
+        "playerKills": 4,
+        "enemyKills": 6
+      },
+      "battleHash": "596f302e51c198138eba63bb6edcd105eba66833bf067c98c92624bb34cb90a7",
+      "profileHash": "e5460951d3bd1fa7de422a1b7b813b952347820f1728d2e19b1280e8a8e4702e"
+    },
+    {
+      "layout": "3x5",
+      "seed": 51,
+      "mission": "04",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 18,
+        "enemyHp": 23,
+        "playerKills": 3,
+        "enemyKills": 5
+      },
+      "battleHash": "75f53eb014db88350f2380b9c035b1e1b3d52852b11304155cf6d945fff22ac3",
+      "profileHash": "ef5e9076fc36557917e43d439aeba430cd375dd0d753c1755c9dd1b030d9d806"
+    },
+    {
+      "layout": "3x5",
+      "seed": 52,
+      "mission": "T13",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 12,
+        "enemyHp": 31,
+        "playerKills": 3,
+        "enemyKills": 5
+      },
+      "battleHash": "33869ae94e72efd826f11516f5d3b8d257d180ae4cb1723f94fac919949bde5c",
+      "profileHash": "9530849de226e0381ac76d8748159108b220d06d4599497228237a74e8015de8"
+    },
+    {
+      "layout": "3x5",
+      "seed": 53,
+      "mission": "06",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 28,
+        "playerKills": 3,
+        "enemyKills": 7
+      },
+      "battleHash": "d9c60532f8072cf293cea479de074904d88a7990ea5f7ddf5f6c3d6907133e80",
+      "profileHash": "8d64338642cabfa808e9416f0994bb03993f732500ebddb9cc13328e5d2facbb"
+    },
+    {
+      "layout": "3x5",
+      "seed": 54,
+      "mission": "T15",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 40,
+        "playerKills": 4,
+        "enemyKills": 6
+      },
+      "battleHash": "15e4650fbb5bc650abe41559af6d102433b4970461c815857bc12caf71700726",
+      "profileHash": "30ddc7fc7d80553fa991a445d73877f41658c76b2d380689ab038c28e318eabb"
+    },
+    {
+      "layout": "3x5",
+      "seed": 55,
+      "mission": "08",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 16,
+        "enemyHp": 28,
+        "playerKills": 2,
+        "enemyKills": 8
+      },
+      "battleHash": "65851ded539269dc03032a7b2a525031a06c66b12bee5e101ccdc38596d08c3c",
+      "profileHash": "791233caf9c52e7d557873cff8094bc3f8c5a86876f08cdeb38563fa5a3b8140"
+    },
+    {
+      "layout": "3x5",
+      "seed": 56,
+      "mission": "T17",
+      "outcome": {
+        "status": "defeat",
+        "round": 6,
+        "playerHp": 0,
+        "enemyHp": 37,
+        "playerKills": 2,
+        "enemyKills": 8
+      },
+      "battleHash": "954e63201faed5e7312a95feaadd842099bf5bdae02c9daf019da9cfc650a043",
+      "profileHash": "145e096ad0db80e6fe2ceacee8dc1e387a246801cde9e6f6439bf843a64fbaef"
+    },
+    {
+      "layout": "3x5",
+      "seed": 57,
+      "mission": "10",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 22,
+        "enemyHp": 30,
+        "playerKills": 3,
+        "enemyKills": 5
+      },
+      "battleHash": "c32c12fe7bab8e66e205c7f57aa8058308a2a20538ec007990e83846600fa752",
+      "profileHash": "ba97dade4f14585a14c8e7f1760f26d66799fa9d17551e921ad624493c129186"
+    },
+    {
+      "layout": "3x5",
+      "seed": 58,
+      "mission": "T19",
+      "outcome": {
+        "status": "defeat",
+        "round": 7,
+        "playerHp": 0,
+        "enemyHp": 37,
+        "playerKills": 2,
+        "enemyKills": 6
+      },
+      "battleHash": "1187650fef9095dc909607c558584001d7f241b42fb0f9570f4dfd633bf91e47",
+      "profileHash": "d2f863255132a482bf25be3417c00d1fe5e841b0a32548a1067e300d25e5206c"
+    },
+    {
+      "layout": "3x5",
+      "seed": 59,
+      "mission": "12",
+      "outcome": {
+        "status": "defeat",
+        "round": 7,
+        "playerHp": 0,
+        "enemyHp": 42,
+        "playerKills": 1,
+        "enemyKills": 7
+      },
+      "battleHash": "184ea6ffbed6e2cdf33ac021fd910778df4ca5c560898b7fe941b87887c4044c",
+      "profileHash": "4dc2a48654b7f6fc2ecd687cd081425df0552d390efd8234c707503f39e331a3"
+    },
+    {
+      "layout": "3x5",
+      "seed": 60,
+      "mission": "T01",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 3,
+        "playerKills": 3,
+        "enemyKills": 2
+      },
+      "battleHash": "e7f79d42c2efcd3775ad3f27eec82ccde734cd303c6ced92522da67107e72ca4",
+      "profileHash": "8848cc38cf3b57a385c9daceaf5886188d094d59e08a4bb24c723354b4b2dcc9"
+    },
+    {
+      "layout": "3x5",
+      "seed": 61,
+      "mission": "02",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 23,
+        "enemyHp": 16,
+        "playerKills": 5,
+        "enemyKills": 3
+      },
+      "battleHash": "c8e4d0e26b64690319ed8d1aa6c4e97f15819332cda0fef32d6ad23245671000",
+      "profileHash": "d54c41b081c266b91319bd249b87085780866e6d771e1328c1dec4da033b46c8"
+    },
+    {
+      "layout": "3x5",
+      "seed": 62,
+      "mission": "T03",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 21,
+        "enemyHp": 17,
+        "playerKills": 4,
+        "enemyKills": 7
+      },
+      "battleHash": "5868a044ef9152ec108d4e3c7c6da62eda5318d043a9c081d5c1be32941a675d",
+      "profileHash": "951deb249d97bceecdf00764031fbfbc9258a9bb38018826f7b14ef9bb7cb04b"
+    },
+    {
+      "layout": "3x5",
+      "seed": 63,
+      "mission": "04",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 23,
+        "playerKills": 5,
+        "enemyKills": 3
+      },
+      "battleHash": "733382c0eb05b1dfb0c2ba013d520c4781ff20c9e44d64a733e7d6e0a5121288",
+      "profileHash": "95640d1afd72819d277ed2cc596b96eb8a1c23a525a422b34835a5269504bfb1"
+    },
+    {
+      "layout": "3x5",
+      "seed": 64,
+      "mission": "T05",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 17,
+        "enemyHp": 19,
+        "playerKills": 2,
+        "enemyKills": 3
+      },
+      "battleHash": "1fd87b334fb8ca8ec92ba6543458e4013f9605785d6a3b43566f2986c8d12f5d",
+      "profileHash": "45a467c0ef26ef0d0c1b90bfdf8a260cded7995b7bd09798f9604f37bdb406a9"
+    },
+    {
+      "layout": "3x5",
+      "seed": 65,
+      "mission": "06",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 26,
+        "playerKills": 3,
+        "enemyKills": 7
+      },
+      "battleHash": "7f99f46bf61718c6ad5be76012c6d60fe026ee21d87334b3b0d2add0cfb8b653",
+      "profileHash": "6d680ce2b62138e89deed2c8daa309c56f8f5cc440cbd9d373e979fe4d2d31a6"
+    },
+    {
+      "layout": "3x5",
+      "seed": 66,
+      "mission": "T07",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 15,
+        "enemyHp": 25,
+        "playerKills": 4,
+        "enemyKills": 3
+      },
+      "battleHash": "908b612d99820c97fee9dafcfa363ad768ba545ca1af506ec5be2a341390e5f6",
+      "profileHash": "93a687fc21f2c5670f29930353865575b5631199eaa522e016683e009d95fd2d"
+    },
+    {
+      "layout": "3x5",
+      "seed": 67,
+      "mission": "08",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 18,
+        "enemyHp": 28,
+        "playerKills": 5,
+        "enemyKills": 5
+      },
+      "battleHash": "72767ca537f7588d889f33314bd09aa2b01f3d7af52ed3e5b48ebb2cec7bb3f3",
+      "profileHash": "3ea87600a288b41732d5b4afb7a244985fa5d049786a97fb8183c6ae94c20f62"
+    },
+    {
+      "layout": "3x5",
+      "seed": 68,
+      "mission": "T09",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 28,
+        "playerKills": 2,
+        "enemyKills": 7
+      },
+      "battleHash": "830feca14a26ad830473d23b31c02fa5d36ab638ee8c2f6e790dd5428f639b8e",
+      "profileHash": "4e2217af3a6c3382d319a2f1fd3596548df68d175f5b6c428eaa9ea00df71d12"
+    },
+    {
+      "layout": "3x5",
+      "seed": 69,
+      "mission": "10",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 1,
+        "enemyHp": 32,
+        "playerKills": 3,
+        "enemyKills": 8
+      },
+      "battleHash": "405eb14d94600b2f6c9af1de578bb62307acda5e2a59c721adc5dfc53ca44190",
+      "profileHash": "01c6582baf8ca483e89777ac23778dcb8230b9f7d3cb8e4466c3d787b29bcb27"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 10,
+      "mission": "T11",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 30,
+        "playerKills": 4,
+        "enemyKills": 5
+      },
+      "battleHash": "b606dc1c862cd1d604c4fd7f86c4411b37bc2ee00d68b6f6679dd760ae24e9da",
+      "profileHash": "a99c54138a61110ea3faad830173219ce8ae2a52bf785860b5a7a63b9add7924"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 11,
+      "mission": "12",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 40,
+        "playerKills": 0,
+        "enemyKills": 4
+      },
+      "battleHash": "6789aa1802b8e6e53957d6be9ef53e21451d0bdbc63d9ad4bbf96d9f6655deb3",
+      "profileHash": "5bacfe55ebbecb022654666df454d5b6dbcb75efbd5b30cbb06335721bba1490"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 12,
+      "mission": "T13",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 32,
+        "playerKills": 1,
+        "enemyKills": 5
+      },
+      "battleHash": "dff258b1d2500745e03a001d3a31c985b3196621562f289f75358eff100e5542",
+      "profileHash": "c75f75730a47d3de6b9cbfdc3bd9d0f53578a8d3b8e714f8f2bd4fae759febe7"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 13,
+      "mission": "02",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 18,
+        "playerKills": 5,
+        "enemyKills": 3
+      },
+      "battleHash": "6cbbac3359e2a74d7c1239341972159559637a74599b45f42beb9be2a730915b",
+      "profileHash": "9b875c09cb8ba364e31478e9898b91ef88aebae035e8168ebcc7c45b0e97c45a"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 14,
+      "mission": "T15",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 40,
+        "playerKills": 0,
+        "enemyKills": 4
+      },
+      "battleHash": "e2f0e1364020652154383da88077b4e14270baa68c864146b90860ade7b2467b",
+      "profileHash": "60ad0b3fff1b536324c284d6088bcecd76c4bd3bf15622707cc34cbe8c4f8dc5"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 15,
+      "mission": "04",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 23,
+        "playerKills": 3,
+        "enemyKills": 3
+      },
+      "battleHash": "6995fe54f5f5379fd9cb4aecd4d4cd1746cc58d4eeeca6fd9baa4cc5bac57352",
+      "profileHash": "5c6bca4f24a0b18f29e0bf71ac9270b53871cf0cfdeda6fbaa6023840637798b"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 16,
+      "mission": "T17",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 37,
+        "playerKills": 1,
+        "enemyKills": 3
+      },
+      "battleHash": "5071b3997eba18e1473db9238058fbf74f95e01332ba7738d7fafd2c46897759",
+      "profileHash": "a676c885d023b71b0fd6d5f6fafed5b556327df4bf2544b289413b4a102259e8"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 17,
+      "mission": "06",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 24,
+        "playerKills": 0,
+        "enemyKills": 3
+      },
+      "battleHash": "8f367790914bbd2656d86d8d34caaf4b7f8556d9f7a23000eff9df0f0b171d1f",
+      "profileHash": "994e5093aca6e60c46ee643531acd339be75de0035f08054da02d72b2327c40a"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 18,
+      "mission": "T19",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 16,
+        "enemyHp": 37,
+        "playerKills": 3,
+        "enemyKills": 4
+      },
+      "battleHash": "aedbc51d401ffc021005b7f586e649c7cc5755dd78f3cb7d308724b15d2b2a0f",
+      "profileHash": "e4e5f6530efd6b4c01efb279f418f64c6db147524a3a37d30410decb6e80b612"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 19,
+      "mission": "08",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 7,
+        "enemyHp": 28,
+        "playerKills": 1,
+        "enemyKills": 3
+      },
+      "battleHash": "48d3d32defdd544f4b498ec2f6d3c7c7653461accaaf6d57c6d2c5736a6c05d7",
+      "profileHash": "3065a55cbaac3de8fbef000690182dd20d3d3e5f60f9e2a9f3a0742593743585"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 20,
+      "mission": "T01",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 17,
+        "playerKills": 4,
+        "enemyKills": 1
+      },
+      "battleHash": "64b07593a89ba3d874fbe85ba8c6b2f95ed8d735b04a8416b24959b94f0f26d2",
+      "profileHash": "2e07bb0f0a5ad6cf7606daac8f26826e17885e8329b1c1f940d72de7b81f1886"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 21,
+      "mission": "10",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 32,
+        "playerKills": 4,
+        "enemyKills": 5
+      },
+      "battleHash": "5f5e27a956c308a77a8609a83bb401f3cd6e7743869eb3bb8fc0410ce97c2e76",
+      "profileHash": "fd509f258daf538fe64247a57f97add3bc9bc6c6bb746563f07d327dbcedfe25"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 22,
+      "mission": "T03",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 19,
+        "playerKills": 2,
+        "enemyKills": 2
+      },
+      "battleHash": "f78d0d4ac5975e6f86bb2c41d2e459ca67b1e4eb28a66f5150f4d95cf6fa04bc",
+      "profileHash": "2e47bf2e917695832fd195b1f4c30a356b684e0150b568f368f176174f96f204"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 23,
+      "mission": "12",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 42,
+        "playerKills": 0,
+        "enemyKills": 1
+      },
+      "battleHash": "b4454289d6c082197342ae26a51f9c33913334e0c9ae89c770c26afdd30d9a89",
+      "profileHash": "84f14fb679fd18da7d1f421717e20dd434b3004cbb4137dfc7f2a12573d71463"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 24,
+      "mission": "T05",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 28,
+        "playerKills": 1,
+        "enemyKills": 1
+      },
+      "battleHash": "62d2cae023969b339c01b36d20c5ca7519fe9918889780bc421d2c617d174f5e",
+      "profileHash": "595afb0c6b09c422dd79c8d893374d126c34dd0d5a260f3fbf4da859ce7cbe78"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 25,
+      "mission": "02",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 20,
+        "playerKills": 4,
+        "enemyKills": 3
+      },
+      "battleHash": "81625ed33bcc7391aef7d722cac85da8da2fa0cbfef937efcb728de605d30b8a",
+      "profileHash": "d6e0ec9a06a00bf746558c18456fc898ea7e49e618c2b73bf1c96c448fc60a87"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 26,
+      "mission": "T07",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 26,
+        "playerKills": 3,
+        "enemyKills": 2
+      },
+      "battleHash": "9611fd8f780e4e9b472dbb4ac41e4bfcc23dec20eece423febd5c776d41504fd",
+      "profileHash": "1aa28c959a03cb3dc1ec86f21f54b5598356dd8094895da090d2b006802c019a"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 27,
+      "mission": "04",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 21,
+        "playerKills": 2,
+        "enemyKills": 4
+      },
+      "battleHash": "09ee7f68581f9a608d1bc9ac16292f3bfeaf9973f797f7c9a25986e9b7187a85",
+      "profileHash": "87ceb7190b438adaaa8d80b32c588255a227edcbfdf2ae338df6b6fb25e1607e"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 28,
+      "mission": "T09",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 16,
+        "playerKills": 4,
+        "enemyKills": 3
+      },
+      "battleHash": "2a7b583eead6f212b91ce852ddbc01e19027efb3dc75d0c2f1b9d739336043b1",
+      "profileHash": "bc2f5d0e663e1cdbf43a8e411504f45a4591adc69b16ee204cc4930f3262e02d"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 29,
+      "mission": "06",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 26,
+        "playerKills": 1,
+        "enemyKills": 4
+      },
+      "battleHash": "fc76dbc8c005a1e0a87a7b03dca183e2b00e627cfa5ad7d89edb128f54d7995f",
+      "profileHash": "90bd426237abc451e5fe0d61ecd1e873fcb5222d08e0a994801050ddcd4a4416"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 30,
+      "mission": "T11",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 30,
+        "playerKills": 4,
+        "enemyKills": 4
+      },
+      "battleHash": "99c9a6dbd82be42a0742571779155af6fc02f3c103c8b8b001bd9cf708fcd196",
+      "profileHash": "e386325dc5ab94270e72606ad6811d54abaa85cc08c4eeeebd751da40cee0dd0"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 31,
+      "mission": "08",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 19,
+        "enemyHp": 26,
+        "playerKills": 2,
+        "enemyKills": 5
+      },
+      "battleHash": "ee285aee94ac2778ef4037d1d5773341a875c6548bd73afaca39b7b25fcea381",
+      "profileHash": "b5a132db1743000447552b5ee800c38314b9559c67869615444945c489b2e7c1"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 32,
+      "mission": "T13",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 30,
+        "playerKills": 0,
+        "enemyKills": 3
+      },
+      "battleHash": "5ac36d997074130a41237ce65d9eb37903f5b3ccd0aebee3206ddd452d94d631",
+      "profileHash": "31b0eabf340b02e3730ed326b76fb2b8d3224f31788af06a4a6261fabe518c91"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 33,
+      "mission": "10",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 28,
+        "playerKills": 0,
+        "enemyKills": 5
+      },
+      "battleHash": "33137a3a97ffce4293f5cda9fb55e1b5b86af93102f7ee0290ce6a9b44386a4f",
+      "profileHash": "8e3dfec0fe62b23d6c1ee242cd656d575b185b2af59867c11588cd53b706c388"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 34,
+      "mission": "T15",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 38,
+        "playerKills": 0,
+        "enemyKills": 3
+      },
+      "battleHash": "ec22e14a0c4c29dc175e115b2d743cf17ad1456a7070cf38d9e788af4866c020",
+      "profileHash": "dd2996a93d5ba3ce8711da37b40718f6b446e13cd4f19090ca0355dd243805c6"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 35,
+      "mission": "12",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 42,
+        "playerKills": 0,
+        "enemyKills": 4
+      },
+      "battleHash": "fe5d83473aab5701d25790cc0e81079898c05c97dc1f372bd81c90dca32d4bf5",
+      "profileHash": "8349df0d96d3d01fdb622fbea4b468b33ec0e52b20154888e1040fcbd239ebc2"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 36,
+      "mission": "T17",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 35,
+        "playerKills": 1,
+        "enemyKills": 5
+      },
+      "battleHash": "25c554b50004f2730986cfad2ab71080527c4e7dcd17be7687712548a5d06bf0",
+      "profileHash": "471a00c23bf94af7631353a0213ac2603a1825d6154725a0adbd38e0335e2a76"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 37,
+      "mission": "02",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 18,
+        "playerKills": 4,
+        "enemyKills": 4
+      },
+      "battleHash": "3a999ae665b0daeeb11da5307568f477cb6dbd40e9cf441d56a17343df6966ad",
+      "profileHash": "3ada70bdcc271dbee679f1d645010e32c3a9127778bb8b427420a4ceffaa9f3d"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 38,
+      "mission": "T19",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 35,
+        "playerKills": 2,
+        "enemyKills": 7
+      },
+      "battleHash": "96c6f048851fdd92925137d5255128afce58571c78f5bdcf5247f1d93bff8339",
+      "profileHash": "f26185156f4e291b51973cbd5e44aa83d75e11679b625464bb5e64efc53d5aa0"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 39,
+      "mission": "04",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 21,
+        "playerKills": 1,
+        "enemyKills": 5
+      },
+      "battleHash": "2c061c75255280301cfedd9ff08e99e61ee267b4704e72c5fba0ac4a6b1afbaf",
+      "profileHash": "bd89eeef0342886b525fed36ed375d844e72c1e9b96b61550f80c96bc3d9c805"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 40,
+      "mission": "T01",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 17,
+        "playerKills": 1,
+        "enemyKills": 3
+      },
+      "battleHash": "01a60a0b61ff1d6da6ee0ce2cdb6d6ce2a88831196e31b6a22fef309ddc7f04b",
+      "profileHash": "bfa12b7afe900d94ca700de353734476169e90b2ff35dc3ec0535c58ab07ac98"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 41,
+      "mission": "06",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 24,
+        "playerKills": 1,
+        "enemyKills": 2
+      },
+      "battleHash": "ea98de10c64e64023942c7a72eefd1ab7454ec18ba9d8751745cd03e6344deb3",
+      "profileHash": "346a8c80a1eee9b6aeb6c5000137ca55548917ce780d3d0f6893802904cf4b46"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 42,
+      "mission": "T03",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 19,
+        "playerKills": 5,
+        "enemyKills": 2
+      },
+      "battleHash": "149c6e66c7d42d51b90993a5d9635fa4ac1c6322a530d8b3685a925578fad138",
+      "profileHash": "82ea50466b6f11001cb0bb11c0ad092dc6d52aa7f0fc73319ff8e7601134c738"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 43,
+      "mission": "08",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 26,
+        "playerKills": 2,
+        "enemyKills": 5
+      },
+      "battleHash": "bb2c2d456ec995cb38552f1661f178e3d393c873adcd495cd1777b8b5d69609b",
+      "profileHash": "01b439d008e9c0c37a55988d44db0b7f0f09d74fa65b0faa7c1d0ea0dbe9d051"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 44,
+      "mission": "T05",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 17,
+        "enemyHp": 28,
+        "playerKills": 0,
+        "enemyKills": 3
+      },
+      "battleHash": "992e6fdcf6b4ffdcbdfbf6a743fa0c6789bc00d1a4b9b0e337b317a1736acd5e",
+      "profileHash": "8b53a26140347df2e1d21be1cc5f6ad32bdc75db8dfa60c29b01a061628b9131"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 45,
+      "mission": "10",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 32,
+        "playerKills": 1,
+        "enemyKills": 5
+      },
+      "battleHash": "f581723b45fbb10c45f1c1f2b15d956306bc88608d5029085a21f5e4d667edce",
+      "profileHash": "2613607038989a11e0cf600bc90a033339346f426f8b8e6001a7ddacc4929521"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 46,
+      "mission": "T07",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 26,
+        "playerKills": 2,
+        "enemyKills": 2
+      },
+      "battleHash": "8807f29f53f771ff816e8dcaea64844e55c9305afea387077c7339c753934638",
+      "profileHash": "f6b6759470f5e1623f292e16dbfc77b2118ba6a8590ca318656f5d4a71d6057c"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 47,
+      "mission": "12",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 42,
+        "playerKills": 0,
+        "enemyKills": 3
+      },
+      "battleHash": "29b73cc8a237e7f7b8e2ec28ad525eede25816345eef928019facdd21f92903c",
+      "profileHash": "02c3964b4e1d6974400f024ff9a98eecc245a30153979fcbc4cc7ea8f47c02f0"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 48,
+      "mission": "T09",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 28,
+        "playerKills": 3,
+        "enemyKills": 2
+      },
+      "battleHash": "0fc0c3f70116cbd4a3c5973780e151ea50bb41d1107433d59d12001c92d66c69",
+      "profileHash": "f9b5a87bc84d2835e3241dcc5d285a79a0bd8a9b123f7fa9d5509c31113157ac"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 49,
+      "mission": "02",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 16,
+        "playerKills": 5,
+        "enemyKills": 2
+      },
+      "battleHash": "d0f3164f65abe338607db5bebfdfbb66d34c637eb8b5d6edb86068beec3273ed",
+      "profileHash": "54a192a3df69e679484d17f63408bf4b0e4eeb69c85216ea77e31e90b059f736"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 50,
+      "mission": "T11",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 28,
+        "playerKills": 5,
+        "enemyKills": 4
+      },
+      "battleHash": "529ecf3f0f231f64678cbc032d21dff48e793c0ccc84e8cb0b5a263efab32ee7",
+      "profileHash": "e5460951d3bd1fa7de422a1b7b813b952347820f1728d2e19b1280e8a8e4702e"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 51,
+      "mission": "04",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 23,
+        "playerKills": 4,
+        "enemyKills": 4
+      },
+      "battleHash": "416ba7659dd0f090e632477c6737a1570029d83f20f5488cf377c4990a390543",
+      "profileHash": "ef5e9076fc36557917e43d439aeba430cd375dd0d753c1755c9dd1b030d9d806"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 52,
+      "mission": "T13",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 32,
+        "playerKills": 2,
+        "enemyKills": 4
+      },
+      "battleHash": "5dbc3cd047039f98b715655ccc0e6d89c59ad57ee2356a31c47bca23813cf305",
+      "profileHash": "9530849de226e0381ac76d8748159108b220d06d4599497228237a74e8015de8"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 53,
+      "mission": "06",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 28,
+        "playerKills": 0,
+        "enemyKills": 3
+      },
+      "battleHash": "7c3b520bbba5b4d5994517b94977d58c32741f68a3283d2af878354b591935fc",
+      "profileHash": "8d64338642cabfa808e9416f0994bb03993f732500ebddb9cc13328e5d2facbb"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 54,
+      "mission": "T15",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 40,
+        "playerKills": 1,
+        "enemyKills": 1
+      },
+      "battleHash": "d3bf318d8791d1528d807b98ecfef44d6f8430b14061924d1f5920fbcb953257",
+      "profileHash": "30ddc7fc7d80553fa991a445d73877f41658c76b2d380689ab038c28e318eabb"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 55,
+      "mission": "08",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 28,
+        "playerKills": 3,
+        "enemyKills": 5
+      },
+      "battleHash": "8fb119bde643c333174e970e5cd0a9082fa3ef1ffc3ac3223203501ae4d829b8",
+      "profileHash": "791233caf9c52e7d557873cff8094bc3f8c5a86876f08cdeb38563fa5a3b8140"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 56,
+      "mission": "T17",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 37,
+        "playerKills": 2,
+        "enemyKills": 6
+      },
+      "battleHash": "090faa62afecf5d6d4bccd5fcf661d960bb2ed5585d8965ef019191b07ffe502",
+      "profileHash": "2d0b83e42faea7cc9e0df9a898b059d0f299f07dba328e71c50eceea47069f16"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 57,
+      "mission": "10",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 30,
+        "playerKills": 1,
+        "enemyKills": 3
+      },
+      "battleHash": "e1dc5aca7045b4bf3d7ecb251fb8b18ff896acd21e1c2057914eeaa0d84f3a5a",
+      "profileHash": "ba97dade4f14585a14c8e7f1760f26d66799fa9d17551e921ad624493c129186"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 58,
+      "mission": "T19",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 37,
+        "playerKills": 1,
+        "enemyKills": 4
+      },
+      "battleHash": "2b6bf25b3f430cdd076cb09a44525fa339cbf21ed38caf98718f3b28936220e0",
+      "profileHash": "145bb90ae75740e00056a78e5864617a5691f06a8f0a5d3aae7c9091356ca73c"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 59,
+      "mission": "12",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 17,
+        "enemyHp": 42,
+        "playerKills": 0,
+        "enemyKills": 4
+      },
+      "battleHash": "12e3fa2cd0b659c0b7324e593f70ab9760bce0deaa96f0e5680fb1edbd215097",
+      "profileHash": "028e1d4c67c14eb4067557b25861cf4e689a28e23248dea08c9e5b0246d11d97"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 60,
+      "mission": "T01",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 15,
+        "playerKills": 3,
+        "enemyKills": 2
+      },
+      "battleHash": "e9c387457d498006136e9a612c71d3b38ca04a0d9f6d787896f4c1e771c4e9b0",
+      "profileHash": "8848cc38cf3b57a385c9daceaf5886188d094d59e08a4bb24c723354b4b2dcc9"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 61,
+      "mission": "02",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 16,
+        "playerKills": 5,
+        "enemyKills": 2
+      },
+      "battleHash": "98db5c54e5286d9f2a9955fc8082652e117ecbc59356333c6b2cfe2aaa7a3167",
+      "profileHash": "d54c41b081c266b91319bd249b87085780866e6d771e1328c1dec4da033b46c8"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 62,
+      "mission": "T03",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 19,
+        "playerKills": 3,
+        "enemyKills": 4
+      },
+      "battleHash": "391e5385bc0561300183fa9a8c6d559fbe262ca9f39808fb5f3f79fb979237da",
+      "profileHash": "951deb249d97bceecdf00764031fbfbc9258a9bb38018826f7b14ef9bb7cb04b"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 63,
+      "mission": "04",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 23,
+        "playerKills": 5,
+        "enemyKills": 3
+      },
+      "battleHash": "5ec1402388403d9b88156036b78b185041b30cefb6b1d102b96ffa427e0cdea2",
+      "profileHash": "95640d1afd72819d277ed2cc596b96eb8a1c23a525a422b34835a5269504bfb1"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 64,
+      "mission": "T05",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 26,
+        "playerKills": 1,
+        "enemyKills": 4
+      },
+      "battleHash": "f7cef787d2f312bfec7fb5e8bcba9e12c3ceb98f6df48180985a3f4e2255cb4e",
+      "profileHash": "45a467c0ef26ef0d0c1b90bfdf8a260cded7995b7bd09798f9604f37bdb406a9"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 65,
+      "mission": "06",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 26,
+        "playerKills": 3,
+        "enemyKills": 4
+      },
+      "battleHash": "bd041e3eeb119ef9bdf4d431f73f6f607394dcb0caae4b6b32a36d9cd14c5d6f",
+      "profileHash": "6d680ce2b62138e89deed2c8daa309c56f8f5cc440cbd9d373e979fe4d2d31a6"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 66,
+      "mission": "T07",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 26,
+        "playerKills": 3,
+        "enemyKills": 2
+      },
+      "battleHash": "c964f2c5533cbf59159bb632e4d9fb500c3210f53a64e6e2e7bf70a60cacfa8b",
+      "profileHash": "93a687fc21f2c5670f29930353865575b5631199eaa522e016683e009d95fd2d"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 67,
+      "mission": "08",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 28,
+        "playerKills": 1,
+        "enemyKills": 5
+      },
+      "battleHash": "98cc411f2c0e58e1fc3814f28fdaca9d5b42d1970b457b4c766edbf1000cf593",
+      "profileHash": "3ea87600a288b41732d5b4afb7a244985fa5d049786a97fb8183c6ae94c20f62"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 68,
+      "mission": "T09",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 28,
+        "playerKills": 1,
+        "enemyKills": 3
+      },
+      "battleHash": "183704ddf7972d0d36fcbc201ba11ff0867d5b8b93b39b9b0b2fc2d33f30f808",
+      "profileHash": "4e2217af3a6c3382d319a2f1fd3596548df68d175f5b6c428eaa9ea00df71d12"
+    },
+    {
+      "layout": "2-4x10",
+      "seed": 69,
+      "mission": "10",
+      "outcome": {
+        "status": "active",
+        "round": 8,
+        "playerHp": 26,
+        "enemyHp": 32,
+        "playerKills": 2,
+        "enemyKills": 5
+      },
+      "battleHash": "ddddf5d6019899b1608e296dd17e996b44fd111f7655da505371c2a0b6200286",
+      "profileHash": "01c6582baf8ca483e89777ac23778dcb8230b9f7d3cb8e4466c3d787b29bcb27"
+    }
+  ]
+}

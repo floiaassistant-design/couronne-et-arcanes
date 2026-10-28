@@ -1,0 +1,40 @@
+{
+  "interface": [
+    ["tests/browser_concorde.py"],
+    ["tests/browser_card_preview.py"],
+    ["tests/browser_collection.py"],
+    ["tests/browser_milicien.py"],
+    ["tests/browser_ether.py"],
+    ["tests/browser_evolution_trials.py", "--part", "portrait"]
+  ],
+  "combat": [
+    ["tests/browser_spell_targeting.py"],
+    ["tests/browser_combat_fx.py"],
+    ["tests/browser_battle_control_v29.py"],
+    ["tests/browser_painted_arena.py"],
+    ["tests/browser_save_integrity_v211.py"],
+    ["tests/browser_forge.py"],
+    ["tests/browser_evolution_trials.py", "--part", "landscape"]
+  ],
+  "catalogue": [
+    ["tests/browser_aube.py"],
+    ["tests/browser_sylve.py"],
+    ["tests/browser_ombre.py"],
+    ["tests/browser_spells.py"],
+    ["tests/browser_card_study.py"],
+    ["tests/browser_maintenance.py"],
+    ["tests/browser_new_game_legibility_v211.py"],
+    ["tests/browser_evolution_trials.py", "--part", "desktop"]
+  ],
+  "moteur": [
+    ["tests/browser_arena_v211.py"],
+    ["tests/browser_combat_fullscreen_v211.py"],
+    ["tests/browser_card_capabilities.py"],
+    ["tests/browser_developer_lab.py"],
+    ["tests/browser_deployment.py"],
+    ["tests/browser_illustrated_pilot_v3.py"],
+    ["tests/browser_class_skills_v28.py"],
+    ["tests/browser_art_reset.py"],
+    ["tests/browser_evolution_trials.py", "--part", "web-recovery"]
+  ]
+}

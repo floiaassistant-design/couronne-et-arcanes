@@ -1,9 +1,10 @@
 """Épreuves : vrai parcours UI, récompenses, inventaire et clôture récupérable."""
-import asyncio,copy,json,subprocess,threading
+import argparse,asyncio,copy,json,subprocess,threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
 from playwright.async_api import async_playwright
+from evolution_ci_plan import PARTS,evolution_cases
 
 ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
@@ -20,11 +21,10 @@ async def case(browser,scenario,viewport,*,touch=False,url=None,terminal=None,fa
     page.on('request',lambda r:external.append(r.url) if r.url.startswith(('http:','https:')) and not r.url.startswith('http://127.0.0.1:') else None)
     payload={SAVE:json.dumps(scenario['profile']),'couronnes_arcanes_animations_v13':'off','evolution-test-failure':failure or ''}
     if terminal is not None:payload[BATTLE]=json.dumps(terminal)
-    await page.add_init_script('''([data,seed])=>{
-      if(!localStorage.getItem('evolution-test-loaded')){
-        for(const [key,value] of Object.entries(data))localStorage.setItem(key,value);
-        localStorage.setItem('evolution-test-loaded','yes');
-      }
+    # Seuls l'horloge et les pannes simulées se réinstallent à chaque document.
+    # La fixture est écrite une seule fois, avant le document réellement testé :
+    # aucun rechargement du parcours ne peut réinjecter une sauvegarde de départ.
+    await page.add_init_script('''(seed)=>{
       Date.now=()=>seed;
       const write=Storage.prototype.setItem,remove=Storage.prototype.removeItem;
       Storage.prototype.setItem=function(k,v){
@@ -35,8 +35,10 @@ async def case(browser,scenario,viewport,*,touch=False,url=None,terminal=None,fa
         if(k==='couronnes_arcanes_bataille_v1'&&this.getItem('evolution-test-failure')==='cleanup')throw Error('coupure simulée');
         return remove.call(this,k);
       };
-    }'''.replace('([data,seed])=>','(([data,seed])=>')+')('+json.dumps([payload,scenario['seed']])+')')
+    }'''.replace('(seed)=>','((seed)=>')+')('+json.dumps(scenario['seed'])+')')
     await page.goto(url or (ROOT/'JOUER.html').as_uri())
+    await page.evaluate('(data)=>{for(const [key,value] of Object.entries(data))localStorage.setItem(key,value)}',payload)
+    await page.reload()
     return context,page,errors,external
 
 async def click(locator,touch=False):
@@ -152,7 +154,7 @@ async def earned_flow(browser,scenario,label,viewport,*,full=False,touch=False,u
     await select(page,index,touch)
     await click(page.locator('[data-action="deploy"][data-lane="0"][data-col="1"]'),touch)
     snapshot=await stored(page,BATTLE);unit=snapshot['board'][0][1]
-    assert unit['id']==card_id and unit['rarity']==rarity and unit['cardRules']=='aube-v1'
+    assert unit['id']==card_id and unit['rarity']==rarity and unit['cardRules']=='cards-v2'
     assert unit['maxhp']=={'militia':5,'shield':11,'archer':4}[card_id]
     await page.screenshot(path=f'/tmp/ca-evolution-campaign-{label}-{scenario["id"]}.png')
     await page.reload();assert await stored(page,BATTLE)==snapshot
@@ -220,7 +222,7 @@ async def recovery(browser):
     await ctx.close()
     print('Épreuves: échec profil, coupure après reçu, objectif manqué/défaite sans coût, ancienne épreuve et verrou boss PASS',flush=True)
 
-async def main():
+async def main(part=None):
     class Quiet(SimpleHTTPRequestHandler):
         def log_message(self,*args):pass
     server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT)))
@@ -228,12 +230,16 @@ async def main():
     try:
         async with async_playwright() as pw:
             browser=await pw.chromium.launch(headless=True,args=['--no-sandbox'])
-            for label,vp,touch in [('desktop',{'width':1440,'height':1000},False),('portrait',{'width':390,'height':844},True),('landscape',{'width':844,'height':390},True)]:
-                for i,s in enumerate(SCENARIOS):
-                    await earned_flow(browser,s,label,vp,touch=touch,full=label=='desktop' or i==(0 if label=='portrait' else 1))
-            await earned_flow(browser,SCENARIOS[0],'web',{'width':1366,'height':900},full=True,url=f'http://127.0.0.1:{server.server_port}/index.html')
-            await recovery(browser)
+            for case in evolution_cases(len(SCENARIOS),part):
+                if case['kind']=='earned':
+                    await earned_flow(browser,SCENARIOS[case['index']],case['label'],case['viewport'],touch=case['touch'],full=case['full'])
+                elif case['kind']=='web':
+                    await earned_flow(browser,SCENARIOS[0],'web',{'width':1366,'height':900},full=True,url=f'http://127.0.0.1:{server.server_port}/index.html')
+                else:await recovery(browser)
             await browser.close()
     finally:server.shutdown();server.server_close()
 
-if __name__=='__main__':asyncio.run(main())
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--part',choices=PARTS)
+    asyncio.run(main(parser.parse_args().part))

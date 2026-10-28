@@ -1,13 +1,31 @@
-## Objectifs personnels des épreuves — suite de la PR 55
+## Objectifs d'épreuves — PR 56 réconciliée, 28 octobre 2026
 
-`engine/trial-objectives.js` centralise création/validation de l'objectif
-sauvegardé, comptage des faits résolus et projection du meilleur exemplaire
-vivant. `battle.js` rapporte interceptions, pertes réelles de PV à distance
-et validation des tours ; `evolution-progress.js` consulte l'objectif pour
-attribuer. Aucune dépendance DOM ni lecture de sauvegarde dans le moteur.
-`ui/evolution-trials.js` partage le compteur et la fiche compacte de combat ;
-`battle-view.js` ne recalcule aucune progression. `storage.js` valide le champ
-facultatif sans enrichir les anciens combats. [Contrat](OBJECTIFS_EPREUVES.md).
+`engine/trial-objectives.js` centralise objectif figé au départ, validation,
+compteurs par uid et projection pure du meilleur exemplaire vivant. `battle.js`
+signale tours validés, dégâts effectifs à distance et Ripostes réellement
+renvoyées par `resolveRetaliation`, sans copier leurs règles. L'attribution
+reste dans `evolution-progress.js` ; `storage.js` valide le champ facultatif.
+`ui/evolution-trials.js` partage compteur et fiche ; `battle-view.js` l'insère.
+Aucune nouvelle dépendance externe ni second registre de cartes. Les 57 modules
+sont découverts par le builder. [Contrat et reprise](OBJECTIFS_EPREUVES.md).
+
+## Règles uniques — correction du 27 octobre 2026
+
+`cards/abilities.js` porte les règles natives communes, Garde et Riposte incluses.
+`cards/definitions.js` garde un seul registre ; les deux noms de résolution
+pointent vers les mêmes objets immuables. `engine/unit-rules.js` lit ces règles
+et contrôle la révision active. Garde, dégâts, soutiens et IA suppriment les
+branches historiques ; aucune sélection de moteur selon le contexte.
+
+`ui/storage.js` distingue profil conservé, ancien combat actif à relancer et
+résultat terminé à régler. `app.js` rend le message de mise à jour et ferme le
+combat obsolète à la demande, sans toucher au profil. La partie précédente peut
+récupérer son profil même si son combat exige la même relance.
+La fiche commune décrit aussi les gardiens et unités à Riposte hors Aube.
+Aucun module de production, CSS, dépendance ou actif ajouté.
+[Contrat actuel et contrôles](REGLES_CARTES_UNIQUES.md).
+
+Les sections ci-dessous retracent les livraisons précédentes.
 
 ## Épreuves d'évolution — PR 55, 27 octobre 2026
 

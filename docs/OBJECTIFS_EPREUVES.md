@@ -1,105 +1,110 @@
-# Objectifs personnels des épreuves — suite de la PR 55
+# Objectifs personnels des épreuves — PR 56, reprise du 28 octobre 2026
 
-Branche `feat/objectifs-epreuves-aube`, base main
-`b58ea3f00330d5f1db3675a2611ddcca8374e699`. La PR 55 a été fusionnée sur accord
-explicite après ses deux CI réussies. L'autorisation ne couvre pas la nouvelle
-PR ; aucune fusion ou publication de cette suite n'est autorisée.
+Branche `feat/objectifs-epreuves-aube`, réconciliée par fusion de main
+`a0726d4408d6ffc4c767fdb1e51be0582ce01445`, sans réécriture d'historique.
+Les PR 55, 57 et 58 sont intégrées ; l'accord du propriétaire porte ici sur
+la poursuite de la PR 56, sans fusion ni publication.
 
-Le tableau maître Notion a été relu, édition `2026-10-27T06:13:46.581Z`.
-Aucun pouvoir/chiffre de carte ni décision Notion modifié. Les seuils des défis
-ci-dessous sont des réglages proposés à la revue de cette PR.
+Les décisions de cartes reprises sont celles du registre unique de main et du
+[contrat des règles communes](REGLES_CARTES_UNIQUES.md). Aucune règle de carte,
+statistique, rareté jouable ni décision Notion modifiée. La référence Notion
+relue lors de la préparation originale était l'édition du 27/10/2026 à
+06:13:46.581 UTC ; aucune nouvelle lecture ou écriture revendiquée ici.
+Les seuils des défis sont des réglages proposés à la revue.
 
 ## Conditions des nouveaux départs
 
 | Évolution | Défi du personnage au rang de départ |
 | --- | --- |
 | Milicien Commun → Rare | Rester vivant pendant 3 tours |
-| Porte-égide Commun → Rare | Intercepter 2 attaques visant sa couronne |
-| Arbalétrière Commune → Rare | Infliger 4 dégâts effectifs aux unités ennemies depuis au moins deux cases devant elle |
+| Porte-égide Commun → Rare | Déclencher 2 Ripostes |
+| Arbalétrière Commune → Rare | Infliger 4 dégâts effectifs à des unités ennemies depuis au moins deux cases devant elle |
 | Milicien Rare → Épique | Déclencher sa réduction du premier coup |
 
 Accomplir le défi, gagner et garder **le même exemplaire** vivant. Deux copies
 ne peuvent pas additionner leurs exploits. La mort retire la candidature ; une
-réinvocation possède un nouveau uid et recommence son compteur. Le relevé montre
-le meilleur exemplaire encore vivant, pas un total historique de l'équipe.
+réinvocation obtient un nouveau uid et son propre compteur. Le relevé montre
+le meilleur exemplaire vivant, pas un total historique de l'équipe.
 
-Les tours de survie sont comptés après validation des actions du joueur, si le
-Milicien est encore sur le plateau et vivant. Une validation refusée ou une
-reprise n'ajoute pas un second tour. Les dégâts à distance comptent les PV
-réellement perdus, après protections et sans surdégâts. Contact, attaques d'une
-autre unité et dégâts du héros/sort ne comptent pas. Une interception compte
-lorsque le moteur détourne réellement une attaque de couronne ; frapper une
-unité portant Garde n'est pas une interception.
+L'ancien objectif d'intercepter deux attaques de couronne était fondé sur
+l'ancienne Garde ; il est remplacé. Un coup visant directement un gardien ne
+constitue pas une interception. Les nouvelles règles de Garde sont conservées,
+y compris lorsqu'un ennemi dépasse un gardien. Seule une Riposte effectivement
+résolue compte : contact, survie au coup, absence de Silence et quota commun
+d'une fois par tour. Tirs, sorts et dégâts seuls ne comptent pas.
 
-Les natifs gardent leurs règles historiques, notamment Garde/Riposte du
-Porte-égide Commun. Cette PR ne convertit pas leurs règles en celles des versions
-futures. Les réductions déjà programmées et leurs quotas sont réutilisés.
+Les tours de survie sont comptés après validation des actions du joueur si le
+Milicien est vivant sur le plateau. Une validation refusée ou une reprise ne
+compte pas deux fois. Les dégâts à distance comptent les PV réellement perdus,
+après protections et sans surdégâts ; contact, autre unité et héros/sorts exclus.
+La réduction initiale reprend l'état réel du moteur, sans consommer un nouveau quota.
 
-Rencontres, decks adverses, prérequis de campagne/boss, récompenses uniques,
-consommation d'un seul exemplaire et slot de deck restent ceux de la PR 55.
-Aucun paquet, fusion de doublons, contrat, marchand ou évolution supplémentaire.
+## Récompenses et portée
 
-## Architecture et compatibilité
+Les 12 missions gardent chacune leur carte native à la première victoire ; la
+rejouer ne redonne pas cette carte. Les épreuves transforment un seul exemplaire
+possédé et son slot de deck, sans augmenter le total de copies ni accorder or,
+éclats, XP ou autre récompense de campagne. Le premier boss conserve son Gardien
+des Racines et ouvre l'accès au Milicien Épique après l'épreuve Rare ; il ne
+donne pas lui-même le Milicien. Attribution et reçu uniques conservés.
 
-- `engine/trial-objectives.js` : objectif enregistré au départ, validation,
-  relevé des faits et lecture pure des survivants. Pas de DOM/profil/stockage.
-- `battle.js` : signale les interceptions et dégâts des attaques résolues,
-  puis les tours validés. Aucun second calcul de dégâts ni règle de Garde.
-- `evolution-progress.js` : crée l'objectif et réutilise sa lecture avant
-  transformation. La clôture avec reçu reste inchangée.
-- `ui/evolution-trials.js` : consignes avant combat et composant commun
-  « Défi · x/y », ouvrant une fiche compacte ; `battle-view.js` l'insère dans
-  le bandeau existant, sans modifier la géométrie du plateau.
-- `storage.js` : validation stricte du champ facultatif `trialChallenge`.
+Rencontres, decks adverses, statistiques, prérequis et ressources restent ceux de
+main. Les recoupements Tour/donjons (Archidruide, Vampire), les copies natives de
+départ, les paquets et la fabrication ne sont pas modifiés. Les 37 autres évolutions
+Aube restent au laboratoire. Pas de marchand, contrat, fusion de doublons ni
+nouvelle récompense.
 
-`trialChallenge` appartient seulement à la bataille : version, personnage/rang,
-métrique, seuil, texte, compteurs par uid et dernier tour compté si nécessaire.
-Les conditions sont enregistrées au départ et conservées à la reprise même si
-un réglage ultérieur change. Les compteurs invalides sont refusés à la lecture.
+## Architecture et sauvegardes
 
-Une ancienne épreuve sans ce champ conserve **la condition de survie seule** et
-son texte d'origine. La consultation n'ajoute aucun compteur/champ à cette
-bataille. Les profils, possessions déjà gagnées et clés historiques restent ;
-aucune récompense rétroactive ni seconde réussite d'une épreuve terminée.
+- `engine/trial-objectives.js` : création/validation de l'objectif enregistré,
+  comptage des faits et lecture pure des survivants ; aucun DOM, profil ou stockage.
+- `battle.js` : signale tours et dégâts résolus ; compte une Riposte seulement
+  lorsque `resolveRetaliation` renvoie vrai, sans recopier Garde/Riposte.
+- `evolution-progress.js` : création et lecture de l'objectif avant transformation ;
+  clôture récupérable et reçu inchangés.
+- `ui/evolution-trials.js` : consignes et compteur « Défi · x/y », avec fiche
+  compacte ; `battle-view.js` l'insère sans calcul métier ni nouvelle géométrie.
+- `storage.js` : valide le champ facultatif `trialChallenge` et conserve le refus
+  des anciens combats actifs incompatibles avec `cards-v2`.
 
-## Vérification et reprise
+L'objectif en bataille contient version, personnage/rang, métrique, seuil, texte,
+compteurs par uid et dernier tour compté si nécessaire. Une épreuve déjà commencée
+sous les règles actuelles sans ce champ garde sa condition de survie seule. Une
+reprise ne l'enrichit pas. Les futurs réglages ne changent pas un objectif déjà
+enregistré ; les données invalides sont refusées. Aucun second moteur de cartes.
+Les profils, exemplaires gagnés et clés restent ; aucun gain rétroactif.
 
-- 441 tests Node réussis, dont neuf nouveaux cas sur les objectifs.
-- 60 scénarios de parité identiques ; 57 modules, 222 dépendances sans cycle,
-  76 illustrations ; `battle.js` reste à 397 lignes.
-- Matrice des quatre épreuves étendue aux graines 1–32 et 41 : 264 combats
-  terminés/déterministes, avec au moins une vraie réussite par épreuve.
-- Les fixtures d'attribution complètes sont distinctes des combats simulés :
-  ceux-ci doivent toujours atteindre les objectifs par les actions du moteur.
-- Suite navigateur complète réussie : 13 parcours, dont sept combats complets
-  par les vrais boutons, bureau/portrait/paysage et web HTTP ; export hors réseau,
-  inventaire, deck, export/import, invocation en campagne et reprise.
-- Contrôle complémentaire des quatre compteurs finaux en portrait : seuil/seuil
-  affiché après chaque clôture, sans variables de diagnostic dans l'export.
-- Ancienne épreuve active reprise avec sa condition de survie seule ; coupures
-  avant/après sauvegarde de récompense et absence de doublon vérifiées.
-- Sept suites ciblées réussies : sauvegardes, fiche universelle, effets/attaques,
-  géométries, laboratoire, capacités et maintenance web. Captures bureau/portrait/
-  paysage des nouvelles fiches examinées. Aucun actif graphique changé.
-- Builds normal, diagnostic et web réussis, export reconstruit sans variation.
+## Vérifications de cette reprise
 
-Export `JOUER.html` : **34 523 446 octets**, blob
-`d768dbf859b9c341e3d6c0f337081532c0ec9dc1`. Le générateur ponctuel
-[40534370907](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40534370907)
-l'a enregistré dans `0c468254a0a46114609bd2c5504605897745977c`, arbre
-`7bcdafc03ccda641dca6b51b4010daf17cdf33d5`, identique au local préparé.
-Son parent source `76db031c` a également été comparé avant envoi. Le générateur
-est retiré dans la clôture de revue. Tête finale et CI dans la description de PR. Les logs locaux
-peuvent disparaître : `/tmp/ca-personal-all.log`, `ca-personal-browser.log` et
-`ca-personal-regression.log`. Playwright 1.56/Chromium 1194 disponibles via
-`/tmp/ca-evolution-pw` si encore présents. Ne pas reconstruire les HTML pendant
-que les navigateurs les lisent.
+Contrôles locaux terminés : **455 tests Node**, **120 scénarios déterministes**
+identiques à la référence `cards-v2`, archive V2.4 intacte. Les tests incluent
+les 12 récompenses de campagne (première victoire/rejeu), les quatre
+transformations uniques, Riposte/quotas, Silence, mort, copies et reprise.
+Simulations `control-balance` et `arena-balance` réussies. Builds autonome,
+diagnostic et web réussis ; 57 modules, 76 illustrations.
 
-Suite à donner : consulter les deux CI de la tête exacte et le main courant,
-présenter cette PR au propriétaire pour revue/essai et garder son accord de fusion
-séparé de celui de la PR 55. Ne pas réutiliser une ancienne CI ; si seule la CI
-reste, arrêter sans surveillance active. Les réglages des défis sont un pilote.
+Résultats navigateur, commit/arbre exacts et CI finale :
+[PR 56](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/56).
+Les bilans de l'ancienne tête `6dc30bae` ne valident pas cette nouvelle version.
 
-Limites : Chromium simulé, aucun téléphone physique/Safari/Firefox ; la réussite
-du robot démontre une possibilité, sans garantir un équilibrage humain exhaustif.
-Publication Sites distincte, non revendiquée ici.
+Les 33 graines précédentes restent dans la matrice. La graine 124 est ajoutée :
+avec la Garde actuelle, le robot de référence n'obtenait plus le Milicien Épique
+dans les anciennes graines ; cette graine termine réellement son objectif et
+sa victoire. Aucun résultat forcé, seuil abaissé, statistique ou rencontre modifié.
+La matrice couvre donc 34 graines × 4 épreuves × 2 répétitions = **272 combats**.
+Le générateur navigateur cherche au plus 256 graines et conserve un vrai succès
+par défi ; les actions sont rejouées avec les boutons du jeu. Cela prouve la
+possibilité, sans garantir la facilité du défi pour un joueur humain.
+
+## Reprise et limites
+
+Consulter le dernier commit et ses deux CI avant toute proposition de fusion.
+Ne pas lancer un second passage déjà en cours ni surveiller activement la CI
+quand aucun travail indépendant ne reste. Les quatre groupes de PR 58 et les
+assertions restent obligatoires. L'export officiel est reconstruit depuis les
+mêmes sources, sans variante de test distribuée.
+
+Après vérification, proposer au propriétaire son essai/revue. La PR reste ouverte
+et sa fusion attend son accord spécifique. Publication Sites distincte, réservée
+au contenu intégré sur main. Limites : Chromium bureau/tactile simulé, aucun
+appareil physique, Safari/Firefox ni équilibrage humain exhaustif.

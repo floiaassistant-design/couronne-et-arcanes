@@ -4,6 +4,7 @@ import {supportedBoard,lastCell} from '../engine/board.js';
 import {CARDS,CLASSES} from '../data.js';
 import {playableCardReference,cardReference,evolutionProfileError} from '../cards/references.js';
 import {validTrialChallenge} from '../engine/trial-objectives.js';
+import {CARD_RULESET} from '../cards/definitions.js';
 export const SAVE_KEY='couronnes_arcanes_v1';
 export const BATTLE_KEY='couronnes_arcanes_bataille_v1';
 const hasCard=id=>typeof id==='string'&&Object.prototype.hasOwnProperty.call(CARDS,id);
@@ -15,7 +16,7 @@ const validHero=h=>h&&typeof h.name==='string'&&nonNegative(h.hp)&&Number.isFini
 const validUnit=u=>u===null||(u&&typeof u==='object'&&hasCard(u.id)&&CARDS[u.id].type==='unité'&&
  ['p','e'].includes(u.side)&&Number.isInteger(u.uid)&&u.uid>=0&&nonNegative(u.hp)&&Number.isFinite(u.maxhp)&&u.maxhp>0&&
  Number.isFinite(u.atk)&&nonNegative(u.armor||0)&&nonNegative(u.stun||0)&&nonNegative(u.poison||0)&&nonNegative(u.poisonTurns||0)&&!!cardReference(u));
-export function validStoredBattle(b){
+function validBattleSnapshot(b){
  if(!b||!['active','victory','defeat'].includes(b.status)||b.rewardGiven||
   !['player','enemy','resolving','finished'].includes(b.phase)||!Number.isInteger(b.round)||b.round<1||
   (b.turnFlow!==undefined&&b.turnFlow!=='alternating')||typeof b.missionId!=='string'||!supportedBoard(b.board)||
@@ -30,6 +31,12 @@ export function validStoredBattle(b){
    Number.isInteger(t.col)&&t.col>=1&&t.col<=lastCell(b)&&nonNegative(t.damage))))return false;
  return true;
 }
+// Un ancien résultat peut encore être réglé ; aucun ancien combat actif ne reprend.
+export function validStoredBattle(b){return validBattleSnapshot(b)&&(b.status!=='active'||b.cardRules===CARD_RULESET);}
+export function storedBattleNeedsRestart(){try{
+ const b=JSON.parse(localStorage.getItem(BATTLE_KEY)||'null');
+ return !!(validBattleSnapshot(b)&&b.status==='active'&&b.cardRules!==CARD_RULESET);
+}catch{return false;}}
 export function validateImportedProfile(raw){
  if(!raw||typeof raw!=='object'||Array.isArray(raw)||!Array.isArray(raw.deck)||
   !raw.collection||typeof raw.collection!=='object'||Array.isArray(raw.collection))throw Error('Format de profil invalide.');
@@ -93,7 +100,7 @@ export function hasPreviousAdventure(){
   const saved=JSON.parse(localStorage.getItem(PREVIOUS_GAME_KEY)||'null');
   if(typeof saved?.profile!=='string'||!(saved.battle===null||typeof saved.battle==='string'))return false;
   validateImportedProfile(JSON.parse(saved.profile));
-  return saved.battle===null||validStoredBattle(JSON.parse(saved.battle));
+  return saved.battle===null||validBattleSnapshot(JSON.parse(saved.battle));
  }catch{return false;}
 }
 export function restorePreviousAdventure(){

@@ -1,12 +1,30 @@
-## Proposé — objectifs personnels des épreuves (27 octobre 2026)
+## Proposition — objectifs d'épreuves, PR 56 réconciliée, 28 octobre 2026
 
-- Défis propres aux quatre versions de départ, avec victoire et survie du même
-  exemplaire ; compteur visible et fiche dans le combat.
-- Comptage par uid, sans somme entre copies ni héritage lors d'une réinvocation ;
-  reprise des compteurs et conditions d'origine conservées pour les anciennes épreuves.
-- Aucun changement de carte, rencontre, prix ou butin. [Contrat](docs/OBJECTIFS_EPREUVES.md).
+- Branche remise à jour avec main `a0726d4` : règles uniques PR 57 et CI parallèle PR 58 conservées.
+- Porte-égide : deux Ripostes réelles avec le même exemplaire, puis victoire et survie.
+  Ancien défi d'interceptions abandonné ; aucune modification de Garde.
+- Trois autres défis conservés ; compteur/fiches et reprise de l'objectif enregistré.
+- Récompenses de campagne, Tour et donjons inchangées ; une épreuve transforme
+  toujours un exemplaire, sans attribuer à nouveau la carte d'un boss.
+- Aucune fusion ni publication de la PR 56 ; [contrat et reprise](docs/OBJECTIFS_EPREUVES.md).
 
-## Fusion autorisée — épreuves d’évolution Aube, PR 55 (27 octobre 2026)
+Les sections ci-dessous décrivent les livraisons précédentes.
+
+## Proposition — règles uniques des cartes jouables, 27 octobre 2026
+
+- Garde normale positionnelle pour les cinq gardiens, priorité près de sa
+  couronne ; aucun détournement d'attaque visant une autre unité.
+- Riposte selon ATQ effective pour les sept natifs concernés, bonus actifs
+  compris, sans Charge ; une fois par tour, fréquence spéciale du Milicien conservée.
+- Registre unique, mêmes règles pour cartes possédées, nouvelles, ennemies et labo.
+  Anciennes branches de Garde/Riposte et pilote `labGuard` retirés.
+- Relance explicite d'un ancien combat actif, sans défaite ni coût ; profil,
+  partie précédente et récupération unique des anciens résultats conservés.
+- Fiches et Guide alignés ; aucun changement des statistiques natives, stocks,
+  circuits d'obtention, illustrations, prix ou disponibilité des évolutions.
+- PR 56 indépendante, à réconcilier après la correction ; aucune fusion autorisée.
+
+## Proposé — épreuves d’évolution Aube, PR 55 (27 octobre 2026)
 
 - Quatre épreuves à récompense annoncée et unique : un exemplaire transformé,
   slot conservé, aucune consommation sur défaite/objectif manqué. Le premier
@@ -17,7 +35,7 @@
   l'écrasement d'une récompense en attente et absence de double attribution.
 - 432 tests réussis, 60 scénarios historiques identiques ; vérification finale
   navigateur réussie (bureau, portrait, paysage, HTTP/hors réseau, coupures). [Contrat](docs/EPREUVES_EVOLUTION.md) et
-  [résultats](docs/REPRISE_EPREUVES_EVOLUTION.md). Fusion `b58ea3f0`, après les deux CI réussies. Publication distincte.
+  [résultats](docs/REPRISE_EPREUVES_EVOLUTION.md). Aucune fusion/publication.
 
 ## Fusion autorisée — construction manuelle du deck, PR 54 (27 octobre 2026)
 

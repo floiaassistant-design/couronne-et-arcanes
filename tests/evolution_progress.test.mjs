@@ -51,6 +51,32 @@ test('Accès : progression, boss, exemplaire et deck sont nécessaires, consulta
  assert.equal(createEvolutionTrial(old,'inconnue').ok,false);
 });
 
+test('Campagne et épreuves : cartes natives garanties distinctes, sans seconde copie du butin du boss',()=>{
+ const p=freshProfile();
+ for(const mission of CAMPAIGN){
+  const before=p.collection[mission.unlock]||0,b=createBattle(p,mission,1);
+  b.status='victory';b.phase='finished';
+  assert.equal(completeBattle(p,mission,b).card,mission.unlock);
+  assert.equal(p.collection[mission.unlock],before+1,mission.id);
+  assert.equal(completeBattle(p,mission,b).card,null);
+  const replay=createBattle(p,mission,2);replay.status='victory';replay.phase='finished';
+  assert.equal(completeBattle(p,mission,replay).card,null);
+  assert.equal(p.collection[mission.unlock],before+1,mission.id+' rejouée');
+ }
+ const native=structuredClone(p.collection);
+ for(const t of EVOLUTION_TRIALS){
+  assert.ok(CAMPAIGN.every(m=>m.unlock!==t.cardId));
+  const before=structuredClone(p),{b,r}=earn(p,t.id);
+  assert.equal(cardKey(r.card),cardKey({id:t.cardId,rarity:t.to}));
+  const expected=structuredClone(before.collection);
+  if(t.from===CARDS[t.cardId].rarity)expected[t.cardId]--;
+  assert.deepEqual(p.collection,expected);
+  assert.equal(p.collection.treant,native.treant,'le boss ne redonne pas son Gardien pendant une épreuve');
+  for(const key of ['gold','shards','heroXp','stars','wins','losses','completed','unlocked'])assert.deepEqual(p[key],before[key],key);
+  const once=structuredClone(p);assert.equal(settleEvolutionTrial(p,b).evolved,false);assert.deepEqual(p,once);
+ }
+});
+
 test('Victoire : un exemplaire exact transformé, slot conservé, aucun coût ni autre progression, attribution unique',()=>{
  const p=profile();p.upgrades.militia=2;p.mastery.militia=22;
  const before=structuredClone(p),b=won(p,'aube-militia-rare'),r=settleEvolutionTrial(p,b);
@@ -84,18 +110,18 @@ test('Défaite, objectif manqué, mauvais camp/rang et appels hors épreuve ne c
  b.mode='evolution-trial';assert.equal(completeBattle(p,CAMPAIGN[0],b),null);assert.equal(grantBattleProgress(p,b).heroXp,0);assert.equal(JSON.stringify(p),before);
 });
 
-test('Moteur réel : seule la version gagnée est nouvelle ; natif historique, bonus, réduction et recyclage restent corrects',()=>{
+test('Moteur réel : règles uniques pour natifs et versions gagnées, bonus, réduction et recyclage restent corrects',()=>{
  const p=profile();p.upgrades.militia=2;p.mastery.militia=22;earn(p,'aube-militia-rare');
  const b=createBattle(p,{...CAMPAIGN[0],deck:[],hp:100},1,{turnFlow:'alternating'});
- assert.equal(b.evolutionsEnabled,true);assert.equal(b.cardRules,undefined);
+ assert.equal(b.evolutionsEnabled,true);assert.equal(b.cardRules,'cards-v2');
  const index=b.heroes.p.hand.findIndex(h=>h.rarity==='rare');assert.ok(index>=0);
  const stats=unitStats(b,b.heroes.p.hand[index]);assert.equal(playPlayerCard(b,index,0,1).ok,true);
- const u=b.board[0][1];assert.equal(u.rarity,'rare');assert.equal(u.cardRules,'aube-v1');
+ const u=b.board[0][1];assert.equal(u.rarity,'rare');assert.equal(u.cardRules,'cards-v2');
  assert.equal(u.atk,stats.atk);assert.equal(u.maxhp,stats.maxhp);assert.equal(u.atk,4);assert.equal(u.maxhp,8);
  hit(b,u,3,'e');assert.equal(u.hp,6);hit(b,u,3,'e');assert.equal(u.hp,3);
  assert.equal(u.firstHitReductionUsed,true);assert.deepEqual(b.heroes.p.discard,[{id:'militia',rarity:'rare'}]);
  b.heroes.p.hand=[];b.heroes.p.deck=[];endPlayerTurn(b);while(!playEnemyCard(b).done){}finishEnemyTurn(b);
- assert.equal(b.heroes.p.hand[0].rarity,'rare');assert.equal(b.heroes.p.hand[0].cardRules,'aube-v1');
+ assert.equal(b.heroes.p.hand[0].rarity,'rare');assert.equal(b.heroes.p.hand[0].cardRules,'cards-v2');
  const legacy=createBattle(freshProfile(),CAMPAIGN[0],1);assert.equal(legacy.evolutionsEnabled,undefined);
  legacy.heroes.p.hand=[{id:'militia',rarity:'rare',wait:0}];const snapshot=JSON.stringify(legacy);
  assert.equal(playPlayerCard(legacy,0,0,1).ok,false);assert.equal(JSON.stringify(legacy),snapshot);
@@ -168,7 +194,7 @@ test('Combats complets des quatre épreuves : fin et intégrité déterministes,
  for(const trial of EVOLUTION_TRIALS){
   const p=profile();if(trial.previous)earn(p,trial.previous);
   const before=JSON.stringify(p);let achieved=0;
-  for(const seed of [...Array.from({length:32},(_,i)=>i+1),41]){
+  for(const seed of [...Array.from({length:32},(_,i)=>i+1),41,124]){
    const a=run(p,trial.id,seed),b=run(p,trial.id,seed);assert.deepEqual(a,b);assert.equal(JSON.stringify(p),before);
    const copy=structuredClone(p),result=settleEvolutionTrial(copy,a);if(result.evolved)achieved++;
   }

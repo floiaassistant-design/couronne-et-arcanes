@@ -11,7 +11,7 @@ import {buildCombatSteps} from './ui/combat-steps.js';
 import {captureCombatFrame} from './engine/combat-events.js';
 import {mountPaintedArena} from './ui/painted-arena.js';
 import {createCardInspection} from './ui/card-inspection.js';
-import {loadProfile,saveProfile,restoreBattle,storeBattle,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure} from './ui/storage.js';
+import {loadProfile,saveProfile,restoreBattle,storeBattle,storedBattleNeedsRestart,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure} from './ui/storage.js';
 import {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission} from './data.js';
 
 import {dungeonStageMission} from './dungeons.js';
@@ -85,6 +85,11 @@ function showModal(html){closeCardInspection(true);$('modal-root').innerHTML=`<d
 function hideModal(){closeCardInspection(true);$('modal-root').innerHTML='';}
 const cardName=(reference,context)=>{const ref=typeof reference==='string'?cardFromKey(reference):reference,id=cardId(ref);return `<span ${cardPreviewAttributes(id,cardRarity(ref),context,esc)}>${esc(CARDS[id].name)}${typeof ref==='object'?' · '+esc(cardRarity(ref)):''}</span>`;};
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une case de départ sur une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
+function notifyBattleUpdate(){
+ if(!storedBattleNeedsRestart())return false;
+ showModal(`<div class="kicker">MISE À JOUR DES CARTES</div><h2>Ce combat doit être relancé</h2><p>Les règles des cartes ont été mises à jour. Recommencez ce combat depuis son écran habituel pour les utiliser.</p><p>Votre collection, votre deck et votre progression sont conservés. Aucune défaite ni pénalité n’est comptée. Dans un donjon, la salle en cours peut être rejouée.</p><div class="button-row">${btn('Revenir au jeu','dismiss-battle-update','','primary')}</div>`);
+ return true;
+}
 function render({frameUpdate=false}={}){
  if(!frameUpdate){stopBattleFx();displayBattle=null;}
  const fxFocus=frameUpdate?document.activeElement?.closest('.combat-readout button')?.dataset.action:null;
@@ -225,7 +230,7 @@ function navigate(page){
  if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();
  cancelEnemyTimer();screen=page;selectedCard=-1;render();if(page==='battle')scheduleEnemyStep();window.scrollTo(0,0);
 }
-function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();window.scrollTo(0,0);}
+function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();notifyBattleUpdate();window.scrollTo(0,0);}
 function act(action,dataset){const {id,index,lane,col,page}=dataset;
  // Une clôture non sauvée ne doit pas être écrasée par une autre épreuve/action.
  if(!developer&&battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven&&
@@ -318,6 +323,7 @@ case 'lab-open':openDeveloper();break;
  case 'retreat':if(developer){showModal(`<h2>Quitter ce test ?</h2><p>Aucune pénalité et aucune récompense.</p><div class="button-row">${btn('Retour au laboratoire','lab-back','','primary')}${btn('Continuer','close-modal','','ghost')}</div>`);break;}showModal(`<div class="kicker">RETRAITE</div><h2>Abandonner la bataille ?</h2><p>Cette décision compte comme une défaite. Dans un donjon, elle met fin à l’expédition.</p><div class="button-row">${btn('Oui, battre en retraite','confirm-retreat','','danger')}${btn('Rester au combat','close-modal','','ghost')}</div>`);break;
  case 'confirm-retreat':if(battle?.status==='active'){cancelEnemyTimer();battle.status='defeat';battle.phase='finished';hideModal();persistBattle();settle();}break;
  case 'close-modal':hideModal();break;
+ case 'dismiss-battle-update':if(!storedBattleNeedsRestart()){hideModal();break;}if(!storeBattle(null)){toast('Nettoyage impossible : vérifiez le stockage local.');break;}hideModal();welcome();break;
  case 'battle-exit':const previousMode=battle?.mode;hideModal();battle=null;persistBattle();navigate(previousMode==='tower'?'tower':previousMode==='dungeon'?'dungeons':'campaign');break;
  case 'battle-deck':hideModal();battle=null;persistBattle();navigate('collection');break;
  case 'choose-class':{if(battle?.status==='active'){toast('Terminez le combat avant de changer de classe.');break;}const result=changeHeroClass(profile,id);if(!result.ok){toast(result.reason);break;}save();render();toast('Nouvelle classe sélectionnée.');break;}
@@ -367,5 +373,5 @@ document.addEventListener('change',async event=>{
   render();return;
  }
  if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;if(battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven){settle();return;}try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
-render();if(battle&&battle.status!=='active')settle();else {welcome();scheduleEnemyStep();}
+render();if(battle&&battle.status!=='active')settle();else if(!notifyBattleUpdate()){welcome();scheduleEnemyStep();}
 

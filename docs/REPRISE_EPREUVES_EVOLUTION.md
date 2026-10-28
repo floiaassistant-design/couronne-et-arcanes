@@ -1,7 +1,13 @@
-> PR 55 fusionnée sur accord explicite au commit `b58ea3f0`, après les deux CI
-> réussies de `d20b731e` (tests `40525189206`, web `40525189091`).
-> La suite active est décrite dans [OBJECTIFS_EPREUVES.md](OBJECTIFS_EPREUVES.md).
-> Les paragraphes ci-dessous conservent le bilan de préparation de la PR 55.
+> **Reprise actuelle — PR 56 :** voir [OBJECTIFS_EPREUVES.md](OBJECTIFS_EPREUVES.md).
+> La PR 55 est intégrée ; les règles uniques de la PR 57 et la CI de la PR 58
+> sont sur main `a0726d4`. La suite des défis reste sur sa branche, sans fusion.
+> Les bilans de PR 55 ci-dessous sont historiques.
+
+> **Contrat remplacé pour les règles natives :** la correction
+> [Règles uniques](REGLES_CARTES_UNIQUES.md) applique Garde/Riposte validées
+> à tous les exemplaires concernés et impose la relance des anciens combats
+> actifs. Les mentions de règles natives historiques ci-dessous décrivent
+> les livraisons précédentes, pas le fonctionnement proposé sur cette branche.
 
 # Reprise — épreuves d’évolution Aube, PR 55
 

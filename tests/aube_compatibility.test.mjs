@@ -6,7 +6,7 @@ import {freshProfile,normalizeProfile,validateDeck} from '../src/engine/profile.
 import {createBattle,playPlayerCard,playEnemyCard} from '../src/engine/battle.js';
 import {unitStatContext,unitStats,versionUnitStats} from '../src/engine/unit-stats.js';
 import {buyPack,fuseCard,upgradeCard} from '../src/engine/economy.js';
-import {validateImportedProfile,storeBattle,restoreBattle,saveProfile,loadProfile} from '../src/ui/storage.js';
+import {validateImportedProfile,storeBattle,restoreBattle,storedBattleNeedsRestart,saveProfile,loadProfile} from '../src/ui/storage.js';
 import {freshLab,createLabBattle} from '../src/engine/developer-lab.js';
 import {AUBE_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference} from '../src/cards/definitions.js';
 
@@ -69,7 +69,7 @@ test('Les natifs des cinq factions conservent statistiques et invocation, joueur
   else{b.phase='enemy';assert.equal(playEnemyCard(b).done,false,c.id);}
   const unit=b.board.flat().find(u=>u?.side===side&&u.id===c.id);
   assert(unit,c.id);assert.equal(unit.atk,stats.atk);assert.equal(unit.hp,stats.maxhp);
-  assert(!Object.hasOwn(unit,'rarity'));assert(!Object.hasOwn(unit,'versionId'));
+  assert.equal(unit.rarity,c.rarity);assert.equal(unit.cardRules,'cards-v2');assert(!Object.hasOwn(unit,'versionId'));
  }
 });
 
@@ -87,12 +87,12 @@ test('Profils historiques : collection, deck, achats, maîtrise et ressources id
  assert(!Object.hasOwn(normal,'rarities'));assert(!Object.hasOwn(normal,'versions'));
 });
 
-test('Anciennes batailles : aucun recalcul des chiffres sauvegardés ni ajout de rareté à la reprise',()=>{
+test('Anciennes batailles : relance requise sans altération ; nouveaux instantanés blessés repris exactement',()=>{
  storage();
  const historical=JSON.parse(fs.readFileSync(new URL('./fixtures/refactor_baseline_v24.json',import.meta.url)))
   .map(entry=>JSON.parse(entry.battle)).filter(b=>b.status==='active');
  assert(historical.length>0);
- for(const b of historical){assert(storeBattle(b));assert.deepEqual(restoreBattle(),b);}
+ for(const b of historical){const before=JSON.stringify(b);assert(storeBattle(b));assert.equal(restoreBattle(),null);assert(storedBattleNeedsRestart());assert.equal(JSON.stringify(b),before);}
  const b=createBattle(improvedProfile(),CAMPAIGN[0],123);
  b.heroes.p.hand=[{id:'shield',wait:0}];playPlayerCard(b,0,0);
  const u=b.board[0][1];u.atk=17;u.maxhp=23;u.hp=7;u.barrier=3;

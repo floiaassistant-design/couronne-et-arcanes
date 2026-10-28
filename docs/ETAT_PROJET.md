@@ -1,28 +1,66 @@
+# Reprise vérifiée — 28 octobre 2026
+
+Main actuel `a0726d4408d6ffc4c767fdb1e51be0582ce01445` : PR 57 (règles
+uniques des cartes) et PR 58 (CI parallèle) fusionnées. La PR 56 reste ouverte
+en brouillon, branche `feat/objectifs-epreuves-aube`, réconciliée avec ce main.
+Le défi du Porte-égide utilise deux Ripostes du même exemplaire ; la Garde
+actuelle et les trois autres défis sont conservés. Aucun circuit de récompense
+ajouté : campagne = cartes natives, épreuves = transformation d'un exemplaire.
+[Contrat, vérifications et prochaine étape](OBJECTIFS_EPREUVES.md).
+Aucune fusion ni publication autorisée pour cette reprise.
+
+Les bilans datés ci-dessous sont historiques ; les commits et la PR priment.
+
 # État courant — 27 octobre 2026
 
-## Objectifs personnels — suite proposée
+## Proposition — CI parallèle
 
-Branche `feat/objectifs-epreuves-aube`, depuis main `b58ea3f0`. Les nouvelles
-épreuves demandent trois tours de survie au Milicien Commun, deux interceptions
-au Porte-égide, quatre dégâts à distance à l'Arbalétrière et une réduction du
-premier coup au Milicien Rare, toujours avec victoire et survie du même uid.
-Le compteur et la fiche sont visibles dans le combat. Les anciennes épreuves
-restent compatibles sans objectif ajouté après leur départ.
+Branche `ci/tests-paralleles`, depuis le main `6dee2dc4` (PR 57 fusionnée).
+PR 58 en brouillon : premier passage 7 min 13 s, mais reprise mobile en échec ;
+verdict global rouge confirmé. Préparation des fixtures isolée avant le parcours ;
+résultats du nouveau passage à lire dans la PR, aucun succès CI anticipé.
+Quatre groupes de tests parallèles, verdict global `validation`, inventaire et
+assertions conservés. Épreuves séparées par contexte ; aucun changement au jeu
+ni à l’export. [Plan, quotas et blocage des fusions](CI_PARALLELE.md).
+La protection effective de main reste une configuration externe à vérifier ;
+aucune fusion autorisée pour cette proposition. La PR 56 reste indépendante.
 
-441 tests réussis, 60 scénarios historiques identiques ; 13 parcours navigateur
-et sept suites ciblées réussis, compteurs finaux contrôlés sur les quatre clôtures. [Contrat et reprise](OBJECTIFS_EPREUVES.md).
-Aucune fusion ni publication autorisée pour cette nouvelle PR.
+Les sections suivantes décrivent les livraisons précédentes.
 
-## PR 55 — fusionnée après vérification
 
-Fusion autorisée au commit `b58ea3f00330d5f1db3675a2611ddcca8374e699`, arbre
-`d785c9fd939f5764d6ed7e85d9ee36be9fbfcd7d` identique à la tête validée
-`d20b731e`. Les deux CI ont réussi : [tests](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40525189206)
-et [web](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40525189091).
-Quatre évolutions obtenables par épreuve et utilisables dans les decks/combats ;
-les 37 autres évolutions Aube restent au laboratoire. Publication du site distincte.
+## Correction proposée — règles uniques des cartes jouables
 
-## Jalon précédent — deck manuel intégré par la PR 54
+Branche `fix/regles-cartes-jouables`, depuis le main vérifié `b58ea3f0`.
+Les cinq gardiens et les sept natifs à Riposte appliquent les règles communes
+validées dans Notion, dans les deux camps ; même registre qu’au laboratoire.
+Les anciens combats actifs demandent une relance sans pénalité. Les profils et
+possessions sont conservés. [Contrat et reprise](REGLES_CARTES_UNIQUES.md).
+**440 tests Node**, **120 scénarios de non-régression**, 27 suites navigateur et
+nouveau parcours de relance/fiches dans les trois formats réussis. 5 120 combats
+de contrôle, comparaison avant/après de 1 536 combats par version. Builds autonomes
+et web réussis ; 56 modules/212 dépendances sans cycle. Export exact dans le contrat.
+La parité avec les anciennes règles n'est plus revendiquée ; référence V2.4 intacte.
+La PR 56 reste indépendante et en attente, en particulier son défi d’interceptions.
+Aucune fusion ni publication autorisée pour cette correction.
+
+
+## PR 55 — épreuves d’évolution Aube proposées
+
+Branche `feat/epreuves-evolution-aube`, base main
+`1177160856b5162eb06c7df109d479eb41441926`. Quatre récompenses uniques :
+Milicien Rare, Porte-égide Rare, Arbalétrière Rare, Milicien Épique après le
+premier boss. Les cartes gagnées sont disponibles en Collection, deck manuel
+et nouveaux combats ; les 37 autres évolutions restent au laboratoire.
+
+Le blocage de simulation Épique est corrigé : l'épreuve n'hérite plus des
+quatre lignes et de la furie du vrai boss. Celui-ci reste inchangé. Les
+432 tests passent ; les 60 scénarios historiques restent identiques. La
+vérification navigateur et la clôture après coupure ont réussi localement.
+Les deux CI de la tête finale restent à vérifier sur GitHub.
+[Contrat](EPREUVES_EVOLUTION.md), [résultats et reprise](REPRISE_EPREUVES_EVOLUTION.md).
+Aucune fusion ni publication de cette PR autorisée.
+
+## Main actuel — deck manuel intégré par la PR 54
 
 Fusion autorisée au commit `1177160856` après ses deux CI réussies.
 « Mon deck » propose cartes possédées, recherche/filtres, quantités et commandes

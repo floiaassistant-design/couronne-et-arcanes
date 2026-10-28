@@ -5,7 +5,7 @@ import {freshProfile} from '../src/engine/profile.js';
 import {createBattle,endPlayerTurn,finishEnemyTurn} from '../src/engine/battle.js';
 import {crownGuardCandidates,findCrownGuardian} from '../src/engine/guard-candidates.js';
 import {resolveUnitDefinition} from '../src/cards/definitions.js';
-import {FUTURE_GUARD_POLICY} from '../src/cards/abilities.js';
+import {GUARD_POLICY} from '../src/cards/abilities.js';
 import {captureCombatFrame} from '../src/engine/combat-events.js';
 import {buildCombatSteps} from '../src/ui/combat-steps.js';
 import {storeBattle,restoreBattle} from '../src/ui/storage.js';
@@ -24,16 +24,16 @@ function combat(legacy=false){
 }
 const guard=(side,rarity='éveillée',extra={})=>unit('shield',side,rarity,{stun:99,...extra});
 
-test('Politique centrale validée : priorité et fréquence héritées par chaque évolution, natif historique',()=>{
+test('Politique centrale validée : priorité et fréquence héritées par chaque rang, natif inclus',()=>{
  const expected={priority:'same-line-then-own-crown',tieBreak:'lane-uid',frequency:'while-alive',maxPerAttack:1};
- assert.deepEqual(FUTURE_GUARD_POLICY,expected);
+ assert.deepEqual(GUARD_POLICY,expected);
  for(const rarity of ['rare','épique','légendaire','divine','éveillée']){
   const d=resolveUnitDefinition('shield',rarity);
   for(const [key,value] of Object.entries(expected))assert.equal(d.abilities.guard[key],value);
   assert.deepEqual(d.pendingDecisions,[]);assert.equal(d.status.combat,rarity==='rare'?'implemented':'pending');
  }
- assert.equal(resolveUnitDefinition('shield').abilities.guard.scope,'legacy-line');
- assert.equal(resolveUnitDefinition('shield').abilities.guard.priority,undefined);
+ assert.equal(resolveUnitDefinition('shield').abilities.guard.scope,'positioned');
+ assert.equal(resolveUnitDefinition('shield').abilities.guard.priority,'same-line-then-own-crown');
 });
 
 for(const legacy of [false,true])for(const side of ['p','e']){
@@ -134,19 +134,22 @@ test('Garde passive sous silence, Armure et barrière du vrai gardien appliquée
  assert.equal(damage.armor,2);assert.equal(damage.absorbed,2);assert.equal(damage.damage,1);
 });
 
-test('Natifs des cinq factions : sélection historique conservée même après dépassement',()=>{
+test('Natifs des cinq factions : position requise, même ligne et priorité près de sa couronne',()=>{
  for(const id of ['shield','treant','crypt','golem','sentinel'])for(const side of ['p','e']){
   const b=combat(),end=b.board[0].length-2,near=side==='p'?1:end,far=side==='p'?3:end-2;
   b.board[0][near]=unit(id,side);b.board[0][far]=unit(id,side);
-  assert.equal(findCrownGuardian(b,0,side,side==='p'?1:end).u,b.board[0][far],id);
+  assert.equal(findCrownGuardian(b,0,side,side==='p'?end:1).u,b.board[0][near],id);
+  assert.equal(findCrownGuardian(b,0,side,side==='p'?1:end),null,'gardes dépassées : '+id);
   assert.equal(findCrownGuardian(b,1,side,side==='p'?1:end),null);
  }
 });
 
-test('Coexistence : priorité validée entre nouveaux et anciens gardiens éligibles, sans mutation',()=>{
+test('Gardes de rangs différents : même règle de position et sélection pure',()=>{
  const b=combat();b.board[1][9]=guard('e');b.board[0][3]=unit('shield','e',undefined,{stun:99});
- assert.equal(findCrownGuardian(b,0,'e',10).u,b.board[0][3],'même ligne prioritaire même pour un natif');
- b.board[0][8]=guard('e','divine');
+ assert.equal(findCrownGuardian(b,0,'e',10).u,b.board[1][9],'le natif dépassé ne peut pas intercepter');
+ b.board[0][3]=null;b.board[0][10]=unit('shield','e',undefined,{stun:99});
+ assert.equal(findCrownGuardian(b,0,'e',9).u,b.board[0][10],'natif bien placé sur la ligne prioritaire');
+ b.board[0][10]=null;b.board[0][8]=guard('e','divine');
  assert.equal(findCrownGuardian(b,0,'e',10).u,b.board[0][8],'plus proche de sa couronne');
  const before=JSON.stringify(b);findCrownGuardian(b,0,'e',10);assert.equal(JSON.stringify(b),before);
 });

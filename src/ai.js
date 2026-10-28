@@ -1,7 +1,6 @@
 // IA tactique V1.7 — heuristique déterministe, sans accès aux cartes cachées du joueur.
 // Évalue l'état public du plateau et les cartes réellement présentes dans sa propre main.
 import {CARDS,GUARD_IDS} from './data.js';
-import {AUBE_RULESET} from './cards/definitions.js';
 import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount} from './engine/unit-rules.js';
 import {unitStats} from './engine/unit-stats.js';
 import {findCrownGuardian} from './engine/guard-candidates.js';
@@ -42,14 +41,13 @@ export function inspectEnemyLane(b,lane){
 // Estimation limitée au plateau public : une unité interposée ou un gardien
 // empêche de compter un coup direct sur la couronne au prochain combat.
 function crownRisk(b,laneInfo){
- if(laneInfo.guard&&b.cardRules!==AUBE_RULESET)return 0;
  return laneInfo.threats.reduce((sum,{u,col})=>{
   const steps=crownColumn(b,'e')-col;
-  if((u.stun||0)>0||!(b.cardRules===AUBE_RULESET?steps<=unitAttackRange(u)+unitMovementSteps(u,silenced(b,u)):steps<=2||(steps===3&&u.ability==='haste')))return sum;
-  if(b.cardRules===AUBE_RULESET&&findCrownGuardian(b,laneInfo.lane,'e',col))return sum;
+  if((u.stun||0)>0||!(steps<=unitAttackRange(u)+unitMovementSteps(u,silenced(b,u))))return sum;
+  if(findCrownGuardian(b,laneInfo.lane,'e',col))return sum;
   const range=unitAttackRange(u);
   if(laneInfo.friends.some(x=>x.col>col&&x.col-col<=range))return sum;
-  return sum+Math.max(1,u.atk)+((unitChargeAmount(u)>0)&&col<lastCell(b)&&(b.cardRules!==AUBE_RULESET||!silenced(b,u))?unitChargeAmount(u):0);
+  return sum+Math.max(1,u.atk)+((unitChargeAmount(u)>0)&&col<lastCell(b)&&!silenced(b,u)?unitChargeAmount(u):0);
  },0);
 }
 
@@ -127,7 +125,7 @@ function scoreOption(b,card,laneInfo,context){
   const target=accelerationTarget(b,'e');
   if(target){
    let pending=CARDS[target.card.id];
-   if(pending?.type==='unité'&&b.cardRules===AUBE_RULESET){const stats=unitStats(b,target.card,'e');pending={...pending,attack:stats.atk,hp:stats.maxhp};}
+   if(pending?.type==='unité'){const stats=unitStats(b,target.card,'e');pending={...pending,attack:stats.atk,hp:stats.maxhp};}
    const slots=Math.max(0,2-(hero.cardsPlayed||0));
    const canFollow=slots>=2&&target.wait<=2;
    score=5+Math.min(2,target.wait)*2.4;
@@ -202,16 +200,14 @@ export function rankEnemyMoves(b){
  if(!b||b.status!=='active'||!b.heroes?.e)return [];
  const rows=Array.from({length:laneCount(b)},(_,lane)=>inspectEnemyLane(b,lane));
  const results=[];
- // Pas de changement des décisions des rencontres historiques sans sort V2.10.
- // Les nouvelles priorités s'activent uniquement avec du tempo dans NOTRE main.
- const hasTempo=b.cardRules===AUBE_RULESET||b.heroes.e.hand.some(x=>x.id==='hourglass_surge'||x.id==='time_bind');
- const risks=rows.map(row=>hasTempo?crownRisk(b,row):0),incoming=risks.reduce((sum,n)=>sum+n,0);
+ // Même lecture des règles et des statistiques que l'invocation réelle.
+ const risks=rows.map(row=>crownRisk(b,row)),incoming=risks.reduce((sum,n)=>sum+n,0);
  const hero=b.heroes.e;
  const context={rows,risks,incoming,lethal:incoming>=Math.max(1,hero.hp+(hero.shield||0))};
  b.heroes.e.hand.forEach((entry,index)=>{
   let card=CARDS[entry.id];if(!card||entry.wait>0) return;
   if(card.type==='unité'&&!unitCanPlay(b,entry,'e'))return;
-  if(card.type==='unité'&&b.cardRules===AUBE_RULESET){const stats=unitStats(b,entry,'e'),d=battleUnitDefinition(b,entry,'e');card={...card,attack:stats.atk,hp:stats.maxhp,versionDefinition:d};}
+  if(card.type==='unité'){const stats=unitStats(b,entry,'e'),d=battleUnitDefinition(b,entry,'e');card={...card,attack:stats.atk,hp:stats.maxhp,versionDefinition:d};}
   rows.forEach(row=>{
    const rank=scoreOption(b,card,row,context);
    if(rank&&rank.score+personalityBonus(b,card,row)>0)results.push({index,lane:row.lane,...(lastCell(b)===10&&card.type==='unité'?{col:row.deploymentCol}:{}),id:entry.id,...rank,score:rank.score+personalityBonus(b,card,row)});

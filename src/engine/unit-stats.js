@@ -1,7 +1,6 @@
 // Statistiques d'invocation partagées par le moteur et les aperçus, sans mutation.
 import {CARDS,FACTIONS} from '../data.js';
 import {gearBonus,masteryRank,reputationLevel} from './profile.js';
-import {resolveUnitDefinition} from '../cards/definitions.js';
 import {battleUnitDefinition} from './unit-rules.js';
 
 export function unitStatContext(profile){
@@ -22,7 +21,7 @@ export function unitStats(context,reference,side='p'){
 // Prévision pure des versions définies : ne rend aucune évolution jouable et n'écrit aucun état.
 // Le laboratoire utilise la même définition et les mêmes bonus que la vraie invocation.
 export function versionUnitStats(context,reference,side='p'){
- const definition=context.cardRules?battleUnitDefinition(context,reference,side):resolveUnitDefinition(reference);if(!definition)return null;
+ const definition=battleUnitDefinition(context,reference,side);if(!definition)return null;
  const level=context.mode==='developer'?(context.labStats?.levels?.[side]?.[definition.id]||0):
   side==='p'?(context.upgrades?.[definition.id]||0):Math.max(0,context.enemyDifficulty-3);
  return {versionId:definition.versionId,base:{...definition.stats},

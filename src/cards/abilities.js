@@ -1,8 +1,8 @@
-// Description structurée du socle natif. Le branchement des règles de combat suit aux étapes 3/4.
+// Capacités communes actuelles, héritées par chaque évolution.
 import {FLYING_IDS,GUARD_IDS,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
 
-// Politique future validée dans Notion ; réutilisable par chaque faction.
-export const FUTURE_GUARD_POLICY=Object.freeze({
+// Politique validée dans Notion, identique pour les cinq factions.
+export const GUARD_POLICY=Object.freeze({
  priority:'same-line-then-own-crown',tieBreak:'lane-uid',frequency:'while-alive',maxPerAttack:1
 });
 
@@ -24,9 +24,9 @@ export function nativeUnitAbilities(card){
  };
  if(card.ability&&Object.hasOwn(primary,card.ability))abilities[card.ability]=primary[card.ability];
  if(FLYING_IDS.has(card.id))abilities.flying={over:'ally',landing:'free'};
- if(GUARD_IDS.has(card.id))abilities.guard={scope:'legacy-line',target:'own-crown',unitTargetPriority:true};
+ if(GUARD_IDS.has(card.id))abilities.guard={...GUARD_POLICY,scope:'positioned',target:'own-crown',unitTargetPriority:false};
  if(CHARGE_IDS.has(card.id))abilities.charge={amount:2,condition:'moved-before-attack'};
- if(RIPOSTE_IDS.has(card.id))abilities.riposte={damageMode:'fixed',amount:2,frequency:'round',trigger:'melee-attack'};
+ if(RIPOSTE_IDS.has(card.id))abilities.riposte={damageMode:'effective-attack',frequency:'round',trigger:'melee-attack'};
  return abilities;
 }
 

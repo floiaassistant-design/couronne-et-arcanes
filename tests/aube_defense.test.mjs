@@ -137,11 +137,12 @@ test('Sauvegarde et instantanés : quotas persistants et barrières de capacité
  assert.equal(resumed.board[0][4].hp,0);assert.equal(resumed.stats.enemyKills,1);
 });
 
-test('Tous les natifs : Riposte fixe historique, chiffres sauvegardés et absence de nouveaux champs',()=>{
+test('Tous les natifs : Riposte selon ATQ effective et bonus, une fois par tour',()=>{
  for(const id of ['shield','paladin','dawnbastion','treant','graveknight','golem','sentinel']){
-  const b=combat(),u=unit(id,undefined,'p',{atk:17}),foe=unit('bone',undefined,'e',{hp:20});
+  const b=combat(),u=unit(id,undefined,'p',{atk:17}),foe=unit('bone',undefined,'e',{hp:40,maxhp:40});
   b.board[0][4]=u;b.board[0][5]=foe;
   assert.equal(retaliate(b,u,foe,0,4,5,5),true);assert.equal(foe.hp,18,id);
+  assert.equal(retaliate(b,u,foe,0,4,5,5),false);assert.equal(foe.hp,18,id);
   assert.equal(u.rarity,undefined);assert.equal(u.riposteUsed,undefined);assert.equal(u.abilityBarriers,undefined);
  }
 });

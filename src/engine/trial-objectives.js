@@ -2,15 +2,15 @@
 import {CARDS} from '../data.js';
 import {evolutionTrial} from '../evolution-trials.js';
 
-const metrics=['turns','rangedDamage','interceptions','firstHit'];
-const labels={turns:'Tours de survie',rangedDamage:'Dégâts à distance',interceptions:'Attaques interceptées',firstHit:'Premier coup réduit'};
+const metrics=['turns','rangedDamage','ripostes','firstHit'];
+const labels={turns:'Tours de survie',rangedDamage:'Dégâts à distance',ripostes:'Ripostes déclenchées',firstHit:'Premier coup réduit'};
 const eligible=(q,u)=>u&&u.side==='p'&&u.hp>0&&u.id===q.cardId&&(u.rarity||CARDS[u.id]?.rarity)===q.rarity;
 export function trialObjectiveText(t){
  if(!t?.goal)return t?.objective||'';
  const {metric,target}=t.goal,name=CARDS[t.cardId].name;
  const task=metric==='turns'?`Rester en vie pendant ${target} tours`:
   metric==='rangedDamage'?`Infliger ${target} dégâts à des unités ennemies depuis au moins deux cases`:
-  metric==='interceptions'?`Intercepter ${target} attaques visant votre couronne`:'Déclencher sa réduction du premier coup';
+  metric==='ripostes'?`Déclencher ${target} Ripostes`:'Déclencher sa réduction du premier coup';
  return `${name} · rang ${t.from} : ${task}. Remporter ensuite la bataille avec ce même exemplaire encore vivant.`;
 }
 export function createTrialChallenge(t){

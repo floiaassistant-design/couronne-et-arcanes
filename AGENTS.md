@@ -1,21 +1,36 @@
 # AGENTS.md — Couronnes & Arcanes
 
-## Suite — objectifs personnels d’épreuve
+## Priorité — règles uniques des cartes jouables, 27 octobre 2026
 
-Branche `feat/objectifs-epreuves-aube`, depuis `b58ea3f0`. Lire
-[le contrat](docs/OBJECTIFS_EPREUVES.md). Nouvelle PR indépendante, aucune
-fusion autorisée pour cette suite. `engine/trial-objectives.js` centralise
-les faits comptés, les objectifs enregistrés au départ et leur lecture pure.
-`battle.js` signale seulement les attaques/interceptions résolues et les tours.
-Les compteurs sont attachés au uid et à la rareté d'un exemplaire vivant ; ne
-pas additionner plusieurs unités ni transmettre l'exploit à une réinvocation.
-Le champ facultatif `battle.trialChallenge` appartient à la bataille, pas au
-profil. Une ancienne épreuve sans ce champ garde son objectif de survie.
-`ui/evolution-trials.js` partage la fiche et le compteur de combat ; les vues
-n'attribuent rien et ne recalculent pas les exploits. Aucun chiffre/pouvoir de
-carte, deck adverse, prix ou récompense supplémentaire dans cette suite.
+Demande explicite du propriétaire : les cartes déjà possédées utilisent les
+règles validées, comme les nouvelles. Aucune variante permanente « historique »
+de Garde/Riposte. Lire [le contrat actuel](docs/REGLES_CARTES_UNIQUES.md).
+`cards/abilities.js` définit Garde normale positionnelle pour les cinq gardiens
+et Riposte à l'ATQ effective pour les sept natifs concernés, bonus compris,
+sans Charge. `definitions.js` expose un seul registre ; `resolveRulesDefinition`
+est un alias, jamais une seconde projection. `CARD_RULESET = cards-v2` identifie
+la révision du combat pour détecter une sauvegarde incompatible, sans choisir
+une autre règle. Mêmes capacités en aventure, dans les deux camps et au labo.
+Les profils/possessions/achats restent intacts ; aucun rang supplémentaire obtenu.
 
-## Épreuves Aube — intégrées par la PR 55
+Les anciens combats actifs ne reprennent plus : message explicite et fermeture
+sans défaite ni pénalité, puis relance depuis l'écran habituel. Aucune conversion
+silencieuse des unités blessées. Les anciens résultats terminés peuvent être
+réglés avec le reçu existant, sans rejouer leur combat. Une partie précédente
+reste récupérable même si seul son combat doit être relancé. Les vieux passages
+techniques ci-dessous sur les règles historiques sont remplacés par ce contrat.
+
+La PR 56 des défis est réconciliée avec main `a0726d4` (PR 57 et 58 intégrées).
+Le Porte-égide doit déclencher deux Ripostes réelles et survivre à la victoire ;
+aucune ancienne Garde ni interception fictive. Les trois autres défis restent
+inchangés. Les exploits sont comptés par uid vivant, sans cumul entre copies.
+`engine/trial-objectives.js` porte création, validation et lecture ; `battle.js`
+rapporte les faits, dont le booléen de Riposte du résolveur commun. Une ancienne
+épreuve compatible sans objectif conserve sa condition de départ.
+Lire [le contrat et la reprise PR 56](docs/OBJECTIFS_EPREUVES.md).
+Aucune fusion/publication de cette PR n'est autorisée par « reprends ».
+
+## Épreuves Aube — PR 55
 
 Lire [la reprise](docs/REPRISE_EPREUVES_EVOLUTION.md) et
 [le contrat](docs/EPREUVES_EVOLUTION.md) avant de poursuivre la branche
@@ -26,8 +41,7 @@ et inventaire facultatif ; les natifs restent des chaînes d'ID. Pas de migratio
 copie offerte ou activation globale des règles Aube dans un ancien combat.
 `engine/evolution-progress.js` porte accès, création et transformation uniques.
 L'interface réutilise la clôture récupérable avec reçu avant nettoyage du combat.
-PR 55 fusionnée sur accord explicite au main `b58ea3f0` après ses deux CI réussies.
-Publication du site distincte, non vérifiée ici.
+Aucune fusion/publication de la PR 55 autorisée. Main de base : `1177160856`.
 
 ## Contrat — construction manuelle du deck
 
@@ -59,9 +73,8 @@ Publication du site distincte, non vérifiée ici.
 ## Contrat — préparation des défenses versionnées
 
 - `engine/battle-defense.js` est l'unique résolution de `hit` et Riposte pour
-  tous les appels du moteur. `versionUnitAbilities` lit le registre seulement
-  pour un instantané futur explicite ou marqué `cardRules: aube-v1`. Les
-  anciens combattants sans ce marqueur gardent leurs règles historiques.
+  tous les appels du moteur. `versionUnitAbilities` lit le registre actuel pour tous les natifs et leurs
+  évolutions. Aucun ancien moteur sélectionné selon le contexte.
 - Distinguer `status.engine` (moteur vérifié) de `status.combat` (livraison
   complète). `unitCanPlay` contrôle la pose : seules les quatre versions des
   épreuves peuvent être jouées en aventure dans un nouveau combat compatible.
@@ -77,18 +90,16 @@ Publication du site distincte, non vérifiée ici.
 
 ## Contrat — règles versionnées et laboratoire commun
 
-- `resolveRulesDefinition` est une projection immuable du registre unique,
-  pas un second catalogue saisi à la main. `AUBE_RULESET` identifie les règles
-  futures des nouveaux instantanés, y compris natifs Aube ; aucune inférence
-  à partir de la date d'une sauvegarde ou modification d'une ancienne unité.
+- `resolveRulesDefinition` est un alias du résolveur unique. `CARD_RULESET`
+  identifie les combats actuels ; aucun contexte ne change les règles d'une
+  même carte. Une ancienne bataille active exige une relance explicite.
 - `engine/unit-rules.js` partage références, autorisation de pose, portée,
   déplacement, Charge, Vol et Perforation entre moteur, IA et prévisions.
   `engine/unit-support.js` résout arrivée et soutiens avec les primitives du
   même moteur. Les états d'arrivée et de soutien empêchent les répétitions.
 - Le laboratoire utilise `versionUnitStats` et les versions dont le moteur est
   implémenté. Niveaux 0–3 indépendants de la rareté ; aucun niveau forcé ni
-  nouveau pilote spécifique au Milicien. Les anciens champs `labGuard` restent
-  seulement lisibles par le chemin de compatibilité, sans nouvelle création.
+  nouveau pilote spécifique au Milicien. Les anciens champs `labGuard` ne sont plus résolus par le moteur.
 - Les barrières de capacités gardent leurs plafonds par effet ; les sorts
   gardent leur plafond individuel et ne réduisent pas un surplus préexistant.
   Ne pas déplacer ces règles dans les vues ou dupliquer les chiffres de Notion.
@@ -245,6 +256,29 @@ Publication du site distincte, non vérifiée ici.
   requis sur main et confirmer séparément la publication ; ne pas confondre
   fin d'attente active, réussite CI, fusion et déploiement.
 
+## CI parallèle — contrat de validation
+
+Lire [le plan et les limites](docs/CI_PARALLELE.md). `test.yml` lance quatre
+instances de `tests` puis le verdict historique `validation`, toujours évalué.
+`ci_browser_groups.json` attribue chaque suite une fois ; les seules parties
+sont les quatre contextes d'épreuves, dont l'union reproduit le parcours complet.
+Ne pas lancer aussi la suite entière en CI. Les 27 entrées et tous les tests
+moteur/simulations sont obligatoires. Le runner conserve les échecs, la matrice
+ne s'arrête pas au premier groupe rouge et le verdict refuse tout sauf success.
+
+Playwright reste fixé dans `scripts/requirements-ci.txt`, cache navigateur
+facultatif publié par un seul groupe. Diagnostic reconstruit localement par
+runner pour éviter une grosse archive obligatoire ; captures conditionnelles
+et paquet Sites conservés. PR plus récente : annulation du passage obsolète ;
+aucune annulation mutuelle des pushes main. Aucun appel de modèle/agent dans
+les workflows, aucun suivi actif supplémentaire demandé aux futures sessions.
+Vérifier le résultat global et ne lire les logs détaillés que si nécessaire.
+
+Le verrouillage effectif nécessite que main exige `validation` et
+`assemblage-web` dans GitHub, administrateurs inclus. Ne pas confondre le
+verdict rouge testé dans la CI avec une protection de branche effectivement
+active : elle n'était pas configurée au relevé initial de cette mission.
+
 ## Contrat CI — vérification sélective des PR documentaires
 
 - Les workflows `test.yml` et `web-package.yml` gardent leurs deux statuts
@@ -289,8 +323,9 @@ Publication du site distincte, non vérifiée ici.
   `tests/JOUER.test.html` est uniquement un paquet diagnostic non distribué.
 - Régénérer avec `npm run build` et `npm run build:test`. Les anciens documents
   mentionnant `ESSAI_CARTES.html`, `build:cards` ou quatre builds sont historiques.
-- Conserver règles, moteur, profils et sauvegardes historiques, y compris leurs
-  plateaux 3×5 ; ils utilisent désormais les cartes, sans conversion des données.
+- Conserver profils, possessions et présentation cartes. Un ancien combat actif
+  incompatible demande une relance, selon le contrat des règles uniques ; aucun
+  second moteur historique ni conversion silencieuse de ses unités.
 
 ## Entretien des vues — proposition indépendante du 23/10/2026
 

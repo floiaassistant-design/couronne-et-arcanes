@@ -7,7 +7,7 @@ export const EVOLUTION_TRIALS=freezeCardData([
   objective:'Remporter la bataille avec au moins un Milicien Commun encore vivant.',
   enemy:'Patrouille des Brumes',difficulty:1,hp:16,aiStyle:'equilibre',deck:['militia','militia','shield','archer','militia','healing','militia','archer']},
  {id:'aube-shield-rare',name:'Le serment du Porte-égide',cardId:'shield',from:'commun',to:'rare',mission:'02',
-  goal:{metric:'interceptions',target:2},
+  goal:{metric:'ripostes',target:2},
   objective:'Remporter la bataille avec au moins un Porte-égide Commun encore vivant.',
   enemy:'Éclaireurs des Brumes',difficulty:1,hp:18,aiStyle:'assaut',deck:['militia','ranger','militia','wolf','militia','healing','ranger','militia']},
  {id:'aube-archer-rare',name:'La dernière volée',cardId:'archer',from:'commun',to:'rare',mission:'02',

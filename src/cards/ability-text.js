@@ -4,7 +4,7 @@ export function unitAbilitySummary(definition){
  const a=definition.abilities,lines=[],scope=p=>p.scope==='all-lines'?'toutes lignes':'sa ligne';
  if(a.armor)lines.push(`Armure ${a.armor.amount}`);
  if(a.firstHitReduction)lines.push(`Premier coup : −${a.firstHitReduction.amount}`);
- if(a.guard)lines.push(`Garde ${a.guard.scope==='all-lines'?'toutes lignes':a.guard.scope==='line'?'de ligne':a.guard.scope==='legacy-line'?'historique':'positionnelle'}`);
+ if(a.guard)lines.push(`Garde ${a.guard.scope==='all-lines'?'toutes lignes':a.guard.scope==='line'?'de ligne':'positionnelle'}`);
  if(a.riposte)lines.push(`Riposte : ${a.riposte.damageMode==='effective-attack'?'ATQ':a.riposte.amount}, ${a.riposte.frequency==='invocation'?'1 fois':'1/tour'}`);
  if(a.lastStand)lines.push(`Dernier Rempart : ${a.lastStand.hp} PV, 1 fois`);
  if(a.riposteBarrier)lines.push(`Barrière après Riposte : ${a.riposteBarrier.amount}`);
@@ -51,7 +51,7 @@ export function unitAbilityDetails(d){
  const a=d.abilities,lines=[],scope=p=>p.scope==='all-lines'?'toutes les lignes':'sa ligne';
  if(a.armor)lines.push(`Armure ${a.armor.amount} : réduit les dégâts, minimum ${a.armor.minimumDamage}.`);
  if(a.firstHitReduction)lines.push(`Premier coup reçu : −${a.firstHitReduction.amount} dégâts, une fois par invocation.`);
- if(a.guard)lines.push(a.guard.scope==='legacy-line'?'Garde historique : intercepte sur sa ligne, avec priorité au ciblage.':`Garde : protège sa couronne ${a.guard.scope==='all-lines'?'depuis toutes les lignes':a.guard.scope==='line'?'depuis toute sa ligne, même dépassé':'sur sa ligne, entre l’attaquant et la couronne'} ; ${a.guard.maxPerAttack} gardien par frappe, tant qu’il vit.`);
+ if(a.guard)lines.push(`Garde : protège sa couronne ${a.guard.scope==='all-lines'?'depuis toutes les lignes':a.guard.scope==='line'?'depuis toute sa ligne, même dépassé':'sur sa ligne, entre l’attaquant et la couronne'} ; ${a.guard.maxPerAttack} gardien par frappe, tant qu’il vit.`);
  if(a.riposte)lines.push(`Riposte au contact après survie : ${a.riposte.damageMode==='effective-attack'?'ATQ effective, bonus compris, sans Charge':a.riposte.amount+' dégâts'}, ${a.riposte.frequency==='invocation'?'une fois par invocation':'au plus une fois par tour'}.`);
  if(a.lastStand)lines.push(`Dernier Rempart : survit au premier coup mortel avec ${a.lastStand.hp} PV au plus, sans dépasser ses PV maximum ; une fois par invocation.`);
  if(a.riposteBarrier)lines.push(`Après une Riposte autorisée : barrière personnelle +${a.riposteBarrier.amount}, plafond ${a.riposteBarrier.cap} pour cet effet.`);

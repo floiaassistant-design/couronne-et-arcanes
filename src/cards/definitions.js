@@ -1,7 +1,7 @@
-// Catalogue de versions en lecture seule. Aucun ajout à CARDS, aucune possession ni règle activée.
+// Registre unique des règles actuelles ; aucune possession ajoutée au catalogue.
 import {CARDS} from '../data.js';
 import {CARD_RARITIES,normalizeCardRarity,freezeCardData} from './schema.js';
-import {nativeUnitAbilities,inheritUnitAbilities,FUTURE_GUARD_POLICY} from './abilities.js';
+import {nativeUnitAbilities,inheritUnitAbilities} from './abilities.js';
 import {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE} from './aube.js';
 import {evolutionTrialFor} from '../evolution-trials.js';
 
@@ -57,22 +57,8 @@ export function unitVersionPlayable(reference){
  return resolveUnitDefinition(reference)?.status.combat==='implemented';
 }
 
-// Identité explicite des règles futures. Les anciens instantanés restent historiques.
-export const AUBE_RULESET='aube-v1';
-const rulesDefinitions=new Map();
-for(const versions of definitions.values())for(const def of versions){
- if(!AUBE_UNIT_IDS.includes(def.id))continue;
- const changes={};
- if(def.abilities.riposte&&def.id!=='militia')changes.riposte={damageMode:'effective-attack'};
- if(def.abilities.guard)changes.guard={...FUTURE_GUARD_POLICY,scope:def.rarity===def.nativeRarity?'positioned':def.abilities.guard.scope,unitTargetPriority:false};
- rulesDefinitions.set(def.versionId,freezeCardData({...def,cardRules:AUBE_RULESET,
-  abilities:inheritUnitAbilities(def.abilities,changes),source:AUBE_DESIGN_SOURCE}));
-}
-export function resolveRulesDefinition(reference){
- const def=resolveUnitDefinition(reference);return def?rulesDefinitions.get(def.versionId)||def:null;
-}
-export function versionUnitAbilities(unit){
- if(!unit||!Object.hasOwn(unit,'rarity'))return null;
- const d=unit.cardRules===AUBE_RULESET?resolveRulesDefinition(unit):resolveUnitDefinition(unit);
- return d?.source?d.abilities:null;
-}
+// Révision du combat, pas une variante sélectionnable de ses règles.
+export const CARD_RULESET='cards-v2';
+// Même registre pour aventure, laboratoire, fiches et références natives.
+export const resolveRulesDefinition=resolveUnitDefinition;
+export function versionUnitAbilities(unit){return unit?resolveUnitDefinition(unit)?.abilities||null:null;}
