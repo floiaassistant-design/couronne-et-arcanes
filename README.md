@@ -1,3 +1,8 @@
+> **Proposition CI :** quatre groupes parallèles et un verdict global, tous
+> les tests existants conservés. [Répartition, quotas et vérifications](docs/CI_PARALLELE.md).
+> Branche `ci/tests-paralleles`, depuis le main `6dee2dc4` (PR 57 fusionnée).
+> Les annonces de propositions ci-dessous retracent les livraisons précédentes.
+
 > **Correction proposée — règles uniques des cartes jouables.**
 > Garde positionnelle pour les cinq gardiens et Riposte à l'ATQ actuelle pour
 > toutes les unités concernées, exemplaires déjà possédés inclus, dans les deux

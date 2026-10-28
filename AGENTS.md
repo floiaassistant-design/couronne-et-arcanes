@@ -252,6 +252,29 @@ Aucune fusion/publication de la PR 55 autorisée. Main de base : `1177160856`.
   requis sur main et confirmer séparément la publication ; ne pas confondre
   fin d'attente active, réussite CI, fusion et déploiement.
 
+## CI parallèle — contrat de validation
+
+Lire [le plan et les limites](docs/CI_PARALLELE.md). `test.yml` lance quatre
+instances de `tests` puis le verdict historique `validation`, toujours évalué.
+`ci_browser_groups.json` attribue chaque suite une fois ; les seules parties
+sont les quatre contextes d'épreuves, dont l'union reproduit le parcours complet.
+Ne pas lancer aussi la suite entière en CI. Les 27 entrées et tous les tests
+moteur/simulations sont obligatoires. Le runner conserve les échecs, la matrice
+ne s'arrête pas au premier groupe rouge et le verdict refuse tout sauf success.
+
+Playwright reste fixé dans `scripts/requirements-ci.txt`, cache navigateur
+facultatif publié par un seul groupe. Diagnostic reconstruit localement par
+runner pour éviter une grosse archive obligatoire ; captures conditionnelles
+et paquet Sites conservés. PR plus récente : annulation du passage obsolète ;
+aucune annulation mutuelle des pushes main. Aucun appel de modèle/agent dans
+les workflows, aucun suivi actif supplémentaire demandé aux futures sessions.
+Vérifier le résultat global et ne lire les logs détaillés que si nécessaire.
+
+Le verrouillage effectif nécessite que main exige `validation` et
+`assemblage-web` dans GitHub, administrateurs inclus. Ne pas confondre le
+verdict rouge testé dans la CI avec une protection de branche effectivement
+active : elle n'était pas configurée au relevé initial de cette mission.
+
 ## Contrat CI — vérification sélective des PR documentaires
 
 - Les workflows `test.yml` et `web-package.yml` gardent leurs deux statuts

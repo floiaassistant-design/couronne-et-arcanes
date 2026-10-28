@@ -1,5 +1,20 @@
 # État courant — 27 octobre 2026
 
+## Proposition — CI parallèle
+
+Branche `ci/tests-paralleles`, depuis le main `6dee2dc4` (PR 57 fusionnée).
+PR 58 en brouillon : premier passage 7 min 13 s, mais reprise mobile en échec ;
+verdict global rouge confirmé. Préparation des fixtures isolée avant le parcours ;
+résultats du nouveau passage à lire dans la PR, aucun succès CI anticipé.
+Quatre groupes de tests parallèles, verdict global `validation`, inventaire et
+assertions conservés. Épreuves séparées par contexte ; aucun changement au jeu
+ni à l’export. [Plan, quotas et blocage des fusions](CI_PARALLELE.md).
+La protection effective de main reste une configuration externe à vérifier ;
+aucune fusion autorisée pour cette proposition. La PR 56 reste indépendante.
+
+Les sections suivantes décrivent les livraisons précédentes.
+
+
 ## Correction proposée — règles uniques des cartes jouables
 
 Branche `fix/regles-cartes-jouables`, depuis le main vérifié `b58ea3f0`.
