@@ -11,8 +11,8 @@ export const trialSource=t=>cardReference({id:t.cardId,rarity:t.from});
 export const trialReward=t=>cardReference({id:t.cardId,rarity:t.to});
 export function evolutionTrialAccess(profile,id,battle=null){
  const t=evolutionTrial(id);if(!t)return {ok:false,reason:'Épreuve inconnue.'};
- if(battle&&(battle.status==='active'||!battle.rewardGiven))return {ok:false,reason:'Terminez le combat et récupérez son résultat avant de commencer une épreuve.'};
  if(profile.completedTrials?.includes(id))return {ok:false,completed:true,reason:t.kind==='ascension'?'Ascension déjà accomplie : fusions débloquées.':'Évolution déjà obtenue : une seule récompense par épreuve.'};
+ if(battle&&(battle.status==='active'||!battle.rewardGiven))return {ok:false,reason:'Terminez le combat et récupérez son résultat avant de commencer une épreuve.'};
  const mission=CAMPAIGN.find(m=>m.id===t.mission);
  if(!profile.completed.includes(t.mission))return {ok:false,reason:`Vaincre ${mission.enemy} dans « ${mission.name} ».`};
  if(t.previous&&!profile.completedTrials?.includes(t.previous))return {ok:false,reason:`Terminer l’épreuve « ${evolutionTrial(t.previous).name} ».`};

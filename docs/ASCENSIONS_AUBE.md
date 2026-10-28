@@ -111,7 +111,7 @@ complets/captures/CI du commit exact dans la PR ; aucun succès anticipé.
 ## Distribution et limites
 
 Export `JOUER.html` reconstruit : **34 547 008 octets**, blob
-`617d56535c6f350b7d6a4bb71fc8123ef4512a2b`. Vérifier les arbres et le blob
+`0240530bf1270123aa351ad30413db026a23df0c`. Vérifier les arbres et le blob
 après enregistrement GitHub ; ne pas éditer l'HTML à la main. Diagnostic jamais
 distribué. Générateur ponctuel retiré avant PR, workflows permanents inchangés.
 

@@ -55,9 +55,12 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         assert result['evolvedCollection']==s['profile']['evolvedCollection']
         assert result['completedTrials'].count(s['id'])==1
         assert await stored(page,BATTLE) is None
-        if config['full']:
-            await click(page.locator('[data-action="trial-exit"][data-page="trials"]'),touch)
+        exit_button=page.locator('.modal [data-action="trial-exit"][data-page="trials"]')
+        if await exit_button.count():
+            await click(exit_button,touch)
         else:
+            if await page.locator('.combat-menu-link').is_visible():
+                await click(page.locator('.combat-menu-link'),touch)
             await click(page.locator('#nav [data-page="trials"]'),touch)
         assert await page.locator(f'[data-trial-id="{s["id"]}"] [data-action="trial-start"]').is_disabled()
         await page.reload();assert await stored(page)==result
@@ -107,6 +110,8 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         await click(page.locator('.combat-menu-link'),touch)
         await click(page.locator('#nav [data-page="alchemy"]'),touch)
         assert await page.locator('[data-fusion-id] button:enabled').count()==0
+        await click(page.locator('#nav [data-page="trials"]'),touch)
+        assert 'Fusions débloquées' in await page.locator(f'[data-trial-id="{s["id"]}"]').inner_text()
         assert await stored(page)==final
         assert not await page.evaluate("'profile' in window||'battle' in window")
         assert not errors,errors

@@ -21,7 +21,7 @@ jobs:
       - name: Générer uniquement l’export vérifié de cette branche
         run: |
           npm run build
-          test "$(git hash-object JOUER.html)" = "617d56535c6f350b7d6a4bb71fc8123ef4512a2b"
+          test "$(git hash-object JOUER.html)" = "0240530bf1270123aa351ad30413db026a23df0c"
           git fetch origin feat/ascensions-aube
           test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
           if git diff --quiet -- JOUER.html; then exit 0; fi

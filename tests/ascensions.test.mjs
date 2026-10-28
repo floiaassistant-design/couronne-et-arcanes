@@ -83,6 +83,7 @@ test('Deux vrais combats complets : accès unique sauvegardé, sans carte, coût
   const once=structuredClone(p);assert.equal(settleEvolutionTrial(p,b).unlocked,undefined);assert.deepEqual(p,once);
   assert.equal(settleEvolutionTrial(p,structuredClone(s.terminal)).unlocked,undefined);assert.deepEqual(p,once);
   assert.equal(evolutionTrialAccess(p,s.id).completed,true);
+  assert.equal(evolutionTrialAccess(p,s.id,{status:'active'}).completed,true);
   storage();assert(saveProfile(p));assert.deepEqual(loadProfile(),p);assert.deepEqual(validateImportedProfile(JSON.parse(JSON.stringify(p))),p);
  }
 });
