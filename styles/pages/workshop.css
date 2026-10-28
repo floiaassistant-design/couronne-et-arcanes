@@ -1,4 +1,11 @@
 /* Atelier : classes, forge, alchimie, maîtrise et talents. */
+.evolution-fusion-recipe { min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 10px; background: #172733; padding: 10px; }
+.evolution-fusion-recipe .unit-card { width: 100%; }
+.evolution-fusion-action { padding: 8px; display: flex; flex: 1; flex-direction: column; gap: 8px; }
+.evolution-fusion-action h3 { margin: 0; font-size: 15px; }
+.evolution-fusion-action p { margin: 0; font-size: 12px; line-height: 1.5; }
+.evolution-fusion-action .btn { margin-top: auto; min-height: 44px; white-space: normal; }
+.fusion-result-card { width: min(180px,100%); margin: 12px auto; }
 .forge-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

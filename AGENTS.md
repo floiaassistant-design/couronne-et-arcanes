@@ -1,5 +1,25 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Fusion de doublons — proposition du 28 octobre 2026
+
+Le propriétaire retient paquets + fusion pour la progression ordinaire, puis
+quelques épreuves très difficiles pour des cartes exceptionnelles. Les quatre
+épreuves pilotes restent intégrées depuis PR 56, main `736fd7d`.
+La branche `feat/fusion-doublons-evolutions` propose 3 copies libres identiques
+pour 1 rang suivant, sans or/éclats, Aube uniquement jusqu'à Épique. Ratio et
+verrous proposés à la revue : mission 01 pour Rare, premier boss pour Épique.
+Douze recettes, dont huit versions nouvellement obtenables ; 29 autres évolutions
+Aube restent au laboratoire. Les anciennes limites « quatre versions/37 autres »
+ci-dessous décrivent l'état antérieur. Aucun gain ni copie automatique.
+Lire [le contrat](docs/FUSION_DOUBLONS.md). `evolution-fusion.js` porte les recettes
+sans chiffres de cartes ; `engine/evolution-fusion.js` contrôle et consomme les
+stocks de rang exact hors deck. `unitVersionPlayable` reste la permission centrale.
+Le contrôleur de fusion exige une confirmation, revérifie les stocks/combat et
+sauve une copie avant de l'adopter ; une panne ne consomme rien. Préserver la
+fabrication or/éclats existante, les quatre épreuves et leurs récompenses uniques.
+Les paquets d'évolution et les grandes épreuves restent des étapes ultérieures.
+Cette proposition n'autorise aucune fusion sur main ni publication.
+
 ## Priorité — règles uniques des cartes jouables, 27 octobre 2026
 
 Demande explicite du propriétaire : les cartes déjà possédées utilisent les

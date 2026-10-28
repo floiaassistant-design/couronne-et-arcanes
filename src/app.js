@@ -1,6 +1,7 @@
 import {cardPreviewAttributes} from './ui/card-presentation.js';
 import {cardId,cardRarity,cardFromKey} from './cards/references.js';
 import {evolutionTrialResult} from './ui/evolution-trials.js';
+import {createEvolutionFusionController} from './ui/evolution-fusion-controller.js';
 import {createSpellController} from './ui/spell-controller.js';
 import {esc} from './ui/markup.js';
 import {createViews} from './ui/views.js';
@@ -28,6 +29,7 @@ const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCard
 const {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying}=createCombatFx(()=>({animationsEnabled,screen}));
 const {spellState,handleSpell,resetSpell}=createSpellController(()=>({battle,selectedCard}),{refresh:()=>render(),launch:(index,lane)=>withBattleFx(()=>playPlayerCard(battle,index,lane)),closeInspection:()=>closeCardInspection(true)});
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,deckUI,trialsUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,deckFilters,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
+const handleEvolutionFusion=createEvolutionFusionController(()=>({profile,battle}),{btn,cardUI,esc,showModal,hideModal,refresh:()=>render(),toast,commitProfile:next=>{if(developer||!saveProfile(next))return false;profile=next;return true;}});
 function load(){return loadProfile();}
 function save(){if(developer)return;if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
@@ -241,6 +243,7 @@ function act(action,dataset){const {id,index,lane,col,page}=dataset;
  if(developer&&screen==='battle'&&!action.startsWith('spell-')&&!['lab-back','lab-exit','lab-start','nav','home','select-card','deploy','end-turn','hero-power','toggle-animations','fx-skip','fx-speed','retreat','confirm-retreat','close-modal','close-inspection'].includes(action))return;
  if(isBattleFxPlaying()&&(action.startsWith('spell-')||['select-card','deploy','end-turn','hero-power'].includes(action)))return;
  if(action==='spell-cancel'){resetSpell();selectedCard=-1;render();return;}
+ if(handleEvolutionFusion(action,dataset))return;
  if(handleSpell(action,dataset))return;
  switch(action){
 

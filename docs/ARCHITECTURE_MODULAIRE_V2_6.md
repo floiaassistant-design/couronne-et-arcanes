@@ -1,3 +1,21 @@
+## Fusion de doublons — proposition du 28 octobre 2026
+
+`evolution-fusion.js` contient uniquement les douze recettes Aube et le ratio.
+Il dépend des données/patches de conception, jamais des résolveurs : le registre
+peut y lire l'obtention sans cycle. `definitions.js` expose la disponibilité
+commune ; `references.js` réutilise `unitVersionPlayable` pour les stocks,
+imports, decks et combats. Les paramètres des cartes restent dans leurs patches.
+
+`engine/evolution-fusion.js` calcule les stocks libres du rang exact et revérifie
+accès de campagne, combat, bornes et obtention avant consommation. Il ne modifie
+ni deck ni ressources. `ui/evolution-fusion.js` rend recettes/confirmation ;
+`ui/evolution-fusion-controller.js` détient seulement la confirmation transitoire,
+consomme sur une copie puis demande sa sauvegarde avant adoption. App ajoute
+l'adaptateur ; pages insère la section dans Alchimie. Quatre modules correspondent
+aux données, métier, rendu et orchestration, sans dépendance externe ni cycle.
+61 modules embarqués ; app reste à 380 lignes, pages à 269.
+[Contrat et reprise](FUSION_DOUBLONS.md).
+
 ## Objectifs d'épreuves — PR 56 réconciliée, 28 octobre 2026
 
 `engine/trial-objectives.js` centralise objectif figé au départ, validation,

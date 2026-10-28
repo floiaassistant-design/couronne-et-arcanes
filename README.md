@@ -3,9 +3,10 @@
 Garde/Riposte uniques (PR 57) et quatre groupes de tests parallèles (PR 58)
 sont intégrés. [Règles](docs/REGLES_CARTES_UNIQUES.md) · [CI](docs/CI_PARALLELE.md).
 
-> PR 55 fusionnée : quatre évolutions obtenables par épreuve. Cette branche propose
-> des [objectifs personnels et leur compteur](docs/OBJECTIFS_EPREUVES.md), dans la PR 56 réconciliée avec main `a0726d4` (PR 57 et 58 intégrées).
-> Le Porte-égide doit déclencher deux Ripostes, avec victoire et survie du même exemplaire.
+> Les quatre défis pilotes (PR 56) sont intégrés sur main `736fd7d`.
+> Cette branche propose la [fusion de doublons](docs/FUSION_DOUBLONS.md) en Alchimie :
+> **3 exemplaires libres identiques → 1 rang suivant**, Aube jusqu'à Épique.
+> Le deck est protégé ; confirmation avant consommation, aucune dépense d'or/éclats.
 
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
 quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle.
@@ -20,7 +21,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 évolutions Rares, puis du Milicien Épique après le premier boss. Sur cette branche, accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; les 37 autres évolutions Aube restent au labo.
+sont utilisables en campagne ; la fusion ouvre ici 12 évolutions Aube ; les 29 autres restent au labo.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
@@ -82,7 +83,7 @@ Sites version 7 ont été vérifiées dans son bilan.
 
 ### Collection — six cartes et aperçu rapide
 
-Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube définies montrent leurs chiffres : quatre évolutions portent le statut des épreuves et leurs vrais exemplaires ; les 37 autres indiquent « Testable au laboratoire · Obtention non définie ». Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
+Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube définies montrent leurs chiffres et leurs stocks réels : douze évolutions sont proposées à la fusion, dont quatre également obtenables par épreuve ; les 29 autres indiquent « Testable au laboratoire · Obtention non définie ». Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
 
 ## Progression et sauvegarde
 
@@ -99,7 +100,7 @@ conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteu
 sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
 et leurs niveaux 0 à 3, choisis indépendamment. Les autres unités conservent
 leur version native. Les quatre récompenses pilotes se gagnent dans les Épreuves ;
-les autres évolutions ne sont pas offertes dans l’aventure. La PR Aube nº 53, avec sa présentation commune et sa
+les 12 évolutions de fusion sont proposées sur cette branche ; les 29 autres restent au laboratoire. La PR Aube nº 53, avec sa présentation commune et sa
 [revue finale](docs/REVUE_AUBE_PR53_2026_10_27.md), a été fusionnée sur accord du
 propriétaire le 27 octobre 2026. La publication du site reste une opération distincte.
 

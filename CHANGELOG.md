@@ -1,3 +1,16 @@
+## Proposition — fusion de doublons Aube, 28 octobre 2026
+
+- Alchimie propose douze évolutions Rare/Épique : trois exemplaires libres
+  identiques deviennent un exemplaire du rang suivant, sans or ni éclats.
+- Mission 01 pour Rare, premier boss pour Épique ; aucune épreuve obligatoire.
+  Ratio et accès sont proposés dans cette PR, sans décision Notion inventée.
+- Huit nouvelles versions obtiennent un circuit d'aventure ; règles des cartes
+  conservées, 29 autres évolutions Aube au laboratoire. Stocks par rang réutilisés.
+- Deck protégé, confirmation, revérification et sauvegarde sur copie ; panne et
+  double clic sans perte/consommation supplémentaire. Carte ajoutable dans Mon deck.
+- Quatre épreuves, butins existants et fabrication or/éclats conservés. Nouveaux
+  paquets et grandes épreuves ultérieurs. [Contrat](docs/FUSION_DOUBLONS.md).
+
 ## Proposition — objectifs d'épreuves, PR 56 réconciliée, 28 octobre 2026
 
 - Branche remise à jour avec main `a0726d4` : règles uniques PR 57 et CI parallèle PR 58 conservées.
