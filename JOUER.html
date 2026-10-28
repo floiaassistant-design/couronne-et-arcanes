@@ -4585,7 +4585,7 @@ case 'lab-open':openDeveloper();break;
  case 'welcome-guide':profile.guideSeen=true;save();hideModal();navigate('guide');break;
  }
 }
-document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();act(el.dataset.action,el.dataset);});
+document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();if(event.detail>1&&el.closest('[data-pack-result-actions]'))return;act(el.dataset.action,el.dataset);});
 document.addEventListener('keydown',event=>{
  if(event.key==='Escape'){if(isBattleFxPlaying())return;if(selectedCard>=0){resetSpell();selectedCard=-1;render();}closeCardInspection(true);return;}
  if((event.key==='Enter'||event.key===' ')&&!event.target.closest('button')){
@@ -4626,7 +4626,7 @@ Object.assign(__exports,{});
 // Modèle et fiche uniques ; lit les calculs du moteur, sans mutation ni action.
 const {CARDS,FACTIONS,CLASSES,cardTraits}=__load("src/data.js");
 const {CARD_RARITIES,normalizeCardRarity}=__load("src/cards/schema.js");
-const {resolveUnitDefinition,resolveRulesDefinition,versionUnitAbilities,AUBE_UNIT_IDS}=__load("src/cards/definitions.js");
+const {resolveUnitDefinition,resolveRulesDefinition,versionUnitAbilities,VERSIONED_UNIT_IDS}=__load("src/cards/definitions.js");
 const {ownedCardCopies}=__load("src/cards/references.js");
 const {evolutionTrialFor}=__load("src/evolution-trials.js");
 const {evolutionFusionFor}=__load("src/evolution-fusion.js");
@@ -4672,7 +4672,7 @@ function cardPresentation(reference,{context={},profile=null,side='p',unit=null,
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);
  let effective=definition;
  if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor??definition.abilities.armor.amount}}:{})}};
- const structured=known&&native.type==='unité'&&(AUBE_UNIT_IDS.includes(id)||effective?.abilities.guard||effective?.abilities.riposte);
+ const structured=known&&native.type==='unité'&&(VERSIONED_UNIT_IDS.includes(id)||effective?.abilities.guard||effective?.abilities.riposte);
  const description=!known?missing:structured?unitCardText(effective):brief(native.description);
  const details=!known?[lower?'Aucune version sous la rareté native.':'Cette évolution reste à concevoir.']:
   structured?unitAbilityDetails(effective):[native.description];
@@ -4713,7 +4713,7 @@ function cardInspectionContent(card,entry,stats,esc,{board=null,presentation=nul
  const identity=`<div class="inspection-feature ${cardTemplateFor(shown)?'inspection-generated-feature':''}">${cardTemplateFor(shown)?generatedCardFace(shown,{stats,delay:board?0:context==='hand'?entry.wait:shown.delay,kind:board?'deployed':context==='hand'?'remaining':'base',concordeActive:!!board?.concordeActive,esc}):`<img class="inspection-art" src="${artSrc(visualFor(shown,{cards:true}).art)}" alt="" draggable="false">`}<div class="inspection-identity"><h2>${esc(shown.name)}</h2><span class="inspection-order">${esc(faction.name)}</span><span class="inspection-rarity">${esc(shown.rarity)} · ${esc(shown.type)}</span><div class="inspection-readiness">${esc(readiness)}</div>${statistics}</div></div>`;
  const body=`<div class="inspection-body"><div class="inspection-description">${model.details.map(t=>`<p>${esc(t)}</p>`).join('')}</div>
   ${model.known?concordeDetails(shown,esc,board?board.concordeActive:null):''}
-  ${model.traits.length&&!AUBE_UNIT_IDS.includes(shown.id)?`<div class="inspection-traits">${model.traits.map(t=>`<span>${esc(t)}</span>`).join(' · ')}</div>`:''}
+  ${model.traits.length&&!VERSIONED_UNIT_IDS.includes(shown.id)?`<div class="inspection-traits">${model.traits.map(t=>`<span>${esc(t)}</span>`).join(' · ')}</div>`:''}
   ${shown.heroClass?`<div class="inspection-summary">${esc(CLASSES[shown.heroClass].name)}</div>`:''}
   ${board?.statuses.length?`<div class="inspection-statuses">${board.statuses.map(esc).join(' · ')}</div>`:''}
   ${bonusText?`<div class="inspection-bonuses">Bonus inclus : ${bonusText}</div>`:''}</div>`;
@@ -4947,10 +4947,12 @@ Object.assign(__exports,{freezeCardData,CARD_RARITIES,normalizeCardRarity});
 const {CARDS}=__load("src/data.js");
 const {CARD_RARITIES,normalizeCardRarity,freezeCardData}=__load("src/cards/schema.js");
 const {nativeUnitAbilities,inheritUnitAbilities}=__load("src/cards/abilities.js");
-const {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE}=__load("src/cards/aube.js");
+const {evolutionFamily}=__load("src/cards/evolutions.js");
 const {evolutionTrialFor}=__load("src/evolution-trials.js");
 const {evolutionFusionFor}=__load("src/evolution-fusion.js");
-const AUBE_UNIT_IDS=Object.freeze(Object.keys(AUBE_EVOLUTIONS));
+const AUBE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='aube'&&c.type==='unité').map(c=>c.id));
+const SYLVE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='sylve'&&c.type==='unité').map(c=>c.id));
+const VERSIONED_UNIT_IDS=Object.freeze([...AUBE_UNIT_IDS,...SYLVE_UNIT_IDS]);
 const definitions=new Map();
 const noVersions=Object.freeze([]);
 
@@ -4959,12 +4961,13 @@ for(const card of Object.values(CARDS)){
  const nativeIndex=CARD_RARITIES.findIndex(rank=>rank.id===card.rarity);
  if(nativeIndex<0)throw Error('Rareté native inconnue : '+card.id);
  const versions=[];
+ const family=evolutionFamily(card.id);
  let stats={attack:card.attack,hp:card.hp,delay:card.delay};
  let geometry={steps:card.ability==='haste'?2:1,range:card.ability==='ranged'?2:1};
  let abilities=nativeUnitAbilities(card),pendingDecisions=[];
  for(const rank of CARD_RARITIES.slice(nativeIndex)){
   const native=rank.id===card.rarity;
-  const patch=AUBE_EVOLUTIONS[card.id]?.[rank.id];
+  const patch=family?.versions[card.id]?.[rank.id];
   if(!native&&!patch)break;
   stats={...stats,...patch?.stats};
   geometry={...geometry,...patch?.geometry};
@@ -4975,7 +4978,7 @@ for(const card of Object.values(CARDS)){
    id:card.id,versionId:`${card.id}:${rank.id}`,rarity:rank.id,nativeRarity:card.rarity,
    stats:{...stats},geometry:{...geometry},abilities,
    status:{design:'validated',combat:native||trial||fusion?'implemented':'pending',engine:'implemented',obtaining:native?'existing':trial&&fusion?'trial-or-fusion':trial?'trial':fusion?'fusion':'undefined'},
-   pendingDecisions:[...pendingDecisions],source:native?null:AUBE_DESIGN_SOURCE
+   pendingDecisions:[...pendingDecisions],source:native?null:family.source
   });
   versions.push(definition);
  }
@@ -5009,7 +5012,7 @@ const CARD_RULESET='cards-v2';
 const resolveRulesDefinition=resolveUnitDefinition;
 function versionUnitAbilities(unit){return unit?resolveUnitDefinition(unit)?.abilities||null:null;}
 
-Object.assign(__exports,{AUBE_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable,CARD_RULESET,resolveRulesDefinition,versionUnitAbilities});
+Object.assign(__exports,{AUBE_UNIT_IDS,SYLVE_UNIT_IDS,VERSIONED_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable,CARD_RULESET,resolveRulesDefinition,versionUnitAbilities});
 
 },
 "src/cards/abilities.js":function(__exports,__load){
@@ -5054,6 +5057,20 @@ function inheritUnitAbilities(previous,changes={}){
 }
 
 Object.assign(__exports,{GUARD_POLICY,nativeUnitAbilities,inheritUnitAbilities});
+
+},
+"src/cards/evolutions.js":function(__exports,__load){
+// Familles de patches et provenance ; aucune règle ni statistique supplémentaire.
+const {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE}=__load("src/cards/aube.js");
+const {SYLVE_EVOLUTIONS,SYLVE_DESIGN_SOURCE}=__load("src/cards/sylve.js");
+const {freezeCardData}=__load("src/cards/schema.js");
+const EVOLUTION_FAMILIES=freezeCardData([
+ {id:'aube',versions:AUBE_EVOLUTIONS,source:AUBE_DESIGN_SOURCE},
+ {id:'sylve',versions:SYLVE_EVOLUTIONS,source:SYLVE_DESIGN_SOURCE}
+]);
+const evolutionFamily=id=>EVOLUTION_FAMILIES.find(f=>Object.hasOwn(f.versions,id))||null;
+
+Object.assign(__exports,{EVOLUTION_FAMILIES,evolutionFamily});
 
 },
 "src/cards/aube.js":function(__exports,__load){
@@ -5132,6 +5149,29 @@ const AUBE_EVOLUTIONS=freezeCardData({
 Object.assign(__exports,{AUBE_DESIGN_SOURCE,AUBE_EVOLUTIONS});
 
 },
+"src/cards/sylve.js":function(__exports,__load){
+// Première tranche Sylve : les quinze évolutions Rare/Épique validées dans Notion.
+// Les totaux remplacent la base ; les 33 rangs supérieurs attendent leur moteur.
+const {freezeCardData}=__load("src/cards/schema.js");
+const SYLVE_DESIGN_SOURCE=freezeCardData({
+ url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
+ editedAt:'2026-10-27T06:13:46.581Z'
+});
+const SYLVE_EVOLUTIONS=freezeCardData({
+ ranger:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}}},
+ wolf:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}}},
+ treant:{'épique':{stats:{hp:12}}},
+ dryad:{'épique':{stats:{hp:7}}},
+ thorn:{rare:{stats:{hp:6}},'épique':{stats:{attack:3}}},
+ pixie:{rare:{stats:{hp:4}},'épique':{abilities:{ward:{amount:5}}}},
+ bear:{'épique':{stats:{hp:11}}},
+ owl:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}}},
+ sylvan_trapper:{rare:{stats:{hp:6}},'épique':{stats:{attack:3}}}
+});
+
+Object.assign(__exports,{SYLVE_DESIGN_SOURCE,SYLVE_EVOLUTIONS});
+
+},
 "src/evolution-trials.js":function(__exports,__load){
 // Premier parcours d'obtention : références de versions, objectifs et rencontres.
 // Les chiffres et pouvoirs restent exclusivement dans le registre de cartes.
@@ -5176,19 +5216,19 @@ Object.assign(__exports,{EVOLUTION_TRIALS,EVOLUTION_ASCENSIONS,ALL_EVOLUTION_TRI
 "src/evolution-fusion.js":function(__exports,__load){
 // Recettes d'obtention uniquement ; statistiques et pouvoirs restent dans le registre.
 const {CARDS}=__load("src/data.js");
-const {AUBE_EVOLUTIONS}=__load("src/cards/aube.js");
+const {EVOLUTION_FAMILIES}=__load("src/cards/evolutions.js");
 const {CARD_RARITIES,freezeCardData}=__load("src/cards/schema.js");
 const {EVOLUTION_ASCENSIONS,evolutionAscensionFor}=__load("src/evolution-trials.js");
 const EVOLUTION_FUSION_COPIES=3;
 const EVOLUTION_FUSION_MISSIONS=freezeCardData({rare:'01','épique':'03','légendaire':'06',...Object.fromEntries(EVOLUTION_ASCENSIONS.map(t=>[t.to,t.mission]))});
-const EVOLUTION_FUSIONS=freezeCardData(Object.entries(AUBE_EVOLUTIONS).flatMap(([cardId,versions])=>{
+const EVOLUTION_FUSIONS=freezeCardData(EVOLUTION_FAMILIES.flatMap(family=>Object.entries(family.versions).flatMap(([cardId,versions])=>{
  const native=CARD_RARITIES.findIndex(r=>r.id===CARDS[cardId].rarity);
  return CARD_RARITIES.flatMap((rank,index)=>{
   if(index<=native||!Object.hasOwn(EVOLUTION_FUSION_MISSIONS,rank.id)||!versions[rank.id])return [];
   const ascension=evolutionAscensionFor(CARDS[cardId].faction,rank.id);
   return [{id:`${cardId}:${rank.id}`,cardId,from:CARD_RARITIES[index-1].id,to:rank.id,copies:EVOLUTION_FUSION_COPIES,mission:EVOLUTION_FUSION_MISSIONS[rank.id],...(ascension?{ascension:ascension.id}:{})}];
  });
-}));
+})));
 const evolutionFusion=id=>EVOLUTION_FUSIONS.find(r=>r.id===id)||null;
 const evolutionFusionFor=(id,rarity)=>EVOLUTION_FUSIONS.find(r=>r.cardId===id&&r.to===rarity)||null;
 
@@ -5260,18 +5300,20 @@ const {EVOLUTION_FUSIONS}=__load("src/evolution-fusion.js");
 const {freezeCardData}=__load("src/cards/schema.js");
 const natives=Object.values(CARDS).filter(c=>!c.heroClass);
 const nativeRank=rarity=>natives.filter(c=>c.rarity===rarity).map(c=>c.id);
-const evolutionRank=rarity=>EVOLUTION_FUSIONS.filter(r=>r.to===rarity).map(r=>({id:r.cardId,rarity:r.to}));
+const evolutionRank=(faction,rarity)=>EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction===faction&&r.to===rarity).map(r=>({id:r.cardId,rarity:r.to}));
+const evolutionPack=(faction,title,order)=>({id:faction+'-evolution',name:`Paquet d’évolution ${title}`,cost:190,count:3,mission:'03',groups:[
+ {label:`Carte de base ${title} (Commune ou Rare)`,weight:60,cards:natives.filter(c=>c.faction===faction&&['commun','rare'].includes(c.rarity)).map(c=>c.id)},
+ {label:`Évolution ${order} Rare`,weight:35,cards:evolutionRank(faction,'rare')},
+ {label:`Évolution ${order} Épique`,weight:5,cards:evolutionRank(faction,'épique')}
+]});
 const CARD_PACKS=freezeCardData([
  {id:'mystic',name:'Paquet mystique',cost:95,count:3,mission:null,groups:[
   {label:'Carte de base Commune',weight:65,cards:nativeRank('commun')},
   {label:'Carte de base Rare',weight:28,cards:nativeRank('rare')},
   {label:'Carte de base Épique',weight:7,cards:nativeRank('épique')}
  ]},
- {id:'aube-evolution',name:'Paquet d’évolution de l’Aube',cost:190,count:3,mission:'03',groups:[
-  {label:'Carte de base de l’Aube (Commune ou Rare)',weight:60,cards:natives.filter(c=>c.faction==='aube'&&['commun','rare'].includes(c.rarity)).map(c=>c.id)},
-  {label:'Évolution Aube Rare',weight:35,cards:evolutionRank('rare')},
-  {label:'Évolution Aube Épique',weight:5,cards:evolutionRank('épique')}
- ]}
+ evolutionPack('aube','de l’Aube','Aube'),
+ evolutionPack('sylve','de la Sylve','Sylve')
 ]);
 const cardPack=id=>CARD_PACKS.find(p=>p.id===id)||null;
 const evolutionPackFor=(id,rarity)=>CARD_PACKS.find(p=>p.groups.some(g=>g.cards.some(ref=>typeof ref==='object'&&ref.id===id&&ref.rarity===rarity)))||null;
@@ -5324,6 +5366,8 @@ function unitCardText(d){
  if(a.riposteBarrier)parts.push(`Barrière ${a.riposteBarrier.amount}`);
  if(a.riposte)parts.push('Riposte'+(a.riposte.damageMode==='effective-attack'?' ATQ':' '+a.riposte.amount));
  if(a.ward)parts.push(`Protection +${a.ward.amount}`);
+ if(a.poison)parts.push(`Poison ${a.poison.amount} · ${a.poison.resolutions} tours`);
+ if(a.trapper)parts.push(`Piège ${a.trapper.damage} / ${a.trapper.period} tours`);
  if(a.flying)parts.push('Vol');
  if(d.geometry.range>1)parts.unshift(`Portée ${d.geometry.range}`);
  return parts.slice(0,3).join(' · ')||'Corps à corps';
@@ -5347,6 +5391,8 @@ function unitAbilityDetails(d){
  if(a.charge)lines.push(`Charge : +${a.charge.amount} ATQ après déplacement avant la frappe.`);
  if(a.pierce)lines.push('Perforation : ignore l’armure de la première cible, autres protections conservées.');
  if(a.rearShot)lines.push(`Tir arrière : ${a.rearShot.amount} dégâts à l’ennemi immédiatement derrière la première cible, même ligne ; protections normales.`);
+ if(a.poison)lines.push(`Après une attaque sur une unité : Poison ${a.poison.amount} dégât par tour pendant ${a.poison.resolutions} tours ; une nouvelle application renouvelle la durée.`);
+ if(a.trapper)lines.push(`Tous les ${a.trapper.period} tours : arme si possible la case libre éligible juste devant. Piège visible pendant ${a.trapper.resolutions} tours au plus ; ${a.trapper.damage} dégât après protections, déplacement et attaque bloqués pour le tour du déclenchement.`);
  return lines;
 }
 
@@ -7707,12 +7753,18 @@ Object.assign(__exports,{createEvolutionFusionController});
 },
 "src/ui/evolution-fusion.js":function(__exports,__load){
 // Présentation des recettes, sans mutation du profil ni des stocks.
-const {CARDS,CAMPAIGN}=__load("src/data.js");
+const {CARDS,CAMPAIGN,FACTIONS}=__load("src/data.js");
 const {EVOLUTION_FUSIONS,EVOLUTION_FUSION_COPIES,EVOLUTION_FUSION_MISSIONS}=__load("src/evolution-fusion.js");
 const {previewEvolutionFusion}=__load("src/engine/evolution-fusion.js");
+const {EVOLUTION_FAMILIES}=__load("src/cards/evolutions.js");
+const {CARD_RARITIES}=__load("src/cards/schema.js");
 function renderEvolutionFusions(profile,battle,{btn,cardUI,esc}){
  const access=Object.entries(EVOLUTION_FUSION_MISSIONS).map(([rank,mission])=>`${esc(rank)} : ${esc(CAMPAIGN.find(m=>m.id===mission).enemy)} (mission ${esc(mission)})`).join(' · ');
- return `<section class="spaced evolution-fusions" aria-labelledby="evolution-fusion-title"><h2 class="section-title" id="evolution-fusion-title">Faire évoluer mes doublons</h2><p class="page-sub">${EVOLUTION_FUSION_COPIES} exemplaires du même personnage et du même rang deviennent 1 exemplaire du rang suivant. Aucun coût en or ou éclats, aucune chance d’échec. Seuls les exemplaires hors du deck sont consommés.</p><p class="hint">Accès après victoire — ${access}. Les rangs Divin et Éveillé exigent aussi leur grande ascension dans Épreuves.</p><p class="hint">Évolutions de l’Aube jusqu’à Éveillé. La carte obtenue rejoint la Collection ; ajoutez-la ensuite dans Mon deck.</p><div class="card-grid">${EVOLUTION_FUSIONS.map(recipe=>{
+ const available=EVOLUTION_FAMILIES.map(f=>{
+  const ranks=EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction===f.id).map(r=>CARD_RARITIES.findIndex(rank=>rank.id===r.to));
+  return `${esc(FACTIONS[f.id].short)} jusqu’au rang ${esc(CARD_RARITIES[Math.max(...ranks)].name)}`;
+ }).join(' · ');
+ return `<section class="spaced evolution-fusions" aria-labelledby="evolution-fusion-title"><h2 class="section-title" id="evolution-fusion-title">Faire évoluer mes doublons</h2><p class="page-sub">${EVOLUTION_FUSION_COPIES} exemplaires du même personnage et du même rang deviennent 1 exemplaire du rang suivant. Aucun coût en or ou éclats, aucune chance d’échec. Seuls les exemplaires hors du deck sont consommés.</p><p class="hint">Accès après victoire — ${access}. Les rangs Divin et Éveillé de l’Aube exigent aussi leur grande ascension dans Épreuves.</p><p class="hint">${available}. La carte obtenue rejoint la Collection ; ajoutez-la ensuite dans Mon deck.</p><div class="card-grid">${EVOLUTION_FUSIONS.map(recipe=>{
   const plan=previewEvolutionFusion(profile,recipe.id,battle);
   return `<article class="evolution-fusion-recipe" data-fusion-id="${esc(recipe.id)}">${cardUI(plan.target,{previewContext:'alchemy'})}<div class="evolution-fusion-action"><h3>${esc(CARDS[recipe.cardId].name)}</h3><p>${recipe.copies} × ${esc(recipe.from)} → 1 × ${esc(recipe.to)}</p><p class="hint">${plan.owned} possédés · ${plan.used} dans le deck · ${Math.max(0,plan.available)} libres</p>${!plan.ok?`<p class="hint">${esc(plan.reason)}</p>`:''}${btn('Préparer la fusion','evolution-fusion-preview',`data-id="${esc(recipe.id)}" ${!plan.ok?'disabled':''}`,'primary')}</div></article>`;
  }).join('')}</div></section>`;
@@ -7771,14 +7823,14 @@ function contents(pack,esc){
 function renderCardPackShop(profile,battle,{btn,esc}){
  return `<section class="spaced"><div class="section-caption">LE COMPTOIR DU MARCHAND</div><h2 class="section-title">Choisir un paquet</h2><p class="page-sub">Les cartes rejoignent votre Collection. Aucun paiement réel ni connexion requis.</p><div class="pack-shop-grid">${CARD_PACKS.map(pack=>{
   const access=previewCardPack(profile,pack.id,battle),evolution=pack.id!=='mystic';
-  return `<article class="card-panel pack-offer" data-pack-id="${pack.id}"><h3>${esc(pack.name)}</h3><p><b>${pack.count} cartes · ${pack.cost} or</b></p>${rates(pack,esc)}${evolution?'<p class="hint">Après le premier boss. Évolutions Aube jusqu’à Épique ; les exemplaires gagnés servent au deck et à la fusion.</p>':''}${contents(pack,esc)}${!access.ok?`<p class="hint">${esc(access.reason)}</p>`:''}${btn(evolution?`Préparer l’ouverture · ${pack.cost} ◈`:`Ouvrir un paquet · ${pack.cost} ◈`,evolution?'card-pack-preview':'buy-pack',`data-id="${pack.id}" ${!access.ok?'disabled':''}`,'primary')}</article>`;
+  return `<article class="card-panel pack-offer" data-pack-id="${pack.id}"><h3>${esc(pack.name)}</h3><p><b>${pack.count} cartes · ${pack.cost} or</b></p>${rates(pack,esc)}${evolution?'<p class="hint">Après le premier boss. Les exemplaires gagnés servent au deck et à la fusion.</p>':''}${contents(pack,esc)}${!access.ok?`<p class="hint">${esc(access.reason)}</p>`:''}${btn(evolution?`Préparer l’ouverture · ${pack.cost} ◈`:`Ouvrir un paquet · ${pack.cost} ◈`,evolution?'card-pack-preview':'buy-pack',`data-id="${pack.id}" ${!access.ok?'disabled':''}`,'primary')}</article>`;
  }).join('')}</div></section>`;
 }
 function cardPackConfirmation(pack,{btn,esc}){
  return `<div class="kicker">OUVERTURE DE PAQUET</div><h2>${esc(pack.name)}</h2><p>${pack.cost} or seront dépensés pour ${pack.count} cartes aléatoires.</p>${rates(pack,esc)}<div class="button-row">${btn(`Ouvrir pour ${pack.cost} or`,'card-pack-confirm','','primary')}${btn('Annuler','close-modal','','ghost')}</div>`;
 }
 function cardPackResult(pack,cards,{btn,cardUI,esc}){
- return `<div class="kicker">${esc(pack.name).toUpperCase()}</div><h2>Trois nouvelles découvertes</h2><p>Ces cartes rejoignent votre collection. Ajoutez-les à votre deck pour les utiliser.</p><div class="three-grid">${cards.map(ref=>cardUI(ref,{previewContext:'pack'})).join('')}</div><div class="button-row">${btn('Voir ma collection','pack-collection','','primary')}${btn('Fermer','close-modal','','ghost')}</div>`;
+ return `<div class="kicker">${esc(pack.name).toUpperCase()}</div><h2>Trois nouvelles découvertes</h2><p>Ces cartes rejoignent votre collection. Ajoutez-les à votre deck pour les utiliser.</p><div class="three-grid">${cards.map(ref=>cardUI(ref,{previewContext:'pack'})).join('')}</div><div class="button-row" data-pack-result-actions>${btn('Voir ma collection','pack-collection','','primary')}${btn('Fermer','close-modal','','ghost')}</div>`;
 }
 
 Object.assign(__exports,{renderCardPackShop,cardPackConfirmation,cardPackResult});
