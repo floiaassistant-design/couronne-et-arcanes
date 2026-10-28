@@ -54,7 +54,12 @@ async def run(browser,label,viewport,faction='aube'):
             'archer':[3,4,4,4,4,4],'lancer':[5,6,6,8,8,8],
             'cleric':[None,4,6,6,6,6],'banner':[None,6,8,8,8,8],
             'scoutcaptain':[None,6,8,8,8,8],'sunpriest':[None,7,9,9,9,9],
-            'paladin':[None,None,9,11,11,13],'dawnbastion':[None,None,None,11,11,11]
+            'paladin':[None,None,9,11,11,13],'dawnbastion':[None,None,None,11,11,11],
+            'ranger':[4,5,5,None,None,None],'wolf':[3,4,4,None,None,None],
+            'treant':[None,10,12,None,None,None],'dryad':[None,5,7,None,None,None],
+            'thorn':[5,6,6,None,None,None],'pixie':[3,4,4,None,None,None],
+            'bear':[None,9,11,None,None,None],'owl':[4,5,5,None,None,None],
+            'sylvan_trapper':[5,6,6,None,None,None]
         }.get(card_id)
         native=await row.locator('[data-current-version="true"]').get_attribute('data-collection-rarity')
         ranks=['commun','rare','épique','légendaire','divine','éveillée']
