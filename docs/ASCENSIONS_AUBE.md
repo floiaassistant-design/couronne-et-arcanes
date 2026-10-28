@@ -111,9 +111,14 @@ complets/captures/CI du commit exact dans la PR ; aucun succès anticipé.
 ## Distribution et limites
 
 Export `JOUER.html` reconstruit : **34 547 008 octets**, blob
-`0240530bf1270123aa351ad30413db026a23df0c`. Vérifier les arbres et le blob
-après enregistrement GitHub ; ne pas éditer l'HTML à la main. Diagnostic jamais
-distribué. Générateur ponctuel retiré avant PR, workflows permanents inchangés.
+`0240530bf1270123aa351ad30413db026a23df0c`, identique en local et sur GitHub.
+L'arbre source final `b00769c8b81a5328129c4d79643fad9239d338af` a été comparé
+au local avant le [générateur final réussi](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40761390036),
+sur `c043e2a37b23cde2b10c5b378114253daf327a7b`. L'export est enregistré dans
+`1c900af3c70383dffa72a799ef56eb333e1d900c`. La préparation précédente précède
+la correction du statut d'ascension pendant un combat ; elle n'est pas l'export
+final. Le générateur est retiré avant PR, workflows permanents inchangés.
+Le diagnostic n'est jamais distribué ; ne pas éditer l'HTML à la main.
 
 Terminer les travaux indépendants, pousser et ouvrir la PR. Ne pas relancer un
 contrôle en cours ni attendre activement la CI quand seul son résultat demeure.
