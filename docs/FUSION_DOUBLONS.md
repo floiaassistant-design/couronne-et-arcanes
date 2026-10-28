@@ -80,7 +80,8 @@ invalides, ancien profil, fusion suivie d'épreuve, confirmation et panne. **120
 scénarios de référence identiques**, archive V2.4 intacte. **192 combats** avec
 des decks contenant chaque évolution réellement fusionnée : fin, déterminisme,
 plateau valide et profil conservé. Builds normal, diagnostic et web réussis :
-61 modules, 76 illustrations, aucun cycle. Aucun actif graphique ajouté.
+61 modules, 76 illustrations, aucun cycle. Aucun actif graphique ajouté. Les
+simulations complètes `control-balance` et `arena-balance` ont aussi réussi.
 
 `browser_evolution_fusion.py` est appelé par la suite Collection existante,
 sans nouveau job ni doublon dans le plan CI. Quatre parcours (bureau/portrait/
@@ -88,8 +89,19 @@ paysage et HTTP) sur le jeu de production : confirmation/annulation, rechargemen
 panne, double clic, fusion Commun → Rare → Épique, autre carte de soin, copies du
 deck protégées, Collection/deck, export/import, vraie invocation et reprise.
 Les assertions portent sur les stocks exacts et l'absence de mutations de ressources.
-Les suites de régression sont en cours au moment de cette préparation ; leur
-résultat final et la CI du commit exact sont consignés dans la PR.
+Les résultats des 27 suites de régression et de la CI du commit exact sont
+consignés dans la PR ; une ancienne réussite ne valide pas une nouvelle tête.
+
+## Export et provenance
+
+L'export officiel reconstruit compte **34 529 689 octets**, blob
+`0c034a62a2ef033687348861230b8af7be44f842`, identique en local et sur GitHub.
+Le [générateur ponctuel](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/40673445281)
+a réussi sur `576c793adea3f7ffd21e843382fb451f40650286` et enregistré le
+fichier dans `1780c24c76e6722f40cb6874324c78163909556c`. L'arbre source
+`1402e5cc6c04c26bce9a40d245241db82857b478` a été comparé au local avant envoi.
+Le générateur est retiré avant ouverture de la PR ; le plan permanent à quatre
+groupes et les deux contrôles obligatoires sont conservés.
 
 ## Reprise
 
