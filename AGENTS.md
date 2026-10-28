@@ -1,5 +1,23 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Migration Aube Légendaire — proposition du 28 octobre 2026
+
+PR 60 fusionnée sur accord au main `e159631b5913791eb96d429201408a452def1337` ;
+les deux CI main ont réussi. La suite `feat/evolutions-legendaires-aube` ouvre
+neuf évolutions Légendaires déjà programmées au laboratoire, par fusion de trois
+Épiques libres identiques après victoire de mission 06 (deuxième boss).
+C'est un réglage d'obtention proposé à la revue, sans nouvelle décision de pouvoir.
+21 évolutions Aube deviennent obtenables ; les 20 Divines/Éveillées restent au
+laboratoire pour les étapes ultérieures et les défis exceptionnels.
+L'Ange du Bastion est déjà Légendaire natif : aucune transition inventée.
+Les recettes et l'accès par rang résident dans `evolution-fusion.js` ; Alchimie
+lit les mêmes accès. Les paquets restent Rare/Épique, mêmes prix/pools/taux.
+Réutiliser moteur, permissions, confirmation, stocks, sauvegarde et fiches existants.
+Le tableau maître Notion a été relu à l'édition `2026-10-27T06:13:46.581Z` ;
+aucun chiffre de carte ni pouvoir ne change. Lire [le contrat](docs/AUBE_LEGENDAIRES.md).
+Les passages antérieurs « 12 évolutions / 29 au labo » sont historiques.
+Cette nouvelle branche n'est autorisée ni à fusionner ni à publier.
+
 ## Paquets d'évolution — proposition du 28 octobre 2026
 
 La PR 59 est intégrée sur accord au main `feeef6e` ; sa CI de PR était verte,

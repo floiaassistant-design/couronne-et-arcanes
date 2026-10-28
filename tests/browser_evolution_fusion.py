@@ -29,7 +29,7 @@ async def run_evolution_fusion(browser,label,viewport,url=None):
     async def confirm():await click(page.locator('.modal [data-action="evolution-fusion-confirm"]'))
     async def fuse(recipe):await preview(recipe);await confirm()
     await open_alchemy();baseline=await saved()
-    assert await page.locator('[data-fusion-id]').count()==12
+    assert await page.locator('[data-fusion-id]').count()==21
     assert await tile('militia:rare').locator('button').is_disabled(),'Les quatre Miliciens du deck sont protégés.'
     assert await tile('lancer:rare').locator('button').is_enabled()
     assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
@@ -84,8 +84,47 @@ async def run_evolution_fusion(browser,label,viewport,url=None):
     exported=json.loads(Path(await (await info.value).path()).read_text());assert exported==final
     await page.locator('#import-file').set_input_files({'name':'fusion.json','mimeType':'application/json','buffer':json.dumps(exported).encode()})
     await page.locator('#view .hero-copy').wait_for();assert await saved()==final
+    # Le rang Légendaire reste verrouillé avant la victoire du deuxième boss.
+    await open_alchemy()
+    assert await tile('lancer:légendaire').locator('button').is_disabled()
+    assert 'Colosse des Fourneaux' in await tile('lancer:légendaire').inner_text()
+    advanced=copy.deepcopy(final);advanced['completed']=['01','02','03','04','05','06']
+    advanced['collection']['paladin']=3;advanced['evolvedCollection']['lancer:épique']=4
+    await click(page.locator('#nav [data-page="guide"]'))
+    await page.locator('#import-file').set_input_files({'name':'deuxieme-boss.json','mimeType':'application/json','buffer':json.dumps(advanced).encode()})
+    await page.locator('#view .hero-copy').wait_for();await open_alchemy();advanced=await saved()
+    assert await tile('lancer:légendaire').locator('button').is_enabled()
+    assert await tile('paladin:légendaire').locator('button').is_enabled()
+    await tile('lancer:légendaire').scroll_into_view_if_needed()
+    await page.screenshot(path=f'/tmp/ca-evolution-legendary-{label}.png')
+    await preview('lancer:légendaire')
+    modal=await page.locator('.modal').inner_text()
+    for word in ['3 exemplaires épique','1 exemplaire légendaire','4 → 1','1 exemplaires dans votre deck']:assert word in modal,word
+    await page.screenshot(path=f'/tmp/ca-evolution-legendary-confirm-{label}.png')
+    await click(page.locator('.modal [data-action="close-modal"]'));assert await saved()==advanced
+    await page.evaluate('''()=>{const write=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='couronnes_arcanes_v1')throw Error('quota simulé');return write.call(this,k,v)}}''')
+    await preview('lancer:légendaire');await confirm();assert await saved()==advanced
+    await page.reload();await open_alchemy()
+    await preview('lancer:légendaire');await page.locator('.modal [data-action="evolution-fusion-confirm"]').dblclick()
+    legendary=await saved();assert legendary['evolvedCollection']['lancer:épique']==1
+    assert legendary['evolvedCollection']['lancer:légendaire']==1 and legendary['deck']==advanced['deck']
+    await fuse('paladin:légendaire')
+    legendary=await saved();assert legendary['collection']['paladin']==0
+    assert legendary['evolvedCollection']['paladin:légendaire']==1
+    for key in ['gold','shards','completed','mastery','wins','losses','heroXp']:assert legendary[key]==advanced[key],key
+    await click(page.locator('#nav [data-page="collection"]'))
+    cell=page.locator('[data-collection-character="lancer"] [data-collection-rarity="légendaire"]')
+    assert 'Possédée ×1' in await cell.inner_text()
+    await click(page.locator('#nav [data-page="deck"]'))
+    await click(page.locator('[data-deck-card="lancer:légendaire"] [data-action="deck-add"]'))
+    final=await saved();assert {'id':'lancer','rarity':'légendaire'} in final['deck']
+    await click(page.locator('#nav [data-page="guide"]'))
+    async with page.expect_download() as info:await click(page.locator('[data-action="export-save"]'))
+    exported=json.loads(Path(await (await info.value).path()).read_text());assert exported==final
+    await page.locator('#import-file').set_input_files({'name':'legendaires.json','mimeType':'application/json','buffer':json.dumps(exported).encode()})
+    await page.locator('#view .hero-copy').wait_for();assert await saved()==final
     # Graine déterministe choisie pour piocher l'exemplaire réellement créé.
-    seed=int(subprocess.check_output(['node','--input-type=module','-e',"import {createBattle} from './src/engine.js';import {CAMPAIGN} from './src/data.js';const p=JSON.parse(process.argv[1]);for(let s=1;s<=100;s++){if(createBattle(p,CAMPAIGN[0],s).heroes.p.hand.some(c=>c.id==='lancer'&&c.rarity==='épique')){console.log(s);break;}}",json.dumps(final)],cwd=ROOT))
+    seed=int(subprocess.check_output(['node','--input-type=module','-e',"import {createBattle} from './src/engine.js';import {CAMPAIGN} from './src/data.js';const p=JSON.parse(process.argv[1]);for(let s=1;s<=10000;s++){const h=createBattle(p,CAMPAIGN[0],s).heroes.p.hand;if(['épique','légendaire'].every(r=>h.some(c=>c.id==='lancer'&&c.rarity===r))){console.log(s);break;}}",json.dumps(final)],cwd=ROOT))
     await page.evaluate('(s)=>{Date.now=()=>s}',seed)
     await click(page.locator('#nav [data-page="campaign"]'));await click(page.locator('[data-action="start-mission"][data-id="01"]'))
     b=await saved(BATTLE);index=next(i for i,c in enumerate(b['heroes']['p']['hand']) if c['id']=='lancer' and c.get('rarity')=='épique')
@@ -95,15 +134,23 @@ async def run_evolution_fusion(browser,label,viewport,url=None):
     await click(page.locator('[data-action="deploy"][data-lane="0"][data-col="1"]'))
     snapshot=await saved(BATTLE);u=snapshot['board'][0][1]
     assert (u['id'],u['rarity'],u['atk'],u['maxhp'])==('lancer','épique',4,6)
+    index=next(i for i,c in enumerate(snapshot['heroes']['p']['hand']) if c['id']=='lancer' and c.get('rarity')=='légendaire')
+    hand=page.locator(f'.hand [data-action="select-card"][data-index="{index}"]')
+    await click(hand)
+    if touch:await click(hand)
+    await click(page.locator('[data-action="deploy"][data-lane="1"][data-col="1"]'))
+    snapshot=await saved(BATTLE);u=snapshot['board'][1][1]
+    assert (u['id'],u['rarity'],u['atk'],u['maxhp'])==('lancer','légendaire',4,8)
     await page.reload();await page.locator('.combat-screen').wait_for();assert await saved(BATTLE)==snapshot
     await click(page.locator('.combat-menu-link'));await open_alchemy()
     assert await tile('lancer:rare').locator('button').is_disabled(),'Aucune fusion pendant le combat.'
+    assert await tile('lancer:légendaire').locator('button').is_disabled()
     assert await saved()==final
     assert not await page.evaluate("'profile' in window||'battle' in window")
     assert not errors,errors
     assert not external,external
     await context.close()
-    print(f'Fusion {label}: confirmation, annulation, panne, stocks par rang, deck protégé, export/import et vraie invocation/reprise PASS',flush=True)
+    print(f'Fusion {label}: Commun → Rare → Épique → Légendaire, boss 06, panne, deck protégé, Paladin natif, export/import et vraies invocations/reprise PASS',flush=True)
 
 async def run_fusion_cases(browser):
     for label,vp in [('desktop',{'width':1440,'height':1000}),('portrait',{'width':390,'height':844}),('landscape',{'width':844,'height':390})]:

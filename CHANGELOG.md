@@ -1,3 +1,14 @@
+## Proposition — neuf évolutions Légendaires Aube, 28 octobre 2026
+
+- Fusion de trois Épiques libres du même personnage après le deuxième boss :
+  Milicien, Porte-égide, Arbalétrière, Sœur, Paladin, Porte-étendard, Capitaine,
+  Prieur et Lancier. Le Paladin consomme son stock natif, les autres leur stock évolué.
+- 21 évolutions obtenables au total, 20 Divines/Éveillées encore au laboratoire.
+  Statistiques et pouvoirs déjà programmés conservés ; aucun nouveau défi requis.
+- Accès de rang commun au catalogue, moteur et vue. Confirmation, sauvegarde,
+  copies du deck protégées, Collection et combat réutilisés.
+- Paquets et économie conservés. [Contrat](docs/AUBE_LEGENDAIRES.md).
+
 ## Proposition — paquet d'évolution de l'Aube, 28 octobre 2026
 
 - Après le premier boss : 3 cartes pour 190 or. Par carte : 60 % base Aube

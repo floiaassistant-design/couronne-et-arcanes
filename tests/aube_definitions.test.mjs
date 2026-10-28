@@ -35,7 +35,7 @@ test('51 versions Aube : tous les totaux et délais Notion, 9 rangs inférieurs 
    assert.equal(def.nativeRarity,CARDS[id].rarity);
    assert(!identities.has(def.versionId));identities.add(def.versionId);
    const trial=['militia:rare','militia:épique','shield:rare','archer:rare'].includes(def.versionId);
-   const fusion=['militia','shield','archer','lancer','cleric','banner','scoutcaptain','sunpriest'].includes(id)&&['rare','épique'].includes(rank.id)&&index>nativeIndex;
+   const fusion=id!=='dawnbastion'&&['rare','épique','légendaire'].includes(rank.id)&&index>nativeIndex;
    assert.equal(unitVersionPlayable({id,rarity:rank.id}),index===nativeIndex||trial||fusion);
    assert.equal(def.status.combat,index===nativeIndex||trial||fusion?'implemented':'pending');
    assert.equal(def.status.obtaining,index===nativeIndex?'existing':trial&&fusion?'trial-or-fusion':fusion?'fusion':trial?'trial':'undefined');
