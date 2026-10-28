@@ -21,3 +21,13 @@ def evolution_cases(count, part=None):
     if part is None or part == 'web-recovery':
         cases.extend([{'kind': 'web'}, {'kind': 'recovery'}])
     return cases
+
+
+def card_pack_cases(part=None):
+    if part is not None and part not in PARTS:
+        raise ValueError('Partie de paquets inconnue')
+    cases = [{'label': label, 'viewport': viewport} for label, viewport, _ in VIEWPORTS
+             if part is None or part == label]
+    if part is None or part == 'web-recovery':
+        cases.append({'label': 'web', 'viewport': {'width': 1366, 'height': 900}})
+    return cases

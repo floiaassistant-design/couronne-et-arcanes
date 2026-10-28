@@ -1,3 +1,18 @@
+# Paquet d'évolution — proposition du 28 octobre 2026
+
+Main vérifié `feeef6e984e8895a77fa5b715dfbc15fd590ad2e` : PR 59 fusionnée
+sur accord après six contrôles verts ; arbre identique à la tête testée.
+La branche `feat/paquet-evolution-aube` propose un paquet Aube après mission 03 :
+190 or, 3 tirages indépendants, 60 % base Commune/Rare, 35 % évolution Rare,
+5 % évolution Épique par carte. Les douze évolutions déjà jouables sont réutilisées.
+Aucun nouveau rang, autre faction ou copie gratuite ; les 29 évolutions futures
+restent au labo. Paquet mystique : 95 or et tirages historiques conservés.
+Les prix/probabilités sont communs au moteur et aux vues ; achats sauvegardés
+avant adoption du profil. [Contrat et reprise](PAQUETS_EVOLUTION.md).
+Aucune fusion ni publication autorisée pour cette proposition.
+
+Les sections suivantes sont des bilans historiques.
+
 # Fusion de doublons — proposition du 28 octobre 2026
 
 Main vérifié `736fd7d4f3b70c142ed8c4001a7acb5abc8d3a06` : PR 56 fusionnée,

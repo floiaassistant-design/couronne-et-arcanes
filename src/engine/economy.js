@@ -4,6 +4,7 @@ import {grantBattleProgress,heroLevel} from './profile.js';
 import {CONTROL_IDS} from './battle-control.js';
 import {TEMPO_IDS} from './tempo.js';
 import {cardId,totalOwnedCopies} from '../cards/references.js';
+export * from './card-packs.js';
 export function completeBattle(profile,mission,b){
  if(b.mode==='developer'||b.mode==='evolution-trial')return null;
  if(b.status!=='victory'&&b.status!=='defeat')return null;
@@ -32,16 +33,6 @@ export function completeBattle(profile,mission,b){
  }
  Object.assign(reward,grantBattleProgress(profile,b));
  return reward;
-}
-export function buyPack(profile,random=Math.random){
- if(profile.gold<95)return {ok:false,reason:'Il faut 95 pièces d’or.'};
- profile.gold-=95;
- const all=Object.values(CARDS).filter(c=>!c.heroClass),result=[];
- for(let i=0;i<3;i++){
-  const roll=random();const pool=all.filter(c=>roll<0.65?c.rarity==='commun':roll<0.93?c.rarity==='rare':c.rarity==='épique');
-  const card=pool[Math.floor(random()*pool.length)]||all[0];profile.collection[card.id]=(profile.collection[card.id]||0)+1;result.push(card.id);
- }
- return {ok:true,cards:result};
 }
 export function upgradeCard(profile,id){
  if(!CARDS[id]||!totalOwnedCopies(profile,id))return {ok:false,reason:'Vous ne possédez pas cette carte.'};

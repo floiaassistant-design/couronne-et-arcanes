@@ -1,13 +1,35 @@
 # AGENTS.md — Couronnes & Arcanes
 
-## Fusion de doublons — proposition du 28 octobre 2026
+## Paquets d'évolution — proposition du 28 octobre 2026
+
+La PR 59 est intégrée sur accord au main `feeef6e` ; sa CI de PR était verte,
+arbre identique vérifié après fusion. La suite isolée sur
+`feat/paquet-evolution-aube` propose un paquet ciblé Aube : 190 or, 3 cartes,
+après le boss de mission 03. Par carte : 60 % base Aube Commune/Rare,
+35 % évolution Rare, 5 % évolution Épique, choix uniforme dans le groupe,
+tirages indépendants et doublons possibles. Ce prix et ces taux sont proposés
+à la revue, sans nouvelle décision de pouvoir ou écriture Notion.
+`card-packs.js` partage prix, groupes et références avec moteur et vues.
+`engine/card-packs.js` prépare/valide tout avant le débit ; `buyPack` reste
+accessible via economy/façade, même prix 95, mêmes pools/poids natifs 65/28/7
+et même séquence de six appels aléatoires. Aucun nouveau rang jouable.
+Le contrôleur d'achat sauvegarde une copie avant adoption ; annulation,
+double confirmation ou panne sans double débit ni perte du profil courant.
+Les ouvertures UI des deux paquets sont bloquées pendant un combat/résultat non récupéré.
+La fiche indique les voies de paquet, fusion et épreuve effectivement disponibles.
+Lire [le contrat](docs/PAQUETS_EVOLUTION.md). Les quatre nouveaux parcours
+navigateur sont répartis une fois dans les quatre parties d'épreuves existantes ;
+conserver les 27 suites, les assertions et les contrôles obligatoires.
+Aucune fusion/publication de cette nouvelle PR autorisée par l'accord sur la 59.
+
+## Fusion de doublons — intégrée par PR 59, 28 octobre 2026
 
 Le propriétaire retient paquets + fusion pour la progression ordinaire, puis
 quelques épreuves très difficiles pour des cartes exceptionnelles. Les quatre
 épreuves pilotes restent intégrées depuis PR 56, main `736fd7d`.
-La branche `feat/fusion-doublons-evolutions` propose 3 copies libres identiques
+La PR 59 intègre 3 copies libres identiques
 pour 1 rang suivant, sans or/éclats, Aube uniquement jusqu'à Épique. Ratio et
-verrous proposés à la revue : mission 01 pour Rare, premier boss pour Épique.
+verrous intégrés : mission 01 pour Rare, premier boss pour Épique.
 Douze recettes, dont huit versions nouvellement obtenables ; 29 autres évolutions
 Aube restent au laboratoire. Les anciennes limites « quatre versions/37 autres »
 ci-dessous décrivent l'état antérieur. Aucun gain ni copie automatique.
@@ -17,7 +39,8 @@ stocks de rang exact hors deck. `unitVersionPlayable` reste la permission centra
 Le contrôleur de fusion exige une confirmation, revérifie les stocks/combat et
 sauve une copie avant de l'adopter ; une panne ne consomme rien. Préserver la
 fabrication or/éclats existante, les quatre épreuves et leurs récompenses uniques.
-Les paquets d'évolution et les grandes épreuves restent des étapes ultérieures.
+Les paquets d'évolution sont la proposition suivante ; les grandes épreuves
+restent une étape ultérieure.
 Cette proposition n'autorise aucune fusion sur main ni publication.
 
 ## Priorité — règles uniques des cartes jouables, 27 octobre 2026

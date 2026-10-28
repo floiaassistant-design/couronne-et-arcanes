@@ -5,6 +5,7 @@ import {cardId,cardFromKey,cardRarity,ownedCardEntries,totalOwnedCopies} from '.
 import {bossEvolutionUnlocks} from '../engine/evolution-progress.js';
 import {renderEvolutionTrials} from './evolution-trials.js';
 import {renderEvolutionFusions} from './evolution-fusion.js';
+import {renderCardPackShop} from './card-packs.js';
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 import { CARDS, CLASS_SKILLS, FACTIONS, CLASSES, CAMPAIGN, TOWER_MAX, towerMission } from '../data.js';
 import { AI_STYLES } from '../ai.js';
@@ -248,7 +249,7 @@ export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
    )
    .join('')}</div></section>
  <section class="spaced"><div class="split-head"><div><div class="section-caption">Les fragments d’âme</div><h2 class="section-title" style="margin-top:8px">Renforcer vos unités</h2></div><span class="pill">✧ ${profile.shards} éclats disponibles</span></div><div class="card-grid">${own.map((c) => cardUI(entries.find(e=>cardId(e.reference)===c.id).reference, { upgradable: true })).join('')}</div></section>
- <section class="spaced"><div class="card-panel"><div class="section-caption">Le comptoir du marchand</div><h2 class="section-title" style="margin-top:8px">Paquet mystique</h2><p class="page-sub">Recevez 3 cartes aléatoires pour 95 pièces d’or. Aucun paiement réel, aucune connexion requise.</p>${btn('Ouvrir un paquet · 95 ◈', 'buy-pack', `${profile.gold < 95 ? 'disabled' : ''}`, 'primary')}</div></section>`;
+ ${renderCardPackShop(profile,battle,{btn,esc})}`;
   }
   function guideUI() {
     return renderGuidePage({ btn, previousGameAvailable });

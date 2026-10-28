@@ -5,6 +5,7 @@ import {resolveUnitDefinition,resolveRulesDefinition,versionUnitAbilities,AUBE_U
 import {ownedCardCopies} from '../cards/references.js';
 import {evolutionTrialFor} from '../evolution-trials.js';
 import {evolutionFusionFor} from '../evolution-fusion.js';
+import {evolutionPackFor} from '../card-packs.js';
 import {unitCardText,unitAbilityDetails,unitAbilitySummary} from '../cards/ability-text.js';
 import {battleUnitDefinition,unitAttackRange,unitMovementSteps} from '../engine/unit-rules.js';
 import {unitStatContext,unitStats,versionUnitStats} from '../engine/unit-stats.js';
@@ -15,6 +16,14 @@ import {concordeDetails} from './concorde.js';
 import {visualFor,artSrc,cardTemplateFor} from '../visuals.js';
 
 const brief=text=>text.length<=90?text:text.slice(0,87).replace(/\s+\S*$/,'')+'…';
+function evolutionAvailability(profile,reference,{trial,fusion,pack}){
+ const routes=[fusion?'fusion':null,pack?'paquet':null,trial?'épreuve':null].filter(Boolean);
+ if(!routes.length)return 'Testable au laboratoire · Obtention non définie';
+ if(profile&&ownedCardCopies(profile,reference)>0)return 'Évolution obtenue';
+ if(profile?.completedTrials?.includes(trial?.id))return 'Épreuve accomplie · Aucun exemplaire à ce rang';
+ if(routes.length===1)return trial?'À gagner en épreuve':`À obtenir par ${routes[0]}`;
+ return `À obtenir par ${routes.slice(0,-1).join(', ')} ou ${routes.at(-1)}`;
+}
 export function cardPresentation(reference,{context={},profile=null,side='p',unit=null,stats=undefined,definition=null}={}){
  const id=typeof reference==='string'?reference:reference?.id,native=CARDS[id];if(!native)return null;
  const explicit=typeof reference==='object'&&Object.hasOwn(reference,'rarity');
@@ -31,9 +40,8 @@ export function cardPresentation(reference,{context={},profile=null,side='p',uni
  const future=known&&selected!==native.rarity;
  const trial=future?evolutionTrialFor(id,selected):null;
  const fusion=future?evolutionFusionFor(id,selected):null;
- const trialStatus=profile&&ownedCardCopies(profile,{id,rarity:selected})>0?'Évolution obtenue':
-  profile?.completedTrials?.includes(trial?.id)?'Épreuve accomplie · Aucun exemplaire à ce rang':fusion?(trial?'À obtenir par fusion ou épreuve':'À obtenir par fusion'):'À gagner en épreuve';
- const availability=!known?missing:future?(trial||fusion?trialStatus:'Testable au laboratoire · Obtention non définie'):'Version native';
+ const pack=future?evolutionPackFor(id,selected):null;
+ const availability=!known?missing:future?evolutionAvailability(profile,{id,rarity:selected},{trial,fusion,pack}):'Version native';
  if(stats===undefined)stats=native.type==='sort'||!known?null:unit?
   {atk:unit.atk,hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);

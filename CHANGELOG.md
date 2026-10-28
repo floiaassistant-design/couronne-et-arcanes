@@ -1,3 +1,14 @@
+## Proposition — paquet d'évolution de l'Aube, 28 octobre 2026
+
+- Après le premier boss : 3 cartes pour 190 or. Par carte : 60 % base Aube
+  Commune/Rare, 35 % évolution Rare, 5 % évolution Épique ; doublons possibles.
+- Prix, taux et cartes possibles affichés avant confirmation. Les douze
+  évolutions de la PR 59 servent au deck et à la fusion ; aucun nouveau rang actif.
+- Paquet mystique conservé à 95 or, pools et poids natifs 65/28/7 inchangés.
+- Achats sauvegardés avant adoption ; panne, tirage invalide et double clic
+  sans perte ni débit supplémentaire. Ouverture refusée pendant un combat.
+- Catalogue, moteur, rendu et contrôleur séparés. [Contrat](docs/PAQUETS_EVOLUTION.md).
+
 ## Proposition — fusion de doublons Aube, 28 octobre 2026
 
 - Alchimie propose douze évolutions Rare/Épique : trois exemplaires libres

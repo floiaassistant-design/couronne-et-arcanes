@@ -11,13 +11,22 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tests'))
-from evolution_ci_plan import PARTS, evolution_cases
+from evolution_ci_plan import PARTS, evolution_cases, card_pack_cases
 spec = importlib.util.spec_from_file_location('runner', ROOT / 'scripts/run_browser_group.py')
 runner = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(runner)
 
 
 class Pipeline(unittest.TestCase):
+    def test_pack_cases_are_distributed_once_across_four_groups(self):
+        full = card_pack_cases()
+        split = [c for part in PARTS for c in card_pack_cases(part)]
+        self.assertEqual(split, full)
+        self.assertEqual([c['label'] for c in full], ['desktop', 'portrait', 'landscape', 'web'])
+        self.assertTrue(all(len(card_pack_cases(part)) == 1 for part in PARTS))
+        with self.assertRaises(ValueError):
+            card_pack_cases('inconnu')
+
     def test_evolution_partition_preserves_every_original_case(self):
         expected = []
         for label in ['desktop', 'portrait', 'landscape']:
