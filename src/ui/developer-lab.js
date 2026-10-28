@@ -52,7 +52,7 @@ export function developerLabUI(lab,{esc,btn}){
     </label>
     <div class="lab-card-preview" ${cardPreviewAttributes(id,rarity,'developer',esc)} data-rarity="${rarity}" data-side="${side}">${generatedCardFace(presentation.card,{stats:presentation.stats,esc})}</div>
     <p class="lab-stats">Prévision en combat : <b>${card.type==='unité'?`${stats.atk} ATQ · ${stats.hp} PV`:'sort, valeurs inchangées'}</b></p>
-    <p class="hint">${card.type==='unité'?`Version ${esc(rarity)} : déplacement ${stats.definition.geometry.steps}, portée ${stats.definition.geometry.range}. ${rankOptions.length>1?'Les évolutions définies sont testables ici ; leur obtention dans l’aventure reste à définir.':'Seule la version native est définie.'}`:'Les sorts conservent leurs effets actuels.'}</p>
+    <p class="hint">${card.type==='unité'?`Version ${esc(rarity)} : déplacement ${stats.definition.geometry.steps}, portée ${stats.definition.geometry.range}. ${rankOptions.length>1?'Les évolutions définies sont testables ici ; leur fiche précise les voies d’obtention dans l’aventure.':'Seule la version native est définie.'}`:'Les sorts conservent leurs effets actuels.'}</p>
     ${card.type==='unité'?`<p class="hint lab-abilities">${unitAbilitySummary(stats.definition).map(esc).join(' · ')||'Aucun pouvoir spécial.'}</p>`:''}
     <p class="hint">Une même carte partage ces réglages entre tous ses exemplaires du camp choisi. Le cadre et l’illustration restent inchangés.</p>
    </div>

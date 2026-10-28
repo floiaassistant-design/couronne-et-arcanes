@@ -1,0 +1,33 @@
+name: Générer l’export des évolutions Sylve
+on:
+  push:
+    branches: [feat/evolutions-sylve-rare-epique]
+    paths: [.github/workflows/sylve-evolutions-export.yml]
+permissions:
+  contents: write
+jobs:
+  export:
+    if: github.repository == 'floiaassistant-design/couronne-et-arcanes' && github.ref == 'refs/heads/feat/evolutions-sylve-rare-epique'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Générer uniquement l’export vérifié de cette branche
+        run: |
+          npm run build
+          test "$(git hash-object JOUER.html)" = "f2ded472eaf544e4fcffa205948b0ee8a19b2f5f"
+          git fetch origin feat/evolutions-sylve-rare-epique
+          test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
+          if git diff --quiet -- JOUER.html; then exit 0; fi
+          test "$(git diff --name-only)" = "JOUER.html"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add JOUER.html
+          git commit -m "build: synchroniser l’export des évolutions Sylve"
+          git push origin HEAD:refs/heads/feat/evolutions-sylve-rare-epique
