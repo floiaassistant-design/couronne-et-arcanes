@@ -1,3 +1,17 @@
+## Migration Aube Légendaire — 28 octobre 2026
+
+Le catalogue `evolution-fusion.js` porte 21 recettes et les trois accès par rang
+`EVOLUTION_FUSION_MISSIONS` (01/03/06). `ui/evolution-fusion.js` lit ces mêmes
+accès et les noms de campagne ; aucune condition de victoire copiée dans la vue.
+Le registre et les références activent les neuf Légendaires via les recettes,
+comme les douze versions précédentes. Aucun second moteur, patch de pouvoir,
+module de production, actif, dépendance ou champ de profil ajouté ; 65 modules.
+Paquets toujours plafonnés à Épique par leurs groupes explicites. Les mêmes
+contrôleurs, transactions et lecteurs de fiche suffisent aux nouvelles versions.
+Les tests de fusion couvrent les 21 recettes et les parcours navigateur existants
+ajoutent le rang Légendaire, sans nouveau job ni suite en double.
+[Contrat](AUBE_LEGENDAIRES.md). Les sections suivantes sont historiques.
+
 ## Paquets d'évolution — proposition du 28 octobre 2026
 
 `card-packs.js` porte les deux produits, leurs groupes pondérés et listes de

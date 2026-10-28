@@ -30,7 +30,7 @@ test('Politique centrale validée : priorité et fréquence héritées par chaqu
  for(const rarity of ['rare','épique','légendaire','divine','éveillée']){
   const d=resolveUnitDefinition('shield',rarity);
   for(const [key,value] of Object.entries(expected))assert.equal(d.abilities.guard[key],value);
-  assert.deepEqual(d.pendingDecisions,[]);assert.equal(d.status.combat,['rare','épique'].includes(rarity)?'implemented':'pending');
+  assert.deepEqual(d.pendingDecisions,[]);assert.equal(d.status.combat,['rare','épique','légendaire'].includes(rarity)?'implemented':'pending');
  }
  assert.equal(resolveUnitDefinition('shield').abilities.guard.scope,'positioned');
  assert.equal(resolveUnitDefinition('shield').abilities.guard.priority,'same-line-then-own-crown');

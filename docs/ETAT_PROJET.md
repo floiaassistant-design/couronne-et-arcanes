@@ -1,3 +1,20 @@
+# Migration des Légendaires Aube — proposition du 28 octobre 2026
+
+Main vérifié `e159631b5913791eb96d429201408a452def1337` : PR 60 fusionnée
+sur accord, tests et assemblage main réussis. Sa publication Sites est distincte.
+La branche `feat/evolutions-legendaires-aube` propose neuf évolutions Aube
+Légendaires : 3 Épiques libres identiques → 1 Légendaire, après victoire sur le
+Colosse des Fourneaux (mission 06). Aucun défi individuel obligatoire.
+Les pouvoirs/statistiques sont ceux déjà vérifiés au laboratoire et dans Notion.
+21 évolutions Aube obtenables au total ; 20 Divines/Éveillées restent au labo.
+Deck protégé, stocks natifs/évolués distincts, confirmation et sauvegarde existantes.
+Le Paladin utilise trois Épiques natifs ; les huit autres utilisent leur stock
+Épique évolué. L'Ange est déjà Légendaire natif, sans recette artificielle.
+Paquets, butins, quatre épreuves, économie et règles des combats conservés.
+[Contrat et vérifications](AUBE_LEGENDAIRES.md). Aucun accord de fusion/publication.
+
+Les sections suivantes sont des bilans historiques.
+
 # Paquet d'évolution — proposition du 28 octobre 2026
 
 Main vérifié `feeef6e984e8895a77fa5b715dfbc15fd590ad2e` : PR 59 fusionnée

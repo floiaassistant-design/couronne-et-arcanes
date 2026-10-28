@@ -89,7 +89,8 @@ test('Chaque évolution peut réellement être tirée, mise au deck, invoquée e
   assert.equal(u.rarity,ref.rarity);assert.deepEqual([u.atk,u.hp],[def.stats.attack,def.stats.hp]);
   storage();assert(storeBattle(b));assert.deepEqual(restoreBattle(),b);
  }
- assert.equal(playableCardReference({id:'militia',rarity:'légendaire'}),false);
+ assert.ok(pack.groups.every(g=>g.cards.every(ref=>typeof ref==='string'||ref.rarity!=='légendaire')));
+ assert.equal(playableCardReference({id:'militia',rarity:'divine'}),false);
  assert.equal(playableCardReference({id:'wolf',rarity:'rare'}),false);
 });
 
@@ -100,6 +101,15 @@ test('Les doublons de paquet alimentent la fusion, sans épreuve accomplie ni ga
  assert.equal(p.evolvedCollection['militia:rare'],0);assert.equal(p.evolvedCollection['militia:épique'],1);
  assert.equal(p.gold,before.gold-190);assert.deepEqual(p.collection,before.collection);assert.deepEqual(p.deck,before.deck);
  assert.equal(p.completedTrials,undefined);
+});
+
+test('Trois Épiques du paquet deviennent une Légendaire après le deuxième boss, sans modifier le paquet',()=>{
+ const p=ready();p.completed.push('06');const before=structuredClone(p);
+ const result=buyCardPack(p,'aube-evolution',draws([.95,0]));assert.equal(result.ok,true);
+ assert.deepEqual(result.cards,Array.from({length:3},()=>({id:'militia',rarity:'épique'})));
+ assert.equal(fuseEvolutionCopies(p,'militia:légendaire').ok,true);
+ const expected=structuredClone(before);expected.gold-=190;
+ expected.evolvedCollection={'militia:épique':0,'militia:légendaire':1};assert.deepEqual(p,expected);
 });
 
 function controller(){
