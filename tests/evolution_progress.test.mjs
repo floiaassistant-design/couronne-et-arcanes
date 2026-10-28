@@ -18,6 +18,10 @@ function won(p,id){
  const ref=cardReference({id:t.cardId,rarity:t.from});
  b.heroes.p.hand=[{id:t.cardId,...(typeof ref==='object'?{rarity:ref.rarity}:{}),wait:0}];
  assert.equal(playPlayerCard(b,0,0,1).ok,true);
+ // Instantané de clôture pour les tests d'attribution ; les combats complets
+ // ci-dessous atteignent les objectifs par les seules actions du moteur.
+ const q=b.trialChallenge,u=b.board[0][1];
+ if(q.metric==='firstHit')u.firstHitReductionUsed=true;else q.counts[u.uid]=q.target;
  b.status='victory';b.phase='finished';return b;
 }
 function earn(p,id){const b=won(p,id),r=settleEvolutionTrial(p,b);assert.equal(r.evolved,true,r.reason);return {b,r};}
@@ -45,6 +49,32 @@ test('Accès : progression, boss, exemplaire et deck sont nécessaires, consulta
  assert.equal(evolutionTrialAccess(old,'aube-militia-epic').ok,false);
  assert.equal(old.evolvedCollection,undefined);assert.equal(JSON.stringify(old),snapshot);
  assert.equal(createEvolutionTrial(old,'inconnue').ok,false);
+});
+
+test('Campagne et épreuves : cartes natives garanties distinctes, sans seconde copie du butin du boss',()=>{
+ const p=freshProfile();
+ for(const mission of CAMPAIGN){
+  const before=p.collection[mission.unlock]||0,b=createBattle(p,mission,1);
+  b.status='victory';b.phase='finished';
+  assert.equal(completeBattle(p,mission,b).card,mission.unlock);
+  assert.equal(p.collection[mission.unlock],before+1,mission.id);
+  assert.equal(completeBattle(p,mission,b).card,null);
+  const replay=createBattle(p,mission,2);replay.status='victory';replay.phase='finished';
+  assert.equal(completeBattle(p,mission,replay).card,null);
+  assert.equal(p.collection[mission.unlock],before+1,mission.id+' rejouée');
+ }
+ const native=structuredClone(p.collection);
+ for(const t of EVOLUTION_TRIALS){
+  assert.ok(CAMPAIGN.every(m=>m.unlock!==t.cardId));
+  const before=structuredClone(p),{b,r}=earn(p,t.id);
+  assert.equal(cardKey(r.card),cardKey({id:t.cardId,rarity:t.to}));
+  const expected=structuredClone(before.collection);
+  if(t.from===CARDS[t.cardId].rarity)expected[t.cardId]--;
+  assert.deepEqual(p.collection,expected);
+  assert.equal(p.collection.treant,native.treant,'le boss ne redonne pas son Gardien pendant une épreuve');
+  for(const key of ['gold','shards','heroXp','stars','wins','losses','completed','unlocked'])assert.deepEqual(p[key],before[key],key);
+  const once=structuredClone(p);assert.equal(settleEvolutionTrial(p,b).evolved,false);assert.deepEqual(p,once);
+ }
 });
 
 test('Victoire : un exemplaire exact transformé, slot conservé, aucun coût ni autre progression, attribution unique',()=>{
@@ -164,7 +194,7 @@ test('Combats complets des quatre épreuves : fin et intégrité déterministes,
  for(const trial of EVOLUTION_TRIALS){
   const p=profile();if(trial.previous)earn(p,trial.previous);
   const before=JSON.stringify(p);let achieved=0;
-  for(const seed of [1,2,3,4,7,11,21,41]){
+  for(const seed of [...Array.from({length:32},(_,i)=>i+1),41,124]){
    const a=run(p,trial.id,seed),b=run(p,trial.id,seed);assert.deepEqual(a,b);assert.equal(JSON.stringify(p),before);
    const copy=structuredClone(p),result=settleEvolutionTrial(copy,a);if(result.evolved)achieved++;
   }

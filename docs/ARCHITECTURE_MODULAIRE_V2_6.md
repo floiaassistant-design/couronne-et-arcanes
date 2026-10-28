@@ -1,3 +1,14 @@
+## Objectifs d'épreuves — PR 56 réconciliée, 28 octobre 2026
+
+`engine/trial-objectives.js` centralise objectif figé au départ, validation,
+compteurs par uid et projection pure du meilleur exemplaire vivant. `battle.js`
+signale tours validés, dégâts effectifs à distance et Ripostes réellement
+renvoyées par `resolveRetaliation`, sans copier leurs règles. L'attribution
+reste dans `evolution-progress.js` ; `storage.js` valide le champ facultatif.
+`ui/evolution-trials.js` partage compteur et fiche ; `battle-view.js` l'insère.
+Aucune nouvelle dépendance externe ni second registre de cartes. Les 57 modules
+sont découverts par le builder. [Contrat et reprise](OBJECTIFS_EPREUVES.md).
+
 ## Règles uniques — correction du 27 octobre 2026
 
 `cards/abilities.js` porte les règles natives communes, Garde et Riposte incluses.

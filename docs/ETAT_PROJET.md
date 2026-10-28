@@ -1,3 +1,16 @@
+# Reprise vérifiée — 28 octobre 2026
+
+Main actuel `a0726d4408d6ffc4c767fdb1e51be0582ce01445` : PR 57 (règles
+uniques des cartes) et PR 58 (CI parallèle) fusionnées. La PR 56 reste ouverte
+en brouillon, branche `feat/objectifs-epreuves-aube`, réconciliée avec ce main.
+Le défi du Porte-égide utilise deux Ripostes du même exemplaire ; la Garde
+actuelle et les trois autres défis sont conservés. Aucun circuit de récompense
+ajouté : campagne = cartes natives, épreuves = transformation d'un exemplaire.
+[Contrat, vérifications et prochaine étape](OBJECTIFS_EPREUVES.md).
+Aucune fusion ni publication autorisée pour cette reprise.
+
+Les bilans datés ci-dessous sont historiques ; les commits et la PR priment.
+
 # État courant — 27 octobre 2026
 
 ## Proposition — CI parallèle

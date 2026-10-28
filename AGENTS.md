@@ -20,11 +20,15 @@ réglés avec le reçu existant, sans rejouer leur combat. Une partie précéden
 reste récupérable même si seul son combat doit être relancé. Les vieux passages
 techniques ci-dessous sur les règles historiques sont remplacés par ce contrat.
 
-La PR 56 des défis reste indépendante et en attente. Son objectif de deux
-interceptions doit être revu après rebase sur la Garde normale : les coups
-visant directement un gardien interposé ne sont pas des interceptions de couronne.
-Ne pas réintroduire l'ancienne Garde pour rendre ce défi réalisable.
-Aucune fusion de cette correction ou de la PR 56 autorisée par « tu peux lancer ».
+La PR 56 des défis est réconciliée avec main `a0726d4` (PR 57 et 58 intégrées).
+Le Porte-égide doit déclencher deux Ripostes réelles et survivre à la victoire ;
+aucune ancienne Garde ni interception fictive. Les trois autres défis restent
+inchangés. Les exploits sont comptés par uid vivant, sans cumul entre copies.
+`engine/trial-objectives.js` porte création, validation et lecture ; `battle.js`
+rapporte les faits, dont le booléen de Riposte du résolveur commun. Une ancienne
+épreuve compatible sans objectif conserve sa condition de départ.
+Lire [le contrat et la reprise PR 56](docs/OBJECTIFS_EPREUVES.md).
+Aucune fusion/publication de cette PR n'est autorisée par « reprends ».
 
 ## Épreuves Aube — PR 55
 

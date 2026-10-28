@@ -1,3 +1,15 @@
+## Proposition — objectifs d'épreuves, PR 56 réconciliée, 28 octobre 2026
+
+- Branche remise à jour avec main `a0726d4` : règles uniques PR 57 et CI parallèle PR 58 conservées.
+- Porte-égide : deux Ripostes réelles avec le même exemplaire, puis victoire et survie.
+  Ancien défi d'interceptions abandonné ; aucune modification de Garde.
+- Trois autres défis conservés ; compteur/fiches et reprise de l'objectif enregistré.
+- Récompenses de campagne, Tour et donjons inchangées ; une épreuve transforme
+  toujours un exemplaire, sans attribuer à nouveau la carte d'un boss.
+- Aucune fusion ni publication de la PR 56 ; [contrat et reprise](docs/OBJECTIFS_EPREUVES.md).
+
+Les sections ci-dessous décrivent les livraisons précédentes.
+
 ## Proposition — règles uniques des cartes jouables, 27 octobre 2026
 
 - Garde normale positionnelle pour les cinq gardiens, priorité près de sa

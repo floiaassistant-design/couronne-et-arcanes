@@ -3,6 +3,7 @@ import {freshProfile,normalizeProfile,validateDeck} from '../engine.js';
 import {supportedBoard,lastCell} from '../engine/board.js';
 import {CARDS,CLASSES} from '../data.js';
 import {playableCardReference,cardReference,evolutionProfileError} from '../cards/references.js';
+import {validTrialChallenge} from '../engine/trial-objectives.js';
 import {CARD_RULESET} from '../cards/definitions.js';
 export const SAVE_KEY='couronnes_arcanes_v1';
 export const BATTLE_KEY='couronnes_arcanes_bataille_v1';
@@ -21,7 +22,7 @@ function validBattleSnapshot(b){
   (b.turnFlow!==undefined&&b.turnFlow!=='alternating')||typeof b.missionId!=='string'||!supportedBoard(b.board)||
   !validHero(b.heroes?.p)||!validHero(b.heroes?.e)||
   !Array.isArray(b.log)||!b.log.every(x=>typeof x==='string'))return false;
- if(!b.board.every(row=>row.every(validUnit)))return false;
+ if(!b.board.every(row=>row.every(validUnit))||!validTrialChallenge(b))return false;
  const refs=[...b.heroes.p.deck,...b.heroes.p.discard,...b.heroes.p.hand,...b.heroes.e.deck,...b.heroes.e.discard,...b.heroes.e.hand];
  if(refs.some(ref=>typeof cardReference(ref)==='object')&&b.evolutionsEnabled!==true)return false;
  if(b.evolutionsEnabled!==undefined&&b.evolutionsEnabled!==true)return false;

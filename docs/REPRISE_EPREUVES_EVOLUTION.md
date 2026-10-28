@@ -1,3 +1,8 @@
+> **Reprise actuelle — PR 56 :** voir [OBJECTIFS_EPREUVES.md](OBJECTIFS_EPREUVES.md).
+> La PR 55 est intégrée ; les règles uniques de la PR 57 et la CI de la PR 58
+> sont sur main `a0726d4`. La suite des défis reste sur sa branche, sans fusion.
+> Les bilans de PR 55 ci-dessous sont historiques.
+
 > **Contrat remplacé pour les règles natives :** la correction
 > [Règles uniques](REGLES_CARTES_UNIQUES.md) applique Garde/Riposte validées
 > à tous les exemplaires concernés et impose la relance des anciens combats

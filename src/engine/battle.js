@@ -1,6 +1,7 @@
 import {castSpell} from './spell-casting.js';
 import {versionUnitAbilities,CARD_RULESET} from '../cards/definitions.js';
 import {hit,resolveRetaliation} from './battle-defense.js';
+import {recordTrialFact,recordTrialTurn} from './trial-objectives.js';
 import {findCrownGuardian} from './guard-candidates.js';
 import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError} from './unit-rules.js';
 import {resolveUnitArrival,resolveUnitSupport} from './unit-support.js';
@@ -209,7 +210,7 @@ function moveUnits(b,sideFilter=null){
 function retaliate(b,defender,attacker,lane,defenderCol,attackerCol,defenderLane=lane){
  if(defenderLane!==lane)return; // Une interception interligne ne crée pas de contact.
  const bonus=formationBonus(b,lane,defender)+(defender.rallyUntil>=b.round?1:0);
- resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,bonus,note);
+ if(resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,bonus,note))recordTrialFact(b,defender,'ripostes',1);
 }
 
 function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppressed=false){
@@ -222,6 +223,11 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
  if(other&&other.hp>0&&other.side!==u.side)hit(b,other,p.amount,u.side,p.ignoreArmor);
 }
 
+function strike(b,u,target,atk,from,to,sameLine=true){
+ const before=target.hp;hit(b,target,atk,u.side,unitHasPierce(u,silenced(b,u)));
+ const damage=Math.max(0,before-target.hp);
+ if(sameLine&&(to-from)*(u.side==='p'?1:-1)>=2)recordTrialFact(b,u,'rangedDamage',damage);
+}
 function resolveAttacks(b,sideFilter=null){
  const intents=[];
  for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
@@ -239,7 +245,7 @@ function resolveAttacks(b,sideFilter=null){
   if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +${unitChargeAmount(u)} attaque sur la ligne ${lane+1}.`);
   if(target.type==='hero'){
    if(guardIntercept){
-    hit(b,guardIntercept.u,atk,u.side,unitHasPierce(u,silenced(b,u)));
+    strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane);
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
     if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
     if(ability==='poison'){guardIntercept.u.poison=1;guardIntercept.u.poisonTurns=Math.max(guardIntercept.u.poisonTurns,2);}
@@ -247,7 +253,7 @@ function resolveAttacks(b,sideFilter=null){
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}}
   } else {
-   hit(b,target.target,atk,u.side,unitHasPierce(u,silenced(b,u)));
+   strike(b,u,target.target,atk,intent.col,target.col);
    if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
    if(ability==='poison'){target.target.poison=1;target.target.poisonTurns=Math.max(target.target.poisonTurns,2);}
    if(ability==='splash'){
@@ -361,7 +367,7 @@ export function endPlayerTurn(b){
  if(b.phase!=='player'||b.status!=='active')return {ok:false,reason:'Le tour est terminé.'};
  if(b.turnFlow==='alternating'){
   b.phase='enemy';
-  resolvePoison(b,'p');prepareControlUnits(b,controlHooks,'p');moveUnits(b,'p');resolveAttacks(b,'p');
+  resolvePoison(b,'p');prepareControlUnits(b,controlHooks,'p');moveUnits(b,'p');resolveAttacks(b,'p');recordTrialTurn(b);
   if(b.status==='active')note(b,'L’IA prépare ses cartes.');
   return {ok:true};
  }

@@ -991,10 +991,15 @@ main {
 .trial-start .btn { min-height: 44px; }
 .trial-result-card { width: min(210px,100%); margin: 16px auto; }
 .evolution-unlock { color: var(--gold); font-size: 12px; line-height: 1.5; }
-.trial-combat-objective { margin: 5px 0 0; max-width: 600px; color: #ecd7aa; font-size: 11px; line-height: 1.4; }
+.trial-combat-objective { position: relative; flex: none; color: #ecd7aa; font-size: 11px; line-height: 1.4; }
+.trial-combat-objective summary { cursor: pointer; list-style: none; padding: 8px; min-height: 40px; display: flex; align-items: center; border: 1px solid var(--gold); border-radius: 5px; }
+.trial-combat-objective summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.trial-objective-panel { position: absolute; z-index: 25; top: calc(100% + 8px); left: 0; width: min(320px,calc(100vw - 32px)); max-height: min(250px,45dvh); overflow: auto; padding: 12px; border: 1px solid var(--gold); border-radius: 6px; background: #102637fa; box-shadow: 0 5px 20px #0009; }
+.trial-objective-panel p { margin: 0 0 8px; }
+.combat-readout:has(.spell-targeting) > .trial-combat-objective { display: none; }
 @media(max-width: 700px) {
  .trial-grid { grid-template-columns: minmax(0,1fr); }
- .trial-combat-objective { max-width: 220px; font-size: 10px; }
+ .trial-combat-objective { font-size: 10px; }
 }
 
 </style>
@@ -5100,15 +5105,19 @@ Object.assign(__exports,{AUBE_DESIGN_SOURCE,AUBE_EVOLUTIONS});
 const {freezeCardData}=__load("src/cards/schema.js");
 const EVOLUTION_TRIALS=freezeCardData([
  {id:'aube-militia-rare',name:'Tenir jusqu’à l’aube',cardId:'militia',from:'commun',to:'rare',mission:'01',
+  goal:{metric:'turns',target:3},
   objective:'Remporter la bataille avec au moins un Milicien Commun encore vivant.',
   enemy:'Patrouille des Brumes',difficulty:1,hp:16,aiStyle:'equilibre',deck:['militia','militia','shield','archer','militia','healing','militia','archer']},
  {id:'aube-shield-rare',name:'Le serment du Porte-égide',cardId:'shield',from:'commun',to:'rare',mission:'02',
+  goal:{metric:'ripostes',target:2},
   objective:'Remporter la bataille avec au moins un Porte-égide Commun encore vivant.',
   enemy:'Éclaireurs des Brumes',difficulty:1,hp:18,aiStyle:'assaut',deck:['militia','ranger','militia','wolf','militia','healing','ranger','militia']},
  {id:'aube-archer-rare',name:'La dernière volée',cardId:'archer',from:'commun',to:'rare',mission:'02',
+  goal:{metric:'rangedDamage',target:4},
   objective:'Remporter la bataille avec au moins une Arbalétrière Commune encore vivante.',
   enemy:'Gardes du chemin',difficulty:1,hp:18,aiStyle:'bastion',deck:['shield','militia','shield','militia','healing','militia','archer','militia']},
  {id:'aube-militia-epic',name:'Le rempart du Bosquet',cardId:'militia',from:'rare',to:'épique',mission:'03',previous:'aube-militia-rare',
+  goal:{metric:'firstHit',target:1},
   objective:'Remporter la bataille avec au moins un Milicien Rare encore vivant.',
   enemy:'Gardien de l’épreuve du Bosquet',difficulty:2,hp:22,aiStyle:'bastion',deck:['treant','militia','ranger','dryad','shield','wolf','militia','healing','archer','militia','shield','ranger']}
 ]);
@@ -5613,6 +5622,7 @@ Object.assign(__exports,{});
 const {castSpell}=__load("src/engine/spell-casting.js");
 const {versionUnitAbilities,CARD_RULESET}=__load("src/cards/definitions.js");
 const {hit,resolveRetaliation}=__load("src/engine/battle-defense.js");
+const {recordTrialFact,recordTrialTurn}=__load("src/engine/trial-objectives.js");
 const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
 const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError}=__load("src/engine/unit-rules.js");
 const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
@@ -5821,7 +5831,7 @@ function moveUnits(b,sideFilter=null){
 function retaliate(b,defender,attacker,lane,defenderCol,attackerCol,defenderLane=lane){
  if(defenderLane!==lane)return; // Une interception interligne ne crée pas de contact.
  const bonus=formationBonus(b,lane,defender)+(defender.rallyUntil>=b.round?1:0);
- resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,bonus,note);
+ if(resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,bonus,note))recordTrialFact(b,defender,'ripostes',1);
 }
 
 function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppressed=false){
@@ -5834,6 +5844,11 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
  if(other&&other.hp>0&&other.side!==u.side)hit(b,other,p.amount,u.side,p.ignoreArmor);
 }
 
+function strike(b,u,target,atk,from,to,sameLine=true){
+ const before=target.hp;hit(b,target,atk,u.side,unitHasPierce(u,silenced(b,u)));
+ const damage=Math.max(0,before-target.hp);
+ if(sameLine&&(to-from)*(u.side==='p'?1:-1)>=2)recordTrialFact(b,u,'rangedDamage',damage);
+}
 function resolveAttacks(b,sideFilter=null){
  const intents=[];
  for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
@@ -5851,7 +5866,7 @@ function resolveAttacks(b,sideFilter=null){
   if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +${unitChargeAmount(u)} attaque sur la ligne ${lane+1}.`);
   if(target.type==='hero'){
    if(guardIntercept){
-    hit(b,guardIntercept.u,atk,u.side,unitHasPierce(u,silenced(b,u)));
+    strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane);
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
     if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
     if(ability==='poison'){guardIntercept.u.poison=1;guardIntercept.u.poisonTurns=Math.max(guardIntercept.u.poisonTurns,2);}
@@ -5859,7 +5874,7 @@ function resolveAttacks(b,sideFilter=null){
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}}
   } else {
-   hit(b,target.target,atk,u.side,unitHasPierce(u,silenced(b,u)));
+   strike(b,u,target.target,atk,intent.col,target.col);
    if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
    if(ability==='poison'){target.target.poison=1;target.target.poisonTurns=Math.max(target.target.poisonTurns,2);}
    if(ability==='splash'){
@@ -5973,7 +5988,7 @@ function endPlayerTurn(b){
  if(b.phase!=='player'||b.status!=='active')return {ok:false,reason:'Le tour est terminé.'};
  if(b.turnFlow==='alternating'){
   b.phase='enemy';
-  resolvePoison(b,'p');prepareControlUnits(b,controlHooks,'p');moveUnits(b,'p');resolveAttacks(b,'p');
+  resolvePoison(b,'p');prepareControlUnits(b,controlHooks,'p');moveUnits(b,'p');resolveAttacks(b,'p');recordTrialTurn(b);
   if(b.status==='active')note(b,'L’IA prépare ses cartes.');
   return {ok:true};
  }
@@ -6510,6 +6525,62 @@ function resolveTempoSpell(b,side,card,note){
 }
 
 Object.assign(__exports,{TEMPO_IDS,TEMPO_MAX_WAIT,accelerationTarget,obstructionTarget,tempoTargetError,resolveTempoSpell});
+
+},
+"src/engine/trial-objectives.js":function(__exports,__load){
+// Objectifs d'épreuve : faits résolus du moteur et lecture pure des survivants.
+const {CARDS}=__load("src/data.js");
+const {evolutionTrial}=__load("src/evolution-trials.js");
+const metrics=['turns','rangedDamage','ripostes','firstHit'];
+const labels={turns:'Tours de survie',rangedDamage:'Dégâts à distance',ripostes:'Ripostes déclenchées',firstHit:'Premier coup réduit'};
+const eligible=(q,u)=>u&&u.side==='p'&&u.hp>0&&u.id===q.cardId&&(u.rarity||CARDS[u.id]?.rarity)===q.rarity;
+function trialObjectiveText(t){
+ if(!t?.goal)return t?.objective||'';
+ const {metric,target}=t.goal,name=CARDS[t.cardId].name;
+ const task=metric==='turns'?`Rester en vie pendant ${target} tours`:
+  metric==='rangedDamage'?`Infliger ${target} dégâts à des unités ennemies depuis au moins deux cases`:
+  metric==='ripostes'?`Déclencher ${target} Ripostes`:'Déclencher sa réduction du premier coup';
+ return `${name} · rang ${t.from} : ${task}. Remporter ensuite la bataille avec ce même exemplaire encore vivant.`;
+}
+function createTrialChallenge(t){
+ return {version:1,cardId:t.cardId,rarity:t.from,metric:t.goal.metric,target:t.goal.target,text:trialObjectiveText(t),counts:{}};
+}
+function validTrialChallenge(b){
+ const q=b.trialChallenge;if(q===undefined)return true;
+ const t=evolutionTrial(b.missionId);
+ return !!q&&b.mode==='evolution-trial'&&!!t&&q.version===1&&q.cardId===t.cardId&&q.rarity===t.from&&
+  metrics.includes(q.metric)&&Number.isSafeInteger(q.target)&&q.target>0&&q.target<=10000&&
+  (q.metric!=='firstHit'||q.target===1)&&
+  (q.lastRound===undefined||Number.isSafeInteger(q.lastRound)&&q.lastRound>=1&&q.lastRound<=b.round)&&
+  typeof q.text==='string'&&q.text.length>0&&q.text.length<=1000&&
+  !!q.counts&&typeof q.counts==='object'&&!Array.isArray(q.counts)&&Object.keys(q.counts).length<=1000&&
+  Object.entries(q.counts).every(([uid,n])=>/^[1-9]\d*$/.test(uid)&&Number.isSafeInteger(Number(uid))&&Number.isSafeInteger(n)&&n>=0&&n<=1000000);
+}
+function recordTrialFact(b,u,metric,amount){
+ const q=b.trialChallenge;
+ if(b.mode!=='evolution-trial'||q?.version!==1||q.metric!==metric||!eligible(q,u)||!Number.isFinite(amount)||amount<=0)return;
+ q.counts[u.uid]=Math.min(1000000,(q.counts[u.uid]||0)+Math.floor(amount));
+}
+function recordTrialTurn(b){
+ const q=b.trialChallenge;
+ if(b.mode!=='evolution-trial'||q?.metric!=='turns'||q.lastRound===b.round)return;
+ q.lastRound=b.round;
+ for(const row of b.board)for(const u of row)recordTrialFact(b,u,'turns',1);
+}
+function trialObjectiveState(b){
+ const t=evolutionTrial(b?.missionId);if(!t||b.mode!=='evolution-trial')return null;
+ const q=b.trialChallenge;
+ if(q===undefined){
+  const alive=b.board.flat().some(u=>eligible({cardId:t.cardId,rarity:t.from},u));
+  return {text:t.objective,legacy:true,achieved:alive,value:alive?1:0,target:1,label:'Personnage vivant'};
+ }
+ if(!validTrialChallenge(b))return {text:'Objectif sauvegardé invalide.',achieved:false,value:0,target:1,label:'Objectif'};
+ const values=b.board.flat().filter(u=>eligible(q,u)).map(u=>q.metric==='firstHit'?(u.firstHitReductionUsed===true?1:0):(q.counts[u.uid]||0));
+ const value=Math.max(0,...values);
+ return {text:q.text,legacy:false,achieved:value>=q.target,value:Math.min(value,q.target),target:q.target,label:labels[q.metric]};
+}
+
+Object.assign(__exports,{trialObjectiveText,createTrialChallenge,validTrialChallenge,recordTrialFact,recordTrialTurn,trialObjectiveState});
 
 },
 "src/engine/guard-candidates.js":function(__exports,__load){
@@ -7098,6 +7169,7 @@ const {evolutionTrial,EVOLUTION_TRIALS}=__load("src/evolution-trials.js");
 const {cardReference,cardKey,ownedCardCopies}=__load("src/cards/references.js");
 const {createBattle}=__load("src/engine/battle.js");
 const {validateDeck}=__load("src/engine/profile.js");
+const {createTrialChallenge,trialObjectiveState}=__load("src/engine/trial-objectives.js");
 const trialSource=t=>cardReference({id:t.cardId,rarity:t.from});
 const trialReward=t=>cardReference({id:t.cardId,rarity:t.to});
 function evolutionTrialAccess(profile,id){
@@ -7116,6 +7188,7 @@ function createEvolutionTrial(profile,id,seed=Date.now()){
  const access=evolutionTrialAccess(profile,id);if(!access.ok)return access;
  const t=access.trial;
  const battle=createBattle(profile,{id:t.id,name:t.name,enemy:t.enemy,difficulty:t.difficulty,hp:t.hp,aiStyle:t.aiStyle,boss:!!t.boss,deck:t.deck,mode:'evolution-trial'},seed,{turnFlow:'alternating'});
+ battle.trialChallenge=createTrialChallenge(t);
  return {ok:true,battle};
 }
 function settleEvolutionTrial(profile,b){
@@ -7126,8 +7199,7 @@ function settleEvolutionTrial(profile,b){
  b.progressionGranted=true;
  if(profile.completedTrials?.includes(t.id))return {...empty,reason:'Évolution déjà obtenue.'};
  if(b.status!=='victory')return {...empty,reason:'Épreuve à retenter. Aucun exemplaire consommé.'};
- const alive=b.board.some(row=>row.some(u=>u&&u.side==='p'&&u.hp>0&&u.id===t.cardId&&(u.rarity||CARDS[u.id].rarity)===t.from));
- if(!alive)return {...empty,reason:'Victoire, mais l’objectif de l’épreuve n’est pas rempli. Aucun exemplaire consommé.'};
+ if(!trialObjectiveState(b).achieved)return {...empty,reason:'Victoire, mais l’objectif de l’épreuve n’est pas rempli. Aucun exemplaire consommé.'};
  const access=evolutionTrialAccess(profile,t.id);if(!access.ok)return {...empty,reason:access.reason};
  const source=trialSource(t),reward=trialReward(t),key=cardKey(source);
  // Seul un exemplaire est transformé ; le slot éventuel du deck reste en place.
@@ -7341,14 +7413,20 @@ Object.assign(__exports,{concordeLight,concordeDescription,concordeDetails});
 const {CARDS,CAMPAIGN}=__load("src/data.js");
 const {EVOLUTION_TRIALS}=__load("src/evolution-trials.js");
 const {evolutionTrialAccess,trialReward}=__load("src/engine/evolution-progress.js");
+const {trialObjectiveText,trialObjectiveState}=__load("src/engine/trial-objectives.js");
+function trialBattleObjective(battle,esc){
+ const state=trialObjectiveState(battle);if(!state)return '';
+ return `<details class="trial-combat-objective"><summary aria-label="Objectif de l’épreuve"><span role="status">Défi · ${state.value}/${state.target}${state.achieved?' ✓':''}</span></summary><div class="trial-objective-panel"><p>${esc(state.text)}</p><p>${esc(state.label)} : ${state.value}/${state.target} · meilleur exemplaire vivant${state.achieved?' · Défi rempli':''}</p></div></details>`;
+}
+
 function renderEvolutionTrials(profile,battle,{btn,cardUI,esc}){
  const busy=battle?.status==='active',boss=CAMPAIGN.find(m=>m.id==='03');
- return `<section class="evolution-trials"><header><div class="kicker">LES ÉPREUVES DE L’AUBE</div><h1 class="page-title">Méritez vos évolutions</h1><p class="page-sub">Remportez une épreuve avec le personnage demandé encore vivant. Un seul exemplaire évolue ; sa place dans votre deck est conservée.</p>${btn('Préparer mon deck','nav','data-page="deck"','ghost')}</header>
+ return `<section class="evolution-trials"><header><div class="kicker">LES ÉPREUVES DE L’AUBE</div><h1 class="page-title">Méritez vos évolutions</h1><p class="page-sub">Accomplissez son défi, puis remportez la bataille avec le même exemplaire encore vivant. Un seul exemplaire évolue ; sa place dans votre deck est conservée.</p>${btn('Préparer mon deck','nav','data-page="deck"','ghost')}</header>
   <div class="card-panel trial-boss-gate"><h2 class="section-title">Le premier boss ouvre la suite</h2><p>Vaincre ${esc(boss.enemy)} dans « ${esc(boss.name)} » ouvre l’épreuve du Milicien Épique, après celle du Milicien Rare.</p><span class="pill">${profile.completed.includes(boss.id)?'✓ Boss déjà vaincu':'Boss à vaincre en campagne'}</span></div>
   ${busy?'<div class="hint red">Terminez le combat en cours avant de commencer une épreuve.</div>':''}
   <div class="trial-grid">${EVOLUTION_TRIALS.map(t=>{
    const access=evolutionTrialAccess(profile,t.id),name=CARDS[t.cardId].name;
-   return `<article class="card-panel trial-card" data-trial-id="${t.id}"><div class="section-caption">${access.completed?'✓ ÉVOLUTION OBTENUE':access.ok?'ÉPREUVE DISPONIBLE':'ÉPREUVE VERROUILLÉE'}</div><h2>${esc(t.name)}</h2><div class="trial-reward-card">${cardUI(trialReward(t),{previewContext:'reward'})}</div><p class="trial-objective">${esc(t.objective)}</p><p><b>Récompense garantie :</b> 1 ${esc(name)} ${esc(t.from)} devient ${esc(t.to)}.</p><p class="hint">Une seule récompense. Aucun coût, aucun tirage, aucun exemplaire consommé en cas d’échec. Pas d’or, d’éclats ou d’XP accordés par ces épreuves.</p><div class="trial-start">${access.ok?'<p class="hint green">Objectif et récompense annoncés : à vous de jouer.</p>':`<p class="hint">${esc(access.reason)}</p>`}${btn(access.completed?'Évolution obtenue':'Commencer l’épreuve','trial-start',`data-id="${t.id}" ${!access.ok||busy?'disabled':''}`,'primary')}</div></article>`;
+   return `<article class="card-panel trial-card" data-trial-id="${t.id}"><div class="section-caption">${access.completed?'✓ ÉVOLUTION OBTENUE':access.ok?'ÉPREUVE DISPONIBLE':'ÉPREUVE VERROUILLÉE'}</div><h2>${esc(t.name)}</h2><div class="trial-reward-card">${cardUI(trialReward(t),{previewContext:'reward'})}</div><p class="trial-objective">${esc(trialObjectiveText(t))}</p><p><b>Récompense garantie :</b> 1 ${esc(name)} ${esc(t.from)} devient ${esc(t.to)}.</p><p class="hint">Une seule récompense. Aucun coût, aucun tirage, aucun exemplaire consommé en cas d’échec. Pas d’or, d’éclats ou d’XP accordés par ces épreuves.</p><div class="trial-start">${access.ok?'<p class="hint green">Objectif et récompense annoncés : à vous de jouer.</p>':`<p class="hint">${esc(access.reason)}</p>`}${btn(access.completed?'Évolution obtenue':'Commencer l’épreuve','trial-start',`data-id="${t.id}" ${!access.ok||busy?'disabled':''}`,'primary')}</div></article>`;
   }).join('')}</div>
  </section>`;
 }
@@ -7359,7 +7437,7 @@ function evolutionTrialResult(reward,{btn,cardUI,esc}){
   <div class="button-row">${btn('Retour aux épreuves','trial-exit','data-page="trials"','primary')}${btn('Voir mon deck','trial-exit','data-page="deck"','ghost')}</div>`;
 }
 
-Object.assign(__exports,{renderEvolutionTrials,evolutionTrialResult});
+Object.assign(__exports,{trialBattleObjective,renderEvolutionTrials,evolutionTrialResult});
 
 },
 "src/ui/spell-controller.js":function(__exports,__load){
@@ -8023,7 +8101,7 @@ Object.assign(__exports,{renderGuidePage});
 
 },
 "src/ui/battle-view.js":function(__exports,__load){
-const {evolutionTrial}=__load("src/evolution-trials.js");
+const {trialBattleObjective}=__load("src/ui/evolution-trials.js");
 const {cardPresentation}=__load("src/ui/card-presentation.js");
 const {spellSelection,spellCardState,spellTargetingUI}=__load("src/ui/spell-targeting.js");
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
@@ -8099,9 +8177,9 @@ function createBattleView(getState, { btn, cardUI, esc }) {
       cells === 10
         ? paintedArena(lanes, (lane, col, visual) => battleCell(battle.board[lane][col], lane, col, visual))
         : `<div class="arena-sky" aria-hidden="true"></div>${Array.from({ length: lanes }, (_, lane) => `<div class="lane-row" data-crown-col="${cells + 1}"><div class="lane-label">${['I', 'II', 'III', 'IV'][lane]}</div><div class="lane-gate" aria-label="Votre couronne"><span class="pixel-tower" aria-hidden="true"></span><b>♜</b></div>${Array.from({ length: cells }, (_, i) => battleCell(battle.board[lane][i + 1], lane, i + 1)).join('')}<div class="lane-gate enemy" aria-label="Couronne adverse"><span class="pixel-tower" aria-hidden="true"></span><b>♛</b></div></div>`).join('')}`;
-    return `<div class="combat-screen" data-painted-arena="${cells === 10}" data-card-layout="${immersive}"><div class="split-head combat-titlebar"><div><div class="kicker">${battle.mode==='developer'?'TEST SANS RÉCOMPENSE':'COMBAT TACTIQUE'} · ${esc(battle.missionName)}</div><h1 class="combat-mission-name">${esc(battle.missionName)}</h1>${battle.mode==='evolution-trial'?`<p class="trial-combat-objective">${esc(evolutionTrial(battle.missionId)?.objective||'')}</p>`:''}</div><span class="pill">2 cartes maximum par tour</span><button type="button" class="combat-menu-link" data-action="${battle.mode==='developer'?'lab-back':'nav'}" data-page="home" aria-label="${battle.mode==='developer'?'Retourner au laboratoire':'Revenir à la Citadelle sans abandonner la bataille'}">${battle.mode==='developer'?'⚙ Laboratoire':'☷ Citadelle'}</button></div>
+    return `<div class="combat-screen" data-painted-arena="${cells === 10}" data-card-layout="${immersive}"><div class="split-head combat-titlebar"><div><div class="kicker">${battle.mode==='developer'?'TEST SANS RÉCOMPENSE':'COMBAT TACTIQUE'} · ${esc(battle.missionName)}</div><h1 class="combat-mission-name">${esc(battle.missionName)}</h1></div><span class="pill">2 cartes maximum par tour</span><button type="button" class="combat-menu-link" data-action="${battle.mode==='developer'?'lab-back':'nav'}" data-page="home" aria-label="${battle.mode==='developer'?'Retourner au laboratoire':'Revenir à la Citadelle sans abandonner la bataille'}">${battle.mode==='developer'?'⚙ Laboratoire':'☷ Citadelle'}</button></div>
  <section class="battle-panel arena-lofi combat-stage">${battleHud(p, e)}
- <div class="combat-readout" aria-label="Lecture des actions du combat"><div class="combat-readout-copy" role="status" aria-live="polite" aria-atomic="true"><b class="combat-phase">${selection?'Ciblage du sort':battle.phase === 'enemy' ? 'Tour adverse' : 'À vous de jouer'}</b><span class="combat-action">${selection?'Cliquez une cible autorisée, puis confirmez dans l’aperçu.':battle.phase === 'enemy' ? 'L’IA prépare ses cartes.' : 'Posez vos cartes, puis validez vos actions.'}</span></div><button type="button" data-action="fx-speed" aria-label="Vitesse de lecture des actions">×1</button><button type="button" data-action="fx-skip" hidden>Passer</button>${spellTargetingUI(selection,spellTarget,spellPreview,esc)}</div>
+ <div class="combat-readout" aria-label="Lecture des actions du combat">${trialBattleObjective(battle,esc)}<div class="combat-readout-copy" role="status" aria-live="polite" aria-atomic="true"><b class="combat-phase">${selection?'Ciblage du sort':battle.phase === 'enemy' ? 'Tour adverse' : 'À vous de jouer'}</b><span class="combat-action">${selection?'Cliquez une cible autorisée, puis confirmez dans l’aperçu.':battle.phase === 'enemy' ? 'L’IA prépare ses cartes.' : 'Posez vos cartes, puis validez vos actions.'}</span></div><button type="button" data-action="fx-speed" aria-label="Vitesse de lecture des actions">×1</button><button type="button" data-action="fx-skip" hidden>Passer</button>${spellTargetingUI(selection,spellTarget,spellPreview,esc)}</div>
  <div class="arena-caption"><span>${selectedCard >= 0 ? (selection?'✦ CHOISISSEZ LA CIBLE DU SORT':'✦ CHOISISSEZ UNE CASE DE DÉPART') : '✧ ARÈNE DES SERMENTS'}</span><span>${lanes} lignes · ${cells} cases par ligne</span></div><div class="battle-grid ${cells === 10 ? 'arena-structured arena-painted' : ''}" tabindex="0" role="region" aria-label="Plateau de combat : ${lanes} lignes de ${cells} cases" style="--cells:${cells};--arena-scene:url('${arenaBackdrop()}')">${arena}</div>
  <div class="arena-legend" aria-label="Légende du plateau"><span class="legend-ally">${campSeal('p')} VOS UNITÉS</span><span class="legend-enemy">${campSeal('e')} ADVERSAIRES</span><span>Contour : rareté · Étiquette : Ordre</span></div>
  <p class="arena-scroll-hint">Sur petit écran, faites glisser le plateau pour voir toutes les cases. Les couronnes sont hors de la grille.</p><div class="vfx-controls"><span>Attaques, déplacements et effets du combat.</span><button type="button" class="vfx-toggle" data-action="toggle-animations" aria-pressed="${animationsEnabled}">${animationsEnabled ? '✦ ' : ''}Animations ${animationsEnabled ? 'activées' : 'désactivées'}</button></div>
@@ -8857,6 +8935,7 @@ const {freshProfile,normalizeProfile,validateDeck}=__load("src/engine.js");
 const {supportedBoard,lastCell}=__load("src/engine/board.js");
 const {CARDS,CLASSES}=__load("src/data.js");
 const {playableCardReference,cardReference,evolutionProfileError}=__load("src/cards/references.js");
+const {validTrialChallenge}=__load("src/engine/trial-objectives.js");
 const {CARD_RULESET}=__load("src/cards/definitions.js");
 const SAVE_KEY='couronnes_arcanes_v1';
 const BATTLE_KEY='couronnes_arcanes_bataille_v1';
@@ -8875,7 +8954,7 @@ function validBattleSnapshot(b){
   (b.turnFlow!==undefined&&b.turnFlow!=='alternating')||typeof b.missionId!=='string'||!supportedBoard(b.board)||
   !validHero(b.heroes?.p)||!validHero(b.heroes?.e)||
   !Array.isArray(b.log)||!b.log.every(x=>typeof x==='string'))return false;
- if(!b.board.every(row=>row.every(validUnit)))return false;
+ if(!b.board.every(row=>row.every(validUnit))||!validTrialChallenge(b))return false;
  const refs=[...b.heroes.p.deck,...b.heroes.p.discard,...b.heroes.p.hand,...b.heroes.e.deck,...b.heroes.e.discard,...b.heroes.e.hand];
  if(refs.some(ref=>typeof cardReference(ref)==='object')&&b.evolutionsEnabled!==true)return false;
  if(b.evolutionsEnabled!==undefined&&b.evolutionsEnabled!==true)return false;

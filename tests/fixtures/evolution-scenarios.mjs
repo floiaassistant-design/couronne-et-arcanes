@@ -8,7 +8,7 @@ const profile=freshProfile();profile.completed=['01','02','03'];profile.unlocked
 const scenarios=[];
 for(const id of ['aube-militia-rare','aube-militia-epic','aube-shield-rare','aube-archer-rare']){
  const trial=EVOLUTION_TRIALS.find(t=>t.id===id);let found;
- for(let seed=1;seed<=100&&!found;seed++){
+ for(let seed=1;seed<=256&&!found;seed++){
   const b=createEvolutionTrial(profile,id,seed).battle,initial=structuredClone(b),actions=[];
   for(let turn=0;turn<40&&b.status==='active';turn++){
    if(b.powerCooldown===0){usePower(b);actions.push({type:'power'});}
@@ -25,7 +25,7 @@ for(const id of ['aube-militia-rare','aube-militia-epic','aube-shield-rare','aub
   }
   if(b.status==='active')throw Error('Combat sans fin');
   const next=structuredClone(profile),reward=settleEvolutionTrial(next,structuredClone(b));
-  if(reward.evolved)found={id,trial,seed,profile:structuredClone(profile),initial,terminal:b,actions,expected:next};
+  if(reward.evolved)found={id,trial:{...trial,legacyObjective:trial.objective,objective:initial.trialChallenge.text},seed,profile:structuredClone(profile),initial,terminal:b,actions,expected:next};
  }
  if(!found)throw Error('Aucun parcours complet réussi : '+id);
  const edited=structuredClone(found.expected),index=edited.deck.findIndex(ref=>ref?.id===trial.cardId&&ref.rarity===trial.to);

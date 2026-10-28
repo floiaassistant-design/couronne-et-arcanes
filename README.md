@@ -1,20 +1,11 @@
-> **Proposition CI :** quatre groupes parallèles et un verdict global, tous
-> les tests existants conservés. [Répartition, quotas et vérifications](docs/CI_PARALLELE.md).
-> Branche `ci/tests-paralleles`, depuis le main `6dee2dc4` (PR 57 fusionnée).
-> Les annonces de propositions ci-dessous retracent les livraisons précédentes.
-
-> **Correction proposée — règles uniques des cartes jouables.**
-> Garde positionnelle pour les cinq gardiens et Riposte à l'ATQ actuelle pour
-> toutes les unités concernées, exemplaires déjà possédés inclus, dans les deux
-> camps. Les anciens combats actifs demandent une relance sans pénalité ; profils
-> et progression conservés. [Contrat et reprise](docs/REGLES_CARTES_UNIQUES.md).
-> Branche `fix/regles-cartes-jouables`, depuis `b58ea3f0` ; aucune fusion effectuée.
-> La PR 56 des défis reste en attente de réconciliation.
-
 # Couronnes & Arcanes
 
-> PR 55 — quatre épreuves d’évolution Aube proposées : [contrat](docs/EPREUVES_EVOLUTION.md)
-> et [reprise/vérifications](docs/REPRISE_EPREUVES_EVOLUTION.md). Pas encore fusionnées.
+Garde/Riposte uniques (PR 57) et quatre groupes de tests parallèles (PR 58)
+sont intégrés. [Règles](docs/REGLES_CARTES_UNIQUES.md) · [CI](docs/CI_PARALLELE.md).
+
+> PR 55 fusionnée : quatre évolutions obtenables par épreuve. Cette branche propose
+> des [objectifs personnels et leur compteur](docs/OBJECTIFS_EPREUVES.md), dans la PR 56 réconciliée avec main `a0726d4` (PR 57 et 58 intégrées).
+> Le Porte-égide doit déclencher deux Ripostes, avec victoire et survie du même exemplaire.
 
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
 quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle.
@@ -25,9 +16,9 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 - `JOUER.html` : **unique export jouable**, complet et autonome sans réseau.
 - `tests/JOUER.test.html` : diagnostic automatisé seulement, jamais distribué.
 
-Sur cette branche, « Épreuves » annonce les conditions et récompenses de trois
-évolutions Rares, puis du Milicien Épique après le premier boss. Gagner avec le
-personnage au rang demandé encore vivant transforme un seul exemplaire et
+« Épreuves » annonce les conditions et récompenses de trois
+évolutions Rares, puis du Milicien Épique après le premier boss. Sur cette branche, accomplir son défi et gagner avec le même
+exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
 sont utilisables en campagne ; les 37 autres évolutions Aube restent au labo.
 
@@ -38,7 +29,7 @@ automatiques conservent leurs compositions historiques.
 
 Le plateau, les cartes et le moteur sont communs. Les nouveaux combats utilisent
 les tours alternés : poser jusqu’à deux cartes, valider, puis regarder ses unités
-agir et l’IA jouer. Les anciens combats 3×5 gardent leurs règles historiques.
+agir et l’IA jouer. Les anciens combats actifs incompatibles demandent une relance sans perte du profil.
 
 ## Ciblage direct et effets
 
