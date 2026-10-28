@@ -1005,6 +1005,14 @@ main {
 </style>
 <style>
 /* Atelier : classes, forge, alchimie, maîtrise et talents. */
+.pack-shop-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.pack-offer { min-width: 0; padding: 20px; }
+.pack-rates { padding: 0; list-style: none; font-size: 13px; }
+.pack-rates li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; }
+.pack-rates b { white-space: nowrap; color: var(--gold); }
+.pack-content { font-size: 12px; line-height: 1.5; margin-bottom: 16px; }
+.pack-content summary { cursor: pointer; min-height: 40px; display: flex; align-items: center; }
+@media(max-width:700px) { .pack-shop-grid { grid-template-columns: minmax(0,1fr); } }
 .evolution-fusion-recipe { min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 10px; background: #172733; padding: 10px; }
 .evolution-fusion-recipe .unit-card { width: 100%; }
 .evolution-fusion-action { padding: 8px; display: flex; flex: 1; flex-direction: column; gap: 8px; }
@@ -4233,6 +4241,7 @@ const {cardPreviewAttributes}=__load("src/ui/card-presentation.js");
 const {cardId,cardRarity,cardFromKey}=__load("src/cards/references.js");
 const {evolutionTrialResult}=__load("src/ui/evolution-trials.js");
 const {createEvolutionFusionController}=__load("src/ui/evolution-fusion-controller.js");
+const {createCardPackController}=__load("src/ui/card-pack-controller.js");
 const {createSpellController}=__load("src/ui/spell-controller.js");
 const {esc}=__load("src/ui/markup.js");
 const {createViews}=__load("src/ui/views.js");
@@ -4246,7 +4255,7 @@ const {createCardInspection}=__load("src/ui/card-inspection.js");
 const {loadProfile,saveProfile,restoreBattle,storeBattle,storedBattleNeedsRestart,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure}=__load("src/ui/storage.js");
 const {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission}=__load("src/data.js");
 const {dungeonStageMission}=__load("src/dungeons.js");
-const {DECK_STYLES,proposeDeck,applyDeckStyle,createEvolutionTrial,settleEvolutionTrial,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,buyPack,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
+const {DECK_STYLES,proposeDeck,applyDeckStyle,createEvolutionTrial,settleEvolutionTrial,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
 const VFX_KEY='couronnes_arcanes_animations_v13';
 let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}catch{return true;}})();
 
@@ -4259,7 +4268,9 @@ const {closeCardInspection,suppressCardInspection,bindCardInspection}=createCard
 const {stopBattleFx,playBattleFx,skipBattleFx,changeFxSpeed,syncFxControls,isBattleFxPlaying}=createCombatFx(()=>({animationsEnabled,screen}));
 const {spellState,handleSpell,resetSpell}=createSpellController(()=>({battle,selectedCard}),{refresh:()=>render(),launch:(index,lane)=>withBattleFx(()=>playPlayerCard(battle,index,lane)),closeInspection:()=>closeCardInspection(true)});
 const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,deckUI,trialsUI,alchemyUI,forgeUI,guideUI,battleUI,navUI,resourceUI}=createViews(()=>({profile,battle:displayBattle||battle,combatReport:combatReport?.battle===battle?combatReport:null,screen,selectedCard,...spellState(),collectionFilter,collectionOwned,deckFilters,animationsEnabled,previousGameAvailable:hasPreviousAdventure()}));
-const handleEvolutionFusion=createEvolutionFusionController(()=>({profile,battle}),{btn,cardUI,esc,showModal,hideModal,refresh:()=>render(),toast,commitProfile:next=>{if(developer||!saveProfile(next))return false;profile=next;return true;}});
+const handleEvolutionFusion=createEvolutionFusionController(()=>({profile,battle}),{btn,cardUI,esc,showModal,hideModal,refresh:()=>render(),toast,commitProfile});
+const handleCardPack=createCardPackController(()=>({profile,battle}),{btn,cardUI,esc,showModal,hideModal,refresh:()=>render(),toast,commitProfile});
+function commitProfile(next){if(developer||!saveProfile(next))return false;profile=next;return true;}
 function load(){return loadProfile();}
 function save(){if(developer)return;if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
 function loadBattle(){return restoreBattle();}
@@ -4474,6 +4485,7 @@ function act(action,dataset){const {id,index,lane,col,page}=dataset;
  if(isBattleFxPlaying()&&(action.startsWith('spell-')||['select-card','deploy','end-turn','hero-power'].includes(action)))return;
  if(action==='spell-cancel'){resetSpell();selectedCard=-1;render();return;}
  if(handleEvolutionFusion(action,dataset))return;
+ if(handleCardPack(action,dataset))return;
  if(handleSpell(action,dataset))return;
  switch(action){
 
@@ -4567,7 +4579,6 @@ case 'lab-open':openDeveloper();break;
  case 'extract-card':{const result=extractCard(profile,id);if(result.ok){save();render();toast(`Carte extraite : +${result.shards} éclats.`);}else toast(result.reason);break;}
  case 'card-upgrade':const up=upgradeCard(profile,id);if(up.ok){save();render();toast('Carte améliorée !');}else toast(up.reason);break;
  case 'building-upgrade':const bu=upgradeBuilding(profile,id);if(bu.ok){save();render();toast('Bâtiment amélioré !');}else toast(bu.reason);break;
- case 'buy-pack':const pack=buyPack(profile);if(!pack.ok){toast(pack.reason);break;}save();render();showModal(`<div class="kicker">PAQUET MYSTIQUE</div><h2>Trois nouvelles découvertes</h2><p>Ces cartes rejoignent votre collection. Ajoutez-les à votre deck pour les utiliser.</p><div class="three-grid">${pack.cards.map(id=>cardUI(id,{previewContext:'pack'})).join('')}</div><div class="button-row">${btn('Voir ma collection','pack-collection','','primary')}${btn('Fermer','close-modal','','ghost')}</div>`);break;
  case 'pack-collection':hideModal();navigate('collection');break;
  case 'export-save':{const blob=new Blob([JSON.stringify(profile,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='couronnes_et_arcanes_sauvegarde.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Sauvegarde exportée.');break;}
  case 'import-save':$('import-file')?.click();break;
@@ -4620,6 +4631,7 @@ const {resolveUnitDefinition,resolveRulesDefinition,versionUnitAbilities,AUBE_UN
 const {ownedCardCopies}=__load("src/cards/references.js");
 const {evolutionTrialFor}=__load("src/evolution-trials.js");
 const {evolutionFusionFor}=__load("src/evolution-fusion.js");
+const {evolutionPackFor}=__load("src/card-packs.js");
 const {unitCardText,unitAbilityDetails,unitAbilitySummary}=__load("src/cards/ability-text.js");
 const {battleUnitDefinition,unitAttackRange,unitMovementSteps}=__load("src/engine/unit-rules.js");
 const {unitStatContext,unitStats,versionUnitStats}=__load("src/engine/unit-stats.js");
@@ -4629,6 +4641,14 @@ const {generatedCardFace}=__load("src/ui/generated-card.js");
 const {concordeDetails}=__load("src/ui/concorde.js");
 const {visualFor,artSrc,cardTemplateFor}=__load("src/visuals.js");
 const brief=text=>text.length<=90?text:text.slice(0,87).replace(/\s+\S*$/,'')+'…';
+function evolutionAvailability(profile,reference,{trial,fusion,pack}){
+ const routes=[fusion?'fusion':null,pack?'paquet':null,trial?'épreuve':null].filter(Boolean);
+ if(!routes.length)return 'Testable au laboratoire · Obtention non définie';
+ if(profile&&ownedCardCopies(profile,reference)>0)return 'Évolution obtenue';
+ if(profile?.completedTrials?.includes(trial?.id))return 'Épreuve accomplie · Aucun exemplaire à ce rang';
+ if(routes.length===1)return trial?'À gagner en épreuve':`À obtenir par ${routes[0]}`;
+ return `À obtenir par ${routes.slice(0,-1).join(', ')} ou ${routes.at(-1)}`;
+}
 function cardPresentation(reference,{context={},profile=null,side='p',unit=null,stats=undefined,definition=null}={}){
  const id=typeof reference==='string'?reference:reference?.id,native=CARDS[id];if(!native)return null;
  const explicit=typeof reference==='object'&&Object.hasOwn(reference,'rarity');
@@ -4645,9 +4665,8 @@ function cardPresentation(reference,{context={},profile=null,side='p',unit=null,
  const future=known&&selected!==native.rarity;
  const trial=future?evolutionTrialFor(id,selected):null;
  const fusion=future?evolutionFusionFor(id,selected):null;
- const trialStatus=profile&&ownedCardCopies(profile,{id,rarity:selected})>0?'Évolution obtenue':
-  profile?.completedTrials?.includes(trial?.id)?'Épreuve accomplie · Aucun exemplaire à ce rang':fusion?(trial?'À obtenir par fusion ou épreuve':'À obtenir par fusion'):'À gagner en épreuve';
- const availability=!known?missing:future?(trial||fusion?trialStatus:'Testable au laboratoire · Obtention non définie'):'Version native';
+ const pack=future?evolutionPackFor(id,selected):null;
+ const availability=!known?missing:future?evolutionAvailability(profile,{id,rarity:selected},{trial,fusion,pack}):'Version native';
  if(stats===undefined)stats=native.type==='sort'||!known?null:unit?
   {atk:unit.atk,hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);
@@ -5214,6 +5233,32 @@ function evolutionProfileError(raw){
 const completedEvolutionTrials=raw=>[...new Set(Array.isArray(raw)?raw.filter(id=>EVOLUTION_TRIALS.some(t=>t.id===id)):[])];
 
 Object.assign(__exports,{cardId,cardReference,cardKey,cardFromKey,cardRarity,playableCardReference,ownedCardCopies,ownedCardEntries,totalOwnedCopies,normalizeEvolutionInventory,evolutionProfileError,completedEvolutionTrials});
+
+},
+"src/card-packs.js":function(__exports,__load){
+// Contenu et probabilités des paquets ; aucune statistique ni possession de carte.
+const {CARDS}=__load("src/data.js");
+const {EVOLUTION_FUSIONS}=__load("src/evolution-fusion.js");
+const {freezeCardData}=__load("src/cards/schema.js");
+const natives=Object.values(CARDS).filter(c=>!c.heroClass);
+const nativeRank=rarity=>natives.filter(c=>c.rarity===rarity).map(c=>c.id);
+const evolutionRank=rarity=>EVOLUTION_FUSIONS.filter(r=>r.to===rarity).map(r=>({id:r.cardId,rarity:r.to}));
+const CARD_PACKS=freezeCardData([
+ {id:'mystic',name:'Paquet mystique',cost:95,count:3,mission:null,groups:[
+  {label:'Carte de base Commune',weight:65,cards:nativeRank('commun')},
+  {label:'Carte de base Rare',weight:28,cards:nativeRank('rare')},
+  {label:'Carte de base Épique',weight:7,cards:nativeRank('épique')}
+ ]},
+ {id:'aube-evolution',name:'Paquet d’évolution de l’Aube',cost:190,count:3,mission:'03',groups:[
+  {label:'Carte de base de l’Aube (Commune ou Rare)',weight:60,cards:natives.filter(c=>c.faction==='aube'&&['commun','rare'].includes(c.rarity)).map(c=>c.id)},
+  {label:'Évolution Aube Rare',weight:35,cards:evolutionRank('rare')},
+  {label:'Évolution Aube Épique',weight:5,cards:evolutionRank('épique')}
+ ]}
+]);
+const cardPack=id=>CARD_PACKS.find(p=>p.id===id)||null;
+const evolutionPackFor=(id,rarity)=>CARD_PACKS.find(p=>p.groups.some(g=>g.cards.some(ref=>typeof ref==='object'&&ref.id===id&&ref.rarity===rarity)))||null;
+
+Object.assign(__exports,{CARD_PACKS,cardPack,evolutionPackFor});
 
 },
 "src/cards/ability-text.js":function(__exports,__load){
@@ -7019,6 +7064,7 @@ const {grantBattleProgress,heroLevel}=__load("src/engine/profile.js");
 const {CONTROL_IDS}=__load("src/engine/battle-control.js");
 const {TEMPO_IDS}=__load("src/engine/tempo.js");
 const {cardId,totalOwnedCopies}=__load("src/cards/references.js");
+Object.assign(__exports,__load("src/engine/card-packs.js"));
 function completeBattle(profile,mission,b){
  if(b.mode==='developer'||b.mode==='evolution-trial')return null;
  if(b.status!=='victory'&&b.status!=='defeat')return null;
@@ -7047,16 +7093,6 @@ function completeBattle(profile,mission,b){
  }
  Object.assign(reward,grantBattleProgress(profile,b));
  return reward;
-}
-function buyPack(profile,random=Math.random){
- if(profile.gold<95)return {ok:false,reason:'Il faut 95 pièces d’or.'};
- profile.gold-=95;
- const all=Object.values(CARDS).filter(c=>!c.heroClass),result=[];
- for(let i=0;i<3;i++){
-  const roll=random();const pool=all.filter(c=>roll<0.65?c.rarity==='commun':roll<0.93?c.rarity==='rare':c.rarity==='épique');
-  const card=pool[Math.floor(random()*pool.length)]||all[0];profile.collection[card.id]=(profile.collection[card.id]||0)+1;result.push(card.id);
- }
- return {ok:true,cards:result};
 }
 function upgradeCard(profile,id){
  if(!CARDS[id]||!totalOwnedCopies(profile,id))return {ok:false,reason:'Vous ne possédez pas cette carte.'};
@@ -7109,7 +7145,57 @@ function upgradeBuilding(profile,key){
  profile.gold-=cost;profile.buildings[key]=level+1;return {ok:true,cost};
 }
 
-Object.assign(__exports,{completeBattle,buyPack,upgradeCard,learnClassSkill,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,BUILDINGS,upgradeBuilding});
+Object.assign(__exports,{completeBattle,upgradeCard,learnClassSkill,FUSION_RECIPES,FUSION_COSTS,EXTRACTION_SHARDS,extractCard,fuseCard,BUILDINGS,upgradeBuilding});
+
+},
+"src/engine/card-packs.js":function(__exports,__load){
+// Préparer tous les tirages et vérifier les stocks avant tout prélèvement.
+const {CAMPAIGN}=__load("src/data.js");
+const {cardPack}=__load("src/card-packs.js");
+const {cardReference,cardKey,ownedCardCopies,playableCardReference}=__load("src/cards/references.js");
+function previewCardPack(profile,id,battle=null){
+ const pack=cardPack(id);if(!pack)return {ok:false,reason:'Paquet inconnu.'};
+ let reason='';
+ if(battle&&(!battle.rewardGiven||battle.status==='active'))reason='Terminez le combat et récupérez son résultat avant d’ouvrir un paquet.';
+ else if(pack.mission&&!profile.completed.includes(pack.mission)){
+  const mission=CAMPAIGN.find(m=>m.id===pack.mission);reason=`Vaincre ${mission.enemy} dans « ${mission.name} » pour ouvrir ce paquet.`;
+ }else if(!Number.isSafeInteger(profile.gold)||profile.gold<0)reason='Montant d’or invalide.';
+ else if(profile.gold<pack.cost)reason=`Il faut ${pack.cost} pièces d’or.`;
+ return {pack,ok:!reason,reason};
+}
+
+function buyCardPack(profile,id,random=Math.random,battle=null){
+ const access=previewCardPack(profile,id,battle);if(!access.ok)return access;
+ const {pack}=access,cards=[],gains=new Map();
+ try{
+  if(pack.groups.reduce((n,g)=>n+g.weight,0)!==100||pack.groups.some(g=>!g.cards.length||!g.cards.every(playableCardReference)))throw Error('Contenu indisponible');
+  const roll=()=>{const n=random();if(!Number.isFinite(n)||n<0||n>=1)throw Error('Tirage invalide');return n;};
+  for(let i=0;i<pack.count;i++){
+   const draw=roll();let threshold=0;
+   const group=pack.groups.find(g=>{threshold+=g.weight;return draw<threshold/100;});
+   const ref=cardReference(group.cards[Math.floor(roll()*group.cards.length)]),key=cardKey(ref);
+   cards.push(ref);const gain=gains.get(key)||{ref,amount:0};gain.amount++;gains.set(key,gain);
+  }
+  for(const {ref,amount} of gains.values()){
+   const raw=typeof ref==='string'?profile.collection[ref]:profile.evolvedCollection?.[cardKey(ref)];
+   const n=ownedCardCopies(profile,ref);if(raw!==undefined&&!Number.isSafeInteger(raw)||!Number.isSafeInteger(n)||n<0||n+amount>100000)throw Error('Stock invalide ou limite atteinte');
+  }
+ }catch{return {ok:false,reason:'Ouverture impossible : tirage ou stock indisponible. Aucun or dépensé.'};}
+ profile.gold-=pack.cost;
+ for(const {ref,amount} of gains.values()){
+  if(typeof ref==='string')profile.collection[ref]=(profile.collection[ref]||0)+amount;
+  else{profile.evolvedCollection??={};const key=cardKey(ref);profile.evolvedCollection[key]=(profile.evolvedCollection[key]||0)+amount;}
+ }
+ return {ok:true,cards,packId:pack.id,cost:pack.cost};
+}
+
+// API historique : même prix, mêmes pools, six appels aléatoires et résultat natif.
+function buyPack(profile,random=Math.random){
+ const result=buyCardPack(profile,'mystic',random);
+ return result.ok?{ok:true,cards:result.cards}:{ok:false,reason:result.reason};
+}
+
+Object.assign(__exports,{previewCardPack,buyCardPack,buyPack});
 
 },
 "src/engine/deck-builder.js":function(__exports,__load){
@@ -7556,6 +7642,64 @@ function evolutionFusionConfirmation(plan,{btn,cardUI,esc}){
 Object.assign(__exports,{renderEvolutionFusions,evolutionFusionConfirmation});
 
 },
+"src/ui/card-pack-controller.js":function(__exports,__load){
+// L'achat est adopté seulement après sauvegarde ; la confirmation ne se rejoue pas.
+const {previewCardPack,buyCardPack}=__load("src/engine/card-packs.js");
+const {cardPackConfirmation,cardPackResult}=__load("src/ui/card-packs.js");
+function createCardPackController(getState,{btn,cardUI,esc,showModal,hideModal,commitProfile,refresh,toast,random=()=>Math.random()}){
+ let pending=null,showing=false;
+ function purchase(id){
+  if(showing)return;
+  const {profile,battle}=getState(),next=structuredClone(profile),result=buyCardPack(next,id,random,battle);
+  hideModal();
+  if(!result.ok){toast(result.reason);return;}
+  if(!commitProfile(next)){toast('Ouverture non enregistrée : aucun or dépensé. Vérifiez le stockage local.');return;}
+  refresh();showing=true;showModal(cardPackResult(previewCardPack(next,id).pack,result.cards,{btn,cardUI,esc}));
+ }
+ return function handleCardPack(action,{id}={}){
+  if(action==='buy-pack'){pending=null;purchase('mystic');return true;}
+  if(action==='card-pack-preview'){
+   pending=null;const {profile,battle}=getState(),plan=previewCardPack(profile,id,battle);
+   if(!plan.ok){toast(plan.reason);return true;}
+   showing=false;pending=id;showModal(cardPackConfirmation(plan.pack,{btn,esc}));return true;
+  }
+  if(action==='card-pack-confirm'){
+   if(!pending)return true;const selected=pending;pending=null;purchase(selected);return true;
+  }
+  if(action!=='close-inspection'){pending=null;showing=false;}
+  return false;
+ };
+}
+
+Object.assign(__exports,{createCardPackController});
+
+},
+"src/ui/card-packs.js":function(__exports,__load){
+// Prix, probabilités et résultats issus du même catalogue, sans opération métier.
+const {CARDS}=__load("src/data.js");
+const {CARD_PACKS}=__load("src/card-packs.js");
+const {cardId,cardRarity}=__load("src/cards/references.js");
+const {previewCardPack}=__load("src/engine/card-packs.js");
+const rates=(pack,esc)=>`<ul class="pack-rates">${pack.groups.map(g=>`<li><span>${esc(g.label)}</span><b>${g.weight} %</b></li>`).join('')}</ul><p class="hint">Probabilités par carte, ${pack.count} tirages indépendants. Doublons possibles ; aucun rang garanti. Chaque carte du groupe a la même chance d’être tirée.</p>`;
+function contents(pack,esc){
+ return `<details class="pack-content"><summary>Voir les cartes possibles</summary>${pack.groups.map(g=>`<p><b>${esc(g.label)} :</b> ${g.cards.map(ref=>`${esc(CARDS[cardId(ref)].name)} (${esc(cardRarity(ref))})`).join(', ')}.</p>`).join('')}</details>`;
+}
+function renderCardPackShop(profile,battle,{btn,esc}){
+ return `<section class="spaced"><div class="section-caption">LE COMPTOIR DU MARCHAND</div><h2 class="section-title">Choisir un paquet</h2><p class="page-sub">Les cartes rejoignent votre Collection. Aucun paiement réel ni connexion requis.</p><div class="pack-shop-grid">${CARD_PACKS.map(pack=>{
+  const access=previewCardPack(profile,pack.id,battle),evolution=pack.id!=='mystic';
+  return `<article class="card-panel pack-offer" data-pack-id="${pack.id}"><h3>${esc(pack.name)}</h3><p><b>${pack.count} cartes · ${pack.cost} or</b></p>${rates(pack,esc)}${evolution?'<p class="hint">Après le premier boss. Évolutions Aube jusqu’à Épique ; les exemplaires gagnés servent au deck et à la fusion.</p>':''}${contents(pack,esc)}${!access.ok?`<p class="hint">${esc(access.reason)}</p>`:''}${btn(evolution?`Préparer l’ouverture · ${pack.cost} ◈`:`Ouvrir un paquet · ${pack.cost} ◈`,evolution?'card-pack-preview':'buy-pack',`data-id="${pack.id}" ${!access.ok?'disabled':''}`,'primary')}</article>`;
+ }).join('')}</div></section>`;
+}
+function cardPackConfirmation(pack,{btn,esc}){
+ return `<div class="kicker">OUVERTURE DE PAQUET</div><h2>${esc(pack.name)}</h2><p>${pack.cost} or seront dépensés pour ${pack.count} cartes aléatoires.</p>${rates(pack,esc)}<div class="button-row">${btn(`Ouvrir pour ${pack.cost} or`,'card-pack-confirm','','primary')}${btn('Annuler','close-modal','','ghost')}</div>`;
+}
+function cardPackResult(pack,cards,{btn,cardUI,esc}){
+ return `<div class="kicker">${esc(pack.name).toUpperCase()}</div><h2>Trois nouvelles découvertes</h2><p>Ces cartes rejoignent votre collection. Ajoutez-les à votre deck pour les utiliser.</p><div class="three-grid">${cards.map(ref=>cardUI(ref,{previewContext:'pack'})).join('')}</div><div class="button-row">${btn('Voir ma collection','pack-collection','','primary')}${btn('Fermer','close-modal','','ghost')}</div>`;
+}
+
+Object.assign(__exports,{renderCardPackShop,cardPackConfirmation,cardPackResult});
+
+},
 "src/ui/spell-controller.js":function(__exports,__load){
 // Sélection transitoire : jamais ajoutée au combat ou à sa sauvegarde.
 const {CARDS}=__load("src/data.js");
@@ -7767,6 +7911,7 @@ const {cardId,cardFromKey,cardRarity,ownedCardEntries,totalOwnedCopies}=__load("
 const {bossEvolutionUnlocks}=__load("src/engine/evolution-progress.js");
 const {renderEvolutionTrials}=__load("src/ui/evolution-trials.js");
 const {renderEvolutionFusions}=__load("src/ui/evolution-fusion.js");
+const {renderCardPackShop}=__load("src/ui/card-packs.js");
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 const { CARDS, CLASS_SKILLS, FACTIONS, CLASSES, CAMPAIGN, TOWER_MAX, towerMission }=__load("src/data.js");
 const { AI_STYLES }=__load("src/ai.js");
@@ -8007,7 +8152,7 @@ function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
    )
    .join('')}</div></section>
  <section class="spaced"><div class="split-head"><div><div class="section-caption">Les fragments d’âme</div><h2 class="section-title" style="margin-top:8px">Renforcer vos unités</h2></div><span class="pill">✧ ${profile.shards} éclats disponibles</span></div><div class="card-grid">${own.map((c) => cardUI(entries.find(e=>cardId(e.reference)===c.id).reference, { upgradable: true })).join('')}</div></section>
- <section class="spaced"><div class="card-panel"><div class="section-caption">Le comptoir du marchand</div><h2 class="section-title" style="margin-top:8px">Paquet mystique</h2><p class="page-sub">Recevez 3 cartes aléatoires pour 95 pièces d’or. Aucun paiement réel, aucune connexion requise.</p>${btn('Ouvrir un paquet · 95 ◈', 'buy-pack', `${profile.gold < 95 ? 'disabled' : ''}`, 'primary')}</div></section>`;
+ ${renderCardPackShop(profile,battle,{btn,esc})}`;
   }
   function guideUI() {
     return renderGuidePage({ btn, previousGameAvailable });
