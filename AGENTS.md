@@ -24,6 +24,8 @@ Fiches, plateau et IA lisent le même malus public, aucune règle dans les vues.
 69 modules/274 dépendances sans cycle ; app 382 lignes, pages 270, 76 images.
 Lire [le contrat](docs/SYLVE_LEGENDAIRES.md). Les quatre nouveaux parcours réutilisent
 les parties d'épreuves existantes, sans nouveau job ni retrait d'assertion.
+515 tests Node, parité 120, 26 autres suites navigateur et quatre parties
+d’épreuves réussis localement ; consulter les résultats CI de la tête exacte.
 Cette nouvelle PR attend son accord spécifique de fusion/publication.
 Les statuts de PR 62/63 ouvertes dans les bilans suivants sont historiques.
 

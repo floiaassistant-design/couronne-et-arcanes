@@ -85,10 +85,14 @@ cycle ; app 382 lignes, pages 270, combat 399. 76 illustrations conservées.
 - 120 scénarios de parité identiques, archive V2.4 intacte ; 20 480 combats de
   contrôle et 6 144 d'arène réussis, aucun plateau invalide.
 - Builds autonome, diagnostic et web réussis ; diagnostic non distribué.
-- Premier parcours navigateur Sylve Légendaire bureau réussi : fusion, panne,
-  deck protégé, export/import, invocation et Harcèlement réellement appliqué
-  dans un combat de campagne normal, puis reprise exacte. Les autres formats
-  et les 27 suites existantes sont en cours ; résultats finaux dans la PR.
+- 26 autres suites navigateur et quatre parties complètes d'épreuves réussies,
+  dont les quatre nouveaux parcours Sylve Légendaire : bureau, portrait, paysage
+  et HTTP. Fusion, panne, double clic, deck protégé, export/import, invocation
+  et Harcèlement réellement appliqué dans une campagne normale, puis reprise
+  exacte. Captures des trois formats examinées. 27 suites et 30 commandes CI
+  conservées ; aucun nouveau job ni retrait d'assertion.
+- Cinq tests Python de partition/exécution CI réussis, y compris le maintien
+  d'un échec lors de l'exécution des autres suites.
 
 Le pilote utilise l'horloge Playwright pour observer la sauvegarde entre les
 camps : les temporisations à zéro du mode sans animations consommaient déjà
@@ -96,3 +100,11 @@ le malus avant lecture. Aucun pouvoir, résultat ou plateau n'est forcé. Les
 premiers journaux de test sont conservés ; aucune assertion retirée.
 La difficulté et l'effort de doublons restent à apprécier en jouant. Aucun
 smartphone physique, équilibrage humain exhaustif ou déploiement n'est revendiqué.
+
+Export final : **34 556 291 octets**, blob
+`0ea23af557f0c1850509ea5df560e6e165089145`, identique local/distant.
+Arbre source `52ec48352df25bb334ccf6dda955b87be4ea8d52` comparé au local ;
+export généré dans `73a0cad25ab2e6f768e60005da3def645dd27c00` avec empreinte
+obligatoire, générateur temporaire retiré avant ouverture de la PR. La tête
+finale et ses résultats CI exacts sont consignés dans la PR ; aucun succès
+CI anticipé ni attente active après fin du travail indépendant.
