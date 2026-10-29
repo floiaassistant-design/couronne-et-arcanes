@@ -1,3 +1,23 @@
+# Sylve Rare/Épique — proposition du 28 octobre 2026
+
+Main reste `63ff7463b89d4f2ff410063a47ba2473087884bc`. La PR 62
+`feat/ascensions-aube`, tête `fc10d0de185b05d3a9e266d2b3dff306db2564b0`,
+est ouverte en brouillon, tests et assemblage réussis. La nouvelle branche
+`feat/evolutions-sylve-rare-epique` en dépend et la cible explicitement.
+Quinze évolutions Sylve Rare/Épique sont proposées à l'obtention par fusion
+et paquet ciblé ; 33 évolutions supérieures restent à intégrer. Règles validées
+relues dans le tableau maître Notion, édition `2026-10-27T06:13:46.581Z`.
+Six passages Commune → Rare, neuf Rare → Épique ; mêmes trois copies libres,
+missions 01/03 et protection du deck. Paquet Sylve après le premier boss :
+190 or/3 cartes, groupes 60/35/5 séparés des pools Aube et du paquet mystique.
+Les 26 versions Sylve utilisent le registre/moteur commun ; seul le bouclier
+d'arrivée de la Luciole passe à 5 en Épique. Fiches poison/pièges structurées.
+Aucun nouveau pouvoir du moteur, défi Sylve, cadeau ou migration de profil.
+[Contrat et vérifications](SYLVE_RARE_EPIQUE.md) · [Suite des factions](REPRISE_MIGRATION_CARTES.md).
+Chaque PR attend son accord spécifique ; aucune fusion/publication réalisée ici.
+
+Les sections suivantes sont historiques.
+
 # Ascensions Aube — proposition du 28 octobre 2026
 
 Main vérifié `63ff7463b89d4f2ff410063a47ba2473087884bc` : PR 61 fusionnée

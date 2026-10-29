@@ -1,7 +1,7 @@
 // Modèle et fiche uniques ; lit les calculs du moteur, sans mutation ni action.
 import {CARDS,FACTIONS,CLASSES,cardTraits} from '../data.js';
 import {CARD_RARITIES,normalizeCardRarity} from '../cards/schema.js';
-import {resolveUnitDefinition,resolveRulesDefinition,versionUnitAbilities,AUBE_UNIT_IDS} from '../cards/definitions.js';
+import {resolveUnitDefinition,resolveRulesDefinition,versionUnitAbilities,VERSIONED_UNIT_IDS} from '../cards/definitions.js';
 import {ownedCardCopies} from '../cards/references.js';
 import {evolutionTrialFor} from '../evolution-trials.js';
 import {evolutionFusionFor} from '../evolution-fusion.js';
@@ -48,7 +48,7 @@ export function cardPresentation(reference,{context={},profile=null,side='p',uni
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);
  let effective=definition;
  if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor??definition.abilities.armor.amount}}:{})}};
- const structured=known&&native.type==='unité'&&(AUBE_UNIT_IDS.includes(id)||effective?.abilities.guard||effective?.abilities.riposte);
+ const structured=known&&native.type==='unité'&&(VERSIONED_UNIT_IDS.includes(id)||effective?.abilities.guard||effective?.abilities.riposte);
  const description=!known?missing:structured?unitCardText(effective):brief(native.description);
  const details=!known?[lower?'Aucune version sous la rareté native.':'Cette évolution reste à concevoir.']:
   structured?unitAbilityDetails(effective):[native.description];
@@ -89,7 +89,7 @@ export function cardInspectionContent(card,entry,stats,esc,{board=null,presentat
  const identity=`<div class="inspection-feature ${cardTemplateFor(shown)?'inspection-generated-feature':''}">${cardTemplateFor(shown)?generatedCardFace(shown,{stats,delay:board?0:context==='hand'?entry.wait:shown.delay,kind:board?'deployed':context==='hand'?'remaining':'base',concordeActive:!!board?.concordeActive,esc}):`<img class="inspection-art" src="${artSrc(visualFor(shown,{cards:true}).art)}" alt="" draggable="false">`}<div class="inspection-identity"><h2>${esc(shown.name)}</h2><span class="inspection-order">${esc(faction.name)}</span><span class="inspection-rarity">${esc(shown.rarity)} · ${esc(shown.type)}</span><div class="inspection-readiness">${esc(readiness)}</div>${statistics}</div></div>`;
  const body=`<div class="inspection-body"><div class="inspection-description">${model.details.map(t=>`<p>${esc(t)}</p>`).join('')}</div>
   ${model.known?concordeDetails(shown,esc,board?board.concordeActive:null):''}
-  ${model.traits.length&&!AUBE_UNIT_IDS.includes(shown.id)?`<div class="inspection-traits">${model.traits.map(t=>`<span>${esc(t)}</span>`).join(' · ')}</div>`:''}
+  ${model.traits.length&&!VERSIONED_UNIT_IDS.includes(shown.id)?`<div class="inspection-traits">${model.traits.map(t=>`<span>${esc(t)}</span>`).join(' · ')}</div>`:''}
   ${shown.heroClass?`<div class="inspection-summary">${esc(CLASSES[shown.heroClass].name)}</div>`:''}
   ${board?.statuses.length?`<div class="inspection-statuses">${board.statuses.map(esc).join(' · ')}</div>`:''}
   ${bonusText?`<div class="inspection-bonuses">Bonus inclus : ${bonusText}</div>`:''}</div>`;

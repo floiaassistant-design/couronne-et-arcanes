@@ -1,5 +1,29 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Première tranche Sylve — proposition du 28 octobre 2026
+
+`feat/evolutions-sylve-rare-epique` dépend explicitement de la PR 62
+`feat/ascensions-aube`, tête `fc10d0de185b05d3a9e266d2b3dff306db2564b0` :
+ses deux CI ont réussi, elle reste ouverte et non fusionnée. Main reste `63ff7463`.
+La nouvelle PR cible cette branche ; après fusion autorisée de la 62, la recibler
+sur main et revérifier ses contrôles, sans fusion implicite de la dépendance.
+Quinze évolutions Sylve Rare/Épique deviennent jouables par paquet et fusion ;
+33 rangs supérieurs restent sans définition, « À concevoir », sans chiffres inventés.
+`cards/sylve.js` porte seulement les patches validés ; `cards/evolutions.js`
+partage les familles/provenances avec registre et recettes. Aucun chiffre dupliqué.
+Natifs conservés, mécaniques communes réutilisées ; Luciole Épique donne 5 bouclier
+à l'arrivée, plafond 20, une seule fois. Aucun autre nouveau pouvoir de moteur.
+Trois copies libres identiques donnent le rang suivant : Rare après mission 01,
+Épique après mission 03. Paquet Sylve proposé à 190 or/3 cartes après mission 03,
+groupes 60/35/5 : 9 bases Commune/Rare, 6 évolutions Rares, 9 Épiques.
+Pools Aube séparés (8/4/8), paquet mystique et hasard historique inchangés.
+Les fiches Sylve lisent les capacités structurées, poison et pièges compris.
+Six cases par personnage, aucun cadeau, migration, nouveau reçu ou défi Sylve.
+68 modules/76 images ; tests Sylve réutilisent les quatre parties d'épreuves
+existantes, sans nouveau job. Lire [le contrat](docs/SYLVE_RARE_EPIQUE.md).
+Ce lot et la PR 62 attendent chacun leur accord spécifique de fusion/publication.
+Les limitations Aube seules dans les bilans suivants sont historiques.
+
 ## Ascensions Aube — proposition du 28 octobre 2026
 
 PR 61 fusionnée sur accord, main `63ff7463b89d4f2ff410063a47ba2473087884bc`,

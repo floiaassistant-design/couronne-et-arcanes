@@ -2,11 +2,13 @@
 import {CARDS} from '../data.js';
 import {CARD_RARITIES,normalizeCardRarity,freezeCardData} from './schema.js';
 import {nativeUnitAbilities,inheritUnitAbilities} from './abilities.js';
-import {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE} from './aube.js';
+import {evolutionFamily} from './evolutions.js';
 import {evolutionTrialFor} from '../evolution-trials.js';
 import {evolutionFusionFor} from '../evolution-fusion.js';
 
-export const AUBE_UNIT_IDS=Object.freeze(Object.keys(AUBE_EVOLUTIONS));
+export const AUBE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='aube'&&c.type==='unité').map(c=>c.id));
+export const SYLVE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='sylve'&&c.type==='unité').map(c=>c.id));
+export const VERSIONED_UNIT_IDS=Object.freeze([...AUBE_UNIT_IDS,...SYLVE_UNIT_IDS]);
 const definitions=new Map();
 const noVersions=Object.freeze([]);
 
@@ -15,12 +17,13 @@ for(const card of Object.values(CARDS)){
  const nativeIndex=CARD_RARITIES.findIndex(rank=>rank.id===card.rarity);
  if(nativeIndex<0)throw Error('Rareté native inconnue : '+card.id);
  const versions=[];
+ const family=evolutionFamily(card.id);
  let stats={attack:card.attack,hp:card.hp,delay:card.delay};
  let geometry={steps:card.ability==='haste'?2:1,range:card.ability==='ranged'?2:1};
  let abilities=nativeUnitAbilities(card),pendingDecisions=[];
  for(const rank of CARD_RARITIES.slice(nativeIndex)){
   const native=rank.id===card.rarity;
-  const patch=AUBE_EVOLUTIONS[card.id]?.[rank.id];
+  const patch=family?.versions[card.id]?.[rank.id];
   if(!native&&!patch)break;
   stats={...stats,...patch?.stats};
   geometry={...geometry,...patch?.geometry};
@@ -31,7 +34,7 @@ for(const card of Object.values(CARDS)){
    id:card.id,versionId:`${card.id}:${rank.id}`,rarity:rank.id,nativeRarity:card.rarity,
    stats:{...stats},geometry:{...geometry},abilities,
    status:{design:'validated',combat:native||trial||fusion?'implemented':'pending',engine:'implemented',obtaining:native?'existing':trial&&fusion?'trial-or-fusion':trial?'trial':fusion?'fusion':'undefined'},
-   pendingDecisions:[...pendingDecisions],source:native?null:AUBE_DESIGN_SOURCE
+   pendingDecisions:[...pendingDecisions],source:native?null:family.source
   });
   versions.push(definition);
  }

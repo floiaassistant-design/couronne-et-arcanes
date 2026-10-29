@@ -347,7 +347,7 @@ case 'lab-open':openDeveloper();break;
  case 'welcome-guide':profile.guideSeen=true;save();hideModal();navigate('guide');break;
  }
 }
-document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();act(el.dataset.action,el.dataset);});
+document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();if(event.detail>1&&el.closest('[data-pack-result-actions]'))return;act(el.dataset.action,el.dataset);});
 document.addEventListener('keydown',event=>{
  if(event.key==='Escape'){if(isBattleFxPlaying())return;if(selectedCard>=0){resetSpell();selectedCard=-1;render();}closeCardInspection(true);return;}
  if((event.key==='Enter'||event.key===' ')&&!event.target.closest('button')){

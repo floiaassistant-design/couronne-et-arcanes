@@ -241,6 +241,7 @@ async def main(part=None):
                     await earned_flow(browser,SCENARIOS[0],'web',{'width':1366,'height':900},full=True,url=f'http://127.0.0.1:{server.server_port}/index.html')
                 else:await recovery(browser)
             await run_card_pack_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html')
+            await run_card_pack_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',scenario='sylve')
             await run_ascension_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',make_case=case,click=click,select=select,replay=replay,stored=stored)
             await browser.close()
     finally:server.shutdown();server.server_close()
