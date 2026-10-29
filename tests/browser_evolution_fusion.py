@@ -29,7 +29,7 @@ async def run_evolution_fusion(browser,label,viewport,url=None):
     async def confirm():await click(page.locator('.modal [data-action="evolution-fusion-confirm"]'))
     async def fuse(recipe):await preview(recipe);await confirm()
     await open_alchemy();baseline=await saved()
-    assert await page.locator('[data-fusion-id]').count()==56
+    assert await page.locator('[data-fusion-id]').count()==67
     assert await tile('militia:rare').locator('button').is_disabled(),'Les quatre Miliciens du deck sont protégés.'
     assert await tile('lancer:rare').locator('button').is_enabled()
     assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')

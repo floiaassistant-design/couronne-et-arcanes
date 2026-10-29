@@ -6,6 +6,7 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 from evolution_ci_plan import PARTS,evolution_cases
 from browser_card_packs import run_card_pack_cases
+from browser_sylve_legendary import run_sylve_legendary_cases
 from browser_ascensions import run_ascension_cases
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -242,6 +243,7 @@ async def main(part=None):
                 else:await recovery(browser)
             await run_card_pack_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html')
             await run_card_pack_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',scenario='sylve')
+            await run_sylve_legendary_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html')
             await run_ascension_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',make_case=case,click=click,select=select,replay=replay,stored=stored)
             await browser.close()
     finally:server.shutdown();server.server_close()

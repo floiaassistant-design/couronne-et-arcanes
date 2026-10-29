@@ -10,7 +10,7 @@ import {createEvolutionFusionController} from '../src/ui/evolution-fusion-contro
 import {simulateBattle} from '../scripts/lib/battle_runner.mjs';
 import {resolveUnitSupport} from '../src/engine/unit-support.js';
 
-const expected={militia:{rare:[2,5],'épique':[2,5],'légendaire':[2,8],divine:[2,8],'éveillée':[2,8]},shield:{rare:[1,11],'épique':[2,11],'légendaire':[2,13],divine:[2,13],'éveillée':[2,13]},archer:{rare:[2,4],'épique':[3,4],'légendaire':[3,4],divine:[3,4],'éveillée':[3,4]},lancer:{rare:[3,6],'épique':[4,6],'légendaire':[4,8],divine:[4,8],'éveillée':[4,8]},cleric:{'épique':[1,6],'légendaire':[1,6],divine:[1,6],'éveillée':[1,6]},paladin:{'légendaire':[4,11],divine:[4,11],'éveillée':[4,13]},banner:{'épique':[2,8],'légendaire':[2,8],divine:[2,8],'éveillée':[2,8]},scoutcaptain:{'épique':[3,8],'légendaire':[4,8],divine:[4,8],'éveillée':[4,8]},sunpriest:{'épique':[2,9],'légendaire':[2,9],divine:[2,9],'éveillée':[2,9]},dawnbastion:{divine:[5,11],'éveillée':[7,11]},ranger:{rare:[2,5],'épique':[3,5]},wolf:{rare:[3,4],'épique':[4,4]},treant:{'épique':[3,12]},dryad:{'épique':[1,7]},thorn:{rare:[2,6],'épique':[3,6]},pixie:{rare:[2,4],'épique':[2,4]},bear:{'épique':[4,11]},owl:{rare:[2,5],'épique':[3,5]},sylvan_trapper:{rare:[2,6],'épique':[3,6]}};
+const expected={militia:{rare:[2,5],'épique':[2,5],'légendaire':[2,8],divine:[2,8],'éveillée':[2,8]},shield:{rare:[1,11],'épique':[2,11],'légendaire':[2,13],divine:[2,13],'éveillée':[2,13]},archer:{rare:[2,4],'épique':[3,4],'légendaire':[3,4],divine:[3,4],'éveillée':[3,4]},lancer:{rare:[3,6],'épique':[4,6],'légendaire':[4,8],divine:[4,8],'éveillée':[4,8]},cleric:{'épique':[1,6],'légendaire':[1,6],divine:[1,6],'éveillée':[1,6]},paladin:{'légendaire':[4,11],divine:[4,11],'éveillée':[4,13]},banner:{'épique':[2,8],'légendaire':[2,8],divine:[2,8],'éveillée':[2,8]},scoutcaptain:{'épique':[3,8],'légendaire':[4,8],divine:[4,8],'éveillée':[4,8]},sunpriest:{'épique':[2,9],'légendaire':[2,9],divine:[2,9],'éveillée':[2,9]},dawnbastion:{divine:[5,11],'éveillée':[7,11]},ranger:{rare:[2,5],'épique':[3,5],'légendaire':[3,5]},wolf:{rare:[3,4],'épique':[4,4],'légendaire':[4,4]},treant:{'épique':[3,12],'légendaire':[3,12]},dryad:{'épique':[1,7],'légendaire':[1,7]},thorn:{rare:[2,6],'épique':[3,6],'légendaire':[3,6]},pixie:{rare:[2,4],'épique':[2,4],'légendaire':[2,4]},bear:{'épique':[4,11],'légendaire':[5,11]},owl:{rare:[2,5],'épique':[3,5],'légendaire':[3,5]},sylvan_trapper:{rare:[2,6],'épique':[3,6],'légendaire':[3,6]},stag:{'légendaire':[5,8]},archdruid:{'légendaire':[3,9]}};
 const ready=()=>{const p=freshProfile();p.completed=['01','02','03','04','05','06','07','08','09','10','11','12'];return p;};
 function stocked(recipe){
  const p=ready(),source=cardReference({id:recipe.cardId,rarity:recipe.from});
@@ -22,15 +22,15 @@ function stocked(recipe){
 }
 function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v)},removeItem:k=>{delete data[k]}};return data;}
 
-test('56 recettes explicites, transitions adjacentes et autres rangs/factions fermés',()=>{
- assert.equal(EVOLUTION_FUSIONS.length,56);
+test('67 recettes explicites, transitions adjacentes et autres rangs/factions fermés',()=>{
+ assert.equal(EVOLUTION_FUSIONS.length,67);
  assert.deepEqual(EVOLUTION_FUSIONS.map(r=>r.id).sort(),Object.entries(expected).flatMap(([id,ranks])=>Object.keys(ranks).map(rank=>id+':'+rank)).sort());
  for(const recipe of EVOLUTION_FUSIONS){assert.equal(recipe.copies,3);assert.equal(recipe.from,{rare:'commun','épique':'rare','légendaire':'épique',divine:'légendaire','éveillée':'divine'}[recipe.to]);assert.equal(recipe.mission,{rare:'01','épique':'03','légendaire':'06',divine:'09','éveillée':'12'}[recipe.to]);}
  const p=ready();
- for(const id of ['ranger:légendaire','firebolt:rare','militia:commun','constructor']){
+ for(const id of ['ranger:divine','firebolt:rare','militia:commun','constructor']){
   const before=structuredClone(p);assert.equal(fuseEvolutionCopies(p,id).ok,false);assert.deepEqual(p,before,id);
  }
- for(const ref of [{id:'ranger',rarity:'légendaire'}])assert.equal(playableCardReference(ref),false);
+ for(const ref of [{id:'ranger',rarity:'divine'}])assert.equal(playableCardReference(ref),false);
 });
 
 test('Chaque recette consomme 3 stocks du rang exact, crée 1 carte jouable et protège le deck et toute autre progression',()=>{
@@ -63,7 +63,7 @@ test('Rangs distincts, copies du deck et manque de doublons : aucun prélèvemen
  const held=structuredClone(p);assert.equal(fuseEvolutionCopies(p,'militia:épique').ok,false);assert.deepEqual(p,held);
 });
 
-test('896 combats avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
+test('1072 exécutions de combat avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
  for(const recipe of EVOLUTION_FUSIONS){
   const p=stocked(recipe),result=fuseEvolutionCopies(p,recipe.id);modifyDeck(p,result.target,1);
   const before=structuredClone(p);
@@ -137,8 +137,8 @@ test('Sauvegarde en échec, manque de copies ou début de combat après prévisu
  }
 });
 
-test('Les neuf Légendaires exigent la victoire réelle du deuxième boss, pas le niveau ou la mission accessible',()=>{
- const recipes=EVOLUTION_FUSIONS.filter(r=>r.to==='légendaire');assert.equal(recipes.length,9);
+test('Les vingt Légendaires Aube/Sylve exigent la victoire réelle du deuxième boss, pas le niveau ou la mission accessible',()=>{
+ const recipes=EVOLUTION_FUSIONS.filter(r=>r.to==='légendaire');assert.equal(recipes.length,20);
  for(const recipe of recipes){
   const p=stocked(recipe);p.completed=['01','02','03','04','05'];p.unlocked=12;p.heroXp=100000;
   const before=structuredClone(p);

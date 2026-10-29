@@ -90,8 +90,8 @@ test('Chaque évolution peut réellement être tirée, mise au deck, invoquée e
   storage();assert(storeBattle(b));assert.deepEqual(restoreBattle(),b);
  }
  assert.ok(pack.groups.every(g=>g.cards.every(ref=>typeof ref==='string'||ref.rarity!=='légendaire')));
- assert.equal(playableCardReference({id:'ranger',rarity:'légendaire'}),false);
- assert.equal(playableCardReference({id:'wolf',rarity:'légendaire'}),false);
+ assert.equal(playableCardReference({id:'ranger',rarity:'divine'}),false);
+ assert.equal(playableCardReference({id:'wolf',rarity:'divine'}),false);
 });
 
 test('Les doublons de paquet alimentent la fusion, sans épreuve accomplie ni gain supplémentaire',()=>{

@@ -1,3 +1,15 @@
+## Proposition — onze Légendaires Sylve, 29 octobre 2026
+
+- Fusion de trois Épiques libres identiques après mission 06 : onze versions
+  déjà validées dans Notion, accessibles au deck et aux combats ; 22 rangs restent à intégrer.
+- Portée 3, Charge +3, Armure 3, régénération, poison sur trois tours,
+  barrière alliée d'arrivée, Harcèlement et piège 2 ; paramètres au registre unique.
+- Effets temporaires sauvegardés : aucune ATQ permanente perdue, aucun cumul,
+  pas de dégât minimum sur une attaque ramenée à zéro ; Riposte et Silence vérifiés.
+- Paquets/économie/natifs/Aube conservés ; aucun défi individuel ni cadeau.
+- PR 62/63 intégrées sur accord au main `33cad6673c9e3cb468b222de39ad821a936dc098`.
+  Cette suite attend son accord propre. [Contrat](docs/SYLVE_LEGENDAIRES.md).
+
 ## Proposition — quinze évolutions Sylve Rare/Épique, 28 octobre 2026
 
 - Quinze évolutions validées utilisables dans Collection, deck, laboratoire et
