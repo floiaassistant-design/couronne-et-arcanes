@@ -1,5 +1,32 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Ascensions Aube — proposition du 28 octobre 2026
+
+PR 61 fusionnée sur accord, main `63ff7463b89d4f2ff410063a47ba2473087884bc`,
+tests et assemblage main réussis. La suite `feat/ascensions-aube` propose les
+20 évolutions Divines/Éveillées restantes : 41 évolutions Aube obtenables au total.
+Deux ascensions communes ouvrent chacune dix fusions, sans épreuve par personnage :
+Divin après mission 09 ; Éveillé après mission 12 et ascension Divine.
+Chaque tentative est gratuite ; la réussite ouvre l'accès, sans carte offerte.
+Chaque fusion exige ensuite trois copies libres du rang précédent ; deck protégé.
+Règles/chiffres des 51 versions Aube inchangés, édition Notion relue
+`2026-10-27T06:13:46.581Z`. Pas d'autre faction activée ni d'écriture Notion.
+`EVOLUTION_TRIALS` garde les quatre pilotes ; `EVOLUTION_ASCENSIONS` porte les deux
+défis communs, `ALL_EVOLUTION_TRIALS` leur lecture générale. Les reçus réutilisent
+`completedTrials` ; normalisation/import/export doivent garder les six identifiants.
+`engine/ascension-objectives.js` lit quatre conditions réelles depuis le plateau,
+la couronne et le tour, sans second moteur ni compteur artificiel. Instantané v2
+obligatoire pour ces nouvelles épreuves ; objectifs v1 et anciennes reprises conservés.
+`settleEvolutionTrial` ouvre l'accès une fois, sans toucher aux stocks/deck/XP.
+Le contrôleur de clôture existant sauve la copie avec reçu avant nettoyage.
+Les combats actifs ou résultats non récupérés bloquent tout nouveau départ.
+Paquets Rare/Épique, économie, butins et capacités conservés. 66 modules/76 images.
+Les nouveaux parcours réutilisent la suite Épreuves et ses quatre parties,
+sans nouveau job ni retrait d'assertion. Lire [le contrat](docs/ASCENSIONS_AUBE.md)
+et [la reprise des factions](docs/REPRISE_MIGRATION_CARTES.md).
+Les anciennes mentions « 21 obtenables, 20 au labo » sont historiques.
+Cette nouvelle PR exige son accord spécifique de fusion ; aucune publication déduite.
+
 ## Migration Aube Légendaire — proposition du 28 octobre 2026
 
 PR 60 fusionnée sur accord au main `e159631b5913791eb96d429201408a452def1337` ;

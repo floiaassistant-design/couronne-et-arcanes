@@ -140,7 +140,7 @@ test('Inventaire/decks : quantités par version, propositions, entraînement par
  p.collection.shield=0;p.deck=p.deck.filter(ref=>ref!=='shield');p.shards=100;
  assert.equal(upgradeCard(p,'shield').ok,true);assert.equal(p.upgrades.shield,1);
  assert.deepEqual(validateImportedProfile(JSON.parse(JSON.stringify(p))),normalizeProfile(p));
- for(const evolvedCollection of [{'shield:divine':1},{'shield:rare':-1},{'shield:rare':1.5},null]){
+ for(const evolvedCollection of [{'wolf:divine':1},{'shield:rare':-1},{'shield:rare':1.5},null]){
   assert.throws(()=>validateImportedProfile({...p,evolvedCollection}));
  }
  assert.throws(()=>validateImportedProfile({...p,completedTrials:['inconnue']}));
@@ -154,7 +154,7 @@ test('Sauvegarde : futures piles/main/unités et quotas conservés, anciennes ba
  assert.equal(validStoredBattle(b),true);assert.equal(storeBattle(b),true);const copy=restoreBattle();assert.ok(copy);
  assert.equal(copy.board[0][1].firstHitReductionUsed,true);assert.equal(cardKey(copy.heroes.p.discard[0]),'militia:rare');
  assert.equal(copy.board[0][1].hp,b.board[0][1].hp);assert.equal(copy.board[0][1].maxhp,b.board[0][1].maxhp);
- const bad=structuredClone(copy);bad.heroes.p.deck.push({id:'shield',rarity:'divine'});assert.equal(validStoredBattle(bad),false);
+ const bad=structuredClone(copy);bad.heroes.p.deck.push({id:'wolf',rarity:'divine'});assert.equal(validStoredBattle(bad),false);
  const old=createBattle(freshProfile(),CAMPAIGN[0],2),before=JSON.stringify(old);assert.equal(storeBattle(old),true);assert.deepEqual(restoreBattle(),JSON.parse(before));
 });
 

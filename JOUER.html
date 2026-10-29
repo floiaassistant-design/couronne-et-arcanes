@@ -4518,8 +4518,7 @@ case 'lab-open':openDeveloper();break;
  case 'confirm-dungeon-quit':hideModal();abandonDungeon(profile);if(battle?.mode==='dungeon'){battle=null;persistBattle();}save();navigate('dungeons');break;
  case 'start-tower':startTower(id);break;
  case 'trial-start':{
-  if(battle?.status==='active'){toast('Terminez le combat en cours.');break;}
-  const result=createEvolutionTrial(profile,id);if(!result.ok){toast(result.reason);break;}
+  const result=createEvolutionTrial(profile,id,Date.now(),battle);if(!result.ok){toast(result.reason);break;}
   battle=result.battle;persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);break;
  }
  case 'trial-exit':hideModal();battle=null;persistBattle();navigate(page==='deck'?'deck':'trials');break;
@@ -4646,6 +4645,7 @@ function evolutionAvailability(profile,reference,{trial,fusion,pack}){
  if(!routes.length)return 'Testable au laboratoire · Obtention non définie';
  if(profile&&ownedCardCopies(profile,reference)>0)return 'Évolution obtenue';
  if(profile?.completedTrials?.includes(trial?.id))return 'Épreuve accomplie · Aucun exemplaire à ce rang';
+ if(fusion?.ascension&&!profile?.completedTrials?.includes(fusion.ascension))return 'À obtenir par fusion · Ascension requise';
  if(routes.length===1)return trial?'À gagner en épreuve':`À obtenir par ${routes[0]}`;
  return `À obtenir par ${routes.slice(0,-1).join(', ')} ou ${routes.at(-1)}`;
 }
@@ -5154,10 +5154,23 @@ const EVOLUTION_TRIALS=freezeCardData([
   objective:'Remporter la bataille avec au moins un Milicien Rare encore vivant.',
   enemy:'Gardien de l’épreuve du Bosquet',difficulty:2,hp:22,aiStyle:'bastion',deck:['treant','militia','ranger','dryad','shield','wolf','militia','healing','archer','militia','shield','ranger']}
 ]);
-const evolutionTrial=id=>EVOLUTION_TRIALS.find(t=>t.id===id)||null;
+// Deux épreuves communes ouvrent les fusions de tout l'Ordre, sans carte offerte.
+const EVOLUTION_ASCENSIONS=freezeCardData([
+ {id:'aube-ascension-divine',kind:'ascension',faction:'aube',name:'Le Serment divin',from:'légendaire',to:'divine',mission:'09',
+  goal:{distinct:3,crownPercent:40,maxRound:24},
+  enemy:'Conseil des Serments',difficulty:5,hp:48,boss:true,aiStyle:'bastion',
+  deck:['shield','paladin','archer','cleric','lancer','banner','shield','paladin','sunpriest','archer','healing','warcry','shield','lancer','cleric','storm']},
+ {id:'aube-ascension-eveillee',kind:'ascension',faction:'aube',name:'L’Éveil du Bastion',from:'divine',to:'éveillée',mission:'12',previous:'aube-ascension-divine',
+  goal:{distinct:4,crownPercent:60,maxRound:24},
+  enemy:'Gardien de l’Éveil',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
+  deck:['dawnbastion','paladin','shield','lancer','sunpriest','archer','banner','paladin','dawnbastion','shield','storm','healing','warcry','lancer','paladin','sunpriest','archer','shield']}
+]);
+const ALL_EVOLUTION_TRIALS=Object.freeze([...EVOLUTION_TRIALS,...EVOLUTION_ASCENSIONS]);
+const evolutionTrial=id=>ALL_EVOLUTION_TRIALS.find(t=>t.id===id)||null;
 const evolutionTrialFor=(id,rarity)=>EVOLUTION_TRIALS.find(t=>t.cardId===id&&t.to===rarity)||null;
+const evolutionAscensionFor=(faction,rarity)=>EVOLUTION_ASCENSIONS.find(t=>t.faction===faction&&t.to===rarity)||null;
 
-Object.assign(__exports,{EVOLUTION_TRIALS,evolutionTrial,evolutionTrialFor});
+Object.assign(__exports,{EVOLUTION_TRIALS,EVOLUTION_ASCENSIONS,ALL_EVOLUTION_TRIALS,evolutionTrial,evolutionTrialFor,evolutionAscensionFor});
 
 },
 "src/evolution-fusion.js":function(__exports,__load){
@@ -5165,12 +5178,16 @@ Object.assign(__exports,{EVOLUTION_TRIALS,evolutionTrial,evolutionTrialFor});
 const {CARDS}=__load("src/data.js");
 const {AUBE_EVOLUTIONS}=__load("src/cards/aube.js");
 const {CARD_RARITIES,freezeCardData}=__load("src/cards/schema.js");
+const {EVOLUTION_ASCENSIONS,evolutionAscensionFor}=__load("src/evolution-trials.js");
 const EVOLUTION_FUSION_COPIES=3;
-const EVOLUTION_FUSION_MISSIONS=freezeCardData({rare:'01','épique':'03','légendaire':'06'});
+const EVOLUTION_FUSION_MISSIONS=freezeCardData({rare:'01','épique':'03','légendaire':'06',...Object.fromEntries(EVOLUTION_ASCENSIONS.map(t=>[t.to,t.mission]))});
 const EVOLUTION_FUSIONS=freezeCardData(Object.entries(AUBE_EVOLUTIONS).flatMap(([cardId,versions])=>{
  const native=CARD_RARITIES.findIndex(r=>r.id===CARDS[cardId].rarity);
- return CARD_RARITIES.flatMap((rank,index)=>index>native&&Object.hasOwn(EVOLUTION_FUSION_MISSIONS,rank.id)&&versions[rank.id]
-  ?[{id:`${cardId}:${rank.id}`,cardId,from:CARD_RARITIES[index-1].id,to:rank.id,copies:EVOLUTION_FUSION_COPIES,mission:EVOLUTION_FUSION_MISSIONS[rank.id]}]:[]);
+ return CARD_RARITIES.flatMap((rank,index)=>{
+  if(index<=native||!Object.hasOwn(EVOLUTION_FUSION_MISSIONS,rank.id)||!versions[rank.id])return [];
+  const ascension=evolutionAscensionFor(CARDS[cardId].faction,rank.id);
+  return [{id:`${cardId}:${rank.id}`,cardId,from:CARD_RARITIES[index-1].id,to:rank.id,copies:EVOLUTION_FUSION_COPIES,mission:EVOLUTION_FUSION_MISSIONS[rank.id],...(ascension?{ascension:ascension.id}:{})}];
+ });
 }));
 const evolutionFusion=id=>EVOLUTION_FUSIONS.find(r=>r.id===id)||null;
 const evolutionFusionFor=(id,rarity)=>EVOLUTION_FUSIONS.find(r=>r.cardId===id&&r.to===rarity)||null;
@@ -5183,7 +5200,7 @@ Object.assign(__exports,{EVOLUTION_FUSION_COPIES,EVOLUTION_FUSION_MISSIONS,EVOLU
 // sont des références {id,rarity}. Jamais de nouvelle entrée dans CARDS.
 const {CARDS}=__load("src/data.js");
 const {resolveUnitDefinition,unitVersionPlayable}=__load("src/cards/definitions.js");
-const {EVOLUTION_TRIALS,evolutionTrial}=__load("src/evolution-trials.js");
+const {evolutionTrial}=__load("src/evolution-trials.js");
 const cardId=ref=>typeof ref==='string'?ref:ref?.id;
 function cardReference(ref){
  const id=cardId(ref);if(typeof id!=='string'||!Object.hasOwn(CARDS,id))return null;const c=CARDS[id];
@@ -5231,7 +5248,7 @@ function evolutionProfileError(raw){
  if(raw.completedTrials!==undefined&&(!Array.isArray(raw.completedTrials)||!raw.completedTrials.every(id=>!!evolutionTrial(id))))return 'Épreuves terminées invalides.';
  return '';
 }
-const completedEvolutionTrials=raw=>[...new Set(Array.isArray(raw)?raw.filter(id=>EVOLUTION_TRIALS.some(t=>t.id===id)):[])];
+const completedEvolutionTrials=raw=>[...new Set(Array.isArray(raw)?raw.filter(id=>!!evolutionTrial(id)):[])];
 
 Object.assign(__exports,{cardId,cardReference,cardKey,cardFromKey,cardRarity,playableCardReference,ownedCardCopies,ownedCardEntries,totalOwnedCopies,normalizeEvolutionInventory,evolutionProfileError,completedEvolutionTrials});
 
@@ -6609,10 +6626,12 @@ Object.assign(__exports,{TEMPO_IDS,TEMPO_MAX_WAIT,accelerationTarget,obstruction
 // Objectifs d'épreuve : faits résolus du moteur et lecture pure des survivants.
 const {CARDS}=__load("src/data.js");
 const {evolutionTrial}=__load("src/evolution-trials.js");
+const {ascensionObjectiveText,createAscensionChallenge,validAscensionChallenge,ascensionObjectiveState}=__load("src/engine/ascension-objectives.js");
 const metrics=['turns','rangedDamage','ripostes','firstHit'];
 const labels={turns:'Tours de survie',rangedDamage:'Dégâts à distance',ripostes:'Ripostes déclenchées',firstHit:'Premier coup réduit'};
 const eligible=(q,u)=>u&&u.side==='p'&&u.hp>0&&u.id===q.cardId&&(u.rarity||CARDS[u.id]?.rarity)===q.rarity;
 function trialObjectiveText(t){
+ if(t?.kind==='ascension')return ascensionObjectiveText(t);
  if(!t?.goal)return t?.objective||'';
  const {metric,target}=t.goal,name=CARDS[t.cardId].name;
  const task=metric==='turns'?`Rester en vie pendant ${target} tours`:
@@ -6621,11 +6640,13 @@ function trialObjectiveText(t){
  return `${name} · rang ${t.from} : ${task}. Remporter ensuite la bataille avec ce même exemplaire encore vivant.`;
 }
 function createTrialChallenge(t){
+ if(t.kind==='ascension')return createAscensionChallenge(t);
  return {version:1,cardId:t.cardId,rarity:t.from,metric:t.goal.metric,target:t.goal.target,text:trialObjectiveText(t),counts:{}};
 }
 function validTrialChallenge(b){
- const q=b.trialChallenge;if(q===undefined)return true;
  const t=evolutionTrial(b.missionId);
+ if(t?.kind==='ascension')return validAscensionChallenge(b,t);
+ const q=b.trialChallenge;if(q===undefined)return true;
  return !!q&&b.mode==='evolution-trial'&&!!t&&q.version===1&&q.cardId===t.cardId&&q.rarity===t.from&&
   metrics.includes(q.metric)&&Number.isSafeInteger(q.target)&&q.target>0&&q.target<=10000&&
   (q.metric!=='firstHit'||q.target===1)&&
@@ -6647,6 +6668,7 @@ function recordTrialTurn(b){
 }
 function trialObjectiveState(b){
  const t=evolutionTrial(b?.missionId);if(!t||b.mode!=='evolution-trial')return null;
+ if(t.kind==='ascension')return ascensionObjectiveState(b,t);
  const q=b.trialChallenge;
  if(q===undefined){
   const alive=b.board.flat().some(u=>eligible({cardId:t.cardId,rarity:t.from},u));
@@ -6659,6 +6681,41 @@ function trialObjectiveState(b){
 }
 
 Object.assign(__exports,{trialObjectiveText,createTrialChallenge,validTrialChallenge,recordTrialFact,recordTrialTurn,trialObjectiveState});
+
+},
+"src/engine/ascension-objectives.js":function(__exports,__load){
+// Objectif commun à un Ordre : lecture de l'état réel, sans second moteur.
+const {CARDS}=__load("src/data.js");
+const {CARD_RARITIES}=__load("src/cards/schema.js");
+function ascensionObjectiveText(t){
+ const q=t.goal;
+ return `Gagner au plus tard au tour ${q.maxRound}, avec au moins ${q.distinct} personnages distincts de l’Aube encore vivants, dont un au rang ${CARD_RARITIES.find(r=>r.id===t.from).name}, et une couronne à au moins ${q.crownPercent} % de ses PV maximum.`;
+}
+function createAscensionChallenge(t){
+ return {version:2,faction:t.faction,rarity:t.from,...t.goal,text:ascensionObjectiveText(t)};
+}
+function validAscensionChallenge(b,t){
+ const q=b.trialChallenge;
+ return b.mode==='evolution-trial'&&t?.kind==='ascension'&&!!q&&q.version===2&&q.faction===t.faction&&q.rarity===t.from&&
+  Number.isSafeInteger(q.distinct)&&q.distinct>=1&&q.distinct<=10&&
+  Number.isSafeInteger(q.crownPercent)&&q.crownPercent>=1&&q.crownPercent<=100&&
+  Number.isSafeInteger(q.maxRound)&&q.maxRound>=1&&q.maxRound<=100&&
+  typeof q.text==='string'&&q.text.length>0&&q.text.length<=1000;
+}
+function ascensionObjectiveState(b,t){
+ if(!validAscensionChallenge(b,t))return {text:'Objectif d’ascension invalide.',achieved:false,value:0,target:1,label:'Objectif',checks:[]};
+ const q=b.trialChallenge,allies=b.board.flat().filter(u=>u?.side==='p'&&u.hp>0&&CARDS[u.id]?.faction===q.faction);
+ const distinct=new Set(allies.map(u=>u.id)).size,crown=b.heroes.p;
+ const checks=[
+  {label:`Personnages Aube vivants : ${distinct}/${q.distinct}`,met:distinct>=q.distinct},
+  {label:`Un personnage ${CARD_RARITIES.find(r=>r.id===q.rarity).name} encore vivant`,met:allies.some(u=>(u.rarity||CARDS[u.id].rarity)===q.rarity)},
+  {label:`PV de la couronne : au moins ${q.crownPercent} %`,met:crown.hp>0&&crown.hp*100>=crown.maxhp*q.crownPercent},
+  {label:`Victoire au plus tard au tour ${q.maxRound} (tour ${b.round})`,met:b.round<=q.maxRound}
+ ];
+ return {text:q.text,legacy:false,achieved:checks.every(c=>c.met),value:checks.filter(c=>c.met).length,target:checks.length,label:'Conditions remplies',checks};
+}
+
+Object.assign(__exports,{ascensionObjectiveText,createAscensionChallenge,validAscensionChallenge,ascensionObjectiveState});
 
 },
 "src/engine/guard-candidates.js":function(__exports,__load){
@@ -7284,27 +7341,35 @@ Object.assign(__exports,{DECK_STYLES,deckOverview,proposeDeck,applyDeckStyle});
 "src/engine/evolution-progress.js":function(__exports,__load){
 // Épreuves : accès, création d'un combat normal et transformation unique.
 const {CARDS,CAMPAIGN}=__load("src/data.js");
-const {evolutionTrial,EVOLUTION_TRIALS}=__load("src/evolution-trials.js");
-const {cardReference,cardKey,ownedCardCopies}=__load("src/cards/references.js");
+const {evolutionTrial,ALL_EVOLUTION_TRIALS}=__load("src/evolution-trials.js");
+const {cardReference,cardKey,cardId,cardRarity,ownedCardCopies}=__load("src/cards/references.js");
 const {createBattle}=__load("src/engine/battle.js");
 const {validateDeck}=__load("src/engine/profile.js");
 const {createTrialChallenge,trialObjectiveState}=__load("src/engine/trial-objectives.js");
+const {CARD_RARITIES}=__load("src/cards/schema.js");
 const trialSource=t=>cardReference({id:t.cardId,rarity:t.from});
 const trialReward=t=>cardReference({id:t.cardId,rarity:t.to});
-function evolutionTrialAccess(profile,id){
+function evolutionTrialAccess(profile,id,battle=null){
  const t=evolutionTrial(id);if(!t)return {ok:false,reason:'Épreuve inconnue.'};
- if(profile.completedTrials?.includes(id))return {ok:false,completed:true,reason:'Évolution déjà obtenue : une seule récompense par épreuve.'};
+ if(profile.completedTrials?.includes(id))return {ok:false,completed:true,reason:t.kind==='ascension'?'Ascension déjà accomplie : fusions débloquées.':'Évolution déjà obtenue : une seule récompense par épreuve.'};
+ if(battle&&(battle.status==='active'||!battle.rewardGiven))return {ok:false,reason:'Terminez le combat et récupérez son résultat avant de commencer une épreuve.'};
  const mission=CAMPAIGN.find(m=>m.id===t.mission);
  if(!profile.completed.includes(t.mission))return {ok:false,reason:`Vaincre ${mission.enemy} dans « ${mission.name} ».`};
  if(t.previous&&!profile.completedTrials?.includes(t.previous))return {ok:false,reason:`Terminer l’épreuve « ${evolutionTrial(t.previous).name} ».`};
+ if(t.kind==='ascension'){
+  const allies=profile.deck.filter(ref=>CARDS[cardId(ref)]?.faction===t.faction);
+  if(!allies.some(ref=>cardRarity(ref)===t.from))return {ok:false,reason:`Ajouter au deck un personnage de l’Aube au rang ${CARD_RARITIES.find(r=>r.id===t.from).name}.`};
+  if(new Set(allies.map(cardId)).size<t.goal.distinct)return {ok:false,reason:`Ajouter au deck au moins ${t.goal.distinct} personnages distincts de l’Aube.`};
+  const invalid=validateDeck(profile);return invalid?{ok:false,reason:invalid}:{ok:true,trial:t};
+ }
  const required=trialSource(t),name=CARDS[t.cardId].name;
  if(ownedCardCopies(profile,required)<1)return {ok:false,reason:`Posséder ${name} au rang ${t.from}.`};
  if(!profile.deck.some(ref=>cardKey(ref)===cardKey(required)))return {ok:false,reason:`Ajouter ${name} ${t.from} au deck.`};
  const invalid=validateDeck(profile);if(invalid)return {ok:false,reason:invalid};
  return {ok:true,trial:t};
 }
-function createEvolutionTrial(profile,id,seed=Date.now()){
- const access=evolutionTrialAccess(profile,id);if(!access.ok)return access;
+function createEvolutionTrial(profile,id,seed=Date.now(),currentBattle=null){
+ const access=evolutionTrialAccess(profile,id,currentBattle);if(!access.ok)return access;
  const t=access.trial;
  const battle=createBattle(profile,{id:t.id,name:t.name,enemy:t.enemy,difficulty:t.difficulty,hp:t.hp,aiStyle:t.aiStyle,boss:!!t.boss,deck:t.deck,mode:'evolution-trial'},seed,{turnFlow:'alternating'});
  battle.trialChallenge=createTrialChallenge(t);
@@ -7320,6 +7385,10 @@ function settleEvolutionTrial(profile,b){
  if(b.status!=='victory')return {...empty,reason:'Épreuve à retenter. Aucun exemplaire consommé.'};
  if(!trialObjectiveState(b).achieved)return {...empty,reason:'Victoire, mais l’objectif de l’épreuve n’est pas rempli. Aucun exemplaire consommé.'};
  const access=evolutionTrialAccess(profile,t.id);if(!access.ok)return {...empty,reason:access.reason};
+ if(t.kind==='ascension'){
+  profile.completedTrials??=[];profile.completedTrials.push(t.id);
+  return {...empty,unlocked:true,trial:t};
+ }
  const source=trialSource(t),reward=trialReward(t),key=cardKey(source);
  // Seul un exemplaire est transformé ; le slot éventuel du deck reste en place.
  if(typeof source==='string')profile.collection[source]--;else profile.evolvedCollection[key]--;
@@ -7329,7 +7398,7 @@ function settleEvolutionTrial(profile,b){
  profile.completedTrials??=[];profile.completedTrials.push(t.id);b.progressionGranted=true;
  return {...empty,card:reward,evolved:true,from:source,trial:t};
 }
-const bossEvolutionUnlocks=missionId=>EVOLUTION_TRIALS.filter(t=>t.previous&&t.mission===missionId);
+const bossEvolutionUnlocks=missionId=>ALL_EVOLUTION_TRIALS.filter(t=>(t.previous||t.kind==='ascension')&&t.mission===missionId);
 
 Object.assign(__exports,{trialSource,trialReward,evolutionTrialAccess,createEvolutionTrial,settleEvolutionTrial,bossEvolutionUnlocks});
 
@@ -7340,6 +7409,7 @@ const {CARDS,CAMPAIGN}=__load("src/data.js");
 const {evolutionFusion}=__load("src/evolution-fusion.js");
 const {resolveUnitDefinition,unitVersionPlayable}=__load("src/cards/definitions.js");
 const {cardReference,cardKey,ownedCardCopies}=__load("src/cards/references.js");
+const {evolutionTrial}=__load("src/evolution-trials.js");
 function previewEvolutionFusion(profile,id,battle=null){
  const recipe=evolutionFusion(id);if(!recipe)return {ok:false,reason:'Recette d’évolution inconnue.'};
  const source=cardReference({id:recipe.cardId,rarity:recipe.from}),target=cardReference({id:recipe.cardId,rarity:recipe.to});
@@ -7353,7 +7423,8 @@ function previewEvolutionFusion(profile,id,battle=null){
  else if(!profile.completed.includes(recipe.mission)){
   const mission=CAMPAIGN.find(m=>m.id===recipe.mission);
   reason=`Vaincre ${mission.enemy} dans « ${mission.name} » pour accéder à ce rang.`;
- }else if(available<recipe.copies)reason=`Il faut ${recipe.copies} exemplaires ${recipe.from} libres : ${Math.max(0,available)} disponibles, ${used} dans le deck.`;
+ }else if(recipe.ascension&&!profile.completedTrials?.includes(recipe.ascension))reason=`Réussir l’ascension « ${evolutionTrial(recipe.ascension).name} » pour débloquer ces fusions.`;
+ else if(available<recipe.copies)reason=`Il faut ${recipe.copies} exemplaires ${recipe.from} libres : ${Math.max(0,available)} disponibles, ${used} dans le deck.`;
  return {...state,ok:!reason,reason};
 }
 
@@ -7565,17 +7636,28 @@ Object.assign(__exports,{concordeLight,concordeDescription,concordeDetails});
 "src/ui/evolution-trials.js":function(__exports,__load){
 // Épreuves et résultat : lecture du moteur et des cartes, aucune attribution ici.
 const {CARDS,CAMPAIGN}=__load("src/data.js");
-const {EVOLUTION_TRIALS}=__load("src/evolution-trials.js");
+const {EVOLUTION_TRIALS,EVOLUTION_ASCENSIONS}=__load("src/evolution-trials.js");
 const {evolutionTrialAccess,trialReward}=__load("src/engine/evolution-progress.js");
 const {trialObjectiveText,trialObjectiveState}=__load("src/engine/trial-objectives.js");
+const {EVOLUTION_FUSION_COPIES}=__load("src/evolution-fusion.js");
+const {CARD_RARITIES}=__load("src/cards/schema.js");
 function trialBattleObjective(battle,esc){
  const state=trialObjectiveState(battle);if(!state)return '';
- return `<details class="trial-combat-objective"><summary aria-label="Objectif de l’épreuve"><span role="status">Défi · ${state.value}/${state.target}${state.achieved?' ✓':''}</span></summary><div class="trial-objective-panel"><p>${esc(state.text)}</p><p>${esc(state.label)} : ${state.value}/${state.target} · meilleur exemplaire vivant${state.achieved?' · Défi rempli':''}</p></div></details>`;
+ const progress=state.checks?`<ul>${state.checks.map(c=>`<li>${c.met?'✓':'○'} ${esc(c.label)}</li>`).join('')}</ul>`:`<p>${esc(state.label)} : ${state.value}/${state.target} · meilleur exemplaire vivant${state.achieved?' · Défi rempli':''}</p>`;
+ return `<details class="trial-combat-objective"><summary aria-label="Objectif de l’épreuve"><span role="status">Défi · ${state.value}/${state.target}${state.achieved?' ✓':''}</span></summary><div class="trial-objective-panel"><p>${esc(state.text)}</p>${progress}</div></details>`;
+}
+
+function renderAscensions(profile,battle,{btn,esc}){
+ return `<section class="spaced"><h2 class="section-title">Les grandes ascensions</h2><p class="page-sub">Deux défis communs à tout l’Ordre. Une réussite débloque les fusions de ce rang pour les dix personnages Aube. Chaque carte demande ensuite ${EVOLUTION_FUSION_COPIES} copies libres du rang précédent ; aucune carte n’est offerte par l’épreuve.</p><div class="trial-grid">${EVOLUTION_ASCENSIONS.map(t=>{
+  const access=evolutionTrialAccess(profile,t.id,battle),rank=CARD_RARITIES.find(r=>r.id===t.to).name;
+  return `<article class="card-panel ascension-card" data-trial-id="${esc(t.id)}"><div class="kicker">ASCENSION · RANG ${esc(rank)}</div><h2>${esc(t.name)}</h2><span class="pill">${access.completed?'✓ Fusions débloquées':'10 fusions à débloquer'}</span><p class="trial-objective">${esc(trialObjectiveText(t))}</p><p><b>Récompense :</b> accès au rang ${esc(rank)} de l’Aube par fusion, sans coût ni copie consommée pour tenter l’épreuve. Pas d’or, d’éclats ou d’XP.</p><p class="hint">${access.ok?'Objectif annoncé : préparez votre deck pour ce combat de boss.':esc(access.reason)}</p>${btn(access.completed?'Ascension accomplie':'Tenter l’ascension','trial-start',`data-id="${esc(t.id)}" ${!access.ok?'disabled':''}`,'primary')}</article>`;
+ }).join('')}</div></section>`;
 }
 
 function renderEvolutionTrials(profile,battle,{btn,cardUI,esc}){
- const busy=battle?.status==='active',boss=CAMPAIGN.find(m=>m.id==='03');
- return `<section class="evolution-trials"><header><div class="kicker">LES ÉPREUVES DE L’AUBE</div><h1 class="page-title">Méritez vos évolutions</h1><p class="page-sub">Accomplissez son défi, puis remportez la bataille avec le même exemplaire encore vivant. Un seul exemplaire évolue ; sa place dans votre deck est conservée.</p>${btn('Préparer mon deck','nav','data-page="deck"','ghost')}</header>
+ const busy=!!battle&&(battle.status==='active'||!battle.rewardGiven),boss=CAMPAIGN.find(m=>m.id==='03');
+ return `<section class="evolution-trials"><header><div class="kicker">LES ÉPREUVES DE L’AUBE</div><h1 class="page-title">Méritez vos évolutions</h1><p class="page-sub">Les grandes ascensions ouvrent les rangs Divin et Éveillé. Les quatre défis de personnage ci-dessous restent une autre voie d’obtention des premières évolutions.</p>${btn('Préparer mon deck','nav','data-page="deck"','ghost')}</header>
+  ${renderAscensions(profile,battle,{btn,esc})}
   <div class="card-panel trial-boss-gate"><h2 class="section-title">Le premier boss ouvre la suite</h2><p>Vaincre ${esc(boss.enemy)} dans « ${esc(boss.name)} » ouvre l’épreuve du Milicien Épique, après celle du Milicien Rare.</p><span class="pill">${profile.completed.includes(boss.id)?'✓ Boss déjà vaincu':'Boss à vaincre en campagne'}</span></div>
   ${busy?'<div class="hint red">Terminez le combat en cours avant de commencer une épreuve.</div>':''}
   <div class="trial-grid">${EVOLUTION_TRIALS.map(t=>{
@@ -7586,8 +7668,8 @@ function renderEvolutionTrials(profile,battle,{btn,cardUI,esc}){
 }
 
 function evolutionTrialResult(reward,{btn,cardUI,esc}){
- return `<div class="kicker">ÉPREUVE DE L’AUBE</div><h2>${reward.evolved?'Évolution obtenue !':reward.victory?'Objectif à retenter':'Épreuve perdue'}</h2>
-  ${reward.evolved?`<p>Un exemplaire a été transformé. Il est disponible dans votre Collection et le deck a été mis à jour.</p><div class="trial-result-card">${cardUI(reward.card,{previewContext:'reward'})}</div>`:`<p>${esc(reward.reason||'Épreuve non validée. Aucun exemplaire consommé.')}</p>`}
+ return `<div class="kicker">ÉPREUVE DE L’AUBE</div><h2>${reward.unlocked?'Ascension accomplie !':reward.evolved?'Évolution obtenue !':reward.victory?'Objectif à retenter':'Épreuve perdue'}</h2>
+  ${reward.unlocked?`<p>Les fusions du rang ${esc(CARD_RARITIES.find(r=>r.id===reward.trial.to).name)} de l’Aube sont débloquées dans Alchimie. Chaque carte demande ${EVOLUTION_FUSION_COPIES} exemplaires libres du rang précédent. Votre deck et vos stocks sont conservés ; aucune carte n’a été offerte.</p>`:reward.evolved?`<p>Un exemplaire a été transformé. Il est disponible dans votre Collection et le deck a été mis à jour.</p><div class="trial-result-card">${cardUI(reward.card,{previewContext:'reward'})}</div>`:`<p>${esc(reward.reason||'Épreuve non validée. Aucun exemplaire consommé.')}</p>`}
   <div class="button-row">${btn('Retour aux épreuves','trial-exit','data-page="trials"','primary')}${btn('Voir mon deck','trial-exit','data-page="deck"','ghost')}</div>`;
 }
 
@@ -7630,7 +7712,7 @@ const {EVOLUTION_FUSIONS,EVOLUTION_FUSION_COPIES,EVOLUTION_FUSION_MISSIONS}=__lo
 const {previewEvolutionFusion}=__load("src/engine/evolution-fusion.js");
 function renderEvolutionFusions(profile,battle,{btn,cardUI,esc}){
  const access=Object.entries(EVOLUTION_FUSION_MISSIONS).map(([rank,mission])=>`${esc(rank)} : ${esc(CAMPAIGN.find(m=>m.id===mission).enemy)} (mission ${esc(mission)})`).join(' · ');
- return `<section class="spaced evolution-fusions" aria-labelledby="evolution-fusion-title"><h2 class="section-title" id="evolution-fusion-title">Faire évoluer mes doublons</h2><p class="page-sub">${EVOLUTION_FUSION_COPIES} exemplaires du même personnage et du même rang deviennent 1 exemplaire du rang suivant. Aucun coût en or ou éclats, aucune chance d’échec. Seuls les exemplaires hors du deck sont consommés.</p><p class="hint">Accès après victoire — ${access}.</p><p class="hint">Évolutions de l’Aube jusqu’à Légendaire. La carte obtenue rejoint la Collection ; ajoutez-la ensuite dans Mon deck.</p><div class="card-grid">${EVOLUTION_FUSIONS.map(recipe=>{
+ return `<section class="spaced evolution-fusions" aria-labelledby="evolution-fusion-title"><h2 class="section-title" id="evolution-fusion-title">Faire évoluer mes doublons</h2><p class="page-sub">${EVOLUTION_FUSION_COPIES} exemplaires du même personnage et du même rang deviennent 1 exemplaire du rang suivant. Aucun coût en or ou éclats, aucune chance d’échec. Seuls les exemplaires hors du deck sont consommés.</p><p class="hint">Accès après victoire — ${access}. Les rangs Divin et Éveillé exigent aussi leur grande ascension dans Épreuves.</p><p class="hint">Évolutions de l’Aube jusqu’à Éveillé. La carte obtenue rejoint la Collection ; ajoutez-la ensuite dans Mon deck.</p><div class="card-grid">${EVOLUTION_FUSIONS.map(recipe=>{
   const plan=previewEvolutionFusion(profile,recipe.id,battle);
   return `<article class="evolution-fusion-recipe" data-fusion-id="${esc(recipe.id)}">${cardUI(plan.target,{previewContext:'alchemy'})}<div class="evolution-fusion-action"><h3>${esc(CARDS[recipe.cardId].name)}</h3><p>${recipe.copies} × ${esc(recipe.from)} → 1 × ${esc(recipe.to)}</p><p class="hint">${plan.owned} possédés · ${plan.used} dans le deck · ${Math.max(0,plan.available)} libres</p>${!plan.ok?`<p class="hint">${esc(plan.reason)}</p>`:''}${btn('Préparer la fusion','evolution-fusion-preview',`data-id="${esc(recipe.id)}" ${!plan.ok?'disabled':''}`,'primary')}</div></article>`;
  }).join('')}</div></section>`;
@@ -7964,7 +8046,7 @@ function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
          .map((m) => {
            const locked = Number(m.id) > profile.unlocked,
              done = profile.completed.includes(m.id);
-           return `<article class="mission ${locked ? 'locked' : ''} ${done ? 'completed' : ''}"><div class="mission-top"><span>MISSION ${m.id} · ${'✦'.repeat(m.difficulty)}</span><span>${done ? '✓ TERMINÉE' : locked ? '⌁ VERROUILLÉE' : m.boss ? '♛ BOSS' : 'À DÉCOUVRIR'}</span></div><h3>${esc(m.name)}</h3><p>${esc(m.story)}</p><p class="enemy-style-tag">Stratégie : ${esc(AI_STYLES[m.aiStyle]?.name || 'Équilibré')}${m.boss ? ' · Boss à deux phases' : ''}</p><div class="reward">◈ ${m.reward} or &nbsp; ✧ ${m.shards} éclats</div>${bossEvolutionUnlocks(m.id).map(t=>`<p class="evolution-unlock">${done?'Épreuve débloquée':'Débloque une épreuve'} : ${esc(CARDS[t.cardId].name)} ${esc(t.to)}.</p>`).join('')}${btn(locked ? 'Inaccessible' : done ? 'Rejouer la bataille' : 'Lancer le combat', 'start-mission', `data-id="${m.id}" ${locked ? 'disabled' : ''}`, locked ? 'ghost' : 'primary')}</article>`;
+           return `<article class="mission ${locked ? 'locked' : ''} ${done ? 'completed' : ''}"><div class="mission-top"><span>MISSION ${m.id} · ${'✦'.repeat(m.difficulty)}</span><span>${done ? '✓ TERMINÉE' : locked ? '⌁ VERROUILLÉE' : m.boss ? '♛ BOSS' : 'À DÉCOUVRIR'}</span></div><h3>${esc(m.name)}</h3><p>${esc(m.story)}</p><p class="enemy-style-tag">Stratégie : ${esc(AI_STYLES[m.aiStyle]?.name || 'Équilibré')}${m.boss ? ' · Boss à deux phases' : ''}</p><div class="reward">◈ ${m.reward} or &nbsp; ✧ ${m.shards} éclats</div>${bossEvolutionUnlocks(m.id).map(t=>`<p class="evolution-unlock">${done?'Épreuve débloquée':'Débloque une épreuve'} : ${esc(t.kind==='ascension'?t.name:CARDS[t.cardId].name+' '+t.to)}.</p>`).join('')}${btn(locked ? 'Inaccessible' : done ? 'Rejouer la bataille' : 'Lancer le combat', 'start-mission', `data-id="${m.id}" ${locked ? 'disabled' : ''}`, locked ? 'ghost' : 'primary')}</article>`;
          })
          .join('')}</div></section>`
    )

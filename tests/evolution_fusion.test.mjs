@@ -10,26 +10,27 @@ import {createEvolutionFusionController} from '../src/ui/evolution-fusion-contro
 import {simulateBattle} from '../scripts/lib/battle_runner.mjs';
 import {resolveUnitSupport} from '../src/engine/unit-support.js';
 
-const expected={militia:{rare:[2,5],'épique':[2,5],'légendaire':[2,8]},shield:{rare:[1,11],'épique':[2,11],'légendaire':[2,13]},archer:{rare:[2,4],'épique':[3,4],'légendaire':[3,4]},lancer:{rare:[3,6],'épique':[4,6],'légendaire':[4,8]},cleric:{'épique':[1,6],'légendaire':[1,6]},paladin:{'légendaire':[4,11]},banner:{'épique':[2,8],'légendaire':[2,8]},scoutcaptain:{'épique':[3,8],'légendaire':[4,8]},sunpriest:{'épique':[2,9],'légendaire':[2,9]}};
-const ready=()=>{const p=freshProfile();p.completed=['01','02','03','04','05','06'];return p;};
+const expected={militia:{rare:[2,5],'épique':[2,5],'légendaire':[2,8],divine:[2,8],'éveillée':[2,8]},shield:{rare:[1,11],'épique':[2,11],'légendaire':[2,13],divine:[2,13],'éveillée':[2,13]},archer:{rare:[2,4],'épique':[3,4],'légendaire':[3,4],divine:[3,4],'éveillée':[3,4]},lancer:{rare:[3,6],'épique':[4,6],'légendaire':[4,8],divine:[4,8],'éveillée':[4,8]},cleric:{'épique':[1,6],'légendaire':[1,6],divine:[1,6],'éveillée':[1,6]},paladin:{'légendaire':[4,11],divine:[4,11],'éveillée':[4,13]},banner:{'épique':[2,8],'légendaire':[2,8],divine:[2,8],'éveillée':[2,8]},scoutcaptain:{'épique':[3,8],'légendaire':[4,8],divine:[4,8],'éveillée':[4,8]},sunpriest:{'épique':[2,9],'légendaire':[2,9],divine:[2,9],'éveillée':[2,9]},dawnbastion:{divine:[5,11],'éveillée':[7,11]}};
+const ready=()=>{const p=freshProfile();p.completed=['01','02','03','04','05','06','07','08','09','10','11','12'];return p;};
 function stocked(recipe){
  const p=ready(),source=cardReference({id:recipe.cardId,rarity:recipe.from});
  const used=p.deck.filter(ref=>cardKey(ref)===cardKey(source)).length;
  if(typeof source==='string')p.collection[source]=used+3;
  else p.evolvedCollection={[cardKey(source)]:used+3};
+ if(recipe.ascension)p.completedTrials=recipe.to==='éveillée'?['aube-ascension-divine',recipe.ascension]:[recipe.ascension];
  return p;
 }
 function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v)},removeItem:k=>{delete data[k]}};return data;}
 
-test('21 recettes explicites, transitions adjacentes, Divin/Éveillé et autres factions fermés',()=>{
- assert.equal(EVOLUTION_FUSIONS.length,21);
+test('41 recettes explicites, transitions adjacentes et autres factions fermées',()=>{
+ assert.equal(EVOLUTION_FUSIONS.length,41);
  assert.deepEqual(EVOLUTION_FUSIONS.map(r=>r.id).sort(),Object.entries(expected).flatMap(([id,ranks])=>Object.keys(ranks).map(rank=>id+':'+rank)).sort());
- for(const recipe of EVOLUTION_FUSIONS){assert.equal(recipe.copies,3);assert.equal(recipe.from,{rare:'commun','épique':'rare','légendaire':'épique'}[recipe.to]);assert.equal(recipe.mission,{rare:'01','épique':'03','légendaire':'06'}[recipe.to]);}
+ for(const recipe of EVOLUTION_FUSIONS){assert.equal(recipe.copies,3);assert.equal(recipe.from,{rare:'commun','épique':'rare','légendaire':'épique',divine:'légendaire','éveillée':'divine'}[recipe.to]);assert.equal(recipe.mission,{rare:'01','épique':'03','légendaire':'06',divine:'09','éveillée':'12'}[recipe.to]);}
  const p=ready();
- for(const id of ['militia:divine','militia:éveillée','ranger:rare','firebolt:rare','militia:commun','constructor']){
+ for(const id of ['ranger:rare','firebolt:rare','militia:commun','constructor']){
   const before=structuredClone(p);assert.equal(fuseEvolutionCopies(p,id).ok,false);assert.deepEqual(p,before,id);
  }
- for(const ref of [{id:'militia',rarity:'divine'},{id:'ranger',rarity:'rare'}])assert.equal(playableCardReference(ref),false);
+ for(const ref of [{id:'ranger',rarity:'rare'}])assert.equal(playableCardReference(ref),false);
 });
 
 test('Chaque recette consomme 3 stocks du rang exact, crée 1 carte jouable et protège le deck et toute autre progression',()=>{
@@ -42,7 +43,7 @@ test('Chaque recette consomme 3 stocks du rang exact, crée 1 carte jouable et p
   if(typeof result.source==='string')desired.collection[result.source]-=3;
   else desired.evolvedCollection[cardKey(result.source)]-=3;
   desired.evolvedCollection??={};desired.evolvedCollection[recipe.id]=1;
-  assert.deepEqual(p,desired);assert.equal(validateDeck(p),'');assert.equal(p.completedTrials,undefined);
+  assert.deepEqual(p,desired);assert.equal(validateDeck(p),'');assert.deepEqual(p.completedTrials,before.completedTrials);
   assert.deepEqual(validateImportedProfile(p),p);assert.equal(modifyDeck(p,result.target,1),true);
   const b=createBattle(p,CAMPAIGN[0],1);b.heroes.p.hand=[{...result.target,wait:0}];
   assert.equal(playPlayerCard(b,0,0,1).ok,true,recipe.id);
@@ -62,7 +63,7 @@ test('Rangs distincts, copies du deck et manque de doublons : aucun prélèvemen
  const held=structuredClone(p);assert.equal(fuseEvolutionCopies(p,'militia:épique').ok,false);assert.deepEqual(p,held);
 });
 
-test('336 combats avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
+test('656 combats avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
  for(const recipe of EVOLUTION_FUSIONS){
   const p=stocked(recipe),result=fuseEvolutionCopies(p,recipe.id);modifyDeck(p,result.target,1);
   const before=structuredClone(p);

@@ -280,8 +280,7 @@ case 'lab-open':openDeveloper();break;
  case 'confirm-dungeon-quit':hideModal();abandonDungeon(profile);if(battle?.mode==='dungeon'){battle=null;persistBattle();}save();navigate('dungeons');break;
  case 'start-tower':startTower(id);break;
  case 'trial-start':{
-  if(battle?.status==='active'){toast('Terminez le combat en cours.');break;}
-  const result=createEvolutionTrial(profile,id);if(!result.ok){toast(result.reason);break;}
+  const result=createEvolutionTrial(profile,id,Date.now(),battle);if(!result.ok){toast(result.reason);break;}
   battle=result.battle;persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);break;
  }
  case 'trial-exit':hideModal();battle=null;persistBattle();navigate(page==='deck'?'deck':'trials');break;

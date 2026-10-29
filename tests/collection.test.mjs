@@ -30,7 +30,7 @@ test('Seule la rareté réelle porte la possession et les actions de deck',()=>{
  assert.equal((row.match(/data-action="deck-add"/g)||[]).length,1);
  assert.equal((row.match(/data-action="deck-remove"/g)||[]).length,1);
  assert.equal((row.match(/known-version/g)||[]).length,6);
- assert.match(row,/Obtention non définie/);
+ assert.match(row,/Ascension requise/);
  const future=row.match(/<td[^>]+data-collection-rarity="divine"([\s\S]*?)<\/td>/)[1];
  assert.doesNotMatch(future,/data-action="deck-(?:add|remove)"/);
  assert.match(future,/stat hp[^]*?<b>8<\/b>/);
@@ -58,7 +58,7 @@ test('Chaque rareté garde une carte survolable sans nouveau bouton de fiche',()
 test('Les versions définies montrent leurs chiffres, les autres restent sans statistiques',()=>{
  const profile=freshProfile(),before=JSON.stringify(profile);
  const future=collectionHoverContent(profile,'militia','éveillée',esc);
- assert.match(future,/Obtention non définie/);
+ assert.match(future,/Ascension requise/);
  assert.match(future,/ATQ 2 \/ PV 8/);
  const unknown=collectionHoverContent(profile,'wolf','éveillée',esc);
  assert.match(unknown,/À concevoir/);

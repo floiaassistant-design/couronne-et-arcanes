@@ -27,7 +27,7 @@ async def run(browser,label,viewport):
     await inspect(future)
     assert 'ATQ 2 / PV 8' in await popup.inner_text()
     assert 'Dernier Rempart' in await popup.inner_text()
-    assert 'Obtention non définie' in await popup.inner_text()
+    assert 'Ascension requise' in await popup.inner_text()
     await contained(page,popup)
     await popup.locator('.inspection-description p').last.scroll_into_view_if_needed()
     assert await popup.locator('.inspection-description p').last.is_visible()

@@ -19,5 +19,18 @@ export const EVOLUTION_TRIALS=freezeCardData([
   objective:'Remporter la bataille avec au moins un Milicien Rare encore vivant.',
   enemy:'Gardien de l’épreuve du Bosquet',difficulty:2,hp:22,aiStyle:'bastion',deck:['treant','militia','ranger','dryad','shield','wolf','militia','healing','archer','militia','shield','ranger']}
 ]);
-export const evolutionTrial=id=>EVOLUTION_TRIALS.find(t=>t.id===id)||null;
+// Deux épreuves communes ouvrent les fusions de tout l'Ordre, sans carte offerte.
+export const EVOLUTION_ASCENSIONS=freezeCardData([
+ {id:'aube-ascension-divine',kind:'ascension',faction:'aube',name:'Le Serment divin',from:'légendaire',to:'divine',mission:'09',
+  goal:{distinct:3,crownPercent:40,maxRound:24},
+  enemy:'Conseil des Serments',difficulty:5,hp:48,boss:true,aiStyle:'bastion',
+  deck:['shield','paladin','archer','cleric','lancer','banner','shield','paladin','sunpriest','archer','healing','warcry','shield','lancer','cleric','storm']},
+ {id:'aube-ascension-eveillee',kind:'ascension',faction:'aube',name:'L’Éveil du Bastion',from:'divine',to:'éveillée',mission:'12',previous:'aube-ascension-divine',
+  goal:{distinct:4,crownPercent:60,maxRound:24},
+  enemy:'Gardien de l’Éveil',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
+  deck:['dawnbastion','paladin','shield','lancer','sunpriest','archer','banner','paladin','dawnbastion','shield','storm','healing','warcry','lancer','paladin','sunpriest','archer','shield']}
+]);
+export const ALL_EVOLUTION_TRIALS=Object.freeze([...EVOLUTION_TRIALS,...EVOLUTION_ASCENSIONS]);
+export const evolutionTrial=id=>ALL_EVOLUTION_TRIALS.find(t=>t.id===id)||null;
 export const evolutionTrialFor=(id,rarity)=>EVOLUTION_TRIALS.find(t=>t.cardId===id&&t.to===rarity)||null;
+export const evolutionAscensionFor=(faction,rarity)=>EVOLUTION_ASCENSIONS.find(t=>t.faction===faction&&t.to===rarity)||null;

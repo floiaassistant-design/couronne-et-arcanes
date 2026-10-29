@@ -21,6 +21,7 @@ function evolutionAvailability(profile,reference,{trial,fusion,pack}){
  if(!routes.length)return 'Testable au laboratoire · Obtention non définie';
  if(profile&&ownedCardCopies(profile,reference)>0)return 'Évolution obtenue';
  if(profile?.completedTrials?.includes(trial?.id))return 'Épreuve accomplie · Aucun exemplaire à ce rang';
+ if(fusion?.ascension&&!profile?.completedTrials?.includes(fusion.ascension))return 'À obtenir par fusion · Ascension requise';
  if(routes.length===1)return trial?'À gagner en épreuve':`À obtenir par ${routes[0]}`;
  return `À obtenir par ${routes.slice(0,-1).join(', ')} ou ${routes.at(-1)}`;
 }

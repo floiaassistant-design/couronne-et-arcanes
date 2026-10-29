@@ -5,8 +5,9 @@ sont intégrés. [Règles](docs/REGLES_CARTES_UNIQUES.md) · [CI](docs/CI_PARALL
 
 > Les quatre défis pilotes (PR 56) et la fusion de doublons (PR 59) sont intégrés.
 > Le [paquet d’évolution Aube](docs/PAQUETS_EVOLUTION.md) est intégré par PR 60.
-> Cette branche propose [neuf évolutions Légendaires Aube](docs/AUBE_LEGENDAIRES.md) :
-> **3 Épiques libres identiques après le deuxième boss**, sans nouvelle épreuve.
+> Les neuf Légendaires Aube sont intégrées par PR 61. Cette branche termine
+> les [41 évolutions Aube](docs/ASCENSIONS_AUBE.md) avec **deux grandes ascensions**
+> ouvrant les fusions Divines et Éveillées pour tout l’Ordre.
 
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
 quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle.
@@ -21,7 +22,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 évolutions Rares, puis du Milicien Épique après le premier boss. Sur cette branche, accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; la fusion ouvre ici 21 évolutions Aube ; les 20 Divines/Éveillées restent au labo.
+sont utilisables en campagne ; la fusion ouvre ici 41 évolutions Aube ; les vingt Divines/Éveillées exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
@@ -83,7 +84,7 @@ Sites version 7 ont été vérifiées dans son bilan.
 
 ### Collection — six cartes et aperçu rapide
 
-Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube définies montrent leurs chiffres et leurs stocks réels : 21 évolutions sont proposées à la fusion, dont douze aussi dans les paquets et quatre également obtenables par épreuve ; les 20 autres indiquent « Testable au laboratoire · Obtention non définie ». Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
+Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube définies montrent leurs chiffres et leurs stocks réels : 41 évolutions sont proposées à la fusion, dont douze aussi dans les paquets et quatre également obtenables par épreuve. Les vingt Divines/Éveillées indiquent « Ascension requise » avant le défi commun correspondant. Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
 
 ## Progression et sauvegarde
 
@@ -100,7 +101,7 @@ conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteu
 sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
 et leurs niveaux 0 à 3, choisis indépendamment. Les autres unités conservent
 leur version native. Les quatre récompenses pilotes se gagnent dans les Épreuves ;
-les 21 évolutions de fusion sont proposées sur cette branche ; les 20 Divines/Éveillées restent au laboratoire. La PR Aube nº 53, avec sa présentation commune et sa
+les 41 évolutions sont proposées à l’obtention sur cette branche ; deux grandes ascensions ouvrent les vingt Divines/Éveillées, sans carte offerte ni consommation du deck. [Prochaines factions](docs/REPRISE_MIGRATION_CARTES.md). La PR Aube nº 53, avec sa présentation commune et sa
 [revue finale](docs/REVUE_AUBE_PR53_2026_10_27.md), a été fusionnée sur accord du
 propriétaire le 27 octobre 2026. La publication du site reste une opération distincte.
 

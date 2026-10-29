@@ -31,3 +31,16 @@ def card_pack_cases(part=None):
     if part is None or part == 'web-recovery':
         cases.append({'label': 'web', 'viewport': {'width': 1366, 'height': 900}})
     return cases
+
+
+def ascension_cases(part=None):
+    if part is not None and part not in PARTS:
+        raise ValueError('Partie d’ascensions inconnue')
+    cases = [{'label': label, 'viewport': viewport, 'index': index % 2,
+              'full': index < 2, 'touch': touch}
+             for index, (label, viewport, touch) in enumerate(VIEWPORTS)
+             if part is None or part == label]
+    if part is None or part == 'web-recovery':
+        cases.append({'label': 'web', 'viewport': {'width': 1366, 'height': 900},
+                      'index': 1, 'full': False, 'touch': False})
+    return cases

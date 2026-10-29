@@ -1,3 +1,23 @@
+# Ascensions Aube — proposition du 28 octobre 2026
+
+Main vérifié `63ff7463b89d4f2ff410063a47ba2473087884bc` : PR 61 fusionnée
+sur accord, tests et assemblage main réussis. Diffusion Sites distincte.
+La branche `feat/ascensions-aube` termine l'obtention des **41 évolutions Aube**.
+Deux grandes épreuves communes ouvrent les vingt fusions Divines/Éveillées :
+mission 09 pour le Serment divin ; mission 12 et Serment accompli pour l'Éveil.
+Objectifs de victoire : plusieurs personnages Aube distincts et le rang requis
+encore vivants, couronne préservée, limite de 24 tours. Aucun défi par personnage.
+La réussite ne donne aucune copie : chaque carte demande ensuite trois copies
+libres du rang précédent. Stocks, deck et ressources conservés par l'ascension.
+Le moteur/les chiffres déjà validés au laboratoire sont réutilisés ; aucune autre
+faction activée, aucun changement de règle des cartes, aucun rang inventé.
+Les quatre pilotes et les paquets conservent leurs parcours ; les deux nouveaux
+reçus restent dans `completedTrials`, sauvegarde et clôture récupérable existantes.
+[Contrat](ASCENSIONS_AUBE.md) · [Prochaines factions et décisions manquantes](REPRISE_MIGRATION_CARTES.md).
+Aucun accord de fusion/publication de cette nouvelle proposition.
+
+Les sections suivantes sont historiques.
+
 # Migration des Légendaires Aube — proposition du 28 octobre 2026
 
 Main vérifié `e159631b5913791eb96d429201408a452def1337` : PR 60 fusionnée

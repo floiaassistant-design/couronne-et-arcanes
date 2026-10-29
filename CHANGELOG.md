@@ -1,3 +1,16 @@
+## Proposition — ascensions communes et fin de migration Aube, 28 octobre 2026
+
+- Deux défis de boss communs à l'Ordre ouvrent les dix fusions Divines et les dix
+  Éveillées, après les missions 09/12 et la précédente ascension. Pas de défi par unité.
+- Victoire avec plusieurs Aube distincts et le rang requis vivants, couronne
+  préservée, avant la limite de tours. Aucun cadeau, coût de tentative ou XP.
+- 41 évolutions obtenables après progression, via les règles déjà programmées.
+  Chaque fusion consomme trois copies libres du rang précédent, deck protégé.
+- Objectif composite v2 et reçus dans `completedTrials`, clôture récupérable,
+  imports/export/reprise ; anciens objectifs et quatre pilotes conservés.
+- Paquets et pouvoirs inchangés. [Contrat](docs/ASCENSIONS_AUBE.md) et
+  [suite des factions](docs/REPRISE_MIGRATION_CARTES.md).
+
 ## Proposition — neuf évolutions Légendaires Aube, 28 octobre 2026
 
 - Fusion de trois Épiques libres du même personnage après le deuxième boss :
