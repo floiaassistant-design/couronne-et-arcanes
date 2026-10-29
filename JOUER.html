@@ -4636,6 +4636,7 @@ const {battleUnitDefinition,unitAttackRange,unitMovementSteps}=__load("src/engin
 const {unitStatContext,unitStats,versionUnitStats}=__load("src/engine/unit-stats.js");
 const {formationBonus}=__load("src/engine.js");
 const {silenced}=__load("src/engine/battle-control.js");
+const {attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {generatedCardFace}=__load("src/ui/generated-card.js");
 const {concordeDetails}=__load("src/ui/concorde.js");
 const {visualFor,artSrc,cardTemplateFor}=__load("src/visuals.js");
@@ -4668,7 +4669,7 @@ function cardPresentation(reference,{context={},profile=null,side='p',unit=null,
  const pack=future?evolutionPackFor(id,selected):null;
  const availability=!known?missing:future?evolutionAvailability(profile,{id,rarity:selected},{trial,fusion,pack}):'Version native';
  if(stats===undefined)stats=native.type==='sort'||!known?null:unit?
-  {atk:unit.atk,hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
+  {atk:attackAfterPenalty(unit,unit.atk),hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);
  let effective=definition;
  if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor??definition.abilities.armor.amount}}:{})}};
@@ -4692,7 +4693,9 @@ function boardInspectionData(battle,uid){
   if(u.riposteUsed)statuses.push('Riposte par invocation consommée');
   if(u.lastRiposteRound===battle.round)statuses.push('Riposte utilisée ce tour');
   if(u.lastStandUsed)statuses.push('Dernier Rempart consommé');
-  const stats={atk:u.atk+concord+rallied,hp:u.hp,maxhp:u.maxhp,bonuses:[]};
+  if(u.attackPenalty)statuses.push(`Harcèlement : −${u.attackPenalty.amount} ATQ, ${u.attackPenalty.remaining} attaque restante`);
+  if(u.regeneration)statuses.push(`Régénération : ${u.regeneration.amount} PV au prochain tour, ${u.regeneration.remaining} effet restant`);
+  const stats={atk:attackAfterPenalty(u,u.atk+concord+rallied),hp:u.hp,maxhp:u.maxhp,bonuses:[]};
   const presentation=cardPresentation(u,{context:battle,side:u.side,unit:u,stats});
   return {...presentation,entry:{wait:0},presentation,board:{side:u.side,lane,col,statuses,concordeActive:!!concord}};
  }
@@ -5150,23 +5153,25 @@ Object.assign(__exports,{AUBE_DESIGN_SOURCE,AUBE_EVOLUTIONS});
 
 },
 "src/cards/sylve.js":function(__exports,__load){
-// Première tranche Sylve : les quinze évolutions Rare/Épique validées dans Notion.
-// Les totaux remplacent la base ; les 33 rangs supérieurs attendent leur moteur.
+// Sylve jusqu'à Légendaire, depuis les cases validées du tableau maître.
+// Les totaux remplacent la base ; les 22 rangs Divins/Éveillés attendent leur moteur.
 const {freezeCardData}=__load("src/cards/schema.js");
 const SYLVE_DESIGN_SOURCE=freezeCardData({
  url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
  editedAt:'2026-10-27T06:13:46.581Z'
 });
 const SYLVE_EVOLUTIONS=freezeCardData({
- ranger:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}}},
- wolf:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}}},
- treant:{'épique':{stats:{hp:12}}},
- dryad:{'épique':{stats:{hp:7}}},
- thorn:{rare:{stats:{hp:6}},'épique':{stats:{attack:3}}},
- pixie:{rare:{stats:{hp:4}},'épique':{abilities:{ward:{amount:5}}}},
- bear:{'épique':{stats:{hp:11}}},
- owl:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}}},
- sylvan_trapper:{rare:{stats:{hp:6}},'épique':{stats:{attack:3}}}
+ ranger:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}},'légendaire':{geometry:{range:3}}},
+ wolf:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}},'légendaire':{abilities:{charge:{amount:3}}}},
+ treant:{'épique':{stats:{hp:12}},'légendaire':{abilities:{armor:{amount:3}}}},
+ dryad:{'épique':{stats:{hp:7}},'légendaire':{abilities:{regeneration:{amount:1,resolutions:1}}}},
+ stag:{'légendaire':{stats:{hp:8}}},
+ thorn:{rare:{stats:{hp:6}},'épique':{stats:{attack:3}},'légendaire':{abilities:{poison:{resolutions:3}}}},
+ pixie:{rare:{stats:{hp:4}},'épique':{abilities:{ward:{amount:5}}},'légendaire':{abilities:{arrivalBarrier:{amount:2,cap:2,scope:'line',includeSelf:false,targets:1}}}},
+ bear:{'épique':{stats:{hp:11}},'légendaire':{stats:{attack:5}}},
+ archdruid:{'légendaire':{stats:{hp:9}}},
+ owl:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}},'légendaire':{abilities:{harass:{amount:1,attacks:1}}}},
+ sylvan_trapper:{rare:{stats:{hp:6}},'épique':{stats:{attack:3}},'légendaire':{abilities:{trapper:{damage:2}}}}
 });
 
 Object.assign(__exports,{SYLVE_DESIGN_SOURCE,SYLVE_EVOLUTIONS});
@@ -5337,6 +5342,9 @@ function unitAbilitySummary(definition){
  if(a.inspire)lines.push(`Inspiration : +${a.inspire.amount} ATQ à ${a.inspire.targets} allié(s) / ${a.inspire.period} tours, ${scope(a.inspire)}`);
  if(a.arrivalInspire)lines.push(`Commandement : +${a.arrivalInspire.amount} ATQ à l'arrivée`);
  if(a.ward)lines.push(`Protection : +${a.ward.amount}`);
+ if(a.arrivalBarrier)lines.push(`Barrière alliée à l’arrivée : ${a.arrivalBarrier.amount}`);
+ if(a.regeneration)lines.push(`Régénération : ${a.regeneration.amount} PV, ${a.regeneration.resolutions} tour(s)`);
+ if(a.harass)lines.push(`Harcèlement : −${a.harass.amount} ATQ, ${a.harass.attacks} attaque(s)`);
  if(a.intervention)lines.push(`Intervention : ${a.intervention.amount} dégâts, portée ${a.intervention.range}`);
  if(a.flying)lines.push('Vol');
  if(a.haste)lines.push(`Célérité ${definition.geometry.steps}`);
@@ -5358,6 +5366,7 @@ function unitCardText(d){
  if(a.guard)parts.push(a.guard.scope==='all-lines'?'Garde toutes lignes':a.guard.scope==='line'?'Garde divine':'Garde');
  if(a.heal)parts.push(`Soin ${a.heal.amount}${a.heal.targets>1?' ×'+a.heal.targets:''}${a.heal.scope==='all-lines'?' toutes lignes':''}`);
  if(a.healBarrier)parts.push(`Barrière +${a.healBarrier.amount}`);
+ if(a.regeneration)parts.push(`Régénération ${a.regeneration.amount}`);
  if(a.inspire)parts.push(`Inspiration +${a.inspire.amount} / ${a.inspire.period} tours`);
  if(a.haste)parts.push(`Célérité ${d.geometry.steps}`);
  if(a.charge)parts.push(`Charge +${a.charge.amount}`);
@@ -5366,6 +5375,8 @@ function unitCardText(d){
  if(a.riposteBarrier)parts.push(`Barrière ${a.riposteBarrier.amount}`);
  if(a.riposte)parts.push('Riposte'+(a.riposte.damageMode==='effective-attack'?' ATQ':' '+a.riposte.amount));
  if(a.ward)parts.push(`Protection +${a.ward.amount}`);
+ if(a.arrivalBarrier)parts.push(`Barrière alliée ${a.arrivalBarrier.amount}`);
+ if(a.harass)parts.push(`Harcèlement −${a.harass.amount} ATQ`);
  if(a.poison)parts.push(`Poison ${a.poison.amount} · ${a.poison.resolutions} tours`);
  if(a.trapper)parts.push(`Piège ${a.trapper.damage} / ${a.trapper.period} tours`);
  if(a.flying)parts.push('Vol');
@@ -5383,16 +5394,19 @@ function unitAbilityDetails(d){
  if(a.riposteBarrier)lines.push(`Après une Riposte autorisée : barrière personnelle +${a.riposteBarrier.amount}, plafond ${a.riposteBarrier.cap} pour cet effet.`);
  if(a.heal)lines.push(`Après les attaques : soigne ${a.heal.amount} PV à ${a.heal.targets>1?'jusqu’à '+a.heal.targets+' alliés blessés distincts, priorité aux plus blessés proportionnellement':'l’allié le plus blessé proportionnellement'} sur ${scope(a.heal)}, elle-même incluse.`);
  if(a.healBarrier)lines.push(`Après un soin effectif : barrière +${a.healBarrier.amount} à la cible, plafond ${a.healBarrier.cap} pour cet effet.`);
+ if(a.regeneration)lines.push(`Après un soin effectif : Régénération ${a.regeneration.amount} PV à la même cible à la fin de son prochain tour de combat, si elle vit et reste blessée. Sans cumul ; une nouvelle application rafraîchit l’effet.`);
  if(a.inspire)lines.push(`Tous les ${a.inspire.period} tours : +${a.inspire.amount} ATQ à ${a.inspire.targets} autre${a.inspire.targets>1?'s':''} allié${a.inspire.targets>1?'s':''} de ${scope(a.inspire)}, ATQ plafonnée à ${a.inspire.cap}.`);
  if(a.arrivalInspire)lines.push(`À l’arrivée : +${a.arrivalInspire.amount} ATQ au premier autre allié de sa ligne, maximum ${a.arrivalInspire.cap}.`);
  if(a.ward)lines.push(`À l’arrivée : +${a.ward.amount} bouclier à sa couronne, plafond ${a.ward.cap}.`);
+ if(a.arrivalBarrier)lines.push(`À l’arrivée : barrière ${a.arrivalBarrier.amount} à un autre allié de sa ligne, priorité au plus blessé proportionnellement. Plafond ${a.arrivalBarrier.cap} pour cet effet, sans cumul ; aucune autre cible ni effet sans allié.`);
+ if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : Harcèlement −${a.harass.amount} ATQ sur sa prochaine attaque d’unité, Riposte comprise ; minimum 0, aucun effet sur les sorts. Les applications renouvellent le malus sans cumul.`);
  if(a.intervention)lines.push(`À l’arrivée : ${a.intervention.amount} dégâts au premier ennemi devant, même ligne, jusqu’à ${a.intervention.range} cases ; protections normales, une seule frappe d’arrivée.`);
  if(a.flying)lines.push('Vol : franchit un allié si la case d’arrivée est libre.');
  if(a.charge)lines.push(`Charge : +${a.charge.amount} ATQ après déplacement avant la frappe.`);
  if(a.pierce)lines.push('Perforation : ignore l’armure de la première cible, autres protections conservées.');
  if(a.rearShot)lines.push(`Tir arrière : ${a.rearShot.amount} dégâts à l’ennemi immédiatement derrière la première cible, même ligne ; protections normales.`);
  if(a.poison)lines.push(`Après une attaque sur une unité : Poison ${a.poison.amount} dégât par tour pendant ${a.poison.resolutions} tours ; une nouvelle application renouvelle la durée.`);
- if(a.trapper)lines.push(`Tous les ${a.trapper.period} tours : arme si possible la case libre éligible juste devant. Piège visible pendant ${a.trapper.resolutions} tours au plus ; ${a.trapper.damage} dégât après protections, déplacement et attaque bloqués pour le tour du déclenchement.`);
+ if(a.trapper)lines.push(`Tous les ${a.trapper.period} tours : arme si possible la case libre éligible juste devant. Piège visible pendant ${a.trapper.resolutions} tours au plus ; ${a.trapper.damage} dégât${a.trapper.damage>1?'s':''} brut${a.trapper.damage>1?'s':''} avant protections, déplacement et attaque bloqués pour le tour du déclenchement.`);
  return lines;
 }
 
@@ -5767,6 +5781,7 @@ const {recordTrialFact,recordTrialTurn}=__load("src/engine/trial-objectives.js")
 const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
 const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError}=__load("src/engine/unit-rules.js");
 const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
+const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration}=__load("src/engine/unit-effects.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 const {CARDS,FACTIONS}=__load("src/data.js");
 const {frontEnemy}=__load("src/engine/spell-targeting.js");
@@ -5986,7 +6001,7 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
 }
 
 function strike(b,u,target,atk,from,to,sameLine=true){
- const before=target.hp;hit(b,target,atk,u.side,unitHasPierce(u,silenced(b,u)));
+ const before=target.hp;if(atk>0)hit(b,target,atk,u.side,unitHasPierce(u,silenced(b,u)));
  const damage=Math.max(0,before-target.hp);
  if(sameLine&&(to-from)*(u.side==='p'?1:-1)>=2)recordTrialFact(b,u,'rangedDamage',damage);
 }
@@ -5996,7 +6011,7 @@ function resolveAttacks(b,sideFilter=null){
   const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0||(sideFilter&&u.side!==sideFilter))continue;
   const target=findTarget(b,lane,col,u);
   const charged=!silenced(b,u)&&unitChargeAmount(u)>0&&!!u.movedThisRound;
-  if(target)intents.push({u,lane,col,target,atk:u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0),ability:activeAbility(b,u),charged});
+  if(target)intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0)),ability:activeAbility(b,u),charged,suppressed:silenced(b,u)});
  }
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
@@ -6010,14 +6025,14 @@ function resolveAttacks(b,sideFilter=null){
     strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane);
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
     if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
-    if(ability==='poison'){guardIntercept.u.poison=1;guardIntercept.u.poisonTurns=Math.max(guardIntercept.u.poisonTurns,2);}
+    applyAttackEffects(u,guardIntercept.u,intent.suppressed);
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}}
   } else {
    strike(b,u,target.target,atk,intent.col,target.col);
    if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
-   if(ability==='poison'){target.target.poison=1;target.target.poisonTurns=Math.max(target.target.poisonTurns,2);}
+   applyAttackEffects(u,target.target,intent.suppressed);
    if(ability==='splash'){
     const extra=b.board[lane].find(v=>v&&v.side!==u.side&&v.uid!==target.target.uid&&v.hp>0);
     if(extra)hit(b,extra,2,u.side);
@@ -6029,6 +6044,7 @@ function resolveAttacks(b,sideFilter=null){
  // Le bonus de charge ne dure qu'un seul tour et doit survivre aux sauvegardes historiques.
  for(const row of b.board)for(const u of row)if(u&&(!sideFilter||u.side===sideFilter))u.movedThisRound=false;
  sweepDead(b);
+ resolveRegeneration(b,sideFilter,fx);
  resolveUnitSupport(b,sideFilter,fx);
  for(const row of b.board)for(const u of row)if(u&&u.stun>0&&(!sideFilter||u.side===sideFilter))u.stun--;
  checkOutcome(b);
@@ -6368,7 +6384,8 @@ const {CARDS}=__load("src/data.js");
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {silenced}=__load("src/engine/battle-control.js");
 const {recordCombatEvent}=__load("src/engine/combat-events.js");
-const barrierKeys=['healBarrier','riposteBarrier'];
+const {consumeAttackPenalty}=__load("src/engine/unit-effects.js");
+const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier'];
 function grantAbilityBarrier(u,key,parameters){
  if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
  const sources={...u.abilityBarriers};
@@ -6430,8 +6447,8 @@ function resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,att
  if(riposte?.frequency==='invocation')defender.riposteUsed=true;
  else defender.lastRiposteRound=b.round;
  recordCombatEvent(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
- const raw=defender.atk+attackBonus;
- const dealt=hit(b,attacker,raw,defender.side);
+ const raw=consumeAttackPenalty(defender,defender.atk+attackBonus);
+ const dealt=raw>0?hit(b,attacker,raw,defender.side):0;
  if(dealt>0)note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
  if(abilities?.riposteBarrier)grantAbilityBarrier(defender,'riposteBarrier',abilities.riposteBarrier);
  return true;
@@ -6462,7 +6479,7 @@ const activeAbility=(b,u)=>silenced(b,u)?'':u.ability;
 function silenceValue(u){
  const value={heal:6,inspire:5,splash:6,poison:5,lifesteal:5,pierce:3,haste:3,silence:6,portal:4,trapper:4}[u?.ability]||0;
  const future=versionUnitAbilities(u);
- return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0);
+ return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0);
 }
 function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 function silenceTarget(b,side,lane){
@@ -6534,10 +6551,10 @@ function trapPlan(b,side,lane,col){
  const target=columns.find(c=>Number.isInteger(c)&&c>=2&&c<lastCell(b)&&!b.board[lane][c]&&!traps.some(t=>t.lane===lane&&t.col===c));
  return target===undefined?null:{lane,col:target};
 }
-function placeTrap(b,side,plan,kind='rune',emit=()=>{},note=()=>{}){
+function placeTrap(b,side,plan,kind='rune',emit=()=>{},note=()=>{},parameters=null){
  if(!plan||!trapPlan(b,side,plan.lane,plan.col))return false;
  if(!b.traps)b.traps=[];
- const trap={owner:side,lane:plan.lane,col:plan.col,kind,damage:kind==='snare'?1:3,stun:kind==='snare'?1:0,expiresRound:b.round+2};
+ const trap={owner:side,lane:plan.lane,col:plan.col,kind,damage:parameters?.damage??(kind==='snare'?1:3),stun:parameters?.stun??(kind==='snare'?1:0),expiresRound:b.round+(parameters?.resolutions??3)-1};
  b.traps.push(trap);emit(b,{type:'trap-place',side,lane:trap.lane,col:trap.col});
  note(b,`Piège ${kind==='snare'?'sylvestre':'runique'} ${side==='p'?'allié':'adverse'} armé : ligne ${trap.lane+1}, case ${trap.col}.`);
  return true;
@@ -6586,7 +6603,7 @@ function prepareControlUnits(b,hooks,sideFilter=null){
   if(u.ability==='silence'){
    const target=silenceTarget(b,u.side,lane);
    if(target&&applySilence(b,target.u,1)){used=true;hooks.emit(b,{type:'silence',side:u.side,lane,col:target.col});hooks.note(b,`${CARDS[u.id].name} réduit ${CARDS[target.u.id].name} au silence pour ce tour.`);}
-  }else if(u.ability==='trapper')used=placeTrap(b,u.side,trapPlan(b,u.side,lane,col+direction(u.side)),'snare',hooks.emit,hooks.note);
+  }else if(u.ability==='trapper')used=placeTrap(b,u.side,trapPlan(b,u.side,lane,col+direction(u.side)),'snare',hooks.emit,hooks.note,versionUnitAbilities(u)?.trapper);
   else if(u.ability==='portal'){
    const plans=[];
    for(let toLane=0;toLane<laneCount(b);toLane++)if(!teleportDestinationError(b,u.side,lane,col,toLane)){
@@ -6595,7 +6612,7 @@ function prepareControlUnits(b,hooks,sideFilter=null){
    const best=plans.sort((a,z)=>z.gain-a.gain||a.toLane-z.toLane)[0];
    if(best?.gain>=2)used=teleportUnit(b,u.side,best,hooks.emit,hooks.note,hooks.enter);
   }
-  if(used)u.controlReadyRound=b.round+3;
+  if(used)u.controlReadyRound=b.round+(u.ability==='trapper'?versionUnitAbilities(u)?.trapper?.period||3:3);
  }
 }
 
@@ -6622,6 +6639,47 @@ function recordCombatEvent(b,event) {
 }
 
 Object.assign(__exports,{captureCombatFrame,recordCombatEvent});
+
+},
+"src/engine/unit-effects.js":function(__exports,__load){
+// États temporaires communs aux unités ; jamais de modification permanente d'ATQ.
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
+function attackAfterPenalty(u,raw){return u.attackPenalty?Math.max(0,raw-u.attackPenalty.amount):raw;}
+function consumeAttackPenalty(u,raw){
+ const result=attackAfterPenalty(u,raw),p=u.attackPenalty;
+ if(p){if(p.remaining<=1)delete u.attackPenalty;else u.attackPenalty={...p,remaining:p.remaining-1};}
+ return result;
+}
+function applyAttackEffects(source,target,suppressed=false){
+ if(suppressed||!target||target.side===source.side)return;
+ const a=versionUnitAbilities(source);
+ if(a?.poison&&source.ability==='poison'){
+  target.poison=a.poison.amount;target.poisonTurns=Math.max(target.poisonTurns||0,a.poison.resolutions);
+ }
+ if(a?.harass&&target.hp>0)target.attackPenalty={amount:a.harass.amount,remaining:a.harass.attacks};
+}
+function grantRegeneration(b,target,parameters){
+ target.regeneration={amount:parameters.amount,remaining:parameters.resolutions,readyRound:b.round+1};
+}
+// Une fois au prochain tour de son camp, avant les nouveaux soins/applications.
+function resolveRegeneration(b,sideFilter,emit){
+ for(let lane=0;lane<b.board.length;lane++)for(let col=1;col<b.board[lane].length-1;col++){
+  const u=b.board[lane][col],p=u?.regeneration;
+  if(!p||u.hp<=0||(sideFilter&&u.side!==sideFilter)||b.round<p.readyRound)continue;
+  if(p.remaining<=1)delete u.regeneration;
+  else u.regeneration={...p,remaining:p.remaining-1,readyRound:b.round+1};
+  const before=u.hp;u.hp=Math.min(u.maxhp,u.hp+p.amount);
+  if(u.hp>before)emit(b,{type:'heal',side:u.side,lane,col,regeneration:true});
+ }
+}
+const integer=(n,max)=>Number.isSafeInteger(n)&&n>0&&n<=max;
+function validUnitEffects(u){
+ const p=u.attackPenalty,r=u.regeneration;
+ return (p===undefined||p&&integer(p.amount,100)&&integer(p.remaining,10))&&
+  (r===undefined||r&&integer(r.amount,100)&&integer(r.remaining,10)&&integer(r.readyRound,100));
+}
+
+Object.assign(__exports,{attackAfterPenalty,consumeAttackPenalty,applyAttackEffects,grantRegeneration,resolveRegeneration,validUnitEffects});
 
 },
 "src/engine/tempo.js":function(__exports,__load){
@@ -6799,7 +6857,8 @@ const {CARDS}=__load("src/data.js");
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {silenced}=__load("src/engine/battle-control.js");
 const {lastCell}=__load("src/engine/board.js");
-const {grantHealBarrier}=__load("src/engine/battle-defense.js");
+const {grantHealBarrier,grantAbilityBarrier}=__load("src/engine/battle-defense.js");
+const {grantRegeneration}=__load("src/engine/unit-effects.js");
 function allies(b,u,lane,parameters){
  const found=[];
  for(let l=0;l<b.board.length;l++){
@@ -6812,13 +6871,17 @@ function allies(b,u,lane,parameters){
  return found;
 }
 function inspireTargets(b,u,lane,p){return allies(b,u,lane,p).slice(0,p.targets);}
+const injuryOrder=(x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid;
 function strengthen(target,p){const before=target.atk;target.atk=Math.max(before,Math.min(p.cap,before+p.amount));return target.atk-before;}
 
 function resolveUnitArrival(b,u,lane,col,hooks){
  const a=versionUnitAbilities(u);
- if(!a||u.arrivalResolved||!(a.ward||a.arrivalInspire||a.intervention))return;
+ if(!a||u.arrivalResolved||!(a.ward||a.arrivalInspire||a.intervention||a.arrivalBarrier))return;
  u.arrivalResolved=true;
  if(a.ward)b.heroes[u.side].shield=Math.max(b.heroes[u.side].shield,Math.min(a.ward.cap,b.heroes[u.side].shield+a.ward.amount));
+ if(a.arrivalBarrier)for(const t of allies(b,u,lane,a.arrivalBarrier).sort(injuryOrder).slice(0,a.arrivalBarrier.targets)){
+  if(grantAbilityBarrier(t.u,'arrivalBarrier',a.arrivalBarrier))hooks.emit(b,{type:'state',side:u.side,lane:t.lane,col:t.col});
+ }
  if(a.arrivalInspire)for(const target of inspireTargets(b,u,lane,a.arrivalInspire)){
   if(strengthen(target.u,a.arrivalInspire))hooks.emit(b,{type:'state',side:u.side,lane:target.lane,col:target.col});
  }
@@ -6840,9 +6903,9 @@ function resolveUnitSupport(b,sideFilter,emit){
   if(silenced(b,u))continue;
   if(a.heal&&u.lastHealRound!==b.round){
    const p=a.heal,targets=allies(b,u,lane,p).filter(t=>t.u.hp<t.u.maxhp)
-    .sort((x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid).slice(0,p.targets);
+    .sort(injuryOrder).slice(0,p.targets);
    if(targets.length)u.lastHealRound=b.round;
-   for(const t of targets){const before=t.u.hp;t.u.hp=Math.min(t.u.maxhp,before+p.amount);grantHealBarrier(b,u,t.u,t.u.hp-before);emit(b,{type:'heal',side:u.side,lane:t.lane,col:t.col});}
+   for(const t of targets){const before=t.u.hp;t.u.hp=Math.min(t.u.maxhp,before+p.amount);grantHealBarrier(b,u,t.u,t.u.hp-before);if(a.regeneration&&t.u.hp>before)grantRegeneration(b,t.u,a.regeneration);emit(b,{type:'heal',side:u.side,lane:t.lane,col:t.col});}
   }
   if(a.inspire&&b.round%a.inspire.period===0&&u.lastInspireRound!==b.round){
    const targets=inspireTargets(b,u,lane,a.inspire);if(targets.length)u.lastInspireRound=b.round;
@@ -6860,6 +6923,7 @@ Object.assign(__exports,{resolveUnitArrival,resolveUnitSupport});
 const {CARDS,GUARD_IDS}=__load("src/data.js");
 const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount}=__load("src/engine/unit-rules.js");
 const {unitStats}=__load("src/engine/unit-stats.js");
+const {attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
 const {silenceTarget,silenceValue,teleportPlan,teleportGain,trapPlan,activeAbility,silenced}=__load("src/engine/battle-control.js");
 const {accelerationTarget}=__load("src/engine/tempo.js");
@@ -6887,7 +6951,7 @@ function inspectEnemyLane(b,lane){
  // Plus un ennemi est proche de la couronne ennemie (droite), plus il faut l'arrêter.
  const urgency=threats.reduce((sum,{u,col})=>{
   const steps=Math.max(1,crownColumn(b,'e')-col);
-  return sum+(steps<=2?7:steps===3?3:0)+Math.max(1,u.atk)*(steps===1?3:steps===2?1.65:steps===3?.6:.15)
+  return sum+(steps<=2?7:steps===3?3:0)+attackAfterPenalty(u,Math.max(1,u.atk))*(steps===1?3:steps===2?1.65:steps===3?.6:.15)
    +((unitChargeAmount(u)>0)&&steps<=3?2:0)+(unitAttackRange(u)>1&&steps<=3?2:0)+1/steps;
  },0);
  const frontline=threats.sort((a,z)=>z.col-a.col)[0]||null;
@@ -6904,7 +6968,7 @@ function crownRisk(b,laneInfo){
   if(findCrownGuardian(b,laneInfo.lane,'e',col))return sum;
   const range=unitAttackRange(u);
   if(laneInfo.friends.some(x=>x.col>col&&x.col-col<=range))return sum;
-  return sum+Math.max(1,u.atk)+((unitChargeAmount(u)>0)&&col<lastCell(b)&&!silenced(b,u)?unitChargeAmount(u):0);
+  return sum+attackAfterPenalty(u,Math.max(1,u.atk))+((unitChargeAmount(u)>0)&&col<lastCell(b)&&!silenced(b,u)?unitChargeAmount(u):0);
  },0);
 }
 
@@ -8502,6 +8566,7 @@ Object.assign(__exports,{renderGuidePage});
 "src/ui/battle-view.js":function(__exports,__load){
 const {trialBattleObjective}=__load("src/ui/evolution-trials.js");
 const {cardPresentation}=__load("src/ui/card-presentation.js");
+const {attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {spellSelection,spellCardState,spellTargetingUI}=__load("src/ui/spell-targeting.js");
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 const { CARDS, FACTIONS, CLASSES }=__load("src/data.js");
@@ -8527,7 +8592,7 @@ function createBattleView(getState, { btn, cardUI, esc }) {
     const concord = u ? formationBonus(battle, lane, u) : 0;
     const rallied = u && u.rallyUntil >= battle.round ? 1 : 0;
     const targeting=selection?spellCardState(selection,u.uid):null;
-    const attack = u ? u.atk + concord + rallied : 0;
+    const attack = u ? attackAfterPenalty(u,u.atk + concord + rallied) : 0;
     const card=cardPresentation(u,{unit:u,stats:{atk:attack,hp:u.hp,maxhp:u.maxhp}}).card;
     return `<div class="unit-on-board ${u.side === 'e' ? 'enemy' : 'ally'} ${silent ? 'silenced' : ''}" data-actor-id="${u.uid}" data-facing="${u.side === 'p' ? 'right' : 'left'}" data-animation-state="idle" data-owner="${u.side}" data-rarity="${esc(card.rarity)}" style="--tone:${FACTIONS[card.faction].tone}" data-unit-summary="${u.side === 'p' ? 'Votre unité' : 'Unité adverse'} · ${esc(FACTIONS[card.faction].name)} · ${esc(card.rarity)} · ${esc(card.name)} · ${esc(card.description)} · Attaque ${attack}${concord ? ' (dont +1 Concorde)' : ''}${rallied ? ' (dont +1 Ralliement)' : ''} · PV ${u.hp}/${u.maxhp}${u.barrier ? ' · Barrière ' + u.barrier : ''}${silent ? ' · Silence : ' + remaining + ' résolution(s)' : ''}">${silent ? `<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>` : ''}${boardCard(u, attack, selection?{...targeting,lane}:null,battle.round,!!concord)}</div>`;
   }
@@ -8732,6 +8797,7 @@ Object.assign(__exports,{unitEffectChanges,frameChanges,buildCombatSteps});
 "src/ui/card-arena.js":function(__exports,__load){
 const {cardPresentation}=__load("src/ui/card-presentation.js");
 const {unitStatusBadges}=__load("src/ui/unit-status.js");
+const {attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {esc}=__load("src/ui/markup.js");
 const {generatedCardFace}=__load("src/ui/generated-card.js");
 // Présentation des vraies unités sur leurs cases. Ni règles, ni partie préfabriquée.
@@ -8742,7 +8808,7 @@ function campSeal(side){
  const enemy=side==='e';
  return `<svg class="board-camp-seal" data-camp="${enemy?'e':'p'}" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path class="camp-seal-body" d="${enemy?'M6 1 11 6 6 11 1 6Z':'M6 1a5 5 0 1 0 0 10a5 5 0 1 0 0-10Z'}"/></svg>`;
 }
-function boardCard(u,attack=u.atk,targeting=null,round=0,concordeActive=false){
+function boardCard(u,attack=attackAfterPenalty(u,u.atk),targeting=null,round=0,concordeActive=false){
  const c=cardPresentation(u,{unit:u,stats:{atk:attack,hp:u.hp,maxhp:u.maxhp}}).card,v=visualFor(c,{cards:true});
  return `<button type="button" class="board-card ${targeting?(targeting.valid?'spell-eligible':'spell-forbidden'):''} ${u.barrier>0?'protected-card':''} ${targeting?.affected?'spell-affected':''} ${cardTemplateFor(c)?'generated-board':''}" data-unit-id="${esc(u.uid)}" data-rarity="${esc(c.rarity)}" ${targeting?`data-action="${targeting.valid?'spell-target':'spell-invalid'}" data-lane="${targeting.lane}" aria-disabled="${!targeting.valid}"`: ''} aria-controls="hand-card-inspection" aria-expanded="false" data-card-id="${u.id}" data-side="${u.side}" aria-label="${u.side==='e'?'Unité adverse':'Votre unité'}, ${esc(c.name)} : attaque ${attack}, vie ${u.hp} sur ${u.maxhp}${concordeActive?', Concorde active : +1 ATQ incluse':''}${targeting?(targeting.valid?', Cible autorisée':', Cible interdite'):''}">
  ${cardTemplateFor(c)?generatedCardFace(c,{stats:{atk:attack,hp:u.hp},delay:0,kind:'deployed',board:true,concordeActive,esc}):` <img class="board-card-art" src="${artSrc(v.art)}" alt="" draggable="false"><span class="board-card-order">${esc(FACTIONS[c.faction].short)}</span>
@@ -8758,7 +8824,8 @@ Object.assign(__exports,{campSeal,boardCard});
 // Indications persistantes des états réels ; aucune durée inventée.
 function unitStatusBadges(u,round){
  const labels=[u.barrier>0?`⬡ ${u.barrier} protection`:'',u.stun>0?`❄ ${u.stun} immobilisation`:'',
-  u.poisonTurns>0?`☠ ${u.poisonTurns} poison`:'',u.rallyUntil>=round?`⚑ ${u.rallyUntil-round+1} ralliement`:''];
+  u.poisonTurns>0?`☠ ${u.poisonTurns} poison`:'',u.rallyUntil>=round?`⚑ ${u.rallyUntil-round+1} ralliement`:'',
+  u.attackPenalty?`Harcèlement −${u.attackPenalty.amount}`:'',u.regeneration?`Régénération ${u.regeneration.amount}`:''];
  return labels.some(Boolean)?`<span class="combat-statuses" aria-label="Effets actifs">${labels.filter(Boolean).map(s=>`<span>${s}</span>`).join('')}</span>`:'';
 }
 
@@ -9337,6 +9404,7 @@ const {CARDS,CLASSES}=__load("src/data.js");
 const {playableCardReference,cardReference,evolutionProfileError}=__load("src/cards/references.js");
 const {validTrialChallenge}=__load("src/engine/trial-objectives.js");
 const {CARD_RULESET}=__load("src/cards/definitions.js");
+const {validUnitEffects}=__load("src/engine/unit-effects.js");
 const SAVE_KEY='couronnes_arcanes_v1';
 const BATTLE_KEY='couronnes_arcanes_bataille_v1';
 const hasCard=id=>typeof id==='string'&&Object.prototype.hasOwnProperty.call(CARDS,id);
@@ -9347,7 +9415,7 @@ const validHero=h=>h&&typeof h.name==='string'&&nonNegative(h.hp)&&Number.isFini
  nonNegative(h.shield)&&validPile(h.deck)&&validPile(h.discard)&&validHand(h.hand)&&Number.isInteger(h.cardsPlayed)&&h.cardsPlayed>=0&&h.cardsPlayed<=2;
 const validUnit=u=>u===null||(u&&typeof u==='object'&&hasCard(u.id)&&CARDS[u.id].type==='unité'&&
  ['p','e'].includes(u.side)&&Number.isInteger(u.uid)&&u.uid>=0&&nonNegative(u.hp)&&Number.isFinite(u.maxhp)&&u.maxhp>0&&
- Number.isFinite(u.atk)&&nonNegative(u.armor||0)&&nonNegative(u.stun||0)&&nonNegative(u.poison||0)&&nonNegative(u.poisonTurns||0)&&!!cardReference(u));
+ Number.isFinite(u.atk)&&nonNegative(u.armor||0)&&nonNegative(u.stun||0)&&nonNegative(u.poison||0)&&nonNegative(u.poisonTurns||0)&&!!cardReference(u)&&validUnitEffects(u));
 function validBattleSnapshot(b){
  if(!b||!['active','victory','defeat'].includes(b.status)||b.rewardGiven||
   !['player','enemy','resolving','finished'].includes(b.phase)||!Number.isInteger(b.round)||b.round<1||

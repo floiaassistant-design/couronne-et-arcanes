@@ -3,8 +3,9 @@ import {CARDS} from '../data.js';
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {silenced} from './battle-control.js';
 import {recordCombatEvent} from './combat-events.js';
+import {consumeAttackPenalty} from './unit-effects.js';
 
-const barrierKeys=['healBarrier','riposteBarrier'];
+const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier'];
 export function grantAbilityBarrier(u,key,parameters){
  if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
  const sources={...u.abilityBarriers};
@@ -66,8 +67,8 @@ export function resolveRetaliation(b,defender,attacker,lane,defenderCol,attacker
  if(riposte?.frequency==='invocation')defender.riposteUsed=true;
  else defender.lastRiposteRound=b.round;
  recordCombatEvent(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
- const raw=defender.atk+attackBonus;
- const dealt=hit(b,attacker,raw,defender.side);
+ const raw=consumeAttackPenalty(defender,defender.atk+attackBonus);
+ const dealt=raw>0?hit(b,attacker,raw,defender.side):0;
  if(dealt>0)note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
  if(abilities?.riposteBarrier)grantAbilityBarrier(defender,'riposteBarrier',abilities.riposteBarrier);
  return true;

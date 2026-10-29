@@ -1,5 +1,34 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Sylve Légendaire — proposition du 29 octobre 2026
+
+PR 62 et 63 fusionnées sur accord, main `33cad6673c9e3cb468b222de39ad821a936dc098`.
+La branche `feat/evolutions-legendaires-sylve` propose les onze Légendaires :
+26 évolutions Sylve obtenables sur cette branche, 22 Divines/Éveillées encore
+sans définition. Trois Épiques libres identiques après mission 06 ; aucun
+nouveau paquet, défi, cadeau, reçu ou migration. Six cases de Collection conservées.
+Source Notion relue à l'édition `2026-10-27T06:13:46.581Z` ; aucune écriture.
+`engine/unit-effects.js` porte Harcèlement, régénération et application des
+poisons paramétrés. ATQ de base jamais modifiée : le malus est consommé par
+l'intention d'attaque suivante ou une Riposte valide, bonus inclus, minimum 0.
+Les sorts ne le consomment pas ; les intentions simultanées déjà préparées
+ne changent pas rétroactivement. Silence bloque les nouvelles applications.
+Régénération : après soin effectif, 1 PV au prochain tour de son camp, avant
+les nouveaux soins ; effet non cumulable, rafraîchi, sans besoin du soigneur vivant.
+Les états déjà appliqués persistent malgré Silence ; états facultatifs validés
+et conservés à la reprise, aucun changement de clé ni révision des natifs.
+Luciole : barrière 2 à un autre allié de sa ligne à l'arrivée, priorité à la
+blessure proportionnelle, plafond par effet via `grantAbilityBarrier`.
+Pièges lisent leurs paramètres de dégâts/cadence/durée ; natifs inchangés.
+Fiches, plateau et IA lisent le même malus public, aucune règle dans les vues.
+69 modules/274 dépendances sans cycle ; app 382 lignes, pages 270, 76 images.
+Lire [le contrat](docs/SYLVE_LEGENDAIRES.md). Les quatre nouveaux parcours réutilisent
+les parties d'épreuves existantes, sans nouveau job ni retrait d'assertion.
+515 tests Node, parité 120, 26 autres suites navigateur et quatre parties
+d’épreuves réussis localement ; consulter les résultats CI de la tête exacte.
+Cette nouvelle PR attend son accord spécifique de fusion/publication.
+Les statuts de PR 62/63 ouvertes dans les bilans suivants sont historiques.
+
 ## Première tranche Sylve — proposition du 28 octobre 2026
 
 `feat/evolutions-sylve-rare-epique` dépend explicitement de la PR 62

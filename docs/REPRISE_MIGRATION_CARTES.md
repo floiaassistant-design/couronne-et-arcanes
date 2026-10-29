@@ -1,23 +1,19 @@
-# Reprise des migrations de cartes — 28 octobre 2026
+# Reprise des migrations de cartes — 29 octobre 2026
 
 Source de conception : [tableau maître unique](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
 édition relue `2026-10-27T06:13:46.581Z`. Les compteurs ci-dessous décrivent
 les cases de conception complètes, pas leur livraison. Aucun tableau parallèle
 de pouvoirs ni validation de nouvelles décisions.
 
-GitHub reste la source du jeu : main `63ff7463b89d4f2ff410063a47ba2473087884bc`
-intègre les 21 premières évolutions Aube. La PR 62 `feat/ascensions-aube`
-propose les vingt dernières et deux défis communs ; ouverte, en brouillon,
-tests et assemblage réussis à la tête `fc10d0de185b05d3a9e266d2b3dff306db2564b0`.
-La branche `feat/evolutions-sylve-rare-epique` la cible explicitement et propose
-les quinze premières évolutions Sylve. Chaque fusion exige son accord spécifique ;
-après intégration de la 62, recibler la PR Sylve sur main et relire ses contrôles.
-La publication est distincte.
+GitHub reste la source du jeu : main `33cad6673c9e3cb468b222de39ad821a936dc098`
+intègre les PR 62/63 sur accord : les 41 évolutions Aube et les 15 Sylve Rare/Épique.
+La branche `feat/evolutions-legendaires-sylve` propose onze Légendaires Sylve
+supplémentaires. Chaque nouvelle PR attend son accord spécifique ; publication distincte.
 
 | Ordre | Unités natives | Évolutions conçues complètement validées | Situation d'implémentation |
 | --- | ---: | ---: | --- |
-| Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables dans la proposition d'ascensions |
-| Sylve | 11 | 48 | 15 Rare/Épique proposées au moteur et à l'obtention ; 33 supérieures à intégrer |
+| Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
+| Sylve | 11 | 48 | 15 Rare/Épique intégrées ; 11 Légendaires proposées, 22 supérieures à intégrer |
 | Ombre | 11 | 43 | Natifs seuls ; transcription et mécanique des évolutions à préparer |
 | Forge | 10 | 0 sur 39 cases futures | Conception incomplète ; règles communes de Garde déjà validées, sans compléter les cases à leur place |
 | Éther | 11 | 0 sur 39 cases futures | Conception incomplète ; même distinction pour les règles communes de Garde |
@@ -26,7 +22,7 @@ Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affich�
 ou un pouvoir validé ne crée ni exemplaire ni définition jouable. Les cellules
 « À définir » restent ouvertes ; leur complétion exige une décision du propriétaire.
 
-## Lot en cours : Sylve Rare/Épique
+## Lot intégré : Sylve Rare/Épique
 
 Les quinze versions de [la première tranche](SYLVE_RARE_EPIQUE.md) réutilisent
 les pouvoirs natifs déjà vérifiés ; Luciole Épique remplace son bouclier d'arrivée
@@ -34,7 +30,13 @@ par 5, plafond 20. Six Rares et neuf Épiques par fusion, après missions 01/03.
 Un paquet Sylve distinct réutilise le circuit d'achat, à 190 or et taux 60/35/5.
 Pas de nouvelle épreuve, copie gratuite ou définition des rangs supérieurs.
 
-## Prochain lot : les 33 évolutions Sylve supérieures
+## Lot en cours : les onze Légendaires Sylve
+
+[Contrat](SYLVE_LEGENDAIRES.md) : tous les personnages Sylve atteignent Légendaire,
+par fusion après mission 06. Leurs nouveaux états utilisent le moteur commun,
+sans élargir les paquets Rare/Épique ni inventer des épreuves individuelles.
+
+## Prochain lot : les 22 Divines/Éveillées Sylve
 
 1. Relire les 48 cases complètes et leurs sources avant transcription, garder
    les onze ID natifs et les six emplacements par personnage. Décrire les totaux

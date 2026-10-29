@@ -1,5 +1,6 @@
 import {trialBattleObjective} from './evolution-trials.js';
 import {cardPresentation} from './card-presentation.js';
+import {attackAfterPenalty} from '../engine/unit-effects.js';
 import {spellSelection,spellCardState,spellTargetingUI} from './spell-targeting.js';
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 import { CARDS, FACTIONS, CLASSES } from '../data.js';
@@ -27,7 +28,7 @@ export function createBattleView(getState, { btn, cardUI, esc }) {
     const concord = u ? formationBonus(battle, lane, u) : 0;
     const rallied = u && u.rallyUntil >= battle.round ? 1 : 0;
     const targeting=selection?spellCardState(selection,u.uid):null;
-    const attack = u ? u.atk + concord + rallied : 0;
+    const attack = u ? attackAfterPenalty(u,u.atk + concord + rallied) : 0;
     const card=cardPresentation(u,{unit:u,stats:{atk:attack,hp:u.hp,maxhp:u.maxhp}}).card;
     return `<div class="unit-on-board ${u.side === 'e' ? 'enemy' : 'ally'} ${silent ? 'silenced' : ''}" data-actor-id="${u.uid}" data-facing="${u.side === 'p' ? 'right' : 'left'}" data-animation-state="idle" data-owner="${u.side}" data-rarity="${esc(card.rarity)}" style="--tone:${FACTIONS[card.faction].tone}" data-unit-summary="${u.side === 'p' ? 'Votre unité' : 'Unité adverse'} · ${esc(FACTIONS[card.faction].name)} · ${esc(card.rarity)} · ${esc(card.name)} · ${esc(card.description)} · Attaque ${attack}${concord ? ' (dont +1 Concorde)' : ''}${rallied ? ' (dont +1 Ralliement)' : ''} · PV ${u.hp}/${u.maxhp}${u.barrier ? ' · Barrière ' + u.barrier : ''}${silent ? ' · Silence : ' + remaining + ' résolution(s)' : ''}">${silent ? `<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>` : ''}${boardCard(u, attack, selection?{...targeting,lane}:null,battle.round,!!concord)}</div>`;
   }

@@ -11,6 +11,7 @@ import {battleUnitDefinition,unitAttackRange,unitMovementSteps} from '../engine/
 import {unitStatContext,unitStats,versionUnitStats} from '../engine/unit-stats.js';
 import {formationBonus} from '../engine.js';
 import {silenced} from '../engine/battle-control.js';
+import {attackAfterPenalty} from '../engine/unit-effects.js';
 import {generatedCardFace} from './generated-card.js';
 import {concordeDetails} from './concorde.js';
 import {visualFor,artSrc,cardTemplateFor} from '../visuals.js';
@@ -44,7 +45,7 @@ export function cardPresentation(reference,{context={},profile=null,side='p',uni
  const pack=future?evolutionPackFor(id,selected):null;
  const availability=!known?missing:future?evolutionAvailability(profile,{id,rarity:selected},{trial,fusion,pack}):'Version native';
  if(stats===undefined)stats=native.type==='sort'||!known?null:unit?
-  {atk:unit.atk,hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
+  {atk:attackAfterPenalty(unit,unit.atk),hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);
  let effective=definition;
  if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor??definition.abilities.armor.amount}}:{})}};
@@ -68,7 +69,9 @@ export function boardInspectionData(battle,uid){
   if(u.riposteUsed)statuses.push('Riposte par invocation consommée');
   if(u.lastRiposteRound===battle.round)statuses.push('Riposte utilisée ce tour');
   if(u.lastStandUsed)statuses.push('Dernier Rempart consommé');
-  const stats={atk:u.atk+concord+rallied,hp:u.hp,maxhp:u.maxhp,bonuses:[]};
+  if(u.attackPenalty)statuses.push(`Harcèlement : −${u.attackPenalty.amount} ATQ, ${u.attackPenalty.remaining} attaque restante`);
+  if(u.regeneration)statuses.push(`Régénération : ${u.regeneration.amount} PV au prochain tour, ${u.regeneration.remaining} effet restant`);
+  const stats={atk:attackAfterPenalty(u,u.atk+concord+rallied),hp:u.hp,maxhp:u.maxhp,bonuses:[]};
   const presentation=cardPresentation(u,{context:battle,side:u.side,unit:u,stats});
   return {...presentation,entry:{wait:0},presentation,board:{side:u.side,lane,col,statuses,concordeActive:!!concord}};
  }

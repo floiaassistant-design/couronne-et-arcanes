@@ -13,6 +13,9 @@ export function unitAbilitySummary(definition){
  if(a.inspire)lines.push(`Inspiration : +${a.inspire.amount} ATQ à ${a.inspire.targets} allié(s) / ${a.inspire.period} tours, ${scope(a.inspire)}`);
  if(a.arrivalInspire)lines.push(`Commandement : +${a.arrivalInspire.amount} ATQ à l'arrivée`);
  if(a.ward)lines.push(`Protection : +${a.ward.amount}`);
+ if(a.arrivalBarrier)lines.push(`Barrière alliée à l’arrivée : ${a.arrivalBarrier.amount}`);
+ if(a.regeneration)lines.push(`Régénération : ${a.regeneration.amount} PV, ${a.regeneration.resolutions} tour(s)`);
+ if(a.harass)lines.push(`Harcèlement : −${a.harass.amount} ATQ, ${a.harass.attacks} attaque(s)`);
  if(a.intervention)lines.push(`Intervention : ${a.intervention.amount} dégâts, portée ${a.intervention.range}`);
  if(a.flying)lines.push('Vol');
  if(a.haste)lines.push(`Célérité ${definition.geometry.steps}`);
@@ -34,6 +37,7 @@ export function unitCardText(d){
  if(a.guard)parts.push(a.guard.scope==='all-lines'?'Garde toutes lignes':a.guard.scope==='line'?'Garde divine':'Garde');
  if(a.heal)parts.push(`Soin ${a.heal.amount}${a.heal.targets>1?' ×'+a.heal.targets:''}${a.heal.scope==='all-lines'?' toutes lignes':''}`);
  if(a.healBarrier)parts.push(`Barrière +${a.healBarrier.amount}`);
+ if(a.regeneration)parts.push(`Régénération ${a.regeneration.amount}`);
  if(a.inspire)parts.push(`Inspiration +${a.inspire.amount} / ${a.inspire.period} tours`);
  if(a.haste)parts.push(`Célérité ${d.geometry.steps}`);
  if(a.charge)parts.push(`Charge +${a.charge.amount}`);
@@ -42,6 +46,8 @@ export function unitCardText(d){
  if(a.riposteBarrier)parts.push(`Barrière ${a.riposteBarrier.amount}`);
  if(a.riposte)parts.push('Riposte'+(a.riposte.damageMode==='effective-attack'?' ATQ':' '+a.riposte.amount));
  if(a.ward)parts.push(`Protection +${a.ward.amount}`);
+ if(a.arrivalBarrier)parts.push(`Barrière alliée ${a.arrivalBarrier.amount}`);
+ if(a.harass)parts.push(`Harcèlement −${a.harass.amount} ATQ`);
  if(a.poison)parts.push(`Poison ${a.poison.amount} · ${a.poison.resolutions} tours`);
  if(a.trapper)parts.push(`Piège ${a.trapper.damage} / ${a.trapper.period} tours`);
  if(a.flying)parts.push('Vol');
@@ -59,15 +65,18 @@ export function unitAbilityDetails(d){
  if(a.riposteBarrier)lines.push(`Après une Riposte autorisée : barrière personnelle +${a.riposteBarrier.amount}, plafond ${a.riposteBarrier.cap} pour cet effet.`);
  if(a.heal)lines.push(`Après les attaques : soigne ${a.heal.amount} PV à ${a.heal.targets>1?'jusqu’à '+a.heal.targets+' alliés blessés distincts, priorité aux plus blessés proportionnellement':'l’allié le plus blessé proportionnellement'} sur ${scope(a.heal)}, elle-même incluse.`);
  if(a.healBarrier)lines.push(`Après un soin effectif : barrière +${a.healBarrier.amount} à la cible, plafond ${a.healBarrier.cap} pour cet effet.`);
+ if(a.regeneration)lines.push(`Après un soin effectif : Régénération ${a.regeneration.amount} PV à la même cible à la fin de son prochain tour de combat, si elle vit et reste blessée. Sans cumul ; une nouvelle application rafraîchit l’effet.`);
  if(a.inspire)lines.push(`Tous les ${a.inspire.period} tours : +${a.inspire.amount} ATQ à ${a.inspire.targets} autre${a.inspire.targets>1?'s':''} allié${a.inspire.targets>1?'s':''} de ${scope(a.inspire)}, ATQ plafonnée à ${a.inspire.cap}.`);
  if(a.arrivalInspire)lines.push(`À l’arrivée : +${a.arrivalInspire.amount} ATQ au premier autre allié de sa ligne, maximum ${a.arrivalInspire.cap}.`);
  if(a.ward)lines.push(`À l’arrivée : +${a.ward.amount} bouclier à sa couronne, plafond ${a.ward.cap}.`);
+ if(a.arrivalBarrier)lines.push(`À l’arrivée : barrière ${a.arrivalBarrier.amount} à un autre allié de sa ligne, priorité au plus blessé proportionnellement. Plafond ${a.arrivalBarrier.cap} pour cet effet, sans cumul ; aucune autre cible ni effet sans allié.`);
+ if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : Harcèlement −${a.harass.amount} ATQ sur sa prochaine attaque d’unité, Riposte comprise ; minimum 0, aucun effet sur les sorts. Les applications renouvellent le malus sans cumul.`);
  if(a.intervention)lines.push(`À l’arrivée : ${a.intervention.amount} dégâts au premier ennemi devant, même ligne, jusqu’à ${a.intervention.range} cases ; protections normales, une seule frappe d’arrivée.`);
  if(a.flying)lines.push('Vol : franchit un allié si la case d’arrivée est libre.');
  if(a.charge)lines.push(`Charge : +${a.charge.amount} ATQ après déplacement avant la frappe.`);
  if(a.pierce)lines.push('Perforation : ignore l’armure de la première cible, autres protections conservées.');
  if(a.rearShot)lines.push(`Tir arrière : ${a.rearShot.amount} dégâts à l’ennemi immédiatement derrière la première cible, même ligne ; protections normales.`);
  if(a.poison)lines.push(`Après une attaque sur une unité : Poison ${a.poison.amount} dégât par tour pendant ${a.poison.resolutions} tours ; une nouvelle application renouvelle la durée.`);
- if(a.trapper)lines.push(`Tous les ${a.trapper.period} tours : arme si possible la case libre éligible juste devant. Piège visible pendant ${a.trapper.resolutions} tours au plus ; ${a.trapper.damage} dégât après protections, déplacement et attaque bloqués pour le tour du déclenchement.`);
+ if(a.trapper)lines.push(`Tous les ${a.trapper.period} tours : arme si possible la case libre éligible juste devant. Piège visible pendant ${a.trapper.resolutions} tours au plus ; ${a.trapper.damage} dégât${a.trapper.damage>1?'s':''} brut${a.trapper.damage>1?'s':''} avant protections, déplacement et attaque bloqués pour le tour du déclenchement.`);
  return lines;
 }

@@ -1,3 +1,23 @@
+## Sylve Légendaire — 29 octobre 2026
+
+Le registre porte onze patches supplémentaires, sans modifier les natifs.
+`engine/unit-effects.js` résout les malus d'attaque, leur consommation,
+les applications de poison et la régénération différée ; il valide ces états
+facultatifs pour les sauvegardes. Aucun DOM, stockage ou seconde simulation.
+`battle.js` consomme le malus lors de la préparation des intentions, puis appelle
+les effets de frappe et les anciens effets différés avant les nouveaux soutiens.
+`battle-defense.js` partage la même consommation pour une Riposte valide et
+étend son plafond de barrière par effet à l'arrivée de Luciole. Aucun double hit.
+`unit-support.js` sélectionne l'allié d'arrivée et pose une régénération seulement
+après soin effectif. `battle-control.js` lit les paramètres du piège au lieu de
+figer son dégât ; les valeurs des pièges natifs et sorts restent identiques.
+Les états sont remplacés, sans mutation des objets partagés avec les événements.
+IA, plateau et fiche emploient `attackAfterPenalty` pour lire le malus public.
+69 modules/274 dépendances sans cycle ; app 382 lignes, pages 270, combat 399.
+Aucune nouvelle bibliothèque, feuille CSS, image, clé de sauvegarde ou variante
+de moteur. 67 recettes ; les trois paquets gardent exactement leurs pools.
+[Contrat et limites](SYLVE_LEGENDAIRES.md). Les sections suivantes sont historiques.
+
 ## Sylve Rare/Épique — 28 octobre 2026
 
 `cards/sylve.js` porte les quinze patches de statistiques/capacités avec leur

@@ -16,7 +16,7 @@ import {saveProfile,loadProfile,validateImportedProfile,storeBattle,restoreBattl
 import {cardPresentation} from '../src/ui/card-presentation.js';
 
 // Totaux indépendants des patches, tableau maître relu le 28/10/2026.
-const totals={ranger:[[2,4,1],[2,5,1],[3,5,1]],wolf:[[3,3,1],[3,4,1],[4,4,1]],treant:[[3,10,2],[3,12,2]],dryad:[[1,5,2],[1,7,2]],stag:[[5,6,3]],thorn:[[2,5,1],[2,6,1],[3,6,1]],pixie:[[2,3,1],[2,4,1],[2,4,1]],bear:[[4,9,2],[4,11,2]],archdruid:[[3,7,3]],owl:[[2,4,1],[2,5,1],[3,5,1]],sylvan_trapper:[[2,5,2],[2,6,2],[3,6,2]]};
+const totals={ranger:[[2,4,1],[2,5,1],[3,5,1],[3,5,1]],wolf:[[3,3,1],[3,4,1],[4,4,1],[4,4,1]],treant:[[3,10,2],[3,12,2],[3,12,2]],dryad:[[1,5,2],[1,7,2],[1,7,2]],stag:[[5,6,3],[5,8,3]],thorn:[[2,5,1],[2,6,1],[3,6,1],[3,6,1]],pixie:[[2,3,1],[2,4,1],[2,4,1],[2,4,1]],bear:[[4,9,2],[4,11,2],[5,11,2]],archdruid:[[3,7,3],[3,9,3]],owl:[[2,4,1],[2,5,1],[3,5,1],[3,5,1]],sylvan_trapper:[[2,5,2],[2,6,2],[3,6,2],[3,6,2]]};
 const recipes=EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction==='sylve');
 const ready=()=>{const p=freshProfile();p.completed=['01','02','03'];p.gold=2000;return p;};
 function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v)},removeItem:k=>{delete data[k]}};return data;}
@@ -30,8 +30,8 @@ function earned(id,rarity='épique'){
 }
 const unit=(uid,id,side,extra={})=>({uid,id,side,rarity:CARDS[id].rarity,atk:CARDS[id].attack,hp:CARDS[id].hp,maxhp:CARDS[id].hp,armor:0,ranged:false,ability:CARDS[id].ability,stun:0,poison:0,poisonTurns:0,...extra});
 
-test('26 versions Sylve : onze natifs conservés, quinze évolutions et 33 rangs supérieurs non activés',()=>{
- assert.deepEqual([...SYLVE_UNIT_IDS].sort(),Object.keys(totals).sort());assert.equal(recipes.length,15);
+test('37 versions Sylve : onze natifs conservés, 26 évolutions et 22 rangs supérieurs non activés',()=>{
+ assert.deepEqual([...SYLVE_UNIT_IDS].sort(),Object.keys(totals).sort());assert.equal(recipes.length,26);
  let defined=0;
  for(const [id,expected] of Object.entries(totals)){
   const versions=unitVersions(id);defined+=versions.length;assert.equal(versions.length,expected.length);
@@ -40,9 +40,9 @@ test('26 versions Sylve : onze natifs conservés, quinze évolutions et 33 rangs
    assert.equal(d.status.engine,'implemented');assert.equal(d.status.combat,'implemented');
    assert.deepEqual(d.pendingDecisions,[]);if(index)assert.strictEqual(d.source,SYLVE_DESIGN_SOURCE);
   }
-  for(const rank of ['légendaire','divine','éveillée'])assert.equal(resolveUnitDefinition(id,rank),null);
+  for(const rank of ['divine','éveillée'])assert.equal(resolveUnitDefinition(id,rank),null);
  }
- assert.equal(defined,26);assert.equal(Object.keys(CARDS).length,76);
+ assert.equal(defined,37);assert.equal(Object.keys(CARDS).length,76);
  assert.equal(resolveUnitDefinition('stag','rare'),null);assert.equal(resolveUnitDefinition('archdruid','rare'),null);
  const p=freshProfile(),before=structuredClone(p);assert.deepEqual(normalizeProfile(p),before);
  assert.equal(p.evolvedCollection,undefined);assert.equal(p.completedTrials,undefined);
@@ -60,7 +60,7 @@ test('Capacités héritées exactes : Charge, Garde/Riposte, poison, piège, soi
  assert.ok(a('pixie').flying);assert.ok(a('owl').flying);assert.equal(resolveUnitDefinition('owl','épique').geometry.range,2);
 });
 
-test('26 versions × quatre niveaux × deux camps : vrais chiffres et invocations du laboratoire',()=>{
+test('37 versions × quatre niveaux × deux camps : vrais chiffres et invocations du laboratoire',()=>{
  for(const id of SYLVE_UNIT_IDS)for(const [index,d] of unitVersions(id).entries())for(const level of [0,1,2,3])for(const side of ['p','e']){
   const lab=freshLab();assert.equal(setLabRarity(lab,side,id,d.rarity).ok,true);assert.equal(setLabLevel(lab,side,id,level).ok,true);
   const before=structuredClone(lab),b=createLabBattle(lab,11);b.heroes[side].hand=[{id,wait:0}];
@@ -80,7 +80,7 @@ test('Paquets séparés : pools Sylve 9/6/9, aucun mélange dans Aube ou rang su
   assert.equal(CARDS[typeof ref==='string'?ref:ref.id].faction,faction);assert.ok(playableCardReference(ref));
   if(typeof ref==='object')assert.ok(['rare','épique'].includes(ref.rarity));
  }
- for(const recipe of recipes)assert.equal(evolutionPackFor(recipe.cardId,recipe.to).id,sylve.id);
+ for(const recipe of recipes)assert.equal(evolutionPackFor(recipe.cardId,recipe.to)?.id,recipe.to==='légendaire'?undefined:sylve.id);
 });
 
 test('Les quinze évolutions sont réellement tirées, invoquées, exportables et reprises, avec leurs stocks exacts',()=>{

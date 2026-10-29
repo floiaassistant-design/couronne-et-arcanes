@@ -3,7 +3,8 @@ import {CARDS} from '../data.js';
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {silenced} from './battle-control.js';
 import {lastCell} from './board.js';
-import {grantHealBarrier} from './battle-defense.js';
+import {grantHealBarrier,grantAbilityBarrier} from './battle-defense.js';
+import {grantRegeneration} from './unit-effects.js';
 
 function allies(b,u,lane,parameters){
  const found=[];
@@ -17,13 +18,17 @@ function allies(b,u,lane,parameters){
  return found;
 }
 function inspireTargets(b,u,lane,p){return allies(b,u,lane,p).slice(0,p.targets);}
+const injuryOrder=(x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid;
 function strengthen(target,p){const before=target.atk;target.atk=Math.max(before,Math.min(p.cap,before+p.amount));return target.atk-before;}
 
 export function resolveUnitArrival(b,u,lane,col,hooks){
  const a=versionUnitAbilities(u);
- if(!a||u.arrivalResolved||!(a.ward||a.arrivalInspire||a.intervention))return;
+ if(!a||u.arrivalResolved||!(a.ward||a.arrivalInspire||a.intervention||a.arrivalBarrier))return;
  u.arrivalResolved=true;
  if(a.ward)b.heroes[u.side].shield=Math.max(b.heroes[u.side].shield,Math.min(a.ward.cap,b.heroes[u.side].shield+a.ward.amount));
+ if(a.arrivalBarrier)for(const t of allies(b,u,lane,a.arrivalBarrier).sort(injuryOrder).slice(0,a.arrivalBarrier.targets)){
+  if(grantAbilityBarrier(t.u,'arrivalBarrier',a.arrivalBarrier))hooks.emit(b,{type:'state',side:u.side,lane:t.lane,col:t.col});
+ }
  if(a.arrivalInspire)for(const target of inspireTargets(b,u,lane,a.arrivalInspire)){
   if(strengthen(target.u,a.arrivalInspire))hooks.emit(b,{type:'state',side:u.side,lane:target.lane,col:target.col});
  }
@@ -45,9 +50,9 @@ export function resolveUnitSupport(b,sideFilter,emit){
   if(silenced(b,u))continue;
   if(a.heal&&u.lastHealRound!==b.round){
    const p=a.heal,targets=allies(b,u,lane,p).filter(t=>t.u.hp<t.u.maxhp)
-    .sort((x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid).slice(0,p.targets);
+    .sort(injuryOrder).slice(0,p.targets);
    if(targets.length)u.lastHealRound=b.round;
-   for(const t of targets){const before=t.u.hp;t.u.hp=Math.min(t.u.maxhp,before+p.amount);grantHealBarrier(b,u,t.u,t.u.hp-before);emit(b,{type:'heal',side:u.side,lane:t.lane,col:t.col});}
+   for(const t of targets){const before=t.u.hp;t.u.hp=Math.min(t.u.maxhp,before+p.amount);grantHealBarrier(b,u,t.u,t.u.hp-before);if(a.regeneration&&t.u.hp>before)grantRegeneration(b,t.u,a.regeneration);emit(b,{type:'heal',side:u.side,lane:t.lane,col:t.col});}
   }
   if(a.inspire&&b.round%a.inspire.period===0&&u.lastInspireRound!==b.round){
    const targets=inspireTargets(b,u,lane,a.inspire);if(targets.length)u.lastInspireRound=b.round;

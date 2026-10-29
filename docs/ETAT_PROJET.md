@@ -1,3 +1,19 @@
+# Sylve Légendaire — proposition du 29 octobre 2026
+
+Main `33cad6673c9e3cb468b222de39ad821a936dc098` intègre les PR 62 et 63 sur
+accord du propriétaire : 41 évolutions Aube et 15 Sylve Rare/Épique obtenables.
+La branche `feat/evolutions-legendaires-sylve` propose onze Légendaires Sylve,
+par fusion de trois Épiques libres après le deuxième boss (mission 06).
+26 évolutions Sylve obtenables sur cette branche ; 22 supérieures à intégrer.
+Pouvoirs validés relus dans le tableau maître Notion : portée 3, Charge +3,
+Armure 3, régénération différée, poison prolongé, barrière alliée à l'arrivée,
+Harcèlement et piège renforcé ; les trois autres versions gagnent leurs stats.
+Le moteur commun porte effets et sauvegardes ; le malus ne modifie pas l'ATQ
+permanente. Natifs, Aube, paquets, images et progression existante conservés.
+[Contrat et validation](SYLVE_LEGENDAIRES.md) · [Suite](REPRISE_MIGRATION_CARTES.md).
+Aucun accord de fusion/publication de cette nouvelle branche ; le flux Sites
+existant reste distinct. Les bilans suivants sont historiques.
+
 # Sylve Rare/Épique — proposition du 28 octobre 2026
 
 Main reste `63ff7463b89d4f2ff410063a47ba2473087884bc`. La PR 62

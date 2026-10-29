@@ -3,6 +3,7 @@
 import {CARDS,GUARD_IDS} from './data.js';
 import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount} from './engine/unit-rules.js';
 import {unitStats} from './engine/unit-stats.js';
+import {attackAfterPenalty} from './engine/unit-effects.js';
 import {findCrownGuardian} from './engine/guard-candidates.js';
 import {silenceTarget,silenceValue,teleportPlan,teleportGain,trapPlan,activeAbility,silenced} from './engine/battle-control.js';
 import {accelerationTarget} from './engine/tempo.js';
@@ -30,7 +31,7 @@ export function inspectEnemyLane(b,lane){
  // Plus un ennemi est proche de la couronne ennemie (droite), plus il faut l'arrêter.
  const urgency=threats.reduce((sum,{u,col})=>{
   const steps=Math.max(1,crownColumn(b,'e')-col);
-  return sum+(steps<=2?7:steps===3?3:0)+Math.max(1,u.atk)*(steps===1?3:steps===2?1.65:steps===3?.6:.15)
+  return sum+(steps<=2?7:steps===3?3:0)+attackAfterPenalty(u,Math.max(1,u.atk))*(steps===1?3:steps===2?1.65:steps===3?.6:.15)
    +((unitChargeAmount(u)>0)&&steps<=3?2:0)+(unitAttackRange(u)>1&&steps<=3?2:0)+1/steps;
  },0);
  const frontline=threats.sort((a,z)=>z.col-a.col)[0]||null;
@@ -47,7 +48,7 @@ function crownRisk(b,laneInfo){
   if(findCrownGuardian(b,laneInfo.lane,'e',col))return sum;
   const range=unitAttackRange(u);
   if(laneInfo.friends.some(x=>x.col>col&&x.col-col<=range))return sum;
-  return sum+Math.max(1,u.atk)+((unitChargeAmount(u)>0)&&col<lastCell(b)&&!silenced(b,u)?unitChargeAmount(u):0);
+  return sum+attackAfterPenalty(u,Math.max(1,u.atk))+((unitChargeAmount(u)>0)&&col<lastCell(b)&&!silenced(b,u)?unitChargeAmount(u):0);
  },0);
 }
 
