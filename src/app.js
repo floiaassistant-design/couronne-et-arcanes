@@ -36,6 +36,10 @@ const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,deckUI,trials
 const handleEvolutionFusion=createEvolutionFusionController(()=>({profile,battle}),{btn,cardUI,esc,showModal,hideModal,refresh:()=>render(),toast,commitProfile});
 const handleCardPack=createCardPackController(()=>({profile,battle}),{btn,cardUI,esc,showModal,hideModal,refresh:()=>render(),toast,commitProfile});
 function commitProfile(next){if(developer||!saveProfile(next))return false;profile=next;return true;}
+// Compatibilité des contrôles navigateur historiques, sans action métier directe.
+function load(){return inspectStoredProfile().profile;}
+function loadBattle(){return restoreBattle();}
+function save(){if(developer)return false;const ok=saveProfile(profile);if(!ok)toast('Sauvegarde locale indisponible.');return ok;}
 function changeProfile(operation){
  const change=commitProfileChange(profile,operation,saveProfile);
  if(change.ok)profile=change.profile;

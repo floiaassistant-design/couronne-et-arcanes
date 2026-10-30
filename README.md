@@ -109,6 +109,19 @@ La sauvegarde est locale à l’appareil et à l’adresse utilisée. Guide perm
 l’export/import du profil. Les clés historiques et les combats repris sont
 conservés ; aucune réinitialisation ou migration implicite.
 
+### Protection des sauvegardes (proposée dans une PR dédiée)
+
+Si le profil local ne peut pas être lu, le jeu affiche un écran de récupération :
+aucune partie vierge n'est enregistrée à sa place. Exportez les données brutes
+avant d'importer une sauvegarde JSON valide. Si le stockage est indisponible,
+rétablissez-le dans le navigateur puis rechargez. Le deck peut rester vide pendant
+sa construction ; les profils historiques lisibles restent compatibles.
+
+Fabrication, équipements, talents, alchimie, deck et événements de donjon ne
+confirment désormais une action qu'après sauvegarde réussie. En cas d'échec,
+les ressources, les copies et le profil actif restent inchangés. Aucune clé de
+sauvegarde ou règle de combat modifiée. Ce correctif attend sa propre fusion.
+
 ## Développer et vérifier
 
 ```sh

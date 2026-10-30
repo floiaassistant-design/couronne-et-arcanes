@@ -1,3 +1,13 @@
+## Proposition — fiabilisation de la sauvegarde, 30 octobre 2026
+
+- Afficher une récupération explicite sans écraser un profil local illisible ;
+  préserver le texte d'origine et permettre son export, puis import volontaire.
+- Sur les actions de progression classiques, enregistrer une copie avant de
+  confirmer, sans débiter de ressources lorsque le stockage refuse l'écriture.
+- Tests de profil défectueux, transaction refusée, interruption et reprise.
+- Clés de sauvegarde, règles, équilibrage, illustrations et obtention inchangés.
+- PR dédiée en attente de contrôles et d'accord spécifique, sans publication.
+
 ## Proposition — onze Légendaires Sylve, 29 octobre 2026
 
 - Fusion de trois Épiques libres identiques après mission 06 : onze versions
