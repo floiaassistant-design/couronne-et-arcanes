@@ -13,16 +13,19 @@ import {buildCombatSteps} from './ui/combat-steps.js';
 import {captureCombatFrame} from './engine/combat-events.js';
 import {mountPaintedArena} from './ui/painted-arena.js';
 import {createCardInspection} from './ui/card-inspection.js';
-import {loadProfile,saveProfile,restoreBattle,storeBattle,storedBattleNeedsRestart,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure} from './ui/storage.js';
+import {inspectStoredProfile,saveProfile,restoreBattle,storeBattle,storedBattleNeedsRestart,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure,SAVE_KEY} from './ui/storage.js';
+import {commitProfileChange} from './ui/profile-transactions.js';
 import {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission} from './data.js';
 
 import {dungeonStageMission} from './dungeons.js';
-import {DECK_STYLES,proposeDeck,applyDeckStyle,createEvolutionTrial,settleEvolutionTrial,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon} from './engine.js';
+import {DECK_STYLES,proposeDeck,applyDeckStyle,createEvolutionTrial,settleEvolutionTrial,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon,freshProfile} from './engine.js';
 const VFX_KEY='couronnes_arcanes_animations_v13';
 let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}catch{return true;}})();
 
 const $=id=>document.getElementById(id);
-let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='aube',collectionOwned=false;
+const initialProfile=inspectStoredProfile();
+let profile=initialProfile.profile??freshProfile(),profileLoadError=initialProfile.error,
+ battle=profileLoadError?null:restoreBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='aube',collectionOwned=false;
 let displayBattle=null,combatReport=null;
 const deckFilters={query:'',faction:'all',type:'all'};
 let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null,developer=null;
@@ -33,9 +36,12 @@ const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,deckUI,trials
 const handleEvolutionFusion=createEvolutionFusionController(()=>({profile,battle}),{btn,cardUI,esc,showModal,hideModal,refresh:()=>render(),toast,commitProfile});
 const handleCardPack=createCardPackController(()=>({profile,battle}),{btn,cardUI,esc,showModal,hideModal,refresh:()=>render(),toast,commitProfile});
 function commitProfile(next){if(developer||!saveProfile(next))return false;profile=next;return true;}
-function load(){return loadProfile();}
-function save(){if(developer)return;if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
-function loadBattle(){return restoreBattle();}
+function changeProfile(operation){
+ const change=commitProfileChange(profile,operation,saveProfile);
+ if(change.ok)profile=change.profile;
+ else toast(change.reason);
+ return change;
+}
 function persistBattle(){
  if(developer)return true;
  const ok=storeBattle(battle);
@@ -90,6 +96,14 @@ function showModal(html){closeCardInspection(true);$('modal-root').innerHTML=`<d
 function hideModal(){closeCardInspection(true);$('modal-root').innerHTML='';}
 const cardName=(reference,context)=>{const ref=typeof reference==='string'?cardFromKey(reference):reference,id=cardId(ref);return `<span ${cardPreviewAttributes(id,cardRarity(ref),context,esc)}>${esc(CARDS[id].name)}${typeof ref==='object'?' · '+esc(cardRarity(ref)):''}</span>`;};
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une case de départ sur une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
+function recoveryUI(){
+ return `<section class="card-panel spaced" role="alert" aria-labelledby="recovery-title">
+ <div class="kicker">SAUVEGARDE À RÉCUPÉRER</div><h1 id="recovery-title">Votre progression n'a pas été remplacée</h1>
+ <p>Le profil enregistré est illisible ou le stockage est inaccessible. Aucune nouvelle partie ni sauvegarde n'a été créée. Le jeu reste bloqué pour protéger vos données.</p>
+ <p>Conservez d'abord le fichier d'origine, puis importez une sauvegarde JSON valide depuis votre appareil. Si le stockage est bloqué par le navigateur, rétablissez son accès et rechargez la page.</p>
+ <div class="button-row">${btn('Exporter le fichier d’origine','export-unreadable-save','','primary')}${btn('Importer une sauvegarde','import-save','','ghost')}</div>
+ <input id="import-file" type="file" accept="application/json,.json" hidden /></section>`;
+}
 function notifyBattleUpdate(){
  if(!storedBattleNeedsRestart())return false;
  showModal(`<div class="kicker">MISE À JOUR DES CARTES</div><h2>Ce combat doit être relancé</h2><p>Les règles des cartes ont été mises à jour. Recommencez ce combat depuis son écran habituel pour les utiliser.</p><p>Votre collection, votre deck et votre progression sont conservés. Aucune défaite ni pénalité n’est comptée. Dans un donjon, la salle en cours peut être rejouée.</p><div class="button-row">${btn('Revenir au jeu','dismiss-battle-update','','primary')}</div>`);
@@ -105,6 +119,7 @@ function render({frameUpdate=false}={}){
  const stageScroll=document.querySelector('.combat-stage')?.scrollTop||0;
  closeCardInspection(true,'render');
  document.body.classList.toggle('animations-off',!animationsEnabled);
+ if(profileLoadError){$('resources').textContent='';$('nav').textContent='';$('view').innerHTML=recoveryUI();return;}
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
  $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='deck'?deckUI():screen==='trials'?trialsUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
  mountPaintedArena();syncFxControls();
@@ -235,8 +250,9 @@ function navigate(page){
  if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();
  cancelEnemyTimer();screen=page;selectedCard=-1;render();if(page==='battle')scheduleEnemyStep();window.scrollTo(0,0);
 }
-function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();notifyBattleUpdate();window.scrollTo(0,0);}
+function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();const state=inspectStoredProfile();profileLoadError=state.error;profile=state.profile??freshProfile();battle=profileLoadError?null:restoreBattle();screen=battle?'battle':'home';selectedCard=-1;render();if(!profileLoadError)notifyBattleUpdate();window.scrollTo(0,0);}
 function act(action,dataset){const {id,index,lane,col,page}=dataset;
+ if(profileLoadError&&!['import-save','export-unreadable-save'].includes(action))return;
  // Une clôture non sauvée ne doit pas être écrasée par une autre épreuve/action.
  if(!developer&&battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven&&
   !['nav','home','close-modal','close-inspection','collection-faction','export-save','toggle-animations'].includes(action)){
@@ -343,6 +359,7 @@ case 'lab-open':openDeveloper();break;
  case 'pack-collection':hideModal();navigate('collection');break;
  case 'export-save':{const blob=new Blob([JSON.stringify(profile,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='couronnes_et_arcanes_sauvegarde.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Sauvegarde exportée.');break;}
  case 'import-save':$('import-file')?.click();break;
+  case 'export-unreadable-save':{try{const original=localStorage.getItem(SAVE_KEY);if(original===null)throw Error('absent');const blob=new Blob([original],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='couronnes_et_arcanes_original_a_recuperer.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Fichier d’origine exporté, sans modification.');}catch{toast('Lecture du stockage impossible : aucun fichier exporté.');}break;}
  case 'welcome-start':profile.guideSeen=true;save();hideModal();startMission('01');break;
  case 'welcome-guide':profile.guideSeen=true;save();hideModal();navigate('guide');break;
  }
@@ -377,6 +394,6 @@ document.addEventListener('change',async event=>{
   else if(key==='aiStyle')d.aiStyle=value;
   render();return;
  }
- if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;if(battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven){settle();return;}try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
-render();if(battle&&battle.status!=='active')settle();else if(!notifyBattleUpdate()){welcome();scheduleEnemyStep();}
+ if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;if(!profileLoadError&&battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven){settle();return;}try{const imported=validateImportedProfile(JSON.parse(await file.text())),previous=localStorage.getItem(SAVE_KEY);if(!saveProfile(imported))throw Error('Enregistrement indisponible.');if(!storeBattle(null)){try{if(previous===null)localStorage.removeItem(SAVE_KEY);else localStorage.setItem(SAVE_KEY,previous);}catch{}throw Error('Combat non nettoyé.');}profile=imported;profileLoadError=null;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide ou stockage indisponible.');}return;}try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
+render();if(!profileLoadError){if(battle&&battle.status!=='active')settle();else if(!notifyBattleUpdate()){welcome();scheduleEnemyStep();}}
 
