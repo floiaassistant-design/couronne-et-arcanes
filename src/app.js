@@ -39,7 +39,7 @@ function commitProfile(next){if(developer||!saveProfile(next))return false;profi
 // Compatibilité des contrôles navigateur historiques, sans action métier directe.
 function load(){return inspectStoredProfile().profile;}
 function loadBattle(){return restoreBattle();}
-function save(){if(developer)return false;const ok=saveProfile(profile);if(!ok)toast('Sauvegarde locale indisponible.');return ok;}
+function save(){if(developer)return;const ok=saveProfile(profile);if(!ok)toast('Sauvegarde locale indisponible.');return ok;}
 function changeProfile(operation){
  const change=commitProfileChange(profile,operation,saveProfile);
  if(change.ok)profile=change.profile;

@@ -1,0 +1,30 @@
+# Étape transitoire : régénérer l'unique export jouable sur la PR, puis se retirer.
+name: Préparer export hors ligne de la PR sauvegardes
+on:
+  pull_request:
+    types: [synchronize]
+permissions:
+  contents: write
+jobs:
+  regeneration:
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'fix/fiabiliser-sauvegardes-20261030' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Générer le seul export officiel et supprimer ce workflow transitoire
+        run: |
+          npm run build
+          git add JOUER.html
+          git rm -- .github/workflows/regen-export-once.yml
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'build: synchroniser JOUER.html sur le correctif sauvegardes'
+          git push origin HEAD:refs/heads/fix/fiabiliser-sauvegardes-20261030
