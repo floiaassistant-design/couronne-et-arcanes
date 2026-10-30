@@ -4252,15 +4252,18 @@ const {buildCombatSteps}=__load("src/ui/combat-steps.js");
 const {captureCombatFrame}=__load("src/engine/combat-events.js");
 const {mountPaintedArena}=__load("src/ui/painted-arena.js");
 const {createCardInspection}=__load("src/ui/card-inspection.js");
-const {loadProfile,saveProfile,restoreBattle,storeBattle,storedBattleNeedsRestart,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure}=__load("src/ui/storage.js");
+const {inspectStoredProfile,saveProfile,restoreBattle,storeBattle,storedBattleNeedsRestart,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure,SAVE_KEY}=__load("src/ui/storage.js");
+const {commitProfileChange}=__load("src/ui/profile-transactions.js");
 const {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission}=__load("src/data.js");
 const {dungeonStageMission}=__load("src/dungeons.js");
-const {DECK_STYLES,proposeDeck,applyDeckStyle,createEvolutionTrial,settleEvolutionTrial,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon}=__load("src/engine.js");
+const {DECK_STYLES,proposeDeck,applyDeckStyle,createEvolutionTrial,settleEvolutionTrial,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon,freshProfile}=__load("src/engine.js");
 const VFX_KEY='couronnes_arcanes_animations_v13';
 let animationsEnabled=(()=>{try{return localStorage.getItem(VFX_KEY)!=='off';}catch{return true;}})();
 
 const $=id=>document.getElementById(id);
-let profile=load(),battle=loadBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='aube',collectionOwned=false;
+const initialProfile=inspectStoredProfile();
+let profile=initialProfile.profile??freshProfile(),profileLoadError=initialProfile.error,
+ battle=profileLoadError?null:restoreBattle(),screen=battle?'battle':'home',selectedCard=-1,collectionFilter='aube',collectionOwned=false;
 let displayBattle=null,combatReport=null;
 const deckFilters={query:'',faction:'all',type:'all'};
 let deferredBattleModal='',battleStorageWarning=false,enemyTimer=null,developer=null;
@@ -4271,9 +4274,16 @@ const {btn,cardUI,homeUI,campaignUI,towerUI,dungeonUI,collectionUI,deckUI,trials
 const handleEvolutionFusion=createEvolutionFusionController(()=>({profile,battle}),{btn,cardUI,esc,showModal,hideModal,refresh:()=>render(),toast,commitProfile});
 const handleCardPack=createCardPackController(()=>({profile,battle}),{btn,cardUI,esc,showModal,hideModal,refresh:()=>render(),toast,commitProfile});
 function commitProfile(next){if(developer||!saveProfile(next))return false;profile=next;return true;}
-function load(){return loadProfile();}
-function save(){if(developer)return;if(!saveProfile(profile))toast('Sauvegarde locale indisponible : exportez votre progression dans le Guide.');}
+// Compatibilité des contrôles navigateur historiques, sans action métier directe.
+function load(){return inspectStoredProfile().profile;}
 function loadBattle(){return restoreBattle();}
+function save(){if(developer)return false;const ok=saveProfile(profile);if(!ok)toast('Sauvegarde locale indisponible.');return ok;}
+function changeProfile(operation){
+ const change=commitProfileChange(profile,operation,saveProfile);
+ if(change.ok)profile=change.profile;
+ else toast(change.reason);
+ return change;
+}
 function persistBattle(){
  if(developer)return true;
  const ok=storeBattle(battle);
@@ -4328,6 +4338,14 @@ function showModal(html){closeCardInspection(true);$('modal-root').innerHTML=`<d
 function hideModal(){closeCardInspection(true);$('modal-root').innerHTML='';}
 const cardName=(reference,context)=>{const ref=typeof reference==='string'?cardFromKey(reference):reference,id=cardId(ref);return `<span ${cardPreviewAttributes(id,cardRarity(ref),context,esc)}>${esc(CARDS[id].name)}${typeof ref==='object'?' · '+esc(cardRarity(ref)):''}</span>`;};
 function welcome(){if(profile.guideSeen||battle?.status==='active')return;showModal(`<div class="kicker">BIENVENUE DANS LE ROYAUME</div><h2>Votre légende commence ici.</h2><p>Ce jeu se joue intégralement dans votre navigateur. Commencez par une mission : sélectionnez une carte, choisissez une case de départ sur une ligne, puis terminez votre tour. Vos troupes avanceront toutes seules.</p><p>Le jeu se sauvegarde automatiquement sur cet appareil.</p><div class="button-row">${btn('Compris, jouer !','welcome-start','','primary')}${btn('Lire les règles','welcome-guide','','ghost')}</div>`);}
+function recoveryUI(){
+ return `<section class="card-panel spaced" role="alert" aria-labelledby="recovery-title">
+ <div class="kicker">SAUVEGARDE À RÉCUPÉRER</div><h1 id="recovery-title">Votre progression n'a pas été remplacée</h1>
+ <p>Le profil enregistré est illisible ou le stockage est inaccessible. Aucune nouvelle partie ni sauvegarde n'a été créée. Le jeu reste bloqué pour protéger vos données.</p>
+ <p>Conservez d'abord le fichier d'origine, puis importez une sauvegarde JSON valide depuis votre appareil. Si le stockage est bloqué par le navigateur, rétablissez son accès et rechargez la page.</p>
+ <div class="button-row">${btn('Exporter le fichier d’origine','export-unreadable-save','','primary')}${btn('Importer une sauvegarde','import-save','','ghost')}</div>
+ <input id="import-file" type="file" accept="application/json,.json" hidden /></section>`;
+}
 function notifyBattleUpdate(){
  if(!storedBattleNeedsRestart())return false;
  showModal(`<div class="kicker">MISE À JOUR DES CARTES</div><h2>Ce combat doit être relancé</h2><p>Les règles des cartes ont été mises à jour. Recommencez ce combat depuis son écran habituel pour les utiliser.</p><p>Votre collection, votre deck et votre progression sont conservés. Aucune défaite ni pénalité n’est comptée. Dans un donjon, la salle en cours peut être rejouée.</p><div class="button-row">${btn('Revenir au jeu','dismiss-battle-update','','primary')}</div>`);
@@ -4343,6 +4361,7 @@ function render({frameUpdate=false}={}){
  const stageScroll=document.querySelector('.combat-stage')?.scrollTop||0;
  closeCardInspection(true,'render');
  document.body.classList.toggle('animations-off',!animationsEnabled);
+ if(profileLoadError){$('resources').textContent='';$('nav').textContent='';$('view').innerHTML=recoveryUI();return;}
  $('resources').innerHTML=resourceUI();$('nav').innerHTML=navUI();
  $('view').innerHTML=screen==='home'?homeUI():screen==='campaign'?campaignUI():screen==='tower'?towerUI():screen==='dungeons'?dungeonUI():screen==='collection'?collectionUI():screen==='deck'?deckUI():screen==='trials'?trialsUI():screen==='alchemy'?alchemyUI():screen==='forge'?forgeUI():screen==='guide'?guideUI():screen==='developer'&&developer?developerLabUI(developer.draft,{btn,esc}):screen==='battle'&&battle?battleUI():homeUI();
  mountPaintedArena();syncFxControls();
@@ -4436,8 +4455,8 @@ function startDungeonStage(){
 }
 function startDungeon(id){
  if(battle?.status==='active'){toast('Terminez le combat en cours avant de commencer un donjon.');navigate('battle');return;}
- const result=beginDungeon(profile,id);if(!result.ok){toast(result.reason);return;}
- save();startDungeonStage();
+ const result=changeProfile(next=>beginDungeon(next,id));if(!result.ok)return;
+ startDungeonStage();
 }
 function startTower(floor){
  if(battle?.status==='active'){toast('Terminez le combat en cours.');navigate('battle');return;}
@@ -4473,8 +4492,9 @@ function navigate(page){
  if(battle&&battle.status!=='active'&&!battle.rewardGiven)settle();
  cancelEnemyTimer();screen=page;selectedCard=-1;render();if(page==='battle')scheduleEnemyStep();window.scrollTo(0,0);
 }
-function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();profile=load();battle=loadBattle();screen=battle?'battle':'home';selectedCard=-1;render();notifyBattleUpdate();window.scrollTo(0,0);}
+function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();const state=inspectStoredProfile();profileLoadError=state.error;profile=state.profile??freshProfile();battle=profileLoadError?null:restoreBattle();screen=battle?'battle':'home';selectedCard=-1;render();if(!profileLoadError)notifyBattleUpdate();window.scrollTo(0,0);}
 function act(action,dataset){const {id,index,lane,col,page}=dataset;
+ if(profileLoadError&&!['import-save','export-unreadable-save'].includes(action))return;
  // Une clôture non sauvée ne doit pas être écrasée par une autre épreuve/action.
  if(!developer&&battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven&&
   !['nav','home','close-modal','close-inspection','collection-faction','export-save','toggle-animations'].includes(action)){
@@ -4511,11 +4531,11 @@ case 'lab-open':openDeveloper();break;
  case 'start-mission':startMission(id);break;
  case 'start-dungeon':startDungeon(id);break;
  case 'dungeon-choice-open':hideModal();battle=null;persistBattle();navigate('dungeons');break;
- case 'dungeon-event':{const result=chooseDungeonEvent(profile,id);if(!result.ok){toast(result.reason);break;}save();render();toast(id==='rest'?`Halte réparatrice : +${result.restored} PV.`:id==='treasure'?`Trésor récupéré : +${result.gold} or et +${result.shards} éclats.`:'Embuscade acceptée. La récompense exige la victoire.');break;}
+ case 'dungeon-event':{const change=changeProfile(next=>chooseDungeonEvent(next,id));if(!change.ok)break;const result=change.result;render();toast(id==='rest'?`Halte réparatrice : +${result.restored} PV.`:id==='treasure'?`Trésor récupéré : +${result.gold} or et +${result.shards} éclats.`:'Embuscade acceptée. La récompense exige la victoire.');break;}
  case 'dungeon-next':hideModal();if(battle?.status==='active'){startDungeonStage();break;}battle=null;persistBattle();startDungeonStage();break;
  case 'dungeon-exit':hideModal();battle=null;persistBattle();navigate('dungeons');break;
  case 'dungeon-quit':showModal(`<div class="kicker">QUITTER LE DONJON</div><h2>Abandonner cette expédition ?</h2><p>Les ressources déjà gagnées seront conservées mais vous devrez recommencer au premier combat.</p><div class="button-row">${btn('Confirmer l’abandon','confirm-dungeon-quit','','danger')}${btn('Continuer','close-modal','','ghost')}</div>`);break;
- case 'confirm-dungeon-quit':hideModal();abandonDungeon(profile);if(battle?.mode==='dungeon'){battle=null;persistBattle();}save();navigate('dungeons');break;
+ case 'confirm-dungeon-quit':if(!changeProfile(next=>abandonDungeon(next)).ok)break;hideModal();if(battle?.mode==='dungeon'){battle=null;persistBattle();}navigate('dungeons');break;
  case 'start-tower':startTower(id);break;
  case 'trial-start':{
   const result=createEvolutionTrial(profile,id,Date.now(),battle);if(!result.ok){toast(result.reason);break;}
@@ -4532,22 +4552,22 @@ case 'lab-open':openDeveloper();break;
  }
  case 'deck-apply':{
   if(battle?.status==='active'){hideModal();toast('Terminez le combat avant de modifier votre deck.');break;}
-  const result=applyDeckStyle(profile,id);
-  if(!result.ok){toast(result.reason);break;}
-  hideModal();save();render();toast(`Deck « ${DECK_STYLES[id].name} » prêt : ${result.deck.length} cartes.`);
+  const change=changeProfile(next=>applyDeckStyle(next,id));
+  if(!change.ok)break;
+  hideModal();render();toast(`Deck « ${DECK_STYLES[id].name} » prêt : ${change.result.deck.length} cartes.`);
   break;
  }
- case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}const result=learnClassSkill(profile,id);if(result.ok){save();render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}else toast(result.reason);break;}
+ case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}if(changeProfile(next=>learnClassSkill(next,id)).ok){render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}break;}
  case 'deck-clear':
   if(battle?.status==='active'){toast('Terminez le combat avant de modifier votre deck.');break;}
   showModal(`<div class="kicker">REFAIRE MON DECK</div><h2>Repartir de zéro ?</h2><p>Les ${profile.deck.length} cartes seront retirées du deck. Elles resteront toutes dans votre Collection.</p><div class="button-row">${btn('Vider mon deck','deck-clear-confirm','','primary')}${btn('Garder mon deck','close-modal','','ghost')}</div>`);break;
  case 'deck-clear-confirm':
   if(battle?.status==='active'){hideModal();toast('Terminez le combat avant de modifier votre deck.');break;}
-  for(const cardId of [...profile.deck])modifyDeck(profile,cardId,-1);
-  hideModal();save();render();$('manual-current-title')?.focus({preventScroll:true});break;
+  if(!changeProfile(next=>{next.deck=[];}).ok)break;
+  hideModal();render();$('manual-current-title')?.focus({preventScroll:true});break;
  case 'deck-add':case 'deck-remove':
   if(battle?.status==='active'){toast('Terminez le combat avant de modifier votre deck.');break;}
-  if(modifyDeck(profile,cardFromKey(id),action==='deck-add'?1:-1)){save();if(screen==='deck')refreshManualDeck();else render();}else toast('Impossible de modifier ce deck davantage.');break;
+  if(changeProfile(next=>modifyDeck(next,cardFromKey(id),action==='deck-add'?1:-1)).ok){if(screen==='deck')refreshManualDeck();else render();}break;
  case 'close-inspection':closeCardInspection(true);break;
  case 'select-card':{
   if(!battle||battle.status!=='active'||battle.phase!=='player')break;
@@ -4570,19 +4590,20 @@ case 'lab-open':openDeveloper();break;
  case 'dismiss-battle-update':if(!storedBattleNeedsRestart()){hideModal();break;}if(!storeBattle(null)){toast('Nettoyage impossible : vérifiez le stockage local.');break;}hideModal();welcome();break;
  case 'battle-exit':const previousMode=battle?.mode;hideModal();battle=null;persistBattle();navigate(previousMode==='tower'?'tower':previousMode==='dungeon'?'dungeons':'campaign');break;
  case 'battle-deck':hideModal();battle=null;persistBattle();navigate('collection');break;
- case 'choose-class':{if(battle?.status==='active'){toast('Terminez le combat avant de changer de classe.');break;}const result=changeHeroClass(profile,id);if(!result.ok){toast(result.reason);break;}save();render();toast('Nouvelle classe sélectionnée.');break;}
- case 'choose-talent':{if(battle?.status==='active'){toast('Terminez le combat avant de changer vos talents.');break;}const result=chooseHeroTalent(profile,id);if(result.ok){save();render();toast('Voie de talent sélectionnée.');}else toast(result.reason);break;}
- case 'craft-equipment':{const result=craftEquipment(profile,id);if(result.ok){save();render();toast('Équipement fabriqué et équipé.');}else toast(result.reason);break;}
- case 'equip-equipment':{const result=equipEquipment(profile,id);if(result.ok){save();render();toast('Équipement changé.');}else toast(result.reason);break;}
- case 'fuse-card':{const result=fuseCard(profile,id);if(result.ok){save();render();toast('Nouvelle carte créée par alchimie.');}else toast(result.reason);break;}
- case 'extract-card':{const result=extractCard(profile,id);if(result.ok){save();render();toast(`Carte extraite : +${result.shards} éclats.`);}else toast(result.reason);break;}
- case 'card-upgrade':const up=upgradeCard(profile,id);if(up.ok){save();render();toast('Carte améliorée !');}else toast(up.reason);break;
- case 'building-upgrade':const bu=upgradeBuilding(profile,id);if(bu.ok){save();render();toast('Bâtiment amélioré !');}else toast(bu.reason);break;
+ case 'choose-class':{if(battle?.status==='active'){toast('Terminez le combat avant de changer de classe.');break;}if(changeProfile(next=>changeHeroClass(next,id)).ok){render();toast('Nouvelle classe sélectionnée.');}break;}
+ case 'choose-talent':{if(battle?.status==='active'){toast('Terminez le combat avant de changer vos talents.');break;}if(changeProfile(next=>chooseHeroTalent(next,id)).ok){render();toast('Voie de talent sélectionnée.');}break;}
+ case 'craft-equipment':if(changeProfile(next=>craftEquipment(next,id)).ok){render();toast('Équipement fabriqué et équipé.');}break;
+ case 'equip-equipment':if(changeProfile(next=>equipEquipment(next,id)).ok){render();toast('Équipement changé.');}break;
+ case 'fuse-card':if(changeProfile(next=>fuseCard(next,id)).ok){render();toast('Nouvelle carte créée par alchimie.');}break;
+ case 'extract-card':{const change=changeProfile(next=>extractCard(next,id));if(change.ok){render();toast(`Carte extraite : +${change.result.shards} éclats.`);}break;}
+ case 'card-upgrade':if(changeProfile(next=>upgradeCard(next,id)).ok){render();toast('Carte améliorée !');}break;
+ case 'building-upgrade':if(changeProfile(next=>upgradeBuilding(next,id)).ok){render();toast('Bâtiment amélioré !');}break;
  case 'pack-collection':hideModal();navigate('collection');break;
  case 'export-save':{const blob=new Blob([JSON.stringify(profile,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='couronnes_et_arcanes_sauvegarde.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Sauvegarde exportée.');break;}
  case 'import-save':$('import-file')?.click();break;
- case 'welcome-start':profile.guideSeen=true;save();hideModal();startMission('01');break;
- case 'welcome-guide':profile.guideSeen=true;save();hideModal();navigate('guide');break;
+  case 'export-unreadable-save':{try{const original=localStorage.getItem(SAVE_KEY);if(original===null)throw Error('absent');const blob=new Blob([original],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='couronnes_et_arcanes_original_a_recuperer.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Fichier d’origine exporté, sans modification.');}catch{toast('Lecture du stockage impossible : aucun fichier exporté.');}break;}
+ case 'welcome-start':if(changeProfile(next=>{next.guideSeen=true;}).ok){hideModal();startMission('01');}break;
+  case 'welcome-guide':if(changeProfile(next=>{next.guideSeen=true;}).ok){hideModal();navigate('guide');}break;
  }
 }
 document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();if(event.detail>1&&el.closest('[data-pack-result-actions]'))return;act(el.dataset.action,el.dataset);});
@@ -4615,8 +4636,8 @@ document.addEventListener('change',async event=>{
   else if(key==='aiStyle')d.aiStyle=value;
   render();return;
  }
- if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;if(battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven){settle();return;}try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
-render();if(battle&&battle.status!=='active')settle();else if(!notifyBattleUpdate()){welcome();scheduleEnemyStep();}
+ if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;if(!profileLoadError&&battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven){settle();return;}try{const imported=validateImportedProfile(JSON.parse(await file.text())),previous=localStorage.getItem(SAVE_KEY);if(!saveProfile(imported))throw Error('Enregistrement indisponible.');if(!storeBattle(null)){try{if(previous===null)localStorage.removeItem(SAVE_KEY);else localStorage.setItem(SAVE_KEY,previous);}catch{}throw Error('Combat non nettoyé.');}profile=imported;profileLoadError=null;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide ou stockage indisponible.');}return;}try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
+render();if(!profileLoadError){if(battle&&battle.status!=='active')settle();else if(!notifyBattleUpdate()){welcome();scheduleEnemyStep();}}
 
 
 Object.assign(__exports,{});
@@ -9450,7 +9471,20 @@ function validateImportedProfile(raw){
  if(error)throw Error(error);
  return p;
 }
-function loadProfile(){try{const value=localStorage.getItem(SAVE_KEY);return value?normalizeProfile(JSON.parse(value)):freshProfile();}catch{return freshProfile();}}
+// Ne jamais substituer silencieusement une partie vierge à une sauvegarde illisible.
+// Un deck vide est légitime pendant sa construction ; les anciennes valeurs sont
+// toujours normalisées comme auparavant, sans migration ni écriture automatique.
+function inspectStoredProfile(){
+ try{
+  const serialized=localStorage.getItem(SAVE_KEY);
+  if(serialized===null)return {profile:freshProfile(),error:null};
+  const raw=JSON.parse(serialized);
+  if(!raw||typeof raw!=='object'||Array.isArray(raw)||!Array.isArray(raw.deck)||
+   !raw.collection||typeof raw.collection!=='object'||Array.isArray(raw.collection))throw Error('Profil illisible');
+  return {profile:normalizeProfile(raw),error:null};
+ }catch{return {profile:null,error:'Sauvegarde locale illisible ou inaccessible.'};}
+}
+function loadProfile(){return inspectStoredProfile().profile;}
 function saveProfile(profile){try{localStorage.setItem(SAVE_KEY,JSON.stringify(profile));return true;}catch{return false;}}
 function restoreBattle(){try{
  const b=JSON.parse(localStorage.getItem(BATTLE_KEY)||'null');
@@ -9508,7 +9542,20 @@ function restorePreviousAdventure(){
  try{return switchGame(JSON.parse(localStorage.getItem(PREVIOUS_GAME_KEY)));}catch{return false;}
 }
 
-Object.assign(__exports,{SAVE_KEY,BATTLE_KEY,validStoredBattle,storedBattleNeedsRestart,validateImportedProfile,loadProfile,saveProfile,restoreBattle,storeBattle,PREVIOUS_GAME_KEY,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure});
+Object.assign(__exports,{SAVE_KEY,BATTLE_KEY,validStoredBattle,storedBattleNeedsRestart,validateImportedProfile,inspectStoredProfile,loadProfile,saveProfile,restoreBattle,storeBattle,PREVIOUS_GAME_KEY,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure});
+
+},
+"src/ui/profile-transactions.js":function(__exports,__load){
+// Transaction de profil hors du moteur : une copie est enregistrée avant adoption.
+// Les échecs (règle métier ou stockage) ne modifient jamais l'objet actif.
+function commitProfileChange(current,mutate,persist){
+ const next=structuredClone(current),result=mutate(next);
+ if(result===false||result?.ok===false)return {ok:false,reason:result?.reason||'Modification impossible.',profile:current};
+ if(!persist(next))return {ok:false,reason:'Sauvegarde locale indisponible : modification non enregistrée.',profile:current};
+ return {ok:true,profile:next,result};
+}
+
+Object.assign(__exports,{commitProfileChange});
 
 }
 };
