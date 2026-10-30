@@ -25,3 +25,11 @@
   d'un profil valide, achats avec quota et reprise d'un résultat terminal.
 - Générer `JOUER.html` depuis les sources, contrôler sa synchronisation et la
   CI du commit exact avant toute demande de fusion. Aucune publication sans fusion.
+
+## Synchronisation de la distribution
+
+Le générateur officiel `npm run build` a régénéré `JOUER.html` sur la
+branche dans le commit `c17049e7dbf3d804804b76b6ba05a0830d90af40`.
+Le workflow temporaire qui a fait cette opération s'est retiré du diff final.
+Cette génération ne prouve pas encore le succès de la suite CI sur la tête
+finale ; consulter la PR et ses contrôles avant fusion. Aucun Site publié ici.
