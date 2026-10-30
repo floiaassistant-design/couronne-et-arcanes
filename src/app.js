@@ -213,8 +213,8 @@ function startDungeonStage(){
 }
 function startDungeon(id){
  if(battle?.status==='active'){toast('Terminez le combat en cours avant de commencer un donjon.');navigate('battle');return;}
- const result=beginDungeon(profile,id);if(!result.ok){toast(result.reason);return;}
- save();startDungeonStage();
+ const result=changeProfile(next=>beginDungeon(next,id));if(!result.ok)return;
+ startDungeonStage();
 }
 function startTower(floor){
  if(battle?.status==='active'){toast('Terminez le combat en cours.');navigate('battle');return;}
@@ -289,11 +289,11 @@ case 'lab-open':openDeveloper();break;
  case 'start-mission':startMission(id);break;
  case 'start-dungeon':startDungeon(id);break;
  case 'dungeon-choice-open':hideModal();battle=null;persistBattle();navigate('dungeons');break;
- case 'dungeon-event':{const result=chooseDungeonEvent(profile,id);if(!result.ok){toast(result.reason);break;}save();render();toast(id==='rest'?`Halte réparatrice : +${result.restored} PV.`:id==='treasure'?`Trésor récupéré : +${result.gold} or et +${result.shards} éclats.`:'Embuscade acceptée. La récompense exige la victoire.');break;}
+ case 'dungeon-event':{const change=changeProfile(next=>chooseDungeonEvent(next,id));if(!change.ok)break;const result=change.result;render();toast(id==='rest'?`Halte réparatrice : +${result.restored} PV.`:id==='treasure'?`Trésor récupéré : +${result.gold} or et +${result.shards} éclats.`:'Embuscade acceptée. La récompense exige la victoire.');break;}
  case 'dungeon-next':hideModal();if(battle?.status==='active'){startDungeonStage();break;}battle=null;persistBattle();startDungeonStage();break;
  case 'dungeon-exit':hideModal();battle=null;persistBattle();navigate('dungeons');break;
  case 'dungeon-quit':showModal(`<div class="kicker">QUITTER LE DONJON</div><h2>Abandonner cette expédition ?</h2><p>Les ressources déjà gagnées seront conservées mais vous devrez recommencer au premier combat.</p><div class="button-row">${btn('Confirmer l’abandon','confirm-dungeon-quit','','danger')}${btn('Continuer','close-modal','','ghost')}</div>`);break;
- case 'confirm-dungeon-quit':hideModal();abandonDungeon(profile);if(battle?.mode==='dungeon'){battle=null;persistBattle();}save();navigate('dungeons');break;
+ case 'confirm-dungeon-quit':if(!changeProfile(next=>abandonDungeon(next)).ok)break;hideModal();if(battle?.mode==='dungeon'){battle=null;persistBattle();}navigate('dungeons');break;
  case 'start-tower':startTower(id);break;
  case 'trial-start':{
   const result=createEvolutionTrial(profile,id,Date.now(),battle);if(!result.ok){toast(result.reason);break;}
@@ -310,22 +310,22 @@ case 'lab-open':openDeveloper();break;
  }
  case 'deck-apply':{
   if(battle?.status==='active'){hideModal();toast('Terminez le combat avant de modifier votre deck.');break;}
-  const result=applyDeckStyle(profile,id);
-  if(!result.ok){toast(result.reason);break;}
-  hideModal();save();render();toast(`Deck « ${DECK_STYLES[id].name} » prêt : ${result.deck.length} cartes.`);
+  const change=changeProfile(next=>applyDeckStyle(next,id));
+  if(!change.ok)break;
+  hideModal();render();toast(`Deck « ${DECK_STYLES[id].name} » prêt : ${change.result.deck.length} cartes.`);
   break;
  }
- case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}const result=learnClassSkill(profile,id);if(result.ok){save();render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}else toast(result.reason);break;}
+ case 'learn-class-skill':{if(battle?.status==='active'){toast('Terminez le combat avant d’apprendre une compétence.');break;}if(changeProfile(next=>learnClassSkill(next,id)).ok){render();toast('Compétence apprise ! Ajoutez-la à votre deck.');}break;}
  case 'deck-clear':
   if(battle?.status==='active'){toast('Terminez le combat avant de modifier votre deck.');break;}
   showModal(`<div class="kicker">REFAIRE MON DECK</div><h2>Repartir de zéro ?</h2><p>Les ${profile.deck.length} cartes seront retirées du deck. Elles resteront toutes dans votre Collection.</p><div class="button-row">${btn('Vider mon deck','deck-clear-confirm','','primary')}${btn('Garder mon deck','close-modal','','ghost')}</div>`);break;
  case 'deck-clear-confirm':
   if(battle?.status==='active'){hideModal();toast('Terminez le combat avant de modifier votre deck.');break;}
-  for(const cardId of [...profile.deck])modifyDeck(profile,cardId,-1);
-  hideModal();save();render();$('manual-current-title')?.focus({preventScroll:true});break;
+  if(!changeProfile(next=>{next.deck=[];}).ok)break;
+  hideModal();render();$('manual-current-title')?.focus({preventScroll:true});break;
  case 'deck-add':case 'deck-remove':
   if(battle?.status==='active'){toast('Terminez le combat avant de modifier votre deck.');break;}
-  if(modifyDeck(profile,cardFromKey(id),action==='deck-add'?1:-1)){save();if(screen==='deck')refreshManualDeck();else render();}else toast('Impossible de modifier ce deck davantage.');break;
+  if(changeProfile(next=>modifyDeck(next,cardFromKey(id),action==='deck-add'?1:-1)).ok){if(screen==='deck')refreshManualDeck();else render();}break;
  case 'close-inspection':closeCardInspection(true);break;
  case 'select-card':{
   if(!battle||battle.status!=='active'||battle.phase!=='player')break;
@@ -348,20 +348,20 @@ case 'lab-open':openDeveloper();break;
  case 'dismiss-battle-update':if(!storedBattleNeedsRestart()){hideModal();break;}if(!storeBattle(null)){toast('Nettoyage impossible : vérifiez le stockage local.');break;}hideModal();welcome();break;
  case 'battle-exit':const previousMode=battle?.mode;hideModal();battle=null;persistBattle();navigate(previousMode==='tower'?'tower':previousMode==='dungeon'?'dungeons':'campaign');break;
  case 'battle-deck':hideModal();battle=null;persistBattle();navigate('collection');break;
- case 'choose-class':{if(battle?.status==='active'){toast('Terminez le combat avant de changer de classe.');break;}const result=changeHeroClass(profile,id);if(!result.ok){toast(result.reason);break;}save();render();toast('Nouvelle classe sélectionnée.');break;}
- case 'choose-talent':{if(battle?.status==='active'){toast('Terminez le combat avant de changer vos talents.');break;}const result=chooseHeroTalent(profile,id);if(result.ok){save();render();toast('Voie de talent sélectionnée.');}else toast(result.reason);break;}
- case 'craft-equipment':{const result=craftEquipment(profile,id);if(result.ok){save();render();toast('Équipement fabriqué et équipé.');}else toast(result.reason);break;}
- case 'equip-equipment':{const result=equipEquipment(profile,id);if(result.ok){save();render();toast('Équipement changé.');}else toast(result.reason);break;}
- case 'fuse-card':{const result=fuseCard(profile,id);if(result.ok){save();render();toast('Nouvelle carte créée par alchimie.');}else toast(result.reason);break;}
- case 'extract-card':{const result=extractCard(profile,id);if(result.ok){save();render();toast(`Carte extraite : +${result.shards} éclats.`);}else toast(result.reason);break;}
- case 'card-upgrade':const up=upgradeCard(profile,id);if(up.ok){save();render();toast('Carte améliorée !');}else toast(up.reason);break;
- case 'building-upgrade':const bu=upgradeBuilding(profile,id);if(bu.ok){save();render();toast('Bâtiment amélioré !');}else toast(bu.reason);break;
+ case 'choose-class':{if(battle?.status==='active'){toast('Terminez le combat avant de changer de classe.');break;}if(changeProfile(next=>changeHeroClass(next,id)).ok){render();toast('Nouvelle classe sélectionnée.');}break;}
+ case 'choose-talent':{if(battle?.status==='active'){toast('Terminez le combat avant de changer vos talents.');break;}if(changeProfile(next=>chooseHeroTalent(next,id)).ok){render();toast('Voie de talent sélectionnée.');}break;}
+ case 'craft-equipment':if(changeProfile(next=>craftEquipment(next,id)).ok){render();toast('Équipement fabriqué et équipé.');}break;
+ case 'equip-equipment':if(changeProfile(next=>equipEquipment(next,id)).ok){render();toast('Équipement changé.');}break;
+ case 'fuse-card':if(changeProfile(next=>fuseCard(next,id)).ok){render();toast('Nouvelle carte créée par alchimie.');}break;
+ case 'extract-card':{const change=changeProfile(next=>extractCard(next,id));if(change.ok){render();toast(`Carte extraite : +${change.result.shards} éclats.`);}break;}
+ case 'card-upgrade':if(changeProfile(next=>upgradeCard(next,id)).ok){render();toast('Carte améliorée !');}break;
+ case 'building-upgrade':if(changeProfile(next=>upgradeBuilding(next,id)).ok){render();toast('Bâtiment amélioré !');}break;
  case 'pack-collection':hideModal();navigate('collection');break;
  case 'export-save':{const blob=new Blob([JSON.stringify(profile,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='couronnes_et_arcanes_sauvegarde.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Sauvegarde exportée.');break;}
  case 'import-save':$('import-file')?.click();break;
   case 'export-unreadable-save':{try{const original=localStorage.getItem(SAVE_KEY);if(original===null)throw Error('absent');const blob=new Blob([original],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='couronnes_et_arcanes_original_a_recuperer.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Fichier d’origine exporté, sans modification.');}catch{toast('Lecture du stockage impossible : aucun fichier exporté.');}break;}
- case 'welcome-start':profile.guideSeen=true;save();hideModal();startMission('01');break;
- case 'welcome-guide':profile.guideSeen=true;save();hideModal();navigate('guide');break;
+ case 'welcome-start':if(changeProfile(next=>{next.guideSeen=true;}).ok){hideModal();startMission('01');}break;
+  case 'welcome-guide':if(changeProfile(next=>{next.guideSeen=true;}).ok){hideModal();navigate('guide');}break;
  }
 }
 document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();if(event.detail>1&&el.closest('[data-pack-result-actions]'))return;act(el.dataset.action,el.dataset);});
