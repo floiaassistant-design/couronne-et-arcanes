@@ -1,3 +1,28 @@
+# Architecture modulaire — lecture courante
+
+Le [point de reprise](ETAT_PROJET.md) décrit le main et la publication vérifiés ;
+[AGENTS](../AGENTS.md) porte les règles permanentes. Les sections datées de ce
+document conservent l'introduction des modules : leurs comptes, bases de PR,
+phrases « proposé » et limitations d'obtention sont historiques, sauf indication
+actuelle ci-dessous. Ils ne remplacent pas les permissions du registre courant.
+
+| Responsabilité | Propriétaire |
+| --- | --- |
+| Catalogue natif, définitions/version et provenance | `data.js`, `cards/definitions.js`, `cards/evolutions.js` |
+| Combat, défense, états et soutien | `engine/battle.js`, `battle-defense.js`, `unit-effects.js`, `unit-support.js` |
+| Règles partagées et géométrie | `engine/unit-rules.js`, `unit-stats.js`, `board.js`, `battle-control.js` |
+| IA | `src/ai.js`, informations publiques seulement |
+| Progression, paquets, fusion et épreuves | Modules spécialisés de `engine/` et catalogues d'accès correspondants |
+| Présentation et consultation | `ui/card-presentation.js`, `card-inspection.js` et rendus de pages |
+| Lecture/validation/persistance et transactions de profil | `ui/storage.js`, `ui/profile-transactions.js` ; reçus spécialisés conservés |
+| Orchestration et effets visuels | `app.js`, contrôleurs UI et `ui/combat-effects.js`, sans règle recopiée |
+| Distribution et contrôles | Builders communs ; [carte des tests](CARTE_TESTS.md) |
+
+Tous les chemins de modules du tableau sont relatifs à `src/`, sauf mention explicite.
+Cette reprise documentaire ne change aucun module, dépendance ou export.
+
+---
+
 ## Transactions de profil et récupération — 30 octobre 2026
 
 `ui/storage.js` signale désormais une lecture illisible via
@@ -9,8 +34,8 @@ cloner le profil, effectuer la mutation métier existante, persister la copie,
 puis seulement l'adopter dans l'interface. Refus métier ou quota ne modifient
 pas l'état actif. La sauvegarde du combat, les reçus anti-doublon et les
 transactions des paquets/évolutions restent sous leurs modules spécialisés.
-Ce lot est une proposition en PR, non fusionnée ; aucune règle du moteur,
-ressource ou format historique n'est changé.
+Ce lot est intégré à main par la PR 65 ; aucune règle du moteur,
+ressource ou format historique n'a été changé.
 
 ## Sylve Légendaire — 29 octobre 2026
 
@@ -596,4 +621,3 @@ La présentation plein écran de la vue cartes reste dans `assets/card-arena.css
 `engine/board.js` définit `deploymentColumns`, `validDeploymentColumn` et `freeDeploymentColumn` d’après le tableau réel (trois cases pour dix colonnes, une pour les anciens 3×5). `battle.js` valide la colonne optionnelle avant toute consommation, invoque exactement sur cette case et réutilise le hook d’entrée des pièges. L’appel sans colonne garde l’entrée historique. `ai.js` choisit une place libre dans la zone miroir ; le robot partagé `scripts/lib/battle_runner.mjs` emploie la même règle. Les sorts restent ciblés par ligne.
 
 `battle-view.js` rend les trois cibles de pose et transmet `data-col` à `app.js`. Le contrôleur d’aperçu ne contient plus d’état épinglé ; pointerdown/clic et sélection ferment la fiche et bloquent sa réouverture sur le même élément jusqu’à sa sortie. Focus clavier et survol restent disponibles. Aucun nouveau module, champ de sauvegarde ou mapping graphique.
-

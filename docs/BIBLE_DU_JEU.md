@@ -1,3 +1,20 @@
+# Lire la Bible avec l'état courant
+
+La Bible conserve la vision et les éditions historiques du jeu. Les sections
+V1 et leurs listes « implémenté / non implémenté » ne décrivent plus seules le
+jeu actuel : plateau 3×5, comptes de cartes/classes, anciens graphismes,
+absence de site ou d'effets y sont des relevés anciens, pas des règles à restaurer.
+Les anciennes batailles actives incompatibles demandent désormais une relance
+explicite sans pénalité ; leur ancienne promesse de reprise inchangée est historique.
+
+Pour la livraison réelle : [état courant](ETAT_PROJET.md), [utilisation](../README.md),
+[registre et architecture](ARCHITECTURE_MODULAIRE_V2_6.md). Les règles permanentes
+sont dans [AGENTS](../AGENTS.md), la conception des évolutions dans le tableau
+maître Notion, leur état intégré dans [la reprise des cartes](REPRISE_MIGRATION_CARTES.md).
+Ce repérage documentaire ne change ni l'univers ni les règles du jeu.
+
+---
+
 > **20/10/2026 — PR nº 20 intégrée, puis remise à zéro nº 22 :** pose libre dans les trois premières cases alliées des arènes à dix cases, zone miroir pour l’adversaire. Clic = sélection/pose ; survol ou focus = lecture, sans fiche épinglée. Les anciennes batailles 3×5 gardent une entrée. Les descriptions historiques d’invocation à une extrémité ci-dessous ne décrivent pas cette nouvelle option.
 
 > **Mise à jour de géométrie V2.11 (fusionnée sur main le 12/10/2026)** : 10 cases par ligne, 2 lignes en duel, 3 dans les rencontres avancées et 4 pour les boss solo ; anciens combats 3×5 conservés. Le décor peint et la présentation cartes sont conservés ; les anciens graphismes de personnages sont retirés. La présente bible contient des sections V1 historiques ; le README et `ETAT_PROJET.md` décrivent l’état courant.
