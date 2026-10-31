@@ -51,7 +51,20 @@ export function validateImportedProfile(raw){
  if(error)throw Error(error);
  return p;
 }
-export function loadProfile(){try{const value=localStorage.getItem(SAVE_KEY);return value?normalizeProfile(JSON.parse(value)):freshProfile();}catch{return freshProfile();}}
+// Ne jamais substituer silencieusement une partie vierge à une sauvegarde illisible.
+// Un deck vide est légitime pendant sa construction ; les anciennes valeurs sont
+// toujours normalisées comme auparavant, sans migration ni écriture automatique.
+export function inspectStoredProfile(){
+ try{
+  const serialized=localStorage.getItem(SAVE_KEY);
+  if(serialized===null)return {profile:freshProfile(),error:null};
+  const raw=JSON.parse(serialized);
+  if(!raw||typeof raw!=='object'||Array.isArray(raw)||!Array.isArray(raw.deck)||
+   !raw.collection||typeof raw.collection!=='object'||Array.isArray(raw.collection))throw Error('Profil illisible');
+  return {profile:normalizeProfile(raw),error:null};
+ }catch{return {profile:null,error:'Sauvegarde locale illisible ou inaccessible.'};}
+}
+export function loadProfile(){return inspectStoredProfile().profile;}
 export function saveProfile(profile){try{localStorage.setItem(SAVE_KEY,JSON.stringify(profile));return true;}catch{return false;}}
 export function restoreBattle(){try{
  const b=JSON.parse(localStorage.getItem(BATTLE_KEY)||'null');

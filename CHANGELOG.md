@@ -1,3 +1,20 @@
+## Correction proposée — détection de syntaxe au démarrage, 31 octobre 2026
+
+- Correction du gestionnaire d'import de profil : suppression d'un résidu de
+  l'ancien code qui empêchait l'interface navigateur de démarrer.
+- Ajout d'un test de syntaxe du point d'entrée avant les parcours Playwright.
+- Export autonome à regénérer sur la branche avant validation finale.
+
+## Proposition — fiabilisation de la sauvegarde, 30 octobre 2026
+
+- Afficher une récupération explicite sans écraser un profil local illisible ;
+  préserver le texte d'origine et permettre son export, puis import volontaire.
+- Sur les actions de progression classiques, enregistrer une copie avant de
+  confirmer, sans débiter de ressources lorsque le stockage refuse l'écriture.
+- Tests de profil défectueux, transaction refusée, interruption et reprise.
+- Clés de sauvegarde, règles, équilibrage, illustrations et obtention inchangés.
+- PR dédiée en attente de contrôles et d'accord spécifique, sans publication.
+
 ## Proposition — onze Légendaires Sylve, 29 octobre 2026
 
 - Fusion de trois Épiques libres identiques après mission 06 : onze versions

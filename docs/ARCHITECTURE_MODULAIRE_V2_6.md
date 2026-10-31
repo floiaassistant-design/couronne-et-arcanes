@@ -1,3 +1,17 @@
+## Transactions de profil et récupération — 30 octobre 2026
+
+`ui/storage.js` signale désormais une lecture illisible via
+`inspectStoredProfile()`, sans écrire ni créer de profil de remplacement.
+`app.js` affiche une récupération en lecture seule (export brut/import validé),
+le jeu et ses contrôleurs restent bloqués tant que le profil n'est pas restauré.
+`ui/profile-transactions.js` fournit la primitive pure `commitProfileChange` :
+cloner le profil, effectuer la mutation métier existante, persister la copie,
+puis seulement l'adopter dans l'interface. Refus métier ou quota ne modifient
+pas l'état actif. La sauvegarde du combat, les reçus anti-doublon et les
+transactions des paquets/évolutions restent sous leurs modules spécialisés.
+Ce lot est une proposition en PR, non fusionnée ; aucune règle du moteur,
+ressource ou format historique n'est changé.
+
 ## Sylve Légendaire — 29 octobre 2026
 
 Le registre porte onze patches supplémentaires, sans modifier les natifs.
