@@ -1,3 +1,13 @@
+## Correction de syntaxe détectée le 31 octobre 2026
+
+La première CI sur `735777e` a confirmé `npm test`, parité, génération
+autonome et assemblage web, mais tous les parcours navigateur échouaient avant
+le premier écran : une ancienne fin de gestionnaire d'import était restée
+collée au nouvel import. Le gestionnaire a été remis en forme sans autre
+changement métier. Un contrôle `node --check src/app.js` fait désormais partie
+des tests Node afin de détecter ce défaut avant les tests navigateur. La
+régénération de `JOUER.html` et les contrôles sur le dernier SHA restent requis.
+
 # Fiabilisation des sauvegardes — proposition du 30 octobre 2026
 
 Base : main `37d40bf48403c7dd6edd845a95df590c42cc02b6` (PR 64

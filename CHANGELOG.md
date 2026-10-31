@@ -1,3 +1,10 @@
+## Correction proposée — détection de syntaxe au démarrage, 31 octobre 2026
+
+- Correction du gestionnaire d'import de profil : suppression d'un résidu de
+  l'ancien code qui empêchait l'interface navigateur de démarrer.
+- Ajout d'un test de syntaxe du point d'entrée avant les parcours Playwright.
+- Export autonome à regénérer sur la branche avant validation finale.
+
 ## Proposition — fiabilisation de la sauvegarde, 30 octobre 2026
 
 - Afficher une récupération explicite sans écraser un profil local illisible ;
