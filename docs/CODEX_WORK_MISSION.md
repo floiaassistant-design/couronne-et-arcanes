@@ -1,76 +1,46 @@
-> **État vérifié le 23/10/2026 :** les PR 31 à 34 sont fusionnées
-> sur `main` `adf9c9192293ea2e25849f37a0ac11d1df08c951`.
-> Présentation cartes unique, `JOUER.html` unique. Les propositions en tête
-> des anciens documents sont historiques. Lire l'état actuel et vérifier les
-> PR ouvertes avant de commencer une nouvelle mission.
-
-## Proposition — Présentation cartes unique et export unique, 22 octobre 2026
-
-Demande du propriétaire : conserver seulement le jeu avec les cartes sur le
-plateau et un seul fichier jouable `JOUER.html`. La présentation personnages,
-son bouton, sa préférence et ses styles spécifiques sont retirés. Le jeu web
-et l’export démarrent toujours en cartes, même avec l’ancienne préférence off
-ou un ancien lien `?cartes=0`. Les anciens combats 3×5 restent lisibles en cartes,
-sans modifier leur géométrie, leurs règles ni leur sauvegarde.
-
-Branche dédiée depuis la PR nº 33, tête exacte `063c9f61`, elle-même basée sur
-main `9941596d`. Cette proposition dépend de la nº 33 et ne l’autorise pas à
-être fusionnée. Chaque PR attend son accord spécifique. Détails et contrôles :
-[EXPORT_UNIQUE_2026_10_22.md](EXPORT_UNIQUE_2026_10_22.md).
-Les mentions de deux présentations et de quatre builds dans les sections
-datées plus bas décrivent l’historique ; elles ne sont plus la consigne active.
-
 # Mission de développement — Couronnes & Arcanes
 
-## Reprendre depuis GitHub
+## Reprendre le travail réel
 
-Lire `../AGENTS.md`, `../README.md`, [l'état du projet](ETAT_PROJET.md),
-la [Bible](BIBLE_DU_JEU.md) et l'architecture concernée. Vérifier le dernier main
-et les PR réelles. Les dépôts GitHub du jeu et de l'atelier sont les seules
-sources officielles ; aucune ancienne archive externe ne sert à reprendre ou
-à synchroniser le projet. Ne pas mélanger ce CCG avec un autre projet de jeu.
+Lire [AGENTS](../AGENTS.md), [README](../README.md), [l'état courant](ETAT_PROJET.md),
+la [Bible](BIBLE_DU_JEU.md) et l'[architecture](ARCHITECTURE_MODULAIRE_V2_6.md).
+Vérifier main, les PR ouvertes et les travaux parallèles ; vérifier toute copie
+locale. GitHub est la source officielle du jeu et de l'atelier, les anciens
+bilans ne déterminent ni les actifs courants ni la prochaine tâche.
 
-## Socle existant
+## Définir une évolution cohérente
 
-Les PR jeu nº 20 et nº 22 sont intégrées : même jeu tactique solo, plateau peint
-plein écran, cartes sur les cases, main et cadre de lecture commun. Pose en
-1/2/3, miroir adverse 10/9/8, anciennes sauvegardes 3×5 compatibles. Le contenu
-est de 76 cartes, quatre classes, 12 missions, 20 étages et trois donjons.
-Moteur, IA heuristique, progression, équipements, talents et sauvegardes existent
-déjà. Lire leurs modules et tests avant de créer une nouvelle implémentation.
+Identifier modules, dépendances et tests, puis réutiliser les règles et rendus
+partagés. Garder moteur, IA, progression, interface, animations et stockage
+séparés. Préserver hors périmètre équilibrage, identifiants, économie, API et
+sauvegardes historiques. Les chiffres ou pouvoirs encore indéfinis ne sont pas
+à inventer. Les limites de livraison des cartes sont suivies dans la
+[reprise des migrations](REPRISE_MIGRATION_CARTES.md).
 
-## Travail graphique actuel
+Pour les graphismes, lire la [décision de production](REMISE_A_ZERO_GRAPHIQUE_2026_10_20.md)
+et le [contrat d'import](INTEGRATION_GRAPHISMES.md), puis vérifier la version
+exacte approuvée dans l'atelier. Import et fusion atelier sont distincts.
+Source, prompt, droits, provenance, reçu et empreinte restent traçables ;
+aucun ancien lot ni lecteur d'effets n'est restauré implicitement.
 
-Le propriétaire conserve plateau et présentation mais demande des illustrations
-et animations neuves. Les anciens portraits, silhouettes, planches et accords
-sont historiques. La PR Milicien nº 25 importe une carte complète v02 autorisée le 21/10/2026.
-Les PR Aube nº 26, Sylve nº 27 et Ombre nº 28 sont désormais fusionnées sur
-accords spécifiques ; les deux sceaux remplacent le trait de camp. La branche
-Forge suivante propose dix v01 de la PR atelier nº 25, épinglées à `ceb0a916`.
-Éther garde ses repères neutres. Lire l’état courant avant toute nouvelle mission. Ne pas réinstaller les anciens lots ni restaurer leur lecteur d'effets.
+## Vérifier et livrer
 
-Commencer par une seule illustration pilote. Source, prompt, provenance, droits,
-version, dimensions, poids, empreinte et accord humain exact restent dans GitHub.
-Les textes et valeurs restent dynamiques. Toute future animation demande un
-contrat explicite, un repli fixe et le respect du mouvement réduit. Voir la
-[décision](REMISE_A_ZERO_GRAPHIQUE_2026_10_20.md) et le
-[contrat d'import](INTEGRATION_GRAPHISMES.md). Aucun transfert automatique.
-
-## Méthode et livraison
-
-- Réaliser les changements autorisés de manière autonome sur une branche dédiée,
-  conserver le concept, vérifier les dépendances et réutiliser les modules.
-- Vérifier tests, parité et builds suivant AGENTS. Un changement d'interface
-  demande les parcours navigateur actuels du workflow, dont cartes, déploiement,
-  aperçus, base graphique neutre, sauvegarde/reprise et fonctionnement hors réseau.
-  `npm run dev` sert l'entrée modulaire ; `JOUER.html` est généré pour jouer
-  directement. Ne pas distribuer les HTML réservés aux tests.
-- Ne pas annoncer une campagne humaine exhaustive, un smartphone physique ou un
-  équilibrage final sur la seule base de tests. Documenter les limites réelles.
-- Tenir l'état court, enregistrer les changements et vérifier la publication
-  effective du commit. Ouvrir une PR concrète et testée.
-- Chaque nouvelle PR exige un accord explicite et spécifique avant fusion,
-  y compris la documentation. Aucun auto-merge ni réécriture forcée de main.
-
-Les rapports V1 et les anciennes propositions sont des bilans datés ; ils ne
-définissent ni les assets actuels, ni les tests à réactiver, ni la prochaine tâche.
+- Une évolution, une branche, une PR. Réconcilier les dépendances utiles,
+  sans forcer main ni écraser les contributions d'autrui.
+- Choisir les contrôles avec [la carte des tests](CARTE_TESTS.md) et AGENTS.
+  Une PR Markdown seule utilise le contrôle léger existant ; le jeu ou la CI
+  demandent les contrôles complets pertinents. Ne jamais affaiblir les tests.
+- `JOUER.html` est l'unique export hors ligne, généré depuis les mêmes sources
+  que le web. Le diagnostic reste réservé aux tests. Documenter chaque ajout
+  de module, CSS ou ressource et son inclusion dans les distributions.
+- Relire le diff complet et la CI du commit exact. Distinguer tests, examen
+  visuel et limites ; les simulations ne valident pas l'équilibrage humain.
+- Actualiser les documents concernés et pousser le travail utile. Terminer
+  les tâches indépendantes de la CI puis laisser un point de reprise si elle
+  tourne encore, sans surveillance active ni relance redondante.
+- Chaque PR, documentation comprise, attend l'accord explicite et spécifique
+  du propriétaire avant fusion. Aucun auto-merge. Après accord, revérifier
+  main/contenu/CI et consigner le bilan après fusion dans la PR.
+- Sites reçoit seulement la distribution du main intégré et vérifié. Consulter
+  l'automatisation existante, préserver l'audience et confirmer le résultat
+  terminal ; ne jamais déduire la publication de la fusion.

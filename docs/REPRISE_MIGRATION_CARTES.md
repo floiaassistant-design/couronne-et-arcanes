@@ -1,19 +1,21 @@
-# Reprise des migrations de cartes — 29 octobre 2026
+# Reprise des migrations de cartes — état intégré au 31 octobre 2026
 
 Source de conception : [tableau maître unique](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
 édition relue `2026-10-27T06:13:46.581Z`. Les compteurs ci-dessous décrivent
 les cases de conception complètes, pas leur livraison. Aucun tableau parallèle
 de pouvoirs ni validation de nouvelles décisions.
 
-GitHub reste la source du jeu : main `33cad6673c9e3cb468b222de39ad821a936dc098`
-intègre les PR 62/63 sur accord : les 41 évolutions Aube et les 15 Sylve Rare/Épique.
-La branche `feat/evolutions-legendaires-sylve` propose onze Légendaires Sylve
-supplémentaires. Chaque nouvelle PR attend son accord spécifique ; publication distincte.
+GitHub reste la source du jeu : main vérifié `117a643bf110995f3bc67dc86c55a678cc8b0f76`.
+Les 41 évolutions Aube et les 26 Sylve jusqu'à Légendaire sont intégrées ;
+la fiabilisation des sauvegardes l'est également. La publication est suivie
+séparément dans [ETAT_PROJET.md](ETAT_PROJET.md). Les compteurs de conception
+ci-dessous restent ceux de la relecture Notion datée ci-dessus, sans nouvelle
+lecture ni écriture Notion pendant cette reprise documentaire.
 
 | Ordre | Unités natives | Évolutions conçues complètement validées | Situation d'implémentation |
 | --- | ---: | ---: | --- |
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
-| Sylve | 11 | 48 | 15 Rare/Épique intégrées ; 11 Légendaires proposées, 22 supérieures à intégrer |
+| Sylve | 11 | 48 | 26 évolutions intégrées jusqu’à Légendaire ; 22 supérieures à intégrer |
 | Ombre | 11 | 43 | Natifs seuls ; transcription et mécanique des évolutions à préparer |
 | Forge | 10 | 0 sur 39 cases futures | Conception incomplète ; règles communes de Garde déjà validées, sans compléter les cases à leur place |
 | Éther | 11 | 0 sur 39 cases futures | Conception incomplète ; même distinction pour les règles communes de Garde |
@@ -30,7 +32,7 @@ par 5, plafond 20. Six Rares et neuf Épiques par fusion, après missions 01/03.
 Un paquet Sylve distinct réutilise le circuit d'achat, à 190 or et taux 60/35/5.
 Pas de nouvelle épreuve, copie gratuite ou définition des rangs supérieurs.
 
-## Lot en cours : les onze Légendaires Sylve
+## Lot intégré : les onze Légendaires Sylve
 
 [Contrat](SYLVE_LEGENDAIRES.md) : tous les personnages Sylve atteignent Légendaire,
 par fusion après mission 06. Leurs nouveaux états utilisent le moteur commun,

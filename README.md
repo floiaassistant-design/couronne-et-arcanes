@@ -1,13 +1,9 @@
 # Couronnes & Arcanes
 
-Garde/Riposte uniques (PR 57) et quatre groupes de tests parallèles (PR 58)
-sont intégrés. [Règles](docs/REGLES_CARTES_UNIQUES.md) · [CI](docs/CI_PARALLELE.md).
-
-> Les quatre défis pilotes (PR 56) et la fusion de doublons (PR 59) sont intégrés.
-> Le [paquet d’évolution Aube](docs/PAQUETS_EVOLUTION.md) est intégré par PR 60.
-> Les ascensions Aube et les 15 évolutions Sylve Rare/Épique sont intégrées
-> par les PR 62 et 63. Cette branche propose les [11 Légendaires Sylve](docs/SYLVE_LEGENDAIRES.md),
-> par fusion après le deuxième boss. Les 22 évolutions Sylve supérieures restent à intégrer.
+Le jeu intègre les sauvegardes protégées, Garde/Riposte uniques, le deck manuel,
+les paquets/fusions, les ascensions Aube et les Légendaires Sylve.
+Les 22 évolutions Divines/Éveillées Sylve restent à implémenter.
+[État intégré et publication](docs/ETAT_PROJET.md) · [Carte des tests](docs/CARTE_TESTS.md).
 
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
 quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle.
@@ -19,10 +15,10 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 - `tests/JOUER.test.html` : diagnostic automatisé seulement, jamais distribué.
 
 « Épreuves » annonce les conditions et récompenses de trois
-évolutions Rares, puis du Milicien Épique après le premier boss. Sur cette branche, accomplir son défi et gagner avec le même
+évolutions Rares, puis du Milicien Épique après le premier boss. Accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; la fusion ouvre ici 41 évolutions Aube et 26 Sylve ; les vingt Divines/Éveillées Aube exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
+sont utilisables en campagne ; la fusion ouvre 41 évolutions Aube et 26 Sylve ; les vingt Divines/Éveillées Aube exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
@@ -55,7 +51,7 @@ sauvegardé avant les effets ; une interruption ne rejoue aucune attaque.
 [Contrat et vérifications](docs/CIBLAGE_EFFETS_COMBAT_2026_10_23.md).
 Le ciblage et ces effets sont intégrés sur GitHub depuis la PR nº 40.
 
-## Concorde — intégré et publié
+## Concorde
 
 Deux unités alliées du même Ordre sur la même ligne gagnent chacune +1 ATQ.
 La carte elle-même compte parmi les deux ; davantage d’unités ne cumule pas ce
@@ -66,25 +62,19 @@ des cartes concernées. La lumière est fixe et localisée. Aucun nouveau dessin
 illustrations et leurs reçus sont conservés. La variante à emblèmes neufs au
 centre envisagée dans l’audit reste historique, sans import automatique.
 [Contrat et validation](docs/CONCORDE_2026_10_24.md).
-La PR nº 42 a été fusionnée sur accord spécifique le 24 octobre 2026, puis
-publiée sur le [jeu en ligne](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site)
-(Sites, version 5). Le déploiement et les fichiers servis ont été vérifiés.
 
-### Affichage simplifié — intégré et publié
+### Repères de camp
 
 Les repères sont un petit rond bleu pour vos unités et un losange rouge
 pour les adversaires, à côté de chaque carte. Les fiches main/plateau/Collection
 affichent une ligne : **☀ Bonus de faction : +1 attaque**, avec le symbole de
 l’Ordre en tête. Le bonus inactif est grisé et marqué « inactif » ; la lumière
 de Concorde sur l’image est conservée.
-La [PR nº 45](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/45)
-a été fusionnée le 24 octobre 2026. La CI finale et la publication automatique
-Sites version 7 ont été vérifiées dans son bilan.
 [Contrat et reprise](docs/REPERES_CAMP_FICHES_2026_10_24.md).
 
 ### Collection — six cartes et aperçu rapide
 
-Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube et Sylve définies montrent leurs chiffres et leurs stocks réels : 67 évolutions sont proposées à la fusion, dont 27 aussi dans les paquets et quatre également obtenables par épreuve. Les vingt Divines/Éveillées indiquent « Ascension requise » avant le défi commun correspondant. Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
+Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube et Sylve définies montrent leurs chiffres et leurs stocks réels : 67 évolutions sont accessibles par fusion, dont 27 aussi dans les paquets et quatre également obtenables par épreuve. Les vingt Divines/Éveillées indiquent « Ascension requise » avant le défi commun correspondant. Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
 
 ## Progression et sauvegarde
 
@@ -101,7 +91,7 @@ conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteu
 sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
 et les **37 versions Sylve** jusqu'à Légendaire, à leurs niveaux 0 à 3 choisis indépendamment.
 Les autres unités conservent leur version native. Les quatre récompenses pilotes se gagnent dans les Épreuves ;
-les 67 évolutions sont proposées à l’obtention sur cette branche ; deux grandes ascensions ouvrent les vingt Divines/Éveillées Aube, sans carte offerte ni consommation du deck. Le paquet Sylve propose 3 cartes pour 190 or après le premier boss, avec les mêmes taux par groupe que l'Aube : 60/35/5. [Prochaines factions](docs/REPRISE_MIGRATION_CARTES.md). La PR Aube nº 53, avec sa présentation commune et sa
+les 67 évolutions sont obtenables après leurs déblocages ; deux grandes ascensions ouvrent les vingt Divines/Éveillées Aube, sans carte offerte ni consommation du deck. Le paquet Sylve propose 3 cartes pour 190 or après le premier boss, avec les mêmes taux par groupe que l'Aube : 60/35/5. [Prochaines factions](docs/REPRISE_MIGRATION_CARTES.md). La PR Aube nº 53, avec sa présentation commune et sa
 [revue finale](docs/REVUE_AUBE_PR53_2026_10_27.md), a été fusionnée sur accord du
 propriétaire le 27 octobre 2026. La publication du site reste une opération distincte.
 
@@ -109,7 +99,7 @@ La sauvegarde est locale à l’appareil et à l’adresse utilisée. Guide perm
 l’export/import du profil. Les clés historiques et les combats repris sont
 conservés ; aucune réinitialisation ou migration implicite.
 
-### Protection des sauvegardes (proposée dans une PR dédiée)
+### Protection des sauvegardes
 
 Si le profil local ne peut pas être lu, le jeu affiche un écran de récupération :
 aucune partie vierge n'est enregistrée à sa place. Exportez les données brutes
@@ -120,7 +110,7 @@ sa construction ; les profils historiques lisibles restent compatibles.
 Fabrication, équipements, talents, alchimie, deck et événements de donjon ne
 confirment désormais une action qu'après sauvegarde réussie. En cas d'échec,
 les ressources, les copies et le profil actif restent inchangés. Aucune clé de
-sauvegarde ou règle de combat modifiée. Ce correctif attend sa propre fusion.
+sauvegarde ou règle de combat modifiée. La protection est intégrée ; le statut de publication est suivi dans [l’état courant](docs/ETAT_PROJET.md).
 
 ## Développer et vérifier
 
@@ -141,7 +131,7 @@ que des fichiers Markdown à la racine ou dans `docs/`, seuls le contrôle
 de portée et ses tests légers tournent ; les deux jobs restent présents.
 Tout autre changement en PR, et tout push sur `main`, gardent la suite complète
 et le paquet de diffusion nécessaire à Sites.
-[Contrat de CI](AGENTS.md#contrat-ci--vérification-sélective-des-pr-documentaires).
+[Contrat de CI](AGENTS.md#tests-et-ci) · [Couverture et limites](docs/CARTE_TESTS.md).
 Un résultat ancien ne valide pas automatiquement un nouveau commit. Le builder découvre les modules importés et
 les feuilles reliées par index.html ; ne jamais éditer JOUER.html à la main.
 Aucune bibliothèque de jeu externe n’est nécessaire.

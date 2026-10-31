@@ -1,3 +1,27 @@
+# Journal des changements
+
+## Documentation proposée — reprise de l'audit, 31 octobre 2026
+
+- Séparation des règles permanentes et des anciens bilans, conservés dans
+  deux archives explicitement non normatives ; point de reprise courant court.
+- Statuts des sauvegardes et des Légendaires Sylve corrigés comme intégrés ;
+  publication suivie séparément, sans déploiement concurrent.
+- Carte des contrôles existants : domaines, commandes, groupes navigateur,
+  appels imbriqués et limites ; aucune modification des tests ou workflows.
+- Protection main constatée active via son ruleset, avec les deux contrôles
+  requis et aucun acteur de contournement ; aucun réglage externe modifié.
+- Ce lot documentaire attend son propre accord de fusion. Les éléments
+  suivants sont des bilans datés : leurs statuts « proposé » décrivent la
+  préparation de chaque changement, pas son état de livraison actuel.
+
+## Intégré — sauvegardes et syntaxe, 31 octobre 2026
+
+La PR 65 est fusionnée au commit `117a643bf110995f3bc67dc86c55a678cc8b0f76`.
+La PR 64 des onze Légendaires Sylve est également intégrée. Les contrôles et le
+statut de publication actuels sont dans [ETAT_PROJET.md](docs/ETAT_PROJET.md).
+
+## Historique des propositions et livraisons
+
 ## Correction proposée — détection de syntaxe au démarrage, 31 octobre 2026
 
 - Correction du gestionnaire d'import de profil : suppression d'un résidu de

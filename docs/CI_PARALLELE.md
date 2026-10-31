@@ -1,4 +1,35 @@
-# CI parallèle — proposition du 27 octobre 2026
+# CI parallèle — contrat en vigueur
+
+La CI parallèle est intégrée. La matrice et les commandes actuelles sont dans
+`scripts/ci_browser_groups.json` et `.github/workflows/test.yml` ; voir la
+[carte des tests](CARTE_TESTS.md) pour les domaines et les appels imbriqués.
+Quatre groupes puis `validation`, propagation des échecs et contrôles sélectifs
+des seules PR Markdown sont conservés. Tout push main garde les tests complets
+et le paquet web ; une PR documentaire verte ne produit pas nécessairement de paquet.
+
+## Protection de main vérifiée le 31 octobre 2026
+
+L'API du ruleset [Protection main](https://github.com/floiaassistant-design/couronne-et-arcanes/rules/26023976)
+confirme `enforcement: active`, cible `refs/heads/main`, PR obligatoire,
+contrôles `validation` et `assemblage-web` et branche à jour (`strict`), blocage
+de suppression et de réécriture forcée. `bypass_actors` est vide et l'utilisateur
+courant ne peut pas contourner ce ruleset. **La protection n'est plus à configurer.**
+
+Le nombre de revues GitHub approuvées exigées reste zéro : ce mécanisme ne
+remplace pas l'autorisation explicite et spécifique du propriétaire dans
+[AGENTS](../AGENTS.md). Aucun réglage GitHub n'a été modifié lors de ce relevé.
+L'absence de protection classique ne suffit pas à conclure : lire aussi les rulesets.
+
+## Historique de mise en place — non normatif
+
+Le texte ci-dessous conserve les mesures et échecs initiaux du 27 octobre.
+Les mentions de PR ouverte, d'absence de protection et de contrôles à effectuer
+décrivent cette date, **pas l'état courant**. Le résultat d'une CI récente se lit
+sur le commit exact ; aucune durée historique n'est une promesse de performance.
+
+---
+
+## Proposition initiale du 27 octobre 2026
 
 Base : main `6dee2dc42e3d6bd69d7cd3aaa065c7ac262b674b` (PR 57 fusionnée).
 Branche : `ci/tests-paralleles`. Aucune fusion autorisée.
