@@ -4636,7 +4636,22 @@ document.addEventListener('change',async event=>{
   else if(key==='aiStyle')d.aiStyle=value;
   render();return;
  }
- if(event.target.id==='import-file'){const file=event.target.files?.[0];if(!file)return;if(!profileLoadError&&battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven){settle();return;}try{const imported=validateImportedProfile(JSON.parse(await file.text())),previous=localStorage.getItem(SAVE_KEY);if(!saveProfile(imported))throw Error('Enregistrement indisponible.');if(!storeBattle(null)){try{if(previous===null)localStorage.removeItem(SAVE_KEY);else localStorage.setItem(SAVE_KEY,previous);}catch{}throw Error('Combat non nettoyé.');}profile=imported;profileLoadError=null;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide ou stockage indisponible.');}return;}try{const raw=JSON.parse(await file.text()),imported=validateImportedProfile(raw);if(!saveProfile(imported))throw Error('Sauvegarde impossible.');if(!storeBattle(null)){saveProfile(profile);throw Error('Nettoyage impossible.');}profile=imported;battle=null;navigate('home');toast('Progression importée.');}catch{toast('Import impossible : fichier invalide.');}return;}if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
+ if(event.target.id==='import-file'){
+   const file=event.target.files?.[0];if(!file)return;
+   if(!profileLoadError&&battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven){settle();return;}
+   try{
+    const imported=validateImportedProfile(JSON.parse(await file.text()));
+    const previous=localStorage.getItem(SAVE_KEY);
+    if(!saveProfile(imported))throw Error('Enregistrement indisponible.');
+    if(!storeBattle(null)){
+     try{if(previous===null)localStorage.removeItem(SAVE_KEY);else localStorage.setItem(SAVE_KEY,previous);}catch{}
+     throw Error('Combat non nettoyé.');
+    }
+    profile=imported;profileLoadError=null;battle=null;navigate('home');toast('Progression importée.');
+   }catch{toast('Import impossible : fichier invalide ou stockage indisponible.');}
+   return;
+  }
+  if(event.target.id==='owned-only'){collectionOwned=event.target.checked;render();}});
 render();if(!profileLoadError){if(battle&&battle.status!=='active')settle();else if(!notifyBattleUpdate()){welcome();scheduleEnemyStep();}}
 
 
