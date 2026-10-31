@@ -33,3 +33,15 @@ branche dans le commit `c17049e7dbf3d804804b76b6ba05a0830d90af40`.
 Le workflow temporaire qui a fait cette opération s'est retiré du diff final.
 Cette génération ne prouve pas encore le succès de la suite CI sur la tête
 finale ; consulter la PR et ses contrôles avant fusion. Aucun Site publié ici.
+
+## Second correctif et point de reprise — 31 octobre 2026
+
+La première CI complète sur `735777e` a révélé une erreur de syntaxe dans
+`src/app.js` (résidu du gestionnaire d'import) : les parcours navigateur
+échouaient avant l'accueil, bien que les contrôles de règles et la génération
+réussissent. Le gestionnaire a été remis en forme et un test `node --check`
+du point d'entrée a été ajouté à `npm test`. Le générateur officiel a ensuite
+reconstruit `JOUER.html` sur la branche via le commit `6a4925cba3eaaf39c9c1ffa7ba50c922bee3cccb` ; le
+workflow transitoire a été retiré du diff. **Recontrôler la CI sur le prochain
+commit de documentation et les quatre groupes Playwright** ; un succès du
+seul assemblage ne suffit pas. Toujours aucune fusion ni publication.
