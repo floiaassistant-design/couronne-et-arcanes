@@ -28,17 +28,17 @@ Sur la tête approuvée : [tests complets réussis](https://github.com/floiaassi
 et [assemblage web réussi](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/41210592442).
 Leur réutilisation pour le merge repose sur l'identité d'arbre ci-dessus.
 L'[assemblage main](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/41219964483)
-a réussi ; la [CI main](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/41219964452)
-est encore en cours au relevé. Ne pas en anticiper la conclusion.
+et la [CI main](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/41219964452)
+ont également réussi sur le commit de fusion exact.
 
 ## Publication séparée
 
-Dernière publication attestée : **Sites nº 17**, GitHub `37d40bf` (PR 64),
-source de diffusion `fe764121a575e5b613af52087d0fee7ca5909b36`, audience publique.
-L'automatisation « Publication Couronnes sur Sites » a enregistré une nouvelle
-exécution en cours le 31 octobre à 17 h 30, heure de Paris. Le résultat conservé
-de la précédente exécution ne prouve pas la publication de `117a643`.
-Aucune publication parallèle lancée pendant cette reprise.
+Publication confirmée : **Sites nº 18**, GitHub `117a643bf110995f3bc67dc86c55a678cc8b0f76`,
+source de diffusion `760fcd4d9ae032123e9fca43b6ba028582d65f8c`, audience publique.
+L'automatisation existante a achevé son exécution le 31 octobre à 17 h 42,
+heure de Paris, avec provenance/empreintes du paquet et fichiers modifiés
+comparés. Le déploiement natif `appgdep_6ae61a39af708191819a6d0119517e37`
+est confirmé réussi. Aucune publication parallèle lancée pendant cette reprise.
 
 [Jeu en ligne — version publiée ci-dessus](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site)
 · [Export du main intégré](https://github.com/floiaassistant-design/couronne-et-arcanes/raw/117a643bf110995f3bc67dc86c55a678cc8b0f76/JOUER.html).
