@@ -1,7 +1,7 @@
 // Joueur automatisé fixe pour les audits comparatifs, sans état global ni DOM.
 // Ne prédit pas la réussite des joueurs humains.
 import {CARDS} from '../../src/data.js';
-import {createBattle,playPlayerCard,endPlayerTurn,usePower} from '../../src/engine.js';
+import {createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower} from '../../src/engine.js';
 import {classSkillTargetError} from '../../src/engine/class-skills.js';
 import {controlTargetError,silenceTarget,silenceValue,teleportPlan,teleportGain,trapPlan,activeAbility} from '../../src/engine/battle-control.js';
 
@@ -41,8 +41,8 @@ export function chooseSimulatedMove(b){
  moves.sort((a,b)=>b.score-a.score||a.i-b.i||a.lane-b.lane);
  return moves[0]||null;
 }
-export function simulateBattle(profile,mission,seed,{turnLimit=40,observe,legacy=false}={}){
- const b=createBattle(profile,mission,seed,{legacy});let turns=0,powers=0;
+export function simulateBattle(profile,mission,seed,{turnLimit=40,observe,legacy=false,turnFlow}={}){
+ const b=createBattle(profile,mission,seed,{legacy,turnFlow});let turns=0,powers=0;
  while(b.status==='active'&&turns<turnLimit){
   if(b.powerCooldown===0){const result=usePower(b);if(result.ok)powers++;}
   for(let i=0;i<2&&b.status==='active';i++){
@@ -50,6 +50,17 @@ export function simulateBattle(profile,mission,seed,{turnLimit=40,observe,legacy
    const result=playPlayerCard(b,best.i,best.lane,best.col);if(!result.ok)throw Error(result.reason);
   }
   if(b.status==='active')endPlayerTurn(b);
+  // Le mode actuel du jeu exige des poses adverses puis leur résolution.
+  // L'option absente conserve les simulations et métriques historiques.
+  if(b.status==='active'&&b.phase==='enemy'){
+   for(let i=0;i<3&&b.status==='active';i++){
+    const result=playEnemyCard(b);if(!result.ok)throw Error(result.reason);
+    if(result.done)break;
+   }
+   if(b.status==='active'){
+    const result=finishEnemyTurn(b);if(!result.ok)throw Error(result.reason);
+   }
+  }
   observe?.(b);
   turns++;
  }

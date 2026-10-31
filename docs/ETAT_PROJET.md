@@ -1,72 +1,71 @@
 # État courant — vérifié le 31 octobre 2026
 
-## Intégré dans main
+## Main intégré
 
-Dernier main vérifié : [`117a643bf110995f3bc67dc86c55a678cc8b0f76`](https://github.com/floiaassistant-design/couronne-et-arcanes/commit/117a643bf110995f3bc67dc86c55a678cc8b0f76),
-fusion autorisée de la [PR 65](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/65).
-Son arbre `ea419ca21800af1f47ad655a9b298b6d0c1841d6` est identique à la tête
-approuvée `d6458eba36ca7913b12609db24280c35490c60fc`.
+[`432b27c82fa05241022b9e3e3f5e7b2ba4cc651f`](https://github.com/floiaassistant-design/couronne-et-arcanes/commit/432b27c82fa05241022b9e3e3f5e7b2ba4cc651f)
+intègre la [PR 66](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/66),
+fusionnée sur accord explicite. Son arbre `31de8519e8aa898d32697e9ba6dad45ee6c7e0d4`
+est identique à la tête approuvée `f252590954251163e38ce8db7c67105e838cd576`.
+[Tests main](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/41223595865)
+et [assemblage main](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/41223595814)
+réussis. Aucun autre travail ouvert au départ de cette mission.
 
-- **Sauvegardes** : profil illisible préservé, récupération/import explicites,
-  opérations ordinaires sur copie et succès seulement après écriture durable.
-  Paquets, fusions et clôtures gardent leurs transactions/reçus spécialisés.
-- **Évolutions** : Aube complète à l'obtention (41 évolutions), Sylve jusqu'à
-  Légendaire (26). Les 22 Divines/Éveillées Sylve restent à implémenter ; Ombre,
-  Forge et Éther restent natifs dans le jeu. [Reprise des cartes](REPRISE_MIGRATION_CARTES.md).
-- Même moteur, registre et ressources pour web, laboratoire et `JOUER.html` ;
-  laboratoire isolé de la progression. Six raretés de Collection, deck manuel,
-  ciblage direct, effets de combat, Garde/Riposte uniques et CI parallèle intégrés.
-- Protection GitHub lue : ruleset [Protection main](https://github.com/floiaassistant-design/couronne-et-arcanes/rules/26023976)
-  actif sur main, PR obligatoire, branche à jour et contrôles `validation` /
-  `assemblage-web`, suppressions et force pushes bloqués, aucun acteur de contournement.
-  La configuration n'exige pas de revue GitHub approuvée ; l'accord spécifique
-  du propriétaire reste obligatoire selon AGENTS.
+Les sauvegardes protégées de la PR 65 sont intégrées. Aube complète à
+l'obtention (41 évolutions), Sylve jusqu'à Légendaire (26) ; 22 Divines/Éveillées
+Sylve restent à implémenter. Ombre, Forge et Éther restent natifs dans le jeu.
+Même moteur/registre pour web, export et laboratoire isolé de la progression ;
+six raretés de Collection et deck manuel. [Reprise des cartes](REPRISE_MIGRATION_CARTES.md).
+Les consignes permanentes et bilans historiques sont désormais séparés.
 
-## Contrôles observés
+Protection main vérifiée : ruleset actif, PR obligatoire, branche à jour,
+`validation` et `assemblage-web`, aucun acteur de contournement. L'accord
+spécifique du propriétaire reste obligatoire pour chaque nouvelle PR.
 
-Sur la tête approuvée : [tests complets réussis](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/41210592469)
-et [assemblage web réussi](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/41210592442).
-Leur réutilisation pour le merge repose sur l'identité d'arbre ci-dessus.
-L'[assemblage main](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/41219964483)
-et la [CI main](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/41219964452)
-ont également réussi sur le commit de fusion exact.
+## Publication
 
-## Publication séparée
-
-Publication confirmée : **Sites nº 18**, GitHub `117a643bf110995f3bc67dc86c55a678cc8b0f76`,
+Le jeu public reste en **Sites nº 18**, code `117a643bf110995f3bc67dc86c55a678cc8b0f76`,
 source de diffusion `760fcd4d9ae032123e9fca43b6ba028582d65f8c`, audience publique.
-L'automatisation existante a achevé son exécution le 31 octobre à 17 h 42,
-heure de Paris, avec provenance/empreintes du paquet et fichiers modifiés
-comparés. Le déploiement natif `appgdep_6ae61a39af708191819a6d0119517e37`
-est confirmé réussi. Aucune publication parallèle lancée pendant cette reprise.
+L'automatisation existante a terminé le traitement de la PR 66 : arbre du
+nouveau main, CI, artefact, provenance et empreintes vérifiés, mais contenu web
+identique. **Aucune nouvelle version Sites nécessaire ni créée** pour ces textes.
+Aucune publication parallèle lancée. La correction proposée ci-dessous n'est pas publiée.
 
-[Jeu en ligne — version publiée ci-dessus](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site)
-· [Export du main intégré](https://github.com/floiaassistant-design/couronne-et-arcanes/raw/117a643bf110995f3bc67dc86c55a678cc8b0f76/JOUER.html).
+[Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
+[Export du main intégré](https://github.com/floiaassistant-design/couronne-et-arcanes/raw/432b27c82fa05241022b9e3e3f5e7b2ba4cc651f/JOUER.html).
 
-## Reprise de l'audit — travail documentaire proposé
+## Proposition — résultats en attente et audit campagne / IA
 
-Branche `docs/reprise-audit-et-tests-20261031`, basée sur le main ci-dessus.
-Aucune autre PR ouverte au départ. Cette branche sépare consignes permanentes
-et bilans datés, corrige les statuts intégrés et cartographie les tests existants
-dans [CARTE_TESTS.md](CARTE_TESTS.md). Aucun fichier de jeu, test, workflow,
-illustration ou export modifié ; aucune écriture dans Notion.
+Branche `fix/resultats-combat-non-enregistres`, depuis le main ci-dessus.
+Défaut reproduit : après refus d'enregistrement du gain en campagne, un nouveau
+combat peut écraser la victoire en attente. Le verrou des épreuves est étendu
+à tous les modes, import compris, sans seconde transaction ni changement métier.
+Navigation, export et contrôles visuels restent disponibles. Pas de carte,
+équilibrage, IA, format de sauvegarde, image ou workflow permanent modifié.
 
-Contrôles locaux réussis : cinq tests Node existants de portée documentaire et
-pipeline, dont cinq tests Python appelés par le pipeline ; liens ajoutés et
-chemins de tests vérifiés, archives fidèles et diff documentaire relu. La CI
-de cette nouvelle PR doit être vérifiée sur son propre SHA. Cette documentation est
-**proposée, non fusionnée** ; son accord de fusion reste spécifique.
+Le robot partagé accepte les tours alternés sur option explicite, avec son
+mode historique conservé par défaut. Deux nouveaux tests couvrent 96 rencontres
+isolées × deux exécutions, quatre classes, instantanés et décisions publiques.
+Neuf parcours de transaction sont ajoutés à la suite navigateur de sauvegardes
+existante, sans nouvelle commande dans la matrice.
 
-Prochaine étape de l'audit : relever les parcours campagne/IA réellement
-couverts et les lacunes, puis mesurer la lisibilité et les interactions mobiles.
-Les simulations ne valident pas seules la difficulté humaine. Le prochain lot
-créatif de cartes reste distinct : Divines/Éveillées Sylve, après relecture des
-validations Notion et des mécaniques à implémenter.
+Contrôles locaux : 523 tests Node, parité 120 et builds autonome/diagnostic/web
+réussis ; défaut et correction observés en navigateur cloud sur la campagne.
+Simulations de contrôle/arène et CI de la nouvelle branche à vérifier dans la PR.
+Le runtime local n'a pas Playwright Python ; les nouveaux parcours automatiques
+sont donc à vérifier en CI, sans succès anticipé. [Détail et limites](AUDIT_CAMPAGNE_IA_2026_10_31.md).
+
+Cette proposition attend son propre accord avant fusion. Dernier SHA, export
+exact et résultats CI seront consignés dans sa PR après génération distante
+contrôlée. Aucun outil ponctuel ne doit rester dans le diff livré.
+
+Suite : compléter la campagne UI depuis zéro avec achats/decks réels, puis
+mesurer la lisibilité mobile. Les simulations ne prouvent pas l'équilibrage humain.
+Le prochain lot créatif de cartes reste distinct : Divines/Éveillées Sylve après
+relecture Notion des validations et mécaniques à implémenter.
 
 ## Historique
 
 [Anciens points de reprise](HISTORIQUE_ETAT_2026_10_31.md) ·
 [Anciennes consignes et bilans](HISTORIQUE_CONSIGNES_2026_10_31.md).
-Les contrats spécialisés conservent leurs relevés datés ; GitHub et cet état
-courant priment pour le statut de livraison. Les règles permanentes sont dans
-[AGENTS.md](../AGENTS.md).
+Les contrats datés conservent leurs constats ; GitHub et cet état courant
+priment pour la livraison. Règles permanentes : [AGENTS.md](../AGENTS.md).

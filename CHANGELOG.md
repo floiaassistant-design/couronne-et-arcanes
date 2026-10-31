@@ -1,5 +1,20 @@
 # Journal des changements
 
+## Correction proposée — résultats non enregistrés, 31 octobre 2026
+
+- Campagne, Tour et donjons : étendre le verrou existant des épreuves aux
+  résultats non enregistrés. Nouveau départ, modification de profil et import
+  retentent la clôture, sans effacer le résultat ni consommer la nouvelle action.
+- Préserver navigation, export et lecture des effets ; libérer les actions
+  après sauvegarde réussie du résultat et de son reçu existant.
+- Robot de simulation : tours alternés sur option explicite, mode historique
+  conservé par défaut ; 96 rencontres × deux exécutions, quatre classes,
+  décisions d'IA publiques et instantanés valides.
+- Régression navigateur ajoutée à la suite de sauvegardes existante ; aucun
+  nouveau job, règle de moteur, équilibrage, carte ou format de sauvegarde.
+- [Constat et reprise](docs/AUDIT_CAMPAGNE_IA_2026_10_31.md). Cette nouvelle PR
+  exige son accord spécifique de fusion ; aucun correctif publié à ce stade.
+
 ## Documentation proposée — reprise de l'audit, 31 octobre 2026
 
 - Séparation des règles permanentes et des anciens bilans, conservés dans

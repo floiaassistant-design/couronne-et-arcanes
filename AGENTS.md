@@ -71,6 +71,9 @@
 - Paquets, fusions et clôtures de combat conservent leurs transactions spécialisées.
   Sauver la copie du profil et son reçu avant nettoyage du combat ; interruption
   ou double confirmation ne doit ni perdre les gains ni les attribuer deux fois.
+- Tout résultat non enregistré bloque les actions qui modifieraient ou remplaceraient
+  l'aventure, import compris, quel que soit le mode de combat. Retenter sa clôture
+  avant de libérer ces actions ; navigation, export et contrôles visuels restent disponibles.
 - Valider imports, nombres, possessions, références et états facultatifs de combat.
   Protéger l'affichage des textes avec `ui/markup.js`. Ne pas recalculer les unités
   d'une bataille reprise à partir du profil actuel.
