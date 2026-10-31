@@ -75,6 +75,40 @@ async def run(browser):
     assert 'Combat non sauvegardé' in await failure.locator('#toast').inner_text()
     assert not errors,errors
     await failure.close()
+    # Profil illisible : aucune sauvegarde neuve ne remplace le texte initial.
+    corrupt='{fragment incomplet'
+    broken=await make_page(browser,VIEWPORT,{SAVE:corrupt},errors)
+    assert await broken.locator('#recovery-title').count()==1
+    assert await broken.locator('#nav button').count()==0
+    assert await broken.evaluate('window.__saves.couronnes_arcanes_v1')==corrupt
+    await broken.locator('[data-action="export-unreadable-save"]').click()
+    assert await broken.evaluate('window.__saves.couronnes_arcanes_v1')==corrupt
+    await broken.close()
+    # Réimporter une copie saine doit lever le blocage, sans remise à zéro implicite.
+    donor=await make_page(browser,VIEWPORT,{},errors)
+    await donor.locator('[data-action="welcome-guide"]').click()
+    backup=await donor.evaluate('window.__saves.couronnes_arcanes_v1')
+    await donor.close()
+    recovered=await make_page(browser,VIEWPORT,{SAVE:corrupt},errors)
+    await recovered.locator('#import-file').set_input_files({'name':'backup.json','mimeType':'application/json','buffer':backup.encode()})
+    assert await recovered.locator('#recovery-title').count()==0
+    assert await recovered.evaluate('JSON.parse(window.__saves.couronnes_arcanes_v1).deck.length')==18
+    assert not errors,errors
+    await recovered.close()
+    # Les achats ne sont confirmés que si la nouvelle progression a été enregistrée.
+    page=await make_page(browser,VIEWPORT,{},errors)
+    await page.locator('[data-action="welcome-guide"]').click()
+    await page.locator('[data-action="nav"][data-page="forge"]').click()
+    before=await page.evaluate('window.__saves.couronnes_arcanes_v1')
+    await page.evaluate("""() => {const original=localStorage.setItem.bind(localStorage);
+      localStorage.setItem=(k,v)=>{if(k==='couronnes_arcanes_v1')throw Error('quota');original(k,v)};
+    }""")
+    await page.locator('[data-action="craft-equipment"][data-id="lame"]').click()
+    assert await page.evaluate('window.__saves.couronnes_arcanes_v1')==before
+    assert await page.evaluate('profile.gold')==110
+    assert 'non enregistrée' in await page.locator('#toast').inner_text()
+    assert not errors,errors
+    await page.close()
     print('V2.11 persistence: animated/static victory, duplicate receipt, interrupted close, failed storage PASS')
 
 async def main():

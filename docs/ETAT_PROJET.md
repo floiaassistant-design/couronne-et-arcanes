@@ -1,3 +1,34 @@
+## Correction de syntaxe détectée le 31 octobre 2026
+
+La première CI sur `735777e` a confirmé `npm test`, parité, génération
+autonome et assemblage web, mais tous les parcours navigateur échouaient avant
+le premier écran : une ancienne fin de gestionnaire d'import était restée
+collée au nouvel import. Le gestionnaire a été remis en forme sans autre
+changement métier. Un contrôle `node --check src/app.js` fait désormais partie
+des tests Node afin de détecter ce défaut avant les tests navigateur. La
+régénération de `JOUER.html` et les contrôles sur le dernier SHA restent requis.
+
+# Fiabilisation des sauvegardes — proposition du 30 octobre 2026
+
+Base : main `37d40bf48403c7dd6edd845a95df590c42cc02b6` (PR 64
+fusionnée le 29 octobre), tests et assemblage main réussis. Branche dédiée
+`fix/fiabiliser-sauvegardes-20261030`, sans autre PR ouverte à sa création.
+
+Le chargement ne remplace plus silencieusement un JSON illisible par un profil
+vierge : lecture en erreur, jeu bloqué, export brut et import volontaire proposés.
+Aucune écriture automatique sur la clé historique ; deck temporairement vide
+et anciens profils lisibles conservés. Les modifications ordinaires du profil
+s'effectuent sur copie ; la sauvegarde doit réussir avant adoption et message de
+succès. Les fusions d'évolution, paquets et clôtures de combat gardent leurs
+transactions propres. Aucun rééquilibrage, migration, nouvel ID, API ou ressource.
+
+Contrôles à effectuer sur l'arbre exact : Node, parité, build et export autonome,
+CI GitHub, navigateur reprise/import, échec quota et non-duplication. Ce lot est
+**proposé, non fusionné et non publié** ; accord spécifique nécessaire avant fusion.
+Les entrées datées ci-dessous sont historiques, notamment les statuts de PR 64.
+
+---
+
 # Sylve Légendaire — proposition du 29 octobre 2026
 
 Main `33cad6673c9e3cb468b222de39ad821a936dc098` intègre les PR 62 et 63 sur

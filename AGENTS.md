@@ -1,5 +1,22 @@
 # AGENTS.md — Couronnes & Arcanes
 
+## Contrat permanent — sauvegardes sûres et récupération
+
+La clé historique du profil et celle du combat sont conservées. Une lecture
+illisible ou inaccessible du profil n'autorise **aucune initialisation ni écriture
+silencieuse** d'une partie neuve : garder le stockage intact, bloquer les
+opérations, proposer export du texte brut si lisible et import validé explicite.
+Un deck vide en construction reste compatible avec le chargement historique.
+
+Toute action ordinaire modifiant collection, ressources, classe, talents,
+équipement, deck, bâtiment ou état d'expédition travaille sur une copie du
+profil : valider la règle métier, enregistrer, puis adopter et annoncer le
+succès. Refus de stockage = aucune mutation adoptée, aucun faux succès. Les
+paquets, évolutions et clôtures de combat conservent leurs reçus et transactions
+spécialisés. Vérifier les reprises, erreurs de quota et le seul export généré.
+Documenter les exceptions techniques sans modifier les sauvegardes historiques.
+
+
 ## Sylve Légendaire — proposition du 29 octobre 2026
 
 PR 62 et 63 fusionnées sur accord, main `33cad6673c9e3cb468b222de39ad821a936dc098`.
