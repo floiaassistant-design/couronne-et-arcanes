@@ -50,13 +50,17 @@ existante, sans nouvelle commande dans la matrice.
 
 Contrôles locaux : 523 tests Node, parité 120 et builds autonome/diagnostic/web
 réussis ; défaut et correction observés en navigateur cloud sur la campagne.
-Simulations de contrôle/arène et CI de la nouvelle branche à vérifier dans la PR.
-Le runtime local n'a pas Playwright Python ; les nouveaux parcours automatiques
-sont donc à vérifier en CI, sans succès anticipé. [Détail et limites](AUDIT_CAMPAGNE_IA_2026_10_31.md).
+Simulations de contrôle/arène réussies (20 480 / 6 144 combats) ; 192 comparaisons
+du robot historique identiques. Le passage ponctuel GitHub a réussi les neuf
+nouveaux parcours ; les dernières assertions export/lecture et la CI complète
+du SHA final restent à vérifier dans la PR.
+Le runtime local n'a pas Playwright Python ; les contrôles navigateur automatiques
+sont exécutés sur GitHub, sans succès final anticipé. [Détail et limites](AUDIT_CAMPAGNE_IA_2026_10_31.md).
 
-Cette proposition attend son propre accord avant fusion. Dernier SHA, export
-exact et résultats CI seront consignés dans sa PR après génération distante
-contrôlée. Aucun outil ponctuel ne doit rester dans le diff livré.
+Cette proposition attend son propre accord avant fusion. Dernier SHA et résultats
+CI sont consignés dans sa PR. Export généré vérifié : 34 559 913 octets, blob
+`f8212fa1379a6ad6e50ce4cefe31f28440ad52da`, empreinte dans le rapport.
+Le générateur ponctuel est retiré du diff livré.
 
 Suite : compléter la campagne UI depuis zéro avec achats/decks réels, puis
 mesurer la lisibilité mobile. Les simulations ne prouvent pas l'équilibrage humain.

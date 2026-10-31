@@ -56,13 +56,21 @@ transaction, pas des preuves de victoire jouée ni de difficulté de campagne.
 - Sur le main avant correction : 521 tests Node réussis.
 - Après correction : 523 tests Node et 120 scénarios de parité réussis ;
   archive V2.4 conservée, 96 rencontres alternées rejouées exactement.
-- Builds autonome, diagnostic et web réussis depuis les mêmes sources ;
-  nouvel export généré, aucune retouche manuelle. Vérifier son empreinte et le
-  diff distant final dans la PR avant livraison.
+- Simulations historiques : 20 480 combats de contrôle et 6 144 d'arène réussis,
+  aucun plateau invalide ; 192 scénarios du robot comparés avant/après, traces et
+  résultats exactement identiques lorsque l'option alternée est absente.
+- Builds autonome, diagnostic et web réussis depuis les mêmes sources. Export
+  généré localement et sur GitHub : 34 559 913 octets, blob
+  `f8212fa1379a6ad6e50ce4cefe31f28440ad52da`, SHA-256
+  `b3ce9b5b13048171c4d09a89e5f8678642b2dcfb232df1cc20913eba445e35ab`.
+  Aucun changement manuel du fichier produit.
 - Navigateur cloud : défaut puis conservation et récupération observés sur le
   parcours campagne. La suite Python n'est pas disponible dans le runtime local ;
-  les neuf nouveaux parcours et toutes les suites existantes restent à vérifier
-  en CI sur le dernier SHA. Aucun succès de navigateur CI anticipé.
+  le [passage ponctuel](https://github.com/floiaassistant-design/couronne-et-arcanes/actions/runs/41225062169)
+  a réussi les anciens contrôles de sauvegarde et les neuf nouveaux parcours.
+  Les assertions d'export JSON et de vitesse visuelle ont ensuite été ajoutées ;
+  la CI complète du SHA final doit confirmer ce complément et toutes les autres
+  suites. Aucun succès final anticipé.
 - Aucun changement de carte, IA, équilibrage, illustration, identifiant, clé,
   format historique ou formule de récompense. Aucun workflow permanent modifié.
 
@@ -75,8 +83,9 @@ par la seule existence de formats tactiles automatisés.
 
 ## Reprise
 
-Terminer génération distante contrôlée de `JOUER.html`, retirer l'outil ponctuel,
-relire le diff complet et les contrôles sur le SHA final, puis proposer la PR.
+Export distant contrôlé et identique au local ; générateur ponctuel retiré du
+diff livré. Relire le résultat complet sur le SHA final de la PR, sans attendre
+activement la CI lorsque tout autre travail utile est terminé.
 Pas de fusion ni publication sans accord spécifique sur cette nouvelle PR.
 Le jeu public reste celui du main intégré ; la publication documentaire de
 la PR 66 est suivie par l'automatisation existante, sans déploiement concurrent.

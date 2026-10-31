@@ -41,6 +41,8 @@ async def pending_case(browser,scenario,label,viewport,*,touch=False,url=None):
 
     await unchanged()
     # La navigation et l'export restent disponibles, le résultat reste intact.
+    await click(page.locator('[data-action="fx-speed"]'))
+    await unchanged()
     await click(page.locator('.combat-menu-link'))
     await click(page.locator('[data-action="start-next"]'))
     await unchanged()
@@ -52,6 +54,11 @@ async def pending_case(browser,scenario,label,viewport,*,touch=False,url=None):
     await click(page.locator('[data-action="deck-remove"]:not(:disabled)').first)
     await unchanged()
     await click(page.locator('#nav [data-page="guide"]'))
+    async with page.expect_download() as download:
+        await click(page.locator('[data-action="export-save"]'))
+    exported=await download.value
+    assert json.loads(Path(await exported.path()).read_text())==scenario['profile']
+    await unchanged()
     # Un import déclenché sur le champ réel ne doit pas contourner le routeur.
     other={**scenario['profile'],'gold':999}
     await page.locator('#import-file').set_input_files({'name':'blocked.json','mimeType':'application/json',
