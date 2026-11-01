@@ -40,7 +40,6 @@ test('Onze Légendaires réellement fusionnées, statistiques indépendantes, au
   const {p,b,u,ref}=gained(id);assert.deepEqual([u.atk,u.maxhp],[...expected.slice(0,2)]);assert.equal(ownedCardCopies(p,ref),1);
   assert.equal(p.completedTrials,undefined);assert.equal(b.mode,'campaign');assert.deepEqual(validateImportedProfile(p),p);
   storage();assert(saveProfile(p));assert.deepEqual(loadProfile(),p);assert(storeBattle(b));assert.deepEqual(restoreBattle(),b);
-  for(const rarity of ['divine','éveillée'])assert.equal(resolveUnitDefinition(id,rarity),null);
  }
 });
 

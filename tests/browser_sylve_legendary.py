@@ -47,7 +47,7 @@ async def run_sylve_legendary(browser,label,viewport,url=None):
     await nav('collection');await click(page.locator('[data-action="collection-faction"][data-id="sylve"]'))
     row=page.locator('[data-collection-character="owl"]');assert await row.locator('td').count()==6
     assert 'Possédée ×1' in await row.locator('[data-collection-rarity="légendaire"]').inner_text()
-    for rank in ['divine','éveillée']:assert 'À concevoir' in await row.locator(f'[data-collection-rarity="{rank}"]').inner_text()
+    for rank in ['divine','éveillée']:assert 'Ascension requise' in await row.locator(f'[data-collection-rarity="{rank}"]').inner_text()
     await nav('deck');await click(page.locator('[data-deck-card="owl:légendaire"] [data-action="deck-add"]'));profile=await saved()
     await nav('guide')
     async with page.expect_download() as info:await click(page.locator('[data-action="export-save"]'))

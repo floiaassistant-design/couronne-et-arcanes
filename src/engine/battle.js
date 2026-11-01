@@ -6,6 +6,8 @@ import {findCrownGuardian} from './guard-candidates.js';
 import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError} from './unit-rules.js';
 import {resolveUnitArrival,resolveUnitSupport} from './unit-support.js';
 import {consumeAttackPenalty,applyAttackEffects,resolveRegeneration} from './unit-effects.js';
+import {tickUnitPoison,clearUnitPoison} from './unit-poison.js';
+import {resolveStrikeRewards,resolveUnitDeath} from './unit-triggers.js';
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 import {CARDS,FACTIONS} from '../data.js';
 import {frontEnemy} from './spell-targeting.js';
@@ -146,7 +148,7 @@ export function previewPlayerSpell(b,index,lane){
 }
 function sweepDead(b){
  for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
-  const u=b.board[lane][col];if(u&&u.hp<=0){fx(b,{type:'death',lane,col,side:u.side,icon:CARDS[u.id]?.icon||'✦'});b.board[lane][col]=null;}
+  const u=b.board[lane][col];if(u&&u.hp<=0){resolveUnitDeath(b,u,lane,col,fx);fx(b,{type:'death',lane,col,side:u.side,icon:CARDS[u.id]?.icon||'✦'});b.board[lane][col]=null;}
  }
 }
 function checkOutcome(b){
@@ -179,7 +181,7 @@ function enemyAct(b){
 
 function resolvePoison(b,sideFilter=null){
  for(const row of b.board)for(const u of row)if(u&&u.poisonTurns>0&&(!sideFilter||u.side===sideFilter)){
-  u.hp=Math.max(0,u.hp-u.poison);u.poisonTurns--;const pos=b.board.findIndex(row=>row.includes(u));if(pos>=0){const col=b.board[pos].indexOf(u);fx(b,{type:'poison',lane:pos,col,damage:u.poison});}
+  if(!tickUnitPoison(b,u))continue;const pos=b.board.findIndex(row=>row.includes(u));if(pos>=0){const col=b.board[pos].indexOf(u);fx(b,{type:'poison',lane:pos,col,damage:u.poison});}
  }
  sweepDead(b);
 }
@@ -188,6 +190,7 @@ function moveUnits(b,sideFilter=null){
  for(const side of sideFilter?[sideFilter]:(b.round%2?['p','e']:['e','p']))for(let lane=0;lane<laneCount(b);lane++){
   const cols=Array.from({length:lastCell(b)},(_,i)=>side==='p'?lastCell(b)-i:i+1);
   for(const original of cols){const u=b.board[lane][original];if(!u||u.side!==side||u.stun>0)continue;
+   if(u.movementRoot){delete u.movementRoot;continue;}
    let col=original;const steps=unitMovementSteps(u,silenced(b,u));
    for(let step=0;step<steps;step++){
     if(findTarget(b,lane,col,u))break;
@@ -224,10 +227,11 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
  if(other&&other.hp>0&&other.side!==u.side)hit(b,other,p.amount,u.side,p.ignoreArmor);
 }
 
-function strike(b,u,target,atk,from,to,sameLine=true){
- const before=target.hp;if(atk>0)hit(b,target,atk,u.side,unitHasPierce(u,silenced(b,u)));
+function strike(b,u,target,atk,from,to,sameLine=true,charged=false){
+ const before=target.hp;if(atk>0)hit(b,target,atk,u.side,unitHasPierce(u,silenced(b,u),charged),true);
  const damage=Math.max(0,before-target.hp);
  if(sameLine&&(to-from)*(u.side==='p'?1:-1)>=2)recordTrialFact(b,u,'rangedDamage',damage);
+ return atk>0&&before>0&&target.hp<=0;
 }
 function resolveAttacks(b,sideFilter=null){
  const intents=[];
@@ -235,7 +239,7 @@ function resolveAttacks(b,sideFilter=null){
   const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0||(sideFilter&&u.side!==sideFilter))continue;
   const target=findTarget(b,lane,col,u);
   const charged=!silenced(b,u)&&unitChargeAmount(u)>0&&!!u.movedThisRound;
-  if(target)intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0)),ability:activeAbility(b,u),charged,suppressed:silenced(b,u)});
+  if(target){const furious=!!u.fury;intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0)),ability:activeAbility(b,u),charged,furious,suppressed:silenced(b,u)});}
  }
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
@@ -246,17 +250,19 @@ function resolveAttacks(b,sideFilter=null){
   if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +${unitChargeAmount(u)} attaque sur la ligne ${lane+1}.`);
   if(target.type==='hero'){
    if(guardIntercept){
-    strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane);
+    const killed=strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane,charged);
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
     if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
-    applyAttackEffects(u,guardIntercept.u,intent.suppressed);
+    applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0);
+    if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}}
   } else {
-   strike(b,u,target.target,atk,intent.col,target.col);
+   const killed=strike(b,u,target.target,atk,intent.col,target.col,true,charged);
    if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
-   applyAttackEffects(u,target.target,intent.suppressed);
+   applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0);
+   if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
    if(ability==='splash'){
     const extra=b.board[lane].find(v=>v&&v.side!==u.side&&v.uid!==target.target.uid&&v.hp>0);
     if(extra)hit(b,extra,2,u.side);
@@ -318,7 +324,7 @@ export function usePower(b){
   if(hasBattleTalent(b,'clerc_purification')){
    // Useful between poison encounters, while keeping the branch below major healing.
    h.shield=Math.min(15,h.shield+1);
-   for(const u of b.board.flat())if(u&&u.side==='p'){u.poison=0;u.poisonTurns=0;u.stun=0;}
+   for(const u of b.board.flat())if(u&&u.side==='p'){clearUnitPoison(u);u.stun=0;}
   }
   note(b,'Bénédiction : le héros et ses alliés sont soignés.');
  }

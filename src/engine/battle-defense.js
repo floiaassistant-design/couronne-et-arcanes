@@ -5,7 +5,7 @@ import {silenced} from './battle-control.js';
 import {recordCombatEvent} from './combat-events.js';
 import {consumeAttackPenalty} from './unit-effects.js';
 
-const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier'];
+const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier'];
 export function grantAbilityBarrier(u,key,parameters){
  if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
  const sources={...u.abilityBarriers};
@@ -35,7 +35,7 @@ function absorbBarrier(u,damage){
  return absorbed;
 }
 
-export function hit(b,u,raw,bySide,ignoreArmor=false){
+export function hit(b,u,raw,bySide,ignoreArmor=false,attack=false){
  if(!u||u.hp<=0)return 0; // Une victime ne compte jamais deux fois.
  const abilities=versionUnitAbilities(u);
  const armor=u.armor??abilities?.armor?.amount??0;
@@ -50,6 +50,7 @@ export function hit(b,u,raw,bySide,ignoreArmor=false){
  if(u.hp<=0&&abilities?.lastStand&&!u.lastStandUsed&&!silenced(b,{...u,hp:before})){
   u.lastStandUsed=true;u.hp=Math.min(u.maxhp,abilities.lastStand.hp);
  }
+ if(attack&&bySide!==u.side&&before>u.hp&&u.hp>0&&abilities?.fury&&!silenced(b,u))u.fury=abilities.fury.amount;
  if(bySide!==u.side&&u.hp<=0)b.stats[bySide==='p'?'playerKills':'enemyKills']++;
  if(Array.isArray(b.vfx)){
   const lane=b.board.findIndex(row=>row.includes(u)),col=lane<0?-1:b.board[lane].indexOf(u);
@@ -68,7 +69,7 @@ export function resolveRetaliation(b,defender,attacker,lane,defenderCol,attacker
  else defender.lastRiposteRound=b.round;
  recordCombatEvent(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
  const raw=consumeAttackPenalty(defender,defender.atk+attackBonus);
- const dealt=raw>0?hit(b,attacker,raw,defender.side):0;
+ const dealt=raw>0?hit(b,attacker,raw,defender.side,false,true):0;
  if(dealt>0)note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
  if(abilities?.riposteBarrier)grantAbilityBarrier(defender,'riposteBarrier',abilities.riposteBarrier);
  return true;
