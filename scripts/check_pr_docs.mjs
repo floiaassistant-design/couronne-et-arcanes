@@ -9,7 +9,7 @@ const MODES = new Set(['mise-a-jour', 'non-necessaire']);
 const EMPTY = /^(?:\[[^\]]+\]|à compléter|a completer|todo|tbd|n\/a|\.{3}|-+)$/i;
 
 export function field(body, name) {
-  const prefix = new RegExp('^\s*' + name + '\s*:\s*', 'i');
+  const prefix = new RegExp('^\\s*' + name + '\\s*:\\s*', 'i');
   const line = String(body || '').split(/\r?\n/).find(value => prefix.test(value));
   return line ? line.replace(prefix, '').trim() : '';
 }
