@@ -257,9 +257,9 @@ function navigate(page){
 function switchToSavedAdventure(){cancelEnemyTimer();stopBattleFx();deferredBattleModal='';hideModal();const state=inspectStoredProfile();profileLoadError=state.error;profile=state.profile??freshProfile();battle=profileLoadError?null:restoreBattle();screen=battle?'battle':'home';selectedCard=-1;render();if(!profileLoadError)notifyBattleUpdate();window.scrollTo(0,0);}
 function act(action,dataset){const {id,index,lane,col,page}=dataset;
  if(profileLoadError&&!['import-save','export-unreadable-save'].includes(action))return;
- // Une clôture non sauvée ne doit pas être écrasée par une autre épreuve/action.
- if(!developer&&battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven&&
-  !['nav','home','close-modal','close-inspection','collection-faction','export-save','toggle-animations'].includes(action)){
+ // Toute clôture non sauvée doit rester récupérable, quel que soit le mode.
+ if(!developer&&battle&&battle.status!=='active'&&!battle.rewardGiven&&
+  !['nav','home','close-modal','close-inspection','collection-faction','export-save','toggle-animations','fx-skip','fx-speed'].includes(action)){
   settle();return;
  }
  if(developer&&screen==='developer'&&!['lab-add','lab-remove','lab-start','lab-back','lab-exit','lab-open','nav','home'].includes(action))return;
@@ -400,7 +400,7 @@ document.addEventListener('change',async event=>{
  }
  if(event.target.id==='import-file'){
    const file=event.target.files?.[0];if(!file)return;
-   if(!profileLoadError&&battle?.mode==='evolution-trial'&&battle.status!=='active'&&!battle.rewardGiven){settle();return;}
+   if(!profileLoadError&&battle&&battle.status!=='active'&&!battle.rewardGiven){settle();return;}
    try{
     const imported=validateImportedProfile(JSON.parse(await file.text()));
     const previous=localStorage.getItem(SAVE_KEY);

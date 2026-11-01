@@ -1,4 +1,5 @@
 from browser_spell_actions import target_spell
+from browser_pending_results import run_pending_results
 """V2.11: final reward persistence, interrupted settlement, and storage errors."""
 import asyncio
 import json
@@ -109,6 +110,7 @@ async def run(browser):
     assert 'non enregistrée' in await page.locator('#toast').inner_text()
     assert not errors,errors
     await page.close()
+    await run_pending_results(browser)
     print('V2.11 persistence: animated/static victory, duplicate receipt, interrupted close, failed storage PASS')
 
 async def main():

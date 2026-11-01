@@ -112,6 +112,13 @@ confirment désormais une action qu'après sauvegarde réussie. En cas d'échec,
 les ressources, les copies et le profil actif restent inchangés. Aucune clé de
 sauvegarde ou règle de combat modifiée. La protection est intégrée ; le statut de publication est suivi dans [l’état courant](docs/ETAT_PROJET.md).
 
+Le correctif proposé dans [le suivi d'audit](docs/AUDIT_CAMPAGNE_IA_2026_10_31.md)
+étend aussi la protection des résultats en attente à la campagne, à la Tour et
+aux donjons. Si l'enregistrement d'une victoire ou défaite échoue, les actions
+qui remplaceraient ou modifieraient l'aventure retentent d'abord sa clôture,
+sans lancer le nouveau combat ni importer un autre profil. Navigation et export
+restent disponibles. Une fois le résultat enregistré, les actions sont libérées.
+
 ## Développer et vérifier
 
 ```sh

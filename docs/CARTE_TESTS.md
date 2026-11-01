@@ -1,6 +1,10 @@
 # Carte des tests — relevé du 31 octobre 2026
 
 Inventaire lu sur main `117a643bf110995f3bc67dc86c55a678cc8b0f76`.
+Complément proposé après l'audit campagne/IA : `campaign_alternating.test.mjs`
+exécute 96 rencontres isolées en tours alternés, chacune deux fois ;
+`browser_pending_results.py` est appelé par la suite de sauvegardes existante.
+Les commandes de matrice restent inchangées. [Constat et limites](AUDIT_CAMPAGNE_IA_2026_10_31.md).
 Cette carte aide à choisir les contrôles ; elle ne mesure pas un pourcentage
 de couverture et ne remplace pas le résultat de CI du commit concerné.
 Sources : [workflow de tests](../.github/workflows/test.yml),
@@ -30,7 +34,7 @@ tous les outils disponibles comme exécutés par chaque CI.
 | Domaine | Tests Node principaux | Parcours navigateur / preuve complémentaire |
 | --- | --- | --- |
 | Chargement, import et écriture du profil | `profile_transactions.test.mjs`, `storage_integrity_v211.test.mjs`, `app_entry_syntax.test.mjs` | `browser_save_integrity_v211.py` : JSON cassé préservé, export brut, import valide et quota ; victoire/reprise/reçu sans double gain |
-| Campagne, progression, Tour, donjons | `engine.test.mjs`, `progression_v22.test.mjs`, `dungeons.test.mjs`, `events_v20.test.mjs` | Épreuves avec combats complets, parité campagne/Tour, simulations de rencontres ; **pas de preuve d'une campagne UI complète de mission 01 à 12 depuis zéro** |
+| Campagne, progression, Tour, donjons | `engine.test.mjs`, `progression_v22.test.mjs`, `dungeons.test.mjs`, `events_v20.test.mjs`, `campaign_alternating.test.mjs` (proposé) | Épreuves avec combats complets, parité campagne/Tour, simulations de rencontres ; **pas de preuve d'une campagne UI complète de mission 01 à 12 depuis zéro** |
 | IA et tempo | `ai_v17.test.mjs`, `ai_styles_v18.test.mjs`, `ai_tactical_tempo.test.mjs`, `ai_arena_tempo_integration.test.mjs`, `tempo_v210.test.mjs` | Simulations de contrôle/arène ; examiner les assertions exactes avant de conclure sur une stratégie ou un défaut |
 | Garde, Riposte, états et géométrie | `current_card_rules.test.mjs`, `aube_defense.test.mjs`, `aube_guard.test.mjs`, `sylve_legendary.test.mjs`, `battle_control_v29.test.mjs`, `deployment_zone.test.mjs` | Capacités, contrôle, déploiement, arène et règles actuelles ; reprise d'états temporaires |
 | Deck, paquets, fusion et ascensions | `manual_deck.test.mjs`, `card_packs.test.mjs`, `evolution_fusion.test.mjs`, `evolution_progress.test.mjs`, `trial_objectives.test.mjs`, `ascensions.test.mjs` | Deck manuel, fusions, paquets Aube/Sylve, ascensions et Légendaires via les appels imbriqués ci-dessous |
@@ -65,6 +69,7 @@ déjà appelés par une entrée. La lecture des imports/appels confirme notammen
 | --- | --- |
 | `browser_card_preview.py` | `browser_card_presentation.py` et `browser_current_card_rules.py` |
 | `browser_collection.py` | `browser_manual_deck.py` et `browser_evolution_fusion.py` |
+| `browser_save_integrity_v211.py` | `browser_pending_results.py` (proposé) : pertes de stockage, actions/import et reprise pour les résultats ordinaires |
 | `browser_evolution_trials.py` | Paquets Aube **et** Sylve, Légendaires Sylve et ascensions ; une partie adaptée à chaque groupe |
 | `browser_sylve.py`, `browser_ombre.py`, `browser_forge.py`, `browser_ether.py` | Pilote partagé `browser_aube.run`, avec l'ordre correspondant |
 

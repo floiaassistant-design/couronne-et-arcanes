@@ -1,5 +1,25 @@
 # Architecture modulaire — lecture courante
 
+## Résultats en attente — correction proposée le 31 octobre 2026
+
+Le verrou déjà présent dans le routeur `app.js` pour les épreuves couvre
+désormais tout résultat terminal non enregistré ; même vérification dans
+l'événement d'import, qui ne passe pas par les boutons. `settle()` reste
+l'unique transaction de clôture : aucun reçu, clé ou calcul de récompense ajouté.
+Les actions visuelles restent disponibles. Aucun nouveau module de production.
+
+`scripts/lib/battle_runner.mjs` accepte l'option explicite `turnFlow: 'alternating'`
+et appelle les poses/résolutions adverses du même moteur. Option absente :
+résolution et métriques historiques conservées. Les nouveaux cas de campagne
+exercent les instantanés et décisions publiques dans le mode actuel, sans DOM
+ni écriture dans la progression réelle. [Constat, preuves et limites](AUDIT_CAMPAGNE_IA_2026_10_31.md).
+
+Le point d'entrée reste à 418 lignes : orchestration existante, correction du
+verrou sur place ; aucun découpage artificiel justifié pour ces trois conditions.
+Les nouveaux helpers sont réservés aux tests. Ce relevé n'est pas une limite permanente.
+
+---
+
 Le [point de reprise](ETAT_PROJET.md) décrit le main et la publication vérifiés ;
 [AGENTS](../AGENTS.md) porte les règles permanentes. Les sections datées de ce
 document conservent l'introduction des modules : leurs comptes, bases de PR,
