@@ -5189,25 +5189,36 @@ Object.assign(__exports,{AUBE_DESIGN_SOURCE,AUBE_EVOLUTIONS});
 
 },
 "src/cards/sylve.js":function(__exports,__load){
-// Sylve jusqu'à Légendaire, depuis les cases validées du tableau maître.
-// Les totaux remplacent la base ; les 22 rangs Divins/Éveillés attendent leur moteur.
+// Sylve complète, depuis les cases validées du tableau maître.
+// Les totaux remplacent la base ; chaque amélioration remplace ses paramètres.
 const {freezeCardData}=__load("src/cards/schema.js");
 const SYLVE_DESIGN_SOURCE=freezeCardData({
  url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
  editedAt:'2026-10-27T06:13:46.581Z'
 });
 const SYLVE_EVOLUTIONS=freezeCardData({
- ranger:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}},'légendaire':{geometry:{range:3}}},
- wolf:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}},'légendaire':{abilities:{charge:{amount:3}}}},
- treant:{'épique':{stats:{hp:12}},'légendaire':{abilities:{armor:{amount:3}}}},
- dryad:{'épique':{stats:{hp:7}},'légendaire':{abilities:{regeneration:{amount:1,resolutions:1}}}},
- stag:{'légendaire':{stats:{hp:8}}},
- thorn:{rare:{stats:{hp:6}},'épique':{stats:{attack:3}},'légendaire':{abilities:{poison:{resolutions:3}}}},
- pixie:{rare:{stats:{hp:4}},'épique':{abilities:{ward:{amount:5}}},'légendaire':{abilities:{arrivalBarrier:{amount:2,cap:2,scope:'line',includeSelf:false,targets:1}}}},
- bear:{'épique':{stats:{hp:11}},'légendaire':{stats:{attack:5}}},
- archdruid:{'légendaire':{stats:{hp:9}}},
- owl:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}},'légendaire':{abilities:{harass:{amount:1,attacks:1}}}},
- sylvan_trapper:{rare:{stats:{hp:6}},'épique':{stats:{attack:3}},'légendaire':{abilities:{trapper:{damage:2}}}}
+ ranger:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}},'légendaire':{geometry:{range:3}},
+  divine:{abilities:{entangle:{frequency:'invocation'}}},'éveillée':{abilities:{entangle:{frequency:'period',period:3}}}},
+ wolf:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}},'légendaire':{abilities:{charge:{amount:3}}},
+  divine:{abilities:{pierce:{ignoreArmor:true,condition:'charged'}}},'éveillée':{geometry:{steps:3}}},
+ treant:{'épique':{stats:{hp:12}},'légendaire':{abilities:{armor:{amount:3}}},
+  divine:{abilities:{guard:{scope:'line'}}},'éveillée':{abilities:{guard:{scope:'all-lines'}}}},
+ dryad:{'épique':{stats:{hp:7}},'légendaire':{abilities:{regeneration:{amount:1,resolutions:1}}},
+  divine:{abilities:{regeneration:{resolutions:2}}},'éveillée':{abilities:{heal:{amount:3}}}},
+ stag:{'légendaire':{stats:{hp:8}},
+  divine:{abilities:{chargeBarrier:{amount:2,cap:2,allies:0}}},'éveillée':{abilities:{chargeBarrier:{allies:1}}}},
+ thorn:{rare:{stats:{hp:6}},'épique':{stats:{attack:3}},'légendaire':{abilities:{poison:{resolutions:3}}},
+  divine:{abilities:{poison:{amount:2,sourceBound:true}}},'éveillée':{abilities:{contagion:{amount:2,resolutions:2}}}},
+ pixie:{rare:{stats:{hp:4}},'épique':{abilities:{ward:{amount:5}}},'légendaire':{abilities:{arrivalBarrier:{amount:2,cap:2,scope:'line',includeSelf:false,targets:1}}},
+  divine:{abilities:{deathWard:{amount:2,cap:20}}},'éveillée':{abilities:{deathWard:{amount:4}}}},
+ bear:{'épique':{stats:{hp:11}},'légendaire':{stats:{attack:5}},
+  divine:{abilities:{fury:{amount:2}}},'éveillée':{abilities:{fury:{amount:3},furyBarrier:{amount:2,cap:2}}}},
+ archdruid:{'légendaire':{stats:{hp:9}},
+  divine:{abilities:{purify:{poison:true}}},'éveillée':{abilities:{heal:{amount:3},purify:{movement:true}}}},
+ owl:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}},'légendaire':{abilities:{harass:{amount:1,attacks:1}}},
+  divine:{abilities:{harass:{amount:2}}},'éveillée':{abilities:{harass:{attacks:2}}}},
+ sylvan_trapper:{rare:{stats:{hp:6}},'épique':{stats:{attack:3}},'légendaire':{abilities:{trapper:{damage:2}}},
+  divine:{abilities:{trapper:{poison:{amount:1,resolutions:2}}}},'éveillée':{abilities:{trapper:{period:2}}}}
 });
 
 Object.assign(__exports,{SYLVE_DESIGN_SOURCE,SYLVE_EVOLUTIONS});
@@ -5246,12 +5257,24 @@ const EVOLUTION_ASCENSIONS=freezeCardData([
   enemy:'Gardien de l’Éveil',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
   deck:['dawnbastion','paladin','shield','lancer','sunpriest','archer','banner','paladin','dawnbastion','shield','storm','healing','warcry','lancer','paladin','sunpriest','archer','shield']}
 ]);
-const ALL_EVOLUTION_TRIALS=Object.freeze([...EVOLUTION_TRIALS,...EVOLUTION_ASCENSIONS]);
+// Même parcours pour la Sylve : deux défis de faction, puis les doublons exacts.
+const SYLVE_ASCENSIONS=freezeCardData([
+ {id:'sylve-ascension-divine',kind:'ascension',faction:'sylve',name:'Le Serment des Racines',from:'légendaire',to:'divine',mission:'09',
+  goal:{distinct:3,crownPercent:40,maxRound:24},
+  enemy:'Conseil du Bosquet',difficulty:5,hp:48,boss:true,aiStyle:'bastion',
+  deck:['treant','bear','ranger','dryad','wolf','owl','treant','stag','archdruid','thorn','healing','warcry','bear','sylvan_trapper','dryad','storm']},
+ {id:'sylve-ascension-eveillee',kind:'ascension',faction:'sylve',name:'L’Éveil de la Canopée',from:'divine',to:'éveillée',mission:'12',previous:'sylve-ascension-divine',
+  goal:{distinct:4,crownPercent:60,maxRound:24},
+  enemy:'Gardien de la Canopée',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
+  deck:['archdruid','stag','treant','wolf','bear','ranger','pixie','stag','archdruid','treant','storm','healing','warcry','thorn','bear','dryad','owl','sylvan_trapper']}
+]);
+const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS]);
+const ALL_EVOLUTION_TRIALS=Object.freeze([...EVOLUTION_TRIALS,...ALL_EVOLUTION_ASCENSIONS]);
 const evolutionTrial=id=>ALL_EVOLUTION_TRIALS.find(t=>t.id===id)||null;
 const evolutionTrialFor=(id,rarity)=>EVOLUTION_TRIALS.find(t=>t.cardId===id&&t.to===rarity)||null;
-const evolutionAscensionFor=(faction,rarity)=>EVOLUTION_ASCENSIONS.find(t=>t.faction===faction&&t.to===rarity)||null;
+const evolutionAscensionFor=(faction,rarity)=>ALL_EVOLUTION_ASCENSIONS.find(t=>t.faction===faction&&t.to===rarity)||null;
 
-Object.assign(__exports,{EVOLUTION_TRIALS,EVOLUTION_ASCENSIONS,ALL_EVOLUTION_TRIALS,evolutionTrial,evolutionTrialFor,evolutionAscensionFor});
+Object.assign(__exports,{EVOLUTION_TRIALS,EVOLUTION_ASCENSIONS,SYLVE_ASCENSIONS,ALL_EVOLUTION_ASCENSIONS,ALL_EVOLUTION_TRIALS,evolutionTrial,evolutionTrialFor,evolutionAscensionFor});
 
 },
 "src/evolution-fusion.js":function(__exports,__load){
@@ -5385,7 +5408,8 @@ function unitAbilitySummary(definition){
  if(a.flying)lines.push('Vol');
  if(a.haste)lines.push(`Célérité ${definition.geometry.steps}`);
  if(a.charge)lines.push(`Charge +${a.charge.amount}`);
- if(a.pierce)lines.push('Perforation');
+ if(a.pierce)lines.push(a.pierce.condition==='charged'?'Charge perforante':'Perforation');
+ lines.push(...advancedSummary(a));
  if(a.rearShot)lines.push(`Tir arrière : ${a.rearShot.amount} dégâts`);
  for(const [key,label] of Object.entries({poison:'Poison',splash:'Impact',lifesteal:'Vol de vie',silence:'Silence',portal:'Portail',trapper:'Piège'}))if(a[key])lines.push(label);
  return lines;
@@ -5393,7 +5417,7 @@ function unitAbilitySummary(definition){
 
 // Texte de carte et fiche sont deux formats des mêmes paramètres effectifs.
 function unitCardText(d){
- const a=d.abilities,parts=[];
+ const a=d.abilities,parts=[...advancedSummary(d.abilities)];
  if(a.firstHitReduction)parts.push(`Premier coup −${a.firstHitReduction.amount}`);
  if(a.lastStand)parts.push(`Rempart ${a.lastStand.hp} PV`);
  if(a.intervention)parts.push(`Intervention ${a.intervention.amount}`);
@@ -5402,19 +5426,19 @@ function unitCardText(d){
  if(a.guard)parts.push(a.guard.scope==='all-lines'?'Garde toutes lignes':a.guard.scope==='line'?'Garde divine':'Garde');
  if(a.heal)parts.push(`Soin ${a.heal.amount}${a.heal.targets>1?' ×'+a.heal.targets:''}${a.heal.scope==='all-lines'?' toutes lignes':''}`);
  if(a.healBarrier)parts.push(`Barrière +${a.healBarrier.amount}`);
- if(a.regeneration)parts.push(`Régénération ${a.regeneration.amount}`);
+ if(a.regeneration)parts.push(`Régénération ${a.regeneration.amount}${a.regeneration.resolutions>1?' · '+a.regeneration.resolutions+' tours':''}`);
  if(a.inspire)parts.push(`Inspiration +${a.inspire.amount} / ${a.inspire.period} tours`);
  if(a.haste)parts.push(`Célérité ${d.geometry.steps}`);
  if(a.charge)parts.push(`Charge +${a.charge.amount}`);
- if(a.pierce)parts.push('Perforation');
+ if(a.pierce)parts.push(a.pierce.condition==='charged'?'Charge perforante':'Perforation');
  if(a.rearShot)parts.push(`Tir arrière ${a.rearShot.amount}`);
  if(a.riposteBarrier)parts.push(`Barrière ${a.riposteBarrier.amount}`);
  if(a.riposte)parts.push('Riposte'+(a.riposte.damageMode==='effective-attack'?' ATQ':' '+a.riposte.amount));
  if(a.ward)parts.push(`Protection +${a.ward.amount}`);
  if(a.arrivalBarrier)parts.push(`Barrière alliée ${a.arrivalBarrier.amount}`);
- if(a.harass)parts.push(`Harcèlement −${a.harass.amount} ATQ`);
+ if(a.harass)parts.push(`Harcèlement −${a.harass.amount} ATQ${a.harass.attacks>1?' · '+a.harass.attacks+' attaques':''}`);
  if(a.poison)parts.push(`Poison ${a.poison.amount} · ${a.poison.resolutions} tours`);
- if(a.trapper)parts.push(`Piège ${a.trapper.damage} / ${a.trapper.period} tours`);
+ if(a.trapper)parts.push(`Piège ${a.trapper.damage} / ${a.trapper.period} tours${a.trapper.poison?' · Poison '+a.trapper.poison.amount:''}`);
  if(a.flying)parts.push('Vol');
  if(d.geometry.range>1)parts.unshift(`Portée ${d.geometry.range}`);
  return parts.slice(0,3).join(' · ')||'Corps à corps';
@@ -5430,20 +5454,39 @@ function unitAbilityDetails(d){
  if(a.riposteBarrier)lines.push(`Après une Riposte autorisée : barrière personnelle +${a.riposteBarrier.amount}, plafond ${a.riposteBarrier.cap} pour cet effet.`);
  if(a.heal)lines.push(`Après les attaques : soigne ${a.heal.amount} PV à ${a.heal.targets>1?'jusqu’à '+a.heal.targets+' alliés blessés distincts, priorité aux plus blessés proportionnellement':'l’allié le plus blessé proportionnellement'} sur ${scope(a.heal)}, elle-même incluse.`);
  if(a.healBarrier)lines.push(`Après un soin effectif : barrière +${a.healBarrier.amount} à la cible, plafond ${a.healBarrier.cap} pour cet effet.`);
- if(a.regeneration)lines.push(`Après un soin effectif : Régénération ${a.regeneration.amount} PV à la même cible à la fin de son prochain tour de combat, si elle vit et reste blessée. Sans cumul ; une nouvelle application rafraîchit l’effet.`);
+ if(a.regeneration)lines.push(`Après un soin effectif : Régénération ${a.regeneration.amount} PV à la même cible ${a.regeneration.resolutions===1?'à la fin de son prochain tour de combat':'à la fin de ses '+a.regeneration.resolutions+' prochains tours de combat'}, si elle vit et reste blessée. Sans cumul ; une nouvelle application rafraîchit l’effet.`);
  if(a.inspire)lines.push(`Tous les ${a.inspire.period} tours : +${a.inspire.amount} ATQ à ${a.inspire.targets} autre${a.inspire.targets>1?'s':''} allié${a.inspire.targets>1?'s':''} de ${scope(a.inspire)}, ATQ plafonnée à ${a.inspire.cap}.`);
  if(a.arrivalInspire)lines.push(`À l’arrivée : +${a.arrivalInspire.amount} ATQ au premier autre allié de sa ligne, maximum ${a.arrivalInspire.cap}.`);
  if(a.ward)lines.push(`À l’arrivée : +${a.ward.amount} bouclier à sa couronne, plafond ${a.ward.cap}.`);
  if(a.arrivalBarrier)lines.push(`À l’arrivée : barrière ${a.arrivalBarrier.amount} à un autre allié de sa ligne, priorité au plus blessé proportionnellement. Plafond ${a.arrivalBarrier.cap} pour cet effet, sans cumul ; aucune autre cible ni effet sans allié.`);
- if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : Harcèlement −${a.harass.amount} ATQ sur sa prochaine attaque d’unité, Riposte comprise ; minimum 0, aucun effet sur les sorts. Les applications renouvellent le malus sans cumul.`);
+ if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : Harcèlement −${a.harass.amount} ATQ sur ${a.harass.attacks===1?'sa prochaine attaque d’unité':'ses '+a.harass.attacks+' prochaines attaques d’unité'}, Riposte comprise ; minimum 0, aucun effet sur les sorts. Les applications renouvellent le malus sans cumul.`);
  if(a.intervention)lines.push(`À l’arrivée : ${a.intervention.amount} dégâts au premier ennemi devant, même ligne, jusqu’à ${a.intervention.range} cases ; protections normales, une seule frappe d’arrivée.`);
  if(a.flying)lines.push('Vol : franchit un allié si la case d’arrivée est libre.');
  if(a.charge)lines.push(`Charge : +${a.charge.amount} ATQ après déplacement avant la frappe.`);
- if(a.pierce)lines.push('Perforation : ignore l’armure de la première cible, autres protections conservées.');
+ if(a.pierce)lines.push(`Perforation : ignore l’armure de la première cible${a.pierce.condition==='charged'?' seulement après déplacement avec Charge':''}, autres protections conservées.`);
  if(a.rearShot)lines.push(`Tir arrière : ${a.rearShot.amount} dégâts à l’ennemi immédiatement derrière la première cible, même ligne ; protections normales.`);
  if(a.poison)lines.push(`Après une attaque sur une unité : Poison ${a.poison.amount} dégât par tour pendant ${a.poison.resolutions} tours ; une nouvelle application renouvelle la durée.`);
  if(a.trapper)lines.push(`Tous les ${a.trapper.period} tours : arme si possible la case libre éligible juste devant. Piège visible pendant ${a.trapper.resolutions} tours au plus ; ${a.trapper.damage} dégât${a.trapper.damage>1?'s':''} brut${a.trapper.damage>1?'s':''} avant protections, déplacement et attaque bloqués pour le tour du déclenchement.`);
+ if(a.trapper?.poison)lines.push(`Si la victime du piège survit : Poison ${a.trapper.poison.amount} pendant ses ${a.trapper.poison.resolutions} prochains tours de combat, sans dégât de poison immédiat ni cumul.`);
+ if(a.entangle)lines.push(`Entrave : après une attaque touchant une unité ennemie survivante, empêche seulement son prochain déplacement. ${a.entangle.frequency==='invocation'?'Une fois par invocation.':'Au plus une fois tous les '+a.entangle.period+' tours, durée rafraîchie sans cumul.'} La cible peut attaquer.`);
+ if(a.chargeBarrier)lines.push(`Après une attaque chargée sur une unité : barrière personnelle ${a.chargeBarrier.amount}${a.chargeBarrier.allies?' et barrière '+a.chargeBarrier.amount+' à un autre allié de sa ligne, priorité au plus blessé proportionnellement':''}. Plafond ${a.chargeBarrier.cap} par cible pour cet effet ; aucun gain sans déplacement ni contre la couronne seule.`);
+ if(a.contagion)lines.push(`Contagion : au premier décès d’un ennemi portant encore son poison, transmet Poison ${a.contagion.amount} pendant ${a.contagion.resolutions} tours à l’ennemi vivant le plus proche sur la même ligne. Une fois par invocation, sans chaîne ; reste attachée au poison si sa source disparaît.`);
+ if(a.deathWard)lines.push(`À sa destruction en combat : +${a.deathWard.amount} bouclier à sa couronne, plafond ${a.deathWard.cap}, une fois par invocation. Aucun effet en quittant simplement le plateau.`);
+ if(a.fury)lines.push(`Fureur : après perte effective de PV par attaque ennemie, si elle survit, sa prochaine attaque gagne +${a.fury.amount} ATQ. Sans cumul, consommée à l’attaque ; peut être réactivée ensuite.`);
+ if(a.furyBarrier)lines.push(`Si son attaque renforcée par Fureur détruit une unité ennemie : barrière ${a.furyBarrier.amount}, plafond ${a.furyBarrier.cap}, au plus une fois par tour.`);
+ if(a.purify)lines.push(`Après un soin restaurant effectivement des PV : retire tout le poison${a.purify.movement?' et l’Entrave empêchant le prochain déplacement':''} de cette seule cible. Aucun retrait sans soin effectif.`);
  return lines;
+}
+
+function advancedSummary(a){
+ const parts=[];
+ if(a.entangle)parts.push(`Entrave ${a.entangle.frequency==='invocation'?'1 fois':'/ '+a.entangle.period+' tours'}`);
+ if(a.chargeBarrier)parts.push(`Barrière après Charge ${a.chargeBarrier.amount}${a.chargeBarrier.allies?' + allié':''}`);
+ if(a.contagion)parts.push(`Contagion ${a.contagion.amount} · ${a.contagion.resolutions} tours`);
+ if(a.deathWard)parts.push(`Dernière lumière +${a.deathWard.amount}`);
+ if(a.fury)parts.push(`Fureur +${a.fury.amount}${a.furyBarrier?' · Barrière '+a.furyBarrier.amount+' si élimination':''}`);
+ if(a.purify)parts.push(`Purification${a.purify.movement?' et Entrave':''}`);
+ return parts;
 }
 
 Object.assign(__exports,{unitAbilitySummary,unitCardText,unitAbilityDetails});
@@ -5473,11 +5516,12 @@ function unitAttackRange(u){
  return u?.ranged?Math.max(2,resolveUnitDefinition(u)?.geometry.range||0):1;
 }
 function unitMovementSteps(u,suppressed=false){
+ if(u.movementRoot)return 0;
  const d=resolveUnitDefinition(u);
  return d?.abilities.haste&&!suppressed?d.geometry.steps:1;
 }
 function unitChargeAmount(u){return versionUnitAbilities(u)?.charge?.amount||0;}
-function unitHasPierce(u,suppressed=false){return !suppressed&&!!versionUnitAbilities(u)?.pierce?.ignoreArmor;}
+function unitHasPierce(u,suppressed=false,charged=false){const p=versionUnitAbilities(u)?.pierce;return !suppressed&&!!p?.ignoreArmor&&(p.condition!=='charged'||charged);}
 function unitFlying(u){return !!versionUnitAbilities(u)?.flying;}
 
 const battleRulesError=b=>b?.cardRules===CARD_RULESET?'':'Ce combat doit être relancé après la mise à jour des cartes.';
@@ -5818,6 +5862,8 @@ const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
 const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError}=__load("src/engine/unit-rules.js");
 const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
 const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration}=__load("src/engine/unit-effects.js");
+const {tickUnitPoison,clearUnitPoison}=__load("src/engine/unit-poison.js");
+const {resolveStrikeRewards,resolveUnitDeath}=__load("src/engine/unit-triggers.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 const {CARDS,FACTIONS}=__load("src/data.js");
 const {frontEnemy}=__load("src/engine/spell-targeting.js");
@@ -5958,7 +6004,7 @@ function previewPlayerSpell(b,index,lane){
 }
 function sweepDead(b){
  for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
-  const u=b.board[lane][col];if(u&&u.hp<=0){fx(b,{type:'death',lane,col,side:u.side,icon:CARDS[u.id]?.icon||'✦'});b.board[lane][col]=null;}
+  const u=b.board[lane][col];if(u&&u.hp<=0){resolveUnitDeath(b,u,lane,col,fx);fx(b,{type:'death',lane,col,side:u.side,icon:CARDS[u.id]?.icon||'✦'});b.board[lane][col]=null;}
  }
 }
 function checkOutcome(b){
@@ -5991,7 +6037,7 @@ function enemyAct(b){
 
 function resolvePoison(b,sideFilter=null){
  for(const row of b.board)for(const u of row)if(u&&u.poisonTurns>0&&(!sideFilter||u.side===sideFilter)){
-  u.hp=Math.max(0,u.hp-u.poison);u.poisonTurns--;const pos=b.board.findIndex(row=>row.includes(u));if(pos>=0){const col=b.board[pos].indexOf(u);fx(b,{type:'poison',lane:pos,col,damage:u.poison});}
+  if(!tickUnitPoison(b,u))continue;const pos=b.board.findIndex(row=>row.includes(u));if(pos>=0){const col=b.board[pos].indexOf(u);fx(b,{type:'poison',lane:pos,col,damage:u.poison});}
  }
  sweepDead(b);
 }
@@ -6000,6 +6046,7 @@ function moveUnits(b,sideFilter=null){
  for(const side of sideFilter?[sideFilter]:(b.round%2?['p','e']:['e','p']))for(let lane=0;lane<laneCount(b);lane++){
   const cols=Array.from({length:lastCell(b)},(_,i)=>side==='p'?lastCell(b)-i:i+1);
   for(const original of cols){const u=b.board[lane][original];if(!u||u.side!==side||u.stun>0)continue;
+   if(u.movementRoot){delete u.movementRoot;continue;}
    let col=original;const steps=unitMovementSteps(u,silenced(b,u));
    for(let step=0;step<steps;step++){
     if(findTarget(b,lane,col,u))break;
@@ -6036,10 +6083,11 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
  if(other&&other.hp>0&&other.side!==u.side)hit(b,other,p.amount,u.side,p.ignoreArmor);
 }
 
-function strike(b,u,target,atk,from,to,sameLine=true){
- const before=target.hp;if(atk>0)hit(b,target,atk,u.side,unitHasPierce(u,silenced(b,u)));
+function strike(b,u,target,atk,from,to,sameLine=true,charged=false){
+ const before=target.hp;if(atk>0)hit(b,target,atk,u.side,unitHasPierce(u,silenced(b,u),charged),true);
  const damage=Math.max(0,before-target.hp);
  if(sameLine&&(to-from)*(u.side==='p'?1:-1)>=2)recordTrialFact(b,u,'rangedDamage',damage);
+ return atk>0&&before>0&&target.hp<=0;
 }
 function resolveAttacks(b,sideFilter=null){
  const intents=[];
@@ -6047,7 +6095,7 @@ function resolveAttacks(b,sideFilter=null){
   const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0||(sideFilter&&u.side!==sideFilter))continue;
   const target=findTarget(b,lane,col,u);
   const charged=!silenced(b,u)&&unitChargeAmount(u)>0&&!!u.movedThisRound;
-  if(target)intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0)),ability:activeAbility(b,u),charged,suppressed:silenced(b,u)});
+  if(target){const furious=!!u.fury;intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0)),ability:activeAbility(b,u),charged,furious,suppressed:silenced(b,u)});}
  }
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
@@ -6058,17 +6106,19 @@ function resolveAttacks(b,sideFilter=null){
   if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +${unitChargeAmount(u)} attaque sur la ligne ${lane+1}.`);
   if(target.type==='hero'){
    if(guardIntercept){
-    strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane);
+    const killed=strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane,charged);
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
     if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
-    applyAttackEffects(u,guardIntercept.u,intent.suppressed);
+    applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0);
+    if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}}
   } else {
-   strike(b,u,target.target,atk,intent.col,target.col);
+   const killed=strike(b,u,target.target,atk,intent.col,target.col,true,charged);
    if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
-   applyAttackEffects(u,target.target,intent.suppressed);
+   applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0);
+   if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
    if(ability==='splash'){
     const extra=b.board[lane].find(v=>v&&v.side!==u.side&&v.uid!==target.target.uid&&v.hp>0);
     if(extra)hit(b,extra,2,u.side);
@@ -6130,7 +6180,7 @@ function usePower(b){
   if(hasBattleTalent(b,'clerc_purification')){
    // Useful between poison encounters, while keeping the branch below major healing.
    h.shield=Math.min(15,h.shield+1);
-   for(const u of b.board.flat())if(u&&u.side==='p'){u.poison=0;u.poisonTurns=0;u.stun=0;}
+   for(const u of b.board.flat())if(u&&u.side==='p'){clearUnitPoison(u);u.stun=0;}
   }
   note(b,'Bénédiction : le héros et ses alliés sont soignés.');
  }
@@ -6421,7 +6471,7 @@ const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {silenced}=__load("src/engine/battle-control.js");
 const {recordCombatEvent}=__load("src/engine/combat-events.js");
 const {consumeAttackPenalty}=__load("src/engine/unit-effects.js");
-const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier'];
+const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier'];
 function grantAbilityBarrier(u,key,parameters){
  if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
  const sources={...u.abilityBarriers};
@@ -6451,7 +6501,7 @@ function absorbBarrier(u,damage){
  return absorbed;
 }
 
-function hit(b,u,raw,bySide,ignoreArmor=false){
+function hit(b,u,raw,bySide,ignoreArmor=false,attack=false){
  if(!u||u.hp<=0)return 0; // Une victime ne compte jamais deux fois.
  const abilities=versionUnitAbilities(u);
  const armor=u.armor??abilities?.armor?.amount??0;
@@ -6466,6 +6516,7 @@ function hit(b,u,raw,bySide,ignoreArmor=false){
  if(u.hp<=0&&abilities?.lastStand&&!u.lastStandUsed&&!silenced(b,{...u,hp:before})){
   u.lastStandUsed=true;u.hp=Math.min(u.maxhp,abilities.lastStand.hp);
  }
+ if(attack&&bySide!==u.side&&before>u.hp&&u.hp>0&&abilities?.fury&&!silenced(b,u))u.fury=abilities.fury.amount;
  if(bySide!==u.side&&u.hp<=0)b.stats[bySide==='p'?'playerKills':'enemyKills']++;
  if(Array.isArray(b.vfx)){
   const lane=b.board.findIndex(row=>row.includes(u)),col=lane<0?-1:b.board[lane].indexOf(u);
@@ -6484,7 +6535,7 @@ function resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,att
  else defender.lastRiposteRound=b.round;
  recordCombatEvent(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
  const raw=consumeAttackPenalty(defender,defender.atk+attackBonus);
- const dealt=raw>0?hit(b,attacker,raw,defender.side):0;
+ const dealt=raw>0?hit(b,attacker,raw,defender.side,false,true):0;
  if(dealt>0)note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
  if(abilities?.riposteBarrier)grantAbilityBarrier(defender,'riposteBarrier',abilities.riposteBarrier);
  return true;
@@ -6506,6 +6557,7 @@ Object.assign(__exports,{grantAbilityBarrier,grantSharedBarrier,hit,resolveRetal
 const {CARDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {unitAttackRange}=__load("src/engine/unit-rules.js");
+const {applyUnitPoison}=__load("src/engine/unit-poison.js");
 const {laneCount,lastCell,crownColumn,entryColumn,validLane,trapColumns}=__load("src/engine/board.js");
 const alive=u=>!!u&&u.hp>0;
 const direction=side=>side==='p'?1:-1;
@@ -6515,7 +6567,8 @@ const activeAbility=(b,u)=>silenced(b,u)?'':u.ability;
 function silenceValue(u){
  const value={heal:6,inspire:5,splash:6,poison:5,lifesteal:5,pierce:3,haste:3,silence:6,portal:4,trapper:4}[u?.ability]||0;
  const future=versionUnitAbilities(u);
- return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0);
+ return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
+  (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0);
 }
 function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 function silenceTarget(b,side,lane){
@@ -6587,10 +6640,11 @@ function trapPlan(b,side,lane,col){
  const target=columns.find(c=>Number.isInteger(c)&&c>=2&&c<lastCell(b)&&!b.board[lane][c]&&!traps.some(t=>t.lane===lane&&t.col===c));
  return target===undefined?null:{lane,col:target};
 }
-function placeTrap(b,side,plan,kind='rune',emit=()=>{},note=()=>{},parameters=null){
+function placeTrap(b,side,plan,kind='rune',emit=()=>{},note=()=>{},parameters=null,source=null){
  if(!plan||!trapPlan(b,side,plan.lane,plan.col))return false;
  if(!b.traps)b.traps=[];
  const trap={owner:side,lane:plan.lane,col:plan.col,kind,damage:parameters?.damage??(kind==='snare'?1:3),stun:parameters?.stun??(kind==='snare'?1:0),expiresRound:b.round+(parameters?.resolutions??3)-1};
+ if(parameters?.poison&&source){trap.poison={...parameters.poison};trap.sourceUid=source.uid;}
  b.traps.push(trap);emit(b,{type:'trap-place',side,lane:trap.lane,col:trap.col});
  note(b,`Piège ${kind==='snare'?'sylvestre':'runique'} ${side==='p'?'allié':'adverse'} armé : ligne ${trap.lane+1}, case ${trap.col}.`);
  return true;
@@ -6602,6 +6656,7 @@ function triggerTrap(b,u,lane,col,hit,emit=()=>{},note=()=>{}){
  const [trap]=b.traps.splice(index,1); // Retrait avant l'effet : aucune réentrée/boucle.
  const damage=hit(b,u,trap.damage,trap.owner);
  if(u.hp>0&&trap.stun)u.stun=Math.max(u.stun||0,trap.stun);
+ if(u.hp>0&&trap.poison)applyUnitPoison(u,{...trap.poison,sourceBound:true},{uid:trap.sourceUid,side:trap.owner},b.round+1);
  emit(b,{type:'trap-trigger',side:trap.owner,lane,col,damage});
  note(b,`Piège déclenché sur ${CARDS[u.id]?.name} : ${damage} dégât(s)${trap.stun?' et immobilisation':''}.`);
  return true;
@@ -6639,7 +6694,7 @@ function prepareControlUnits(b,hooks,sideFilter=null){
   if(u.ability==='silence'){
    const target=silenceTarget(b,u.side,lane);
    if(target&&applySilence(b,target.u,1)){used=true;hooks.emit(b,{type:'silence',side:u.side,lane,col:target.col});hooks.note(b,`${CARDS[u.id].name} réduit ${CARDS[target.u.id].name} au silence pour ce tour.`);}
-  }else if(u.ability==='trapper')used=placeTrap(b,u.side,trapPlan(b,u.side,lane,col+direction(u.side)),'snare',hooks.emit,hooks.note,versionUnitAbilities(u)?.trapper);
+  }else if(u.ability==='trapper')used=placeTrap(b,u.side,trapPlan(b,u.side,lane,col+direction(u.side)),'snare',hooks.emit,hooks.note,versionUnitAbilities(u)?.trapper,u);
   else if(u.ability==='portal'){
    const plans=[];
    for(let toLane=0;toLane<laneCount(b);toLane++)if(!teleportDestinationError(b,u.side,lane,col,toLane)){
@@ -6653,6 +6708,47 @@ function prepareControlUnits(b,hooks,sideFilter=null){
 }
 
 Object.assign(__exports,{CONTROL_IDS,silenced,activeAbility,silenceValue,canSilence,silenceTarget,applySilence,teleportDestinationError,teleportPlan,teleportGain,teleportUnit,trapPlan,placeTrap,triggerTrap,expireControl,controlTargetError,resolveControlSpell,prepareControlUnits});
+
+},
+"src/engine/unit-poison.js":function(__exports,__load){
+// Un seul poison actif comme historiquement ; provenance facultative, sans cumul.
+function applyUnitPoison(target,parameters,source,readyRound){
+ if(!target||target.hp<=0&&parameters.sourceBound)return;
+ target.poison=parameters.amount;
+ target.poisonTurns=parameters.sourceBound?parameters.resolutions:Math.max(target.poisonTurns||0,parameters.resolutions);
+ if(parameters.sourceBound){
+  target.poisonOrigin={uid:source.uid,side:source.side,...(source.contagion?{contagion:{...source.contagion}}:{}),...(readyRound?{readyRound}:{})};
+ }else delete target.poisonOrigin;
+}
+function clearUnitPoison(u){u.poison=0;u.poisonTurns=0;delete u.poisonOrigin;}
+function tickUnitPoison(b,u){
+ if(!(u.poisonTurns>0)||u.poisonOrigin?.readyRound>b.round)return false;
+ u.hp=Math.max(0,u.hp-u.poison);u.poisonTurns--;
+ if(u.hp<=0&&u.poisonOrigin)u.poisonOrigin={...u.poisonOrigin,lethal:true};
+ else if(!u.poisonTurns)delete u.poisonOrigin;
+ return true;
+}
+// La contagion est attachée au poison déjà appliqué, même si sa source a disparu.
+// Consommation au premier décès éligible ; aucune contamination en chaîne.
+function spreadUnitPoison(b,dead,lane,col,emit){
+ const origin=dead.poisonOrigin,p=origin?.contagion;
+ if(!p||!(dead.poisonTurns>0||origin.lethal)||(b.poisonSpreads||[]).includes(origin.uid))return;
+ b.poisonSpreads=[...(b.poisonSpreads||[]),origin.uid];
+ const target=b.board[lane].map((u,col)=>({u,col})).filter(t=>t.u&&t.u.hp>0&&t.u.side===dead.side)
+  .sort((a,z)=>Math.abs(a.col-col)-Math.abs(z.col-col)||a.col-z.col||a.u.uid-z.u.uid)[0];
+ if(!target)return;
+ applyUnitPoison(target.u,{...p,sourceBound:true},{uid:origin.uid,side:origin.side});
+ emit(b,{type:'state',side:origin.side,lane,col:target.col});
+}
+const positive=n=>Number.isSafeInteger(n)&&n>0&&n<=100;
+function validPoisonOrigin(p){
+ return p===undefined||!!p&&Number.isSafeInteger(p.uid)&&p.uid>=0&&['p','e'].includes(p.side)&&
+  (p.readyRound===undefined||positive(p.readyRound))&&(p.lethal===undefined||typeof p.lethal==='boolean')&&
+  (p.contagion===undefined||!!p.contagion&&positive(p.contagion.amount)&&positive(p.contagion.resolutions));
+}
+function validPoisonSpreads(ids){return ids===undefined||Array.isArray(ids)&&ids.every(n=>Number.isSafeInteger(n)&&n>=0)&&new Set(ids).size===ids.length;}
+
+Object.assign(__exports,{applyUnitPoison,clearUnitPoison,tickUnitPoison,spreadUnitPoison,validPoisonOrigin,validPoisonSpreads});
 
 },
 "src/engine/combat-events.js":function(__exports,__load){
@@ -6680,19 +6776,25 @@ Object.assign(__exports,{captureCombatFrame,recordCombatEvent});
 "src/engine/unit-effects.js":function(__exports,__load){
 // États temporaires communs aux unités ; jamais de modification permanente d'ATQ.
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
-function attackAfterPenalty(u,raw){return u.attackPenalty?Math.max(0,raw-u.attackPenalty.amount):raw;}
+const {applyUnitPoison,validPoisonOrigin}=__load("src/engine/unit-poison.js");
+function attackAfterPenalty(u,raw){const boosted=raw+(u.fury||0);return u.attackPenalty?Math.max(0,boosted-u.attackPenalty.amount):boosted;}
 function consumeAttackPenalty(u,raw){
  const result=attackAfterPenalty(u,raw),p=u.attackPenalty;
  if(p){if(p.remaining<=1)delete u.attackPenalty;else u.attackPenalty={...p,remaining:p.remaining-1};}
+ if(u.fury)delete u.fury;
  return result;
 }
-function applyAttackEffects(source,target,suppressed=false){
+function applyAttackEffects(source,target,suppressed=false,round=0,touched=true){
  if(suppressed||!target||target.side===source.side)return;
  const a=versionUnitAbilities(source);
  if(a?.poison&&source.ability==='poison'){
-  target.poison=a.poison.amount;target.poisonTurns=Math.max(target.poisonTurns||0,a.poison.resolutions);
+  applyUnitPoison(target,a.poison,{uid:source.uid,side:source.side,contagion:a.contagion});
  }
  if(a?.harass&&target.hp>0)target.attackPenalty={amount:a.harass.amount,remaining:a.harass.attacks};
+ if(touched&&target.hp>0&&a?.entangle&&round>0){
+  const p=a.entangle,ready=p.frequency==='invocation'?!source.entangleUsed:!(source.entangleReadyRound>round);
+  if(ready){target.movementRoot=1;if(p.frequency==='invocation')source.entangleUsed=true;else source.entangleReadyRound=round+p.period;}
+ }
 }
 function grantRegeneration(b,target,parameters){
  target.regeneration={amount:parameters.amount,remaining:parameters.resolutions,readyRound:b.round+1};
@@ -6712,7 +6814,10 @@ const integer=(n,max)=>Number.isSafeInteger(n)&&n>0&&n<=max;
 function validUnitEffects(u){
  const p=u.attackPenalty,r=u.regeneration;
  return (p===undefined||p&&integer(p.amount,100)&&integer(p.remaining,10))&&
-  (r===undefined||r&&integer(r.amount,100)&&integer(r.remaining,10)&&integer(r.readyRound,100));
+  (r===undefined||r&&integer(r.amount,100)&&integer(r.remaining,10)&&integer(r.readyRound,100))&&
+  (u.movementRoot===undefined||u.movementRoot===1)&&(u.entangleUsed===undefined||typeof u.entangleUsed==='boolean')&&
+  (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
+  (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin);
 }
 
 Object.assign(__exports,{attackAfterPenalty,consumeAttackPenalty,applyAttackEffects,grantRegeneration,resolveRegeneration,validUnitEffects});
@@ -6825,11 +6930,11 @@ Object.assign(__exports,{trialObjectiveText,createTrialChallenge,validTrialChall
 },
 "src/engine/ascension-objectives.js":function(__exports,__load){
 // Objectif commun à un Ordre : lecture de l'état réel, sans second moteur.
-const {CARDS}=__load("src/data.js");
+const {CARDS,FACTIONS}=__load("src/data.js");
 const {CARD_RARITIES}=__load("src/cards/schema.js");
 function ascensionObjectiveText(t){
  const q=t.goal;
- return `Gagner au plus tard au tour ${q.maxRound}, avec au moins ${q.distinct} personnages distincts de l’Aube encore vivants, dont un au rang ${CARD_RARITIES.find(r=>r.id===t.from).name}, et une couronne à au moins ${q.crownPercent} % de ses PV maximum.`;
+ return `Gagner au plus tard au tour ${q.maxRound}, avec au moins ${q.distinct} personnages distincts de ${FACTIONS[t.faction].short==='Aube'?'l’Aube':'la '+FACTIONS[t.faction].short} encore vivants, dont un au rang ${CARD_RARITIES.find(r=>r.id===t.from).name}, et une couronne à au moins ${q.crownPercent} % de ses PV maximum.`;
 }
 function createAscensionChallenge(t){
  return {version:2,faction:t.faction,rarity:t.from,...t.goal,text:ascensionObjectiveText(t)};
@@ -6847,7 +6952,7 @@ function ascensionObjectiveState(b,t){
  const q=b.trialChallenge,allies=b.board.flat().filter(u=>u?.side==='p'&&u.hp>0&&CARDS[u.id]?.faction===q.faction);
  const distinct=new Set(allies.map(u=>u.id)).size,crown=b.heroes.p;
  const checks=[
-  {label:`Personnages Aube vivants : ${distinct}/${q.distinct}`,met:distinct>=q.distinct},
+  {label:`Personnages ${FACTIONS[q.faction].short} vivants : ${distinct}/${q.distinct}`,met:distinct>=q.distinct},
   {label:`Un personnage ${CARD_RARITIES.find(r=>r.id===q.rarity).name} encore vivant`,met:allies.some(u=>(u.rarity||CARDS[u.id].rarity)===q.rarity)},
   {label:`PV de la couronne : au moins ${q.crownPercent} %`,met:crown.hp>0&&crown.hp*100>=crown.maxhp*q.crownPercent},
   {label:`Victoire au plus tard au tour ${q.maxRound} (tour ${b.round})`,met:b.round<=q.maxRound}
@@ -6895,19 +7000,9 @@ const {silenced}=__load("src/engine/battle-control.js");
 const {lastCell}=__load("src/engine/board.js");
 const {grantHealBarrier,grantAbilityBarrier}=__load("src/engine/battle-defense.js");
 const {grantRegeneration}=__load("src/engine/unit-effects.js");
-function allies(b,u,lane,parameters){
- const found=[];
- for(let l=0;l<b.board.length;l++){
-  if(parameters.scope!=='all-lines'&&l!==lane)continue;
-  for(let col=1;col<=lastCell(b);col++){
-   const other=b.board[l][col];
-   if(other&&other.hp>0&&other.side===u.side&&(parameters.includeSelf||other.uid!==u.uid))found.push({u:other,lane:l,col});
-  }
- }
- return found;
-}
+const {alliedTargets as allies,injuryOrder}=__load("src/engine/unit-targets.js");
+const {clearUnitPoison}=__load("src/engine/unit-poison.js");
 function inspireTargets(b,u,lane,p){return allies(b,u,lane,p).slice(0,p.targets);}
-const injuryOrder=(x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid;
 function strengthen(target,p){const before=target.atk;target.atk=Math.max(before,Math.min(p.cap,before+p.amount));return target.atk-before;}
 
 function resolveUnitArrival(b,u,lane,col,hooks){
@@ -6941,7 +7036,13 @@ function resolveUnitSupport(b,sideFilter,emit){
    const p=a.heal,targets=allies(b,u,lane,p).filter(t=>t.u.hp<t.u.maxhp)
     .sort(injuryOrder).slice(0,p.targets);
    if(targets.length)u.lastHealRound=b.round;
-   for(const t of targets){const before=t.u.hp;t.u.hp=Math.min(t.u.maxhp,before+p.amount);grantHealBarrier(b,u,t.u,t.u.hp-before);if(a.regeneration&&t.u.hp>before)grantRegeneration(b,t.u,a.regeneration);emit(b,{type:'heal',side:u.side,lane:t.lane,col:t.col});}
+   for(const t of targets){const before=t.u.hp;t.u.hp=Math.min(t.u.maxhp,before+p.amount);grantHealBarrier(b,u,t.u,t.u.hp-before);
+    if(t.u.hp>before){
+     if(a.regeneration)grantRegeneration(b,t.u,a.regeneration);
+     if(a.purify?.poison)clearUnitPoison(t.u);
+     if(a.purify?.movement)delete t.u.movementRoot;
+    }
+    emit(b,{type:'heal',side:u.side,lane:t.lane,col:t.col});}
   }
   if(a.inspire&&b.round%a.inspire.period===0&&u.lastInspireRound!==b.round){
    const targets=inspireTargets(b,u,lane,a.inspire);if(targets.length)u.lastInspireRound=b.round;
@@ -6951,6 +7052,54 @@ function resolveUnitSupport(b,sideFilter,emit){
 }
 
 Object.assign(__exports,{resolveUnitArrival,resolveUnitSupport});
+
+},
+"src/engine/unit-targets.js":function(__exports,__load){
+// Sélection pure partagée par les soins et protections des unités.
+const {lastCell}=__load("src/engine/board.js");
+function alliedTargets(b,u,lane,parameters){
+ const found=[];
+ for(let l=0;l<b.board.length;l++){
+  if(parameters.scope!=='all-lines'&&l!==lane)continue;
+  for(let col=1;col<=lastCell(b);col++){
+   const other=b.board[l][col];
+   if(other&&other.hp>0&&other.side===u.side&&(parameters.includeSelf||other.uid!==u.uid))found.push({u:other,lane:l,col});
+  }
+ }
+ return found;
+}
+const injuryOrder=(x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid;
+
+Object.assign(__exports,{alliedTargets,injuryOrder});
+
+},
+"src/engine/unit-triggers.js":function(__exports,__load){
+// Déclencheurs de protection après frappe et à la destruction, moteur commun.
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
+const {grantAbilityBarrier}=__load("src/engine/battle-defense.js");
+const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
+const {spreadUnitPoison}=__load("src/engine/unit-poison.js");
+function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed},emit){
+ if(suppressed||u.hp<=0)return;
+ const a=versionUnitAbilities(u);
+ const protect=(target,key,p)=>{if(grantAbilityBarrier(target.u,key,p))emit(b,{type:'state',side:u.side,lane:target.lane,col:target.col});};
+ if(charged&&a.chargeBarrier){
+  protect({u,lane,col},'chargeBarrier',a.chargeBarrier);
+  if(a.chargeBarrier.allies)for(const target of alliedTargets(b,u,lane,{includeSelf:false}).sort(injuryOrder).slice(0,a.chargeBarrier.allies))protect(target,'chargeBarrier',a.chargeBarrier);
+ }
+ if(furious&&killed&&a.furyBarrier&&u.lastFuryBarrierRound!==b.round){
+  u.lastFuryBarrierRound=b.round;protect({u,lane,col},'furyBarrier',a.furyBarrier);
+ }
+}
+function resolveUnitDeath(b,u,lane,col,emit){
+ const p=versionUnitAbilities(u)?.deathWard;
+ if(p&&!(u.silenceUntil>=b.round)){
+  const h=b.heroes[u.side];h.shield=Math.max(h.shield,Math.min(p.cap,h.shield+p.amount));
+ }
+ spreadUnitPoison(b,u,lane,col,emit);
+}
+
+Object.assign(__exports,{resolveStrikeRewards,resolveUnitDeath});
 
 },
 "src/ai.js":function(__exports,__load){
@@ -7486,7 +7635,7 @@ Object.assign(__exports,{DECK_STYLES,deckOverview,proposeDeck,applyDeckStyle});
 },
 "src/engine/evolution-progress.js":function(__exports,__load){
 // Épreuves : accès, création d'un combat normal et transformation unique.
-const {CARDS,CAMPAIGN}=__load("src/data.js");
+const {CARDS,CAMPAIGN,FACTIONS}=__load("src/data.js");
 const {evolutionTrial,ALL_EVOLUTION_TRIALS}=__load("src/evolution-trials.js");
 const {cardReference,cardKey,cardId,cardRarity,ownedCardCopies}=__load("src/cards/references.js");
 const {createBattle}=__load("src/engine/battle.js");
@@ -7504,8 +7653,9 @@ function evolutionTrialAccess(profile,id,battle=null){
  if(t.previous&&!profile.completedTrials?.includes(t.previous))return {ok:false,reason:`Terminer l’épreuve « ${evolutionTrial(t.previous).name} ».`};
  if(t.kind==='ascension'){
   const allies=profile.deck.filter(ref=>CARDS[cardId(ref)]?.faction===t.faction);
-  if(!allies.some(ref=>cardRarity(ref)===t.from))return {ok:false,reason:`Ajouter au deck un personnage de l’Aube au rang ${CARD_RARITIES.find(r=>r.id===t.from).name}.`};
-  if(new Set(allies.map(cardId)).size<t.goal.distinct)return {ok:false,reason:`Ajouter au deck au moins ${t.goal.distinct} personnages distincts de l’Aube.`};
+  const faction=t.faction==='aube'?'l’Aube':'la '+FACTIONS[t.faction].short;
+  if(!allies.some(ref=>cardRarity(ref)===t.from))return {ok:false,reason:`Ajouter au deck un personnage de ${faction} au rang ${CARD_RARITIES.find(r=>r.id===t.from).name}.`};
+  if(new Set(allies.map(cardId)).size<t.goal.distinct)return {ok:false,reason:`Ajouter au deck au moins ${t.goal.distinct} personnages distincts de ${faction}.`};
   const invalid=validateDeck(profile);return invalid?{ok:false,reason:invalid}:{ok:true,trial:t};
  }
  const required=trialSource(t),name=CARDS[t.cardId].name;
@@ -7781,11 +7931,11 @@ Object.assign(__exports,{concordeLight,concordeDescription,concordeDetails});
 },
 "src/ui/evolution-trials.js":function(__exports,__load){
 // Épreuves et résultat : lecture du moteur et des cartes, aucune attribution ici.
-const {CARDS,CAMPAIGN}=__load("src/data.js");
-const {EVOLUTION_TRIALS,EVOLUTION_ASCENSIONS}=__load("src/evolution-trials.js");
+const {CARDS,CAMPAIGN,FACTIONS}=__load("src/data.js");
+const {EVOLUTION_TRIALS,ALL_EVOLUTION_ASCENSIONS}=__load("src/evolution-trials.js");
 const {evolutionTrialAccess,trialReward}=__load("src/engine/evolution-progress.js");
 const {trialObjectiveText,trialObjectiveState}=__load("src/engine/trial-objectives.js");
-const {EVOLUTION_FUSION_COPIES}=__load("src/evolution-fusion.js");
+const {EVOLUTION_FUSION_COPIES,EVOLUTION_FUSIONS}=__load("src/evolution-fusion.js");
 const {CARD_RARITIES}=__load("src/cards/schema.js");
 function trialBattleObjective(battle,esc){
  const state=trialObjectiveState(battle);if(!state)return '';
@@ -7794,15 +7944,15 @@ function trialBattleObjective(battle,esc){
 }
 
 function renderAscensions(profile,battle,{btn,esc}){
- return `<section class="spaced"><h2 class="section-title">Les grandes ascensions</h2><p class="page-sub">Deux défis communs à tout l’Ordre. Une réussite débloque les fusions de ce rang pour les dix personnages Aube. Chaque carte demande ensuite ${EVOLUTION_FUSION_COPIES} copies libres du rang précédent ; aucune carte n’est offerte par l’épreuve.</p><div class="trial-grid">${EVOLUTION_ASCENSIONS.map(t=>{
-  const access=evolutionTrialAccess(profile,t.id,battle),rank=CARD_RARITIES.find(r=>r.id===t.to).name;
-  return `<article class="card-panel ascension-card" data-trial-id="${esc(t.id)}"><div class="kicker">ASCENSION · RANG ${esc(rank)}</div><h2>${esc(t.name)}</h2><span class="pill">${access.completed?'✓ Fusions débloquées':'10 fusions à débloquer'}</span><p class="trial-objective">${esc(trialObjectiveText(t))}</p><p><b>Récompense :</b> accès au rang ${esc(rank)} de l’Aube par fusion, sans coût ni copie consommée pour tenter l’épreuve. Pas d’or, d’éclats ou d’XP.</p><p class="hint">${access.ok?'Objectif annoncé : préparez votre deck pour ce combat de boss.':esc(access.reason)}</p>${btn(access.completed?'Ascension accomplie':'Tenter l’ascension','trial-start',`data-id="${esc(t.id)}" ${!access.ok?'disabled':''}`,'primary')}</article>`;
+ return `<section class="spaced"><h2 class="section-title">Les grandes ascensions</h2><p class="page-sub">Deux défis communs par faction, pour l’Aube et la Sylve. Une réussite débloque les fusions de ce rang pour les personnages de cette faction. Chaque carte demande ensuite ${EVOLUTION_FUSION_COPIES} copies libres du rang précédent ; aucune carte n’est offerte par l’épreuve.</p><div class="trial-grid">${ALL_EVOLUTION_ASCENSIONS.map(t=>{
+  const access=evolutionTrialAccess(profile,t.id,battle),rank=CARD_RARITIES.find(r=>r.id===t.to).name,faction=FACTIONS[t.faction].short,count=EVOLUTION_FUSIONS.filter(r=>r.ascension===t.id).length;
+  return `<article class="card-panel ascension-card" data-trial-id="${esc(t.id)}"><div class="kicker">ASCENSION ${esc(faction)} · RANG ${esc(rank)}</div><h2>${esc(t.name)}</h2><span class="pill">${access.completed?'✓ Fusions débloquées':`${count} fusions à débloquer`}</span><p class="trial-objective">${esc(trialObjectiveText(t))}</p><p><b>Récompense :</b> accès au rang ${esc(rank)} pour ${esc(faction)} par fusion, sans coût ni copie consommée pour tenter l’épreuve. Pas d’or, d’éclats ou d’XP.</p><p class="hint">${access.ok?'Objectif annoncé : préparez votre deck pour ce combat de boss.':esc(access.reason)}</p>${btn(access.completed?'Ascension accomplie':'Tenter l’ascension','trial-start',`data-id="${esc(t.id)}" ${!access.ok?'disabled':''}`,'primary')}</article>`;
  }).join('')}</div></section>`;
 }
 
 function renderEvolutionTrials(profile,battle,{btn,cardUI,esc}){
  const busy=!!battle&&(battle.status==='active'||!battle.rewardGiven),boss=CAMPAIGN.find(m=>m.id==='03');
- return `<section class="evolution-trials"><header><div class="kicker">LES ÉPREUVES DE L’AUBE</div><h1 class="page-title">Méritez vos évolutions</h1><p class="page-sub">Les grandes ascensions ouvrent les rangs Divin et Éveillé. Les quatre défis de personnage ci-dessous restent une autre voie d’obtention des premières évolutions.</p>${btn('Préparer mon deck','nav','data-page="deck"','ghost')}</header>
+ return `<section class="evolution-trials"><header><div class="kicker">LES ÉPREUVES DES FACTIONS</div><h1 class="page-title">Méritez vos évolutions</h1><p class="page-sub">Les grandes ascensions ouvrent les rangs Divin et Éveillé. Les quatre défis de personnage ci-dessous restent une autre voie d’obtention des premières évolutions.</p>${btn('Préparer mon deck','nav','data-page="deck"','ghost')}</header>
   ${renderAscensions(profile,battle,{btn,esc})}
   <div class="card-panel trial-boss-gate"><h2 class="section-title">Le premier boss ouvre la suite</h2><p>Vaincre ${esc(boss.enemy)} dans « ${esc(boss.name)} » ouvre l’épreuve du Milicien Épique, après celle du Milicien Rare.</p><span class="pill">${profile.completed.includes(boss.id)?'✓ Boss déjà vaincu':'Boss à vaincre en campagne'}</span></div>
   ${busy?'<div class="hint red">Terminez le combat en cours avant de commencer une épreuve.</div>':''}
@@ -7814,8 +7964,8 @@ function renderEvolutionTrials(profile,battle,{btn,cardUI,esc}){
 }
 
 function evolutionTrialResult(reward,{btn,cardUI,esc}){
- return `<div class="kicker">ÉPREUVE DE L’AUBE</div><h2>${reward.unlocked?'Ascension accomplie !':reward.evolved?'Évolution obtenue !':reward.victory?'Objectif à retenter':'Épreuve perdue'}</h2>
-  ${reward.unlocked?`<p>Les fusions du rang ${esc(CARD_RARITIES.find(r=>r.id===reward.trial.to).name)} de l’Aube sont débloquées dans Alchimie. Chaque carte demande ${EVOLUTION_FUSION_COPIES} exemplaires libres du rang précédent. Votre deck et vos stocks sont conservés ; aucune carte n’a été offerte.</p>`:reward.evolved?`<p>Un exemplaire a été transformé. Il est disponible dans votre Collection et le deck a été mis à jour.</p><div class="trial-result-card">${cardUI(reward.card,{previewContext:'reward'})}</div>`:`<p>${esc(reward.reason||'Épreuve non validée. Aucun exemplaire consommé.')}</p>`}
+ return `<div class="kicker">ÉPREUVE D’ÉVOLUTION</div><h2>${reward.unlocked?'Ascension accomplie !':reward.evolved?'Évolution obtenue !':reward.victory?'Objectif à retenter':'Épreuve perdue'}</h2>
+  ${reward.unlocked?`<p>Les fusions du rang ${esc(CARD_RARITIES.find(r=>r.id===reward.trial.to).name)} pour ${esc(FACTIONS[reward.trial.faction].short)} sont débloquées dans Alchimie. Chaque carte demande ${EVOLUTION_FUSION_COPIES} exemplaires libres du rang précédent. Votre deck et vos stocks sont conservés ; aucune carte n’a été offerte.</p>`:reward.evolved?`<p>Un exemplaire a été transformé. Il est disponible dans votre Collection et le deck a été mis à jour.</p><div class="trial-result-card">${cardUI(reward.card,{previewContext:'reward'})}</div>`:`<p>${esc(reward.reason||'Épreuve non validée. Aucun exemplaire consommé.')}</p>`}
   <div class="button-row">${btn('Retour aux épreuves','trial-exit','data-page="trials"','primary')}${btn('Voir mon deck','trial-exit','data-page="deck"','ghost')}</div>`;
 }
 
@@ -7864,7 +8014,7 @@ function renderEvolutionFusions(profile,battle,{btn,cardUI,esc}){
   const ranks=EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction===f.id).map(r=>CARD_RARITIES.findIndex(rank=>rank.id===r.to));
   return `${esc(FACTIONS[f.id].short)} jusqu’au rang ${esc(CARD_RARITIES[Math.max(...ranks)].name)}`;
  }).join(' · ');
- return `<section class="spaced evolution-fusions" aria-labelledby="evolution-fusion-title"><h2 class="section-title" id="evolution-fusion-title">Faire évoluer mes doublons</h2><p class="page-sub">${EVOLUTION_FUSION_COPIES} exemplaires du même personnage et du même rang deviennent 1 exemplaire du rang suivant. Aucun coût en or ou éclats, aucune chance d’échec. Seuls les exemplaires hors du deck sont consommés.</p><p class="hint">Accès après victoire — ${access}. Les rangs Divin et Éveillé de l’Aube exigent aussi leur grande ascension dans Épreuves.</p><p class="hint">${available}. La carte obtenue rejoint la Collection ; ajoutez-la ensuite dans Mon deck.</p><div class="card-grid">${EVOLUTION_FUSIONS.map(recipe=>{
+ return `<section class="spaced evolution-fusions" aria-labelledby="evolution-fusion-title"><h2 class="section-title" id="evolution-fusion-title">Faire évoluer mes doublons</h2><p class="page-sub">${EVOLUTION_FUSION_COPIES} exemplaires du même personnage et du même rang deviennent 1 exemplaire du rang suivant. Aucun coût en or ou éclats, aucune chance d’échec. Seuls les exemplaires hors du deck sont consommés.</p><p class="hint">Accès après victoire — ${access}. Les rangs Divin et Éveillé de l’Aube et de la Sylve exigent aussi leur grande ascension dans Épreuves.</p><p class="hint">${available}. La carte obtenue rejoint la Collection ; ajoutez-la ensuite dans Mon deck.</p><div class="card-grid">${EVOLUTION_FUSIONS.map(recipe=>{
   const plan=previewEvolutionFusion(profile,recipe.id,battle);
   return `<article class="evolution-fusion-recipe" data-fusion-id="${esc(recipe.id)}">${cardUI(plan.target,{previewContext:'alchemy'})}<div class="evolution-fusion-action"><h3>${esc(CARDS[recipe.cardId].name)}</h3><p>${recipe.copies} × ${esc(recipe.from)} → 1 × ${esc(recipe.to)}</p><p class="hint">${plan.owned} possédés · ${plan.used} dans le deck · ${Math.max(0,plan.available)} libres</p>${!plan.ok?`<p class="hint">${esc(plan.reason)}</p>`:''}${btn('Préparer la fusion','evolution-fusion-preview',`data-id="${esc(recipe.id)}" ${!plan.ok?'disabled':''}`,'primary')}</div></article>`;
  }).join('')}</div></section>`;
@@ -8861,7 +9011,8 @@ Object.assign(__exports,{campSeal,boardCard});
 function unitStatusBadges(u,round){
  const labels=[u.barrier>0?`⬡ ${u.barrier} protection`:'',u.stun>0?`❄ ${u.stun} immobilisation`:'',
   u.poisonTurns>0?`☠ ${u.poisonTurns} poison`:'',u.rallyUntil>=round?`⚑ ${u.rallyUntil-round+1} ralliement`:'',
-  u.attackPenalty?`Harcèlement −${u.attackPenalty.amount}`:'',u.regeneration?`Régénération ${u.regeneration.amount}`:''];
+  u.attackPenalty?`Harcèlement −${u.attackPenalty.amount}`:'',u.regeneration?`Régénération ${u.regeneration.amount}`:'',
+  u.movementRoot?'Entrave : déplacement':'',u.fury?`Fureur +${u.fury}`:''];
  return labels.some(Boolean)?`<span class="combat-statuses" aria-label="Effets actifs">${labels.filter(Boolean).map(s=>`<span>${s}</span>`).join('')}</span>`:'';
 }
 
@@ -9441,6 +9592,7 @@ const {playableCardReference,cardReference,evolutionProfileError}=__load("src/ca
 const {validTrialChallenge}=__load("src/engine/trial-objectives.js");
 const {CARD_RULESET}=__load("src/cards/definitions.js");
 const {validUnitEffects}=__load("src/engine/unit-effects.js");
+const {validPoisonSpreads}=__load("src/engine/unit-poison.js");
 const SAVE_KEY='couronnes_arcanes_v1';
 const BATTLE_KEY='couronnes_arcanes_bataille_v1';
 const hasCard=id=>typeof id==='string'&&Object.prototype.hasOwnProperty.call(CARDS,id);
@@ -9458,13 +9610,16 @@ function validBattleSnapshot(b){
   (b.turnFlow!==undefined&&b.turnFlow!=='alternating')||typeof b.missionId!=='string'||!supportedBoard(b.board)||
   !validHero(b.heroes?.p)||!validHero(b.heroes?.e)||
   !Array.isArray(b.log)||!b.log.every(x=>typeof x==='string'))return false;
- if(!b.board.every(row=>row.every(validUnit))||!validTrialChallenge(b))return false;
+ if(!b.board.every(row=>row.every(validUnit))||!validTrialChallenge(b)||!validPoisonSpreads(b.poisonSpreads))return false;
  const refs=[...b.heroes.p.deck,...b.heroes.p.discard,...b.heroes.p.hand,...b.heroes.e.deck,...b.heroes.e.discard,...b.heroes.e.hand];
  if(refs.some(ref=>typeof cardReference(ref)==='object')&&b.evolutionsEnabled!==true)return false;
  if(b.evolutionsEnabled!==undefined&&b.evolutionsEnabled!==true)return false;
  if(b.traps!==undefined&&(!Array.isArray(b.traps)||!b.traps.every(t=>t&&['p','e'].includes(t.owner)&&
    Number.isInteger(t.lane)&&t.lane>=0&&t.lane<b.board.length&&
-   Number.isInteger(t.col)&&t.col>=1&&t.col<=lastCell(b)&&nonNegative(t.damage))))return false;
+   Number.isInteger(t.col)&&t.col>=1&&t.col<=lastCell(b)&&nonNegative(t.damage)&&
+   (t.poison===undefined||t.poison&&Number.isSafeInteger(t.sourceUid)&&t.sourceUid>=0&&
+    Number.isSafeInteger(t.poison.amount)&&t.poison.amount>0&&t.poison.amount<=100&&
+    Number.isSafeInteger(t.poison.resolutions)&&t.poison.resolutions>0&&t.poison.resolutions<=10))))return false;
  return true;
 }
 // Un ancien résultat peut encore être réglé ; aucun ancien combat actif ne reprend.
