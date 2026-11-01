@@ -17,14 +17,14 @@ export function tickUnitPoison(b,u){
 }
 // La contagion est attachée au poison déjà appliqué, même si sa source a disparu.
 // Consommation au premier décès éligible ; aucune contamination en chaîne.
-export function spreadUnitPoison(b,dead,lane,col,emit){
+export function spreadUnitPoison(b,dead,lane,col,emit,readyRound){
  const origin=dead.poisonOrigin,p=origin?.contagion;
  if(!p||!(dead.poisonTurns>0||origin.lethal)||(b.poisonSpreads||[]).includes(origin.uid))return;
  b.poisonSpreads=[...(b.poisonSpreads||[]),origin.uid];
  const target=b.board[lane].map((u,col)=>({u,col})).filter(t=>t.u&&t.u.hp>0&&t.u.side===dead.side)
   .sort((a,z)=>Math.abs(a.col-col)-Math.abs(z.col-col)||a.col-z.col||a.u.uid-z.u.uid)[0];
  if(!target)return;
- applyUnitPoison(target.u,{...p,sourceBound:true},{uid:origin.uid,side:origin.side});
+ applyUnitPoison(target.u,{...p,sourceBound:true},{uid:origin.uid,side:origin.side},readyRound);
  emit(b,{type:'state',side:origin.side,lane,col:target.col});
 }
 const positive=n=>Number.isSafeInteger(n)&&n>0&&n<=100;

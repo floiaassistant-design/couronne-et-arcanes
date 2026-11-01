@@ -10,7 +10,7 @@ SCENARIOS={f:json.loads(subprocess.check_output(['node','tests/fixtures/ascensio
 
 async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,stored,faction='aube'):
     for config in ascension_cases(part):
-        label,touch=config['label'],config['touch'];s=SCENARIOS[faction][config['index']];card_id='owl' if faction=='sylve' else 'dawnbastion'
+        label,touch=config['label'],config['touch'];s=SCENARIOS[faction][config['index']];card_id='thorn' if faction=='sylve' else 'dawnbastion'
         address=url if label=='web' else None
         locked=copy.deepcopy(s);locked['profile']['completed']=[]
         ctx,page,errors,_=await make_case(browser,locked,config['viewport'],touch=touch,url=address)
@@ -67,7 +67,7 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         await click(page.locator('#nav [data-page="alchemy"]'),touch)
         target=card_id+':'+s['trial']['to']
         recipe=page.locator(f'[data-fusion-id="{target}"]')
-        assert await recipe.locator('button').is_enabled()
+        assert await recipe.locator('button').is_enabled(),await recipe.inner_text()
         await click(recipe.locator('button'),touch)
         assert '3 exemplaires' in await page.locator('.modal').inner_text()
         assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
@@ -105,7 +105,7 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         await select(page,index,touch)
         await click(page.locator('[data-action="deploy"][data-lane="0"][data-col="1"]'),touch)
         snapshot=await stored(page,BATTLE);unit=snapshot['board'][0][1]
-        assert (unit['id'],unit['rarity'],unit['atk'],unit['maxhp'])==(card_id,s['trial']['to'],(5 if faction=='sylve' else 7 if s['trial']['to']=='divine' else 9),(8 if faction=='sylve' else 14))
+        assert (unit['id'],unit['rarity'],unit['atk'],unit['maxhp'])==(card_id,s['trial']['to'],(5 if faction=='sylve' else 7 if s['trial']['to']=='divine' else 9),(9 if faction=='sylve' else 14))
         if faction=='aube':assert unit['arrivalResolved'] and snapshot['heroes']['p']['shield']==3
         await page.reload();await page.locator('.combat-screen').wait_for();assert await stored(page,BATTLE)==snapshot
         await click(page.locator('.combat-menu-link'),touch)

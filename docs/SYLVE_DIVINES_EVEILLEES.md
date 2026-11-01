@@ -63,10 +63,13 @@ Rare/Épique, niveaux et maîtrise sont conservés ; aucun cadeau ni migration.
   Égalité : colonne puis uid. Une fois par invocation, sans chaîne. La provenance
   reste attachée au poison si le Traqueur meurt ou devient silencieux. Le premier
   décès éligible consomme le quota même sans autre cible. Le dernier tick létal
-  est éligible ; un poison expiré ou dissipé ne l'est plus. Le moteur conserve
+  est éligible ; un poison expiré ou dissipé ne l'est plus. Les morts sont traitées
+  dans leur ordre réel. Une contagion pendant la phase de poison attend le
+  prochain tour de la cible, sans tick immédiat selon sa colonne. Le moteur conserve
   son modèle historique d'un seul poison actif, y compris entre sources.
 - Luciole : à sa destruction en combat, bouclier de couronne +2 puis +4,
-  plafond 20 sans réduire un surplus. Aucune seconde application d'arrivée,
+  plafond 20 sans réduire un surplus. Réaction immédiate avant la frappe suivante,
+  jamais répétée au retrait du plateau ou à la reprise. Aucune seconde application d'arrivée,
   aucun effet en quittant simplement le plateau.
 - Ours : perte réelle de PV par attaque ennemie, protections déjà résolues,
   et survie requise : Fureur +2 puis +3 sur sa prochaine attaque. Pas de cumul,
@@ -94,10 +97,11 @@ avec les lecteurs publics de l'IA, sans exposer les cartes cachées.
 ## Architecture, reprise et vérification
 
 `unit-poison.js` porte application, dissipation, tick, provenance et contagion ;
-`unit-triggers.js` les protections après frappe et à la destruction ;
+`unit-triggers.js` les protections après frappe ; `unit-death.js` les réactions
+immédiates à la destruction, sans cycle avec les défenses ;
 `unit-targets.js` extrait la sélection alliée existante, réutilisée par soins
 et barrières. Pas de moteur alternatif, CSS, actif ou dépendance ajouté.
-États facultatifs validés à la reprise : Entrave, fréquence d'application,
+États facultatifs validés à la reprise : Entrave, fréquence d'application, destruction déjà résolue,
 Fureur, quota de barrière, origine du poison, quota de contagion et piège enrichi.
 Les objets imbriqués sont remplacés pour préserver les instantanés d'événements.
 Les clés, ID, sauvegardes anciennes et `cards-v2` sont conservés. Le web et
@@ -109,7 +113,7 @@ partagés dans `evolution_fusion.test.mjs`. Les scénarios d'ascension utilisent
 le moteur et le robot communs ; les quatre parties navigateur existantes
 ajoutent les ascensions Sylve, sans nouvelle commande ni double exécution.
 
-Contrôles locaux : 556 tests Node réussis, 120 scénarios de parité identiques,
+Contrôles locaux : 559 tests Node réussis, 120 scénarios de parité identiques,
 builds autonome, diagnostic et web réussis. Un import renommé, valide en ES
 modules mais non pris en charge par le builder autonome, a été remplacé par
 l'import direct. Un contrôle de syntaxe du script distribué prévient cette

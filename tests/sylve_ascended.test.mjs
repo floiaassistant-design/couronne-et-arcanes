@@ -8,7 +8,8 @@ import {applyAttackEffects,resolveRegeneration,attackAfterPenalty,consumeAttackP
 import {applyUnitPoison,tickUnitPoison} from '../src/engine/unit-poison.js';
 import {resolveUnitSupport} from '../src/engine/unit-support.js';
 import {hit,grantSharedBarrier,resolveRetaliation} from '../src/engine/battle-defense.js';
-import {resolveStrikeRewards,resolveUnitDeath} from '../src/engine/unit-triggers.js';
+import {resolveStrikeRewards} from '../src/engine/unit-triggers.js';
+import {resolveUnitDeath} from '../src/engine/unit-death.js';
 import {findCrownGuardian} from '../src/engine/guard-candidates.js';
 import {prepareControlUnits,triggerTrap,applySilence,expireControl} from '../src/engine/battle-control.js';
 import {unitHasPierce,unitMovementSteps} from '../src/engine/unit-rules.js';
@@ -190,8 +191,32 @@ test('Reprise : états optionnels validés, vieux combats inchangés et instanta
  const {b,u}=gained('thorn','éveillée'),target=unit('bone','commun','e',{hp:20,maxhp:20});b.board[0][4]=target;applyAttackEffects(u,target,false,1);target.movementRoot=1;u.fury=3;u.entangleReadyRound=4;b.poisonSpreads=[123];
  b.vfx=[];recordCombatEvent(b,{type:'state',lane:0,col:4,side:'e'});const frame=JSON.stringify(b.vfx[0].frame);tickUnitPoison(b,target);applyAttackEffects(u,target,false,2);consumeAttackPenalty(u,3);assert.equal(JSON.stringify(b.vfx[0].frame),frame);
  storage();storeBattle(b);const {vfx,...saved}=b;assert.deepEqual(restoreBattle(),saved);
- for(const effect of [{movementRoot:2},{fury:-1},{entangleUsed:1},{entangleReadyRound:Infinity},{lastFuryBarrierRound:0},{poisonOrigin:null},{poisonOrigin:{uid:-1,side:'e'}},{poisonOrigin:{uid:1,side:'x'}},{poisonOrigin:{uid:1,side:'e',contagion:{amount:2,resolutions:0}}}]){
+ for(const effect of [{movementRoot:2},{fury:-1},{entangleUsed:1},{deathResolved:1},{entangleReadyRound:Infinity},{lastFuryBarrierRound:0},{poisonOrigin:null},{poisonOrigin:{uid:-1,side:'e'}},{poisonOrigin:{uid:1,side:'x'}},{poisonOrigin:{uid:1,side:'e',contagion:{amount:2,resolutions:0}}}]){
   const bad=structuredClone(saved);Object.assign(bad.board[0][4],effect);assert.equal(validStoredBattle(bad),false);
  }
  for(const ids of [[1,1],[-1],null]){const bad=structuredClone(saved);bad.poisonSpreads=ids;assert.equal(validStoredBattle(bad),false);}
+});
+
+test('Luciole : le décès protège immédiatement la couronne contre la frappe suivante, jamais deux fois',()=>{
+ const {b,u}=gained('pixie','éveillée');b.heroes.p.shield=0;const attacker=unit('bone','commun','e',{atk:20,hp:50,maxhp:50});b.board[0][2]=attacker;
+ b.board[1][1]=unit('bone','commun','e',{atk:5,hp:50,maxhp:50});b.phase='enemy';finishEnemyTurn(b);
+ assert.equal(b.heroes.p.hp,99);assert.equal(b.heroes.p.shield,0);assert.equal(u.deathResolved,true);
+ const hp=b.heroes.p.hp;resolveUnitDeath(b,u,0,1,noop);assert.equal(b.heroes.p.shield,0);assert.equal(b.heroes.p.hp,hp);
+});
+
+test('Contagion : ordre réel des morts et poison différé si le décès survient pendant les ticks',()=>{
+ const {b,u}=gained('thorn','éveillée'),left=unit('bone'),right=unit('bone'),nearRight=unit('bone');b.board[0][3]=left;b.board[0][8]=right;b.board[0][9]=nearRight;
+ applyAttackEffects(u,left);applyAttackEffects(u,right);hit(b,right,100,'p');assert.equal(nearRight.poisonTurns,2);hit(b,left,100,'p');assert.deepEqual(b.poisonSpreads,[u.uid]);
+ const x=gained('thorn','éveillée'),dead=unit('bone','commun','e',{hp:2}),next=unit('bone','commun','e',{hp:20,maxhp:20});x.b.board[0][4]=dead;x.b.board[0][5]=next;applyAttackEffects(x.u,dead);dead.poisonTurns=1;
+ x.b.phase='enemy';finishEnemyTurn(x.b);assert.equal(next.hp,20);assert.equal(next.poisonTurns,2);assert.equal(dead.deathResolved,true);
+ x.b.phase='enemy';finishEnemyTurn(x.b);assert.equal(next.hp,18);assert.equal(next.poisonTurns,1);
+});
+
+test('Fureur : les dégâts secondaires d’une attaque comptent, les pièges et sorts n’activent rien',()=>{
+ for(const side of ['p','e']){
+  const {b,u}=gained('bear','éveillée',side),foe=side==='p'?'e':'p';for(const row of b.board)row.fill(null);
+  const col=foe==='p'?1:10,dir=foe==='p'?1:-1;const archer=unit('archer','éveillée',foe,{atk:1});b.board[0][col]=archer;
+  b.board[0][col+dir]=unit('bone','commun',side,{hp:20,maxhp:20,stun:99});b.board[0][col+2*dir]=u;
+  b.phase=foe==='p'?'player':'enemy';advance(b,foe);assert.equal(u.hp,10);assert.equal(u.fury,3);
+ }
 });

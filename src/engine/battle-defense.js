@@ -4,6 +4,7 @@ import {versionUnitAbilities} from '../cards/definitions.js';
 import {silenced} from './battle-control.js';
 import {recordCombatEvent} from './combat-events.js';
 import {consumeAttackPenalty} from './unit-effects.js';
+import {resolveUnitDeath} from './unit-death.js';
 
 const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier'];
 export function grantAbilityBarrier(u,key,parameters){
@@ -56,6 +57,7 @@ export function hit(b,u,raw,bySide,ignoreArmor=false,attack=false){
   const lane=b.board.findIndex(row=>row.includes(u)),col=lane<0?-1:b.board[lane].indexOf(u);
   recordCombatEvent(b,{type:'damage',side:u.side,lane,col,damage:Math.max(0,before-u.hp),absorbed,armor:ignoreArmor?0:Math.min(raw-1,armor)});
  }
+ if(u.hp<=0){const lane=b.board.findIndex(row=>row.includes(u));if(lane>=0)resolveUnitDeath(b,u,lane,b.board[lane].indexOf(u),recordCombatEvent);}
  return dmg;
 }
 

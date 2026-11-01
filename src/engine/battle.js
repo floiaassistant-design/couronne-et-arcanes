@@ -7,7 +7,8 @@ import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitC
 import {resolveUnitArrival,resolveUnitSupport} from './unit-support.js';
 import {consumeAttackPenalty,applyAttackEffects,resolveRegeneration} from './unit-effects.js';
 import {tickUnitPoison,clearUnitPoison} from './unit-poison.js';
-import {resolveStrikeRewards,resolveUnitDeath} from './unit-triggers.js';
+import {resolveStrikeRewards} from './unit-triggers.js';
+import {resolveUnitDeath} from './unit-death.js';
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 import {CARDS,FACTIONS} from '../data.js';
 import {frontEnemy} from './spell-targeting.js';
@@ -181,7 +182,7 @@ function enemyAct(b){
 
 function resolvePoison(b,sideFilter=null){
  for(const row of b.board)for(const u of row)if(u&&u.poisonTurns>0&&(!sideFilter||u.side===sideFilter)){
-  if(!tickUnitPoison(b,u))continue;const pos=b.board.findIndex(row=>row.includes(u));if(pos>=0){const col=b.board[pos].indexOf(u);fx(b,{type:'poison',lane:pos,col,damage:u.poison});}
+  if(!tickUnitPoison(b,u))continue;const pos=b.board.findIndex(row=>row.includes(u));if(pos>=0){const col=b.board[pos].indexOf(u);fx(b,{type:'poison',lane:pos,col,damage:u.poison});if(u.hp<=0)resolveUnitDeath(b,u,pos,col,fx,b.round+1);}
  }
  sweepDead(b);
 }
@@ -224,7 +225,7 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
  if((targetCol-sourceCol)*dir<=0)return;
  const col=targetCol+dir;if(col<1||col>lastCell(b))return;
  const other=b.board[lane][col];
- if(other&&other.hp>0&&other.side!==u.side)hit(b,other,p.amount,u.side,p.ignoreArmor);
+ if(other&&other.hp>0&&other.side!==u.side)hit(b,other,p.amount,u.side,p.ignoreArmor,true);
 }
 
 function strike(b,u,target,atk,from,to,sameLine=true,charged=false){
@@ -265,7 +266,7 @@ function resolveAttacks(b,sideFilter=null){
    if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
    if(ability==='splash'){
     const extra=b.board[lane].find(v=>v&&v.side!==u.side&&v.uid!==target.target.uid&&v.hp>0);
-    if(extra)hit(b,extra,2,u.side);
+    if(extra)hit(b,extra,2,u.side,false,true);
    }
    resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);

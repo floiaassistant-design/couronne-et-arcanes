@@ -18,10 +18,10 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
+      - run: npm run build
       - run: npm test
       - run: npm run test:parity
-      - run: npm run build
-      - run: echo 'd5871600163c8eea49baa4bf95471be4b9a1c82132376deee86585c9ebd6d418  JOUER.html' | sha256sum -c -
+      - run: echo '96d5234276373e812da6653d722329e6935c98f60aeb39b8b832ff049d56f59c  JOUER.html' | sha256sum -c -
       - run: npm run build:test
       - name: Enregistrer uniquement l’export généré sur cette branche
         run: |
