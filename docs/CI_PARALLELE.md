@@ -7,6 +7,18 @@ Quatre groupes puis `validation`, propagation des échecs et contrôles sélecti
 des seules PR Markdown sont conservés. Tout push main garde les tests complets
 et le paquet web ; une PR documentaire verte ne produit pas nécessairement de paquet.
 
+## Contrôle de documentation proposé le 1er novembre 2026
+
+Le job final `validation` conserve son verdict historique après les quatre
+groupes, puis contrôle sur PR les champs `Documentation`, `Reprise`, `Limites`
+et éventuellement `Justification` du descriptif. Déclarer une mise à jour
+nécessite un changement Markdown réel à la racine ou dans `docs/`.
+L'absence de documentation est autorisée seulement si justifiée. Cette
+vérification ne lit pas le sens des documents : une revue reste nécessaire.
+Aucun appel d'agent, aucune permission d'écriture et aucune fusion automatique.
+Le contrôle est sans effet sur les push `main` et conserve les deux statuts
+historiquement exigés.
+
 ## Protection de main vérifiée le 31 octobre 2026
 
 L'API du ruleset [Protection main](https://github.com/floiaassistant-design/couronne-et-arcanes/rules/26023976)

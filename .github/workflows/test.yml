@@ -128,3 +128,14 @@ jobs:
             exit 1
           fi
           echo "Tous les groupes de validation ont réussi."
+      - name: Récupérer les fichiers de la PR pour la documentation
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Vérifier la documentation et la reprise
+        if: github.event_name == 'pull_request'
+        env:
+          CI_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: node scripts/check_pr_docs.mjs
