@@ -5863,7 +5863,8 @@ const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitCh
 const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
 const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration}=__load("src/engine/unit-effects.js");
 const {tickUnitPoison,clearUnitPoison}=__load("src/engine/unit-poison.js");
-const {resolveStrikeRewards,resolveUnitDeath}=__load("src/engine/unit-triggers.js");
+const {resolveStrikeRewards}=__load("src/engine/unit-triggers.js");
+const {resolveUnitDeath}=__load("src/engine/unit-death.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 const {CARDS,FACTIONS}=__load("src/data.js");
 const {frontEnemy}=__load("src/engine/spell-targeting.js");
@@ -6037,7 +6038,7 @@ function enemyAct(b){
 
 function resolvePoison(b,sideFilter=null){
  for(const row of b.board)for(const u of row)if(u&&u.poisonTurns>0&&(!sideFilter||u.side===sideFilter)){
-  if(!tickUnitPoison(b,u))continue;const pos=b.board.findIndex(row=>row.includes(u));if(pos>=0){const col=b.board[pos].indexOf(u);fx(b,{type:'poison',lane:pos,col,damage:u.poison});}
+  if(!tickUnitPoison(b,u))continue;const pos=b.board.findIndex(row=>row.includes(u));if(pos>=0){const col=b.board[pos].indexOf(u);fx(b,{type:'poison',lane:pos,col,damage:u.poison});if(u.hp<=0)resolveUnitDeath(b,u,pos,col,fx,b.round+1);}
  }
  sweepDead(b);
 }
@@ -6080,7 +6081,7 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
  if((targetCol-sourceCol)*dir<=0)return;
  const col=targetCol+dir;if(col<1||col>lastCell(b))return;
  const other=b.board[lane][col];
- if(other&&other.hp>0&&other.side!==u.side)hit(b,other,p.amount,u.side,p.ignoreArmor);
+ if(other&&other.hp>0&&other.side!==u.side)hit(b,other,p.amount,u.side,p.ignoreArmor,true);
 }
 
 function strike(b,u,target,atk,from,to,sameLine=true,charged=false){
@@ -6121,7 +6122,7 @@ function resolveAttacks(b,sideFilter=null){
    if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
    if(ability==='splash'){
     const extra=b.board[lane].find(v=>v&&v.side!==u.side&&v.uid!==target.target.uid&&v.hp>0);
-    if(extra)hit(b,extra,2,u.side);
+    if(extra)hit(b,extra,2,u.side,false,true);
    }
    resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);
@@ -6471,6 +6472,7 @@ const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {silenced}=__load("src/engine/battle-control.js");
 const {recordCombatEvent}=__load("src/engine/combat-events.js");
 const {consumeAttackPenalty}=__load("src/engine/unit-effects.js");
+const {resolveUnitDeath}=__load("src/engine/unit-death.js");
 const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier'];
 function grantAbilityBarrier(u,key,parameters){
  if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
@@ -6522,6 +6524,7 @@ function hit(b,u,raw,bySide,ignoreArmor=false,attack=false){
   const lane=b.board.findIndex(row=>row.includes(u)),col=lane<0?-1:b.board[lane].indexOf(u);
   recordCombatEvent(b,{type:'damage',side:u.side,lane,col,damage:Math.max(0,before-u.hp),absorbed,armor:ignoreArmor?0:Math.min(raw-1,armor)});
  }
+ if(u.hp<=0){const lane=b.board.findIndex(row=>row.includes(u));if(lane>=0)resolveUnitDeath(b,u,lane,b.board[lane].indexOf(u),recordCombatEvent);}
  return dmg;
 }
 
@@ -6730,14 +6733,14 @@ function tickUnitPoison(b,u){
 }
 // La contagion est attachée au poison déjà appliqué, même si sa source a disparu.
 // Consommation au premier décès éligible ; aucune contamination en chaîne.
-function spreadUnitPoison(b,dead,lane,col,emit){
+function spreadUnitPoison(b,dead,lane,col,emit,readyRound){
  const origin=dead.poisonOrigin,p=origin?.contagion;
  if(!p||!(dead.poisonTurns>0||origin.lethal)||(b.poisonSpreads||[]).includes(origin.uid))return;
  b.poisonSpreads=[...(b.poisonSpreads||[]),origin.uid];
  const target=b.board[lane].map((u,col)=>({u,col})).filter(t=>t.u&&t.u.hp>0&&t.u.side===dead.side)
   .sort((a,z)=>Math.abs(a.col-col)-Math.abs(z.col-col)||a.col-z.col||a.u.uid-z.u.uid)[0];
  if(!target)return;
- applyUnitPoison(target.u,{...p,sourceBound:true},{uid:origin.uid,side:origin.side});
+ applyUnitPoison(target.u,{...p,sourceBound:true},{uid:origin.uid,side:origin.side},readyRound);
  emit(b,{type:'state',side:origin.side,lane,col:target.col});
 }
 const positive=n=>Number.isSafeInteger(n)&&n>0&&n<=100;
@@ -6816,11 +6819,29 @@ function validUnitEffects(u){
  return (p===undefined||p&&integer(p.amount,100)&&integer(p.remaining,10))&&
   (r===undefined||r&&integer(r.amount,100)&&integer(r.remaining,10)&&integer(r.readyRound,100))&&
   (u.movementRoot===undefined||u.movementRoot===1)&&(u.entangleUsed===undefined||typeof u.entangleUsed==='boolean')&&
+  (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
   (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin);
 }
 
 Object.assign(__exports,{attackAfterPenalty,consumeAttackPenalty,applyAttackEffects,grantRegeneration,resolveRegeneration,validUnitEffects});
+
+},
+"src/engine/unit-death.js":function(__exports,__load){
+// Réactions à la destruction, avant les dégâts suivants ; repli du balayage sans doublon.
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
+const {spreadUnitPoison}=__load("src/engine/unit-poison.js");
+function resolveUnitDeath(b,u,lane,col,emit,poisonReadyRound){
+ const p=versionUnitAbilities(u)?.deathWard;
+ if(u.hp>0||u.deathResolved||!(p||u.poisonOrigin?.contagion))return;
+ u.deathResolved=true;
+ if(p&&!(u.silenceUntil>=b.round)){
+  const h=b.heroes[u.side];h.shield=Math.max(h.shield,Math.min(p.cap,h.shield+p.amount));
+ }
+ spreadUnitPoison(b,u,lane,col,emit,poisonReadyRound);
+}
+
+Object.assign(__exports,{resolveUnitDeath});
 
 },
 "src/engine/tempo.js":function(__exports,__load){
@@ -7000,9 +7021,9 @@ const {silenced}=__load("src/engine/battle-control.js");
 const {lastCell}=__load("src/engine/board.js");
 const {grantHealBarrier,grantAbilityBarrier}=__load("src/engine/battle-defense.js");
 const {grantRegeneration}=__load("src/engine/unit-effects.js");
-const {alliedTargets as allies,injuryOrder}=__load("src/engine/unit-targets.js");
+const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
 const {clearUnitPoison}=__load("src/engine/unit-poison.js");
-function inspireTargets(b,u,lane,p){return allies(b,u,lane,p).slice(0,p.targets);}
+function inspireTargets(b,u,lane,p){return alliedTargets(b,u,lane,p).slice(0,p.targets);}
 function strengthen(target,p){const before=target.atk;target.atk=Math.max(before,Math.min(p.cap,before+p.amount));return target.atk-before;}
 
 function resolveUnitArrival(b,u,lane,col,hooks){
@@ -7010,7 +7031,7 @@ function resolveUnitArrival(b,u,lane,col,hooks){
  if(!a||u.arrivalResolved||!(a.ward||a.arrivalInspire||a.intervention||a.arrivalBarrier))return;
  u.arrivalResolved=true;
  if(a.ward)b.heroes[u.side].shield=Math.max(b.heroes[u.side].shield,Math.min(a.ward.cap,b.heroes[u.side].shield+a.ward.amount));
- if(a.arrivalBarrier)for(const t of allies(b,u,lane,a.arrivalBarrier).sort(injuryOrder).slice(0,a.arrivalBarrier.targets)){
+ if(a.arrivalBarrier)for(const t of alliedTargets(b,u,lane,a.arrivalBarrier).sort(injuryOrder).slice(0,a.arrivalBarrier.targets)){
   if(grantAbilityBarrier(t.u,'arrivalBarrier',a.arrivalBarrier))hooks.emit(b,{type:'state',side:u.side,lane:t.lane,col:t.col});
  }
  if(a.arrivalInspire)for(const target of inspireTargets(b,u,lane,a.arrivalInspire)){
@@ -7033,7 +7054,7 @@ function resolveUnitSupport(b,sideFilter,emit){
   const a=versionUnitAbilities(u);
   if(silenced(b,u))continue;
   if(a.heal&&u.lastHealRound!==b.round){
-   const p=a.heal,targets=allies(b,u,lane,p).filter(t=>t.u.hp<t.u.maxhp)
+   const p=a.heal,targets=alliedTargets(b,u,lane,p).filter(t=>t.u.hp<t.u.maxhp)
     .sort(injuryOrder).slice(0,p.targets);
    if(targets.length)u.lastHealRound=b.round;
    for(const t of targets){const before=t.u.hp;t.u.hp=Math.min(t.u.maxhp,before+p.amount);grantHealBarrier(b,u,t.u,t.u.hp-before);
@@ -7074,11 +7095,10 @@ Object.assign(__exports,{alliedTargets,injuryOrder});
 
 },
 "src/engine/unit-triggers.js":function(__exports,__load){
-// Déclencheurs de protection après frappe et à la destruction, moteur commun.
+// Déclencheurs de protection après frappe, moteur commun.
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {grantAbilityBarrier}=__load("src/engine/battle-defense.js");
 const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
-const {spreadUnitPoison}=__load("src/engine/unit-poison.js");
 function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed},emit){
  if(suppressed||u.hp<=0)return;
  const a=versionUnitAbilities(u);
@@ -7091,15 +7111,8 @@ function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed},e
   u.lastFuryBarrierRound=b.round;protect({u,lane,col},'furyBarrier',a.furyBarrier);
  }
 }
-function resolveUnitDeath(b,u,lane,col,emit){
- const p=versionUnitAbilities(u)?.deathWard;
- if(p&&!(u.silenceUntil>=b.round)){
-  const h=b.heroes[u.side];h.shield=Math.max(h.shield,Math.min(p.cap,h.shield+p.amount));
- }
- spreadUnitPoison(b,u,lane,col,emit);
-}
 
-Object.assign(__exports,{resolveStrikeRewards,resolveUnitDeath});
+Object.assign(__exports,{resolveStrikeRewards});
 
 },
 "src/ai.js":function(__exports,__load){
