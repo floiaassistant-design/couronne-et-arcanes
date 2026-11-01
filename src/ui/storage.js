@@ -6,6 +6,7 @@ import {playableCardReference,cardReference,evolutionProfileError} from '../card
 import {validTrialChallenge} from '../engine/trial-objectives.js';
 import {CARD_RULESET} from '../cards/definitions.js';
 import {validUnitEffects} from '../engine/unit-effects.js';
+import {validPoisonSpreads} from '../engine/unit-poison.js';
 export const SAVE_KEY='couronnes_arcanes_v1';
 export const BATTLE_KEY='couronnes_arcanes_bataille_v1';
 const hasCard=id=>typeof id==='string'&&Object.prototype.hasOwnProperty.call(CARDS,id);
@@ -23,13 +24,16 @@ function validBattleSnapshot(b){
   (b.turnFlow!==undefined&&b.turnFlow!=='alternating')||typeof b.missionId!=='string'||!supportedBoard(b.board)||
   !validHero(b.heroes?.p)||!validHero(b.heroes?.e)||
   !Array.isArray(b.log)||!b.log.every(x=>typeof x==='string'))return false;
- if(!b.board.every(row=>row.every(validUnit))||!validTrialChallenge(b))return false;
+ if(!b.board.every(row=>row.every(validUnit))||!validTrialChallenge(b)||!validPoisonSpreads(b.poisonSpreads))return false;
  const refs=[...b.heroes.p.deck,...b.heroes.p.discard,...b.heroes.p.hand,...b.heroes.e.deck,...b.heroes.e.discard,...b.heroes.e.hand];
  if(refs.some(ref=>typeof cardReference(ref)==='object')&&b.evolutionsEnabled!==true)return false;
  if(b.evolutionsEnabled!==undefined&&b.evolutionsEnabled!==true)return false;
  if(b.traps!==undefined&&(!Array.isArray(b.traps)||!b.traps.every(t=>t&&['p','e'].includes(t.owner)&&
    Number.isInteger(t.lane)&&t.lane>=0&&t.lane<b.board.length&&
-   Number.isInteger(t.col)&&t.col>=1&&t.col<=lastCell(b)&&nonNegative(t.damage))))return false;
+   Number.isInteger(t.col)&&t.col>=1&&t.col<=lastCell(b)&&nonNegative(t.damage)&&
+   (t.poison===undefined||t.poison&&Number.isSafeInteger(t.sourceUid)&&t.sourceUid>=0&&
+    Number.isSafeInteger(t.poison.amount)&&t.poison.amount>0&&t.poison.amount<=100&&
+    Number.isSafeInteger(t.poison.resolutions)&&t.poison.resolutions>0&&t.poison.resolutions<=10))))return false;
  return true;
 }
 // Un ancien résultat peut encore être réglé ; aucun ancien combat actif ne reprend.

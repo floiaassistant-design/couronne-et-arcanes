@@ -3,6 +3,7 @@
 import {CARDS,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {unitAttackRange} from './unit-rules.js';
+import {applyUnitPoison} from './unit-poison.js';
 import {laneCount,lastCell,crownColumn,entryColumn,validLane,trapColumns} from './board.js';
 const alive=u=>!!u&&u.hp>0;
 const direction=side=>side==='p'?1:-1;
@@ -12,7 +13,8 @@ export const activeAbility=(b,u)=>silenced(b,u)?'':u.ability;
 export function silenceValue(u){
  const value={heal:6,inspire:5,splash:6,poison:5,lifesteal:5,pierce:3,haste:3,silence:6,portal:4,trapper:4}[u?.ability]||0;
  const future=versionUnitAbilities(u);
- return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0);
+ return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
+  (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0);
 }
 export function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 export function silenceTarget(b,side,lane){
@@ -84,10 +86,11 @@ export function trapPlan(b,side,lane,col){
  const target=columns.find(c=>Number.isInteger(c)&&c>=2&&c<lastCell(b)&&!b.board[lane][c]&&!traps.some(t=>t.lane===lane&&t.col===c));
  return target===undefined?null:{lane,col:target};
 }
-export function placeTrap(b,side,plan,kind='rune',emit=()=>{},note=()=>{},parameters=null){
+export function placeTrap(b,side,plan,kind='rune',emit=()=>{},note=()=>{},parameters=null,source=null){
  if(!plan||!trapPlan(b,side,plan.lane,plan.col))return false;
  if(!b.traps)b.traps=[];
  const trap={owner:side,lane:plan.lane,col:plan.col,kind,damage:parameters?.damage??(kind==='snare'?1:3),stun:parameters?.stun??(kind==='snare'?1:0),expiresRound:b.round+(parameters?.resolutions??3)-1};
+ if(parameters?.poison&&source){trap.poison={...parameters.poison};trap.sourceUid=source.uid;}
  b.traps.push(trap);emit(b,{type:'trap-place',side,lane:trap.lane,col:trap.col});
  note(b,`Piège ${kind==='snare'?'sylvestre':'runique'} ${side==='p'?'allié':'adverse'} armé : ligne ${trap.lane+1}, case ${trap.col}.`);
  return true;
@@ -99,6 +102,7 @@ export function triggerTrap(b,u,lane,col,hit,emit=()=>{},note=()=>{}){
  const [trap]=b.traps.splice(index,1); // Retrait avant l'effet : aucune réentrée/boucle.
  const damage=hit(b,u,trap.damage,trap.owner);
  if(u.hp>0&&trap.stun)u.stun=Math.max(u.stun||0,trap.stun);
+ if(u.hp>0&&trap.poison)applyUnitPoison(u,{...trap.poison,sourceBound:true},{uid:trap.sourceUid,side:trap.owner},b.round+1);
  emit(b,{type:'trap-trigger',side:trap.owner,lane,col,damage});
  note(b,`Piège déclenché sur ${CARDS[u.id]?.name} : ${damage} dégât(s)${trap.stun?' et immobilisation':''}.`);
  return true;
@@ -136,7 +140,7 @@ export function prepareControlUnits(b,hooks,sideFilter=null){
   if(u.ability==='silence'){
    const target=silenceTarget(b,u.side,lane);
    if(target&&applySilence(b,target.u,1)){used=true;hooks.emit(b,{type:'silence',side:u.side,lane,col:target.col});hooks.note(b,`${CARDS[u.id].name} réduit ${CARDS[target.u.id].name} au silence pour ce tour.`);}
-  }else if(u.ability==='trapper')used=placeTrap(b,u.side,trapPlan(b,u.side,lane,col+direction(u.side)),'snare',hooks.emit,hooks.note,versionUnitAbilities(u)?.trapper);
+  }else if(u.ability==='trapper')used=placeTrap(b,u.side,trapPlan(b,u.side,lane,col+direction(u.side)),'snare',hooks.emit,hooks.note,versionUnitAbilities(u)?.trapper,u);
   else if(u.ability==='portal'){
    const plans=[];
    for(let toLane=0;toLane<laneCount(b);toLane++)if(!teleportDestinationError(b,u.side,lane,col,toLane)){
