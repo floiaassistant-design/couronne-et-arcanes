@@ -68,7 +68,8 @@ et vues lisent la faction et le nombre réel de recettes. Aucun nouveau moteur.
 les protections après Charge. `unit-poison.js` centralise poison, dissipation,
 ticks et contagion à provenance facultative ; `unit-triggers.js` porte les
 protections après frappe et `unit-death.js` les réactions immédiates à la
-destruction, sans dépendance cyclique avec les défenses. `unit-effects.js` partage Entrave,
+destruction, sans dépendance cyclique avec les défenses. `unit-effects.js`
+partage Entrave,
 Fureur, Harcèlement et régénération ; stockage valide leurs nouveaux états.
 Les imports entrent automatiquement dans les distributions web et autonome.
 [Contrat, interactions et obtention](SYLVE_DIVINES_EVEILLEES.md).

@@ -117,9 +117,10 @@ Contrôles locaux : 559 tests Node réussis, 120 scénarios de parité identique
 builds autonome, diagnostic et web réussis. Un import renommé, valide en ES
 modules mais non pris en charge par le builder autonome, a été remplacé par
 l'import direct. Un contrôle de syntaxe du script distribué prévient cette
-régression. La première prévalidation navigateur a échoué sur cet assemblage ;
-les parcours sont relancés après correction. Les résultats de CI restent dans
-la PR, associés à leur SHA exact. Les contrôles de robot ne
+régression. Le graphe commun compte 74 modules et 290 dépendances sans cycle.
+Les simulations locales de contrôle (20 480 combats) et d’arène (6 144 combats,
+aucun plateau invalide) sont terminées. Les résultats de CI et des parcours
+navigateur restent dans la PR, associés à leur SHA exact. Les contrôles de robot ne
 valident pas la difficulté humaine, Safari/Firefox ou un téléphone physique.
 Après revue, accord spécifique, fusion et publication via le flux existant :
 reprendre les 43 évolutions Ombre, après relecture de leurs validations Notion.
