@@ -10,6 +10,11 @@
 - Lire `README.md`, `docs/ETAT_PROJET.md`, `docs/CODEX_WORK_MISSION.md`, la Bible
   et l'architecture concernée. Les anciens bilans, comptes et états de PR sont
   historiques ; ils ne fixent aucune prochaine action ni autorisation.
+- À chaque reprise, lire en priorité la branche `main`, les PR ouvertes, leurs
+  SHA exacts et les résultats de GitHub Actions. `ETAT_PROJET.md` garde les
+  jalons durables et les prochaines étapes, jamais le statut instantané d'une CI.
+- Ne pas recopier comme vérités courantes les anciens bilans de conversation,
+  PR ou documentation : vérifier les statuts de fusion et de publication à la source.
 - Notion porte les décisions de conception ; le registre du jeu porte les
   versions réellement implémentées. Relire les validations avant transcription,
   sans inventer les statistiques, pouvoirs, évolutions ou permissions manquants.
@@ -223,6 +228,11 @@
   `JOUER.html` est l'unique export jouable hors ligne, généré, jamais retouché
   à la main. `tests/JOUER.test.html` reste un diagnostic non distribué.
   Tout ajout de module/CSS/ressource doit entrer dans les deux distributions.
+- Toute PR remplit les champs normalisés de reprise : `Documentation`,
+  `Justification` si aucun document n'est nécessaire, `Reprise` et `Limites`.
+  La CI exige les champs et une modification Markdown réelle si la documentation
+  est déclarée mise à jour ; elle ne peut pas juger seule la justesse du contenu.
+  Une justification doit être précise, pas un texte de modèle non rempli.
 - Mettre à jour les documents concernés dans la même PR : utilisation dans
   README, règles permanentes dans AGENTS, responsabilités dans architecture,
   état/reprise dans ETAT_PROJET, changements dans CHANGELOG et contrats spécialisés.

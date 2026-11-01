@@ -35,7 +35,11 @@ aucun ancien lot ni lecteur d'effets n'est restauré implicitement.
   de module, CSS ou ressource et son inclusion dans les distributions.
 - Relire le diff complet et la CI du commit exact. Distinguer tests, examen
   visuel et limites ; les simulations ne valident pas l'équilibrage humain.
-- Actualiser les documents concernés et pousser le travail utile. Terminer
+- Actualiser les documents concernés et pousser le travail utile. Renseigner dans
+  la description de PR les champs `Documentation`, `Reprise`, `Limites`, et
+  `Justification` si aucun document ne change. La vérification CI contrôle
+  leur présence, mais la revue vérifie la cohérence réelle de ces informations.
+  Au retour d'une session, revérifier les états GitHub avant de lire un ancien bilan. Terminer
   les tâches indépendantes de la CI puis laisser un point de reprise si elle
   tourne encore, sans surveillance active ni relance redondante.
 - Chaque PR, documentation comprise, attend l'accord explicite et spécifique

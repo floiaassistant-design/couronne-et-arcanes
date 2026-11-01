@@ -1,5 +1,18 @@
 # Journal des changements
 
+## Proposition — contrôle documentaire et reprise, 1er novembre 2026
+
+- Contrôle PR des champs Documentation/Reprise/Limites (et justification si
+  aucune documentation n'est nécessaire), intégré au verdict `validation`.
+- Test unitaire du contrôle et modèle de description de PR ; aucun appel d'agent
+  dans les workflows, aucune modification des mécanismes de combat ou de
+  sauvegarde et aucun auto-merge.
+- Consignes de reprise basées sur les véritables statuts GitHub ; état courant
+  recentré sur les jalons durables. Les statuts CI/déploiement restent dans leurs
+  services d'origine et ne sont pas supposés terminés dans ce document.
+- Ce lot attend ses contrôles sur le commit exact et un accord de fusion distinct.
+
+
 ## Correction proposée — résultats non enregistrés, 31 octobre 2026
 
 - Campagne, Tour et donjons : étendre le verrou existant des épreuves aux
