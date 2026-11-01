@@ -39,9 +39,18 @@ test('CI : le verdict historique validation attend la matrice et refuse échec, 
  assert.match(gate,/needs: tests/);assert.match(gate,/if: \$\{\{ always\(\) \}\}/);
  assert.match(gate,/TEST_GROUPS_RESULT: \$\{\{ needs.tests.result \}\}/);
  // Le shell exact du workflow est exécuté, pas une copie de son algorithme.
- const shell=gate.split('        run: |\n')[1].split('\n').map(l=>l.slice(10)).join('\n');
+ const shell=gate.split('        run: |\n')[1].split('\n      - name:')[0].split('\n').map(l=>l.slice(10)).join('\n');
  for(const [result,expected] of [['success',0],['failure',1],['cancelled',1],['skipped',1],['',1],['unexpected',1]]){
   const process=spawnSync('bash',['-e','-c',shell],{env:{...globalThis.process.env,TEST_GROUPS_RESULT:result},encoding:'utf8'});
   assert.equal(process.status,expected,result||'absent');
  }
+});
+
+
+test('CI : le contrôle documentaire de PR complète la validation sans changer ses statuts',()=>{
+ const workflow=read('.github/workflows/test.yml');
+ const gate=workflow.slice(workflow.indexOf('\n  validation:'));
+ assert.match(gate,/needs: tests/);
+ assert.match(gate,/run: node scripts\/check_pr_docs\.mjs/);
+ assert.match(gate,/if: github\.event_name == 'pull_request'/);
 });
