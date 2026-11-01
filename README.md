@@ -1,8 +1,9 @@
 # Couronnes & Arcanes
 
 Le jeu intègre les sauvegardes protégées, Garde/Riposte uniques, le deck manuel,
-les paquets/fusions, les ascensions Aube et les Légendaires Sylve.
-Les 22 évolutions Divines/Éveillées Sylve restent à implémenter.
+les paquets/fusions et les ascensions Aube.
+Cette branche propose les 22 évolutions Divines/Éveillées Sylve et leurs deux
+ascensions communes ; fusion et publication restent à vérifier dans GitHub.
 [État intégré et publication](docs/ETAT_PROJET.md) · [Carte des tests](docs/CARTE_TESTS.md).
 
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
@@ -18,7 +19,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 évolutions Rares, puis du Milicien Épique après le premier boss. Accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; la fusion ouvre 41 évolutions Aube et 26 Sylve ; les vingt Divines/Éveillées Aube exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
+sont utilisables en campagne ; la fusion ouvre 41 évolutions Aube et 48 Sylve ; les 42 Divines/Éveillées Aube/Sylve exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
@@ -74,7 +75,7 @@ de Concorde sur l’image est conservée.
 
 ### Collection — six cartes et aperçu rapide
 
-Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube et Sylve définies montrent leurs chiffres et leurs stocks réels : 67 évolutions sont accessibles par fusion, dont 27 aussi dans les paquets et quatre également obtenables par épreuve. Les vingt Divines/Éveillées indiquent « Ascension requise » avant le défi commun correspondant. Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
+Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube et Sylve définies montrent leurs chiffres et leurs stocks réels : 89 évolutions sont accessibles par fusion, dont 27 aussi dans les paquets et quatre également obtenables par épreuve. Les 42 Divines/Éveillées indiquent « Ascension requise » avant le défi commun correspondant. Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
 
 ## Progression et sauvegarde
 
@@ -89,9 +90,9 @@ bloquées pendant un combat. [Fonctionnement](docs/DECK_MANUEL_2026_10_27.md).
 La Collection, les classes, les maîtrises, équipements, talents et donjons sont
 conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteur,
 sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
-et les **37 versions Sylve** jusqu'à Légendaire, à leurs niveaux 0 à 3 choisis indépendamment.
+et les **59 versions Sylve** jusqu'à Éveillée, à leurs niveaux 0 à 3 choisis indépendamment.
 Les autres unités conservent leur version native. Les quatre récompenses pilotes se gagnent dans les Épreuves ;
-les 67 évolutions sont obtenables après leurs déblocages ; deux grandes ascensions ouvrent les vingt Divines/Éveillées Aube, sans carte offerte ni consommation du deck. Le paquet Sylve propose 3 cartes pour 190 or après le premier boss, avec les mêmes taux par groupe que l'Aube : 60/35/5. [Prochaines factions](docs/REPRISE_MIGRATION_CARTES.md). La PR Aube nº 53, avec sa présentation commune et sa
+les 89 évolutions sont obtenables après leurs déblocages ; quatre grandes ascensions ouvrent les 42 Divines/Éveillées Aube/Sylve, sans carte offerte ni consommation du deck. Le paquet Sylve propose 3 cartes pour 190 or après le premier boss, avec les mêmes taux par groupe que l'Aube : 60/35/5. [Prochaines factions](docs/REPRISE_MIGRATION_CARTES.md). La PR Aube nº 53, avec sa présentation commune et sa
 [revue finale](docs/REVUE_AUBE_PR53_2026_10_27.md), a été fusionnée sur accord du
 propriétaire le 27 octobre 2026. La publication du site reste une opération distincte.
 

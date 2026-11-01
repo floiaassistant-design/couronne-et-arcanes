@@ -57,6 +57,21 @@ transactions des paquets/évolutions restent sous leurs modules spécialisés.
 Ce lot est intégré à main par la PR 65 ; aucune règle du moteur,
 ressource ou format historique n'a été changé.
 
+## Sylve Divine / Éveillée — proposition du 1er novembre 2026
+
+Les 22 remplacements dans `cards/sylve.js` réutilisent le registre commun,
+les permissions, recettes et laboratoire. `evolution-trials.js` ajoute deux
+ascensions Sylve à l'agrégat ; l'export Aube existant reste conservé. Objectifs
+et vues lisent la faction et le nombre réel de recettes. Aucun nouveau moteur.
+
+`engine/unit-targets.js` extrait la sélection alliée existante, partagée avec
+les protections après Charge. `unit-poison.js` centralise poison, dissipation,
+ticks et contagion à provenance facultative ; `unit-triggers.js` porte les
+protections après frappe et à la destruction. `unit-effects.js` partage Entrave,
+Fureur, Harcèlement et régénération ; stockage valide leurs nouveaux états.
+Les imports entrent automatiquement dans les distributions web et autonome.
+[Contrat, interactions et obtention](SYLVE_DIVINES_EVEILLEES.md).
+
 ## Sylve Légendaire — 29 octobre 2026
 
 Le registre porte onze patches supplémentaires, sans modifier les natifs.

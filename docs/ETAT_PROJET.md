@@ -50,8 +50,11 @@ version plus récente ; ne jamais republier en parallèle.
   isolées de l'audit ne remplacent pas ce parcours complet.
 - Vérifier la lisibilité et l'interaction sur téléphone physique ; la CI
   couvre Chromium simulé, pas Safari, Firefox ni l'équilibrage humain.
-- Intégrer les Divines/Éveillées Sylve seulement après validation des règles
-  et références dans Notion.
+- Relire et intégrer le lot des 22 Divines/Éveillées Sylve proposé sur
+  `feat/ascensions-sylve`, avec deux ascensions communes. Les validations Notion
+  ont été relues le 1er novembre ; [contrat et reprise](SYLVE_DIVINES_EVEILLEES.md).
+  La proposition ne confirme ni fusion ni publication. Après intégration,
+  préparer les 43 évolutions Ombre avec une nouvelle relecture des sources.
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 
