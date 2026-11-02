@@ -1,0 +1,68 @@
+# Usage unique sur la branche de correction ; supprimer ce workflow avant toute fusion.
+name: Regénération ponctuelle de l'Impact de zone
+on:
+  push:
+    branches:
+      - fix/impact-zone-adjacence-20261102
+    paths:
+      - .github/workflows/temporary-build-impact-zone.yml
+permissions:
+  contents: write
+jobs:
+  generate-on-pr-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: true
+          ref: fix/impact-zone-adjacence-20261102
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Vérifier la référence historique immuable
+        run: |
+          echo "4997044f537da23b51202cc0223d9cc84b8cae336fb6632ebd2ea699585b5df8  tests/fixtures/refactor_baseline_v24.json" | sha256sum --check
+      - name: Régénérer les références actuelles et contrôler les écarts
+        run: |
+          cp tests/fixtures/rules_baseline_cards_v2.json /tmp/impact-previous-rules.json
+          rm tests/fixtures/rules_baseline_cards_v2.json
+          node scripts/parity_snapshot.mjs --record-current
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const old=JSON.parse(fs.readFileSync('/tmp/impact-previous-rules.json','utf8'));
+          const now=JSON.parse(fs.readFileSync('tests/fixtures/rules_baseline_cards_v2.json','utf8'));
+          assert.equal(old.scenarios.length,120);
+          assert.equal(now.scenarios.length,120);
+          assert.equal(old.rules,now.rules);
+          const changed=[];
+          for(let i=0;i<120;i++){
+            assert.equal(old.scenarios[i].layout,now.scenarios[i].layout);
+            assert.equal(old.scenarios[i].seed,now.scenarios[i].seed);
+            assert.equal(old.scenarios[i].mission,now.scenarios[i].mission);
+            const before=old.scenarios[i],after=now.scenarios[i];
+            if(JSON.stringify(before)!==JSON.stringify(after))changed.push({
+              seed:before.seed,layout:before.layout,mission:before.mission,
+              before:before.outcome,after:after.outcome,
+              profileChanged:before.profileHash!==after.profileHash
+            });
+          }
+          console.log('SCÉNARIOS AYANT CHANGÉ',changed.length);
+          console.log(JSON.stringify(changed,null,2));
+          assert.ok(changed.length>0,'Un changement attendu doit produire un delta');
+          NODE
+          npm run test:parity
+          npm test
+      - name: Regénérer les deux assemblages issus des sources
+        run: |
+          npm run build
+          npm run build:test
+          node scripts/build_web.mjs
+      - name: Enregistrer les sources générées sur cette branche seulement
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add JOUER.html tests/fixtures/rules_baseline_cards_v2.json
+          git diff --cached --stat
+          git commit -m "build: régénérer export et référence après changement explicite d'Impact"
+          git push origin HEAD:fix/impact-zone-adjacence-20261102
