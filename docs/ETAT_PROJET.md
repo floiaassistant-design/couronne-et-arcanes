@@ -29,10 +29,15 @@ Ne pas déduire un état actuel d'un ancien SHA ou d'un compte rendu daté.
   spécifique et six contrôles réussis le 2 novembre 2026 dans
   `039a6a7d9a9de3ddb2feaccd58999924444daab6`. Arbre identique à la tête testée.
 
+- [PR 71](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/71) :
+  dix Légendaires Ombre et Veille funéraire, fusionnées après accord spécifique
+  et six contrôles réussis dans `588692a44680f7f08a51d37407e396685d67cc8f`.
+  Arbre intégré identique à la tête testée, sans conflit.
+
 Les évolutions de l'Aube sont obtenables (41), celles de la Sylve également
-jusqu'au rang Éveillé (48), et onze Rares/Épiques Ombre sont intégrées. Forge
-et Éther restent natifs. Le laboratoire réutilise le même moteur sans modifier
-la progression.
+jusqu'au rang Éveillé (48), et 21 évolutions Ombre jusqu'à Légendaire sont
+intégrées. Forge et Éther restent natifs au moteur. Le laboratoire réutilise
+le même moteur sans modifier la progression.
 
 ## Processus de livraison
 
@@ -44,23 +49,22 @@ automatique. Les PR constituent les journaux des travaux en cours et portent
 leurs preuves de tests et points de reprise. `AGENTS.md` fixe les règles.
 
 La distribution du jeu est séparée de la fusion. Sites a confirmé le
-2 novembre 2026 la **version publique 20**, déployée avec succès à 10:44 UTC.
-Son commit de diffusion `82d502122c3dce0e13b7f659433586cd4e6bf637` est distinct
-du SHA GitHub du jeu ; cette observation ne prouve pas la publication du main
-intégrant la PR 70. Vérifier le paquet du main exact et le flux de publication
-existant, sans lancer de publication parallèle.
+2 novembre 2026 la **version publique 21**, déployée avec succès à 16:47, heure
+de Paris. Son commit de diffusion `cc8325be47953df720e0a56589d082ad6ce293de`
+est distinct du SHA GitHub du jeu ; cette observation ne prouve pas la publication
+du main intégrant la PR 71. Vérifier le paquet exact et le flux existant, sans
+lancer de publication parallèle.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
 [Procédure de publication](PUBLICATION_WEB_2026_10_23.md)
 
 ## Lot Ombre en préparation
 
-La tranche [Ombre Rare/Épique](OMBRE_RARE_EPIQUE.md) est intégrée par PR 70.
-La branche `feat/ombre-legendaires`, basée sur ce main, propose
-[dix Légendaires](OMBRE_LEGENDAIRES.md) et Veille funéraire : 32 versions Ombre
-définies, 21 évolutions et 110 recettes au total sur la proposition. Les
-22 Divines/Éveillées restent à réaliser. Ce nouveau lot conserve son accord
-de fusion spécifique et sa publication distincte.
+Les [Rares/Épiques](OMBRE_RARE_EPIQUE.md) et [Légendaires](OMBRE_LEGENDAIRES.md)
+sont intégrées par PR 70/71. La branche `feat/ombre-divines-eveillees`, basée sur
+ce main, propose les [22 Divines/Éveillées](OMBRE_DIVINES_EVEILLEES.md) et deux
+ascensions communes : 54 versions Ombre et 132 recettes au total sur la proposition.
+Ce nouveau lot conserve son accord de fusion spécifique et sa publication distincte.
 
 ## Travaux durables restant à réaliser
 
@@ -69,9 +73,9 @@ de fusion spécifique et sa publication distincte.
   isolées de l'audit ne remplacent pas ce parcours complet.
 - Vérifier la lisibilité et l'interaction sur téléphone physique ; la CI
   couvre Chromium simulé, pas Safari, Firefox ni l'équilibrage humain.
-- Relire la proposition Légendaire Ombre et sa CI avant intégration autorisée ;
-  préparer ensuite les 22 Divines/Éveillées, en relisant leurs validations
-  Notion. [Contrat et reprise](OMBRE_LEGENDAIRES.md).
+- Relire la proposition Divine/Éveillée Ombre et sa CI avant intégration autorisée ;
+  reprendre ensuite Forge/Éther sur la dernière édition Notion, sans appliquer
+  implicitement leurs nouvelles décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 

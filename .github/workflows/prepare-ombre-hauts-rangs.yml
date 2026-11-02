@@ -21,7 +21,7 @@ jobs:
       - run: npm run build
       - run: npm test
       - run: npm run test:parity
-      - run: echo '712c48935bdc05697dab2d207720cbcd0a1572a8e3d56a194973d3cad4e3ad33  JOUER.html' | sha256sum -c -
+      - run: echo 'bc063ced14b3b3e0354341515daa2ef0a2ef027de9b43cd655eaa2d51216f460  JOUER.html' | sha256sum -c -
       - run: npm run build:test
       - name: Enregistrer uniquement l’export généré sur cette branche
         run: |

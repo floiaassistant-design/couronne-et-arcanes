@@ -57,7 +57,28 @@ transactions des paquets/évolutions restent sous leurs modules spécialisés.
 Ce lot est intégré à main par la PR 65 ; aucune règle du moteur,
 ressource ou format historique n'a été changé.
 
-## Ombre Légendaire — proposition du 2 novembre 2026
+## Ombre Divine / Éveillée — proposition du 2 novembre 2026
+
+Les 22 patches de `cards/ombre.js` réutilisent les primitives existantes, sans
+nouveau module de production. `battle-defense.js` reçoit facultativement le
+contexte d'une attaque directe pour Fracas ; les dégâts secondaires ne le
+reçoivent pas. `unit-effects.js` partage les bonus, malus à minimum/cadence et
+Exécution ; `unit-triggers.js` porte les récompenses directes après frappe.
+
+`unit-poison.js` distingue la contagion causée par poison, à portée limitée,
+de la contagion Sylve existante. `battle-control.js` lit durée, nombre de cibles
+et cadence du registre. `unit-rules.js` lit les pas réels et le prochain tour
+éligible ; `battle.js` compte les distances et transmet les résultats. Sa taille
+atteint 423 lignes : orchestration des étapes communes, sans pilote par carte
+ni découpage artificiel. Les responsabilités restent dans les modules spécialisés.
+
+Deux ascensions Ombre sont ajoutées à l'agrégat existant ; accès, objectifs,
+transactions et vues restent communs. Les marqueurs sont facultatifs et validés,
+les bonus acquis restent séparés de l'ATQ de base et des statistiques du profil.
+Web, autonome et laboratoire partagent le même graphe.
+[Contrat et interactions](OMBRE_DIVINES_EVEILLEES.md).
+
+## Ombre Légendaire — intégré par PR 71 le 2 novembre 2026
 
 `cards/ombre.js` ajoute dix patches, dont Veille funéraire. Le registre expose
 32 versions Ombre, les recettes montent à 110 après mission 06. Paquets inchangés.

@@ -238,11 +238,11 @@ function strike(b,u,target,atk,from,to,sameLine=true,charged=false,suppressed=fa
  if(raw>0)hit(b,target,raw,u.side,unitHasPierce(u,suppressed,charged),true,{attacker:u,from,to,sameLine});
  const damage=Math.max(0,before-target.hp);
  if(sameLine&&(to-from)*(u.side==='p'?1:-1)>=2)recordTrialFact(b,u,'rangedDamage',damage);
- return {performed:raw>0,killed:raw>0&&before>0&&target.hp<=0,damaged:damage>0,execution:execution>0};
+ return {primaryAlive:before>0,performed:raw>0,killed:raw>0&&before>0&&target.hp<=0,damaged:damage>0,execution:execution>0};
 }
-function resolveSplash(b,u,lane,primary,atk,intercepted=false){
+function resolveSplash(b,u,lane,primary,atk,intercepted=false,primaryAlive=true){
  const p=versionUnitAbilities(u)?.splash;
- if(!p||intercepted&&!p.onGuard||p.requiresAttack&&atk<=0)return;
+ if(!p||intercepted&&!p.onGuard||p.requiresAttack&&(!primaryAlive||atk<=0))return;
  const others=b.board[lane].filter(v=>v&&v.side!==u.side&&v.uid!==primary.uid&&v.hp>0).slice(0,p.targets||1);
  for(const extra of others)hit(b,extra,p.amount,u.side,false,true);
 }
@@ -272,7 +272,7 @@ function resolveAttacks(b,sideFilter=null){
     if(ability==='lifesteal')resolveLifesteal(b,u);
     applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0,{battle:b,lane:guardIntercept.lane,col:guardIntercept.col});
     if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result},fx);
-    if(ability==='splash')resolveSplash(b,u,guardIntercept.lane,guardIntercept.u,atk,true);
+    if(ability==='splash')resolveSplash(b,u,guardIntercept.lane,guardIntercept.u,atk,true,result.primaryAlive);
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
@@ -281,7 +281,7 @@ function resolveAttacks(b,sideFilter=null){
    if(ability==='lifesteal')resolveLifesteal(b,u);
    applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0,{battle:b,lane,col:target.col});
    if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result},fx);
-   if(ability==='splash')resolveSplash(b,u,lane,target.target,atk);
+   if(ability==='splash')resolveSplash(b,u,lane,target.target,atk,false,result.primaryAlive);
    resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);
   }

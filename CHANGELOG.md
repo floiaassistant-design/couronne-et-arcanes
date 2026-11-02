@@ -1,6 +1,18 @@
 # Journal des changements
 
-## Proposition — Légendaires Ombre, 2 novembre 2026
+## Proposition — Ombre Divine / Éveillée, 2 novembre 2026
+
+- Les onze personnages Ombre atteignent Divin et Éveillé : 22 évolutions,
+  54 versions Ombre définies et 132 recettes Aube/Sylve/Ombre.
+- Fracas, Dévoration, Exécution, contagion causée par poison, malus à cadence,
+  soins, impacts multiples et déplacement réel utilisent les primitives du moteur.
+- Deux ascensions communes ouvrent les fusions supérieures, sans carte offerte,
+  paiement ou épreuve par personnage ; stocks et deck protégés.
+- Paquets, natifs et sauvegardes historiques conservés ; états nouveaux facultatifs
+  validés. [Contrat et reprise](docs/OMBRE_DIVINES_EVEILLEES.md).
+
+
+## Intégré — Légendaires Ombre, 2 novembre 2026
 
 - Dix évolutions Légendaires, obtenues par fusion de trois Épiques libres
   après mission 06 ; 32 versions Ombre définies et 110 recettes au total.
@@ -8,7 +20,8 @@
   autre allié sur sa ligne, plafond 2 pour cet effet, au plus une fois par tour.
 - Barrières communes extraites sans cycle, API existante conservée ; quotas
   et instantanés validés à la reprise. Vol de vie paramétré à valeur inchangée.
-- Paquets et récompenses conservés. [Contrat et reprise](docs/OMBRE_LEGENDAIRES.md).
+- PR 71 fusionnée après accord spécifique et six contrôles réussis ; publication
+  distincte. Paquets et récompenses conservés. [Contrat](docs/OMBRE_LEGENDAIRES.md).
 
 
 ## Intégré — Ombre Rare / Épique, 2 novembre 2026

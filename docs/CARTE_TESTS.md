@@ -70,7 +70,7 @@ déjà appelés par une entrée. La lecture des imports/appels confirme notammen
 | `browser_card_preview.py` | `browser_card_presentation.py` et `browser_current_card_rules.py` |
 | `browser_collection.py` | `browser_manual_deck.py` et `browser_evolution_fusion.py` |
 | `browser_save_integrity_v211.py` | `browser_pending_results.py` (proposé) : pertes de stockage, actions/import et reprise pour les résultats ordinaires |
-| `browser_evolution_trials.py` | Paquets Aube **et** Sylve, Légendaires Sylve/Ombre, paquets Ombre et ascensions Aube/Sylve ; une partie adaptée à chaque groupe |
+| `browser_evolution_trials.py` | Paquets Aube **et** Sylve, Légendaires Sylve/Ombre, paquets Ombre et ascensions Aube/Sylve/Ombre ; une partie adaptée à chaque groupe |
 | `browser_sylve.py`, `browser_ombre.py`, `browser_forge.py`, `browser_ether.py` | Pilote partagé `browser_aube.run`, avec l'ordre correspondant |
 
 L'existence d'un ancien script `browser_*.py` dans le dépôt ne prouve donc ni
@@ -98,7 +98,7 @@ parties d'épreuves ajoutent le scénario de paquet Ombre sans nouvelle entrée 
 matrice ; le contrôle commun des illustrations vérifie les six colonnes et
 les PV de chaque version définie. [Contrat](OMBRE_RARE_EPIQUE.md).
 
-## Lot Légendaire Ombre proposé le 2 novembre
+## Lot Légendaire Ombre intégré par PR 71 le 2 novembre
 
 `ombre_legendary.test.mjs` exerce les dix fusions et Veille funéraire : ordre
 immédiat des morts, une fois par tour, plafonds par effet, plusieurs copies,
@@ -110,6 +110,24 @@ Le pilote Légendaire Sylve est étendu par scénario au Faucheur Ombre ; sa pos
 attend son délai réel, puis vérifie Poison, fiche Veille et reprise. Les quatre
 parties d'épreuves l'appellent, sans ajouter de commande de matrice.
 [Contrat et limites](OMBRE_LEGENDAIRES.md).
+
+## Lot Ombre Divine / Éveillée proposé le 2 novembre
+
+`ombre_ascended.test.mjs` couvre les 22 fusions et interactions nouvelles :
+contexte fatal direct, absence de chaîne, soins/bonus plafonnés, deux camps,
+contagion causée par poison, malus à cadence, cibles distinctes, PV de la cible
+immédiatement avant Exécution, distances réelles, états et véritable moteur
+embarqué. `ombre_ascensions.test.mjs` réutilise les parties du pilote partagé :
+deux combats complets, 128 graines/niveaux joués deux fois, objectifs, reprise,
+refus sans mutation et isolation des factions.
+
+Le catalogue contrôle 54 versions Ombre × quatre niveaux × deux camps ; les
+132 recettes passent par 2 112 exécutions déterministes. Les témoins de versions
+absentes visent désormais Forge, au lieu de rejeter les Ombre maintenant définies.
+Le pilote navigateur commun ajoute l'Ombre aux quatre parties d'ascension :
+combat/reprise, pannes, déblocage sans cadeau, fusion, export/import et invocation.
+L'inventaire permanent reste 27 scripts et 30 commandes, sans doublon de suite.
+[Contrat](OMBRE_DIVINES_EVEILLEES.md). Résultats à lire sur le SHA de la PR.
 
 ## Décision de validation et limites
 

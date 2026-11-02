@@ -17,7 +17,10 @@ export function applyAttackEffects(source,target,suppressed=false,round=0,touche
  }
  if(a?.harass&&target.hp>0){
   const p=a.harass;
-  if(!p.period)target.attackPenalty={amount:p.amount,remaining:p.attacks};
+  if(!p.period){
+   if(target.attackPenalty?.minimum!==undefined)applyAttackPenalty(target,{...p,minimum:0});
+   else target.attackPenalty={amount:p.amount,remaining:p.attacks};
+  }
   else if(touched&&!(source.harassReadyRound>round)){
    source.harassReadyRound=round+p.period;applyAttackPenalty(target,p);
    if(p.secondary&&battle){

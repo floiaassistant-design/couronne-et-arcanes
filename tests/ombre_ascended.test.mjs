@@ -97,9 +97,14 @@ test('Archiliche : une ou deux cibles secondaires distinctes, protections normal
  }
 });
 
+test('Onde : aucune activation sur une cible déjà morte avant sa frappe',()=>{
+ const {b,u}=ready('lich');b.board[0][1]=unit('archer','légendaire','p',{atk:20});b.board[0][3]=u;const target=unit('militia','commun','e',{hp:1,stun:99}),other=unit('militia','commun','e',{hp:20,maxhp:20,stun:99});b.board[0][4]=target;b.board[0][5]=other;endPlayerTurn(b);assert.equal(target.hp,0);assert.equal(other.hp,20);
+});
+
 test('Banshee : cadence 3, minimum 1, plus fort malus, une cible adjacente et reprise',()=>{
  const {b,u}=ready('banshee'),target=unit('militia','commun','e',{hp:20}),left=unit('militia','commun','e',{hp:20}),right=unit('militia','commun','e',{hp:20});b.board[0][5]=target;b.board[0][4]=left;b.board[0][6]=right;
  applyAttackEffects(u,target,false,1,true,{battle:b,lane:0,col:5});assert.deepEqual(target.attackPenalty,{amount:2,remaining:1,minimum:1});assert.equal(left.attackPenalty.amount,1);assert.equal(right.attackPenalty,undefined);assert.equal(u.harassReadyRound,4);
+ const owl=unit('owl','légendaire','p');applyAttackEffects(owl,target,false,1);assert.equal(target.attackPenalty.amount,2,'Harcèlement plus faible ne remplace pas le Cri déjà appliqué');
  assert.equal(consumeAttackPenalty(target,1),1);assert.equal(consumeAttackPenalty(left,0),0);applyAttackEffects(u,target,false,2,true,{battle:b,lane:0,col:5});assert.equal(target.attackPenalty,undefined);
  target.attackPenalty={amount:3,remaining:2};applyAttackEffects(u,target,false,4,true,{battle:b,lane:0,col:5});assert.deepEqual(target.attackPenalty,{amount:3,remaining:2});storage();assert(storeBattle(b));assert.deepEqual(restoreBattle(),b);
 });

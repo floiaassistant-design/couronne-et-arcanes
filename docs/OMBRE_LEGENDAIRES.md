@@ -1,11 +1,19 @@
-# Ombre Légendaire — proposition du 2 novembre 2026
+# Ombre Légendaire — lot intégré le 2 novembre 2026
 
 ## Base et source
 
 Base vérifiée : main `039a6a7d9a9de3ddb2feaccd58999924444daab6`, intégrant
 la PR 70 après accord et tous les contrôles réussis. Arbre strictement identique
-à la tête testée. Branche `feat/ombre-legendaires`. Cette nouvelle proposition
-exige son propre accord de fusion et n'est pas publiée.
+à la tête testée. Branche `feat/ombre-legendaires`. Le lot
+a été fusionné par [PR 71](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/71)
+après accord spécifique et six contrôles réussis dans
+`588692a44680f7f08a51d37407e396685d67cc8f`. Arbre
+`efdc5e6e896b4156b4d5e934823f68620f066d14`, identique à la tête testée
+`1e7ea902652b21205c8a15cdf7d0ae79996fa7c9`. Publication distincte.
+
+Les comptes ci-dessous décrivent ce lot intégré. La proposition suivante
+[Divine/Éveillée](OMBRE_DIVINES_EVEILLEES.md) porte la branche à 54 versions
+Ombre et 132 recettes.
 
 Source : [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
 édition `2026-10-27T06:13:46.581Z`, relue le 2 novembre. Les dix cellules
@@ -107,8 +115,8 @@ Le précontrôle navigateur a réussi les quatre formats Légendaires Sylve et
 les trois formats d'affichage Ombre. Le nouveau parcours Ombre a exposé une
 assertion de lecture sensible à la casse : elle exige désormais le libellé
 exact `Poison 2 tour(s)` après avoir vérifié l'état moteur. La CI complète
-doit confirmer ce parcours corrigé sur la tête de PR.
+a confirmé ce parcours corrigé dans les quatre groupes et tous les contrôles.
 Résultats et SHA exacts à lire dans la PR. Chromium simulé ne valide pas
-Safari, Firefox, un téléphone physique ou la difficulté humaine. Après revue,
-accord spécifique, intégration et publication par le flux existant : relire
-les 22 Divines/Éveillées Ombre avant de préparer leur mécanique et leur accès.
+Safari, Firefox, un téléphone physique ou la difficulté humaine. Reprise :
+les 22 Divines/Éveillées font maintenant l’objet de leur propre proposition.
+Vérifier ses contrôles et son accord spécifique ; publication via le flux existant.
