@@ -1,9 +1,9 @@
 # Couronnes & Arcanes
 
 Le jeu intègre les sauvegardes protégées, Garde/Riposte uniques, le deck manuel,
-les paquets/fusions et les ascensions Aube, Sylve et Ombre. La branche de la
-[PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75)
-propose dix évolutions Rares/Épiques Forge et leur paquet, **non fusionnées et non publiées**.
+les paquets/fusions et les ascensions Aube, Sylve et Ombre. La [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75)
+a intégré dix évolutions Rares/Épiques Forge et leur paquet à `main`,
+avec six contrôles réussis. Leur publication sur Sites reste à vérifier séparément.
 Les rangs supérieurs Forge et les évolutions Éther restent hors de cette tranche.
 [Contrat Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md).
 [État intégré et publication](docs/ETAT_PROJET.md) · [Carte des tests](docs/CARTE_TESTS.md).
@@ -23,7 +23,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 évolutions Rares, puis du Milicien Épique après le premier boss. Accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve et 43 Ombre ; cette branche propose dix évolutions Forge supplémentaires. Les 64 Divines/Éveillées Aube/Sylve/Ombre exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
+sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve, 43 Ombre et dix évolutions Forge supplémentaires. Les 64 Divines/Éveillées Aube/Sylve/Ombre exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche

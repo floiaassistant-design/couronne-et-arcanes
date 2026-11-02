@@ -6,9 +6,9 @@ consulter [les PR GitHub](https://github.com/floiaassistant-design/couronne-et-a
 la branche `main` et les [exécutions GitHub Actions](https://github.com/floiaassistant-design/couronne-et-arcanes/actions).
 Ne pas déduire un état actuel d'un ancien SHA ou d'un compte rendu daté.
 
-## Reprise Forge Rare/Épique — proposition du 2 novembre 2026
+## Forge Rare/Épique — intégrée le 2 novembre 2026
 
-Le dernier main observé au début de la branche est `843f1412f689b75acca7ff80fb44b99c149cb6c7`, intégrant la PR 73 d'Impact de zone. La tranche [Forge Rare/Épique](FORGE_RARE_EPIQUE.md) propose dix versions sur sept unités et un paquet distinct, sans activation de rang supérieur ni écriture Notion. Ce lot doit encore être testé et relu dans sa PR, puis autorisé séparément avant fusion et publication.
+La [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75) a intégré dix versions Forge sur sept unités et un paquet distinct. Fusion squash au commit `5d9e2861911744ed051d3f656cdb186025451613`, arbre identique à la tête testée `42103d5` ; six contrôles réussis, sans nouveau rang supérieur ni écriture Notion. Publication Sites distincte, à confirmer.
 
 ## Jalons intégrés
 
@@ -47,10 +47,14 @@ Le dernier main observé au début de la branche est `843f1412f689b75acca7ff80fb
   ciblage contigu de l'Impact de zone, intégré sur main le 2 novembre 2026,
   sans changement des sauvegardes ou des décisions Notion.
 
+- [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75) :
+  dix évolutions Forge Rares/Épiques et paquet dédié, fusionnées le 2 novembre
+  après accord spécifique et six contrôles réussis ; arbre intégré inchangé.
+
 Les évolutions de l'Aube sont obtenables (41), celles de la Sylve également
 jusqu'au rang Éveillé (48), et celles de l'Ombre jusqu'à Éveillée (43) sont
-intégrées. Forge et Éther restent natifs sur main à la base de cette proposition ;
-les dix évolutions Forge sont exclusivement sur sa branche non fusionnée.
+intégrées. Dix évolutions Forge Rares/Épiques sont également sur main ;
+l'Éther conserve ses versions natives.
 Le laboratoire réutilise le même moteur sans modifier la progression.
 
 ## Processus de livraison
@@ -62,12 +66,12 @@ L'autorisation explicite du propriétaire est conservée ; aucune fusion
 automatique. Les PR constituent les journaux des travaux en cours et portent
 leurs preuves de tests et points de reprise. `AGENTS.md` fixe les règles.
 
-La distribution du jeu est séparée de la fusion. Sites a confirmé le
-2 novembre 2026 la **version publique 21**, déployée avec succès à 16:47, heure
-de Paris. Son commit de diffusion `cc8325be47953df720e0a56589d082ad6ce293de`
-est distinct du SHA GitHub du jeu ; cette observation ne prouve pas la publication
-du main intégrant les PR 72 et 73. Vérifier le paquet exact et le flux existant, sans
-lancer de publication parallèle.
+La distribution du jeu est séparée de la fusion. Le suivi de publication
+existant a confirmé le 2 novembre 2026 la **version publique 22**, basée sur
+le commit GitHub `afdf6543761dd04c832e268f7d5f261cb23addf6` (PR 72),
+avec le commit Sites `10f7143b06bce3a24a61f5ae5462cdea70064714`.
+Ce constat ne prouve pas la publication des PR 73 et 75. Vérifier le paquet
+exact et le flux existant, sans lancer de publication parallèle.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
 [Procédure de publication](PUBLICATION_WEB_2026_10_23.md)
@@ -87,9 +91,9 @@ La publication du main intégrant ces lots est suivie indépendamment de leur fu
   isolées de l'audit ne remplacent pas ce parcours complet.
 - Vérifier la lisibilité et l'interaction sur téléphone physique ; la CI
   couvre Chromium simulé, pas Safari, Firefox ni l'équilibrage humain.
-- Relire les validations Notion les plus récentes à chaque tranche ; pour Forge,
-  contrôler la PR Rare/Épique avant tout accord de fusion. Éther reste séparé,
-  sans appliquer implicitement ses nouvelles décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
+- Relire les validations Notion les plus récentes à chaque tranche ; préparer
+  séparément les hauts rangs Forge encore absents et les évolutions Éther,
+  sans appliquer implicitement leurs décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 
