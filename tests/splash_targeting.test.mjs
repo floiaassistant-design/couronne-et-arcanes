@@ -74,3 +74,24 @@ test('Impact : les anciennes grilles de 5 cases gardent le même contrat',()=>{
  reverse.board[0][3]=enemy('p');reverse.board[0][2]=enemy('p');
  assert.deepEqual(contiguousSplashTargets(reverse,0,5,3,'e',2).map(x=>x.col),[2]);
 });
+
+test('Impact : les cinq unités natives utilisent exactement le même ciblage',()=>{
+ for(const id of ['lich','bomb','elemental','dragon','tempest']){
+  const b=battle(),attacker=unit(id,'p'),first=enemy(),second=enemy(),distant=enemy();
+  b.board[0][3]=attacker;b.board[0][4]=first;b.board[0][5]=second;b.board[0][7]=distant;
+  endPlayerTurn(b);
+  assert.equal(first.hp,20-attacker.atk,id+' : cible principale');
+  assert.equal(second.hp,18,id+' : exactement 2 dégâts secondaires bruts');
+  assert.equal(distant.hp,20,id+' : aucune cible éloignée');
+ }
+});
+
+test('Impact : une élimination principale n’empêche pas le dégât secondaire, sans seconde attaque',()=>{
+ const b=battle(),attacker=unit('tempest','p'),first=enemy('e',{hp:1,maxhp:1}),second=enemy();
+ b.board[0][3]=attacker;b.board[0][4]=first;b.board[0][5]=second;
+ endPlayerTurn(b);
+ assert.equal(first.hp,0);
+ assert.equal(second.hp,18,'la case de la première cible reste la référence');
+ const attacks=b.vfx.filter(v=>v.type==='attack'&&v.side==='p'&&v.lane===0);
+ assert.equal(attacks.length,1,'l’Impact n’ajoute pas d’attaque');
+});

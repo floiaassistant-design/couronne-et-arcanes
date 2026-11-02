@@ -124,6 +124,8 @@
 
 ## Combat et effets
 
+- Impact de zone : les dégâts secondaires ne touchent que les unités ennemies vivantes immédiatement derrière la cible principale, dans le sens de la frappe et sur la même ligne ; aucune case vide ni unité alliée traversée. Les versions ayant plusieurs cibles secondaires exigent des cases consécutives. Le moteur commun gère les protections et les événements de dégâts ; voir `docs/IMPACT_ZONE_2026_11_02.md`.
+
 - `engine/board.js` lit la géométrie du combat sauvegardé. Nouveaux combats :
   dix cases, couronnes 0/11 ; deux lignes en difficulté 1–2, trois au-delà et
   quatre pour les boss. Les fixtures 3×5 gardent tableau et couronnes 0/6.
