@@ -66,7 +66,7 @@ test('Dix évolutions : capacités natives et géométrie héritées à l’iden
  assert.deepEqual([a('alchemist').poison.amount,a('alchemist').poison.resolutions],[1,2]);
  assert.deepEqual(Object.keys(a('smith')),[]);assert.equal(a('golem').flying,undefined);
  assert.equal(a('bomb').guard,undefined);assert.equal(a('drill').riposte,undefined);
- assert.equal(evolutionFusionFor('colossus','divine'),undefined);assert.equal(evolutionFusionFor('engineer','légendaire'),undefined);
+ assert.equal(evolutionFusionFor('colossus','divine'),null);assert.equal(evolutionFusionFor('engineer','légendaire'),null);
  assert.equal(playableCardReference({id:'smith',rarity:'légendaire'}),false);
 });
 
