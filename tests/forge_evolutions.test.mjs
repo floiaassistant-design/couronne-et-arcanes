@@ -8,7 +8,6 @@ import {cardPack,evolutionPackFor} from '../src/card-packs.js';
 import {cardReference,cardKey,ownedCardCopies,playableCardReference} from '../src/cards/references.js';
 import {freshProfile,normalizeProfile,previewEvolutionFusion,fuseEvolutionCopies,modifyDeck,buyCardPack,createBattle,playPlayerCard,playEnemyCard} from '../src/engine.js';
 import {freshLab,setLabRarity,setLabLevel,createLabBattle} from '../src/engine/developer-lab.js';
-import {findCrownGuardian} from '../src/engine/guard-candidates.js';
 import {saveProfile,loadProfile,validateImportedProfile,storeBattle,restoreBattle} from '../src/ui/storage.js';
 import {cardPresentation} from '../src/ui/card-presentation.js';
 

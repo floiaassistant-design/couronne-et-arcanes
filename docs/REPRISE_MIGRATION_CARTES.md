@@ -1,23 +1,23 @@
 # Reprise des migrations de cartes — Forge Rare/Épique proposée le 2 novembre 2026
 
 Source de conception : [tableau maître unique](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
-édition relue `2026-11-02T15:29:46.385Z`. Les compteurs ci-dessous décrivent
+édition relue `2026-11-02T16:09:01.799Z`. Les compteurs ci-dessous décrivent
 les cases de conception complètes, pas leur livraison. Aucun tableau parallèle
 de pouvoirs ni validation de nouvelles décisions.
 
 GitHub reste la source du jeu. Base historique du lot Ombre : main
 `588692a44680f7f08a51d37407e396685d67cc8f`, PR 71 intégrée après accord et six
 contrôles réussis. Base de la nouvelle proposition Forge :
-`843f1412f689b75acca7ff80fb44b99c149cb6c7`, PR 73 intégrée. Les 41 évolutions Aube, 48 Sylve et 21 Ombre jusqu'à Légendaire
-sont intégrées. `feat/ombre-divines-eveillees` propose les 22 hauts rangs restants,
-sans modifier Notion. [Contrat](OMBRE_DIVINES_EVEILLEES.md). La publication est
-suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
+`843f1412f689b75acca7ff80fb44b99c149cb6c7`, PR 73 intégrée.
+Les 41 évolutions Aube, 48 Sylve et 43 Ombre jusqu'à Éveillée sont intégrées.
+La PR 72 a intégré les 22 derniers hauts rangs Ombre avec accord spécifique.
+La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 
 | Ordre | Unités natives | Évolutions conçues complètement validées | Situation d'implémentation |
 | --- | ---: | ---: | --- |
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
-| Ombre | 11 | 43 | 21 évolutions intégrées ; 22 hauts rangs proposés, 54 versions sur la branche |
+| Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
 | Forge | 10 | 39 sur 39 cases futures | 10 Rares/Épiques proposées sur une branche (7 unités), les autres non implémentées sur main |
 | Éther | 11 | 9 sur 39 cases futures | Feu follet et Oracle complets ; autres cases encore ouvertes dans cette édition ; règles partielles de Garde distinctes |
 
@@ -62,12 +62,13 @@ libres après mission 06, paquets inchangés. Base : main intégrant la PR 70.
 La PR 71 a été intégrée après accord spécifique et six contrôles réussis,
 sans conflit ni différence d'arbre avec la tête testée.
 
-## Lot proposé : les 22 Divines/Éveillées Ombre
+## Lot intégré : les 22 Divines/Éveillées Ombre
 
 Le [contrat](OMBRE_DIVINES_EVEILLEES.md) décrit les 22 pouvoirs et leurs
 interactions, deux ascensions communes puis fusions de trois copies libres.
-Paquets, natifs et sauvegardes historiques conservés. Cette nouvelle proposition
-attend ses contrôles et son propre accord de fusion ; elle n'est pas publiée.
+Paquets, natifs et sauvegardes historiques conservés. La PR 72 a été
+fusionnée le 2 novembre après autorisation spécifique et six contrôles réussis.
+La publication du jeu reste une opération distincte.
 
 ## Reprise suivante : Forge et Éther
 

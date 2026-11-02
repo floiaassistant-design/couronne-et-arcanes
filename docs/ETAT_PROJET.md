@@ -33,19 +33,25 @@ Le dernier main observé au début de la branche est `843f1412f689b75acca7ff80fb
   spécifique et six contrôles réussis le 2 novembre 2026 dans
   `039a6a7d9a9de3ddb2feaccd58999924444daab6`. Arbre identique à la tête testée.
 
-- [PR 73](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/73) :
-  ciblage contigu de l'Impact de zone, intégré sur main le 2 novembre 2026,
-  sans changement des sauvegardes ou des décisions Notion.
-
 - [PR 71](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/71) :
   dix Légendaires Ombre et Veille funéraire, fusionnées après accord spécifique
   et six contrôles réussis dans `588692a44680f7f08a51d37407e396685d67cc8f`.
   Arbre intégré identique à la tête testée, sans conflit.
 
+- [PR 72](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/72) :
+  22 Divines/Éveillées Ombre et deux ascensions communes, intégrées le
+  2 novembre après accord spécifique et six contrôles réussis.
+  54 versions Ombre et 132 recettes étaient présentes sur main après cette fusion.
+
+- [PR 73](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/73) :
+  ciblage contigu de l'Impact de zone, intégré sur main le 2 novembre 2026,
+  sans changement des sauvegardes ou des décisions Notion.
+
 Les évolutions de l'Aube sont obtenables (41), celles de la Sylve également
-jusqu'au rang Éveillé (48), et 21 évolutions Ombre jusqu'à Légendaire sont
-intégrées. Forge et Éther restent natifs sur main à la base de cette proposition ; les dix évolutions Forge sont exclusivement sur sa branche non fusionnée. Le laboratoire réutilise
-le même moteur sans modifier la progression.
+jusqu'au rang Éveillé (48), et celles de l'Ombre jusqu'à Éveillée (43) sont
+intégrées. Forge et Éther restent natifs sur main à la base de cette proposition ;
+les dix évolutions Forge sont exclusivement sur sa branche non fusionnée.
+Le laboratoire réutilise le même moteur sans modifier la progression.
 
 ## Processus de livraison
 
@@ -60,19 +66,19 @@ La distribution du jeu est séparée de la fusion. Sites a confirmé le
 2 novembre 2026 la **version publique 21**, déployée avec succès à 16:47, heure
 de Paris. Son commit de diffusion `cc8325be47953df720e0a56589d082ad6ce293de`
 est distinct du SHA GitHub du jeu ; cette observation ne prouve pas la publication
-du main intégrant la PR 71. Vérifier le paquet exact et le flux existant, sans
+du main intégrant les PR 72 et 73. Vérifier le paquet exact et le flux existant, sans
 lancer de publication parallèle.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
 [Procédure de publication](PUBLICATION_WEB_2026_10_23.md)
 
-## Lot Ombre en préparation
+## Lot Ombre intégré
 
-Les [Rares/Épiques](OMBRE_RARE_EPIQUE.md) et [Légendaires](OMBRE_LEGENDAIRES.md)
-sont intégrées par PR 70/71. La branche `feat/ombre-divines-eveillees`, basée sur
-ce main, propose les [22 Divines/Éveillées](OMBRE_DIVINES_EVEILLEES.md) et deux
-ascensions communes : 54 versions Ombre et 132 recettes au total sur la proposition.
-Ce nouveau lot conserve son accord de fusion spécifique et sa publication distincte.
+Les [Rares/Épiques](OMBRE_RARE_EPIQUE.md), [Légendaires](OMBRE_LEGENDAIRES.md)
+et [Divines/Éveillées](OMBRE_DIVINES_EVEILLEES.md) sont intégrées par les
+PR 70/71/72. Les onze personnages Ombre disposent de 54 versions,
+dont 43 évolutions ; les deux ascensions sont communes à la faction.
+La publication du main intégrant ces lots est suivie indépendamment de leur fusion.
 
 ## Travaux durables restant à réaliser
 
