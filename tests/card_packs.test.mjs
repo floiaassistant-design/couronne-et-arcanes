@@ -14,7 +14,7 @@ const kind=ref=>typeof ref==='string'?'native':ref.rarity;
 function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v)},removeItem:k=>{delete data[k]}};return data;}
 
 test('Catalogue : ancien paquet conservé, nouveau contenu explicite et seuls les douze rangs Aube déjà jouables',()=>{
- assert.equal(CARD_PACKS.length,4);
+ assert.equal(CARD_PACKS.length,5);
  const pack=cardPack('aube-evolution');assert.deepEqual([pack.cost,pack.count,pack.mission],[190,3,'03']);
  assert.deepEqual(pack.groups.map(g=>g.weight),[60,35,5]);assert.deepEqual(pack.groups.map(g=>g.cards.length),[8,4,8]);
  assert.deepEqual(pack.groups[0].cards.slice().sort(),['militia','shield','archer','lancer','cleric','banner','scoutcaptain','sunpriest'].sort());
