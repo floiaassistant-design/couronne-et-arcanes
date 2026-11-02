@@ -124,6 +124,9 @@
 
 ## Combat et effets
 
+- L’Impact de zone suit le contrat directionnel unique : ennemis contigus immédiatement derrière la première cible devant l’attaquant, sans traverser de case vide, d’allié ni de ligne ; dégâts bruts via le moteur. Les rares versions à plusieurs cibles secondaires suivent la même continuité. Voir `docs/IMPACT_ZONE_2026_11_02.md`.
+
+
 - `engine/board.js` lit la géométrie du combat sauvegardé. Nouveaux combats :
   dix cases, couronnes 0/11 ; deux lignes en difficulté 1–2, trois au-delà et
   quatre pour les boss. Les fixtures 3×5 gardent tableau et couronnes 0/6.

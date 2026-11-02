@@ -1,5 +1,12 @@
 # Journal des changements
 
+## Proposition — Ciblage directionnel de l’Impact de zone, 2 novembre 2026
+
+- Cible secondaire immédiatement derrière la première unité frappée, sans traverser de vide ni d’allié, dans les deux directions et sur les plateaux anciens/récents.
+- Impact de zone multiple : deux cibles secondaires uniquement consécutives, sans propagation libre. Dégâts, Armure, barrières, Garde et sauvegardes inchangés hors ciblage prévu.
+- Tests moteur dédiés et documentation de conception ; proposition **non fusionnée** et export autonome à régénérer et contrôler avant intégration.
+
+
 ## Proposition — Ombre Divine / Éveillée, 2 novembre 2026
 
 - Les onze personnages Ombre atteignent Divin et Éveillé : 22 évolutions,

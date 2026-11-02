@@ -33,6 +33,9 @@ agir et l’IA jouer. Les anciens combats actifs incompatibles demandent une rel
 
 ## Ciblage direct et effets
 
+L'**Impact de zone** d'une unité touche seulement un ennemi immédiatement derrière la première cible, sur la même ligne et dans le sens de l'attaque (sans case vide intermédiaire) ; les exceptions de plusieurs cibles consécutives viennent de la rareté de la carte. [Contrat de ciblage](docs/IMPACT_ZONE_2026_11_02.md). Cette correction est proposée sur une branche distincte tant qu'elle n'est pas fusionnée et que son export autonome n'est pas vérifié.
+
+
 Sélectionner un sort, cliquer une carte autorisée, lire l’aperçu puis **Lancer le
 sort**. Les contours verts désignent les cibles autorisées ; les contours dorés
 montrent toutes les cartes concernées. Annuler, Échap ou une autre carte permet
