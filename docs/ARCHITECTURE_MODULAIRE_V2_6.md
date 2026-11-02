@@ -57,7 +57,21 @@ transactions des paquets/évolutions restent sous leurs modules spécialisés.
 Ce lot est intégré à main par la PR 65 ; aucune règle du moteur,
 ressource ou format historique n'a été changé.
 
-## Ombre Rare / Épique — proposition du 2 novembre 2026
+## Ombre Légendaire — proposition du 2 novembre 2026
+
+`cards/ombre.js` ajoute dix patches, dont Veille funéraire. Le registre expose
+32 versions Ombre, les recettes montent à 110 après mission 06. Paquets inchangés.
+`engine/unit-barriers.js` extrait les primitives de défense pour permettre
+les réactions aux morts sans cycle ; `battle-defense.js` les réexporte pour
+préserver les appelants. La nouvelle clé n'enrichit pas les barrières anciennes.
+
+`unit-death.js` notifie les Veilleurs vivants de la ligne avant les dégâts
+suivants ; garde-fou de décès et quota individuel sauvegardé. `unit-effects.js`
+valide ce quota et partage Vol de vie paramétré, à valeur native inchangée.
+Silence et fiches utilisent les capacités du registre ; aucun pilote parallèle.
+[Contrat](OMBRE_LEGENDAIRES.md).
+
+## Ombre Rare / Épique — intégré par PR 70 le 2 novembre 2026
 
 `cards/ombre.js` porte onze patches validés pour huit personnages, sans nouvelle
 mécanique. La famille partagée alimente registre et 100 recettes ; le paquet

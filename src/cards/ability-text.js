@@ -17,13 +17,14 @@ export function unitAbilitySummary(definition){
  if(a.regeneration)lines.push(`Régénération : ${a.regeneration.amount} PV, ${a.regeneration.resolutions} tour(s)`);
  if(a.harass)lines.push(`Harcèlement : −${a.harass.amount} ATQ, ${a.harass.attacks} attaque(s)`);
  if(a.intervention)lines.push(`Intervention : ${a.intervention.amount} dégâts, portée ${a.intervention.range}`);
+ if(a.lifesteal)lines.push(`Vol de vie : ${a.lifesteal.amount}`);
  if(a.flying)lines.push('Vol');
  if(a.haste)lines.push(`Célérité ${definition.geometry.steps}`);
  if(a.charge)lines.push(`Charge +${a.charge.amount}`);
  if(a.pierce)lines.push(a.pierce.condition==='charged'?'Charge perforante':'Perforation');
  lines.push(...advancedSummary(a));
  if(a.rearShot)lines.push(`Tir arrière : ${a.rearShot.amount} dégâts`);
- for(const [key,label] of Object.entries({poison:'Poison',splash:'Impact',lifesteal:'Vol de vie',silence:'Silence',portal:'Portail',trapper:'Piège'}))if(a[key])lines.push(label);
+ for(const [key,label] of Object.entries({poison:'Poison',splash:'Impact',silence:'Silence',portal:'Portail',trapper:'Piège'}))if(a[key])lines.push(label);
  return lines;
 }
 
@@ -52,6 +53,7 @@ export function unitCardText(d){
  if(a.poison)parts.push(`Poison ${a.poison.amount} · ${a.poison.resolutions} tours`);
  if(a.trapper)parts.push(`Piège ${a.trapper.damage} / ${a.trapper.period} tours${a.trapper.poison?' · Poison '+a.trapper.poison.amount:''}`);
  if(a.silence)parts.push(`Silence / ${a.silence.period} tours`);
+ if(a.lifesteal)parts.push(`Vol de vie ${a.lifesteal.amount}`);
  if(a.flying)parts.push('Vol');
  if(d.geometry.range>1)parts.unshift(`Portée ${d.geometry.range}`);
  return parts.slice(0,3).join(' · ')||'Corps à corps';
@@ -74,6 +76,8 @@ export function unitAbilityDetails(d){
  if(a.arrivalBarrier)lines.push(`À l’arrivée : barrière ${a.arrivalBarrier.amount} à un autre allié de sa ligne, priorité au plus blessé proportionnellement. Plafond ${a.arrivalBarrier.cap} pour cet effet, sans cumul ; aucune autre cible ni effet sans allié.`);
  if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : Harcèlement −${a.harass.amount} ATQ sur ${a.harass.attacks===1?'sa prochaine attaque d’unité':'ses '+a.harass.attacks+' prochaines attaques d’unité'}, Riposte comprise ; minimum 0, aucun effet sur les sorts. Les applications renouvellent le malus sans cumul.`);
  if(a.intervention)lines.push(`À l’arrivée : ${a.intervention.amount} dégâts au premier ennemi devant, même ligne, jusqu’à ${a.intervention.range} cases ; protections normales, une seule frappe d’arrivée.`);
+ if(a.lifesteal)lines.push(`À chaque attaque effectuée : rend ${a.lifesteal.amount} PV à sa couronne, même si la frappe est absorbée, sans dépasser ses PV maximum.`);
+ if(a.funeralWatch)lines.push(`Veille funéraire : lorsqu’une autre unité alliée meurt sur sa ligne, si le Veilleur vit et n’est pas silencieux, barrière personnelle ${a.funeralWatch.amount}, plafond ${a.funeralWatch.cap} pour cet effet. Au plus une fois par tour, sans cumul ni double déclenchement.`);
  if(a.flying)lines.push('Vol : franchit un allié si la case d’arrivée est libre.');
  if(a.charge)lines.push(`Charge : +${a.charge.amount} ATQ après déplacement avant la frappe.`);
  if(a.pierce)lines.push(`Perforation : ignore l’armure de la première cible${a.pierce.condition==='charged'?' seulement après déplacement avec Charge':''}, autres protections conservées.`);
@@ -94,6 +98,7 @@ export function unitAbilityDetails(d){
 
 function advancedSummary(a){
  const parts=[];
+ if(a.funeralWatch)parts.push(`Veille funéraire · Barrière ${a.funeralWatch.amount}`);
  if(a.entangle)parts.push(`Entrave ${a.entangle.frequency==='invocation'?'1 fois':'/ '+a.entangle.period+' tours'}`);
  if(a.chargeBarrier)parts.push(`Barrière après Charge ${a.chargeBarrier.amount}${a.chargeBarrier.allies?' + allié':''}`);
  if(a.contagion)parts.push(`Contagion ${a.contagion.amount} · ${a.contagion.resolutions} tours`);

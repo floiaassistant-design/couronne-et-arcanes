@@ -1,6 +1,17 @@
 # Journal des changements
 
-## Proposition — Ombre Rare / Épique, 2 novembre 2026
+## Proposition — Légendaires Ombre, 2 novembre 2026
+
+- Dix évolutions Légendaires, obtenues par fusion de trois Épiques libres
+  après mission 06 ; 32 versions Ombre définies et 110 recettes au total.
+- Veille funéraire du Veilleur : barrière personnelle 2 après la mort d'un
+  autre allié sur sa ligne, plafond 2 pour cet effet, au plus une fois par tour.
+- Barrières communes extraites sans cycle, API existante conservée ; quotas
+  et instantanés validés à la reprise. Vol de vie paramétré à valeur inchangée.
+- Paquets et récompenses conservés. [Contrat et reprise](docs/OMBRE_LEGENDAIRES.md).
+
+
+## Intégré — Ombre Rare / Épique, 2 novembre 2026
 
 - Onze évolutions validées pour huit personnages, 22 versions Ombre définies
   dont onze natives ; dix Légendaires et 22 hauts rangs restent à intégrer.
@@ -10,7 +21,8 @@
   l'Inquisiteur, mêmes règles dans les deux camps et le laboratoire.
 - Contrôle de lecture de l’Inquisiteur : vérifier le libellé et la fiche
   détaillée de Silence plutôt que la longueur de l’ancien descriptif.
-- [Contrat, contrôles et reprise](docs/OMBRE_RARE_EPIQUE.md).
+- PR 70 fusionnée après accord spécifique et six contrôles réussis ;
+  publication distincte. [Contrat, contrôles et reprise](docs/OMBRE_RARE_EPIQUE.md).
 
 
 ## Intégré — Sylve Divine / Éveillée, 2 novembre 2026

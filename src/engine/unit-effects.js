@@ -21,6 +21,10 @@ export function applyAttackEffects(source,target,suppressed=false,round=0,touche
   if(ready){target.movementRoot=1;if(p.frequency==='invocation')source.entangleUsed=true;else source.entangleReadyRound=round+p.period;}
  }
 }
+export function resolveLifesteal(b,u){
+ const p=versionUnitAbilities(u)?.lifesteal;if(!p)return;
+ const hero=b.heroes[u.side];hero.hp=Math.min(hero.maxhp,hero.hp+p.amount);
+}
 export function grantRegeneration(b,target,parameters){
  target.regeneration={amount:parameters.amount,remaining:parameters.resolutions,readyRound:b.round+1};
 }
@@ -42,6 +46,7 @@ export function validUnitEffects(u){
   (r===undefined||r&&integer(r.amount,100)&&integer(r.remaining,10)&&integer(r.readyRound,100))&&
   (u.movementRoot===undefined||u.movementRoot===1)&&(u.entangleUsed===undefined||typeof u.entangleUsed==='boolean')&&
   (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
+  (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
   (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin);
 }

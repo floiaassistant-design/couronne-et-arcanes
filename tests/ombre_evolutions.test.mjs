@@ -17,7 +17,9 @@ import {saveProfile,loadProfile,validateImportedProfile,storeBattle,restoreBattl
 // Totaux indépendants : tableau maître relu le 02/11/2026. Le délai 1 de
 // nightblade est confirmé dans le catalogue natif, sans nouveau délai inventé.
 const totals={bone:[[3,3,1],[3,4,1],[4,4,1]],shade:[[3,3,1],[3,5,1]],crypt:[[2,7,1],[2,9,1],[3,9,1]],plague:[[3,5,2],[3,7,2]],lich:[[6,9,4]],banshee:[[4,5,3]],vampire:[[5,6,3]],graveknight:[[4,8,2],[4,10,2]],nightblade:[[3,3,1],[3,4,1],[4,4,1]],spectre:[[3,4,1],[3,6,1]],mist_inquisitor:[[2,6,3],[2,8,3]]};
-const recipes=EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction==='ombre');
+const legendary={bone:[4,6,1],shade:[4,5,1],crypt:[3,9,1],plague:[4,7,2],banshee:[4,7,3],vampire:[5,8,3],graveknight:[5,10,2],nightblade:[4,6,1],spectre:[4,6,1],mist_inquisitor:[3,8,3]};
+for(const [id,stats] of Object.entries(legendary))totals[id].push(stats);
+const recipes=EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction==='ombre'&&['rare','épique'].includes(r.to));
 const ready=()=>{const p=freshProfile();p.completed=['01','02','03'];p.gold=2000;return p;};
 function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v)},removeItem:k=>{delete data[k]}};}
 function earned(id,rarity='épique'){
@@ -32,7 +34,7 @@ function earned(id,rarity='épique'){
 let uid=900;
 const foe=(extra={})=>({uid:uid++,id:'bone',rarity:'commun',side:'e',atk:3,hp:30,maxhp:30,armor:0,ranged:false,ability:'',stun:99,poison:0,poisonTurns:0,...extra});
 
-test('22 versions Ombre : onze natifs inchangés, onze évolutions et aucun haut rang nouveau',()=>{
+test('32 versions Ombre : onze natifs inchangés, 21 évolutions et aucun Divin/Éveillé',()=>{
  assert.equal(recipes.length,11);assert.deepEqual([...OMBRE_UNIT_IDS].sort(),Object.keys(totals).sort());let count=0;
  for(const [id,expected] of Object.entries(totals)){
   const versions=unitVersions(id);assert.equal(versions.length,expected.length,id);count+=versions.length;
@@ -41,14 +43,14 @@ test('22 versions Ombre : onze natifs inchangés, onze évolutions et aucun haut
    if(i){assert.strictEqual(d.source,OMBRE_DESIGN_SOURCE);assert.equal(d.status.obtaining,'fusion');}
    else assert.deepEqual([d.stats.attack,d.stats.hp,d.stats.delay],[CARDS[id].attack,CARDS[id].hp,CARDS[id].delay]);
   }
-  for(const rarity of ['légendaire','divine','éveillée'])if(!(id==='lich'&&rarity==='légendaire'))assert.equal(resolveUnitDefinition(id,rarity),null,id+rarity);
+  for(const rarity of ['divine','éveillée'])assert.equal(resolveUnitDefinition(id,rarity),null,id+rarity);
  }
- assert.equal(count,22);assert.equal(Object.keys(CARDS).length,76);
- assert.equal(OMBRE_UNIT_IDS.filter(id=>VERSIONED_UNIT_IDS.includes(id)).length,8);
+ assert.equal(count,32);assert.equal(Object.keys(CARDS).length,76);
+ assert.equal(OMBRE_UNIT_IDS.filter(id=>VERSIONED_UNIT_IDS.includes(id)).length,10);
  const p=freshProfile();assert.deepEqual(normalizeProfile(p),p);assert.equal(p.evolvedCollection,undefined);assert.equal(p.completedTrials,undefined);
 });
 
-test('22 versions × quatre niveaux × deux camps : chiffres et invocations du même laboratoire',()=>{
+test('32 versions × quatre niveaux × deux camps : chiffres et invocations du même laboratoire',()=>{
  for(const id of OMBRE_UNIT_IDS)for(const [i,d] of unitVersions(id).entries())for(const level of [0,1,2,3])for(const side of ['p','e']){
   const lab=freshLab();assert(setLabRarity(lab,side,id,d.rarity).ok);assert(setLabLevel(lab,side,id,level).ok);const before=structuredClone(lab),b=createLabBattle(lab,11);
   b.heroes[side].hand=[{id,wait:0}];if(side==='e')b.phase='enemy';assert((side==='p'?playPlayerCard(b,0,0,1):playEnemyCard(b)).ok);
@@ -63,7 +65,7 @@ test('Pouvoirs hérités : Charge, Garde positionnelle, Riposte effective, poiso
  assert.equal(a('graveknight').armor.amount,2);assert.equal(a('graveknight').riposte.damageMode,'effective-attack');assert.equal(a('graveknight').guard,undefined);assert.equal(a('graveknight').charge.amount,2);
  assert.deepEqual([a('plague').poison.amount,a('plague').poison.resolutions],[1,2]);assert.equal(a('nightblade').pierce.ignoreArmor,true);
  assert.deepEqual([a('mist_inquisitor').silence.period,a('mist_inquisitor').silence.resolutions],[3,1]);
- for(const id of ['lich','banshee','vampire'])assert.equal(VERSIONED_UNIT_IDS.includes(id),false);
+ assert.equal(VERSIONED_UNIT_IDS.includes('lich'),false);for(const id of ['banshee','vampire'])assert.equal(VERSIONED_UNIT_IDS.includes(id),true);
 });
 
 test('Onze fusions réelles : rang exact, stocks/deck protégés, aucun gain ni ascension imposée',()=>{
