@@ -2,10 +2,11 @@
 
 ## Base et source
 
-Ce lot est préparé à partir de la PR 69, tête
-`e5affd08955e9e6ec0e90b548d0bd427dd731f91`, en attente de son intégration vérifiée.
-Sa branche et sa PR seront créées depuis le main intégrant ce contenu, sans
-publication d'une branche non fusionnée ni fusion automatique de cette nouvelle PR.
+Base vérifiée : main `c9ab3209472a0433931c23315164c714af9099da`, intégrant la PR 69 après
+réussite de tous les contrôles. Son arbre est identique à la tête Sylve testée.
+La branche `feat/ombre-rare-epique` est rattachée à ce main sans écrasement
+d'historique. Cette nouvelle proposition demande son propre accord de fusion ;
+elle n'est pas publiée.
 
 Source : [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
 édition `2026-10-27T06:13:46.581Z`, relue le 2 novembre 2026. Aucune écriture
@@ -94,7 +95,9 @@ parties d'épreuves existantes : bureau, portrait, paysage et HTTP, avec panne,
 annulation, double clic, fusion, export/import, invocation et reprise.
 La matrice permanente conserve ses 27 scripts d'entrée et 30 commandes.
 
-Les résultats et le commit exact sont à lire dans la PR. Les contrôles de robot
+Contrôles locaux : 570 tests Node réussis, 120 scénarios de parité identiques,
+builds autonome, diagnostic et web réussis ; 75 modules et 292 dépendances
+sans cycle. Les résultats navigateur et le commit exact sont à lire dans la PR. Les contrôles de robot
 ne prouvent ni difficulté humaine ni téléphone physique, Safari ou Firefox.
 Après intégration autorisée et publication vérifiée par le flux existant,
 reprendre les dix Légendaires Ombre, notamment la Veille funéraire, puis

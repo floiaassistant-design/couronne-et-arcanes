@@ -2,8 +2,8 @@
 
 Le jeu intègre les sauvegardes protégées, Garde/Riposte uniques, le deck manuel,
 les paquets/fusions et les ascensions Aube/Sylve. Cette branche propose les
-onze évolutions Rares/Épiques Ombre et un paquet distinct, sur la base de la
-PR 69 à intégrer et vérifier. [Contrat Ombre](docs/OMBRE_RARE_EPIQUE.md).
+onze évolutions Rares/Épiques Ombre et un paquet distinct. La PR 69 Sylve
+est fusionnée ; la publication de chaque lot reste distincte. [Contrat Ombre](docs/OMBRE_RARE_EPIQUE.md).
 [État intégré et publication](docs/ETAT_PROJET.md) · [Carte des tests](docs/CARTE_TESTS.md).
 
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,

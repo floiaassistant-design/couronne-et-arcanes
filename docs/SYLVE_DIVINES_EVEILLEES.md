@@ -4,6 +4,11 @@ Base vérifiée : main `e130b3009679927bcd57e6fc59a7ddacbe9c14d2`, après PR 68.
 Branche `feat/ascensions-sylve`. Ce contrat décrit le lot proposé ; sa présence
 ne confirme ni fusion ni publication. Accord spécifique requis pour cette PR.
 
+Intégration confirmée le 2 novembre 2026 par la PR 69 dans
+`c9ab3209472a0433931c23315164c714af9099da` : arbre identique à la tête testée, accord du propriétaire
+reçu pour cette fusion. Les paragraphes de proposition ci-dessous décrivent
+le contrat préparé ; la publication du nouveau main reste distincte.
+
 ## Source et périmètre
 
 Les 22 cellules supérieures des onze personnages ont été relues dans le

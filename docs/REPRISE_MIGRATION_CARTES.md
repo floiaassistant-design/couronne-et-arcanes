@@ -1,4 +1,4 @@
-# Reprise des migrations de cartes — lot Sylve proposé le 1er novembre 2026
+# Reprise des migrations de cartes — reprise Ombre du 2 novembre 2026
 
 Source de conception : [tableau maître unique](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
 édition relue `2026-10-27T06:13:46.581Z`. Les compteurs ci-dessous décrivent
@@ -6,17 +6,16 @@ les cases de conception complètes, pas leur livraison. Aucun tableau parallèle
 de pouvoirs ni validation de nouvelles décisions.
 
 GitHub reste la source du jeu. Base vérifiée : main
-`e130b3009679927bcd57e6fc59a7ddacbe9c14d2` (PR 68 intégrée).
-La branche `feat/ascensions-sylve` propose les 22 versions supérieures relues
-le 1er novembre et leurs ascensions ; leur fusion/publication n'est pas acquise.
-[Contrat et reprise](SYLVE_DIVINES_EVEILLEES.md). Les 41 évolutions Aube et les
-26 Sylve antérieures restent conservées. La publication est suivie séparément
-dans [ETAT_PROJET.md](ETAT_PROJET.md). Aucune écriture Notion.
+`c9ab3209472a0433931c23315164c714af9099da`, PR 69 intégrée après accord et tests réussis.
+Les 41 évolutions Aube et 48 Sylve sont intégrées. La branche
+`feat/ombre-rare-epique` propose onze Rares/Épiques Ombre relues le 2 novembre,
+sans modifier Notion. [Contrat et reprise](OMBRE_RARE_EPIQUE.md). La publication
+est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 
 | Ordre | Unités natives | Évolutions conçues complètement validées | Situation d'implémentation |
 | --- | ---: | ---: | --- |
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
-| Sylve | 11 | 48 | 26 évolutions intégrées ; 22 Divines/Éveillées proposées sur la branche, 59 versions au total |
+| Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 11 Rares/Épiques proposées, 22 versions définies sur la branche ; 32 évolutions restantes |
 | Forge | 10 | 0 sur 39 cases futures | Conception incomplète ; règles communes de Garde déjà validées, sans compléter les cases à leur place |
 | Éther | 11 | 0 sur 39 cases futures | Conception incomplète ; même distinction pour les règles communes de Garde |
@@ -39,22 +38,20 @@ Pas de nouvelle épreuve, copie gratuite ou définition des rangs supérieurs.
 par fusion après mission 06. Leurs nouveaux états utilisent le moteur commun,
 sans élargir les paquets Rare/Épique ni inventer des épreuves individuelles.
 
-## Lot proposé : les 22 Divines/Éveillées Sylve
+## Lot intégré : les 22 Divines/Éveillées Sylve
 
-Le [contrat](SYLVE_DIVINES_EVEILLEES.md) décrit les pouvoirs transcrits,
-les interactions et les deux ascensions communes, suivies de fusions de trois
-copies du rang précédent. Aucun élargissement de paquet, don ou migration.
-Les réglages des rencontres sont proposés à la revue, distincts des pouvoirs
-validés dans Notion. Terminer les contrôles de la PR, relire le diff, obtenir
-l'accord spécifique puis fusionner et vérifier la publication via le flux existant.
+La PR 69 est intégrée après tests et accord spécifique. Le [contrat](SYLVE_DIVINES_EVEILLEES.md) décrit les pouvoirs, interactions et deux ascensions
+communes suivies de fusions de trois copies. Aucun élargissement de paquet,
+don ou migration. La publication reste à vérifier via le flux existant.
 
 ## Lot proposé : Ombre Rare / Épique
 
 Le [contrat](OMBRE_RARE_EPIQUE.md) décrit onze évolutions validées pour huit
 personnages. Le délai de la Lame nocturne est confirmé à 1 dans le catalogue
 actuel. Fusions de trois copies libres après missions 01/03 et paquet distinct
-à 190 or ; aucun changement des pouvoirs ni des paquets existants. Base préparée
-sur la PR 69 corrigée ; vérifier son intégration avant proposition de cette PR.
+à 190 or ; aucun changement des pouvoirs ni des paquets existants. Base :
+main intégrant la PR 69, vérifié avec son arbre exact. Cette nouvelle PR garde
+son propre accord de fusion.
 
 ## Lot suivant : dix Légendaires Ombre
 

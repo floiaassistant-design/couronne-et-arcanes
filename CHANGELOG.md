@@ -11,7 +11,7 @@
 - [Contrat, contrôles et reprise](docs/OMBRE_RARE_EPIQUE.md).
 
 
-## Proposition — Sylve Divine / Éveillée, 2 novembre 2026
+## Intégré — Sylve Divine / Éveillée, 2 novembre 2026
 
 - Les onze personnages Sylve atteignent les rangs Divin et Éveillé : 22
   nouvelles évolutions, 59 versions Sylve définies, 89 recettes Aube/Sylve.
