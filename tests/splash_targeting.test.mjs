@@ -70,5 +70,7 @@ test('Impact : les anciennes grilles de 5 cases gardent le même contrat',()=>{
  const b=battle(true),primary=enemy(),second=enemy(),third=enemy();
  b.board[0][2]=primary;b.board[0][3]=second;b.board[0][5]=third;
  assert.deepEqual(contiguousSplashTargets(b,0,1,2,'p',2).map(x=>x.col),[3]);
- assert.deepEqual(contiguousSplashTargets(b,0,5,3,'e',2).map(x=>x.col),[2]);
+ const reverse=battle(true);
+ reverse.board[0][3]=enemy('p');reverse.board[0][2]=enemy('p');
+ assert.deepEqual(contiguousSplashTargets(reverse,0,5,3,'e',2).map(x=>x.col),[2]);
 });
