@@ -57,7 +57,6 @@ jobs:
         run: |
           npm run build
           npm run build:test
-          node scripts/build_web.mjs
       - name: Enregistrer les sources générées sur cette branche seulement
         run: |
           git config user.name "github-actions[bot]"
