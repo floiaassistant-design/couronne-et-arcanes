@@ -12,6 +12,8 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 
 ## Jouer
 
+- Impact de zone : cible secondaire uniquement immédiatement derrière la cible principale, sans case vide, dans le sens de la frappe ; voir [contrat de ciblage](docs/IMPACT_ZONE_2026_11_02.md). Ce correctif est proposé par PR dédiée tant qu'il n'est pas fusionné.
+
 - `index.html` / `npm run dev` : jeu web modulaire ; publication sur Sites après fusion.
 - `JOUER.html` : **unique export jouable**, complet et autonome sans réseau.
 - `tests/JOUER.test.html` : diagnostic automatisé seulement, jamais distribué.

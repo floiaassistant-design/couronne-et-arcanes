@@ -1,5 +1,13 @@
 # Journal des changements
 
+## Proposé — Impact de zone adjacent, 2 novembre 2026
+
+- Ciblage secondaire corrigé : ennemi immédiatement derrière la cible principale, même ligne et sens de frappe, aucun saut ni coup derrière l'attaquant.
+- L'Archiliche Éveillée conserve jusqu'à deux cibles secondaires, uniquement contiguës. Armure, barrières et effets de dégâts communs préservés ; mêmes règles IA/joueur et ancienne géométrie.
+- Tests de géométrie et de combat ajoutés ; export unique et parité à vérifier sur la CI de la PR. Aucune fusion ni publication dans ce lot proposé.
+- [Contrat spécialisé](docs/IMPACT_ZONE_2026_11_02.md).
+
+
 ## Proposition — Ombre Divine / Éveillée, 2 novembre 2026
 
 - Les onze personnages Ombre atteignent Divin et Éveillé : 22 évolutions,
