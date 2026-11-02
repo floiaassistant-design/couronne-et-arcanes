@@ -325,10 +325,10 @@
         "round": 8,
         "playerHp": 5,
         "enemyHp": 28,
-        "playerKills": 3,
+        "playerKills": 2,
         "enemyKills": 6
       },
-      "battleHash": "95ec1fb730ceb8b53fba77d0843fef9abd980524515ddf76bfeacde8d4f3ea95",
+      "battleHash": "7dd1d4f2ce4fd1c5894601c980ea9e98a6de297924eb817fddae249ab276d0f1",
       "profileHash": "b5a132db1743000447552b5ee800c38314b9559c67869615444945c489b2e7c1"
     },
     {
@@ -688,7 +688,7 @@
         "playerKills": 2,
         "enemyKills": 8
       },
-      "battleHash": "65851ded539269dc03032a7b2a525031a06c66b12bee5e101ccdc38596d08c3c",
+      "battleHash": "778ac0a0dc9d8498ad1ebe45addf88d7d295e517b0ec0d652f897eeda47876d3",
       "profileHash": "791233caf9c52e7d557873cff8094bc3f8c5a86876f08cdeb38563fa5a3b8140"
     },
     {
@@ -731,9 +731,9 @@
         "playerHp": 0,
         "enemyHp": 37,
         "playerKills": 2,
-        "enemyKills": 6
+        "enemyKills": 5
       },
-      "battleHash": "1187650fef9095dc909607c558584001d7f241b42fb0f9570f4dfd633bf91e47",
+      "battleHash": "3dc9abc2ce4e07932ed4ccbbaaba9923fa8b0a5f0d1c7a8b3572fb1ab0352de5",
       "profileHash": "d2f863255132a482bf25be3417c00d1fe5e841b0a32548a1067e300d25e5206c"
     },
     {
@@ -928,7 +928,7 @@
         "playerKills": 0,
         "enemyKills": 4
       },
-      "battleHash": "6789aa1802b8e6e53957d6be9ef53e21451d0bdbc63d9ad4bbf96d9f6655deb3",
+      "battleHash": "1bca8172934d2b7aaf6f0d78b4f6e77357c2448d00dfec52b3bad5084c506f9e",
       "profileHash": "5bacfe55ebbecb022654666df454d5b6dbcb75efbd5b30cbb06335721bba1490"
     },
     {
@@ -1003,7 +1003,7 @@
         "playerKills": 1,
         "enemyKills": 3
       },
-      "battleHash": "5071b3997eba18e1473db9238058fbf74f95e01332ba7738d7fafd2c46897759",
+      "battleHash": "76d3314ae3feace2a0c1783f33f46c948452a84109ca041cbc4ae3042d87e320",
       "profileHash": "a676c885d023b71b0fd6d5f6fafed5b556327df4bf2544b289413b4a102259e8"
     },
     {
@@ -1303,7 +1303,7 @@
         "playerKills": 1,
         "enemyKills": 5
       },
-      "battleHash": "25c554b50004f2730986cfad2ab71080527c4e7dcd17be7687712548a5d06bf0",
+      "battleHash": "fff1ca20a4d45bfaa96e4bdc3346e7d492b05d4c1a34e1fa220c88644b3e3b21",
       "profileHash": "471a00c23bf94af7631353a0213ac2603a1825d6154725a0adbd38e0335e2a76"
     },
     {
@@ -1468,7 +1468,7 @@
         "playerKills": 0,
         "enemyKills": 3
       },
-      "battleHash": "29b73cc8a237e7f7b8e2ec28ad525eede25816345eef928019facdd21f92903c",
+      "battleHash": "1439f6ee9b424f931ab05ec6f8248bccfef0b790ef93c7b3cf00c74d8e0970e4",
       "profileHash": "02c3964b4e1d6974400f024ff9a98eecc245a30153979fcbc4cc7ea8f47c02f0"
     },
     {
@@ -1618,7 +1618,7 @@
         "playerKills": 1,
         "enemyKills": 3
       },
-      "battleHash": "e1dc5aca7045b4bf3d7ecb251fb8b18ff896acd21e1c2057914eeaa0d84f3a5a",
+      "battleHash": "eaeb875d4c54cc6c9d291e9da15a1b5ccf60c15971031cde20327fa617dbb27a",
       "profileHash": "ba97dade4f14585a14c8e7f1760f26d66799fa9d17551e921ad624493c129186"
     },
     {

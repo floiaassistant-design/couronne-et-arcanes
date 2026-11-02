@@ -1,5 +1,10 @@
 # Architecture modulaire — lecture courante
 
+## Correctif proposé — ciblage de l'Impact (2 novembre 2026)
+
+`unit-targets.js` sélectionne les ennemis secondaires contigus en direction de l'attaque à partir de la position réelle de la cible principale ; `battle.js` conserve conditions de déclenchement et dégâts via `hit()`. Les paramètres natifs et les fiches lisent le même contrat. Les deux cibles secondaires de l'Archiliche Éveillée restent possibles sans sauter une case. Il s'agit d'une PR de règles **non encore intégrée** ; voir [contrat](IMPACT_ZONE_2026_11_02.md).
+
+
 ## Résultats en attente — correction proposée le 31 octobre 2026
 
 Le verrou déjà présent dans le routeur `app.js` pour les épreuves couvre

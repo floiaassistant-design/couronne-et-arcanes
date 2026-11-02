@@ -5075,7 +5075,7 @@ function nativeUnitAbilities(card){
   ward:{amount:3,cap:20,target:'own-crown',timing:'spawn'},
   pierce:{target:'primary',ignoreArmor:true},
   poison:{amount:1,resolutions:2,target:'primary'},
-  splash:{amount:2,target:'other-enemy-on-line'},
+  splash:{amount:2,target:'contiguous-enemies-behind-primary'},
   lifesteal:{amount:2,target:'own-hero',trigger:'attack'},
   silence:{period:3,resolutions:1,target:'enemy-on-line'},
   portal:{period:3,target:'free-same-column'},
@@ -5523,7 +5523,7 @@ function unitAbilityDetails(d){
  if(a.execution)lines.push(`Exécution : +${a.execution.amount} ATQ pour cette attaque seulement si l’unité ciblée possède au plus la moitié de ses PV maximum immédiatement avant la frappe${a.execution.killHaste?' ; si cette Exécution élimine la cible, Célérité '+a.execution.killHaste+' pour son prochain tour seulement':''}. Perforation conservée ; aucune attaque supplémentaire.`);
  if(a.strikeHeal)lines.push(`Sang partagé : après une attaque sur une unité lui retirant réellement au moins 1 PV, soin personnel ${a.strikeHeal.amount}, sans dépasser ses PV maximum, au plus une fois par tour. Aucun soin personnel sur barrière seule ni couronne.`);
  if(a.traverseAlly)lines.push(`Traverse au plus ${a.traverseAlly.max} allié pendant son déplacement, arrivée libre et distance totale limitée à ${d.geometry.steps} cases. Ne traverse pas les ennemis et ne change pas de ligne.`);
- if(a.splash)lines.push(`Impact de zone : ${a.splash.amount} dégâts bruts à ${a.splash.targets||1} autre(s) ennemi(s) distinct(s) au plus sur la ligne, protections normales, sans attaque supplémentaire ni chaîne.`);
+ if(a.splash)lines.push(`Impact de zone : ${a.splash.amount} dégâts bruts à ${a.splash.targets||1} ennemi(s) supplémentaire(s) au plus, immédiatement derrière la cible précédente et sans case vide, dans le sens de l'attaque sur la même ligne. Protections normales, aucune frappe vers l'arrière, aucune attaque supplémentaire.`);
  if(a.funeralWatch)lines.push(`Veille funéraire : lorsqu’une autre unité alliée meurt sur sa ligne, si le Veilleur vit et n’est pas silencieux, barrière personnelle ${a.funeralWatch.amount}, plafond ${a.funeralWatch.cap} pour cet effet. Au plus une fois par tour, sans cumul ni double déclenchement.`);
  if(a.flying)lines.push('Vol : franchit un allié si la case d’arrivée est libre.');
  if(a.charge)lines.push(`Charge : +${a.charge.amount} ATQ après déplacement avant la frappe.`);
@@ -5936,6 +5936,7 @@ const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js
 const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {tickUnitPoison,clearUnitPoison}=__load("src/engine/unit-poison.js");
 const {resolveStrikeRewards}=__load("src/engine/unit-triggers.js");
+const {contiguousSplashTargets}=__load("src/engine/unit-targets.js");
 const {resolveUnitDeath}=__load("src/engine/unit-death.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 const {CARDS,FACTIONS}=__load("src/data.js");
@@ -6168,11 +6169,12 @@ function strike(b,u,target,atk,from,to,sameLine=true,charged=false,suppressed=fa
  if(sameLine&&(to-from)*(u.side==='p'?1:-1)>=2)recordTrialFact(b,u,'rangedDamage',damage);
  return {primaryAlive:before>0,performed:raw>0,killed:raw>0&&before>0&&target.hp<=0,damaged:damage>0,execution:execution>0};
 }
-function resolveSplash(b,u,lane,primary,atk,intercepted=false,primaryAlive=true){
+function resolveSplash(b,u,sourceLane,sourceCol,primaryLane,primaryCol,atk,intercepted=false,primaryAlive=true){
  const p=versionUnitAbilities(u)?.splash;
- if(!p||intercepted&&!p.onGuard||p.requiresAttack&&(!primaryAlive||atk<=0))return;
- const others=b.board[lane].filter(v=>v&&v.side!==u.side&&v.uid!==primary.uid&&v.hp>0).slice(0,p.targets||1);
- for(const extra of others)hit(b,extra,p.amount,u.side,false,true);
+ if(!p||atk<=0||sourceLane!==primaryLane||intercepted&&!p.onGuard||p.requiresAttack&&!primaryAlive)return;
+ for(const {u:extra} of contiguousSplashTargets(b,primaryLane,sourceCol,primaryCol,u.side,p.targets||1)){
+  hit(b,extra,p.amount,u.side,false,true);
+ }
 }
 function resolveAttacks(b,sideFilter=null){
  const intents=[];
@@ -6200,7 +6202,7 @@ function resolveAttacks(b,sideFilter=null){
     if(ability==='lifesteal')resolveLifesteal(b,u);
     applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0,{battle:b,lane:guardIntercept.lane,col:guardIntercept.col});
     if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result},fx);
-    if(ability==='splash')resolveSplash(b,u,guardIntercept.lane,guardIntercept.u,atk,true,result.primaryAlive);
+    if(ability==='splash')resolveSplash(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,atk,true,result.primaryAlive);
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
@@ -6209,7 +6211,7 @@ function resolveAttacks(b,sideFilter=null){
    if(ability==='lifesteal')resolveLifesteal(b,u);
    applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0,{battle:b,lane,col:target.col});
    if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result},fx);
-   if(ability==='splash')resolveSplash(b,u,lane,target.target,atk,false,result.primaryAlive);
+   if(ability==='splash')resolveSplash(b,u,lane,intent.col,lane,target.col,atk,false,result.primaryAlive);
    resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);
   }
@@ -6979,7 +6981,24 @@ function alliedTargets(b,u,lane,parameters){
 }
 const injuryOrder=(x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid;
 
-Object.assign(__exports,{alliedTargets,injuryOrder});
+// Cibles secondaires de l'Impact : une chaîne contiguë dans le sens de frappe.
+// La première case vide, alliée ou hors plateau termine la chaîne ; pas de saut.
+function contiguousSplashTargets(b,lane,sourceCol,primaryCol,side,count=1){
+ const row=b.board[lane],dir=side==='p'?1:-1;
+ if(!row||!Number.isInteger(sourceCol)||!Number.isInteger(primaryCol)||
+    (primaryCol-sourceCol)*dir<=0||!Number.isSafeInteger(count)||count<1)return [];
+ const targets=[];
+ for(let n=1;n<=count;n++){
+  const col=primaryCol+n*dir;
+  if(col<1||col>lastCell(b))break;
+  const u=row[col];
+  if(!u||u.hp<=0||u.side===side)break;
+  targets.push({u,col});
+ }
+ return targets;
+}
+
+Object.assign(__exports,{alliedTargets,injuryOrder,contiguousSplashTargets});
 
 },
 "src/engine/unit-barriers.js":function(__exports,__load){

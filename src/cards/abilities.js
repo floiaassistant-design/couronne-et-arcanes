@@ -16,7 +16,7 @@ export function nativeUnitAbilities(card){
   ward:{amount:3,cap:20,target:'own-crown',timing:'spawn'},
   pierce:{target:'primary',ignoreArmor:true},
   poison:{amount:1,resolutions:2,target:'primary'},
-  splash:{amount:2,target:'other-enemy-on-line'},
+  splash:{amount:2,target:'contiguous-enemies-behind-primary'},
   lifesteal:{amount:2,target:'own-hero',trigger:'attack'},
   silence:{period:3,resolutions:1,target:'enemy-on-line'},
   portal:{period:3,target:'free-same-column'},

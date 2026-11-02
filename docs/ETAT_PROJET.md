@@ -6,6 +6,10 @@ consulter [les PR GitHub](https://github.com/floiaassistant-design/couronne-et-a
 la branche `main` et les [exécutions GitHub Actions](https://github.com/floiaassistant-design/couronne-et-arcanes/actions).
 Ne pas déduire un état actuel d'un ancien SHA ou d'un compte rendu daté.
 
+## Correctif de ciblage proposé — 2 novembre 2026
+
+Une branche dédiée propose de limiter l'Impact de zone à la case immédiatement derrière la cible principale, dans le sens de l'attaque. L'Archiliche Éveillée conserve ses deux secondaires adjacentes si la chaîne est complète. [Contrat et tests](IMPACT_ZONE_2026_11_02.md). **Non fusionné, non publié** ; aucun changement de progression ni des 53 fiches Notion.
+
 ## Jalons intégrés
 
 - [PR 65](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/65) :
