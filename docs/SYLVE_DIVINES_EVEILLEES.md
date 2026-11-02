@@ -107,6 +107,10 @@ Les objets imbriqués sont remplacés pour préserver les instantanés d'événe
 Les clés, ID, sauvegardes anciennes et `cards-v2` sont conservés. Le web et
 l'unique export `JOUER.html` sont générés depuis le même graphe de modules.
 
+Le contrôle navigateur commun de Collection vérifie les six colonnes et leurs
+PV attendus explicitement, y compris les 22 versions supérieures Sylve. Les
+valeurs absentes des anciens attendus ont été complétées, sans retirer d'assertion.
+
 Points d'entrée : `sylve_ascended.test.mjs`, `sylve_ascensions.test.mjs`,
 versions/niveaux/deux camps dans `sylve_evolutions.test.mjs`, recettes et combats
 partagés dans `evolution_fusion.test.mjs`. Les scénarios d'ascension utilisent

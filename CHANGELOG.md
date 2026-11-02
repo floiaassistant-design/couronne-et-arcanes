@@ -1,5 +1,20 @@
 # Journal des changements
 
+## Proposition — Sylve Divine / Éveillée, 2 novembre 2026
+
+- Les onze personnages Sylve atteignent les rangs Divin et Éveillé : 22
+  nouvelles évolutions, 59 versions Sylve définies, 89 recettes Aube/Sylve.
+- Deux ascensions communes ouvrent les fusions supérieures, puis trois copies
+  libres du rang précédent donnent une carte. Aucun changement des paquets.
+- Entrave, Fureur, poison/contagion et réactions à la destruction utilisent
+  le moteur commun, les mêmes fiches et des états de reprise validés.
+- Export autonome régénéré et contrôlé syntaxiquement. Le contrôle navigateur
+  de Collection conserve ses assertions sur les six rangs ; ses valeurs
+  attendues Sylve incluent les versions supérieures maintenant définies.
+- [Contrat, contrôles et reprise](docs/SYLVE_DIVINES_EVEILLEES.md). La fusion
+  et la publication sont des étapes distinctes à vérifier sur leurs sources.
+
+
 ## Proposition — contrôle documentaire et reprise, 1er novembre 2026
 
 - Contrôle PR des champs Documentation/Reprise/Limites (et justification si
