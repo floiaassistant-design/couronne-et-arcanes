@@ -43,6 +43,13 @@ version plus récente ; ne jamais republier en parallèle.
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
 [Procédure de publication](PUBLICATION_WEB_2026_10_23.md)
 
+## Lot Ombre en préparation
+
+La première tranche [Ombre Rare/Épique](OMBRE_RARE_EPIQUE.md) prépare onze
+évolutions et un paquet distinct, à partir du contenu de la PR 69 corrigée.
+Sa base doit être rapprochée du main intégré avant proposition. Les 32 autres
+évolutions Ombre restent à réaliser : dix Légendaires puis 22 hauts rangs.
+
 ## Travaux durables restant à réaliser
 
 - Auditer une campagne complète depuis zéro dans l'interface, avec achats,

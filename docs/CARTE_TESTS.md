@@ -70,7 +70,7 @@ déjà appelés par une entrée. La lecture des imports/appels confirme notammen
 | `browser_card_preview.py` | `browser_card_presentation.py` et `browser_current_card_rules.py` |
 | `browser_collection.py` | `browser_manual_deck.py` et `browser_evolution_fusion.py` |
 | `browser_save_integrity_v211.py` | `browser_pending_results.py` (proposé) : pertes de stockage, actions/import et reprise pour les résultats ordinaires |
-| `browser_evolution_trials.py` | Paquets Aube **et** Sylve, Légendaires Sylve et ascensions Aube/Sylve ; une partie adaptée à chaque groupe |
+| `browser_evolution_trials.py` | Paquets Aube **et** Sylve, Légendaires Sylve, paquets Ombre et ascensions Aube/Sylve ; une partie adaptée à chaque groupe |
 | `browser_sylve.py`, `browser_ombre.py`, `browser_forge.py`, `browser_ether.py` | Pilote partagé `browser_aube.run`, avec l'ordre correspondant |
 
 L'existence d'un ancien script `browser_*.py` dans le dépôt ne prouve donc ni
@@ -88,6 +88,15 @@ réutilisent les scénarios Aube/Sylve pour boss, objectif, reprise, échec de
 stockage, fusion, Collection/deck, export/import et invocation réelle.
 Aucune modification de la matrice permanente ni seconde exécution de la suite.
 [Contrat et limites](SYLVE_DIVINES_EVEILLEES.md). Résultats à lire dans la PR.
+
+## Lot Ombre Rare / Épique proposé le 2 novembre
+
+`ombre_evolutions.test.mjs` couvre les onze évolutions, 22 versions au laboratoire
+à quatre niveaux et deux camps, véritables tirages/fusions/invocations, accès,
+stocks et sauvegardes. Les 100 recettes utilisent le robot partagé. Les quatre
+parties d'épreuves ajoutent le scénario de paquet Ombre sans nouvelle entrée de
+matrice ; le contrôle commun des illustrations vérifie les six colonnes et
+les PV de chaque version définie. [Contrat](OMBRE_RARE_EPIQUE.md).
 
 ## Décision de validation et limites
 

@@ -51,6 +51,7 @@ export function unitCardText(d){
  if(a.harass)parts.push(`Harcèlement −${a.harass.amount} ATQ${a.harass.attacks>1?' · '+a.harass.attacks+' attaques':''}`);
  if(a.poison)parts.push(`Poison ${a.poison.amount} · ${a.poison.resolutions} tours`);
  if(a.trapper)parts.push(`Piège ${a.trapper.damage} / ${a.trapper.period} tours${a.trapper.poison?' · Poison '+a.trapper.poison.amount:''}`);
+ if(a.silence)parts.push(`Silence / ${a.silence.period} tours`);
  if(a.flying)parts.push('Vol');
  if(d.geometry.range>1)parts.unshift(`Portée ${d.geometry.range}`);
  return parts.slice(0,3).join(' · ')||'Corps à corps';
@@ -80,6 +81,7 @@ export function unitAbilityDetails(d){
  if(a.poison)lines.push(`Après une attaque sur une unité : Poison ${a.poison.amount} dégât par tour pendant ${a.poison.resolutions} tours ; une nouvelle application renouvelle la durée.`);
  if(a.trapper)lines.push(`Tous les ${a.trapper.period} tours : arme si possible la case libre éligible juste devant. Piège visible pendant ${a.trapper.resolutions} tours au plus ; ${a.trapper.damage} dégât${a.trapper.damage>1?'s':''} brut${a.trapper.damage>1?'s':''} avant protections, déplacement et attaque bloqués pour le tour du déclenchement.`);
  if(a.trapper?.poison)lines.push(`Si la victime du piège survit : Poison ${a.trapper.poison.amount} pendant ses ${a.trapper.poison.resolutions} prochains tours de combat, sans dégât de poison immédiat ni cumul.`);
+ if(a.silence)lines.push(`Avant son déplacement : réduit au silence certaines capacités d’un ennemi de sa ligne pendant ${a.silence.resolutions} tour, au plus une fois tous les ${a.silence.period} tours. Attaques normales et traits passifs conservés.`);
  if(a.entangle)lines.push(`Entrave : après une attaque touchant une unité ennemie survivante, empêche seulement son prochain déplacement. ${a.entangle.frequency==='invocation'?'Une fois par invocation.':'Au plus une fois tous les '+a.entangle.period+' tours, durée rafraîchie sans cumul.'} La cible peut attaquer.`);
  if(a.chargeBarrier)lines.push(`Après une attaque chargée sur une unité : barrière personnelle ${a.chargeBarrier.amount}${a.chargeBarrier.allies?' et barrière '+a.chargeBarrier.amount+' à un autre allié de sa ligne, priorité au plus blessé proportionnellement':''}. Plafond ${a.chargeBarrier.cap} par cible pour cet effet ; aucun gain sans déplacement ni contre la couronne seule.`);
  if(a.contagion)lines.push(`Contagion : au premier décès d’un ennemi portant encore son poison, transmet Poison ${a.contagion.amount} pendant ${a.contagion.resolutions} tours à l’ennemi vivant le plus proche sur la même ligne. Une fois par invocation, sans chaîne ; reste attachée au poison si sa source disparaît.`);

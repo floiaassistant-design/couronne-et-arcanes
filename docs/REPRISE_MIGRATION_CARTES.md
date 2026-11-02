@@ -17,7 +17,7 @@ dans [ETAT_PROJET.md](ETAT_PROJET.md). Aucune écriture Notion.
 | --- | ---: | ---: | --- |
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 26 évolutions intégrées ; 22 Divines/Éveillées proposées sur la branche, 59 versions au total |
-| Ombre | 11 | 43 | Natifs seuls ; transcription et mécanique des évolutions à préparer |
+| Ombre | 11 | 43 | 11 Rares/Épiques proposées, 22 versions définies sur la branche ; 32 évolutions restantes |
 | Forge | 10 | 0 sur 39 cases futures | Conception incomplète ; règles communes de Garde déjà validées, sans compléter les cases à leur place |
 | Éther | 11 | 0 sur 39 cases futures | Conception incomplète ; même distinction pour les règles communes de Garde |
 
@@ -48,13 +48,21 @@ Les réglages des rencontres sont proposés à la revue, distincts des pouvoirs
 validés dans Notion. Terminer les contrôles de la PR, relire le diff, obtenir
 l'accord spécifique puis fusionner et vérifier la publication via le flux existant.
 
-## Lot suivant : Ombre
+## Lot proposé : Ombre Rare / Épique
 
-Même méthode pour les 43 évolutions validées. Vérifier particulièrement les
-réactions aux morts, créations, vols/régénérations et interactions d'états qui
-seront effectivement présentes dans les cases relues. Chaque effet doit utiliser
-les primitives communes ; aucune seconde simulation ou variante historique.
-Les choix validés de Riposte et Garde restent ceux déjà appliqués aux natifs.
+Le [contrat](OMBRE_RARE_EPIQUE.md) décrit onze évolutions validées pour huit
+personnages. Le délai de la Lame nocturne est confirmé à 1 dans le catalogue
+actuel. Fusions de trois copies libres après missions 01/03 et paquet distinct
+à 190 or ; aucun changement des pouvoirs ni des paquets existants. Base préparée
+sur la PR 69 corrigée ; vérifier son intégration avant proposition de cette PR.
+
+## Lot suivant : dix Légendaires Ombre
+
+Relire leurs validations et préparer notamment la Veille funéraire du Veilleur.
+Les 22 Divines/Éveillées viennent ensuite. Réactions aux morts, créations et
+vols/régénérations doivent réutiliser les primitives communes, sans deuxième
+moteur. Forge et Éther restent à concevoir ; leurs cases ne sont pas complétées
+sans validation du propriétaire.
 
 ## Conditions de reprise
 

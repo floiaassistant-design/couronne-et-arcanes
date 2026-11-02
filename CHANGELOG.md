@@ -1,5 +1,16 @@
 # Journal des changements
 
+## Proposition — Ombre Rare / Épique, 2 novembre 2026
+
+- Onze évolutions validées pour huit personnages, 22 versions Ombre définies
+  dont onze natives ; dix Légendaires et 22 hauts rangs restent à intégrer.
+- Fusions de trois copies libres après missions 01/03 et paquet Ombre distinct
+  après le premier boss : trois cartes, 190 or, taux 60/35/5, pools 8/3/8.
+- Pouvoirs et sauvegardes natifs conservés ; fiche de Silence paramétrée pour
+  l'Inquisiteur, mêmes règles dans les deux camps et le laboratoire.
+- [Contrat, contrôles et reprise](docs/OMBRE_RARE_EPIQUE.md).
+
+
 ## Proposition — Sylve Divine / Éveillée, 2 novembre 2026
 
 - Les onze personnages Sylve atteignent les rangs Divin et Éveillé : 22
