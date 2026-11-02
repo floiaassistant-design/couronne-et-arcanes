@@ -5228,7 +5228,7 @@ Object.assign(__exports,{SYLVE_DESIGN_SOURCE,SYLVE_EVOLUTIONS});
 
 },
 "src/cards/ombre.js":function(__exports,__load){
-// Première tranche Ombre : les onze évolutions Rares/Épiques validées.
+// Ombre jusqu'à Légendaire, depuis les cellules validées du tableau maître.
 // Le délai non chiffré de la Lame nocturne hérite du natif vérifié (1).
 const {freezeCardData}=__load("src/cards/schema.js");
 const OMBRE_DESIGN_SOURCE=freezeCardData({
@@ -5236,14 +5236,16 @@ const OMBRE_DESIGN_SOURCE=freezeCardData({
  editedAt:'2026-10-27T06:13:46.581Z'
 });
 const OMBRE_EVOLUTIONS=freezeCardData({
- bone:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}}},
- shade:{'épique':{stats:{hp:5}}},
- crypt:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}}},
- plague:{'épique':{stats:{hp:7}}},
- graveknight:{'épique':{stats:{hp:10}}},
- nightblade:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}}},
- spectre:{'épique':{stats:{hp:6}}},
- mist_inquisitor:{'épique':{stats:{hp:8}}}
+ bone:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}},'légendaire':{stats:{hp:6}}},
+ shade:{'épique':{stats:{hp:5}},'légendaire':{stats:{attack:4}}},
+ crypt:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}},'légendaire':{abilities:{funeralWatch:{amount:2,cap:2}}}},
+ plague:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}}},
+ banshee:{'légendaire':{stats:{hp:7}}},
+ vampire:{'légendaire':{stats:{hp:8}}},
+ graveknight:{'épique':{stats:{hp:10}},'légendaire':{stats:{attack:5}}},
+ nightblade:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}},'légendaire':{stats:{hp:6}}},
+ spectre:{'épique':{stats:{hp:6}},'légendaire':{stats:{attack:4}}},
+ mist_inquisitor:{'épique':{stats:{hp:8}},'légendaire':{stats:{attack:3}}}
 });
 
 Object.assign(__exports,{OMBRE_DESIGN_SOURCE,OMBRE_EVOLUTIONS});
@@ -5431,13 +5433,14 @@ function unitAbilitySummary(definition){
  if(a.regeneration)lines.push(`Régénération : ${a.regeneration.amount} PV, ${a.regeneration.resolutions} tour(s)`);
  if(a.harass)lines.push(`Harcèlement : −${a.harass.amount} ATQ, ${a.harass.attacks} attaque(s)`);
  if(a.intervention)lines.push(`Intervention : ${a.intervention.amount} dégâts, portée ${a.intervention.range}`);
+ if(a.lifesteal)lines.push(`Vol de vie : ${a.lifesteal.amount}`);
  if(a.flying)lines.push('Vol');
  if(a.haste)lines.push(`Célérité ${definition.geometry.steps}`);
  if(a.charge)lines.push(`Charge +${a.charge.amount}`);
  if(a.pierce)lines.push(a.pierce.condition==='charged'?'Charge perforante':'Perforation');
  lines.push(...advancedSummary(a));
  if(a.rearShot)lines.push(`Tir arrière : ${a.rearShot.amount} dégâts`);
- for(const [key,label] of Object.entries({poison:'Poison',splash:'Impact',lifesteal:'Vol de vie',silence:'Silence',portal:'Portail',trapper:'Piège'}))if(a[key])lines.push(label);
+ for(const [key,label] of Object.entries({poison:'Poison',splash:'Impact',silence:'Silence',portal:'Portail',trapper:'Piège'}))if(a[key])lines.push(label);
  return lines;
 }
 
@@ -5466,6 +5469,7 @@ function unitCardText(d){
  if(a.poison)parts.push(`Poison ${a.poison.amount} · ${a.poison.resolutions} tours`);
  if(a.trapper)parts.push(`Piège ${a.trapper.damage} / ${a.trapper.period} tours${a.trapper.poison?' · Poison '+a.trapper.poison.amount:''}`);
  if(a.silence)parts.push(`Silence / ${a.silence.period} tours`);
+ if(a.lifesteal)parts.push(`Vol de vie ${a.lifesteal.amount}`);
  if(a.flying)parts.push('Vol');
  if(d.geometry.range>1)parts.unshift(`Portée ${d.geometry.range}`);
  return parts.slice(0,3).join(' · ')||'Corps à corps';
@@ -5488,6 +5492,8 @@ function unitAbilityDetails(d){
  if(a.arrivalBarrier)lines.push(`À l’arrivée : barrière ${a.arrivalBarrier.amount} à un autre allié de sa ligne, priorité au plus blessé proportionnellement. Plafond ${a.arrivalBarrier.cap} pour cet effet, sans cumul ; aucune autre cible ni effet sans allié.`);
  if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : Harcèlement −${a.harass.amount} ATQ sur ${a.harass.attacks===1?'sa prochaine attaque d’unité':'ses '+a.harass.attacks+' prochaines attaques d’unité'}, Riposte comprise ; minimum 0, aucun effet sur les sorts. Les applications renouvellent le malus sans cumul.`);
  if(a.intervention)lines.push(`À l’arrivée : ${a.intervention.amount} dégâts au premier ennemi devant, même ligne, jusqu’à ${a.intervention.range} cases ; protections normales, une seule frappe d’arrivée.`);
+ if(a.lifesteal)lines.push(`À chaque attaque effectuée : rend ${a.lifesteal.amount} PV à sa couronne, même si la frappe est absorbée, sans dépasser ses PV maximum.`);
+ if(a.funeralWatch)lines.push(`Veille funéraire : lorsqu’une autre unité alliée meurt sur sa ligne, si le Veilleur vit et n’est pas silencieux, barrière personnelle ${a.funeralWatch.amount}, plafond ${a.funeralWatch.cap} pour cet effet. Au plus une fois par tour, sans cumul ni double déclenchement.`);
  if(a.flying)lines.push('Vol : franchit un allié si la case d’arrivée est libre.');
  if(a.charge)lines.push(`Charge : +${a.charge.amount} ATQ après déplacement avant la frappe.`);
  if(a.pierce)lines.push(`Perforation : ignore l’armure de la première cible${a.pierce.condition==='charged'?' seulement après déplacement avec Charge':''}, autres protections conservées.`);
@@ -5508,6 +5514,7 @@ function unitAbilityDetails(d){
 
 function advancedSummary(a){
  const parts=[];
+ if(a.funeralWatch)parts.push(`Veille funéraire · Barrière ${a.funeralWatch.amount}`);
  if(a.entangle)parts.push(`Entrave ${a.entangle.frequency==='invocation'?'1 fois':'/ '+a.entangle.period+' tours'}`);
  if(a.chargeBarrier)parts.push(`Barrière après Charge ${a.chargeBarrier.amount}${a.chargeBarrier.allies?' + allié':''}`);
  if(a.contagion)parts.push(`Contagion ${a.contagion.amount} · ${a.contagion.resolutions} tours`);
@@ -5889,7 +5896,7 @@ const {recordTrialFact,recordTrialTurn}=__load("src/engine/trial-objectives.js")
 const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
 const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError}=__load("src/engine/unit-rules.js");
 const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
-const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration}=__load("src/engine/unit-effects.js");
+const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal}=__load("src/engine/unit-effects.js");
 const {tickUnitPoison,clearUnitPoison}=__load("src/engine/unit-poison.js");
 const {resolveStrikeRewards}=__load("src/engine/unit-triggers.js");
 const {resolveUnitDeath}=__load("src/engine/unit-death.js");
@@ -6137,15 +6144,15 @@ function resolveAttacks(b,sideFilter=null){
    if(guardIntercept){
     const killed=strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane,charged);
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
-    if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
+    if(ability==='lifesteal')resolveLifesteal(b,u);
     applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0);
     if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
-   }else{damageHero(b,target.side,atk);if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}}
+   }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
   } else {
    const killed=strike(b,u,target.target,atk,intent.col,target.col,true,charged);
-   if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
+   if(ability==='lifesteal')resolveLifesteal(b,u);
    applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0);
    if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
    if(ability==='splash'){
@@ -6501,36 +6508,9 @@ const {silenced}=__load("src/engine/battle-control.js");
 const {recordCombatEvent}=__load("src/engine/combat-events.js");
 const {consumeAttackPenalty}=__load("src/engine/unit-effects.js");
 const {resolveUnitDeath}=__load("src/engine/unit-death.js");
-const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier'];
-function grantAbilityBarrier(u,key,parameters){
- if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
- const sources={...u.abilityBarriers};
- const remaining=Math.min(sources[key]||0,u.barrier||0);
- const added=Math.max(0,Math.min(parameters.amount,parameters.cap-remaining));
- if(!added)return 0;
- sources[key]=remaining+added;u.abilityBarriers=sources;
- u.barrier=(u.barrier||0)+added;
- return added;
-}
-
-function grantSharedBarrier(u,amount,cap){
- // Le plafond du sort porte sur la barrière totale ; ne jamais effacer un
- // surplus déjà acquis via une autre source ni réattribuer ses points.
- const total=u.barrier||0;u.barrier=Math.max(total,Math.min(cap,total+amount));
-}
-
-function absorbBarrier(u,damage){
- const absorbed=Math.min(u.barrier||0,damage);
- if((u.barrier||0)>0)u.barrier-=absorbed;
- if(absorbed&&u.abilityBarriers){
-  let left=absorbed;const sources={...u.abilityBarriers};
-  // Les barrières de capacités sont consommées avant le reste du bouclier.
-  for(const key of barrierKeys){const used=Math.min(sources[key]||0,left);sources[key]=(sources[key]||0)-used;left-=used;}
-  u.abilityBarriers=sources;
- }
- return absorbed;
-}
-
+const {absorbBarrier,grantAbilityBarrier}=__load("src/engine/unit-barriers.js");
+// Préserver les imports existants des appelants.
+Object.assign(__exports,__load("src/engine/unit-barriers.js"));
 function hit(b,u,raw,bySide,ignoreArmor=false,attack=false){
  if(!u||u.hp<=0)return 0; // Une victime ne compte jamais deux fois.
  const abilities=versionUnitAbilities(u);
@@ -6579,7 +6559,7 @@ function grantHealBarrier(b,healer,target,healed){
  return grantAbilityBarrier(target,'healBarrier',parameters);
 }
 
-Object.assign(__exports,{grantAbilityBarrier,grantSharedBarrier,hit,resolveRetaliation,grantHealBarrier});
+Object.assign(__exports,{hit,resolveRetaliation,grantHealBarrier});
 
 },
 "src/engine/battle-control.js":function(__exports,__load){
@@ -6599,7 +6579,7 @@ function silenceValue(u){
  const value={heal:6,inspire:5,splash:6,poison:5,lifesteal:5,pierce:3,haste:3,silence:6,portal:4,trapper:4}[u?.ability]||0;
  const future=versionUnitAbilities(u);
  return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
-  (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0);
+  (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0);
 }
 function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 function silenceTarget(b,side,lane){
@@ -6827,6 +6807,10 @@ function applyAttackEffects(source,target,suppressed=false,round=0,touched=true)
   if(ready){target.movementRoot=1;if(p.frequency==='invocation')source.entangleUsed=true;else source.entangleReadyRound=round+p.period;}
  }
 }
+function resolveLifesteal(b,u){
+ const p=versionUnitAbilities(u)?.lifesteal;if(!p)return;
+ const hero=b.heroes[u.side];hero.hp=Math.min(hero.maxhp,hero.hp+p.amount);
+}
 function grantRegeneration(b,target,parameters){
  target.regeneration={amount:parameters.amount,remaining:parameters.resolutions,readyRound:b.round+1};
 }
@@ -6848,28 +6832,94 @@ function validUnitEffects(u){
   (r===undefined||r&&integer(r.amount,100)&&integer(r.remaining,10)&&integer(r.readyRound,100))&&
   (u.movementRoot===undefined||u.movementRoot===1)&&(u.entangleUsed===undefined||typeof u.entangleUsed==='boolean')&&
   (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
+  (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
   (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin);
 }
 
-Object.assign(__exports,{attackAfterPenalty,consumeAttackPenalty,applyAttackEffects,grantRegeneration,resolveRegeneration,validUnitEffects});
+Object.assign(__exports,{attackAfterPenalty,consumeAttackPenalty,applyAttackEffects,resolveLifesteal,grantRegeneration,resolveRegeneration,validUnitEffects});
 
 },
 "src/engine/unit-death.js":function(__exports,__load){
 // Réactions à la destruction, avant les dégâts suivants ; repli du balayage sans doublon.
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {spreadUnitPoison}=__load("src/engine/unit-poison.js");
+const {alliedTargets}=__load("src/engine/unit-targets.js");
+const {grantAbilityBarrier}=__load("src/engine/unit-barriers.js");
+const {silenced}=__load("src/engine/battle-control.js");
 function resolveUnitDeath(b,u,lane,col,emit,poisonReadyRound){
  const p=versionUnitAbilities(u)?.deathWard;
- if(u.hp>0||u.deathResolved||!(p||u.poisonOrigin?.contagion))return;
+ if(u.hp>0||u.deathResolved)return;
+ const watchers=alliedTargets(b,u,lane,{includeSelf:false})
+  .map(t=>({...t,p:versionUnitAbilities(t.u)?.funeralWatch})).filter(t=>t.p);
+ if(!(p||u.poisonOrigin?.contagion||watchers.length))return;
  u.deathResolved=true;
  if(p&&!(u.silenceUntil>=b.round)){
   const h=b.heroes[u.side];h.shield=Math.max(h.shield,Math.min(p.cap,h.shield+p.amount));
+ }
+ for(const t of watchers){
+  if(silenced(b,t.u)||t.u.lastFuneralWatchRound===b.round)continue;
+  t.u.lastFuneralWatchRound=b.round;
+  if(grantAbilityBarrier(t.u,'funeralBarrier',t.p))emit(b,{type:'state',side:u.side,lane:t.lane,col:t.col});
  }
  spreadUnitPoison(b,u,lane,col,emit,poisonReadyRound);
 }
 
 Object.assign(__exports,{resolveUnitDeath});
+
+},
+"src/engine/unit-targets.js":function(__exports,__load){
+// Sélection pure partagée par les soins et protections des unités.
+const {lastCell}=__load("src/engine/board.js");
+function alliedTargets(b,u,lane,parameters){
+ const found=[];
+ for(let l=0;l<b.board.length;l++){
+  if(parameters.scope!=='all-lines'&&l!==lane)continue;
+  for(let col=1;col<=lastCell(b);col++){
+   const other=b.board[l][col];
+   if(other&&other.hp>0&&other.side===u.side&&(parameters.includeSelf||other.uid!==u.uid))found.push({u:other,lane:l,col});
+  }
+ }
+ return found;
+}
+const injuryOrder=(x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid;
+
+Object.assign(__exports,{alliedTargets,injuryOrder});
+
+},
+"src/engine/unit-barriers.js":function(__exports,__load){
+// Barrières partagées par les défenses et les réactions aux morts, sans cycle.
+const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier','funeralBarrier'];
+function grantAbilityBarrier(u,key,parameters){
+ if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
+ const sources={...u.abilityBarriers};
+ const remaining=Math.min(sources[key]||0,u.barrier||0);
+ const added=Math.max(0,Math.min(parameters.amount,parameters.cap-remaining));
+ if(!added)return 0;
+ sources[key]=remaining+added;u.abilityBarriers=sources;
+ u.barrier=(u.barrier||0)+added;
+ return added;
+}
+function grantSharedBarrier(u,amount,cap){
+ const total=u.barrier||0;u.barrier=Math.max(total,Math.min(cap,total+amount));
+}
+function absorbBarrier(u,damage){
+ const absorbed=Math.min(u.barrier||0,damage);
+ if((u.barrier||0)>0)u.barrier-=absorbed;
+ if(absorbed&&u.abilityBarriers){
+  let left=absorbed;const sources={...u.abilityBarriers};
+  // Conserver l'ordre et les champs historiques, sans ajouter l'état nouveau
+  // aux unités qui n'ont jamais reçu de barrière funéraire.
+  for(const key of barrierKeys){
+   if(key==='funeralBarrier'&&!Object.hasOwn(sources,key))continue;
+   const used=Math.min(sources[key]||0,left);sources[key]=(sources[key]||0)-used;left-=used;
+  }
+  u.abilityBarriers=sources;
+ }
+ return absorbed;
+}
+
+Object.assign(__exports,{grantAbilityBarrier,grantSharedBarrier,absorbBarrier});
 
 },
 "src/engine/tempo.js":function(__exports,__load){
@@ -7101,25 +7151,6 @@ function resolveUnitSupport(b,sideFilter,emit){
 }
 
 Object.assign(__exports,{resolveUnitArrival,resolveUnitSupport});
-
-},
-"src/engine/unit-targets.js":function(__exports,__load){
-// Sélection pure partagée par les soins et protections des unités.
-const {lastCell}=__load("src/engine/board.js");
-function alliedTargets(b,u,lane,parameters){
- const found=[];
- for(let l=0;l<b.board.length;l++){
-  if(parameters.scope!=='all-lines'&&l!==lane)continue;
-  for(let col=1;col<=lastCell(b);col++){
-   const other=b.board[l][col];
-   if(other&&other.hp>0&&other.side===u.side&&(parameters.includeSelf||other.uid!==u.uid))found.push({u:other,lane:l,col});
-  }
- }
- return found;
-}
-const injuryOrder=(x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid;
-
-Object.assign(__exports,{alliedTargets,injuryOrder});
 
 },
 "src/engine/unit-triggers.js":function(__exports,__load){
