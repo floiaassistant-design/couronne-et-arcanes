@@ -71,7 +71,7 @@ valide ce quota et partage Vol de vie paramétré, à valeur native inchangée.
 Silence et fiches utilisent les capacités du registre ; aucun pilote parallèle.
 [Contrat](OMBRE_LEGENDAIRES.md).
 
-## Ombre Rare / Épique — proposition du 2 novembre 2026
+## Ombre Rare / Épique — intégré par PR 70 le 2 novembre 2026
 
 `cards/ombre.js` porte onze patches validés pour huit personnages, sans nouvelle
 mécanique. La famille partagée alimente registre et 100 recettes ; le paquet

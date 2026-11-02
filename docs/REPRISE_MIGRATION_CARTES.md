@@ -6,17 +6,17 @@ les cases de conception complètes, pas leur livraison. Aucun tableau parallèle
 de pouvoirs ni validation de nouvelles décisions.
 
 GitHub reste la source du jeu. Base vérifiée : main
-`c9ab3209472a0433931c23315164c714af9099da`, PR 69 intégrée après accord et tests réussis.
-Les 41 évolutions Aube et 48 Sylve sont intégrées. La branche
-`feat/ombre-rare-epique` propose onze Rares/Épiques Ombre relues le 2 novembre,
-sans modifier Notion. [Contrat et reprise](OMBRE_RARE_EPIQUE.md). La publication
+`039a6a7d9a9de3ddb2feaccd58999924444daab6`, PR 70 intégrée après accord et six contrôles réussis.
+Les 41 évolutions Aube, 48 Sylve et onze Rares/Épiques Ombre sont intégrées.
+La branche `feat/ombre-legendaires` propose dix Légendaires relues le 2 novembre,
+sans modifier Notion. [Contrat et reprise](OMBRE_LEGENDAIRES.md). La publication
 est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 
 | Ordre | Unités natives | Évolutions conçues complètement validées | Situation d'implémentation |
 | --- | ---: | ---: | --- |
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
-| Ombre | 11 | 43 | 11 Rares/Épiques proposées, 22 versions définies sur la branche ; 32 évolutions restantes |
+| Ombre | 11 | 43 | 11 Rares/Épiques intégrées ; 10 Légendaires proposées, 32 versions sur la branche ; 22 évolutions restantes |
 | Forge | 10 | 0 sur 39 cases futures | Conception incomplète ; règles communes de Garde déjà validées, sans compléter les cases à leur place |
 | Éther | 11 | 0 sur 39 cases futures | Conception incomplète ; même distinction pour les règles communes de Garde |
 
@@ -44,19 +44,22 @@ La PR 69 est intégrée après tests et accord spécifique. Le [contrat](SYLVE_D
 communes suivies de fusions de trois copies. Aucun élargissement de paquet,
 don ou migration. La publication reste à vérifier via le flux existant.
 
-## Lot proposé : Ombre Rare / Épique
+## Lot intégré : Ombre Rare / Épique
 
 Le [contrat](OMBRE_RARE_EPIQUE.md) décrit onze évolutions validées pour huit
 personnages. Le délai de la Lame nocturne est confirmé à 1 dans le catalogue
 actuel. Fusions de trois copies libres après missions 01/03 et paquet distinct
 à 190 or ; aucun changement des pouvoirs ni des paquets existants. Base :
-main intégrant la PR 69, vérifié avec son arbre exact. Cette nouvelle PR garde
-son propre accord de fusion.
+main intégrant la PR 69 ; PR 70 fusionnée le 2 novembre après accord spécifique
+et six contrôles réussis. Arbre intégré identique à la tête testée.
 
-## Lot suivant : dix Légendaires Ombre
+## Lot proposé : dix Légendaires Ombre
 
-Relire leurs validations et préparer notamment la Veille funéraire du Veilleur.
-Les 22 Divines/Éveillées viennent ensuite. Réactions aux morts, créations et
+Le [contrat](OMBRE_LEGENDAIRES.md) transcrit les dix validations et la Veille
+funéraire du Veilleur dans les primitives communes. Fusion de trois Épiques
+libres après mission 06, paquets inchangés. Base : main intégrant la PR 70.
+Ce nouveau lot conserve son accord spécifique ; les contrôles et SHA sont
+à lire dans sa PR. Les 22 Divines/Éveillées viennent ensuite. Réactions aux morts, créations et
 vols/régénérations doivent réutiliser les primitives communes, sans deuxième
 moteur. Forge et Éther restent à concevoir ; leurs cases ne sont pas complétées
 sans validation du propriétaire.

@@ -1,12 +1,18 @@
-# Ombre Rare / Épique — proposition du 2 novembre 2026
+# Ombre Rare / Épique — lot intégré le 2 novembre 2026
 
 ## Base et source
 
 Base vérifiée : main `c9ab3209472a0433931c23315164c714af9099da`, intégrant la PR 69 après
 réussite de tous les contrôles. Son arbre est identique à la tête Sylve testée.
-La branche `feat/ombre-rare-epique` est rattachée à ce main sans écrasement
-d'historique. Cette nouvelle proposition demande son propre accord de fusion ;
-elle n'est pas publiée.
+La [PR 70](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/70)
+a été fusionnée après accord spécifique et six contrôles réussis dans
+`039a6a7d9a9de3ddb2feaccd58999924444daab6`. Arbre intégré
+`4cbab21bce1a140697e9b038053604d4440f3cf8`, identique à celui de la tête
+testée `71a391f338097c9c64ef5a857d114b67fc52af7c`. La publication reste distincte.
+
+Les comptes et limitations ci-dessous décrivent le lot livré par cette PR.
+La proposition suivante [Légendaires Ombre](OMBRE_LEGENDAIRES.md) ajoute dix
+versions, portant cette branche à 32 définitions Ombre et 110 recettes.
 
 Source : [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
 édition `2026-10-27T06:13:46.581Z`, relue le 2 novembre 2026. Aucune écriture
@@ -102,6 +108,7 @@ Contrôles locaux : 570 tests Node réussis, 120 scénarios de parité identique
 builds autonome, diagnostic et web réussis ; 75 modules et 292 dépendances
 sans cycle. Les résultats navigateur et le commit exact sont à lire dans la PR. Les contrôles de robot
 ne prouvent ni difficulté humaine ni téléphone physique, Safari ou Firefox.
-Après intégration autorisée et publication vérifiée par le flux existant,
-reprendre les dix Légendaires Ombre, notamment la Veille funéraire, puis
-les 22 versions supérieures, en relisant chaque validation Notion.
+Reprise : la proposition Légendaire documente maintenant les dix versions
+suivantes, notamment Veille funéraire. Vérifier sa PR avant toute intégration,
+puis reprendre les 22 versions supérieures en relisant chaque validation Notion.
+La publication reste vérifiée séparément par le flux existant.

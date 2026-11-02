@@ -100,6 +100,14 @@ délai de main réellement attendu, invocation du Faucheur, Poison effectif et
 reprise. Il conserve le scénario Sylve et lit aussi la fiche Veille funéraire.
 Les quatre parties de CI réutilisent ces appels ; inventaire permanent inchangé.
 
+Contrôles locaux : 585 tests Node réussis, 120 scénarios de parité identiques,
+20 480 combats de contrôle et 6 144 d'arène (zéro état invalide), builds autonome,
+diagnostic et web réussis ; 76 modules et 297 dépendances sans cycle.
+Le précontrôle navigateur a réussi les quatre formats Légendaires Sylve et
+les trois formats d'affichage Ombre. Le nouveau parcours Ombre a exposé une
+assertion de lecture sensible à la casse : elle exige désormais le libellé
+exact `Poison 2 tour(s)` après avoir vérifié l'état moteur. La CI complète
+doit confirmer ce parcours corrigé sur la tête de PR.
 Résultats et SHA exacts à lire dans la PR. Chromium simulé ne valide pas
 Safari, Firefox, un téléphone physique ou la difficulté humaine. Après revue,
 accord spécifique, intégration et publication par le flux existant : relire

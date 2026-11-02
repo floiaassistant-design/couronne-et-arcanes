@@ -11,7 +11,7 @@
 - Paquets et récompenses conservés. [Contrat et reprise](docs/OMBRE_LEGENDAIRES.md).
 
 
-## Proposition — Ombre Rare / Épique, 2 novembre 2026
+## Intégré — Ombre Rare / Épique, 2 novembre 2026
 
 - Onze évolutions validées pour huit personnages, 22 versions Ombre définies
   dont onze natives ; dix Légendaires et 22 hauts rangs restent à intégrer.
@@ -21,7 +21,8 @@
   l'Inquisiteur, mêmes règles dans les deux camps et le laboratoire.
 - Contrôle de lecture de l’Inquisiteur : vérifier le libellé et la fiche
   détaillée de Silence plutôt que la longueur de l’ancien descriptif.
-- [Contrat, contrôles et reprise](docs/OMBRE_RARE_EPIQUE.md).
+- PR 70 fusionnée après accord spécifique et six contrôles réussis ;
+  publication distincte. [Contrat, contrôles et reprise](docs/OMBRE_RARE_EPIQUE.md).
 
 
 ## Intégré — Sylve Divine / Éveillée, 2 novembre 2026
