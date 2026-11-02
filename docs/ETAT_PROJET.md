@@ -66,12 +66,12 @@ L'autorisation explicite du propriétaire est conservée ; aucune fusion
 automatique. Les PR constituent les journaux des travaux en cours et portent
 leurs preuves de tests et points de reprise. `AGENTS.md` fixe les règles.
 
-La distribution du jeu est séparée de la fusion. Sites a confirmé le
-2 novembre 2026 la **version publique 21**, déployée avec succès à 16:47, heure
-de Paris. Son commit de diffusion `cc8325be47953df720e0a56589d082ad6ce293de`
-est distinct du SHA GitHub du jeu ; cette observation ne prouve pas la publication
-du main intégrant les PR 72, 73 et 75. Vérifier le paquet exact et le flux existant, sans
-lancer de publication parallèle.
+La distribution du jeu est séparée de la fusion. Le suivi de publication
+existant a confirmé le 2 novembre 2026 la **version publique 22**, basée sur
+le commit GitHub `afdf6543761dd04c832e268f7d5f261cb23addf6` (PR 72),
+avec le commit Sites `10f7143b06bce3a24a61f5ae5462cdea70064714`.
+Ce constat ne prouve pas la publication des PR 73 et 75. Vérifier le paquet
+exact et le flux existant, sans lancer de publication parallèle.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
 [Procédure de publication](PUBLICATION_WEB_2026_10_23.md)
