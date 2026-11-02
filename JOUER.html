@@ -4993,8 +4993,9 @@ const {evolutionTrialFor}=__load("src/evolution-trials.js");
 const {evolutionFusionFor}=__load("src/evolution-fusion.js");
 const AUBE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='aube'&&c.type==='unité').map(c=>c.id));
 const SYLVE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='sylve'&&c.type==='unité').map(c=>c.id));
+const FORGE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='forge'&&c.type==='unité').map(c=>c.id));
 const OMBRE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='ombre'&&c.type==='unité').map(c=>c.id));
-const VERSIONED_UNIT_IDS=Object.freeze([...AUBE_UNIT_IDS,...SYLVE_UNIT_IDS,...OMBRE_UNIT_IDS.filter(id=>evolutionFamily(id))]);
+const VERSIONED_UNIT_IDS=Object.freeze([...AUBE_UNIT_IDS,...SYLVE_UNIT_IDS,...OMBRE_UNIT_IDS.filter(id=>evolutionFamily(id)),...FORGE_UNIT_IDS.filter(id=>evolutionFamily(id))]);
 const definitions=new Map();
 const noVersions=Object.freeze([]);
 
@@ -5054,7 +5055,7 @@ const CARD_RULESET='cards-v2';
 const resolveRulesDefinition=resolveUnitDefinition;
 function versionUnitAbilities(unit){return unit?resolveUnitDefinition(unit)?.abilities||null:null;}
 
-Object.assign(__exports,{AUBE_UNIT_IDS,SYLVE_UNIT_IDS,OMBRE_UNIT_IDS,VERSIONED_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable,CARD_RULESET,resolveRulesDefinition,versionUnitAbilities});
+Object.assign(__exports,{AUBE_UNIT_IDS,SYLVE_UNIT_IDS,FORGE_UNIT_IDS,OMBRE_UNIT_IDS,VERSIONED_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable,CARD_RULESET,resolveRulesDefinition,versionUnitAbilities});
 
 },
 "src/cards/abilities.js":function(__exports,__load){
@@ -5106,11 +5107,13 @@ Object.assign(__exports,{GUARD_POLICY,nativeUnitAbilities,inheritUnitAbilities})
 const {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE}=__load("src/cards/aube.js");
 const {SYLVE_EVOLUTIONS,SYLVE_DESIGN_SOURCE}=__load("src/cards/sylve.js");
 const {OMBRE_EVOLUTIONS,OMBRE_DESIGN_SOURCE}=__load("src/cards/ombre.js");
+const {FORGE_EVOLUTIONS,FORGE_DESIGN_SOURCE}=__load("src/cards/forge.js");
 const {freezeCardData}=__load("src/cards/schema.js");
 const EVOLUTION_FAMILIES=freezeCardData([
  {id:'aube',versions:AUBE_EVOLUTIONS,source:AUBE_DESIGN_SOURCE},
  {id:'sylve',versions:SYLVE_EVOLUTIONS,source:SYLVE_DESIGN_SOURCE},
- {id:'ombre',versions:OMBRE_EVOLUTIONS,source:OMBRE_DESIGN_SOURCE}
+ {id:'ombre',versions:OMBRE_EVOLUTIONS,source:OMBRE_DESIGN_SOURCE},
+ {id:'forge',versions:FORGE_EVOLUTIONS,source:FORGE_DESIGN_SOURCE}
 ]);
 const evolutionFamily=id=>EVOLUTION_FAMILIES.find(f=>Object.hasOwn(f.versions,id))||null;
 
@@ -5262,6 +5265,26 @@ const OMBRE_EVOLUTIONS=freezeCardData({
 });
 
 Object.assign(__exports,{OMBRE_DESIGN_SOURCE,OMBRE_EVOLUTIONS});
+
+},
+"src/cards/forge.js":function(__exports,__load){
+// Première tranche Forge : données validées, sans retouche des versions natives.
+const {freezeCardData}=__load("src/cards/schema.js");
+const FORGE_DESIGN_SOURCE=freezeCardData({
+ url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
+ editedAt:'2026-11-02T16:09:01.799Z'
+});
+const FORGE_EVOLUTIONS=freezeCardData({
+ smith:{rare:{stats:{hp:8}},'épique':{stats:{attack:4}}},
+ golem:{'épique':{stats:{hp:14}}},
+ bomb:{'épique':{stats:{hp:5}}},
+ drill:{rare:{stats:{hp:7}},'épique':{stats:{attack:3}}},
+ mechanist:{'épique':{stats:{hp:10}}},
+ ironwraith:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}}},
+ alchemist:{'épique':{stats:{hp:7}}}
+});
+
+Object.assign(__exports,{FORGE_DESIGN_SOURCE,FORGE_EVOLUTIONS});
 
 },
 "src/evolution-trials.js":function(__exports,__load){
@@ -5429,7 +5452,8 @@ const CARD_PACKS=freezeCardData([
  ]},
  evolutionPack('aube','de l’Aube','Aube'),
  evolutionPack('sylve','de la Sylve','Sylve'),
- evolutionPack('ombre','de l’Ombre','Ombre')
+ evolutionPack('ombre','de l’Ombre','Ombre'),
+ evolutionPack('forge','de la Forge','Forge')
 ]);
 const cardPack=id=>CARD_PACKS.find(p=>p.id===id)||null;
 const evolutionPackFor=(id,rarity)=>CARD_PACKS.find(p=>p.groups.some(g=>g.cards.some(ref=>typeof ref==='object'&&ref.id===id&&ref.rarity===rarity)))||null;
