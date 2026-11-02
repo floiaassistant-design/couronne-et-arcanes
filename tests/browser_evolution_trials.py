@@ -243,6 +243,7 @@ async def main(part=None):
                 else:await recovery(browser)
             await run_card_pack_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html')
             await run_card_pack_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',scenario='sylve')
+            await run_card_pack_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',scenario='ombre')
             await run_sylve_legendary_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html')
             await run_ascension_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',make_case=case,click=click,select=select,replay=replay,stored=stored)
             await run_ascension_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',make_case=case,click=click,select=select,replay=replay,stored=stored,faction='sylve')

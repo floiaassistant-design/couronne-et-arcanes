@@ -1,5 +1,5 @@
 """Vrais achats : probabilités affichées, confirmation, panne, rangs, fusion et combat."""
-import asyncio,copy,json,subprocess,threading
+import argparse,asyncio,copy,json,subprocess,threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
@@ -13,6 +13,7 @@ PROFILE=json.loads(subprocess.check_output(['node','--input-type=module','-e',"i
 
 SCENARIOS={
     'aube':{'pack':'aube-evolution','base':'militia','card':'militia','random':[0,0,.6,0,.95,0],'stats':(2,5),'power':'−2'},
+    'ombre':{'pack':'ombre-evolution','base':'bone','card':'nightblade','random':[0,0,.6,.99,.95,.7],'stats':(4,4),'power':'Perforation'},
     'sylve':{'pack':'sylve-evolution','base':'ranger','card':'pixie','random':[0,0,.6,.6,.95,.6],'stats':(2,4),'power':'5 bouclier','shield':5},
 }
 
@@ -120,13 +121,13 @@ async def run_card_packs(browser,label,viewport,url=None,scenario='aube'):
     assert not errors,errors
     assert not external,external
     await context.close()
-    print(f'Paquets {"Sylve " if scenario=="sylve" else ""}{label}: boss, probabilités, annulation, panne, double clic, stocks, fusion, export/import et invocation/reprise PASS',flush=True)
+    print(f'Paquets {scenario.title()+" " if scenario!="aube" else ""}{label}: boss, probabilités, annulation, panne, double clic, stocks, fusion, export/import et invocation/reprise PASS',flush=True)
 
 async def run_card_pack_cases(browser,part=None,web_url=None,scenario='aube'):
     for case in card_pack_cases(part):
         await run_card_packs(browser,case['label'],case['viewport'],web_url if case['label']=='web' else None,scenario)
 
-async def main():
+async def main(scenario='aube'):
     class Quiet(SimpleHTTPRequestHandler):
         def log_message(self,*args):pass
     server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT)))
@@ -134,7 +135,10 @@ async def main():
     try:
         async with async_playwright() as pw:
             browser=await pw.chromium.launch(headless=True,args=['--no-sandbox'])
-            await run_card_pack_cases(browser,web_url=f'http://127.0.0.1:{server.server_port}/index.html');await browser.close()
+            await run_card_pack_cases(browser,web_url=f'http://127.0.0.1:{server.server_port}/index.html',scenario=scenario);await browser.close()
     finally:server.shutdown();server.server_close()
 
-if __name__=='__main__':asyncio.run(main())
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--scenario',choices=tuple(SCENARIOS),default='aube')
+    asyncio.run(main(parser.parse_args().scenario))

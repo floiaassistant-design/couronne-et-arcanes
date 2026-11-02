@@ -57,6 +57,20 @@ transactions des paquets/évolutions restent sous leurs modules spécialisés.
 Ce lot est intégré à main par la PR 65 ; aucune règle du moteur,
 ressource ou format historique n'a été changé.
 
+## Ombre Rare / Épique — proposition du 2 novembre 2026
+
+`cards/ombre.js` porte onze patches validés pour huit personnages, sans nouvelle
+mécanique. La famille partagée alimente registre et 100 recettes ; le paquet
+Ombre réutilise le constructeur et les transactions existants, à 190 or pour
+trois cartes, pools 8/3/8 et taux 60/35/5. Les autres paquets restent inchangés.
+
+Seuls les huit personnages évolutifs rejoignent la présentation structurée ;
+les trois natifs de haut rang restent présentés comme avant. La fiche de
+l'Inquisiteur décrit le Silence depuis sa définition, sans changer sa résolution.
+Aucun nouveau pilote, actif, CSS ou état de sauvegarde. Le builder inclut le
+module de données dans le web et l'export autonome.
+[Contrat et reprise](OMBRE_RARE_EPIQUE.md).
+
 ## Sylve Divine / Éveillée — proposition du 1er novembre 2026
 
 Les 22 remplacements dans `cards/sylve.js` réutilisent le registre commun,

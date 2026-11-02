@@ -18,7 +18,8 @@ export const CARD_PACKS=freezeCardData([
   {label:'Carte de base Épique',weight:7,cards:nativeRank('épique')}
  ]},
  evolutionPack('aube','de l’Aube','Aube'),
- evolutionPack('sylve','de la Sylve','Sylve')
+ evolutionPack('sylve','de la Sylve','Sylve'),
+ evolutionPack('ombre','de l’Ombre','Ombre')
 ]);
 export const cardPack=id=>CARD_PACKS.find(p=>p.id===id)||null;
 export const evolutionPackFor=(id,rarity)=>CARD_PACKS.find(p=>p.groups.some(g=>g.cards.some(ref=>typeof ref==='object'&&ref.id===id&&ref.rarity===rarity)))||null;

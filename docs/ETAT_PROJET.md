@@ -1,4 +1,4 @@
-# État du projet — jalons durables (1er novembre 2026)
+# État du projet — jalons durables (2 novembre 2026)
 
 Ce fichier décrit les faits intégrés et les chantiers durables, pas l'état
 instantané des tests, des branches ou des déploiements. **À chaque reprise**,
@@ -19,10 +19,13 @@ Ne pas déduire un état actuel d'un ancien SHA ou d'un compte rendu daté.
   Les contrôles de la tête PR ont réussi ; le statut des contrôles de main
   et la publication doivent être lus séparément sur leurs sources actuelles.
 
-Les évolutions de l'Aube sont obtenables (41), celles de la Sylve jusqu'au
-rang Légendaire (26). Les 22 Divines/Éveillées Sylve restent à intégrer après
-relecture des validations Notion ; Ombre, Forge et Éther restent natifs dans
-le jeu. Le laboratoire réutilise le même moteur sans modifier la progression.
+- [PR 69](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/69) :
+  22 évolutions Divines/Éveillées Sylve et deux ascensions communes, fusionnées
+  avec l'accord du propriétaire le 2 novembre 2026 dans `c9ab3209472a0433931c23315164c714af9099da`.
+  Arbre intégré identique à la tête testée ; aucune publication déduite de la fusion.
+
+Les évolutions de l'Aube sont obtenables (41), celles de la Sylve également
+jusqu'au rang Éveillé (48). Ombre, Forge et Éther restent natifs sur ce main. Le laboratoire réutilise le même moteur sans modifier la progression.
 
 ## Processus de livraison
 
@@ -33,15 +36,22 @@ L'autorisation explicite du propriétaire est conservée ; aucune fusion
 automatique. Les PR constituent les journaux des travaux en cours et portent
 leurs preuves de tests et points de reprise. `AGENTS.md` fixe les règles.
 
-La distribution du jeu est séparée de la fusion. La dernière publication
-**explicitement vérifiée dans les bilans disponibles avant cette reprise**
-était Sites version 18, code `117a643bf110995f3bc67dc86c55a678cc8b0f76`.
-Ce repère historique **ne confirme pas** la publication des PR 66 ou 67.
-Vérifier l'automatisation de publication et l'état réel de Sites pour une
-version plus récente ; ne jamais republier en parallèle.
+La distribution du jeu est séparée de la fusion. Sites a confirmé le
+2 novembre 2026, avant la fusion de la PR 69, la **version publique 19** et
+son déploiement réussi. Le commit du dépôt de diffusion Sites est distinct
+du SHA GitHub du jeu ; cette observation ne confirme pas la publication de
+la PR 69. Vérifier le paquet du main exact et le flux de publication existant,
+sans lancer de publication parallèle.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
 [Procédure de publication](PUBLICATION_WEB_2026_10_23.md)
+
+## Lot Ombre en préparation
+
+La première tranche [Ombre Rare/Épique](OMBRE_RARE_EPIQUE.md) prépare onze
+évolutions et un paquet distinct, sur le main intégrant la PR 69
+(`c9ab3209472a0433931c23315164c714af9099da`). Les 32 autres
+évolutions Ombre restent à réaliser : dix Légendaires puis 22 hauts rangs.
 
 ## Travaux durables restant à réaliser
 
@@ -50,11 +60,9 @@ version plus récente ; ne jamais republier en parallèle.
   isolées de l'audit ne remplacent pas ce parcours complet.
 - Vérifier la lisibilité et l'interaction sur téléphone physique ; la CI
   couvre Chromium simulé, pas Safari, Firefox ni l'équilibrage humain.
-- Relire et intégrer le lot des 22 Divines/Éveillées Sylve proposé sur
-  `feat/ascensions-sylve`, avec deux ascensions communes. Les validations Notion
-  ont été relues le 1er novembre ; [contrat et reprise](SYLVE_DIVINES_EVEILLEES.md).
-  La proposition ne confirme ni fusion ni publication. Après intégration,
-  préparer les 43 évolutions Ombre avec une nouvelle relecture des sources.
+- Relire la proposition Ombre Rare/Épique et sa CI avant intégration autorisée ;
+  préparer ensuite dix Légendaires puis 22 hauts rangs, en relisant leurs
+  validations Notion. [Contrat et reprise](OMBRE_RARE_EPIQUE.md).
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 

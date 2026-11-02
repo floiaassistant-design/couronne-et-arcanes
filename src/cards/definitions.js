@@ -8,7 +8,8 @@ import {evolutionFusionFor} from '../evolution-fusion.js';
 
 export const AUBE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='aube'&&c.type==='unité').map(c=>c.id));
 export const SYLVE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='sylve'&&c.type==='unité').map(c=>c.id));
-export const VERSIONED_UNIT_IDS=Object.freeze([...AUBE_UNIT_IDS,...SYLVE_UNIT_IDS]);
+export const OMBRE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='ombre'&&c.type==='unité').map(c=>c.id));
+export const VERSIONED_UNIT_IDS=Object.freeze([...AUBE_UNIT_IDS,...SYLVE_UNIT_IDS,...OMBRE_UNIT_IDS.filter(id=>evolutionFamily(id))]);
 const definitions=new Map();
 const noVersions=Object.freeze([]);
 
