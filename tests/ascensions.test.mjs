@@ -17,7 +17,7 @@ const scenarios=ascensionScenarios();
 function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v)},removeItem:k=>{delete data[k]}};return data;}
 
 test('Deux ascensions communes, dix fusions par rang, 41 évolutions et quatre épreuves pilotes conservées',()=>{
- assert.equal(EVOLUTION_TRIALS.length,4);assert.equal(EVOLUTION_ASCENSIONS.length,2);assert.equal(ALL_EVOLUTION_TRIALS.length,6);
+ assert.equal(EVOLUTION_TRIALS.length,4);assert.equal(EVOLUTION_ASCENSIONS.length,2);assert.equal(ALL_EVOLUTION_TRIALS.length,8);
  assert.equal(EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction==='aube').length,41);
  for(const t of EVOLUTION_ASCENSIONS){
   const recipes=EVOLUTION_FUSIONS.filter(r=>r.ascension===t.id);assert.equal(recipes.length,10);

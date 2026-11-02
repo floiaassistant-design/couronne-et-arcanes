@@ -1,21 +1,22 @@
-# Reprise des migrations de cartes — état intégré au 31 octobre 2026
+# Reprise des migrations de cartes — lot Sylve proposé le 1er novembre 2026
 
 Source de conception : [tableau maître unique](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
 édition relue `2026-10-27T06:13:46.581Z`. Les compteurs ci-dessous décrivent
 les cases de conception complètes, pas leur livraison. Aucun tableau parallèle
 de pouvoirs ni validation de nouvelles décisions.
 
-GitHub reste la source du jeu : main vérifié `117a643bf110995f3bc67dc86c55a678cc8b0f76`.
-Les 41 évolutions Aube et les 26 Sylve jusqu'à Légendaire sont intégrées ;
-la fiabilisation des sauvegardes l'est également. La publication est suivie
-séparément dans [ETAT_PROJET.md](ETAT_PROJET.md). Les compteurs de conception
-ci-dessous restent ceux de la relecture Notion datée ci-dessus, sans nouvelle
-lecture ni écriture Notion pendant cette reprise documentaire.
+GitHub reste la source du jeu. Base vérifiée : main
+`e130b3009679927bcd57e6fc59a7ddacbe9c14d2` (PR 68 intégrée).
+La branche `feat/ascensions-sylve` propose les 22 versions supérieures relues
+le 1er novembre et leurs ascensions ; leur fusion/publication n'est pas acquise.
+[Contrat et reprise](SYLVE_DIVINES_EVEILLEES.md). Les 41 évolutions Aube et les
+26 Sylve antérieures restent conservées. La publication est suivie séparément
+dans [ETAT_PROJET.md](ETAT_PROJET.md). Aucune écriture Notion.
 
 | Ordre | Unités natives | Évolutions conçues complètement validées | Situation d'implémentation |
 | --- | ---: | ---: | --- |
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
-| Sylve | 11 | 48 | 26 évolutions intégrées jusqu’à Légendaire ; 22 supérieures à intégrer |
+| Sylve | 11 | 48 | 26 évolutions intégrées ; 22 Divines/Éveillées proposées sur la branche, 59 versions au total |
 | Ombre | 11 | 43 | Natifs seuls ; transcription et mécanique des évolutions à préparer |
 | Forge | 10 | 0 sur 39 cases futures | Conception incomplète ; règles communes de Garde déjà validées, sans compléter les cases à leur place |
 | Éther | 11 | 0 sur 39 cases futures | Conception incomplète ; même distinction pour les règles communes de Garde |
@@ -38,23 +39,14 @@ Pas de nouvelle épreuve, copie gratuite ou définition des rangs supérieurs.
 par fusion après mission 06. Leurs nouveaux états utilisent le moteur commun,
 sans élargir les paquets Rare/Épique ni inventer des épreuves individuelles.
 
-## Prochain lot : les 22 Divines/Éveillées Sylve
+## Lot proposé : les 22 Divines/Éveillées Sylve
 
-1. Relire les 48 cases complètes et leurs sources avant transcription, garder
-   les onze ID natifs et les six emplacements par personnage. Décrire les totaux
-   hérités et remplacements de capacités dans les données, sans réécrire le natif.
-2. Réutiliser géométrie, Charge, Garde, Riposte, Vol, soin et pièges du moteur.
-   Identifier chaque capacité nouvelle avant d'autoriser une version : notamment
-   les entraves, soutiens, états et fréquences validés. Pas d'activation globale
-   pour contourner une mécanique absente.
-3. Vérifier chaque rang aux deux camps, les bonus séparés et les quotas à la
-   reprise. Laboratoire, IA et lecteur de fiche utilisent les mêmes règles.
-4. Ouvrir les circuits ordinaires paquets/fusion seulement pour les versions
-   réellement implémentées, puis proposer les défis exceptionnels communs.
-   Conserver l'économie et annoncer prix/taux/récompenses avant achat ou essai.
-5. Branche et PR propres, tests de contrat et combats complets, export autonome
-   identique aux sources, contrôles navigateur et sauvegardes. Accord de fusion
-   spécifique, puis publication par le flux existant.
+Le [contrat](SYLVE_DIVINES_EVEILLEES.md) décrit les pouvoirs transcrits,
+les interactions et les deux ascensions communes, suivies de fusions de trois
+copies du rang précédent. Aucun élargissement de paquet, don ou migration.
+Les réglages des rencontres sont proposés à la revue, distincts des pouvoirs
+validés dans Notion. Terminer les contrôles de la PR, relire le diff, obtenir
+l'accord spécifique puis fusionner et vérifier la publication via le flux existant.
 
 ## Lot suivant : Ombre
 

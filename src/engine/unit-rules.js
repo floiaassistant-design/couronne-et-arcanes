@@ -22,11 +22,12 @@ export function unitAttackRange(u){
  return u?.ranged?Math.max(2,resolveUnitDefinition(u)?.geometry.range||0):1;
 }
 export function unitMovementSteps(u,suppressed=false){
+ if(u.movementRoot)return 0;
  const d=resolveUnitDefinition(u);
  return d?.abilities.haste&&!suppressed?d.geometry.steps:1;
 }
 export function unitChargeAmount(u){return versionUnitAbilities(u)?.charge?.amount||0;}
-export function unitHasPierce(u,suppressed=false){return !suppressed&&!!versionUnitAbilities(u)?.pierce?.ignoreArmor;}
+export function unitHasPierce(u,suppressed=false,charged=false){const p=versionUnitAbilities(u)?.pierce;return !suppressed&&!!p?.ignoreArmor&&(p.condition!=='charged'||charged);}
 export function unitFlying(u){return !!versionUnitAbilities(u)?.flying;}
 
 export const battleRulesError=b=>b?.cardRules===CARD_RULESET?'':'Ce combat doit être relancé après la mise à jour des cartes.';

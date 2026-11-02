@@ -55,12 +55,12 @@ async def run(browser,label,viewport,faction='aube'):
             'cleric':[None,4,6,6,6,6],'banner':[None,6,8,8,8,8],
             'scoutcaptain':[None,6,8,8,8,8],'sunpriest':[None,7,9,9,9,9],
             'paladin':[None,None,9,11,11,13],'dawnbastion':[None,None,None,11,11,11],
-            'ranger':[4,5,5,5,None,None],'wolf':[3,4,4,4,None,None],
-            'treant':[None,10,12,12,None,None],'dryad':[None,5,7,7,None,None],
-            'thorn':[5,6,6,6,None,None],'pixie':[3,4,4,4,None,None],
-            'bear':[None,9,11,11,None,None],'owl':[4,5,5,5,None,None],
-            'sylvan_trapper':[5,6,6,6,None,None],
-            'stag':[None,None,6,8,None,None],'archdruid':[None,None,7,9,None,None]
+            'ranger':[4,5,5,5,5,5],'wolf':[3,4,4,4,4,4],
+            'treant':[None,10,12,12,12,12],'dryad':[None,5,7,7,7,7],
+            'thorn':[5,6,6,6,6,6],'pixie':[3,4,4,4,4,4],
+            'bear':[None,9,11,11,11,11],'owl':[4,5,5,5,5,5],
+            'sylvan_trapper':[5,6,6,6,6,6],
+            'stag':[None,None,6,8,8,8],'archdruid':[None,None,7,9,9,9]
         }.get(card_id)
         native=await row.locator('[data-current-version="true"]').get_attribute('data-collection-rarity')
         ranks=['commun','rare','épique','légendaire','divine','éveillée']

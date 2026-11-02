@@ -1,5 +1,5 @@
 // Épreuves : accès, création d'un combat normal et transformation unique.
-import {CARDS,CAMPAIGN} from '../data.js';
+import {CARDS,CAMPAIGN,FACTIONS} from '../data.js';
 import {evolutionTrial,ALL_EVOLUTION_TRIALS} from '../evolution-trials.js';
 import {cardReference,cardKey,cardId,cardRarity,ownedCardCopies} from '../cards/references.js';
 import {createBattle} from './battle.js';
@@ -18,8 +18,9 @@ export function evolutionTrialAccess(profile,id,battle=null){
  if(t.previous&&!profile.completedTrials?.includes(t.previous))return {ok:false,reason:`Terminer l’épreuve « ${evolutionTrial(t.previous).name} ».`};
  if(t.kind==='ascension'){
   const allies=profile.deck.filter(ref=>CARDS[cardId(ref)]?.faction===t.faction);
-  if(!allies.some(ref=>cardRarity(ref)===t.from))return {ok:false,reason:`Ajouter au deck un personnage de l’Aube au rang ${CARD_RARITIES.find(r=>r.id===t.from).name}.`};
-  if(new Set(allies.map(cardId)).size<t.goal.distinct)return {ok:false,reason:`Ajouter au deck au moins ${t.goal.distinct} personnages distincts de l’Aube.`};
+  const faction=t.faction==='aube'?'l’Aube':'la '+FACTIONS[t.faction].short;
+  if(!allies.some(ref=>cardRarity(ref)===t.from))return {ok:false,reason:`Ajouter au deck un personnage de ${faction} au rang ${CARD_RARITIES.find(r=>r.id===t.from).name}.`};
+  if(new Set(allies.map(cardId)).size<t.goal.distinct)return {ok:false,reason:`Ajouter au deck au moins ${t.goal.distinct} personnages distincts de ${faction}.`};
   const invalid=validateDeck(profile);return invalid?{ok:false,reason:invalid}:{ok:true,trial:t};
  }
  const required=trialSource(t),name=CARDS[t.cardId].name;

@@ -1,10 +1,10 @@
 // Objectif commun à un Ordre : lecture de l'état réel, sans second moteur.
-import {CARDS} from '../data.js';
+import {CARDS,FACTIONS} from '../data.js';
 import {CARD_RARITIES} from '../cards/schema.js';
 
 export function ascensionObjectiveText(t){
  const q=t.goal;
- return `Gagner au plus tard au tour ${q.maxRound}, avec au moins ${q.distinct} personnages distincts de l’Aube encore vivants, dont un au rang ${CARD_RARITIES.find(r=>r.id===t.from).name}, et une couronne à au moins ${q.crownPercent} % de ses PV maximum.`;
+ return `Gagner au plus tard au tour ${q.maxRound}, avec au moins ${q.distinct} personnages distincts de ${FACTIONS[t.faction].short==='Aube'?'l’Aube':'la '+FACTIONS[t.faction].short} encore vivants, dont un au rang ${CARD_RARITIES.find(r=>r.id===t.from).name}, et une couronne à au moins ${q.crownPercent} % de ses PV maximum.`;
 }
 export function createAscensionChallenge(t){
  return {version:2,faction:t.faction,rarity:t.from,...t.goal,text:ascensionObjectiveText(t)};
@@ -22,7 +22,7 @@ export function ascensionObjectiveState(b,t){
  const q=b.trialChallenge,allies=b.board.flat().filter(u=>u?.side==='p'&&u.hp>0&&CARDS[u.id]?.faction===q.faction);
  const distinct=new Set(allies.map(u=>u.id)).size,crown=b.heroes.p;
  const checks=[
-  {label:`Personnages Aube vivants : ${distinct}/${q.distinct}`,met:distinct>=q.distinct},
+  {label:`Personnages ${FACTIONS[q.faction].short} vivants : ${distinct}/${q.distinct}`,met:distinct>=q.distinct},
   {label:`Un personnage ${CARD_RARITIES.find(r=>r.id===q.rarity).name} encore vivant`,met:allies.some(u=>(u.rarity||CARDS[u.id].rarity)===q.rarity)},
   {label:`PV de la couronne : au moins ${q.crownPercent} %`,met:crown.hp>0&&crown.hp*100>=crown.maxhp*q.crownPercent},
   {label:`Victoire au plus tard au tour ${q.maxRound} (tour ${b.round})`,met:b.round<=q.maxRound}

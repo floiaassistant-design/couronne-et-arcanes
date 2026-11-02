@@ -5,20 +5,9 @@ import {silenced} from './battle-control.js';
 import {lastCell} from './board.js';
 import {grantHealBarrier,grantAbilityBarrier} from './battle-defense.js';
 import {grantRegeneration} from './unit-effects.js';
-
-function allies(b,u,lane,parameters){
- const found=[];
- for(let l=0;l<b.board.length;l++){
-  if(parameters.scope!=='all-lines'&&l!==lane)continue;
-  for(let col=1;col<=lastCell(b);col++){
-   const other=b.board[l][col];
-   if(other&&other.hp>0&&other.side===u.side&&(parameters.includeSelf||other.uid!==u.uid))found.push({u:other,lane:l,col});
-  }
- }
- return found;
-}
-function inspireTargets(b,u,lane,p){return allies(b,u,lane,p).slice(0,p.targets);}
-const injuryOrder=(x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid;
+import {alliedTargets,injuryOrder} from './unit-targets.js';
+import {clearUnitPoison} from './unit-poison.js';
+function inspireTargets(b,u,lane,p){return alliedTargets(b,u,lane,p).slice(0,p.targets);}
 function strengthen(target,p){const before=target.atk;target.atk=Math.max(before,Math.min(p.cap,before+p.amount));return target.atk-before;}
 
 export function resolveUnitArrival(b,u,lane,col,hooks){
@@ -26,7 +15,7 @@ export function resolveUnitArrival(b,u,lane,col,hooks){
  if(!a||u.arrivalResolved||!(a.ward||a.arrivalInspire||a.intervention||a.arrivalBarrier))return;
  u.arrivalResolved=true;
  if(a.ward)b.heroes[u.side].shield=Math.max(b.heroes[u.side].shield,Math.min(a.ward.cap,b.heroes[u.side].shield+a.ward.amount));
- if(a.arrivalBarrier)for(const t of allies(b,u,lane,a.arrivalBarrier).sort(injuryOrder).slice(0,a.arrivalBarrier.targets)){
+ if(a.arrivalBarrier)for(const t of alliedTargets(b,u,lane,a.arrivalBarrier).sort(injuryOrder).slice(0,a.arrivalBarrier.targets)){
   if(grantAbilityBarrier(t.u,'arrivalBarrier',a.arrivalBarrier))hooks.emit(b,{type:'state',side:u.side,lane:t.lane,col:t.col});
  }
  if(a.arrivalInspire)for(const target of inspireTargets(b,u,lane,a.arrivalInspire)){
@@ -49,10 +38,16 @@ export function resolveUnitSupport(b,sideFilter,emit){
   const a=versionUnitAbilities(u);
   if(silenced(b,u))continue;
   if(a.heal&&u.lastHealRound!==b.round){
-   const p=a.heal,targets=allies(b,u,lane,p).filter(t=>t.u.hp<t.u.maxhp)
+   const p=a.heal,targets=alliedTargets(b,u,lane,p).filter(t=>t.u.hp<t.u.maxhp)
     .sort(injuryOrder).slice(0,p.targets);
    if(targets.length)u.lastHealRound=b.round;
-   for(const t of targets){const before=t.u.hp;t.u.hp=Math.min(t.u.maxhp,before+p.amount);grantHealBarrier(b,u,t.u,t.u.hp-before);if(a.regeneration&&t.u.hp>before)grantRegeneration(b,t.u,a.regeneration);emit(b,{type:'heal',side:u.side,lane:t.lane,col:t.col});}
+   for(const t of targets){const before=t.u.hp;t.u.hp=Math.min(t.u.maxhp,before+p.amount);grantHealBarrier(b,u,t.u,t.u.hp-before);
+    if(t.u.hp>before){
+     if(a.regeneration)grantRegeneration(b,t.u,a.regeneration);
+     if(a.purify?.poison)clearUnitPoison(t.u);
+     if(a.purify?.movement)delete t.u.movementRoot;
+    }
+    emit(b,{type:'heal',side:u.side,lane:t.lane,col:t.col});}
   }
   if(a.inspire&&b.round%a.inspire.period===0&&u.lastInspireRound!==b.round){
    const targets=inspireTargets(b,u,lane,a.inspire);if(targets.length)u.lastInspireRound=b.round;

@@ -120,7 +120,7 @@ test('Catalogue et économie inchangés : aucune variante dans paquets, Tour, re
 test('Références futures : refus sans consommation ni invocation partielle dans les deux camps',()=>{
  for(const side of ['p','e'])for(const legacy of [true,false]){
   for(const entry of [{id:'militia',rarity:'rare'},{id:'paladin',rarity:'commun'},
-   {id:'shield',rarity:'inconnue'},{id:'wolf',rarity:'éveillée'},{id:'militia',rarity:null}]){
+   {id:'shield',rarity:'inconnue'},{id:'bone',rarity:'éveillée'},{id:'militia',rarity:null}]){
    const b=createBattle(freshProfile(),{...CAMPAIGN[0],deck:[]},331,{legacy,turnFlow:'alternating'});
    b.phase=side==='p'?'player':'enemy';b.heroes[side].hand=[{...entry,wait:0}];
    const before=structuredClone(b);

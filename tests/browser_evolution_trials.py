@@ -142,7 +142,7 @@ async def earned_flow(browser,scenario,label,viewport,*,full=False,touch=False,u
         await click(page.locator('[data-action="export-save"]'),touch)
     exported=json.loads(Path(await (await download_info.value).path()).read_text())
     assert exported==changed
-    invalid=copy.deepcopy(exported);invalid['evolvedCollection']['wolf:divine']=1
+    invalid=copy.deepcopy(exported);invalid['evolvedCollection']['bone:divine']=1
     await page.locator('#import-file').set_input_files({'name':'invalide.json','mimeType':'application/json','buffer':json.dumps(invalid).encode()})
     assert await stored(page)==changed
     await page.locator('#import-file').set_input_files({'name':'profil.json','mimeType':'application/json','buffer':json.dumps(exported).encode()})
@@ -245,6 +245,7 @@ async def main(part=None):
             await run_card_pack_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',scenario='sylve')
             await run_sylve_legendary_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html')
             await run_ascension_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',make_case=case,click=click,select=select,replay=replay,stored=stored)
+            await run_ascension_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',make_case=case,click=click,select=select,replay=replay,stored=stored,faction='sylve')
             await browser.close()
     finally:server.shutdown();server.server_close()
 

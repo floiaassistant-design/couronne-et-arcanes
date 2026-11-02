@@ -40,7 +40,7 @@ test('La Collection expose 51 définitions, distingue les 9 rangs inexistants et
   const model=cardPresentation({id,rarity},{profile:p});if(!model.known){missing++;assert.equal(model.availability,'Rang inexistant');assert.equal(model.stats,null);}
  }
  assert.equal(missing,9);
- const unknown=cardPresentation({id:'wolf',rarity:'divine'},{profile:p});assert.equal(unknown.availability,'À concevoir');assert.equal(unknown.stats,null);
+ const unknown=cardPresentation({id:'bone',rarity:'divine'},{profile:p});assert.equal(unknown.availability,'À concevoir');assert.equal(unknown.stats,null);
  assert.equal(JSON.stringify(p),before);
 });
 

@@ -1,19 +1,25 @@
 // États temporaires communs aux unités ; jamais de modification permanente d'ATQ.
 import {versionUnitAbilities} from '../cards/definitions.js';
+import {applyUnitPoison,validPoisonOrigin} from './unit-poison.js';
 
-export function attackAfterPenalty(u,raw){return u.attackPenalty?Math.max(0,raw-u.attackPenalty.amount):raw;}
+export function attackAfterPenalty(u,raw){const boosted=raw+(u.fury||0);return u.attackPenalty?Math.max(0,boosted-u.attackPenalty.amount):boosted;}
 export function consumeAttackPenalty(u,raw){
  const result=attackAfterPenalty(u,raw),p=u.attackPenalty;
  if(p){if(p.remaining<=1)delete u.attackPenalty;else u.attackPenalty={...p,remaining:p.remaining-1};}
+ if(u.fury)delete u.fury;
  return result;
 }
-export function applyAttackEffects(source,target,suppressed=false){
+export function applyAttackEffects(source,target,suppressed=false,round=0,touched=true){
  if(suppressed||!target||target.side===source.side)return;
  const a=versionUnitAbilities(source);
  if(a?.poison&&source.ability==='poison'){
-  target.poison=a.poison.amount;target.poisonTurns=Math.max(target.poisonTurns||0,a.poison.resolutions);
+  applyUnitPoison(target,a.poison,{uid:source.uid,side:source.side,contagion:a.contagion});
  }
  if(a?.harass&&target.hp>0)target.attackPenalty={amount:a.harass.amount,remaining:a.harass.attacks};
+ if(touched&&target.hp>0&&a?.entangle&&round>0){
+  const p=a.entangle,ready=p.frequency==='invocation'?!source.entangleUsed:!(source.entangleReadyRound>round);
+  if(ready){target.movementRoot=1;if(p.frequency==='invocation')source.entangleUsed=true;else source.entangleReadyRound=round+p.period;}
+ }
 }
 export function grantRegeneration(b,target,parameters){
  target.regeneration={amount:parameters.amount,remaining:parameters.resolutions,readyRound:b.round+1};
@@ -33,5 +39,9 @@ const integer=(n,max)=>Number.isSafeInteger(n)&&n>0&&n<=max;
 export function validUnitEffects(u){
  const p=u.attackPenalty,r=u.regeneration;
  return (p===undefined||p&&integer(p.amount,100)&&integer(p.remaining,10))&&
-  (r===undefined||r&&integer(r.amount,100)&&integer(r.remaining,10)&&integer(r.readyRound,100));
+  (r===undefined||r&&integer(r.amount,100)&&integer(r.remaining,10)&&integer(r.readyRound,100))&&
+  (u.movementRoot===undefined||u.movementRoot===1)&&(u.entangleUsed===undefined||typeof u.entangleUsed==='boolean')&&
+  (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
+  (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
+  (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin);
 }

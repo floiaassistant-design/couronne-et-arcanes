@@ -6,18 +6,18 @@ from evolution_ci_plan import ascension_cases
 ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
 BATTLE='couronnes_arcanes_bataille_v1'
-SCENARIOS=json.loads(subprocess.check_output(['node','tests/fixtures/ascension-scenarios.mjs','--json'],cwd=ROOT))
+SCENARIOS={f:json.loads(subprocess.check_output(['node','tests/fixtures/ascension-scenarios.mjs','--json']+(['--sylve'] if f=='sylve' else []),cwd=ROOT)) for f in ['aube','sylve']}
 
-async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,stored):
+async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,stored,faction='aube'):
     for config in ascension_cases(part):
-        label,touch=config['label'],config['touch'];s=SCENARIOS[config['index']]
+        label,touch=config['label'],config['touch'];s=SCENARIOS[faction][config['index']];card_id='thorn' if faction=='sylve' else 'dawnbastion'
         address=url if label=='web' else None
         locked=copy.deepcopy(s);locked['profile']['completed']=[]
         ctx,page,errors,_=await make_case(browser,locked,config['viewport'],touch=touch,url=address)
         await click(page.locator('#nav [data-page="trials"]'),touch)
         tile=page.locator(f'[data-trial-id="{s["id"]}"]')
         assert await tile.locator('[data-action="trial-start"]').is_disabled()
-        assert await page.locator('.trial-card').count()==4 and await page.locator('.ascension-card').count()==2
+        assert await page.locator('.trial-card').count()==4 and await page.locator('.ascension-card').count()==4
         assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
         assert not errors,errors
         await ctx.close()
@@ -28,12 +28,12 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
             tile=page.locator(f'[data-trial-id="{s["id"]}"]')
             assert await tile.locator('[data-action="trial-start"]').is_enabled()
             await tile.scroll_into_view_if_needed()
-            await page.screenshot(path=f'/tmp/ca-evolution-ascension-{label}.png')
+            await page.screenshot(path=f'/tmp/ca-evolution-ascension-{faction}-{label}.png')
             await click(tile.locator('[data-action="trial-start"]'),touch)
             snapshot=await stored(page,BATTLE);assert snapshot['trialChallenge']['version']==2
             await click(page.locator('.trial-combat-objective summary'),touch)
             assert await page.locator('.trial-objective-panel li').count()==4
-            await page.screenshot(path=f'/tmp/ca-evolution-ascension-objective-{label}.png')
+            await page.screenshot(path=f'/tmp/ca-evolution-ascension-objective-{faction}-{label}.png')
             await click(page.locator('.trial-combat-objective summary'),touch)
             await page.reload();await page.locator('.combat-screen').wait_for();assert await stored(page,BATTLE)==snapshot
             await replay(page,s,touch,result_title='Ascension accomplie')
@@ -65,47 +65,48 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         assert await page.locator(f'[data-trial-id="{s["id"]}"] [data-action="trial-start"]').is_disabled()
         await page.reload();assert await stored(page)==result
         await click(page.locator('#nav [data-page="alchemy"]'),touch)
-        target='dawnbastion:'+s['trial']['to']
+        target=card_id+':'+s['trial']['to']
         recipe=page.locator(f'[data-fusion-id="{target}"]')
-        assert await recipe.locator('button').is_enabled()
+        assert await recipe.locator('button').is_enabled(),await recipe.inner_text()
         await click(recipe.locator('button'),touch)
         assert '3 exemplaires' in await page.locator('.modal').inner_text()
         assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
-        await page.screenshot(path=f'/tmp/ca-evolution-ascension-fusion-{label}.png')
+        await page.screenshot(path=f'/tmp/ca-evolution-ascension-fusion-{faction}-{label}.png')
         await click(page.locator('.modal [data-action="close-modal"]'),touch);assert await stored(page)==result
         await click(recipe.locator('button'),touch)
         await page.locator('.modal [data-action="evolution-fusion-confirm"]').dblclick()
         fused=await stored(page);assert fused['evolvedCollection'][target]==1
-        source='dawnbastion:'+s['trial']['from']
-        if s['trial']['from']=='légendaire':assert fused['collection']['dawnbastion']==result['collection']['dawnbastion']-3
+        source=card_id+':'+s['trial']['from']
+        if faction=='aube' and s['trial']['from']=='légendaire':assert fused['collection'][card_id]==result['collection'][card_id]-3
         else:assert fused['evolvedCollection'][source]==result['evolvedCollection'][source]-3
         for key in ['gold','shards','heroXp','completed','completedTrials','deck']:assert fused[key]==result[key],key
         await click(page.locator('#nav [data-page="collection"]'),touch)
-        row=page.locator('[data-collection-character="dawnbastion"]')
+        if faction=='sylve':await click(page.locator('[data-action="collection-faction"][data-id="sylve"]'),touch)
+        row=page.locator(f'[data-collection-character="{card_id}"]')
         assert await row.locator('td').count()==6
         assert 'Possédée ×1' in await row.locator(f'[data-collection-rarity="{s["trial"]["to"]}"]').inner_text()
         await click(page.locator('#nav [data-page="deck"]'),touch)
         await click(page.locator(f'[data-deck-card="{target}"] [data-action="deck-add"]'),touch)
-        final=await stored(page);assert {'id':'dawnbastion','rarity':s['trial']['to']} in final['deck']
+        final=await stored(page);assert {'id':card_id,'rarity':s['trial']['to']} in final['deck']
         await click(page.locator('#nav [data-page="guide"]'),touch)
         async with page.expect_download() as info:await click(page.locator('[data-action="export-save"]'),touch)
         exported=json.loads(Path(await (await info.value).path()).read_text());assert exported==final
         await page.locator('#import-file').set_input_files({'name':'ascension.json','mimeType':'application/json','buffer':json.dumps(exported).encode()})
         await page.locator('#view .hero-copy').wait_for();assert await stored(page)==final
-        seed=int(subprocess.check_output(['node','--input-type=module','-e',"import {createBattle} from './src/engine.js';import {CAMPAIGN} from './src/data.js';const p=JSON.parse(process.argv[1]);for(let s=1;s<=1000;s++){if(createBattle(p,CAMPAIGN[0],s).heroes.p.hand.some(c=>c.id==='dawnbastion'&&c.rarity===process.argv[2])){console.log(s);break}}",json.dumps(final),s['trial']['to']],cwd=ROOT))
+        seed=int(subprocess.check_output(['node','--input-type=module','-e',"import {createBattle} from './src/engine.js';import {CAMPAIGN} from './src/data.js';const p=JSON.parse(process.argv[1]);for(let s=1;s<=1000;s++){if(createBattle(p,CAMPAIGN[0],s).heroes.p.hand.some(c=>c.id===process.argv[3]&&c.rarity===process.argv[2])){console.log(s);break}}",json.dumps(final),s['trial']['to'],card_id],cwd=ROOT))
         await page.evaluate('(seed)=>{Date.now=()=>seed}',seed)
         await click(page.locator('#nav [data-page="campaign"]'),touch)
         await click(page.locator('[data-action="start-mission"][data-id="01"]'),touch)
         for _ in range(3):
             b=await stored(page,BATTLE);await click(page.locator('[data-action="end-turn"]'),touch)
             await page.wait_for_function('''([key,n])=>{const b=JSON.parse(localStorage.getItem(key));return b?.phase==='player'&&b.round>n}''',arg=[BATTLE,b['round']])
-        b=await stored(page,BATTLE);index=next(i for i,h in enumerate(b['heroes']['p']['hand']) if h['id']=='dawnbastion' and h.get('rarity')==s['trial']['to'])
+        b=await stored(page,BATTLE);index=next(i for i,h in enumerate(b['heroes']['p']['hand']) if h['id']==card_id and h.get('rarity')==s['trial']['to'])
         assert b['heroes']['p']['hand'][index]['wait']==0
         await select(page,index,touch)
         await click(page.locator('[data-action="deploy"][data-lane="0"][data-col="1"]'),touch)
         snapshot=await stored(page,BATTLE);unit=snapshot['board'][0][1]
-        assert (unit['id'],unit['rarity'],unit['atk'],unit['maxhp'])==('dawnbastion',s['trial']['to'],7 if s['trial']['to']=='divine' else 9,14)
-        assert unit['arrivalResolved'] and snapshot['heroes']['p']['shield']==3
+        assert (unit['id'],unit['rarity'],unit['atk'],unit['maxhp'])==(card_id,s['trial']['to'],(5 if faction=='sylve' else 7 if s['trial']['to']=='divine' else 9),(9 if faction=='sylve' else 14))
+        if faction=='aube':assert unit['arrivalResolved'] and snapshot['heroes']['p']['shield']==3
         await page.reload();await page.locator('.combat-screen').wait_for();assert await stored(page,BATTLE)==snapshot
         await click(page.locator('.combat-menu-link'),touch)
         await click(page.locator('#nav [data-page="alchemy"]'),touch)
@@ -117,4 +118,4 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         assert not errors,errors
         assert not external,external
         await ctx.close()
-        print(f'Ascension {label}: {s["trial"]["to"]}, {"combat UI complet" if config["full"] else "reprise après panne"}, déblocage sans cadeau, fusion, export/import et vraie invocation/reprise PASS',flush=True)
+        print(f'Ascension {faction} {label}: {s["trial"]["to"]}, {"combat UI complet" if config["full"] else "reprise après panne"}, déblocage sans cadeau, fusion, export/import et vraie invocation/reprise PASS',flush=True)

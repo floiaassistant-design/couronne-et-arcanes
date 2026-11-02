@@ -30,7 +30,19 @@ export const EVOLUTION_ASCENSIONS=freezeCardData([
   enemy:'Gardien de l’Éveil',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
   deck:['dawnbastion','paladin','shield','lancer','sunpriest','archer','banner','paladin','dawnbastion','shield','storm','healing','warcry','lancer','paladin','sunpriest','archer','shield']}
 ]);
-export const ALL_EVOLUTION_TRIALS=Object.freeze([...EVOLUTION_TRIALS,...EVOLUTION_ASCENSIONS]);
+// Même parcours pour la Sylve : deux défis de faction, puis les doublons exacts.
+export const SYLVE_ASCENSIONS=freezeCardData([
+ {id:'sylve-ascension-divine',kind:'ascension',faction:'sylve',name:'Le Serment des Racines',from:'légendaire',to:'divine',mission:'09',
+  goal:{distinct:3,crownPercent:40,maxRound:24},
+  enemy:'Conseil du Bosquet',difficulty:5,hp:48,boss:true,aiStyle:'bastion',
+  deck:['treant','bear','ranger','dryad','wolf','owl','treant','stag','archdruid','thorn','healing','warcry','bear','sylvan_trapper','dryad','storm']},
+ {id:'sylve-ascension-eveillee',kind:'ascension',faction:'sylve',name:'L’Éveil de la Canopée',from:'divine',to:'éveillée',mission:'12',previous:'sylve-ascension-divine',
+  goal:{distinct:4,crownPercent:60,maxRound:24},
+  enemy:'Gardien de la Canopée',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
+  deck:['archdruid','stag','treant','wolf','bear','ranger','pixie','stag','archdruid','treant','storm','healing','warcry','thorn','bear','dryad','owl','sylvan_trapper']}
+]);
+export const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS]);
+export const ALL_EVOLUTION_TRIALS=Object.freeze([...EVOLUTION_TRIALS,...ALL_EVOLUTION_ASCENSIONS]);
 export const evolutionTrial=id=>ALL_EVOLUTION_TRIALS.find(t=>t.id===id)||null;
 export const evolutionTrialFor=(id,rarity)=>EVOLUTION_TRIALS.find(t=>t.cardId===id&&t.to===rarity)||null;
-export const evolutionAscensionFor=(faction,rarity)=>EVOLUTION_ASCENSIONS.find(t=>t.faction===faction&&t.to===rarity)||null;
+export const evolutionAscensionFor=(faction,rarity)=>ALL_EVOLUTION_ASCENSIONS.find(t=>t.faction===faction&&t.to===rarity)||null;

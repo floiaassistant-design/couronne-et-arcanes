@@ -70,12 +70,24 @@ déjà appelés par une entrée. La lecture des imports/appels confirme notammen
 | `browser_card_preview.py` | `browser_card_presentation.py` et `browser_current_card_rules.py` |
 | `browser_collection.py` | `browser_manual_deck.py` et `browser_evolution_fusion.py` |
 | `browser_save_integrity_v211.py` | `browser_pending_results.py` (proposé) : pertes de stockage, actions/import et reprise pour les résultats ordinaires |
-| `browser_evolution_trials.py` | Paquets Aube **et** Sylve, Légendaires Sylve et ascensions ; une partie adaptée à chaque groupe |
+| `browser_evolution_trials.py` | Paquets Aube **et** Sylve, Légendaires Sylve et ascensions Aube/Sylve ; une partie adaptée à chaque groupe |
 | `browser_sylve.py`, `browser_ombre.py`, `browser_forge.py`, `browser_ether.py` | Pilote partagé `browser_aube.run`, avec l'ordre correspondant |
 
 L'existence d'un ancien script `browser_*.py` dans le dépôt ne prouve donc ni
 son exécution en CI ni son abandon. Lire la matrice et les appels transitifs
 avant de le lancer ou de le déclarer manquant.
+
+## Lot Sylve Divine / Éveillée proposé le 1er novembre
+
+`sylve_ascended.test.mjs` couvre les nouveaux déclencheurs et états facultatifs,
+`sylve_ascensions.test.mjs` les deux rencontres complètes, objectifs, accès,
+quotas et simulations déterministes. Le catalogue Sylve teste 59 versions à
+quatre niveaux dans les deux camps ; les 89 recettes passent par fusion,
+invocation et combats partagés. Les quatre parties navigateur existantes
+réutilisent les scénarios Aube/Sylve pour boss, objectif, reprise, échec de
+stockage, fusion, Collection/deck, export/import et invocation réelle.
+Aucune modification de la matrice permanente ni seconde exécution de la suite.
+[Contrat et limites](SYLVE_DIVINES_EVEILLEES.md). Résultats à lire dans la PR.
 
 ## Décision de validation et limites
 

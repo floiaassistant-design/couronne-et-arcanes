@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
+import {Script} from 'node:vm';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const read=p=>readFileSync(root+p,'utf8');
 test('V2.5 stable engine facade preserves all core entrypoints',async()=>{
@@ -26,4 +27,9 @@ test('V2.5 production bundle isolates internal variables and embeds offline artw
  assert.doesNotMatch(html,/Object\.defineProperties\(window/);
  assert.doesNotMatch(html,/<script[^>]*src=/);
  assert.doesNotMatch(html,/import \{/);
+});
+test('Le script autonome distribué est du JavaScript exécutable',()=>{
+ const script=read('JOUER.html').match(/<script>\n([\s\S]*)<\/script>/)?.[1];
+ assert.ok(script,'Script autonome manquant');
+ assert.doesNotThrow(()=>new Script(script,{filename:'JOUER.html'}));
 });
