@@ -1,10 +1,11 @@
 # Couronnes & Arcanes
 
 Le jeu intègre les sauvegardes protégées, Garde/Riposte uniques, le deck manuel,
-les paquets/fusions et les ascensions Aube/Sylve. Cette branche propose les
-22 évolutions Divines/Éveillées Ombre et leurs deux ascensions communes.
-La PR 71 Légendaire est intégrée ; la publication de chaque lot reste distincte.
-[Contrat hauts rangs Ombre](docs/OMBRE_DIVINES_EVEILLEES.md).
+les paquets/fusions et les ascensions Aube, Sylve et Ombre. La branche de la
+[PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75)
+propose dix évolutions Rares/Épiques Forge et leur paquet, **non fusionnées et non publiées**.
+Les rangs supérieurs Forge et les évolutions Éther restent hors de cette tranche.
+[Contrat Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md).
 [État intégré et publication](docs/ETAT_PROJET.md) · [Carte des tests](docs/CARTE_TESTS.md).
 
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
@@ -12,7 +13,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 
 ## Jouer
 
-- Impact de zone : cible secondaire uniquement immédiatement derrière la cible principale, sans case vide, dans le sens de la frappe ; voir [contrat de ciblage](docs/IMPACT_ZONE_2026_11_02.md). Ce correctif est proposé par PR dédiée tant qu'il n'est pas fusionné.
+- Impact de zone : cible secondaire uniquement immédiatement derrière la cible principale, sans case vide, dans le sens de la frappe ; voir le [contrat de ciblage](docs/IMPACT_ZONE_2026_11_02.md), intégré à main par la PR 73.
 
 - `index.html` / `npm run dev` : jeu web modulaire ; publication sur Sites après fusion.
 - `JOUER.html` : **unique export jouable**, complet et autonome sans réseau.
@@ -22,7 +23,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 évolutions Rares, puis du Milicien Épique après le premier boss. Accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; la fusion ouvre 41 évolutions Aube, 48 Sylve et 43 Ombre ; les 64 Divines/Éveillées Aube/Sylve/Ombre exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
+sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve et 43 Ombre ; cette branche propose dix évolutions Forge supplémentaires. Les 64 Divines/Éveillées Aube/Sylve/Ombre exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
