@@ -4991,7 +4991,8 @@ const {evolutionTrialFor}=__load("src/evolution-trials.js");
 const {evolutionFusionFor}=__load("src/evolution-fusion.js");
 const AUBE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='aube'&&c.type==='unité').map(c=>c.id));
 const SYLVE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='sylve'&&c.type==='unité').map(c=>c.id));
-const VERSIONED_UNIT_IDS=Object.freeze([...AUBE_UNIT_IDS,...SYLVE_UNIT_IDS]);
+const OMBRE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='ombre'&&c.type==='unité').map(c=>c.id));
+const VERSIONED_UNIT_IDS=Object.freeze([...AUBE_UNIT_IDS,...SYLVE_UNIT_IDS,...OMBRE_UNIT_IDS.filter(id=>evolutionFamily(id))]);
 const definitions=new Map();
 const noVersions=Object.freeze([]);
 
@@ -5051,7 +5052,7 @@ const CARD_RULESET='cards-v2';
 const resolveRulesDefinition=resolveUnitDefinition;
 function versionUnitAbilities(unit){return unit?resolveUnitDefinition(unit)?.abilities||null:null;}
 
-Object.assign(__exports,{AUBE_UNIT_IDS,SYLVE_UNIT_IDS,VERSIONED_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable,CARD_RULESET,resolveRulesDefinition,versionUnitAbilities});
+Object.assign(__exports,{AUBE_UNIT_IDS,SYLVE_UNIT_IDS,OMBRE_UNIT_IDS,VERSIONED_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable,CARD_RULESET,resolveRulesDefinition,versionUnitAbilities});
 
 },
 "src/cards/abilities.js":function(__exports,__load){
@@ -5102,10 +5103,12 @@ Object.assign(__exports,{GUARD_POLICY,nativeUnitAbilities,inheritUnitAbilities})
 // Familles de patches et provenance ; aucune règle ni statistique supplémentaire.
 const {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE}=__load("src/cards/aube.js");
 const {SYLVE_EVOLUTIONS,SYLVE_DESIGN_SOURCE}=__load("src/cards/sylve.js");
+const {OMBRE_EVOLUTIONS,OMBRE_DESIGN_SOURCE}=__load("src/cards/ombre.js");
 const {freezeCardData}=__load("src/cards/schema.js");
 const EVOLUTION_FAMILIES=freezeCardData([
  {id:'aube',versions:AUBE_EVOLUTIONS,source:AUBE_DESIGN_SOURCE},
- {id:'sylve',versions:SYLVE_EVOLUTIONS,source:SYLVE_DESIGN_SOURCE}
+ {id:'sylve',versions:SYLVE_EVOLUTIONS,source:SYLVE_DESIGN_SOURCE},
+ {id:'ombre',versions:OMBRE_EVOLUTIONS,source:OMBRE_DESIGN_SOURCE}
 ]);
 const evolutionFamily=id=>EVOLUTION_FAMILIES.find(f=>Object.hasOwn(f.versions,id))||null;
 
@@ -5222,6 +5225,28 @@ const SYLVE_EVOLUTIONS=freezeCardData({
 });
 
 Object.assign(__exports,{SYLVE_DESIGN_SOURCE,SYLVE_EVOLUTIONS});
+
+},
+"src/cards/ombre.js":function(__exports,__load){
+// Première tranche Ombre : les onze évolutions Rares/Épiques validées.
+// Le délai non chiffré de la Lame nocturne hérite du natif vérifié (1).
+const {freezeCardData}=__load("src/cards/schema.js");
+const OMBRE_DESIGN_SOURCE=freezeCardData({
+ url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
+ editedAt:'2026-10-27T06:13:46.581Z'
+});
+const OMBRE_EVOLUTIONS=freezeCardData({
+ bone:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}}},
+ shade:{'épique':{stats:{hp:5}}},
+ crypt:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}}},
+ plague:{'épique':{stats:{hp:7}}},
+ graveknight:{'épique':{stats:{hp:10}}},
+ nightblade:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}}},
+ spectre:{'épique':{stats:{hp:6}}},
+ mist_inquisitor:{'épique':{stats:{hp:8}}}
+});
+
+Object.assign(__exports,{OMBRE_DESIGN_SOURCE,OMBRE_EVOLUTIONS});
 
 },
 "src/evolution-trials.js":function(__exports,__load){
@@ -5377,7 +5402,8 @@ const CARD_PACKS=freezeCardData([
   {label:'Carte de base Épique',weight:7,cards:nativeRank('épique')}
  ]},
  evolutionPack('aube','de l’Aube','Aube'),
- evolutionPack('sylve','de la Sylve','Sylve')
+ evolutionPack('sylve','de la Sylve','Sylve'),
+ evolutionPack('ombre','de l’Ombre','Ombre')
 ]);
 const cardPack=id=>CARD_PACKS.find(p=>p.id===id)||null;
 const evolutionPackFor=(id,rarity)=>CARD_PACKS.find(p=>p.groups.some(g=>g.cards.some(ref=>typeof ref==='object'&&ref.id===id&&ref.rarity===rarity)))||null;
@@ -5439,6 +5465,7 @@ function unitCardText(d){
  if(a.harass)parts.push(`Harcèlement −${a.harass.amount} ATQ${a.harass.attacks>1?' · '+a.harass.attacks+' attaques':''}`);
  if(a.poison)parts.push(`Poison ${a.poison.amount} · ${a.poison.resolutions} tours`);
  if(a.trapper)parts.push(`Piège ${a.trapper.damage} / ${a.trapper.period} tours${a.trapper.poison?' · Poison '+a.trapper.poison.amount:''}`);
+ if(a.silence)parts.push(`Silence / ${a.silence.period} tours`);
  if(a.flying)parts.push('Vol');
  if(d.geometry.range>1)parts.unshift(`Portée ${d.geometry.range}`);
  return parts.slice(0,3).join(' · ')||'Corps à corps';
@@ -5468,6 +5495,7 @@ function unitAbilityDetails(d){
  if(a.poison)lines.push(`Après une attaque sur une unité : Poison ${a.poison.amount} dégât par tour pendant ${a.poison.resolutions} tours ; une nouvelle application renouvelle la durée.`);
  if(a.trapper)lines.push(`Tous les ${a.trapper.period} tours : arme si possible la case libre éligible juste devant. Piège visible pendant ${a.trapper.resolutions} tours au plus ; ${a.trapper.damage} dégât${a.trapper.damage>1?'s':''} brut${a.trapper.damage>1?'s':''} avant protections, déplacement et attaque bloqués pour le tour du déclenchement.`);
  if(a.trapper?.poison)lines.push(`Si la victime du piège survit : Poison ${a.trapper.poison.amount} pendant ses ${a.trapper.poison.resolutions} prochains tours de combat, sans dégât de poison immédiat ni cumul.`);
+ if(a.silence)lines.push(`Avant son déplacement : réduit au silence certaines capacités d’un ennemi de sa ligne pendant ${a.silence.resolutions} tour, au plus une fois tous les ${a.silence.period} tours. Attaques normales et traits passifs conservés.`);
  if(a.entangle)lines.push(`Entrave : après une attaque touchant une unité ennemie survivante, empêche seulement son prochain déplacement. ${a.entangle.frequency==='invocation'?'Une fois par invocation.':'Au plus une fois tous les '+a.entangle.period+' tours, durée rafraîchie sans cumul.'} La cible peut attaquer.`);
  if(a.chargeBarrier)lines.push(`Après une attaque chargée sur une unité : barrière personnelle ${a.chargeBarrier.amount}${a.chargeBarrier.allies?' et barrière '+a.chargeBarrier.amount+' à un autre allié de sa ligne, priorité au plus blessé proportionnellement':''}. Plafond ${a.chargeBarrier.cap} par cible pour cet effet ; aucun gain sans déplacement ni contre la couronne seule.`);
  if(a.contagion)lines.push(`Contagion : au premier décès d’un ennemi portant encore son poison, transmet Poison ${a.contagion.amount} pendant ${a.contagion.resolutions} tours à l’ennemi vivant le plus proche sur la même ligne. Une fois par invocation, sans chaîne ; reste attachée au poison si sa source disparaît.`);
