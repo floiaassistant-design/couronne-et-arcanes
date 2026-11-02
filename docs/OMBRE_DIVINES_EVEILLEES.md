@@ -110,6 +110,13 @@ Le pilote navigateur d'ascensions existant ajoute l'Ombre aux quatre parties,
 avec panne, reprise, fusion, export/import et invocation réelle. Les témoins
 « version absente » restent sur Forge, dont aucun rang n'est implémenté ici.
 
+Contrôles locaux : 608 tests Node réussis, 120 scénarios de parité identiques,
+20 480 combats de contrôle et 6 144 d'arène (zéro état invalide), builds autonome,
+diagnostic et web réussis. Graphe inchangé : 76 modules, 297 dépendances sans cycle.
+Le premier précontrôle a exposé une fixture d'ascension qui réservait deux des
+trois copies Divines au deck. Le scénario prépare maintenant les copies libres
+supplémentaires par les vraies fusions, sans modifier la protection du deck.
+Les parcours corrigés et la CI complète restent à confirmer sur la tête de PR.
 Les résultats et SHA exacts restent dans la PR. Les tests de robot et Chromium
 simulé ne valident ni difficulté humaine ni téléphone physique/Safari/Firefox.
 Après CI, revue et accord spécifique : intégrer et vérifier séparément la
