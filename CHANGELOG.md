@@ -4,7 +4,7 @@
 
 - Cible secondaire immédiatement derrière la première unité frappée, sans traverser de vide ni d’allié, dans les deux directions et sur les plateaux anciens/récents.
 - Impact de zone multiple : deux cibles secondaires uniquement consécutives, sans propagation libre. Dégâts, Armure, barrières, Garde et sauvegardes inchangés hors ciblage prévu.
-- Tests moteur dédiés et documentation de conception ; proposition **non fusionnée** et export autonome à régénérer et contrôler avant intégration.
+- 614 tests Node réussis sur la branche ; 120 instantanés de parité recalculés depuis le moteur (8 modifiés), export autonome régénéré depuis les sources. La CI finale reste à vérifier ; proposition **non fusionnée**.
 
 
 ## Proposition — Ombre Divine / Éveillée, 2 novembre 2026

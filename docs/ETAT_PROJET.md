@@ -69,7 +69,7 @@ Ce nouveau lot conserve son accord de fusion spécifique et sa publication disti
 ## Proposition en préparation — Impact de zone
 
 - Branche `fix/impact-zone-adjacence-20261102`, issue de main `afdf6543761dd04c832e268f7d5f261cb23addf6`. Correction du ciblage natif et de l’Impact multiple de l’Archiliche selon la décision Notion, sans retouche des 53 unités ni des 210 évolutions conçues.
-- [Contrat spécialisé](IMPACT_ZONE_2026_11_02.md). Tests et reconstruction de `JOUER.html` restent à confirmer sur l’arbre proposé ; aucune fusion ni publication n’est déduite de cette branche.
+- [Contrat spécialisé](IMPACT_ZONE_2026_11_02.md). Sur la branche, 614 tests Node réussis ; 120 scénarios de parité régénérés, dont 8 affectés par la règle ; `JOUER.html` et l’export diagnostic reconstruits depuis les sources. Le verdict de la CI sur le dernier commit reste à confirmer ; aucune fusion ni publication n’est déduite de cette branche.
 - Les 78 évolutions Forge/Éther demeurent une mission ultérieure indépendante.
 
 ## Travaux durables restant à réaliser
