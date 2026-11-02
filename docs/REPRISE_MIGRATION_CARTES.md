@@ -1,13 +1,14 @@
-# Reprise des migrations de cartes — reprise Ombre du 2 novembre 2026
+# Reprise des migrations de cartes — Forge Rare/Épique proposée le 2 novembre 2026
 
 Source de conception : [tableau maître unique](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
 édition relue `2026-11-02T15:29:46.385Z`. Les compteurs ci-dessous décrivent
 les cases de conception complètes, pas leur livraison. Aucun tableau parallèle
 de pouvoirs ni validation de nouvelles décisions.
 
-GitHub reste la source du jeu. Base vérifiée : main
+GitHub reste la source du jeu. Base historique du lot Ombre : main
 `588692a44680f7f08a51d37407e396685d67cc8f`, PR 71 intégrée après accord et six
-contrôles réussis. Les 41 évolutions Aube, 48 Sylve et 21 Ombre jusqu'à Légendaire
+contrôles réussis. Base de la nouvelle proposition Forge :
+`843f1412f689b75acca7ff80fb44b99c149cb6c7`, PR 73 intégrée. Les 41 évolutions Aube, 48 Sylve et 21 Ombre jusqu'à Légendaire
 sont intégrées. `feat/ombre-divines-eveillees` propose les 22 hauts rangs restants,
 sans modifier Notion. [Contrat](OMBRE_DIVINES_EVEILLEES.md). La publication est
 suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
@@ -17,7 +18,7 @@ suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 21 évolutions intégrées ; 22 hauts rangs proposés, 54 versions sur la branche |
-| Forge | 10 | 39 sur 39 cases futures | Validation complète dans cette édition Notion ; évolutions non implémentées au moteur |
+| Forge | 10 | 39 sur 39 cases futures | 10 Rares/Épiques proposées sur une branche (7 unités), les autres non implémentées sur main |
 | Éther | 11 | 9 sur 39 cases futures | Feu follet et Oracle complets ; autres cases encore ouvertes dans cette édition ; règles partielles de Garde distinctes |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
@@ -70,9 +71,11 @@ attend ses contrôles et son propre accord de fusion ; elle n'est pas publiée.
 
 ## Reprise suivante : Forge et Éther
 
-Les 39 évolutions Forge sont entièrement validées dans l'édition relue.
-Ne pas déduire leur intégration du statut Notion : elles restent absentes du
-registre. L'Éther conserve 30 cases futures incomplètes dans cette édition.
+Les 39 évolutions Forge sont entièrement validées dans la conception.
+La première tranche [Rare/Épique](FORGE_RARE_EPIQUE.md) propose dix versions
+sur sept personnages (3 Rares et 7 Épiques), et 142 recettes au total
+sur sa branche, sans fusion ni publication. Ne pas déduire l'intégration
+sur main du seul statut Notion. L'Éther conserve 30 cases futures incomplètes dans cette édition.
 La nouvelle portée native 3 du Feu follet est une décision séparée du natif 2
 encore au moteur ; elle exige son propre périmètre, contrôle et documentation.
 Relire Notion à la reprise, car la conception continue en parallèle.

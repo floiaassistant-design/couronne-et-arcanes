@@ -6,9 +6,9 @@ consulter [les PR GitHub](https://github.com/floiaassistant-design/couronne-et-a
 la branche `main` et les [exécutions GitHub Actions](https://github.com/floiaassistant-design/couronne-et-arcanes/actions).
 Ne pas déduire un état actuel d'un ancien SHA ou d'un compte rendu daté.
 
-## Correctif de ciblage proposé — 2 novembre 2026
+## Reprise Forge Rare/Épique — proposition du 2 novembre 2026
 
-Une branche dédiée propose de limiter l'Impact de zone à la case immédiatement derrière la cible principale, dans le sens de l'attaque. L'Archiliche Éveillée conserve ses deux secondaires adjacentes si la chaîne est complète. [Contrat et tests](IMPACT_ZONE_2026_11_02.md). **Non fusionné, non publié** ; aucun changement de progression ni des 53 fiches Notion.
+Le dernier main observé au début de la branche est `843f1412f689b75acca7ff80fb44b99c149cb6c7`, intégrant la PR 73 d'Impact de zone. La tranche [Forge Rare/Épique](FORGE_RARE_EPIQUE.md) propose dix versions sur sept unités et un paquet distinct, sans activation de rang supérieur ni écriture Notion. Ce lot doit encore être testé et relu dans sa PR, puis autorisé séparément avant fusion et publication.
 
 ## Jalons intégrés
 
@@ -33,6 +33,10 @@ Une branche dédiée propose de limiter l'Impact de zone à la case immédiateme
   spécifique et six contrôles réussis le 2 novembre 2026 dans
   `039a6a7d9a9de3ddb2feaccd58999924444daab6`. Arbre identique à la tête testée.
 
+- [PR 73](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/73) :
+  ciblage contigu de l'Impact de zone, intégré sur main le 2 novembre 2026,
+  sans changement des sauvegardes ou des décisions Notion.
+
 - [PR 71](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/71) :
   dix Légendaires Ombre et Veille funéraire, fusionnées après accord spécifique
   et six contrôles réussis dans `588692a44680f7f08a51d37407e396685d67cc8f`.
@@ -40,7 +44,7 @@ Une branche dédiée propose de limiter l'Impact de zone à la case immédiateme
 
 Les évolutions de l'Aube sont obtenables (41), celles de la Sylve également
 jusqu'au rang Éveillé (48), et 21 évolutions Ombre jusqu'à Légendaire sont
-intégrées. Forge et Éther restent natifs au moteur. Le laboratoire réutilise
+intégrées. Forge et Éther restent natifs sur main à la base de cette proposition ; les dix évolutions Forge sont exclusivement sur sa branche non fusionnée. Le laboratoire réutilise
 le même moteur sans modifier la progression.
 
 ## Processus de livraison
@@ -77,9 +81,9 @@ Ce nouveau lot conserve son accord de fusion spécifique et sa publication disti
   isolées de l'audit ne remplacent pas ce parcours complet.
 - Vérifier la lisibilité et l'interaction sur téléphone physique ; la CI
   couvre Chromium simulé, pas Safari, Firefox ni l'équilibrage humain.
-- Relire la proposition Divine/Éveillée Ombre et sa CI avant intégration autorisée ;
-  reprendre ensuite Forge/Éther sur la dernière édition Notion, sans appliquer
-  implicitement leurs nouvelles décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
+- Relire les validations Notion les plus récentes à chaque tranche ; pour Forge,
+  contrôler la PR Rare/Épique avant tout accord de fusion. Éther reste séparé,
+  sans appliquer implicitement ses nouvelles décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 
