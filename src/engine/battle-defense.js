@@ -6,35 +6,9 @@ import {recordCombatEvent} from './combat-events.js';
 import {consumeAttackPenalty} from './unit-effects.js';
 import {resolveUnitDeath} from './unit-death.js';
 
-const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier'];
-export function grantAbilityBarrier(u,key,parameters){
- if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
- const sources={...u.abilityBarriers};
- const remaining=Math.min(sources[key]||0,u.barrier||0);
- const added=Math.max(0,Math.min(parameters.amount,parameters.cap-remaining));
- if(!added)return 0;
- sources[key]=remaining+added;u.abilityBarriers=sources;
- u.barrier=(u.barrier||0)+added;
- return added;
-}
-
-export function grantSharedBarrier(u,amount,cap){
- // Le plafond du sort porte sur la barrière totale ; ne jamais effacer un
- // surplus déjà acquis via une autre source ni réattribuer ses points.
- const total=u.barrier||0;u.barrier=Math.max(total,Math.min(cap,total+amount));
-}
-
-function absorbBarrier(u,damage){
- const absorbed=Math.min(u.barrier||0,damage);
- if((u.barrier||0)>0)u.barrier-=absorbed;
- if(absorbed&&u.abilityBarriers){
-  let left=absorbed;const sources={...u.abilityBarriers};
-  // Les barrières de capacités sont consommées avant le reste du bouclier.
-  for(const key of barrierKeys){const used=Math.min(sources[key]||0,left);sources[key]=(sources[key]||0)-used;left-=used;}
-  u.abilityBarriers=sources;
- }
- return absorbed;
-}
+import {absorbBarrier,grantAbilityBarrier} from './unit-barriers.js';
+// Préserver les imports existants des appelants.
+export * from './unit-barriers.js';
 
 export function hit(b,u,raw,bySide,ignoreArmor=false,attack=false){
  if(!u||u.hp<=0)return 0; // Une victime ne compte jamais deux fois.

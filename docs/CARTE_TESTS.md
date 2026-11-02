@@ -98,6 +98,19 @@ parties d'épreuves ajoutent le scénario de paquet Ombre sans nouvelle entrée 
 matrice ; le contrôle commun des illustrations vérifie les six colonnes et
 les PV de chaque version définie. [Contrat](OMBRE_RARE_EPIQUE.md).
 
+## Lot Légendaire Ombre proposé le 2 novembre
+
+`ombre_legendary.test.mjs` exerce les dix fusions et Veille funéraire : ordre
+immédiat des morts, une fois par tour, plafonds par effet, plusieurs copies,
+Silence, deux camps, sauvegarde et instantanés. Un cas exécute le moteur
+embarqué depuis le véritable export. Le catalogue couvre 32 versions Ombre
+et le robot partagé 110 recettes, sans modifier sa référence de parité.
+
+Le pilote Légendaire Sylve est étendu par scénario au Faucheur Ombre ; sa pose
+attend son délai réel, puis vérifie Poison, fiche Veille et reprise. Les quatre
+parties d'épreuves l'appellent, sans ajouter de commande de matrice.
+[Contrat et limites](OMBRE_LEGENDAIRES.md).
+
 ## Décision de validation et limites
 
 PR uniquement Markdown racine/`docs/` : classification réelle du diff, puis

@@ -5,7 +5,7 @@ import {recordTrialFact,recordTrialTurn} from './trial-objectives.js';
 import {findCrownGuardian} from './guard-candidates.js';
 import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError} from './unit-rules.js';
 import {resolveUnitArrival,resolveUnitSupport} from './unit-support.js';
-import {consumeAttackPenalty,applyAttackEffects,resolveRegeneration} from './unit-effects.js';
+import {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal} from './unit-effects.js';
 import {tickUnitPoison,clearUnitPoison} from './unit-poison.js';
 import {resolveStrikeRewards} from './unit-triggers.js';
 import {resolveUnitDeath} from './unit-death.js';
@@ -253,15 +253,15 @@ function resolveAttacks(b,sideFilter=null){
    if(guardIntercept){
     const killed=strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane,charged);
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
-    if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
+    if(ability==='lifesteal')resolveLifesteal(b,u);
     applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0);
     if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
-   }else{damageHero(b,target.side,atk);if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}}
+   }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
   } else {
    const killed=strike(b,u,target.target,atk,intent.col,target.col,true,charged);
-   if(ability==='lifesteal'){const h=b.heroes[u.side];h.hp=Math.min(h.maxhp,h.hp+2);}
+   if(ability==='lifesteal')resolveLifesteal(b,u);
    applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0);
    if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
    if(ability==='splash'){

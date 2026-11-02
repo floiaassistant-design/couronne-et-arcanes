@@ -1,5 +1,16 @@
 # Journal des changements
 
+## Proposition — Légendaires Ombre, 2 novembre 2026
+
+- Dix évolutions Légendaires, obtenues par fusion de trois Épiques libres
+  après mission 06 ; 32 versions Ombre définies et 110 recettes au total.
+- Veille funéraire du Veilleur : barrière personnelle 2 après la mort d'un
+  autre allié sur sa ligne, plafond 2 pour cet effet, au plus une fois par tour.
+- Barrières communes extraites sans cycle, API existante conservée ; quotas
+  et instantanés validés à la reprise. Vol de vie paramétré à valeur inchangée.
+- Paquets et récompenses conservés. [Contrat et reprise](docs/OMBRE_LEGENDAIRES.md).
+
+
 ## Proposition — Ombre Rare / Épique, 2 novembre 2026
 
 - Onze évolutions validées pour huit personnages, 22 versions Ombre définies
