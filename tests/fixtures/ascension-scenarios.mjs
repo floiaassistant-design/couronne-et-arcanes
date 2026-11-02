@@ -1,6 +1,6 @@
 // Parties complètes du moteur et préparation de profils avancés pour les tests.
 import {CARDS,CAMPAIGN} from '../../src/data.js';
-import {EVOLUTION_ASCENSIONS,SYLVE_ASCENSIONS} from '../../src/evolution-trials.js';
+import {EVOLUTION_ASCENSIONS,SYLVE_ASCENSIONS,OMBRE_ASCENSIONS} from '../../src/evolution-trials.js';
 import {EVOLUTION_FUSIONS} from '../../src/evolution-fusion.js';
 import {cardReference,cardKey} from '../../src/cards/references.js';
 import {freshProfile,createBattle,createEvolutionTrial,settleEvolutionTrial,fuseEvolutionCopies,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower} from '../../src/engine.js';
@@ -9,6 +9,8 @@ import {chooseSimulatedMove} from '../../scripts/lib/battle_runner.mjs';
 
 const composition=['shield','shield','shield','lancer','lancer','lancer','archer','archer','archer','cleric','cleric','sunpriest','sunpriest','banner','banner','scoutcaptain','scoutcaptain','paladin','healing','healing'];
 const sylveComposition=['treant','treant','treant','bear','bear','wolf','wolf','ranger','ranger','dryad','dryad','archdruid','archdruid','pixie','pixie','owl','sylvan_trapper','stag','healing','healing'];
+const ombreComposition=['crypt','crypt','crypt','graveknight','graveknight','shade','shade','bone','bone','vampire','vampire','banshee','banshee','lich','mist_inquisitor','plague','nightblade','spectre','healing','healing'];
+const factionComposition=faction=>faction==='ombre'?ombreComposition:faction==='sylve'?sylveComposition:composition;
 export function ascensionProfile(rarity='légendaire',level=2,faction='aube'){
  const p=freshProfile();p.completed=CAMPAIGN.map(m=>m.id);p.unlocked=12;p.guideSeen=true;p.heroClass='clerc';
  p.evolvedCollection={};p.buildings.bastion=2;p.buildings.forge=1;
@@ -16,8 +18,8 @@ export function ascensionProfile(rarity='légendaire',level=2,faction='aube'){
   p.collection[id]=30;p.upgrades[id]=level;
   if(CARDS[id].rarity!==rarity)p.evolvedCollection[cardKey({id,rarity})]=30;
  }
- p.deck=(faction==='sylve'?sylveComposition:composition).map(id=>CARDS[id].type==='sort'?id:cardReference({id,rarity}));
- if(faction==='sylve')p.collection.healing=30;
+ p.deck=factionComposition(faction).map(id=>CARDS[id].type==='sort'?id:cardReference({id,rarity}));
+ if(faction!=='aube')p.collection.healing=30;
  return p;
 }
 export function playAscension(profile,id,seed,withActions=false){
@@ -40,7 +42,7 @@ export function playAscension(profile,id,seed,withActions=false){
 }
 export function ascensionScenarios(faction='aube'){
  const scenarios=[];let profile=ascensionProfile('légendaire',2,faction);
- for(const t of faction==='sylve'?SYLVE_ASCENSIONS:EVOLUTION_ASCENSIONS){
+ for(const t of faction==='ombre'?OMBRE_ASCENSIONS:faction==='sylve'?SYLVE_ASCENSIONS:EVOLUTION_ASCENSIONS){
   let found;
   for(let seed=1;seed<=256&&!found;seed++){
    const run=playAscension(profile,t.id,seed,true),expected=structuredClone(profile);
@@ -50,12 +52,12 @@ export function ascensionScenarios(faction='aube'){
   if(!found)throw Error('Aucun parcours réussi : '+t.id);
   scenarios.push(found);profile=structuredClone(found.expected);
   if(t.to==='divine'){
-   for(const recipe of EVOLUTION_FUSIONS.filter(r=>r.to==='divine'&&CARDS[r.cardId].faction===faction))for(let n=0;n<3;n++){
+   for(const recipe of EVOLUTION_FUSIONS.filter(r=>r.to==='divine'&&CARDS[r.cardId].faction===faction))for(let n=0;n<3+(faction==='ombre'?factionComposition(faction).filter(id=>id===recipe.cardId).length:0);n++){
     const r=fuseEvolutionCopies(profile,recipe.id);if(!r.ok)throw Error(r.reason);
    }
-   profile.deck=(faction==='sylve'?sylveComposition:composition).map(id=>CARDS[id].type==='sort'?id:cardReference({id,rarity:'divine'}));
+   profile.deck=factionComposition(faction).map(id=>CARDS[id].type==='sort'?id:cardReference({id,rarity:'divine'}));
   }
  }
  return scenarios;
 }
-if(process.argv.includes('--json'))console.log(JSON.stringify(ascensionScenarios(process.argv.includes('--sylve')?'sylve':'aube')));
+if(process.argv.includes('--json'))console.log(JSON.stringify(ascensionScenarios(process.argv.includes('--ombre')?'ombre':process.argv.includes('--sylve')?'sylve':'aube')));

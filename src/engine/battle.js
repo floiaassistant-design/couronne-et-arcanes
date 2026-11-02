@@ -5,7 +5,7 @@ import {recordTrialFact,recordTrialTurn} from './trial-objectives.js';
 import {findCrownGuardian} from './guard-candidates.js';
 import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError} from './unit-rules.js';
 import {resolveUnitArrival,resolveUnitSupport} from './unit-support.js';
-import {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal} from './unit-effects.js';
+import {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty} from './unit-effects.js';
 import {tickUnitPoison,clearUnitPoison} from './unit-poison.js';
 import {resolveStrikeRewards} from './unit-triggers.js';
 import {resolveUnitDeath} from './unit-death.js';
@@ -192,19 +192,23 @@ function moveUnits(b,sideFilter=null){
   const cols=Array.from({length:lastCell(b)},(_,i)=>side==='p'?lastCell(b)-i:i+1);
   for(const original of cols){const u=b.board[lane][original];if(!u||u.side!==side||u.stun>0)continue;
    if(u.movementRoot){delete u.movementRoot;continue;}
-   let col=original;const steps=unitMovementSteps(u,silenced(b,u));
+   const a=versionUnitAbilities(u),tracked=!!(a?.pierce?.minMovedCells||a?.traverseAlly);
+   if(tracked)u.movedCellsThisRound=0;
+   let col=original,crossed=0;const steps=unitMovementSteps(u,silenced(b,u),b.round);
    for(let step=0;step<steps;step++){
     if(findTarget(b,lane,col,u))break;
     const next=col+forward(side);
     if(next<1||next>lastCell(b))break;
     let destination=next;
     if(b.board[lane][next]){
-      if(isFlying(u)){
+      if(isFlying(u)||!silenced(b,u)&&a?.traverseAlly&&b.board[lane][next].side===u.side&&crossed<a.traverseAlly.max){
         const leap=next+forward(side);
         if(leap<1||leap>lastCell(b)||b.board[lane][leap])break;
-        destination=leap;
+        if(a?.traverseAlly&&step+2>steps)break;
+        destination=leap;if(a?.traverseAlly){step++;crossed++;}
       }else break;
     }
+    if(tracked)u.movedCellsThisRound+=Math.abs(destination-col);
     b.board[lane][destination]=u;b.board[lane][col]=null;u.movedThisRound=true;fx(b,{type:'move',lane,from:col,to:destination,side,icon:CARDS[u.id]?.icon||'♞'});col=destination;
     enterCell(b,u,lane,col);if(u.hp<=0||u.stun>0)break;
    }
@@ -228,11 +232,19 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
  if(other&&other.hp>0&&other.side!==u.side)hit(b,other,p.amount,u.side,p.ignoreArmor,true);
 }
 
-function strike(b,u,target,atk,from,to,sameLine=true,charged=false){
- const before=target.hp;if(atk>0)hit(b,target,atk,u.side,unitHasPierce(u,silenced(b,u),charged),true);
+function strike(b,u,target,atk,from,to,sameLine=true,charged=false,suppressed=false,attackState=null){
+ const execution=executionBonus(u,target,suppressed),before=target.hp;
+ const raw=execution&&attackState?attackAfterPenalty(attackState.unit,attackState.raw+execution):atk;
+ if(raw>0)hit(b,target,raw,u.side,unitHasPierce(u,suppressed,charged),true,{attacker:u,from,to,sameLine});
  const damage=Math.max(0,before-target.hp);
  if(sameLine&&(to-from)*(u.side==='p'?1:-1)>=2)recordTrialFact(b,u,'rangedDamage',damage);
- return atk>0&&before>0&&target.hp<=0;
+ return {primaryAlive:before>0,performed:raw>0,killed:raw>0&&before>0&&target.hp<=0,damaged:damage>0,execution:execution>0};
+}
+function resolveSplash(b,u,lane,primary,atk,intercepted=false,primaryAlive=true){
+ const p=versionUnitAbilities(u)?.splash;
+ if(!p||intercepted&&!p.onGuard||p.requiresAttack&&(!primaryAlive||atk<=0))return;
+ const others=b.board[lane].filter(v=>v&&v.side!==u.side&&v.uid!==primary.uid&&v.hp>0).slice(0,p.targets||1);
+ for(const extra of others)hit(b,extra,p.amount,u.side,false,true);
 }
 function resolveAttacks(b,sideFilter=null){
  const intents=[];
@@ -240,7 +252,11 @@ function resolveAttacks(b,sideFilter=null){
   const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0||(sideFilter&&u.side!==sideFilter))continue;
   const target=findTarget(b,lane,col,u);
   const charged=!silenced(b,u)&&unitChargeAmount(u)>0&&!!u.movedThisRound;
-  if(target){const furious=!!u.fury;intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0)),ability:activeAbility(b,u),charged,furious,suppressed:silenced(b,u)});}
+  if(target){
+   const furious=!!u.fury,raw=u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0);
+   const attackState=versionUnitAbilities(u)?.execution?{unit:{...u,attackPenalty:u.attackPenalty?{...u.attackPenalty}:undefined},raw}:null;
+   intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,raw),attackState,ability:activeAbility(b,u),charged,furious,suppressed:silenced(b,u)});
+  }
  }
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
@@ -251,29 +267,30 @@ function resolveAttacks(b,sideFilter=null){
   if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +${unitChargeAmount(u)} attaque sur la ligne ${lane+1}.`);
   if(target.type==='hero'){
    if(guardIntercept){
-    const killed=strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane,charged);
+    const result=strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane,charged,intent.suppressed,intent.attackState);
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
     if(ability==='lifesteal')resolveLifesteal(b,u);
-    applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0);
-    if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
+    applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0,{battle:b,lane:guardIntercept.lane,col:guardIntercept.col});
+    if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result},fx);
+    if(ability==='splash')resolveSplash(b,u,guardIntercept.lane,guardIntercept.u,atk,true,result.primaryAlive);
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
   } else {
-   const killed=strike(b,u,target.target,atk,intent.col,target.col,true,charged);
+   const result=strike(b,u,target.target,atk,intent.col,target.col,true,charged,intent.suppressed,intent.attackState);
    if(ability==='lifesteal')resolveLifesteal(b,u);
-   applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0);
-   if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
-   if(ability==='splash'){
-    const extra=b.board[lane].find(v=>v&&v.side!==u.side&&v.uid!==target.target.uid&&v.hp>0);
-    if(extra)hit(b,extra,2,u.side,false,true);
-   }
+   applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0,{battle:b,lane,col:target.col});
+   if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result},fx);
+   if(ability==='splash')resolveSplash(b,u,lane,target.target,atk,false,result.primaryAlive);
    resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);
   }
  }
  // Le bonus de charge ne dure qu'un seul tour et doit survivre aux sauvegardes historiques.
- for(const row of b.board)for(const u of row)if(u&&(!sideFilter||u.side===sideFilter))u.movedThisRound=false;
+ for(const row of b.board)for(const u of row)if(u&&(!sideFilter||u.side===sideFilter)){
+  u.movedThisRound=false;delete u.movedCellsThisRound;
+  if(u.killHasteRound<=b.round)delete u.killHasteRound;
+ }
  sweepDead(b);
  resolveRegeneration(b,sideFilter,fx);
  resolveUnitSupport(b,sideFilter,fx);

@@ -37,7 +37,7 @@ test('Dix Légendaires réellement fusionnées : totaux, mission 06, stocks, imp
   const d=resolveUnitDefinition(id,'légendaire');assert.deepEqual([d.stats.attack,d.stats.hp,d.stats.delay],expected);assert.equal(evolutionFusionFor(id,'légendaire').mission,'06');
   const {p,b,u,ref}=gained(id);assert.deepEqual([u.atk,u.maxhp],expected.slice(0,2));assert.equal(ownedCardCopies(p,ref),1);assert.equal(p.completedTrials,undefined);assert.equal(b.mode,'campaign');
   assert.deepEqual(validateImportedProfile(p),p);storage();assert(saveProfile(p));assert.deepEqual(loadProfile(),p);assert(storeBattle(b));assert.deepEqual(restoreBattle(),b);
-  assert.equal(resolveUnitDefinition(id,'divine'),null);assert.equal(resolveUnitDefinition(id,'éveillée'),null);assert.equal(evolutionPackFor(id,'légendaire'),null);
+  for(const rank of ['divine','éveillée']){assert.equal(resolveUnitDefinition(id,rank).status.obtaining,'fusion');const before=structuredClone(p);assert.equal(fuseEvolutionCopies(p,id+':'+rank).ok,false);assert.deepEqual(p,before);assert.ok(evolutionFusionFor(id,rank).ascension);}assert.equal(evolutionPackFor(id,'légendaire'),null);
  }
  assert.equal(resolveUnitDefinition('lich').rarity,'légendaire');assert.equal(evolutionFusionFor('lich','légendaire'),null);
  assert.deepEqual(cardPack('ombre-evolution').groups.map(g=>g.cards.length),[8,3,8]);

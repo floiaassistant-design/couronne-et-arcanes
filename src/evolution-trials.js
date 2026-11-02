@@ -41,7 +41,18 @@ export const SYLVE_ASCENSIONS=freezeCardData([
   enemy:'Gardien de la Canopée',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
   deck:['archdruid','stag','treant','wolf','bear','ranger','pixie','stag','archdruid','treant','storm','healing','warcry','thorn','bear','dryad','owl','sylvan_trapper']}
 ]);
-export const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS]);
+// Même accès de faction pour l'Ombre : aucune récompense automatique.
+export const OMBRE_ASCENSIONS=freezeCardData([
+ {id:'ombre-ascension-divine',kind:'ascension',faction:'ombre',name:'Le Serment du Tombeau',from:'légendaire',to:'divine',mission:'09',
+  goal:{distinct:3,crownPercent:40,maxRound:24},
+  enemy:'Conseil des Brumes',difficulty:5,hp:48,boss:true,aiStyle:'bastion',
+  deck:['crypt','graveknight','banshee','vampire','shade','bone','crypt','lich','mist_inquisitor','plague','healing','warcry','graveknight','spectre','nightblade','storm']},
+ {id:'ombre-ascension-eveillee',kind:'ascension',faction:'ombre',name:'L’Éveil de Minuit',from:'divine',to:'éveillée',mission:'12',previous:'ombre-ascension-divine',
+  goal:{distinct:4,crownPercent:60,maxRound:24},
+  enemy:'Gardien de Minuit',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
+  deck:['lich','vampire','crypt','graveknight','shade','banshee','mist_inquisitor','lich','vampire','crypt','storm','healing','warcry','plague','spectre','nightblade','bone','graveknight']}
+]);
+export const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS,...OMBRE_ASCENSIONS]);
 export const ALL_EVOLUTION_TRIALS=Object.freeze([...EVOLUTION_TRIALS,...ALL_EVOLUTION_ASCENSIONS]);
 export const evolutionTrial=id=>ALL_EVOLUTION_TRIALS.find(t=>t.id===id)||null;
 export const evolutionTrialFor=(id,rarity)=>EVOLUTION_TRIALS.find(t=>t.cardId===id&&t.to===rarity)||null;

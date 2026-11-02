@@ -61,11 +61,11 @@ async def run(browser,label,viewport,faction='aube'):
             'bear':[None,9,11,11,11,11],'owl':[4,5,5,5,5,5],
             'sylvan_trapper':[5,6,6,6,6,6],
             'stag':[None,None,6,8,8,8],'archdruid':[None,None,7,9,9,9],
-            'banshee':[None,None,5,7,None,None],'vampire':[None,None,6,8,None,None],
-            'bone':[3,4,4,6,None,None],'shade':[None,3,5,5,None,None],
-            'crypt':[7,9,9,9,None,None],'plague':[None,5,7,7,None,None],
-            'graveknight':[None,8,10,10,None,None],'nightblade':[3,4,4,6,None,None],
-            'spectre':[None,4,6,6,None,None],'mist_inquisitor':[None,6,8,8,None,None]
+            'banshee':[None,None,5,7,7,7],'vampire':[None,None,6,8,8,8],'lich':[None,None,None,9,9,9],
+            'bone':[3,4,4,6,6,6],'shade':[None,3,5,5,5,5],
+            'crypt':[7,9,9,9,9,9],'plague':[None,5,7,7,7,7],
+            'graveknight':[None,8,10,10,10,10],'nightblade':[3,4,4,6,6,6],
+            'spectre':[None,4,6,6,6,6],'mist_inquisitor':[None,6,8,8,8,8]
         }.get(card_id)
         native=await row.locator('[data-current-version="true"]').get_attribute('data-collection-rarity')
         ranks=['commun','rare','épique','légendaire','divine','éveillée']

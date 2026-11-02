@@ -48,7 +48,7 @@ export function cardPresentation(reference,{context={},profile=null,side='p',uni
   {atk:attackAfterPenalty(unit,unit.atk),hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);
  let effective=definition;
- if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor??definition.abilities.armor.amount}}:{})}};
+ if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit,silenced(ctx,unit),ctx.round),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor??definition.abilities.armor.amount}}:{})}};
  const structured=known&&native.type==='unité'&&(VERSIONED_UNIT_IDS.includes(id)||effective?.abilities.guard||effective?.abilities.riposte);
  const description=!known?missing:structured?unitCardText(effective):brief(native.description);
  const details=!known?[lower?'Aucune version sous la rareté native.':'Cette évolution reste à concevoir.']:
@@ -65,6 +65,8 @@ export function boardInspectionData(battle,uid){
   const concord=formationBonus(battle,lane,u),rallied=u.rallyUntil>=battle.round?1:0;
   const armor=u.armor??versionUnitAbilities(u)?.armor?.amount;
   const statuses=[concord?'Concorde +1 ATQ':'',rallied?'Ralliement +1 ATQ':'',armor?'Armure '+armor:'',u.barrier?'Barrière '+u.barrier:'',u.poisonTurns?'Poison '+u.poisonTurns+' tour(s)':'',u.stun?'Immobilisation '+u.stun:'',silenced(battle,u)?'Silence : capacités déclenchées suspendues':''].filter(Boolean);
+  if(u.devourAttack)statuses.push(`Dévoration : +${u.devourAttack} ATQ`);
+  if(u.killHasteRound===battle.round)statuses.push('Célérité temporaire ce tour');
   if(u.firstHitReductionUsed)statuses.push('Réduction du premier coup consommée');
   if(u.riposteUsed)statuses.push('Riposte par invocation consommée');
   if(u.lastRiposteRound===battle.round)statuses.push('Riposte utilisée ce tour');

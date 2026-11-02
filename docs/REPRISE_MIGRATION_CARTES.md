@@ -1,24 +1,24 @@
 # Reprise des migrations de cartes — reprise Ombre du 2 novembre 2026
 
 Source de conception : [tableau maître unique](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
-édition relue `2026-10-27T06:13:46.581Z`. Les compteurs ci-dessous décrivent
+édition relue `2026-11-02T15:29:46.385Z`. Les compteurs ci-dessous décrivent
 les cases de conception complètes, pas leur livraison. Aucun tableau parallèle
 de pouvoirs ni validation de nouvelles décisions.
 
 GitHub reste la source du jeu. Base vérifiée : main
-`039a6a7d9a9de3ddb2feaccd58999924444daab6`, PR 70 intégrée après accord et six contrôles réussis.
-Les 41 évolutions Aube, 48 Sylve et onze Rares/Épiques Ombre sont intégrées.
-La branche `feat/ombre-legendaires` propose dix Légendaires relues le 2 novembre,
-sans modifier Notion. [Contrat et reprise](OMBRE_LEGENDAIRES.md). La publication
-est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
+`588692a44680f7f08a51d37407e396685d67cc8f`, PR 71 intégrée après accord et six
+contrôles réussis. Les 41 évolutions Aube, 48 Sylve et 21 Ombre jusqu'à Légendaire
+sont intégrées. `feat/ombre-divines-eveillees` propose les 22 hauts rangs restants,
+sans modifier Notion. [Contrat](OMBRE_DIVINES_EVEILLEES.md). La publication est
+suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 
 | Ordre | Unités natives | Évolutions conçues complètement validées | Situation d'implémentation |
 | --- | ---: | ---: | --- |
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
-| Ombre | 11 | 43 | 11 Rares/Épiques intégrées ; 10 Légendaires proposées, 32 versions sur la branche ; 22 évolutions restantes |
-| Forge | 10 | 0 sur 39 cases futures | Conception incomplète ; règles communes de Garde déjà validées, sans compléter les cases à leur place |
-| Éther | 11 | 0 sur 39 cases futures | Conception incomplète ; même distinction pour les règles communes de Garde |
+| Ombre | 11 | 43 | 21 évolutions intégrées ; 22 hauts rangs proposés, 54 versions sur la branche |
+| Forge | 10 | 39 sur 39 cases futures | Validation complète dans cette édition Notion ; évolutions non implémentées au moteur |
+| Éther | 11 | 9 sur 39 cases futures | Feu follet et Oracle complets ; autres cases encore ouvertes dans cette édition ; règles partielles de Garde distinctes |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
 ou un pouvoir validé ne crée ni exemplaire ni définition jouable. Les cellules
@@ -53,16 +53,29 @@ actuel. Fusions de trois copies libres après missions 01/03 et paquet distinct
 main intégrant la PR 69 ; PR 70 fusionnée le 2 novembre après accord spécifique
 et six contrôles réussis. Arbre intégré identique à la tête testée.
 
-## Lot proposé : dix Légendaires Ombre
+## Lot intégré : dix Légendaires Ombre
 
 Le [contrat](OMBRE_LEGENDAIRES.md) transcrit les dix validations et la Veille
 funéraire du Veilleur dans les primitives communes. Fusion de trois Épiques
 libres après mission 06, paquets inchangés. Base : main intégrant la PR 70.
-Ce nouveau lot conserve son accord spécifique ; les contrôles et SHA sont
-à lire dans sa PR. Les 22 Divines/Éveillées viennent ensuite. Réactions aux morts, créations et
-vols/régénérations doivent réutiliser les primitives communes, sans deuxième
-moteur. Forge et Éther restent à concevoir ; leurs cases ne sont pas complétées
-sans validation du propriétaire.
+La PR 71 a été intégrée après accord spécifique et six contrôles réussis,
+sans conflit ni différence d'arbre avec la tête testée.
+
+## Lot proposé : les 22 Divines/Éveillées Ombre
+
+Le [contrat](OMBRE_DIVINES_EVEILLEES.md) décrit les 22 pouvoirs et leurs
+interactions, deux ascensions communes puis fusions de trois copies libres.
+Paquets, natifs et sauvegardes historiques conservés. Cette nouvelle proposition
+attend ses contrôles et son propre accord de fusion ; elle n'est pas publiée.
+
+## Reprise suivante : Forge et Éther
+
+Les 39 évolutions Forge sont entièrement validées dans l'édition relue.
+Ne pas déduire leur intégration du statut Notion : elles restent absentes du
+registre. L'Éther conserve 30 cases futures incomplètes dans cette édition.
+La nouvelle portée native 3 du Feu follet est une décision séparée du natif 2
+encore au moteur ; elle exige son propre périmètre, contrôle et documentation.
+Relire Notion à la reprise, car la conception continue en parallèle.
 
 ## Conditions de reprise
 

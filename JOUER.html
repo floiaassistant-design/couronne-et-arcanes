@@ -4708,7 +4708,7 @@ function cardPresentation(reference,{context={},profile=null,side='p',unit=null,
   {atk:attackAfterPenalty(unit,unit.atk),hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);
  let effective=definition;
- if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor??definition.abilities.armor.amount}}:{})}};
+ if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit,silenced(ctx,unit),ctx.round),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor??definition.abilities.armor.amount}}:{})}};
  const structured=known&&native.type==='unité'&&(VERSIONED_UNIT_IDS.includes(id)||effective?.abilities.guard||effective?.abilities.riposte);
  const description=!known?missing:structured?unitCardText(effective):brief(native.description);
  const details=!known?[lower?'Aucune version sous la rareté native.':'Cette évolution reste à concevoir.']:
@@ -4725,6 +4725,8 @@ function boardInspectionData(battle,uid){
   const concord=formationBonus(battle,lane,u),rallied=u.rallyUntil>=battle.round?1:0;
   const armor=u.armor??versionUnitAbilities(u)?.armor?.amount;
   const statuses=[concord?'Concorde +1 ATQ':'',rallied?'Ralliement +1 ATQ':'',armor?'Armure '+armor:'',u.barrier?'Barrière '+u.barrier:'',u.poisonTurns?'Poison '+u.poisonTurns+' tour(s)':'',u.stun?'Immobilisation '+u.stun:'',silenced(battle,u)?'Silence : capacités déclenchées suspendues':''].filter(Boolean);
+  if(u.devourAttack)statuses.push(`Dévoration : +${u.devourAttack} ATQ`);
+  if(u.killHasteRound===battle.round)statuses.push('Célérité temporaire ce tour');
   if(u.firstHitReductionUsed)statuses.push('Réduction du premier coup consommée');
   if(u.riposteUsed)statuses.push('Riposte par invocation consommée');
   if(u.lastRiposteRound===battle.round)statuses.push('Riposte utilisée ce tour');
@@ -5228,24 +5230,35 @@ Object.assign(__exports,{SYLVE_DESIGN_SOURCE,SYLVE_EVOLUTIONS});
 
 },
 "src/cards/ombre.js":function(__exports,__load){
-// Ombre jusqu'à Légendaire, depuis les cellules validées du tableau maître.
+// Ombre complète, depuis les cellules validées du tableau maître.
 // Le délai non chiffré de la Lame nocturne hérite du natif vérifié (1).
 const {freezeCardData}=__load("src/cards/schema.js");
 const OMBRE_DESIGN_SOURCE=freezeCardData({
  url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
- editedAt:'2026-10-27T06:13:46.581Z'
+ editedAt:'2026-11-02T15:29:46.385Z'
 });
 const OMBRE_EVOLUTIONS=freezeCardData({
- bone:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}},'légendaire':{stats:{hp:6}}},
- shade:{'épique':{stats:{hp:5}},'légendaire':{stats:{attack:4}}},
- crypt:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}},'légendaire':{abilities:{funeralWatch:{amount:2,cap:2}}}},
- plague:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}}},
- banshee:{'légendaire':{stats:{hp:7}}},
- vampire:{'légendaire':{stats:{hp:8}}},
- graveknight:{'épique':{stats:{hp:10}},'légendaire':{stats:{attack:5}}},
- nightblade:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}},'légendaire':{stats:{hp:6}}},
- spectre:{'épique':{stats:{hp:6}},'légendaire':{stats:{attack:4}}},
- mist_inquisitor:{'épique':{stats:{hp:8}},'légendaire':{stats:{attack:3}}}
+ bone:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}},'légendaire':{stats:{hp:6}},
+  divine:{abilities:{deathStrike:{amount:2,range:1}}},'éveillée':{abilities:{deathStrike:{amount:3,range:2,entangle:true}}}},
+ shade:{'épique':{stats:{hp:5}},'légendaire':{stats:{attack:4}},
+  divine:{abilities:{devour:{heal:2}}},'éveillée':{abilities:{devour:{heal:3,attack:1,cap:2}}}},
+ crypt:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}},'légendaire':{abilities:{funeralWatch:{amount:2,cap:2}}},
+  divine:{abilities:{guard:{scope:'line'}}},'éveillée':{abilities:{guard:{scope:'all-lines'}}}},
+ plague:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}},
+  divine:{abilities:{poison:{resolutions:3}}},'éveillée':{abilities:{poison:{sourceBound:true},contagion:{amount:1,resolutions:2,maxDistance:2,trigger:'poison-death',frequency:'victim'}}}},
+ lich:{divine:{abilities:{splash:{amount:3,targets:1,onGuard:true,requiresAttack:true}}},'éveillée':{abilities:{splash:{targets:2}}}},
+ banshee:{'légendaire':{stats:{hp:7}},
+  divine:{abilities:{harass:{amount:1,attacks:1,minimum:1,period:3}}},'éveillée':{abilities:{harass:{amount:2,secondary:{amount:1,range:1,targets:1}}}}},
+ vampire:{'légendaire':{stats:{hp:8}},
+  divine:{abilities:{lifesteal:{amount:3}}},'éveillée':{abilities:{strikeHeal:{amount:2}}}},
+ graveknight:{'épique':{stats:{hp:10}},'légendaire':{stats:{attack:5}},
+  divine:{abilities:{armor:{amount:3}}},'éveillée':{abilities:{charge:{amount:3},chargeBarrier:{amount:2,cap:2,requiresKill:true,frequency:'round'}}}},
+ nightblade:{rare:{stats:{hp:4}},'épique':{stats:{attack:4}},'légendaire':{stats:{hp:6}},
+  divine:{abilities:{execution:{amount:2}}},'éveillée':{abilities:{execution:{amount:3,killHaste:2}}}},
+ spectre:{'épique':{stats:{hp:6}},'légendaire':{stats:{attack:4}},
+  divine:{abilities:{pierce:{ignoreArmor:true,minMovedCells:2}}},'éveillée':{geometry:{steps:3},abilities:{traverseAlly:{max:1}}}},
+ mist_inquisitor:{'épique':{stats:{hp:8}},'légendaire':{stats:{attack:3}},
+  divine:{abilities:{silence:{resolutions:2}}},'éveillée':{abilities:{silence:{targets:2}}}}
 });
 
 Object.assign(__exports,{OMBRE_DESIGN_SOURCE,OMBRE_EVOLUTIONS});
@@ -5295,13 +5308,24 @@ const SYLVE_ASCENSIONS=freezeCardData([
   enemy:'Gardien de la Canopée',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
   deck:['archdruid','stag','treant','wolf','bear','ranger','pixie','stag','archdruid','treant','storm','healing','warcry','thorn','bear','dryad','owl','sylvan_trapper']}
 ]);
-const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS]);
+// Même accès de faction pour l'Ombre : aucune récompense automatique.
+const OMBRE_ASCENSIONS=freezeCardData([
+ {id:'ombre-ascension-divine',kind:'ascension',faction:'ombre',name:'Le Serment du Tombeau',from:'légendaire',to:'divine',mission:'09',
+  goal:{distinct:3,crownPercent:40,maxRound:24},
+  enemy:'Conseil des Brumes',difficulty:5,hp:48,boss:true,aiStyle:'bastion',
+  deck:['crypt','graveknight','banshee','vampire','shade','bone','crypt','lich','mist_inquisitor','plague','healing','warcry','graveknight','spectre','nightblade','storm']},
+ {id:'ombre-ascension-eveillee',kind:'ascension',faction:'ombre',name:'L’Éveil de Minuit',from:'divine',to:'éveillée',mission:'12',previous:'ombre-ascension-divine',
+  goal:{distinct:4,crownPercent:60,maxRound:24},
+  enemy:'Gardien de Minuit',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
+  deck:['lich','vampire','crypt','graveknight','shade','banshee','mist_inquisitor','lich','vampire','crypt','storm','healing','warcry','plague','spectre','nightblade','bone','graveknight']}
+]);
+const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS,...OMBRE_ASCENSIONS]);
 const ALL_EVOLUTION_TRIALS=Object.freeze([...EVOLUTION_TRIALS,...ALL_EVOLUTION_ASCENSIONS]);
 const evolutionTrial=id=>ALL_EVOLUTION_TRIALS.find(t=>t.id===id)||null;
 const evolutionTrialFor=(id,rarity)=>EVOLUTION_TRIALS.find(t=>t.cardId===id&&t.to===rarity)||null;
 const evolutionAscensionFor=(faction,rarity)=>ALL_EVOLUTION_ASCENSIONS.find(t=>t.faction===faction&&t.to===rarity)||null;
 
-Object.assign(__exports,{EVOLUTION_TRIALS,EVOLUTION_ASCENSIONS,SYLVE_ASCENSIONS,ALL_EVOLUTION_ASCENSIONS,ALL_EVOLUTION_TRIALS,evolutionTrial,evolutionTrialFor,evolutionAscensionFor});
+Object.assign(__exports,{EVOLUTION_TRIALS,EVOLUTION_ASCENSIONS,SYLVE_ASCENSIONS,OMBRE_ASCENSIONS,ALL_EVOLUTION_ASCENSIONS,ALL_EVOLUTION_TRIALS,evolutionTrial,evolutionTrialFor,evolutionAscensionFor});
 
 },
 "src/evolution-fusion.js":function(__exports,__load){
@@ -5431,7 +5455,7 @@ function unitAbilitySummary(definition){
  if(a.ward)lines.push(`Protection : +${a.ward.amount}`);
  if(a.arrivalBarrier)lines.push(`Barrière alliée à l’arrivée : ${a.arrivalBarrier.amount}`);
  if(a.regeneration)lines.push(`Régénération : ${a.regeneration.amount} PV, ${a.regeneration.resolutions} tour(s)`);
- if(a.harass)lines.push(`Harcèlement : −${a.harass.amount} ATQ, ${a.harass.attacks} attaque(s)`);
+ if(a.harass)lines.push(`${a.harass.period?'Cri d’effroi':'Harcèlement'} : −${a.harass.amount} ATQ, ${a.harass.attacks} attaque(s)`);
  if(a.intervention)lines.push(`Intervention : ${a.intervention.amount} dégâts, portée ${a.intervention.range}`);
  if(a.lifesteal)lines.push(`Vol de vie : ${a.lifesteal.amount}`);
  if(a.flying)lines.push('Vol');
@@ -5459,16 +5483,17 @@ function unitCardText(d){
  if(a.inspire)parts.push(`Inspiration +${a.inspire.amount} / ${a.inspire.period} tours`);
  if(a.haste)parts.push(`Célérité ${d.geometry.steps}`);
  if(a.charge)parts.push(`Charge +${a.charge.amount}`);
- if(a.pierce)parts.push(a.pierce.condition==='charged'?'Charge perforante':'Perforation');
+ if(a.pierce)parts.push(a.pierce.minMovedCells?'Perforation après '+a.pierce.minMovedCells+' cases':a.pierce.condition==='charged'?'Charge perforante':'Perforation');
  if(a.rearShot)parts.push(`Tir arrière ${a.rearShot.amount}`);
  if(a.riposteBarrier)parts.push(`Barrière ${a.riposteBarrier.amount}`);
  if(a.riposte)parts.push('Riposte'+(a.riposte.damageMode==='effective-attack'?' ATQ':' '+a.riposte.amount));
  if(a.ward)parts.push(`Protection +${a.ward.amount}`);
  if(a.arrivalBarrier)parts.push(`Barrière alliée ${a.arrivalBarrier.amount}`);
- if(a.harass)parts.push(`Harcèlement −${a.harass.amount} ATQ${a.harass.attacks>1?' · '+a.harass.attacks+' attaques':''}`);
+ if(a.harass)parts.push(`${a.harass.period?(a.harass.secondary?'Hurlement':'Cri d’effroi'):'Harcèlement'} −${a.harass.amount} ATQ${a.harass.attacks>1?' · '+a.harass.attacks+' attaques':''}`);
  if(a.poison)parts.push(`Poison ${a.poison.amount} · ${a.poison.resolutions} tours`);
  if(a.trapper)parts.push(`Piège ${a.trapper.damage} / ${a.trapper.period} tours${a.trapper.poison?' · Poison '+a.trapper.poison.amount:''}`);
- if(a.silence)parts.push(`Silence / ${a.silence.period} tours`);
+ if(a.silence)parts.push(`Silence${a.silence.targets>1?' ×'+a.silence.targets:''}${a.silence.resolutions>1?' · '+a.silence.resolutions+' tours':' / '+a.silence.period+' tours'}`);
+ if(a.splash&&!a.splash.targets)parts.push(`Impact ${a.splash.amount}`);
  if(a.lifesteal)parts.push(`Vol de vie ${a.lifesteal.amount}`);
  if(a.flying)parts.push('Vol');
  if(d.geometry.range>1)parts.unshift(`Portée ${d.geometry.range}`);
@@ -5490,21 +5515,27 @@ function unitAbilityDetails(d){
  if(a.arrivalInspire)lines.push(`À l’arrivée : +${a.arrivalInspire.amount} ATQ au premier autre allié de sa ligne, maximum ${a.arrivalInspire.cap}.`);
  if(a.ward)lines.push(`À l’arrivée : +${a.ward.amount} bouclier à sa couronne, plafond ${a.ward.cap}.`);
  if(a.arrivalBarrier)lines.push(`À l’arrivée : barrière ${a.arrivalBarrier.amount} à un autre allié de sa ligne, priorité au plus blessé proportionnellement. Plafond ${a.arrivalBarrier.cap} pour cet effet, sans cumul ; aucune autre cible ni effet sans allié.`);
- if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : Harcèlement −${a.harass.amount} ATQ sur ${a.harass.attacks===1?'sa prochaine attaque d’unité':'ses '+a.harass.attacks+' prochaines attaques d’unité'}, Riposte comprise ; minimum 0, aucun effet sur les sorts. Les applications renouvellent le malus sans cumul.`);
+ if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : ${a.harass.period?'Cri d’effroi':'Harcèlement'} −${a.harass.amount} ATQ sur ${a.harass.attacks===1?'sa prochaine attaque d’unité':'ses '+a.harass.attacks+' prochaines attaques d’unité'}, Riposte comprise ; minimum ${a.harass.minimum||0}, aucun effet sur les sorts. ${a.harass.period?'Au plus une fois tous les '+a.harass.period+' tours ; seule la réduction la plus forte persiste.':'Les applications renouvellent le malus sans cumul.'}${a.harass.secondary?' Un autre ennemi à '+a.harass.secondary.range+' case au plus de la cible sur la même ligne : −'+a.harass.secondary.amount+' ATQ pour sa prochaine attaque.':''}`);
  if(a.intervention)lines.push(`À l’arrivée : ${a.intervention.amount} dégâts au premier ennemi devant, même ligne, jusqu’à ${a.intervention.range} cases ; protections normales, une seule frappe d’arrivée.`);
  if(a.lifesteal)lines.push(`À chaque attaque effectuée : rend ${a.lifesteal.amount} PV à sa couronne, même si la frappe est absorbée, sans dépasser ses PV maximum.`);
+ if(a.deathStrike)lines.push(`Fracas d’os : à sa destruction par une attaque directe d’une unité ennemie sur sa ligne à ${a.deathStrike.range} case(s) au plus, inflige ${a.deathStrike.amount} dégâts bruts à cet attaquant encore vivant, protections normales${a.deathStrike.entangle?' puis Entrave à l’attaquant survivant':''}. Une fois par invocation, sans résurrection, sort, poison ni réaction en chaîne.`);
+ if(a.devour)lines.push(`Dévoration : chaque unité éliminée par son attaque directe lui rend jusqu’à ${a.devour.heal} PV sans dépasser son maximum${a.devour.attack?', et +'+a.devour.attack+' ATQ pour cette invocation, cumul limité à +'+a.devour.cap:''}. Aucun gain sans élimination ni après sa propre mort.`);
+ if(a.execution)lines.push(`Exécution : +${a.execution.amount} ATQ pour cette attaque seulement si l’unité ciblée possède au plus la moitié de ses PV maximum immédiatement avant la frappe${a.execution.killHaste?' ; si cette Exécution élimine la cible, Célérité '+a.execution.killHaste+' pour son prochain tour seulement':''}. Perforation conservée ; aucune attaque supplémentaire.`);
+ if(a.strikeHeal)lines.push(`Sang partagé : après une attaque sur une unité lui retirant réellement au moins 1 PV, soin personnel ${a.strikeHeal.amount}, sans dépasser ses PV maximum, au plus une fois par tour. Aucun soin personnel sur barrière seule ni couronne.`);
+ if(a.traverseAlly)lines.push(`Traverse au plus ${a.traverseAlly.max} allié pendant son déplacement, arrivée libre et distance totale limitée à ${d.geometry.steps} cases. Ne traverse pas les ennemis et ne change pas de ligne.`);
+ if(a.splash)lines.push(`Impact de zone : ${a.splash.amount} dégâts bruts à ${a.splash.targets||1} autre(s) ennemi(s) distinct(s) au plus sur la ligne, protections normales, sans attaque supplémentaire ni chaîne.`);
  if(a.funeralWatch)lines.push(`Veille funéraire : lorsqu’une autre unité alliée meurt sur sa ligne, si le Veilleur vit et n’est pas silencieux, barrière personnelle ${a.funeralWatch.amount}, plafond ${a.funeralWatch.cap} pour cet effet. Au plus une fois par tour, sans cumul ni double déclenchement.`);
  if(a.flying)lines.push('Vol : franchit un allié si la case d’arrivée est libre.');
  if(a.charge)lines.push(`Charge : +${a.charge.amount} ATQ après déplacement avant la frappe.`);
- if(a.pierce)lines.push(`Perforation : ignore l’armure de la première cible${a.pierce.condition==='charged'?' seulement après déplacement avec Charge':''}, autres protections conservées.`);
+ if(a.pierce)lines.push(`Perforation : ignore l’armure de la première cible${a.pierce.minMovedCells?' seulement après au moins '+a.pierce.minMovedCells+' cases parcourues ce tour':a.pierce.condition==='charged'?' seulement après déplacement avec Charge':''}, autres protections conservées.`);
  if(a.rearShot)lines.push(`Tir arrière : ${a.rearShot.amount} dégâts à l’ennemi immédiatement derrière la première cible, même ligne ; protections normales.`);
  if(a.poison)lines.push(`Après une attaque sur une unité : Poison ${a.poison.amount} dégât par tour pendant ${a.poison.resolutions} tours ; une nouvelle application renouvelle la durée.`);
  if(a.trapper)lines.push(`Tous les ${a.trapper.period} tours : arme si possible la case libre éligible juste devant. Piège visible pendant ${a.trapper.resolutions} tours au plus ; ${a.trapper.damage} dégât${a.trapper.damage>1?'s':''} brut${a.trapper.damage>1?'s':''} avant protections, déplacement et attaque bloqués pour le tour du déclenchement.`);
  if(a.trapper?.poison)lines.push(`Si la victime du piège survit : Poison ${a.trapper.poison.amount} pendant ses ${a.trapper.poison.resolutions} prochains tours de combat, sans dégât de poison immédiat ni cumul.`);
- if(a.silence)lines.push(`Avant son déplacement : réduit au silence certaines capacités d’un ennemi de sa ligne pendant ${a.silence.resolutions} tour, au plus une fois tous les ${a.silence.period} tours. Attaques normales et traits passifs conservés.`);
+ if(a.silence)lines.push(`Avant son déplacement : réduit au silence certaines capacités ${a.silence.targets>1?'de jusqu’à '+a.silence.targets+' ennemis distincts éligibles':'d’un ennemi'} de sa ligne pendant ${a.silence.resolutions} tour${a.silence.resolutions>1?'s':''}, au plus une fois tous les ${a.silence.period} tours. Attaques normales et traits passifs conservés.`);
  if(a.entangle)lines.push(`Entrave : après une attaque touchant une unité ennemie survivante, empêche seulement son prochain déplacement. ${a.entangle.frequency==='invocation'?'Une fois par invocation.':'Au plus une fois tous les '+a.entangle.period+' tours, durée rafraîchie sans cumul.'} La cible peut attaquer.`);
- if(a.chargeBarrier)lines.push(`Après une attaque chargée sur une unité : barrière personnelle ${a.chargeBarrier.amount}${a.chargeBarrier.allies?' et barrière '+a.chargeBarrier.amount+' à un autre allié de sa ligne, priorité au plus blessé proportionnellement':''}. Plafond ${a.chargeBarrier.cap} par cible pour cet effet ; aucun gain sans déplacement ni contre la couronne seule.`);
- if(a.contagion)lines.push(`Contagion : au premier décès d’un ennemi portant encore son poison, transmet Poison ${a.contagion.amount} pendant ${a.contagion.resolutions} tours à l’ennemi vivant le plus proche sur la même ligne. Une fois par invocation, sans chaîne ; reste attachée au poison si sa source disparaît.`);
+ if(a.chargeBarrier)lines.push(`Après une attaque chargée ${a.chargeBarrier.requiresKill?'éliminant une unité ennemie':'sur une unité'} : barrière personnelle ${a.chargeBarrier.amount}${a.chargeBarrier.allies?' et barrière '+a.chargeBarrier.amount+' à un autre allié de sa ligne, priorité au plus blessé proportionnellement':''}. Plafond ${a.chargeBarrier.cap} par cible pour cet effet ; aucun gain sans déplacement ni contre la couronne seule.${a.chargeBarrier.frequency?' Au plus une fois par tour.':''}`);
+ if(a.contagion)lines.push(`Contagion : ${a.contagion.trigger==='poison-death'?'lorsqu’un ennemi meurt à cause de ce poison':'au premier décès d’un ennemi portant encore son poison'}, transmet Poison ${a.contagion.amount} pendant ${a.contagion.resolutions} tours à l’ennemi vivant le plus proche sur la même ligne${a.contagion.maxDistance?', à '+a.contagion.maxDistance+' cases au plus':''}. ${a.contagion.frequency==='victim'?'Une fois par victime':'Une fois par invocation'}, sans chaîne ; reste attachée au poison si sa source disparaît.`);
  if(a.deathWard)lines.push(`À sa destruction en combat : +${a.deathWard.amount} bouclier à sa couronne, plafond ${a.deathWard.cap}, une fois par invocation. Aucun effet en quittant simplement le plateau.`);
  if(a.fury)lines.push(`Fureur : après perte effective de PV par attaque ennemie, si elle survit, sa prochaine attaque gagne +${a.fury.amount} ATQ. Sans cumul, consommée à l’attaque ; peut être réactivée ensuite.`);
  if(a.furyBarrier)lines.push(`Si son attaque renforcée par Fureur détruit une unité ennemie : barrière ${a.furyBarrier.amount}, plafond ${a.furyBarrier.cap}, au plus une fois par tour.`);
@@ -5514,6 +5545,12 @@ function unitAbilityDetails(d){
 
 function advancedSummary(a){
  const parts=[];
+ if(a.deathStrike)parts.push(`Fracas ${a.deathStrike.amount}${a.deathStrike.entangle?' · Entrave':''}`);
+ if(a.devour)parts.push(`Dévoration ${a.devour.heal}${a.devour.attack?' · +'+a.devour.attack+' ATQ (max +'+a.devour.cap+')':''}`);
+ if(a.execution)parts.push(`Exécution +${a.execution.amount}${a.execution.killHaste?' · Célérité après élimination':''}`);
+ if(a.strikeHeal)parts.push(`Sang partagé · Soin personnel ${a.strikeHeal.amount}`);
+ if(a.splash?.targets)parts.push(`Onde ${a.splash.amount} ×${a.splash.targets}`);
+ if(a.traverseAlly)parts.push('Traversée alliée');
  if(a.funeralWatch)parts.push(`Veille funéraire · Barrière ${a.funeralWatch.amount}`);
  if(a.entangle)parts.push(`Entrave ${a.entangle.frequency==='invocation'?'1 fois':'/ '+a.entangle.period+' tours'}`);
  if(a.chargeBarrier)parts.push(`Barrière après Charge ${a.chargeBarrier.amount}${a.chargeBarrier.allies?' + allié':''}`);
@@ -5550,13 +5587,13 @@ function unitCanPlay(context,reference,side='p'){
 function unitAttackRange(u){
  return u?.ranged?Math.max(2,resolveUnitDefinition(u)?.geometry.range||0):1;
 }
-function unitMovementSteps(u,suppressed=false){
+function unitMovementSteps(u,suppressed=false,round){
  if(u.movementRoot)return 0;
  const d=resolveUnitDefinition(u);
- return d?.abilities.haste&&!suppressed?d.geometry.steps:1;
+ return suppressed?1:Math.max(d?.abilities.haste?d.geometry.steps:1,Number.isSafeInteger(round)&&u.killHasteRound===round?d?.abilities.execution?.killHaste||1:1);
 }
 function unitChargeAmount(u){return versionUnitAbilities(u)?.charge?.amount||0;}
-function unitHasPierce(u,suppressed=false,charged=false){const p=versionUnitAbilities(u)?.pierce;return !suppressed&&!!p?.ignoreArmor&&(p.condition!=='charged'||charged);}
+function unitHasPierce(u,suppressed=false,charged=false){const p=versionUnitAbilities(u)?.pierce;return !suppressed&&!!p?.ignoreArmor&&(p.condition!=='charged'||charged)&&(!p.minMovedCells||(u.movedCellsThisRound||0)>=p.minMovedCells);}
 function unitFlying(u){return !!versionUnitAbilities(u)?.flying;}
 
 const battleRulesError=b=>b?.cardRules===CARD_RULESET?'':'Ce combat doit être relancé après la mise à jour des cartes.';
@@ -5896,7 +5933,7 @@ const {recordTrialFact,recordTrialTurn}=__load("src/engine/trial-objectives.js")
 const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
 const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError}=__load("src/engine/unit-rules.js");
 const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
-const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal}=__load("src/engine/unit-effects.js");
+const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {tickUnitPoison,clearUnitPoison}=__load("src/engine/unit-poison.js");
 const {resolveStrikeRewards}=__load("src/engine/unit-triggers.js");
 const {resolveUnitDeath}=__load("src/engine/unit-death.js");
@@ -6083,19 +6120,23 @@ function moveUnits(b,sideFilter=null){
   const cols=Array.from({length:lastCell(b)},(_,i)=>side==='p'?lastCell(b)-i:i+1);
   for(const original of cols){const u=b.board[lane][original];if(!u||u.side!==side||u.stun>0)continue;
    if(u.movementRoot){delete u.movementRoot;continue;}
-   let col=original;const steps=unitMovementSteps(u,silenced(b,u));
+   const a=versionUnitAbilities(u),tracked=!!(a?.pierce?.minMovedCells||a?.traverseAlly);
+   if(tracked)u.movedCellsThisRound=0;
+   let col=original,crossed=0;const steps=unitMovementSteps(u,silenced(b,u),b.round);
    for(let step=0;step<steps;step++){
     if(findTarget(b,lane,col,u))break;
     const next=col+forward(side);
     if(next<1||next>lastCell(b))break;
     let destination=next;
     if(b.board[lane][next]){
-      if(isFlying(u)){
+      if(isFlying(u)||!silenced(b,u)&&a?.traverseAlly&&b.board[lane][next].side===u.side&&crossed<a.traverseAlly.max){
         const leap=next+forward(side);
         if(leap<1||leap>lastCell(b)||b.board[lane][leap])break;
-        destination=leap;
+        if(a?.traverseAlly&&step+2>steps)break;
+        destination=leap;if(a?.traverseAlly){step++;crossed++;}
       }else break;
     }
+    if(tracked)u.movedCellsThisRound+=Math.abs(destination-col);
     b.board[lane][destination]=u;b.board[lane][col]=null;u.movedThisRound=true;fx(b,{type:'move',lane,from:col,to:destination,side,icon:CARDS[u.id]?.icon||'♞'});col=destination;
     enterCell(b,u,lane,col);if(u.hp<=0||u.stun>0)break;
    }
@@ -6119,11 +6160,19 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
  if(other&&other.hp>0&&other.side!==u.side)hit(b,other,p.amount,u.side,p.ignoreArmor,true);
 }
 
-function strike(b,u,target,atk,from,to,sameLine=true,charged=false){
- const before=target.hp;if(atk>0)hit(b,target,atk,u.side,unitHasPierce(u,silenced(b,u),charged),true);
+function strike(b,u,target,atk,from,to,sameLine=true,charged=false,suppressed=false,attackState=null){
+ const execution=executionBonus(u,target,suppressed),before=target.hp;
+ const raw=execution&&attackState?attackAfterPenalty(attackState.unit,attackState.raw+execution):atk;
+ if(raw>0)hit(b,target,raw,u.side,unitHasPierce(u,suppressed,charged),true,{attacker:u,from,to,sameLine});
  const damage=Math.max(0,before-target.hp);
  if(sameLine&&(to-from)*(u.side==='p'?1:-1)>=2)recordTrialFact(b,u,'rangedDamage',damage);
- return atk>0&&before>0&&target.hp<=0;
+ return {primaryAlive:before>0,performed:raw>0,killed:raw>0&&before>0&&target.hp<=0,damaged:damage>0,execution:execution>0};
+}
+function resolveSplash(b,u,lane,primary,atk,intercepted=false,primaryAlive=true){
+ const p=versionUnitAbilities(u)?.splash;
+ if(!p||intercepted&&!p.onGuard||p.requiresAttack&&(!primaryAlive||atk<=0))return;
+ const others=b.board[lane].filter(v=>v&&v.side!==u.side&&v.uid!==primary.uid&&v.hp>0).slice(0,p.targets||1);
+ for(const extra of others)hit(b,extra,p.amount,u.side,false,true);
 }
 function resolveAttacks(b,sideFilter=null){
  const intents=[];
@@ -6131,7 +6180,11 @@ function resolveAttacks(b,sideFilter=null){
   const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0||(sideFilter&&u.side!==sideFilter))continue;
   const target=findTarget(b,lane,col,u);
   const charged=!silenced(b,u)&&unitChargeAmount(u)>0&&!!u.movedThisRound;
-  if(target){const furious=!!u.fury;intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0)),ability:activeAbility(b,u),charged,furious,suppressed:silenced(b,u)});}
+  if(target){
+   const furious=!!u.fury,raw=u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0);
+   const attackState=versionUnitAbilities(u)?.execution?{unit:{...u,attackPenalty:u.attackPenalty?{...u.attackPenalty}:undefined},raw}:null;
+   intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,raw),attackState,ability:activeAbility(b,u),charged,furious,suppressed:silenced(b,u)});
+  }
  }
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
@@ -6142,29 +6195,30 @@ function resolveAttacks(b,sideFilter=null){
   if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +${unitChargeAmount(u)} attaque sur la ligne ${lane+1}.`);
   if(target.type==='hero'){
    if(guardIntercept){
-    const killed=strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane,charged);
+    const result=strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane,charged,intent.suppressed,intent.attackState);
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
     if(ability==='lifesteal')resolveLifesteal(b,u);
-    applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0);
-    if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
+    applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0,{battle:b,lane:guardIntercept.lane,col:guardIntercept.col});
+    if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result},fx);
+    if(ability==='splash')resolveSplash(b,u,guardIntercept.lane,guardIntercept.u,atk,true,result.primaryAlive);
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
   } else {
-   const killed=strike(b,u,target.target,atk,intent.col,target.col,true,charged);
+   const result=strike(b,u,target.target,atk,intent.col,target.col,true,charged,intent.suppressed,intent.attackState);
    if(ability==='lifesteal')resolveLifesteal(b,u);
-   applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0);
-   if(atk>0)resolveStrikeRewards(b,u,lane,intent.col,{...intent,killed},fx);
-   if(ability==='splash'){
-    const extra=b.board[lane].find(v=>v&&v.side!==u.side&&v.uid!==target.target.uid&&v.hp>0);
-    if(extra)hit(b,extra,2,u.side,false,true);
-   }
+   applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0,{battle:b,lane,col:target.col});
+   if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result},fx);
+   if(ability==='splash')resolveSplash(b,u,lane,target.target,atk,false,result.primaryAlive);
    resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);
   }
  }
  // Le bonus de charge ne dure qu'un seul tour et doit survivre aux sauvegardes historiques.
- for(const row of b.board)for(const u of row)if(u&&(!sideFilter||u.side===sideFilter))u.movedThisRound=false;
+ for(const row of b.board)for(const u of row)if(u&&(!sideFilter||u.side===sideFilter)){
+  u.movedThisRound=false;delete u.movedCellsThisRound;
+  if(u.killHasteRound<=b.round)delete u.killHasteRound;
+ }
  sweepDead(b);
  resolveRegeneration(b,sideFilter,fx);
  resolveUnitSupport(b,sideFilter,fx);
@@ -6511,7 +6565,7 @@ const {resolveUnitDeath}=__load("src/engine/unit-death.js");
 const {absorbBarrier,grantAbilityBarrier}=__load("src/engine/unit-barriers.js");
 // Préserver les imports existants des appelants.
 Object.assign(__exports,__load("src/engine/unit-barriers.js"));
-function hit(b,u,raw,bySide,ignoreArmor=false,attack=false){
+function hit(b,u,raw,bySide,ignoreArmor=false,attack=false,direct=null){
  if(!u||u.hp<=0)return 0; // Une victime ne compte jamais deux fois.
  const abilities=versionUnitAbilities(u);
  const armor=u.armor??abilities?.armor?.amount??0;
@@ -6533,6 +6587,14 @@ function hit(b,u,raw,bySide,ignoreArmor=false,attack=false){
   recordCombatEvent(b,{type:'damage',side:u.side,lane,col,damage:Math.max(0,before-u.hp),absorbed,armor:ignoreArmor?0:Math.min(raw-1,armor)});
  }
  if(u.hp<=0){const lane=b.board.findIndex(row=>row.includes(u));if(lane>=0)resolveUnitDeath(b,u,lane,b.board[lane].indexOf(u),recordCombatEvent);}
+ const deathStrike=abilities?.deathStrike,attacker=direct?.attacker;
+ if(u.hp<=0&&deathStrike&&!u.deathStrikeUsed&&attack&&direct?.sameLine&&attacker?.hp>0&&attacker.side!==u.side&&
+    Math.abs(direct.from-direct.to)<=deathStrike.range&&!silenced(b,{...u,hp:before})){
+  u.deathStrikeUsed=true;
+  // Dégât secondaire : ne crée ni nouvelle attaque ni chaîne de Fracas.
+  hit(b,attacker,deathStrike.amount,u.side);
+  if(attacker.hp>0&&deathStrike.entangle)attacker.movementRoot=1;
+ }
  return dmg;
 }
 
@@ -6546,7 +6608,7 @@ function resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,att
  else defender.lastRiposteRound=b.round;
  recordCombatEvent(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
  const raw=consumeAttackPenalty(defender,defender.atk+attackBonus);
- const dealt=raw>0?hit(b,attacker,raw,defender.side,false,true):0;
+ const dealt=raw>0?hit(b,attacker,raw,defender.side,false,true,{attacker:defender,from:defenderCol,to:attackerCol,sameLine:true}):0;
  if(dealt>0)note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
  if(abilities?.riposteBarrier)grantAbilityBarrier(defender,'riposteBarrier',abilities.riposteBarrier);
  return true;
@@ -6579,7 +6641,8 @@ function silenceValue(u){
  const value={heal:6,inspire:5,splash:6,poison:5,lifesteal:5,pierce:3,haste:3,silence:6,portal:4,trapper:4}[u?.ability]||0;
  const future=versionUnitAbilities(u);
  return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
-  (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0);
+  (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0)+
+  (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0);
 }
 function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 function silenceTarget(b,side,lane){
@@ -6703,8 +6766,12 @@ function prepareControlUnits(b,hooks,sideFilter=null){
   if(!alive(u)||u.stun>0||silenced(b,u)||u.controlReadyRound>b.round)continue;
   let used=false;
   if(u.ability==='silence'){
-   const target=silenceTarget(b,u.side,lane);
-   if(target&&applySilence(b,target.u,1)){used=true;hooks.emit(b,{type:'silence',side:u.side,lane,col:target.col});hooks.note(b,`${CARDS[u.id].name} réduit ${CARDS[target.u.id].name} au silence pour ce tour.`);}
+   const p=versionUnitAbilities(u)?.silence;
+   for(let n=0;n<(p?.targets||1);n++){
+    const target=silenceTarget(b,u.side,lane);
+    if(!target||!applySilence(b,target.u,p?.resolutions||1))break;
+    used=true;hooks.emit(b,{type:'silence',side:u.side,lane,col:target.col});hooks.note(b,`${CARDS[u.id].name} réduit ${CARDS[target.u.id].name} au silence ${p?.resolutions>1?'pour '+p.resolutions+' tours.':'pour ce tour.'}`);
+   }
   }else if(u.ability==='trapper')used=placeTrap(b,u.side,trapPlan(b,u.side,lane,col+direction(u.side)),'snare',hooks.emit,hooks.note,versionUnitAbilities(u)?.trapper,u);
   else if(u.ability==='portal'){
    const plans=[];
@@ -6714,7 +6781,7 @@ function prepareControlUnits(b,hooks,sideFilter=null){
    const best=plans.sort((a,z)=>z.gain-a.gain||a.toLane-z.toLane)[0];
    if(best?.gain>=2)used=teleportUnit(b,u.side,best,hooks.emit,hooks.note,hooks.enter);
   }
-  if(used)u.controlReadyRound=b.round+(u.ability==='trapper'?versionUnitAbilities(u)?.trapper?.period||3:3);
+  if(used)u.controlReadyRound=b.round+(versionUnitAbilities(u)?.[u.ability]?.period||3);
  }
 }
 
@@ -6743,9 +6810,9 @@ function tickUnitPoison(b,u){
 // Consommation au premier décès éligible ; aucune contamination en chaîne.
 function spreadUnitPoison(b,dead,lane,col,emit,readyRound){
  const origin=dead.poisonOrigin,p=origin?.contagion;
- if(!p||!(dead.poisonTurns>0||origin.lethal)||(b.poisonSpreads||[]).includes(origin.uid))return;
- b.poisonSpreads=[...(b.poisonSpreads||[]),origin.uid];
- const target=b.board[lane].map((u,col)=>({u,col})).filter(t=>t.u&&t.u.hp>0&&t.u.side===dead.side)
+ if(!p||!(dead.poisonTurns>0||origin.lethal)||p.trigger==='poison-death'&&!origin.lethal||p.frequency!=='victim'&&(b.poisonSpreads||[]).includes(origin.uid))return;
+ if(p.frequency!=='victim')b.poisonSpreads=[...(b.poisonSpreads||[]),origin.uid];
+ const target=b.board[lane].map((u,col)=>({u,col})).filter(t=>t.u&&t.u.hp>0&&t.u.side===dead.side&&(!p.maxDistance||Math.abs(t.col-col)<=p.maxDistance))
   .sort((a,z)=>Math.abs(a.col-col)-Math.abs(z.col-col)||a.col-z.col||a.u.uid-z.u.uid)[0];
  if(!target)return;
  applyUnitPoison(target.u,{...p,sourceBound:true},{uid:origin.uid,side:origin.side},readyRound);
@@ -6755,7 +6822,9 @@ const positive=n=>Number.isSafeInteger(n)&&n>0&&n<=100;
 function validPoisonOrigin(p){
  return p===undefined||!!p&&Number.isSafeInteger(p.uid)&&p.uid>=0&&['p','e'].includes(p.side)&&
   (p.readyRound===undefined||positive(p.readyRound))&&(p.lethal===undefined||typeof p.lethal==='boolean')&&
-  (p.contagion===undefined||!!p.contagion&&positive(p.contagion.amount)&&positive(p.contagion.resolutions));
+  (p.contagion===undefined||!!p.contagion&&positive(p.contagion.amount)&&positive(p.contagion.resolutions)&&
+   (p.contagion.maxDistance===undefined||positive(p.contagion.maxDistance))&&(p.contagion.trigger===undefined||p.contagion.trigger==='poison-death')&&
+   (p.contagion.frequency===undefined||p.contagion.frequency==='victim'));
 }
 function validPoisonSpreads(ids){return ids===undefined||Array.isArray(ids)&&ids.every(n=>Number.isSafeInteger(n)&&n>=0)&&new Set(ids).size===ids.length;}
 
@@ -6788,24 +6857,46 @@ Object.assign(__exports,{captureCombatFrame,recordCombatEvent});
 // États temporaires communs aux unités ; jamais de modification permanente d'ATQ.
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {applyUnitPoison,validPoisonOrigin}=__load("src/engine/unit-poison.js");
-function attackAfterPenalty(u,raw){const boosted=raw+(u.fury||0);return u.attackPenalty?Math.max(0,boosted-u.attackPenalty.amount):boosted;}
+function attackAfterPenalty(u,raw){const boosted=raw+(u.fury||0)+(u.devourAttack||0);return u.attackPenalty?Math.min(boosted,Math.max(u.attackPenalty.minimum||0,boosted-u.attackPenalty.amount)):boosted;}
 function consumeAttackPenalty(u,raw){
  const result=attackAfterPenalty(u,raw),p=u.attackPenalty;
  if(p){if(p.remaining<=1)delete u.attackPenalty;else u.attackPenalty={...p,remaining:p.remaining-1};}
  if(u.fury)delete u.fury;
  return result;
 }
-function applyAttackEffects(source,target,suppressed=false,round=0,touched=true){
+function applyAttackEffects(source,target,suppressed=false,round=0,touched=true,{battle,lane,col}={}){
  if(suppressed||!target||target.side===source.side)return;
  const a=versionUnitAbilities(source);
  if(a?.poison&&source.ability==='poison'){
   applyUnitPoison(target,a.poison,{uid:source.uid,side:source.side,contagion:a.contagion});
  }
- if(a?.harass&&target.hp>0)target.attackPenalty={amount:a.harass.amount,remaining:a.harass.attacks};
+ if(a?.harass&&target.hp>0){
+  const p=a.harass;
+  if(!p.period){
+   if(target.attackPenalty?.minimum!==undefined)applyAttackPenalty(target,{...p,minimum:0});
+   else target.attackPenalty={amount:p.amount,remaining:p.attacks};
+  }
+  else if(touched&&!(source.harassReadyRound>round)){
+   source.harassReadyRound=round+p.period;applyAttackPenalty(target,p);
+   if(p.secondary&&battle){
+    const other=battle.board[lane].map((u,col)=>({u,col})).filter(t=>t.u&&t.u.hp>0&&t.u.side===target.side&&t.u.uid!==target.uid&&Math.abs(t.col-col)<=p.secondary.range)
+     .sort((a,z)=>Math.abs(a.col-col)-Math.abs(z.col-col)||a.col-z.col||a.u.uid-z.u.uid).slice(0,p.secondary.targets);
+    for(const t of other)applyAttackPenalty(t.u,{...p,amount:p.secondary.amount});
+   }
+  }
+ }
  if(touched&&target.hp>0&&a?.entangle&&round>0){
   const p=a.entangle,ready=p.frequency==='invocation'?!source.entangleUsed:!(source.entangleReadyRound>round);
   if(ready){target.movementRoot=1;if(p.frequency==='invocation')source.entangleUsed=true;else source.entangleReadyRound=round+p.period;}
  }
+}
+function applyAttackPenalty(target,p){
+ const old=target.attackPenalty;if(old&&old.amount>p.amount)return;
+ target.attackPenalty={amount:p.amount,remaining:Math.max(p.attacks,old?.remaining||0),minimum:old&&old.amount===p.amount?Math.min(old.minimum||0,p.minimum):p.minimum};
+}
+function executionBonus(u,target,suppressed=false){
+ const p=versionUnitAbilities(u)?.execution;
+ return !suppressed&&p&&target.hp>0&&target.hp*2<=target.maxhp?p.amount:0;
 }
 function resolveLifesteal(b,u){
  const p=versionUnitAbilities(u)?.lifesteal;if(!p)return;
@@ -6828,16 +6919,20 @@ function resolveRegeneration(b,sideFilter,emit){
 const integer=(n,max)=>Number.isSafeInteger(n)&&n>0&&n<=max;
 function validUnitEffects(u){
  const p=u.attackPenalty,r=u.regeneration;
- return (p===undefined||p&&integer(p.amount,100)&&integer(p.remaining,10))&&
+ return (p===undefined||p&&integer(p.amount,100)&&integer(p.remaining,10)&&(p.minimum===undefined||p.minimum===0||p.minimum===1))&&
   (r===undefined||r&&integer(r.amount,100)&&integer(r.remaining,10)&&integer(r.readyRound,100))&&
   (u.movementRoot===undefined||u.movementRoot===1)&&(u.entangleUsed===undefined||typeof u.entangleUsed==='boolean')&&
   (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
+  (u.deathStrikeUsed===undefined||typeof u.deathStrikeUsed==='boolean')&&
+  (u.devourAttack===undefined||integer(u.devourAttack,2))&&
+  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
+  (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
   (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin);
 }
 
-Object.assign(__exports,{attackAfterPenalty,consumeAttackPenalty,applyAttackEffects,resolveLifesteal,grantRegeneration,resolveRegeneration,validUnitEffects});
+Object.assign(__exports,{attackAfterPenalty,consumeAttackPenalty,applyAttackEffects,executionBonus,resolveLifesteal,grantRegeneration,resolveRegeneration,validUnitEffects});
 
 },
 "src/engine/unit-death.js":function(__exports,__load){
@@ -7158,14 +7253,24 @@ Object.assign(__exports,{resolveUnitArrival,resolveUnitSupport});
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {grantAbilityBarrier}=__load("src/engine/battle-defense.js");
 const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
-function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed},emit){
+function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,damaged,execution},emit){
  if(suppressed||u.hp<=0)return;
  const a=versionUnitAbilities(u);
  const protect=(target,key,p)=>{if(grantAbilityBarrier(target.u,key,p))emit(b,{type:'state',side:u.side,lane:target.lane,col:target.col});};
- if(charged&&a.chargeBarrier){
+ if(charged&&a.chargeBarrier&&(!a.chargeBarrier.requiresKill||killed)&&(!a.chargeBarrier.frequency||u.lastChargeBarrierRound!==b.round)){
+  if(a.chargeBarrier.frequency)u.lastChargeBarrierRound=b.round;
   protect({u,lane,col},'chargeBarrier',a.chargeBarrier);
   if(a.chargeBarrier.allies)for(const target of alliedTargets(b,u,lane,{includeSelf:false}).sort(injuryOrder).slice(0,a.chargeBarrier.allies))protect(target,'chargeBarrier',a.chargeBarrier);
  }
+ if(killed&&a.devour){
+  u.hp=Math.min(u.maxhp,u.hp+a.devour.heal);
+  if(a.devour.attack)u.devourAttack=Math.min(a.devour.cap,(u.devourAttack||0)+a.devour.attack);
+  emit(b,{type:'heal',side:u.side,lane,col});
+ }
+ if(damaged&&a.strikeHeal&&u.lastStrikeHealRound!==b.round){
+  u.lastStrikeHealRound=b.round;u.hp=Math.min(u.maxhp,u.hp+a.strikeHeal.amount);emit(b,{type:'heal',side:u.side,lane,col});
+ }
+ if(killed&&execution&&a.execution?.killHaste)u.killHasteRound=b.round+1;
  if(furious&&killed&&a.furyBarrier&&u.lastFuryBarrierRound!==b.round){
   u.lastFuryBarrierRound=b.round;protect({u,lane,col},'furyBarrier',a.furyBarrier);
  }
