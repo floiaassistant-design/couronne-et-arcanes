@@ -93,7 +93,10 @@ contrôle de Collection conserve ses six colonnes avec les PV attendus
 explicitement. Les parcours de paquet Ombre sont appelés par les quatre
 parties d'épreuves existantes : bureau, portrait, paysage et HTTP, avec panne,
 annulation, double clic, fusion, export/import, invocation et reprise.
-La matrice permanente conserve ses 27 scripts d'entrée et 30 commandes.
+Le parcours de contrôle V2.9 vérifie le libellé court et le contenu de la fiche
+Silence : moment, durée, cadence et capacités conservées, plutôt qu'une longueur
+minimum héritée de l'ancien descriptif. La matrice permanente conserve ses
+27 scripts d'entrée et 30 commandes.
 
 Contrôles locaux : 570 tests Node réussis, 120 scénarios de parité identiques,
 builds autonome, diagnostic et web réussis ; 75 modules et 292 dépendances

@@ -95,6 +95,13 @@ async def run(browser,label,viewport):
             for phrase in ['Tous les 3 tours','Piège visible pendant 3 tours','1 dégât','déplacement et attaque bloqués']:
                 assert phrase in detail,phrase
             await page.keyboard.press('Escape')
+        elif id=='mist_inquisitor':
+            assert text=='Silence / 3 tours'
+            await card.hover()
+            detail=await page.locator('#collection-hover-inspection:not([hidden])').inner_text()
+            for phrase in ['Avant son déplacement','pendant 1 tour','tous les 3 tours','Attaques normales et traits passifs conservés']:
+                assert phrase in detail,phrase
+            await page.keyboard.press('Escape')
         else:
             assert len(text)>50
     await page.locator('#nav [data-page="campaign"]').click()

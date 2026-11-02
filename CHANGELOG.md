@@ -8,6 +8,8 @@
   après le premier boss : trois cartes, 190 or, taux 60/35/5, pools 8/3/8.
 - Pouvoirs et sauvegardes natifs conservés ; fiche de Silence paramétrée pour
   l'Inquisiteur, mêmes règles dans les deux camps et le laboratoire.
+- Contrôle de lecture de l’Inquisiteur : vérifier le libellé et la fiche
+  détaillée de Silence plutôt que la longueur de l’ancien descriptif.
 - [Contrat, contrôles et reprise](docs/OMBRE_RARE_EPIQUE.md).
 
 
