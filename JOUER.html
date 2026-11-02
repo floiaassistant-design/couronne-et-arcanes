@@ -5075,7 +5075,7 @@ function nativeUnitAbilities(card){
   ward:{amount:3,cap:20,target:'own-crown',timing:'spawn'},
   pierce:{target:'primary',ignoreArmor:true},
   poison:{amount:1,resolutions:2,target:'primary'},
-  splash:{amount:2,target:'other-enemy-on-line'},
+  splash:{amount:2,target:'adjacent-enemies-behind-primary'},
   lifesteal:{amount:2,target:'own-hero',trigger:'attack'},
   silence:{period:3,resolutions:1,target:'enemy-on-line'},
   portal:{period:3,target:'free-same-column'},
@@ -5937,6 +5937,7 @@ const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifest
 const {tickUnitPoison,clearUnitPoison}=__load("src/engine/unit-poison.js");
 const {resolveStrikeRewards}=__load("src/engine/unit-triggers.js");
 const {resolveUnitDeath}=__load("src/engine/unit-death.js");
+const {splashSecondaryTargets}=__load("src/engine/unit-targets.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 const {CARDS,FACTIONS}=__load("src/data.js");
 const {frontEnemy}=__load("src/engine/spell-targeting.js");
@@ -6168,11 +6169,13 @@ function strike(b,u,target,atk,from,to,sameLine=true,charged=false,suppressed=fa
  if(sameLine&&(to-from)*(u.side==='p'?1:-1)>=2)recordTrialFact(b,u,'rangedDamage',damage);
  return {primaryAlive:before>0,performed:raw>0,killed:raw>0&&before>0&&target.hp<=0,damaged:damage>0,execution:execution>0};
 }
-function resolveSplash(b,u,lane,primary,atk,intercepted=false,primaryAlive=true){
+function resolveSplash(b,u,lane,sourceCol,primaryCol,atk,intercepted=false,primaryAlive=true){
  const p=versionUnitAbilities(u)?.splash;
- if(!p||intercepted&&!p.onGuard||p.requiresAttack&&(!primaryAlive||atk<=0))return;
- const others=b.board[lane].filter(v=>v&&v.side!==u.side&&v.uid!==primary.uid&&v.hp>0).slice(0,p.targets||1);
- for(const extra of others)hit(b,extra,p.amount,u.side,false,true);
+ if(!p||atk<=0||intercepted&&!p.onGuard||p.requiresAttack&&!primaryAlive)return;
+ // L'Impact reste sur la ligne de l'attaquant : aucun tir arrière ou par-dessus un trou.
+ for(const {u:secondary} of splashSecondaryTargets(b,lane,sourceCol,primaryCol,u.side,p.targets||1)){
+  hit(b,secondary,p.amount,u.side,false,true);
+ }
 }
 function resolveAttacks(b,sideFilter=null){
  const intents=[];
@@ -6200,7 +6203,7 @@ function resolveAttacks(b,sideFilter=null){
     if(ability==='lifesteal')resolveLifesteal(b,u);
     applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0,{battle:b,lane:guardIntercept.lane,col:guardIntercept.col});
     if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result},fx);
-    if(ability==='splash')resolveSplash(b,u,guardIntercept.lane,guardIntercept.u,atk,true,result.primaryAlive);
+    if(ability==='splash'&&guardIntercept.lane===lane)resolveSplash(b,u,lane,intent.col,guardIntercept.col,atk,true,result.primaryAlive);
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
@@ -6209,7 +6212,7 @@ function resolveAttacks(b,sideFilter=null){
    if(ability==='lifesteal')resolveLifesteal(b,u);
    applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0,{battle:b,lane,col:target.col});
    if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result},fx);
-   if(ability==='splash')resolveSplash(b,u,lane,target.target,atk,false,result.primaryAlive);
+   if(ability==='splash')resolveSplash(b,u,lane,intent.col,target.col,atk,false,result.primaryAlive);
    resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);
   }
@@ -6978,8 +6981,23 @@ function alliedTargets(b,u,lane,parameters){
  return found;
 }
 const injuryOrder=(x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid;
+// Ciblage d'Impact de zone : seulement les ennemis consécutifs derrière la cible.
+// La case de la cible principale reste la référence même si elle vient de mourir.
+function splashSecondaryTargets(b,lane,attackerCol,primaryCol,attackerSide,maxTargets=1){
+ const dir=attackerSide==='p'?1:-1;
+ if((primaryCol-attackerCol)*dir<=0)return [];
+ const result=[];
+ for(let distance=1;distance<=maxTargets;distance++){
+  const col=primaryCol+dir*distance;
+  if(col<1||col>lastCell(b))break;
+  const u=b.board[lane]?.[col];
+  if(!u||u.hp<=0||u.side===attackerSide)break;
+  result.push({u,col});
+ }
+ return result;
+}
 
-Object.assign(__exports,{alliedTargets,injuryOrder});
+Object.assign(__exports,{alliedTargets,injuryOrder,splashSecondaryTargets});
 
 },
 "src/engine/unit-barriers.js":function(__exports,__load){
