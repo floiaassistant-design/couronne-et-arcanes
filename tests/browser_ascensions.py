@@ -6,18 +6,18 @@ from evolution_ci_plan import ascension_cases
 ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
 BATTLE='couronnes_arcanes_bataille_v1'
-SCENARIOS={f:json.loads(subprocess.check_output(['node','tests/fixtures/ascension-scenarios.mjs','--json']+(['--sylve'] if f=='sylve' else []),cwd=ROOT)) for f in ['aube','sylve']}
+SCENARIOS={f:json.loads(subprocess.check_output(['node','tests/fixtures/ascension-scenarios.mjs','--json']+(['--'+f] if f!='aube' else []),cwd=ROOT)) for f in ['aube','sylve','ombre']}
 
 async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,stored,faction='aube'):
     for config in ascension_cases(part):
-        label,touch=config['label'],config['touch'];s=SCENARIOS[faction][config['index']];card_id='thorn' if faction=='sylve' else 'dawnbastion'
+        label,touch=config['label'],config['touch'];s=SCENARIOS[faction][config['index']];card_id='bone' if faction=='ombre' else 'thorn' if faction=='sylve' else 'dawnbastion'
         address=url if label=='web' else None
         locked=copy.deepcopy(s);locked['profile']['completed']=[]
         ctx,page,errors,_=await make_case(browser,locked,config['viewport'],touch=touch,url=address)
         await click(page.locator('#nav [data-page="trials"]'),touch)
         tile=page.locator(f'[data-trial-id="{s["id"]}"]')
         assert await tile.locator('[data-action="trial-start"]').is_disabled()
-        assert await page.locator('.trial-card').count()==4 and await page.locator('.ascension-card').count()==4
+        assert await page.locator('.trial-card').count()==4 and await page.locator('.ascension-card').count()==6
         assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
         assert not errors,errors
         await ctx.close()
@@ -81,7 +81,7 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         else:assert fused['evolvedCollection'][source]==result['evolvedCollection'][source]-3
         for key in ['gold','shards','heroXp','completed','completedTrials','deck']:assert fused[key]==result[key],key
         await click(page.locator('#nav [data-page="collection"]'),touch)
-        if faction=='sylve':await click(page.locator('[data-action="collection-faction"][data-id="sylve"]'),touch)
+        if faction!='aube':await click(page.locator(f'[data-action="collection-faction"][data-id="{faction}"]'),touch)
         row=page.locator(f'[data-collection-character="{card_id}"]')
         assert await row.locator('td').count()==6
         assert 'Possédée ×1' in await row.locator(f'[data-collection-rarity="{s["trial"]["to"]}"]').inner_text()
@@ -105,7 +105,7 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         await select(page,index,touch)
         await click(page.locator('[data-action="deploy"][data-lane="0"][data-col="1"]'),touch)
         snapshot=await stored(page,BATTLE);unit=snapshot['board'][0][1]
-        assert (unit['id'],unit['rarity'],unit['atk'],unit['maxhp'])==(card_id,s['trial']['to'],(5 if faction=='sylve' else 7 if s['trial']['to']=='divine' else 9),(9 if faction=='sylve' else 14))
+        assert (unit['id'],unit['rarity'],unit['atk'],unit['maxhp'])==(card_id,s['trial']['to'],(6 if faction=='ombre' else 5 if faction=='sylve' else 7 if s['trial']['to']=='divine' else 9),(9 if faction in ('sylve','ombre') else 14))
         if faction=='aube':assert unit['arrivalResolved'] and snapshot['heroes']['p']['shield']==3
         await page.reload();await page.locator('.combat-screen').wait_for();assert await stored(page,BATTLE)==snapshot
         await click(page.locator('.combat-menu-link'),touch)

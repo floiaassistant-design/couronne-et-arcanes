@@ -10,7 +10,7 @@ import {absorbBarrier,grantAbilityBarrier} from './unit-barriers.js';
 // Préserver les imports existants des appelants.
 export * from './unit-barriers.js';
 
-export function hit(b,u,raw,bySide,ignoreArmor=false,attack=false){
+export function hit(b,u,raw,bySide,ignoreArmor=false,attack=false,direct=null){
  if(!u||u.hp<=0)return 0; // Une victime ne compte jamais deux fois.
  const abilities=versionUnitAbilities(u);
  const armor=u.armor??abilities?.armor?.amount??0;
@@ -32,6 +32,14 @@ export function hit(b,u,raw,bySide,ignoreArmor=false,attack=false){
   recordCombatEvent(b,{type:'damage',side:u.side,lane,col,damage:Math.max(0,before-u.hp),absorbed,armor:ignoreArmor?0:Math.min(raw-1,armor)});
  }
  if(u.hp<=0){const lane=b.board.findIndex(row=>row.includes(u));if(lane>=0)resolveUnitDeath(b,u,lane,b.board[lane].indexOf(u),recordCombatEvent);}
+ const deathStrike=abilities?.deathStrike,attacker=direct?.attacker;
+ if(u.hp<=0&&deathStrike&&!u.deathStrikeUsed&&attack&&direct?.sameLine&&attacker?.hp>0&&attacker.side!==u.side&&
+    Math.abs(direct.from-direct.to)<=deathStrike.range&&!silenced(b,{...u,hp:before})){
+  u.deathStrikeUsed=true;
+  // Dégât secondaire : ne crée ni nouvelle attaque ni chaîne de Fracas.
+  hit(b,attacker,deathStrike.amount,u.side);
+  if(attacker.hp>0&&deathStrike.entangle)attacker.movementRoot=1;
+ }
  return dmg;
 }
 
@@ -45,7 +53,7 @@ export function resolveRetaliation(b,defender,attacker,lane,defenderCol,attacker
  else defender.lastRiposteRound=b.round;
  recordCombatEvent(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
  const raw=consumeAttackPenalty(defender,defender.atk+attackBonus);
- const dealt=raw>0?hit(b,attacker,raw,defender.side,false,true):0;
+ const dealt=raw>0?hit(b,attacker,raw,defender.side,false,true,{attacker:defender,from:defenderCol,to:attackerCol,sameLine:true}):0;
  if(dealt>0)note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
  if(abilities?.riposteBarrier)grantAbilityBarrier(defender,'riposteBarrier',abilities.riposteBarrier);
  return true;

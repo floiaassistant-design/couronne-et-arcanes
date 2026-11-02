@@ -14,7 +14,8 @@ export function silenceValue(u){
  const value={heal:6,inspire:5,splash:6,poison:5,lifesteal:5,pierce:3,haste:3,silence:6,portal:4,trapper:4}[u?.ability]||0;
  const future=versionUnitAbilities(u);
  return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
-  (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0);
+  (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0)+
+  (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0);
 }
 export function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 export function silenceTarget(b,side,lane){
@@ -138,8 +139,12 @@ export function prepareControlUnits(b,hooks,sideFilter=null){
   if(!alive(u)||u.stun>0||silenced(b,u)||u.controlReadyRound>b.round)continue;
   let used=false;
   if(u.ability==='silence'){
-   const target=silenceTarget(b,u.side,lane);
-   if(target&&applySilence(b,target.u,1)){used=true;hooks.emit(b,{type:'silence',side:u.side,lane,col:target.col});hooks.note(b,`${CARDS[u.id].name} réduit ${CARDS[target.u.id].name} au silence pour ce tour.`);}
+   const p=versionUnitAbilities(u)?.silence;
+   for(let n=0;n<(p?.targets||1);n++){
+    const target=silenceTarget(b,u.side,lane);
+    if(!target||!applySilence(b,target.u,p?.resolutions||1))break;
+    used=true;hooks.emit(b,{type:'silence',side:u.side,lane,col:target.col});hooks.note(b,`${CARDS[u.id].name} réduit ${CARDS[target.u.id].name} au silence ${p?.resolutions>1?'pour '+p.resolutions+' tours.':'pour ce tour.'}`);
+   }
   }else if(u.ability==='trapper')used=placeTrap(b,u.side,trapPlan(b,u.side,lane,col+direction(u.side)),'snare',hooks.emit,hooks.note,versionUnitAbilities(u)?.trapper,u);
   else if(u.ability==='portal'){
    const plans=[];
@@ -149,6 +154,6 @@ export function prepareControlUnits(b,hooks,sideFilter=null){
    const best=plans.sort((a,z)=>z.gain-a.gain||a.toLane-z.toLane)[0];
    if(best?.gain>=2)used=teleportUnit(b,u.side,best,hooks.emit,hooks.note,hooks.enter);
   }
-  if(used)u.controlReadyRound=b.round+(u.ability==='trapper'?versionUnitAbilities(u)?.trapper?.period||3:3);
+  if(used)u.controlReadyRound=b.round+(versionUnitAbilities(u)?.[u.ability]?.period||3);
  }
 }

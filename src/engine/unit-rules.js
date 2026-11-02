@@ -21,13 +21,13 @@ export function unitCanPlay(context,reference,side='p'){
 export function unitAttackRange(u){
  return u?.ranged?Math.max(2,resolveUnitDefinition(u)?.geometry.range||0):1;
 }
-export function unitMovementSteps(u,suppressed=false){
+export function unitMovementSteps(u,suppressed=false,round){
  if(u.movementRoot)return 0;
  const d=resolveUnitDefinition(u);
- return d?.abilities.haste&&!suppressed?d.geometry.steps:1;
+ return suppressed?1:Math.max(d?.abilities.haste?d.geometry.steps:1,Number.isSafeInteger(round)&&u.killHasteRound===round?d?.abilities.execution?.killHaste||1:1);
 }
 export function unitChargeAmount(u){return versionUnitAbilities(u)?.charge?.amount||0;}
-export function unitHasPierce(u,suppressed=false,charged=false){const p=versionUnitAbilities(u)?.pierce;return !suppressed&&!!p?.ignoreArmor&&(p.condition!=='charged'||charged);}
+export function unitHasPierce(u,suppressed=false,charged=false){const p=versionUnitAbilities(u)?.pierce;return !suppressed&&!!p?.ignoreArmor&&(p.condition!=='charged'||charged)&&(!p.minMovedCells||(u.movedCellsThisRound||0)>=p.minMovedCells);}
 export function unitFlying(u){return !!versionUnitAbilities(u)?.flying;}
 
 export const battleRulesError=b=>b?.cardRules===CARD_RULESET?'':'Ce combat doit être relancé après la mise à jour des cartes.';

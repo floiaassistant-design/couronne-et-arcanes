@@ -46,7 +46,7 @@ test('Laboratoire : six rangs définis, rangs inférieurs absents, réglages inv
  const lab=freshLab();assert.equal(labRanks('militia').length,6);assert.equal(labRanks('paladin').length,4);
  assert.equal(labRanks('dawnbastion').length,3);assert.equal(labRanks('wolf').length,6);
  assert.equal(setLabRarity(lab,'p','paladin','commun').ok,false);
- assert.equal(setLabRarity(lab,'p','bone','éveillée').ok,false);
+ assert.equal(setLabRarity(lab,'p','smith','éveillée').ok,false);
  setLabRarity(lab,'p','militia','éveillée');assert.equal(setLabLevel(lab,'p','militia',0).ok,true);
  lab.rarities.p.militia='inconnue';assert.throws(()=>createLabBattle(lab),/invalide/);
 });
