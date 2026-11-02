@@ -1,11 +1,11 @@
-# Forge Rare / Épique — proposition du 2 novembre 2026
+# Forge Rare / Épique — intégrée le 2 novembre 2026
 
 ## Sources et périmètre
 Source : [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f), page modifiée le 2 novembre 2026 à 16:09:01 UTC et relue avant la création de ce lot.
 Base : `main` au commit `843f1412f689b75acca7ff80fb44b99c149cb6c7` (PR 73 intégrée), aucune PR ouverte à la reprise.
-La PR de ce lot demeure **proposée et non fusionnée** ; sa publication n'est pas acquise.
+La [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75) est **fusionnée** sur `main` au commit `5d9e2861911744ed051d3f656cdb186025451613` ; sa publication sur Sites reste à confirmer séparément.
 
-Dix versions futures validées, sur sept des dix unités natives Forge :
+Dix évolutions validées et intégrées, sur sept des dix unités natives Forge :
 
 | Unité | Rare | Épique |
 | --- | --- | --- |
@@ -37,6 +37,6 @@ Le paquet distinct `forge-evolution`, après mission 03, coûte 190 or pour troi
 ## Architecture, tests et reprise
 `cards/forge.js` apporte uniquement les patches immuables et la provenance ; `cards/evolutions.js` les transmet au registre et aux recettes. `cards/definitions.js` expose les unités Forge à la présentation ; `card-packs.js` réutilise le constructeur commun. Aucun changement moteur, IA, schéma de sauvegarde, assets ou CSS ; identités natives et référence `{id,rarity}` préservées.
 
-`tests/forge_evolutions.test.mjs` examine les totaux, rangs absents, capacités héritées, dix fusions, stocks/deck, missions, paquets, tirages, import/export, combat réel et laboratoire deux camps/quatre niveaux. La matrice existante couvre aussi navigateur, reprise et export ; la CI de la PR fera foi sur son SHA exact. Les résultats locaux et les résultats CI doivent être distingués ; le téléphone physique et l'équilibrage humain ne sont pas prouvés.
+`tests/forge_evolutions.test.mjs` examine les totaux, rangs absents, capacités héritées, dix fusions, stocks/deck, missions, paquets, tirages, import/export, combat réel et laboratoire deux camps/quatre niveaux. La matrice existante couvre aussi navigateur, reprise et export ; les six contrôles GitHub de la tête testée `42103d5` ont réussi et l'arbre fusionné est identique. Les résultats locaux et les résultats CI doivent être distingués ; le téléphone physique et l'équilibrage humain ne sont pas prouvés.
 
-Reprise : vérifier la tête de PR et les six contrôles GitHub ; corriger un échec sur la même branche, relire diff et main. Ne pas fusionner sans autorisation spécifique, ni publier une version non fusionnée. Notion reste la source de conception, inchangée.
+Reprise : poursuivre séparément les rangs Forge encore absents ; consulter Notion et main à nouveau. La publication doit être vérifiée via l'automatisation existante, sans déploiement concurrent. Notion reste la source de conception, inchangée.

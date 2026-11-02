@@ -1,11 +1,11 @@
 # Journal des changements
 
-## Proposition — Forge Rare / Épique, 2 novembre 2026
+## Intégré — Forge Rare / Épique, 2 novembre 2026
 
-- Dix évolutions validées pour sept personnages Forge, uniquement en statistiques ATQ/PV ; 20 versions Forge définies dont dix natives et 142 recettes au total sur cette branche.
+- Dix évolutions validées pour sept personnages Forge, uniquement en statistiques ATQ/PV ; 20 versions Forge définies dont dix natives et 142 recettes au total sur main.
 - Garde/Riposte, Impact de zone directionnel, Armure, Inspiration, Protection et Poison sont hérités sans duplication du moteur.
 - Fusion de trois copies libres après missions 01/03, paquet Forge distinct 190 or, trois cartes et poids 60/35/5 (pools 7/3/7) après mission 03. Pas de nouveau rang supérieur ou de carte offerte.
-- Tests de définition, combat, paquets, collection, stockage, laboratoire et export prévus par la CI. Aucune fusion ou publication demandée.
+- PR 75 fusionnée avec accord spécifique au commit `5d9e2861911744ed051d3f656cdb186025451613`. Six contrôles GitHub réussis sur `42103d5` ; arbre intégré identique à l'arbre testé. Publication Sites suivie séparément.
 - [Contrat du lot](docs/FORGE_RARE_EPIQUE.md).
 
 
