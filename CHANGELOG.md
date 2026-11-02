@@ -1,10 +1,19 @@
 # Journal des changements
 
-## Proposé — Impact de zone adjacent, 2 novembre 2026
+## Proposition — Forge Rare / Épique, 2 novembre 2026
+
+- Dix évolutions validées pour sept personnages Forge, uniquement en statistiques ATQ/PV ; 20 versions Forge définies dont dix natives et 142 recettes au total sur cette branche.
+- Garde/Riposte, Impact de zone directionnel, Armure, Inspiration, Protection et Poison sont hérités sans duplication du moteur.
+- Fusion de trois copies libres après missions 01/03, paquet Forge distinct 190 or, trois cartes et poids 60/35/5 (pools 7/3/7) après mission 03. Pas de nouveau rang supérieur ou de carte offerte.
+- Tests de définition, combat, paquets, collection, stockage, laboratoire et export prévus par la CI. Aucune fusion ou publication demandée.
+- [Contrat du lot](docs/FORGE_RARE_EPIQUE.md).
+
+
+## Intégré — Impact de zone adjacent, 2 novembre 2026
 
 - Ciblage secondaire corrigé : ennemi immédiatement derrière la cible principale, même ligne et sens de frappe, aucun saut ni coup derrière l'attaquant.
 - L'Archiliche Éveillée conserve jusqu'à deux cibles secondaires, uniquement contiguës. Armure, barrières et effets de dégâts communs préservés ; mêmes règles IA/joueur et ancienne géométrie.
-- Tests de géométrie et de combat ajoutés ; export unique et parité à vérifier sur la CI de la PR. Aucune fusion ni publication dans ce lot proposé.
+- Tests de géométrie et de combat ajoutés ; export unique et parité à vérifier sur la CI de la PR. PR 73 fusionnée avec autorisation spécifique ; publication distincte à vérifier.
 - [Contrat spécialisé](docs/IMPACT_ZONE_2026_11_02.md).
 
 

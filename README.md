@@ -1,10 +1,11 @@
 # Couronnes & Arcanes
 
 Le jeu intègre les sauvegardes protégées, Garde/Riposte uniques, le deck manuel,
-les paquets/fusions et les ascensions Aube/Sylve. Cette branche propose les
-22 évolutions Divines/Éveillées Ombre et leurs deux ascensions communes.
-La PR 71 Légendaire est intégrée ; la publication de chaque lot reste distincte.
-[Contrat hauts rangs Ombre](docs/OMBRE_DIVINES_EVEILLEES.md).
+les paquets/fusions et les ascensions Aube, Sylve et Ombre. La branche de la
+[PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75)
+propose dix évolutions Rares/Épiques Forge et leur paquet, **non fusionnées et non publiées**.
+Les rangs supérieurs Forge et les évolutions Éther restent hors de cette tranche.
+[Contrat Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md).
 [État intégré et publication](docs/ETAT_PROJET.md) · [Carte des tests](docs/CARTE_TESTS.md).
 
 Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
@@ -12,7 +13,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 
 ## Jouer
 
-- Impact de zone : cible secondaire uniquement immédiatement derrière la cible principale, sans case vide, dans le sens de la frappe ; voir [contrat de ciblage](docs/IMPACT_ZONE_2026_11_02.md). Ce correctif est proposé par PR dédiée tant qu'il n'est pas fusionné.
+- Impact de zone : cible secondaire uniquement immédiatement derrière la cible principale, sans case vide, dans le sens de la frappe ; voir le [contrat de ciblage](docs/IMPACT_ZONE_2026_11_02.md), intégré à main par la PR 73.
 
 - `index.html` / `npm run dev` : jeu web modulaire ; publication sur Sites après fusion.
 - `JOUER.html` : **unique export jouable**, complet et autonome sans réseau.
@@ -22,7 +23,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 évolutions Rares, puis du Milicien Épique après le premier boss. Accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; la fusion ouvre 41 évolutions Aube, 48 Sylve et 43 Ombre ; les 64 Divines/Éveillées Aube/Sylve/Ombre exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
+sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve et 43 Ombre ; cette branche propose dix évolutions Forge supplémentaires. Les 64 Divines/Éveillées Aube/Sylve/Ombre exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
@@ -78,7 +79,7 @@ de Concorde sur l’image est conservée.
 
 ### Collection — six cartes et aperçu rapide
 
-Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube, Sylve et Ombre définies montrent leurs chiffres et leurs stocks réels : 132 évolutions sont accessibles par fusion, dont 27 aussi dans les paquets et quatre également obtenables par épreuve. Les 64 Divines/Éveillées indiquent « Ascension requise » avant le défi commun correspondant. Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
+Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube, Sylve, Ombre et Forge définies montrent leurs chiffres et leurs stocks réels : 142 évolutions sont accessibles par fusion, dont 48 aussi dans les paquets et quatre également obtenables par épreuve. Les 64 Divines/Éveillées indiquent « Ascension requise » avant le défi commun correspondant. Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
 
 ## Progression et sauvegarde
 
@@ -94,8 +95,8 @@ La Collection, les classes, les maîtrises, équipements, talents et donjons son
 conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteur,
 sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
 et les **59 versions Sylve** jusqu'à Éveillée, à leurs niveaux 0 à 3 choisis indépendamment.
-L’Ombre compte 54 versions définies, dont onze natives ; Forge et Éther conservent leurs versions natives. Les quatre récompenses pilotes se gagnent dans les Épreuves ;
-les 132 évolutions sont obtenables après leurs déblocages ; six grandes ascensions ouvrent les 64 Divines/Éveillées Aube/Sylve/Ombre, sans carte offerte ni consommation du deck. Les paquets Sylve et Ombre proposent chacun 3 cartes pour 190 or après le premier boss, avec les mêmes taux par groupe que l'Aube : 60/35/5. [Prochaines factions](docs/REPRISE_MIGRATION_CARTES.md). La PR Aube nº 53, avec sa présentation commune et sa
+L’Ombre compte 54 versions définies, dont onze natives ; Forge compte 20 versions, dont dix natives, et Éther conserve ses versions natives. Les quatre récompenses pilotes se gagnent dans les Épreuves ;
+les 142 évolutions sont obtenables après leurs déblocages ; six grandes ascensions ouvrent les 64 Divines/Éveillées Aube/Sylve/Ombre, sans carte offerte ni consommation du deck. Les paquets Sylve, Ombre et Forge proposent chacun 3 cartes pour 190 or après le premier boss, avec les mêmes taux par groupe que l'Aube : 60/35/5. [Migration des factions](docs/REPRISE_MIGRATION_CARTES.md) · [Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md). La PR Aube nº 53, avec sa présentation commune et sa
 [revue finale](docs/REVUE_AUBE_PR53_2026_10_27.md), a été fusionnée sur accord du
 propriétaire le 27 octobre 2026. La publication du site reste une opération distincte.
 
