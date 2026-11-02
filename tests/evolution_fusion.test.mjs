@@ -72,7 +72,7 @@ test('Rangs distincts, copies du deck et manque de doublons : aucun prélèvemen
  const held=structuredClone(p);assert.equal(fuseEvolutionCopies(p,'militia:épique').ok,false);assert.deepEqual(p,held);
 });
 
-test('2112 exécutions de combat avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
+test('2272 exécutions de combat avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
  for(const recipe of EVOLUTION_FUSIONS){
   const p=stocked(recipe),result=fuseEvolutionCopies(p,recipe.id);modifyDeck(p,result.target,1);
   const before=structuredClone(p);
