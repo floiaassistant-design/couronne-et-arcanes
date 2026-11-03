@@ -2,7 +2,7 @@
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {spreadUnitPoison} from './unit-poison.js';
 import {alliedTargets} from './unit-targets.js';
-import {grantAbilityBarrier} from './unit-barriers.js';
+import {grantAbilityBarrier,grantCrownShield} from './unit-barriers.js';
 import {silenced} from './battle-control.js';
 export function resolveUnitDeath(b,u,lane,col,emit,poisonReadyRound){
  const p=versionUnitAbilities(u)?.deathWard;
@@ -12,7 +12,7 @@ export function resolveUnitDeath(b,u,lane,col,emit,poisonReadyRound){
  if(!(p||u.poisonOrigin?.contagion||watchers.length))return;
  u.deathResolved=true;
  if(p&&!(u.silenceUntil>=b.round)){
-  const h=b.heroes[u.side];h.shield=Math.max(h.shield,Math.min(p.cap,h.shield+p.amount));
+  grantCrownShield(b.heroes[u.side],p);
  }
  for(const t of watchers){
   if(silenced(b,t.u)||t.u.lastFuneralWatchRound===b.round)continue;

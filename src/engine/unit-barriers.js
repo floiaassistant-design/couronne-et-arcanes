@@ -1,5 +1,10 @@
 // Barrières partagées par les défenses et les réactions aux morts, sans cycle.
 const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier','funeralBarrier'];
+export function grantCrownShield(hero,parameters){
+ const before=hero.shield;
+ hero.shield=Math.max(before,Math.min(parameters.cap,before+parameters.amount));
+ return hero.shield-before;
+}
 export function grantAbilityBarrier(u,key,parameters){
  if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
  const sources={...u.abilityBarriers};

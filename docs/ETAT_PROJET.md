@@ -95,6 +95,7 @@ La publication du main intégrant ces lots est suivie indépendamment de leur fu
   séparément les hauts rangs Forge encore absents et les évolutions Éther,
   sans appliquer implicitement leurs décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
 - Terminer la revue des [cinq Légendaires Forge de statistiques](FORGE_LEGENDAIRES_STATS.md) dans la [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78) : export hors ligne régénéré, références des tests actualisées et parcours navigateur Forge ajouté ; CI du commit final puis accord spécifique requis. Proposition non fusionnée, non publiée.
+- Préparer la [suite Marchefer Légendaire](FORGE_MARCHEFER_LEGENDAIRE.md) séparément : Ferraille récupérée, cadence sauvegardée, primitive de bouclier commune et parcours réel de fusion/combat/reprise. Le Golem reste en attente : la Garde normale cible directement le gardien et ne passe pas par l'interception de couronne requise par Cœur runique ; ne pas modifier implicitement cette condition.
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 

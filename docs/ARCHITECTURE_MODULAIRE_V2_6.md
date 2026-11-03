@@ -1,5 +1,21 @@
 # Architecture modulaire — lecture courante
 
+## Marchefer Légendaire — proposition du 3 novembre 2026
+
+`unit-barriers.js` partage `grantCrownShield` entre Protection d'arrivée,
+Dernière lumière à la mort et Ferraille récupérée. Les calculs historiques
+d'arrivée/mort sont inchangés : même plafond par définition, surplus conservé.
+`unit-triggers.js` lit le paramètre `strikeWard` seulement après l'élimination
+directe d'une unité par l'attaque normale, avec le garde-fou de survie déjà partagé.
+Son prochain tour éligible appartient à l'invocation ; `unit-effects.js` valide
+cet état facultatif. Aucun état d'animation, profil ou clé de stockage ajouté.
+
+Le registre porte une seule nouvelle évolution et les fiches lisent ses paramètres.
+La sélection publique du Silence reconnaît ce pouvoir déclenché ; pas de nouvelle
+stratégie d'IA. Les événements de protection utilisent les instantanés existants.
+Web, autonome et laboratoire conservent le même graphe ; aucun module de production,
+actif ou dépendance externe ajouté. [Contrat et limites](FORGE_MARCHEFER_LEGENDAIRE.md).
+
 ## Correctif proposé — ciblage de l'Impact (2 novembre 2026)
 
 `unit-targets.js` sélectionne les ennemis secondaires contigus en direction de l'attaque à partir de la position réelle de la cible principale ; `battle.js` conserve conditions de déclenchement et dégâts via `hit()`. Les paramètres natifs et les fiches lisent le même contrat. Les deux cibles secondaires de l'Archiliche Éveillée restent possibles sans sauter une case. Il s'agit d'une PR de règles **non encore intégrée** ; voir [contrat](IMPACT_ZONE_2026_11_02.md).

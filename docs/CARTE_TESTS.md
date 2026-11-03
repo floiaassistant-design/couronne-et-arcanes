@@ -77,6 +77,18 @@ L'existence d'un ancien script `browser_*.py` dans le dépôt ne prouve donc ni
 son exécution en CI ni son abandon. Lire la matrice et les appels transitifs
 avant de le lancer ou de le déclarer manquant.
 
+## Marchefer Légendaire — proposition du 3 novembre
+
+`forge_marchefer.test.mjs` vérifie la fusion, Protection héritée, élimination
+normale réelle, refus sur les autres causes, plafond/surplus, cadence, Silence,
+destruction simultanée, deux camps du laboratoire, reprise/validation du quota,
+instantanés, fiche et exécution depuis le véritable export autonome.
+Les 148 recettes partagent les contrôles de stock et 2 368 exécutions déterministes.
+Le scénario `forge-scrap` étend le pilote Légendaire existant : fusion, stockage
+refusé, double clic, Collection/deck, import/export, attaque éliminatrice, bouclier
+de couronne et reprise, dans les quatre parties déjà distribuées aux groupes.
+Aucun nouveau job ni exécution de la suite entière en double.
+
 ## Lot Sylve Divine / Éveillée proposé le 1er novembre
 
 `sylve_ascended.test.mjs` couvre les nouveaux déclencheurs et états facultatifs,

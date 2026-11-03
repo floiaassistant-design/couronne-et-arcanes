@@ -1,4 +1,4 @@
-// Forge : Rares/Épiques et cinq Légendaires de statistiques validées ; natifs inchangés.
+// Forge : Rares/Épiques, cinq Légendaires de statistiques et Ferraille récupérée ; natifs inchangés.
 import {freezeCardData} from './schema.js';
 
 export const FORGE_DESIGN_SOURCE=freezeCardData({
@@ -13,6 +13,6 @@ export const FORGE_EVOLUTIONS=freezeCardData({
  engineer:{'légendaire':{stats:{hp:9}}},
  cannon:{'légendaire':{stats:{hp:9}}},
  mechanist:{'épique':{stats:{hp:10}},'légendaire':{stats:{attack:3}}},
- ironwraith:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}}},
+ ironwraith:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}},'légendaire':{abilities:{strikeWard:{amount:2,cap:20,period:3,requiresKill:true}}}},
  alchemist:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}}}
 });

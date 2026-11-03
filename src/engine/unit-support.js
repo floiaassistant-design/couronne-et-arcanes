@@ -3,7 +3,7 @@ import {CARDS} from '../data.js';
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {silenced} from './battle-control.js';
 import {lastCell} from './board.js';
-import {grantHealBarrier,grantAbilityBarrier} from './battle-defense.js';
+import {grantHealBarrier,grantAbilityBarrier,grantCrownShield} from './battle-defense.js';
 import {grantRegeneration} from './unit-effects.js';
 import {alliedTargets,injuryOrder} from './unit-targets.js';
 import {clearUnitPoison} from './unit-poison.js';
@@ -14,7 +14,7 @@ export function resolveUnitArrival(b,u,lane,col,hooks){
  const a=versionUnitAbilities(u);
  if(!a||u.arrivalResolved||!(a.ward||a.arrivalInspire||a.intervention||a.arrivalBarrier))return;
  u.arrivalResolved=true;
- if(a.ward)b.heroes[u.side].shield=Math.max(b.heroes[u.side].shield,Math.min(a.ward.cap,b.heroes[u.side].shield+a.ward.amount));
+ if(a.ward)grantCrownShield(b.heroes[u.side],a.ward);
  if(a.arrivalBarrier)for(const t of alliedTargets(b,u,lane,a.arrivalBarrier).sort(injuryOrder).slice(0,a.arrivalBarrier.targets)){
   if(grantAbilityBarrier(t.u,'arrivalBarrier',a.arrivalBarrier))hooks.emit(b,{type:'state',side:u.side,lane:t.lane,col:t.col});
  }

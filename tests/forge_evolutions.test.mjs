@@ -20,7 +20,7 @@ const expected={
  engineer:[[3,7,3],[3,9,3]],
  cannon:[[5,7,3],[5,9,3]],
  mechanist:[[2,8,2],[2,10,2],[3,10,2]],
- ironwraith:[[2,7,1],[2,9,1],[3,9,1]],
+ ironwraith:[[2,7,1],[2,9,1],[3,9,1],[3,9,1]],
  alchemist:[[3,5,2],[3,7,2],[4,7,2]]
 };
 const forgeRecipes=EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction==='forge');
@@ -34,9 +34,9 @@ function stocked(recipe){
  return p;
 }
 
-test('Forge : dix natives inchangées, quinze évolutions validées, aucun rang futur inventé',()=>{
+test('Forge : dix natives inchangées, seize évolutions validées, aucun rang futur inventé',()=>{
  assert.deepEqual([...FORGE_UNIT_IDS].sort(),Object.keys(expected).sort());
- assert.equal(forgeRecipes.length,15);assert.equal(VERSIONED_UNIT_IDS.filter(id=>FORGE_UNIT_IDS.includes(id)).length,9);
+ assert.equal(forgeRecipes.length,16);assert.equal(VERSIONED_UNIT_IDS.filter(id=>FORGE_UNIT_IDS.includes(id)).length,9);
  assert.equal(Object.keys(CARDS).length,76);
  let total=0;
  for(const [id,totals] of Object.entries(expected)){
@@ -51,11 +51,11 @@ test('Forge : dix natives inchangées, quinze évolutions validées, aucun rang 
    if(!versions.some(version=>version.rarity===rank))assert.equal(resolveUnitDefinition(id,rank),null,id+':'+rank);
   }
  }
- assert.equal(total,25);
+ assert.equal(total,26);
  const p=freshProfile();assert.deepEqual(normalizeProfile(p),p);assert.equal(p.evolvedCollection,undefined);
 });
 
-test('Quinze évolutions : capacités natives et géométrie héritées à l’identique',()=>{
+test('Rares/Épiques : capacités natives et géométrie héritées à l’identique',()=>{
  const a=(id,r='épique')=>resolveUnitDefinition(id,r).abilities;
  assert.equal(a('golem').armor.amount,2);assert.equal(a('golem').guard.scope,'positioned');assert.equal(a('golem').riposte.damageMode,'effective-attack');
  assert.equal(a('bomb').splash.amount,2);assert.equal(a('bomb').splash.target,'contiguous-enemies-behind-primary');
@@ -126,7 +126,7 @@ test('Chaque Rare/Épique Forge peut être tirée, sauvegardée, mise au deck et
  assert.notDeepEqual(p,before);
 });
 
-test('Laboratoire : 25 versions Forge × 4 niveaux × 2 camps, aucun gain réel',()=>{
+test('Laboratoire : 26 versions Forge × 4 niveaux × 2 camps, aucun gain réel',()=>{
  for(const id of FORGE_UNIT_IDS)for(const [i,def] of unitVersions(id).entries())for(const level of [0,1,2,3])for(const side of ['p','e']){
   const lab=freshLab();
   assert.equal(setLabRarity(lab,side,id,def.rarity).ok,true);
@@ -166,7 +166,7 @@ test('Forge Légendaire : cinq gains de statistiques sans pouvoir ajouté ni acc
   profile.completed.push('06');assert.equal(fuseEvolutionCopies(profile,recipe.id).ok,true);
   assert.equal(ownedCardCopies(profile,{id,rarity:'légendaire'}),1);
  }
- for(const id of ['smith','golem','drill','ironwraith']){
+ for(const id of ['smith','golem','drill']){
   assert.equal(resolveUnitDefinition(id,'légendaire'),null,'mécanique de haut rang encore absente');
  }
 });

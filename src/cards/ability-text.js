@@ -74,6 +74,7 @@ export function unitAbilityDetails(d){
  if(a.inspire)lines.push(`Tous les ${a.inspire.period} tours : +${a.inspire.amount} ATQ à ${a.inspire.targets} autre${a.inspire.targets>1?'s':''} allié${a.inspire.targets>1?'s':''} de ${scope(a.inspire)}, ATQ plafonnée à ${a.inspire.cap}.`);
  if(a.arrivalInspire)lines.push(`À l’arrivée : +${a.arrivalInspire.amount} ATQ au premier autre allié de sa ligne, maximum ${a.arrivalInspire.cap}.`);
  if(a.ward)lines.push(`À l’arrivée : +${a.ward.amount} bouclier à sa couronne, plafond ${a.ward.cap}.`);
+ if(a.strikeWard)lines.push(`Ferraille récupérée : si son attaque normale élimine une unité ennemie, +${a.strikeWard.amount} bouclier à sa couronne, plafond ${a.strikeWard.cap}. Au plus une fois tous les ${a.strikeWard.period} tours ; aucun gain par sort, poison, Riposte, dégâts secondaires ou après sa mort.`);
  if(a.arrivalBarrier)lines.push(`À l’arrivée : barrière ${a.arrivalBarrier.amount} à un autre allié de sa ligne, priorité au plus blessé proportionnellement. Plafond ${a.arrivalBarrier.cap} pour cet effet, sans cumul ; aucune autre cible ni effet sans allié.`);
  if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : ${a.harass.period?'Cri d’effroi':'Harcèlement'} −${a.harass.amount} ATQ sur ${a.harass.attacks===1?'sa prochaine attaque d’unité':'ses '+a.harass.attacks+' prochaines attaques d’unité'}, Riposte comprise ; minimum ${a.harass.minimum||0}, aucun effet sur les sorts. ${a.harass.period?'Au plus une fois tous les '+a.harass.period+' tours ; seule la réduction la plus forte persiste.':'Les applications renouvellent le malus sans cumul.'}${a.harass.secondary?' Un autre ennemi à '+a.harass.secondary.range+' case au plus de la cible sur la même ligne : −'+a.harass.secondary.amount+' ATQ pour sa prochaine attaque.':''}`);
  if(a.intervention)lines.push(`À l’arrivée : ${a.intervention.amount} dégâts au premier ennemi devant, même ligne, jusqu’à ${a.intervention.range} cases ; protections normales, une seule frappe d’arrivée.`);
@@ -105,6 +106,7 @@ export function unitAbilityDetails(d){
 
 function advancedSummary(a){
  const parts=[];
+ if(a.strikeWard)parts.push(`Ferraille récupérée · Couronne +${a.strikeWard.amount}`);
  if(a.deathStrike)parts.push(`Fracas ${a.deathStrike.amount}${a.deathStrike.entangle?' · Entrave':''}`);
  if(a.devour)parts.push(`Dévoration ${a.devour.heal}${a.devour.attack?' · +'+a.devour.attack+' ATQ (max +'+a.devour.cap+')':''}`);
  if(a.execution)parts.push(`Exécution +${a.execution.amount}${a.execution.killHaste?' · Célérité après élimination':''}`);

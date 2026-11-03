@@ -1,11 +1,15 @@
 // Déclencheurs de protection après frappe, moteur commun.
 import {versionUnitAbilities} from '../cards/definitions.js';
-import {grantAbilityBarrier} from './battle-defense.js';
+import {grantAbilityBarrier,grantCrownShield} from './unit-barriers.js';
 import {alliedTargets,injuryOrder} from './unit-targets.js';
 
 export function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,damaged,execution},emit){
  if(suppressed||u.hp<=0)return;
  const a=versionUnitAbilities(u);
+ if(a.strikeWard&&(!a.strikeWard.requiresKill||killed)&&!(u.strikeWardReadyRound>b.round)){
+  u.strikeWardReadyRound=b.round+a.strikeWard.period;
+  if(grantCrownShield(b.heroes[u.side],a.strikeWard))emit(b,{type:'state',side:u.side,lane,col});
+ }
  const protect=(target,key,p)=>{if(grantAbilityBarrier(target.u,key,p))emit(b,{type:'state',side:u.side,lane:target.lane,col:target.col});};
  if(charged&&a.chargeBarrier&&(!a.chargeBarrier.requiresKill||killed)&&(!a.chargeBarrier.frequency||u.lastChargeBarrierRound!==b.round)){
   if(a.chargeBarrier.frequency)u.lastChargeBarrierRound=b.round;

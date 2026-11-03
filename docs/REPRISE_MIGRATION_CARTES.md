@@ -84,6 +84,8 @@ La tranche suivante, [cinq Légendaires Forge uniquement statistiques](FORGE_LEG
 
 ## Conditions de reprise
 
+La [proposition Marchefer Légendaire](FORGE_MARCHEFER_LEGENDAIRE.md) suit les cinq versions de statistiques : une évolution supplémentaire, 26 versions Forge et 148 recettes dans sa branche, sans nouvelle version du Golem, du Marteau ou du Foreur. Le pouvoir Cœur runique nécessite de résoudre la différence entre ciblage direct de la Garde normale et interception d'une attaque visant la couronne ; aucun assouplissement de sa validation Notion n'est appliqué.
+
 - Lire main, les branches/PR et `ETAT_PROJET.md`, rapprocher les choix de la
   dernière édition Notion. Les anciens bilans sont historiques.
 - Ne pas empiler silencieusement les propositions : intégrer les dépendances
