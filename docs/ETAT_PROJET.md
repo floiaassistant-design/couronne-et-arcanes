@@ -94,6 +94,7 @@ La publication du main intégrant ces lots est suivie indépendamment de leur fu
 - Relire les validations Notion les plus récentes à chaque tranche ; préparer
   séparément les hauts rangs Forge encore absents et les évolutions Éther,
   sans appliquer implicitement leurs décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
+- Préparer [cinq Légendaires Forge de statistiques](FORGE_LEGENDAIRES_STATS.md) sur branche distincte, sans considérer leur proposition comme fusionnée : export hors ligne à régénérer et CI sur commit exact à vérifier.
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 
