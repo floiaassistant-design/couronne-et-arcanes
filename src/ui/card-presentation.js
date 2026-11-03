@@ -12,6 +12,7 @@ import {unitStatContext,unitStats,versionUnitStats} from '../engine/unit-stats.j
 import {formationBonus} from '../engine.js';
 import {silenced} from '../engine/battle-control.js';
 import {attackAfterPenalty} from '../engine/unit-effects.js';
+import {activeStrikeState} from '../engine/unit-strike-modifiers.js';
 import {generatedCardFace} from './generated-card.js';
 import {concordeDetails} from './concorde.js';
 import {visualFor,artSrc,cardTemplateFor} from '../visuals.js';
@@ -73,6 +74,11 @@ export function boardInspectionData(battle,uid){
   if(u.lastStandUsed)statuses.push('Dernier Rempart consommé');
   if(u.attackPenalty)statuses.push(`Harcèlement : −${u.attackPenalty.amount} ATQ, ${u.attackPenalty.remaining} attaque restante`);
   if(u.regeneration)statuses.push(`Régénération : ${u.regeneration.amount} PV au prochain tour, ${u.regeneration.remaining} effet restant`);
+  const penalty=activeStrikeState(u,'armorPenalty',battle.round),protection=activeStrikeState(u,'temporaryArmor',battle.round),calibration=activeStrikeState(u,'calibration',battle.round),mark=activeStrikeState(u,'spotMark',battle.round);
+  if(penalty)statuses.push(`Armure −${penalty.amount} à la prochaine attaque directe subie`);
+  if(protection)statuses.push(`Blindage : +${protection.amount} Armure à la prochaine attaque directe subie`);
+  if(calibration)statuses.push(`Calibrage : ignore ${calibration.ignoreArmor} Armure à la prochaine attaque contre une unité`);
+  if(mark)statuses.push(`Repérage : ${mark.remaining} attaque(s) d’un autre allié du Canon à +${mark.amount} dégâts`);
   const stats={atk:attackAfterPenalty(u,u.atk+concord+rallied),hp:u.hp,maxhp:u.maxhp,bonuses:[]};
   const presentation=cardPresentation(u,{context:battle,side:u.side,unit:u,stats});
   return {...presentation,entry:{wait:0},presentation,board:{side:u.side,lane,col,statuses,concordeActive:!!concord}};

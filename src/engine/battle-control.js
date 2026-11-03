@@ -4,6 +4,7 @@ import {CARDS,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {unitAttackRange} from './unit-rules.js';
 import {applyUnitPoison} from './unit-poison.js';
+import {expireStrikeModifiers} from './unit-strike-modifiers.js';
 import {laneCount,lastCell,crownColumn,entryColumn,validLane,trapColumns} from './board.js';
 const alive=u=>!!u&&u.hp>0;
 const direction=side=>side==='p'?1:-1;
@@ -15,7 +16,8 @@ export function silenceValue(u){
  const future=versionUnitAbilities(u);
  return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
   (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0)+
-  (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0)+(future?.strikeWard?2:0)+(future?.barrierDrill?3:0)+(future?.knockback?3:0)+(future?.scoria?3:0);
+  (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0)+(future?.strikeWard?2:0)+(future?.barrierDrill?3:0)+(future?.knockback?3:0)+(future?.scoria?3:0)+
+  (future?.fracture?2:0)+(future?.spotting?2:0)+(future?.catalysis?2:0);
 }
 export function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 export function silenceTarget(b,side,lane){
@@ -109,6 +111,7 @@ export function triggerTrap(b,u,lane,col,hit,emit=()=>{},note=()=>{}){
  return true;
 }
 export function expireControl(b,emit=()=>{}){
+ expireStrikeModifiers(b);
  if(b.traps){
   for(const t of b.traps)if(t.expiresRound<=b.round)emit(b,{type:'trap-expire',lane:t.lane,col:t.col,side:t.owner});
   b.traps=b.traps.filter(t=>t.expiresRound>b.round);

@@ -1,6 +1,10 @@
 # Architecture modulaire — lecture courante
 
-## Forge — hauts rangs et blindages, proposition du 3 novembre
+## Forge — dix hauts rangs tactiques, proposition du 3 novembre
+
+`unit-strike-modifiers.js` centralise états consommables, Armure effective, Calibrage, marques, expiration et validation. `battle-defense.js` passe le contexte direct et conserve les protections communes ; `unit-support.js` pose les états après gain effectif d’ATQ ; `unit-triggers.js` orchestre marquage et détonation avec la provenance de `unit-poison.js`. Le rendu lit les états sans recopier leurs calculs. Un module ajouté, 78 modules et 76 illustrations dans les deux distributions ; les fichiers conservent leurs responsabilités, sans second moteur. [Contrat](FORGE_HAUTS_RANGS_TACTIQUES.md).
+
+## Forge — hauts rangs et blindages, intégrés par PR 82 le 3 novembre
 
 Le registre paramètre quatre cartes et leurs remplacements de pouvoirs. `unit-triggers.js` prolonge préparation/recul/récompenses et reçoit de `battle-defense.js` les attaques directes survécues par le Colosse. L’origine de frappe distingue les sorts et effets secondaires, sans recopier les dégâts. Les nouvelles barrières utilisent `grantAbilityBarrier`, plafonds propres et objets remplacés ; `unit-effects.js` valide les deux champs facultatifs du Colosse. `battle.js` ne fait que fournir le hook `hit` commun pour le Fracas alternatif. Aucun module nouveau ni cycle ; l’export conserve les 77 modules et 76 illustrations.
 

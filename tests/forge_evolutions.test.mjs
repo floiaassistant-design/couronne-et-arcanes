@@ -14,14 +14,14 @@ import {cardPresentation} from '../src/ui/card-presentation.js';
 const expected={
  smith:[[3,6,1],[3,8,1],[4,8,1],[4,8,1],[4,8,1],[4,8,1]],
  golem:[[2,12,2],[2,14,2]],
- bomb:[[4,3,2],[4,5,2],[5,5,2]],
+ bomb:[[4,3,2],[4,5,2],[5,5,2],[5,5,2],[5,5,2]],
  drill:[[2,5,1],[2,7,1],[3,7,1],[3,7,1],[3,7,1],[3,7,1]],
  colossus:[[6,13,4],[6,13,4],[6,13,4]],
- engineer:[[3,7,3],[3,9,3]],
- cannon:[[5,7,3],[5,9,3]],
- mechanist:[[2,8,2],[2,10,2],[3,10,2]],
+ engineer:[[3,7,3],[3,9,3],[3,9,3],[3,9,3]],
+ cannon:[[5,7,3],[5,9,3],[5,9,3],[5,9,3]],
+ mechanist:[[2,8,2],[2,10,2],[3,10,2],[3,10,2],[3,10,2]],
  ironwraith:[[2,7,1],[2,9,1],[3,9,1],[3,9,1],[3,9,1],[3,9,1]],
- alchemist:[[3,5,2],[3,7,2],[4,7,2]]
+ alchemist:[[3,5,2],[3,7,2],[4,7,2],[4,7,2],[4,7,2]]
 };
 const forgeRecipes=EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction==='forge');
 const ready=()=>{const p=freshProfile();p.gold=2000;p.completed=['01','02','03','04','05','06','07','08','09','10','11','12'];p.completedTrials=['forge-ascension-divine','forge-ascension-eveillee'];return p;};
@@ -34,9 +34,9 @@ function stocked(recipe){
  return p;
 }
 
-test('Forge : dix natives inchangées, vingt-six évolutions validées, aucun rang futur inventé',()=>{
+test('Forge : dix natives inchangées, trente-six évolutions validées, aucun rang futur inventé',()=>{
  assert.deepEqual([...FORGE_UNIT_IDS].sort(),Object.keys(expected).sort());
- assert.equal(forgeRecipes.length,26);assert.equal(VERSIONED_UNIT_IDS.filter(id=>FORGE_UNIT_IDS.includes(id)).length,10);
+ assert.equal(forgeRecipes.length,36);assert.equal(VERSIONED_UNIT_IDS.filter(id=>FORGE_UNIT_IDS.includes(id)).length,10);
  assert.equal(Object.keys(CARDS).length,76);
  let total=0;
  for(const [id,totals] of Object.entries(expected)){
@@ -51,7 +51,7 @@ test('Forge : dix natives inchangées, vingt-six évolutions validées, aucun ra
    if(!versions.some(version=>version.rarity===rank))assert.equal(resolveUnitDefinition(id,rank),null,id+':'+rank);
   }
  }
- assert.equal(total,36);
+ assert.equal(total,46);
  const p=freshProfile();assert.deepEqual(normalizeProfile(p),p);assert.equal(p.evolvedCollection,undefined);
 });
 
@@ -126,7 +126,7 @@ test('Chaque Rare/Épique Forge peut être tirée, sauvegardée, mise au deck et
  assert.notDeepEqual(p,before);
 });
 
-test('Laboratoire : 36 versions Forge × 4 niveaux × 2 camps, aucun gain réel',()=>{
+test('Laboratoire : 46 versions Forge × 4 niveaux × 2 camps, aucun gain réel',()=>{
  for(const id of FORGE_UNIT_IDS)for(const [i,def] of unitVersions(id).entries())for(const level of [0,1,2,3])for(const side of ['p','e']){
   const lab=freshLab();
   assert.equal(setLabRarity(lab,side,id,def.rarity).ok,true);

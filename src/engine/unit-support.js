@@ -7,6 +7,7 @@ import {grantHealBarrier,grantAbilityBarrier,grantCrownShield} from './battle-de
 import {grantRegeneration} from './unit-effects.js';
 import {alliedTargets,injuryOrder} from './unit-targets.js';
 import {clearUnitPoison} from './unit-poison.js';
+import {grantSupportStrikeState} from './unit-strike-modifiers.js';
 function inspireTargets(b,u,lane,p){return alliedTargets(b,u,lane,p).slice(0,p.targets);}
 function strengthen(target,p){const before=target.atk;target.atk=Math.max(before,Math.min(p.cap,before+p.amount));return target.atk-before;}
 
@@ -51,7 +52,10 @@ export function resolveUnitSupport(b,sideFilter,emit){
   }
   if(a.inspire&&b.round%a.inspire.period===0&&u.lastInspireRound!==b.round){
    const targets=inspireTargets(b,u,lane,a.inspire);if(targets.length)u.lastInspireRound=b.round;
-   for(const t of targets)if(strengthen(t.u,a.inspire))emit(b,{type:'state',side:u.side,lane:t.lane,col:t.col});
+   for(const t of targets)if(strengthen(t.u,a.inspire)){
+    grantSupportStrikeState(t.u,a,b.round);
+    emit(b,{type:'state',side:u.side,lane:t.lane,col:t.col});
+   }
   }
  }
 }

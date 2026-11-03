@@ -1,6 +1,7 @@
 // États temporaires communs aux unités ; jamais de modification permanente d'ATQ.
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {applyUnitPoison,validPoisonOrigin} from './unit-poison.js';
+import {validStrikeModifiers} from './unit-strike-modifiers.js';
 
 export function attackAfterPenalty(u,raw){const boosted=raw+(u.fury||0)+(u.devourAttack||0);return u.attackPenalty?Math.min(boosted,Math.max(u.attackPenalty.minimum||0,boosted-u.attackPenalty.amount)):boosted;}
 export function consumeAttackPenalty(u,raw){
@@ -9,10 +10,10 @@ export function consumeAttackPenalty(u,raw){
  if(u.fury)delete u.fury;
  return result;
 }
-export function applyAttackEffects(source,target,suppressed=false,round=0,touched=true,{battle,lane,col}={}){
+export function applyAttackEffects(source,target,suppressed=false,round=0,touched=true,{battle,lane,col,skipPoison=false}={}){
  if(suppressed||!target||target.side===source.side)return;
  const a=versionUnitAbilities(source);
- if(a?.poison&&source.ability==='poison'){
+ if(a?.poison&&source.ability==='poison'&&!skipPoison&&(!a.catalysis||touched)){
   applyUnitPoison(target,a.poison,{uid:source.uid,side:source.side,contagion:a.contagion});
  }
  if(a?.harass&&target.hp>0){
@@ -70,10 +71,10 @@ export function validUnitEffects(u){
   (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
   (u.deathStrikeUsed===undefined||typeof u.deathStrikeUsed==='boolean')&&
   (u.devourAttack===undefined||integer(u.devourAttack,2))&&
-  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
+  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound','spottingReadyRound','catalysisReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
   (u.scoriaHits===undefined||Number.isSafeInteger(u.scoriaHits)&&u.scoriaHits>=0&&u.scoriaHits<=2)&&
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
-  (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin);
+  (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin)&&validStrikeModifiers(u);
 }

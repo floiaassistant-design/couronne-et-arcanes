@@ -8,6 +8,41 @@ SAVE='couronnes_arcanes_v1'
 BATTLE='couronnes_arcanes_bataille_v1'
 SCENARIOS={f:json.loads(subprocess.check_output(['node','tests/fixtures/ascension-scenarios.mjs','--json']+(['--'+f] if f!='aube' else []),cwd=ROOT)) for f in ['aube','sylve','ombre','forge']}
 
+async def run_forge_tactical_case(browser,config,address,profile,rank,make_case,click,stored):
+    fixture=json.loads(subprocess.check_output(['node','tests/fixtures/forge-tactical-battle.mjs',json.dumps(profile),rank],cwd=ROOT))
+    touch=config['touch'];ctx,page,errors,external=await make_case(browser,fixture,config['viewport'],touch=touch,url=address,terminal=fixture['battle'])
+    await page.locator('.combat-screen').wait_for()
+    await page.clock.install(time='2026-11-03T00:00:00Z');await page.clock.pause_at('2026-11-03T00:00:01Z')
+    await click(page.locator('[data-action="end-turn"]'),touch)
+    b=await stored(page,BATTLE);units={u['uid']:u for row in b['board'] for u in row if u};sources=fixture['sources'];targets=fixture['targets']
+    expected=1 if rank=='divine' else 2
+    assert units[sources['mechanist']]['calibration']['ignoreArmor']==expected
+    assert units[sources['engineer']]['temporaryArmor']['amount']==expected
+    assert units[targets['secondary']]['armorPenalty']['amount']==expected
+    assert units[targets['mark']]['hp']==3
+    assert (units[targets['mark']].get('spotMark') or {}).get('remaining',0)==(0 if rank=='divine' else 1)
+    assert units[sources['cannon']]['spottingReadyRound']==6
+    assert units[targets['poison']]['poisonOrigin']['uid']==sources['alchemist']
+    for uid,word in [(sources['mechanist'],'Calibrage'),(sources['engineer'],'Blindage'),(targets['secondary'],'Armure −')]:
+        card=page.locator(f'.board-card[data-unit-id="{uid}"]')
+        if touch:await card.tap()
+        else:await card.hover()
+        assert word in await page.locator('#hand-card-inspection').inner_text()
+        await page.keyboard.press('Escape')
+    await page.reload();await page.locator('.combat-screen').wait_for();assert await stored(page,BATTLE)==b
+    await page.clock.run_for(1000)
+    await page.wait_for_function("()=>{const b=JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'));return b?.round===4&&b.phase==='player'}")
+    await click(page.locator('[data-action="end-turn"]'),touch)
+    b=await stored(page,BATTLE);units={u['uid']:u for row in b['board'] for u in row if u}
+    assert units[sources['alchemist']]['catalysisReadyRound']==7
+    assert units[targets['poison']]['poisonTurns']==0
+    assert units[targets['poison']]['hp']==(2 if rank=='divine' else 1)
+    await page.screenshot(path=f'/tmp/ca-forge-tactical-{config["label"]}-{rank}.png')
+    await page.reload();await page.locator('.combat-screen').wait_for();assert await stored(page,BATTLE)==b
+    assert await stored(page)==fixture['profile'];assert not errors,errors;assert not external,external
+    await ctx.close()
+    print(f'Forge tactique {config["label"]} {rank}: Calibrage/Blindage, Fracture, Repérage allié et Catalyse réels, deux tours et reprise PASS',flush=True)
+
 async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,stored,faction='aube'):
     for config in ascension_cases(part):
         label,touch=config['label'],config['touch'];s=SCENARIOS[faction][config['index']];card_id='drill' if faction=='forge' else 'bone' if faction=='ombre' else 'thorn' if faction=='sylve' else 'dawnbastion'
@@ -130,3 +165,4 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         assert not external,external
         await ctx.close()
         print(f'Ascension {faction} {label}: {s["trial"]["to"]}, {"combat UI complet" if config["full"] else "reprise après panne"}, déblocage sans cadeau, fusion, export/import et vraie invocation/reprise PASS',flush=True)
+        if faction=='forge':await run_forge_tactical_case(browser,config,address,final,s['trial']['to'],make_case,click,stored)

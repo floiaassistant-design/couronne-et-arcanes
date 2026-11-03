@@ -1,6 +1,11 @@
 # Journal des changements
 
-## En préparation — Forge, hauts rangs et blindages, 3 novembre 2026
+## En préparation — Forge, dix hauts rangs tactiques, 3 novembre 2026
+
+- Dix évolutions du Sapeur, de l’Ingénieure, du Mécaniste, du Canon et de l’Alchimiste : Fracture, Calibrage, Blindage, Repérage et Catalyse.
+- États d’attaque partagés, consommation/expiration/reprise et dix recettes supplémentaires via les ascensions Forge existantes. Natifs, paquets et sauvegardes historiques conservés. [Contrat](docs/FORGE_HAUTS_RANGS_TACTIQUES.md).
+
+## Intégré — Forge, hauts rangs et blindages, 3 novembre 2026
 
 - Huit évolutions : Marteau (recul/avancée ou Fracas), Foreur (retrait 4 et récupération), Colosse (barrière après deux coups) et Marchefer (recyclage sur blessure et surplus).
 - Deux ascensions Forge communes et quatre recettes par rang, sans carte offerte ni déblocage des versions absentes ; paquets inchangés.

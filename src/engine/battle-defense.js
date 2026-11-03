@@ -6,6 +6,7 @@ import {recordCombatEvent} from './combat-events.js';
 import {consumeAttackPenalty} from './unit-effects.js';
 import {resolveUnitDeath} from './unit-death.js';
 import {resolveSurvivedStrike} from './unit-triggers.js';
+import {prepareDirectStrike,grantCalibrationReward} from './unit-strike-modifiers.js';
 
 import {absorbBarrier,grantAbilityBarrier} from './unit-barriers.js';
 // Préserver les imports existants des appelants.
@@ -14,8 +15,11 @@ export * from './unit-barriers.js';
 export function hit(b,u,raw,bySide,ignoreArmor=false,attack=false,direct=null){
  if(!u||u.hp<=0)return 0; // Une victime ne compte jamais deux fois.
  const abilities=versionUnitAbilities(u);
- const armor=u.armor??abilities?.armor?.amount??0;
- let dmg=Math.max(1,raw-(ignoreArmor?0:armor));
+ const baseArmor=u.armor??abilities?.armor?.amount??0;
+ const directStrike=attack&&direct?.attacker?prepareDirectStrike(b,direct.attacker,u,raw,baseArmor,ignoreArmor):null;
+ const armor=directStrike?.armor??(ignoreArmor?0:baseArmor);
+ if(directStrike)raw=directStrike.raw;
+ let dmg=Math.max(1,raw-armor);
  const reduction=abilities?.firstHitReduction;
  if(reduction&&!u.firstHitReductionUsed&&bySide!==u.side){
   u.firstHitReductionUsed=true;dmg=Math.max(0,dmg-reduction.amount);
@@ -42,6 +46,7 @@ export function hit(b,u,raw,bySide,ignoreArmor=false,attack=false,direct=null){
   hit(b,attacker,deathStrike.amount,u.side);
   if(attacker.hp>0&&deathStrike.entangle)attacker.movementRoot=1;
  }
+ if(directStrike)grantCalibrationReward(b,direct.attacker,directStrike.calibration,before>u.hp,recordCombatEvent);
  return dmg;
 }
 

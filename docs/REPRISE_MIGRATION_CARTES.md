@@ -18,12 +18,12 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
-| Forge | 10 | 39 sur 39 cases futures | 10 Rares/Épiques et 8 Légendaires intégrées par PR 75/78/79/80/81 ; autres lots suivis séparément |
-| Éther | 11 | 9 sur 39 cases futures | Feu follet et Oracle complets ; autres cases encore ouvertes dans cette édition ; règles partielles de Garde distinctes |
+| Forge | 10 | 39 sur 39 cases futures | 26 évolutions intégrées par PR 75/78/79/80/81/82 ; 36 versions Forge, dix autres évolutions proposées séparément |
+| Éther | 11 | 39 sur 39 cases futures | Conception complète des onze personnages ; seules les natives sont au moteur, portée 3 future du Feu follet distincte |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
-ou un pouvoir validé ne crée ni exemplaire ni définition jouable. Les cellules
-« À définir » restent ouvertes ; leur complétion exige une décision du propriétaire.
+ou un pouvoir validé ne crée ni exemplaire ni définition jouable. Les onze personnages Éther ont leurs 39 évolutions validées dans cette édition ;
+la disponibilité réelle reste déterminée par le registre du jeu.
 
 ## Lot intégré : Sylve Rare/Épique
 
@@ -74,7 +74,7 @@ La publication du jeu reste une opération distincte.
 
 Les 39 évolutions Forge sont entièrement validées dans la conception.
 La première tranche [Rare/Épique](FORGE_RARE_EPIQUE.md) est intégrée par la PR 75 :
-dix versions sur sept personnages (3 Rares et 7 Épiques), 142 recettes au total après cette fusion. La publication Sites doit être vérifiée indépendamment de la fusion. L'Éther conserve 30 cases futures incomplètes dans cette édition.
+dix versions sur sept personnages (3 Rares et 7 Épiques), 142 recettes au total après cette fusion. La publication Sites doit être vérifiée indépendamment de la fusion. Les 39 évolutions Éther sont validées en conception ; aucune n’est encore intégrée au moteur.
 La nouvelle portée native 3 du Feu follet est une décision séparée du natif 2
 encore au moteur ; elle exige son propre périmètre, contrôle et documentation.
 Relire Notion à la reprise, car la conception continue en parallèle.
@@ -103,6 +103,10 @@ Marchefer et Foreur sont intégrés par PR 79 et 80. Le Marteau est désormais i
 
 Foreur intégré par PR 80 (`7d3d6d4`). Le [Marteau](FORGE_MARTEAU_LEGENDAIRE.md) intégré par PR 81 au commit `b54e567` apporte une évolution supplémentaire : 28 versions Forge, 18 évolutions et 150 recettes sur main après cette fusion. Golem demeure fermé au rang Légendaire : son bonus n’est pas réinterprété comme une récompense de tout coup reçu. Les hauts rangs de plusieurs autres Forge se préparent séparément. L’accord explicite de cette session autorise les fusions des lots prêts après revue/CI ; il ne dispense d’aucun contrôle ni ne crée de fusion automatique.
 
-## Proposition — hauts rangs Forge et blindages
+## Hauts rangs Forge et blindages — intégrés par PR 82
 
-Le lot [Marteau / Foreur / Colosse / Marchefer](FORGE_HAUTS_RANGS_BLINDAGES.md) prépare huit évolutions et deux ascensions. Les deux défis ouvrent quatre recettes définies chacun, pas les cartes encore absentes. Le pilote et les simulations d’ascension sont partagés ; les pouvoirs lisent le registre et les primitives de protections/mouvement. 36 versions Forge, 26 évolutions et 158 recettes dans cette branche ; intégration/publication distinctes. Golem et les autres hauts rangs attendent leurs lots.
+Le lot [Marteau / Foreur / Colosse / Marchefer](FORGE_HAUTS_RANGS_BLINDAGES.md) a intégré huit évolutions et deux ascensions. Après PR 82, les deux défis ouvrent quatre recettes définies chacun, pas les cartes encore absentes. Le pilote et les simulations d’ascension sont partagés ; les pouvoirs lisent le registre et les primitives de protections/mouvement. 36 versions Forge, 26 évolutions et 158 recettes sur main après PR 82 ; publication distincte. Golem et les autres hauts rangs attendent leurs lots.
+
+## Proposition suivante — dix hauts rangs tactiques
+
+[Contrat](FORGE_HAUTS_RANGS_TACTIQUES.md) : dix évolutions de cinq cartes, 46 versions Forge et 168 recettes dans la branche. Les deux ascensions existantes ouvrent neuf recettes chacune ; les trois rangs futurs du Golem restent fermés. Ensuite : raccordement Golem, puis évolutions Éther et décision native de portée du Feu follet, avec relecture de la conception et périmètres explicites.

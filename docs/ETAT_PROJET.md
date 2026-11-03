@@ -26,6 +26,10 @@ La [PR 80](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/80)
 
 La [PR 81](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/81) est fusionnée au commit `b54e567a477c2c9e64c7b51ccb49eb492176050b`, après accord explicite, revue et six contrôles réussis. Arbre `01ee415dcf4a03be1902191cf48c3cf824deb975` identique à la tête testée, export `7e2a34df02cf71527a1d385d381c99eac14261f9` synchronisé. Coup de masse et ses fusions sont intégrés ; publication distincte.
 
+## Forge — huit hauts rangs et deux ascensions intégrés le 3 novembre
+
+La [PR 82](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/82) est fusionnée au commit `e3800b8b581efc89344db267f9a2f5e58884c323`, après accord explicite renouvelé, revue et six contrôles réussis. Arbre `151beffffdbaf5f296e0a6a0e7e858955215bb1a` identique à la tête testée ; export `0a8f3516142817e60333b493bcc1fa52ed904bfc` synchronisé. Marteau, Foreur, Colosse et Marchefer jusqu’à Éveillé, deux ascensions Forge et 158 recettes intégrés. Publication distincte.
+
 ## Jalons intégrés
 
 - [PR 65](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/65) :
@@ -69,7 +73,7 @@ La [PR 81](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/81)
 
 Les évolutions de l'Aube sont obtenables (41), celles de la Sylve également
 jusqu'au rang Éveillé (48), et celles de l'Ombre jusqu'à Éveillée (43) sont
-intégrées. Dix évolutions Forge Rares/Épiques et huit Légendaires supplémentaires, dont le Marchefer, sont également sur main ;
+intégrées. Dix évolutions Forge Rares/Épiques, huit Légendaires supplémentaires et huit Divines/Éveillées sont également sur main ;
 l'Éther conserve ses versions natives.
 Le laboratoire réutilise le même moteur sans modifier la progression.
 
@@ -82,7 +86,7 @@ L'autorisation explicite du propriétaire est conservée ; aucune fusion
 automatique. Les PR constituent les journaux des travaux en cours et portent
 leurs preuves de tests et points de reprise. `AGENTS.md` fixe les règles.
 
-La distribution du jeu est séparée de la fusion. Le suivi existant a confirmé le 3 novembre 2026 la **version publique 23**, basée sur le commit GitHub `304e20f1f0d8a5007948ddba6577990d7a5f2123` (PR 78, avec les lots précédents), arbre `124b28ad899e225c93baf150ab87ea145deff4cb` et commit Sites `84f92835a71f7f2f3d5a2178d8700e147c23f6ea`. Empreintes et fichiers diffusés ont été vérifiés, audience publique conservée. La publication du Marchefer (PR 79, commit `5a70b0c`) reste distincte et en attente de confirmation dans le suivi existant ; aucune publication concurrente n'est lancée.
+La distribution du jeu est séparée de la fusion. Le suivi existant a confirmé la **version publique 26**, basée sur le commit GitHub `e3800b8b581efc89344db267f9a2f5e58884c323` (PR 82 et lots précédents), arbre `151beffffdbaf5f296e0a6a0e7e858955215bb1a` et commit Sites `a4645101d40e8715a46936171bceeb675fbb752e`. Fichiers et empreintes vérifiés, audience publique conservée. La proposition suivante n’est pas publiée ; aucun déploiement parallèle.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
 [Procédure de publication](PUBLICATION_WEB_2026_10_23.md)
@@ -106,7 +110,7 @@ La publication du main intégrant ces lots est suivie indépendamment de leur fu
   séparément les hauts rangs Forge encore absents et les évolutions Éther,
   sans appliquer implicitement leurs décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
 - Raccorder le futur Cœur runique du Golem à une interception effective : la Garde normale cible directement le gardien et ne passe pas par l'interception de couronne requise. Respecter les règles validées, sans attribuer le bonus à tous les coups reçus.
-- Foreur et Marteau Légendaires sont intégrés par PR 80 et 81. La proposition suivante apporte [huit hauts rangs Forge](FORGE_HAUTS_RANGS_BLINDAGES.md) et deux ascensions, dans une PR distincte avec ses propres tests et revue. L’accord de cette session autorise les fusions de ces lots lorsqu’ils sont prêts.
+- Les PR 80/81/82 sont intégrées. Préparer [dix hauts rangs tactiques Forge](FORGE_HAUTS_RANGS_TACTIQUES.md), dans une PR distincte avec ses propres contrôles et revue. L’accord reçu autorise la fusion des lots prêts.
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 
@@ -119,6 +123,10 @@ La publication du main intégrant ces lots est suivie indépendamment de leur fu
 [Historique des états](HISTORIQUE_ETAT_2026_10_31.md) ·
 [Historique des consignes](HISTORIQUE_CONSIGNES_2026_10_31.md).
 
-## Proposition distincte — hauts rangs Forge et blindages
+## Hauts rangs Forge et blindages — intégrés par PR 82
 
-Après le Marteau Légendaire (PR 81), [huit évolutions Divines/Éveillées](FORGE_HAUTS_RANGS_BLINDAGES.md) du Marteau, du Foreur, du Colosse et du Marchefer sont préparées avec deux ascensions Forge. La branche définit 36 versions Forge, 26 évolutions et 158 recettes. Ce lot n’est ni fusionné ni publié avant ses propres contrôles et sa revue ; l’accord de fusion des lots prêts a été reçu cette session. Golem et les cinq autres hauts rangs Forge demeurent distincts.
+Après le Marteau Légendaire (PR 81), [huit évolutions Divines/Éveillées](FORGE_HAUTS_RANGS_BLINDAGES.md) du Marteau, du Foreur, du Colosse et du Marchefer sont intégrées avec deux ascensions Forge. Après cette fusion, main définit 36 versions Forge, 26 évolutions et 158 recettes ; la diffusion reste indépendante. Golem et les cinq autres hauts rangs Forge demeurent distincts.
+
+## Proposition suivante — dix hauts rangs tactiques Forge
+
+La [tranche Sapeur / Ingénieure / Mécaniste / Canon / Alchimiste](FORGE_HAUTS_RANGS_TACTIQUES.md) prépare dix évolutions avec leurs pouvoirs : 46 versions Forge, 36 évolutions et 168 recettes dans sa branche, neuf par ascension Forge. Golem reste distinct ; les 39 évolutions Éther sont validées en conception mais non programmées. L’accord reçu autorise la fusion des lots prêts après leurs propres contrôles et revue, sans fusion automatique.

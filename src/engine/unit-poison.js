@@ -8,6 +8,9 @@ export function applyUnitPoison(target,parameters,source,readyRound){
  }else delete target.poisonOrigin;
 }
 export function clearUnitPoison(u){u.poison=0;u.poisonTurns=0;delete u.poisonOrigin;}
+export function poisonBelongsTo(target,source){
+ return target?.hp>0&&target.side!==source.side&&target.poisonTurns>0&&target.poisonOrigin?.uid===source.uid&&target.poisonOrigin.side===source.side;
+}
 export function tickUnitPoison(b,u){
  if(!(u.poisonTurns>0)||u.poisonOrigin?.readyRound>b.round)return false;
  u.hp=Math.max(0,u.hp-u.poison);u.poisonTurns--;
