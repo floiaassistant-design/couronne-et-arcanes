@@ -1,10 +1,16 @@
 # Journal des changements
 
-## En préparation — Foreur Légendaire, 3 novembre 2026
+## En préparation — Marteau Légendaire, 3 novembre 2026
+
+- Coup de masse : recul d’une case après une blessure au contact sur une cible survivante, après Riposte, au plus une fois tous les 3 tours.
+- Cases bloquées, limites, pièges et reprise utilisent le moteur commun ; aucune attaque ajoutée, aucun changement de Garde ou des paquets.
+- Fusion de trois Épiques libres après mission 06 ; proposition distincte. [Contrat](docs/FORGE_MARTEAU_LEGENDAIRE.md).
+
+## Intégré — Foreur Légendaire, 3 novembre 2026
 
 - Foreuse d'acier : jusqu'à 2 points de barrière personnelle détruits avant une attaque normale, au plus une fois tous les 3 tours ; 3 ATQ / 7 PV / délai 1 et Armure 2 conservés.
 - Trois Épiques libres après mission 06 ; cadence et provenance de barrière sauvegardées, paquets et natifs inchangés.
-- Tests métier, moteur embarqué et parcours navigateur sur combat préparé valide. Proposition non fusionnée et non publiée. [Contrat](docs/FORGE_FOREUR_LEGENDAIRE.md).
+- Tests métier, moteur embarqué et parcours navigateur sur combat préparé valide. Intégré par PR 80 au commit `7d3d6d4`, publication distincte. [Contrat](docs/FORGE_FOREUR_LEGENDAIRE.md).
 
 ## Intégré — Marchefer Légendaire, 3 novembre 2026
 

@@ -169,3 +169,5 @@ ancien lot ne doit être restauré implicitement.
 Sites héberge le jeu depuis la distribution de main ; la fusion seule ne prouve
 pas sa publication. Réutiliser le Site et le workflow existants :
 [procédure de publication](docs/PUBLICATION_WEB_2026_10_23.md).
+
+La proposition [Marteau Légendaire](docs/FORGE_MARTEAU_LEGENDAIRE.md) ajoute Coup de masse dans une PR distincte : recul après blessure au contact, sans attaque supplémentaire. Sa disponibilité reste conditionnée à la fusion de cette proposition.

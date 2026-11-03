@@ -249,6 +249,7 @@ async def main(part=None):
             await run_sylve_legendary_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',scenario='forge')
             await run_sylve_legendary_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',scenario='forge-scrap')
             await run_sylve_legendary_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',scenario='forge-drill')
+            await run_sylve_legendary_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',scenario='forge-smith')
             await run_ascension_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',make_case=case,click=click,select=select,replay=replay,stored=stored)
             await run_ascension_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',make_case=case,click=click,select=select,replay=replay,stored=stored,faction='sylve')
             await run_ascension_cases(browser,part,f'http://127.0.0.1:{server.server_port}/index.html',make_case=case,click=click,select=select,replay=replay,stored=stored,faction='ombre')

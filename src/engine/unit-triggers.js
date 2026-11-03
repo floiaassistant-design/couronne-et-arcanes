@@ -2,6 +2,24 @@
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {grantAbilityBarrier,grantCrownShield,absorbBarrier} from './unit-barriers.js';
 import {alliedTargets,injuryOrder} from './unit-targets.js';
+import {lastCell} from './board.js';
+
+// Après les réactions de contact : aucun recul à distance ni attaque ajoutée.
+export function resolveStrikeDisplacement(b,u,target,{damaged,suppressed},hooks){
+ const p=versionUnitAbilities(u)?.knockback;
+ if(!p||suppressed||!damaged||u.hp<=0||target?.hp<=0||target?.side===u.side||u.ranged||u.knockbackReadyRound>b.round)return false;
+ const lane=b.board.findIndex(row=>row.includes(u)),row=b.board[lane];
+ if(!row||!row.includes(target))return false;
+ const from=row.indexOf(u),col=row.indexOf(target),dir=target.side==='p'?-1:1;
+ if(col-from!==dir)return false;
+ const destination=col+dir*p.cells;
+ if(destination<1||destination>lastCell(b)||row[destination])return false;
+ u.knockbackReadyRound=b.round+p.period;
+ row[destination]=target;row[col]=null;
+ hooks.emit(b,{type:'move',side:target.side,lane,from:col,to:destination,knockback:true});
+ hooks.enter(b,target,lane,destination);
+ return true;
+}
 
 export function resolveStrikePreparation(b,u,target,suppressed,emit){
  const p=versionUnitAbilities(u)?.barrierDrill;

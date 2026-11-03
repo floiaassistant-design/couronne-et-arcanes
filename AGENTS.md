@@ -150,6 +150,9 @@
   protection communes ; retirer une barrière conserve ses origines et ne crée
   aucun dégât aux PV. Le quota ne se consomme qu'avec une cible éligible et une
   attaque normale réellement effectuée, distincte des sorts et des Ripostes.
+- Un recul de frappe utilise la géométrie réelle et le hook commun d’entrée de
+  case, après les réactions de contact. Une destination occupée ou hors plateau
+  ne provoque ni déplacement, collision ou attaque supplémentaire.
 - `unit-effects.js` partage malus d'attaque, poison paramétré et régénération.
   L'ATQ permanente ne change pas ; malus consommé à la prochaine intention d'attaque
   ou Riposte valide, bonus inclus, minimum zéro. Pas de consommation par sort ni

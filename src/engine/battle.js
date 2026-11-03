@@ -7,7 +7,7 @@ import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitC
 import {resolveUnitArrival,resolveUnitSupport} from './unit-support.js';
 import {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty} from './unit-effects.js';
 import {tickUnitPoison,clearUnitPoison} from './unit-poison.js';
-import {resolveStrikeRewards,resolveStrikePreparation} from './unit-triggers.js';
+import {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement} from './unit-triggers.js';
 import {contiguousSplashTargets} from './unit-targets.js';
 import {resolveUnitDeath} from './unit-death.js';
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
@@ -280,6 +280,7 @@ function resolveAttacks(b,sideFilter=null){
     if(ability==='splash')resolveSplash(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,atk,true,result.primaryAlive);
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
+    resolveStrikeDisplacement(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
   } else {
    const result=strike(b,u,target.target,atk,intent.col,target.col,true,charged,intent.suppressed,intent.attackState);
@@ -289,6 +290,7 @@ function resolveAttacks(b,sideFilter=null){
    if(ability==='splash')resolveSplash(b,u,lane,intent.col,lane,target.col,atk,false,result.primaryAlive);
    resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);
+   resolveStrikeDisplacement(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
   }
  }
  // Le bonus de charge ne dure qu'un seul tour et doit survivre aux sauvegardes historiques.

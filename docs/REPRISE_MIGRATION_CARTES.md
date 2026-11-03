@@ -18,7 +18,7 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
-| Forge | 10 | 39 sur 39 cases futures | 10 Rares/Épiques et 6 Légendaires intégrées par PR 75/78/79 ; autres lots suivis séparément |
+| Forge | 10 | 39 sur 39 cases futures | 10 Rares/Épiques et 7 Légendaires intégrées par PR 75/78/79/80 ; autres lots suivis séparément |
 | Éther | 11 | 9 sur 39 cases futures | Feu follet et Oracle complets ; autres cases encore ouvertes dans cette édition ; règles partielles de Garde distinctes |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
@@ -98,3 +98,7 @@ Le [Marchefer Légendaire](FORGE_MARCHEFER_LEGENDAIRE.md) est intégré par la P
 - Ne pas transformer une demande de poursuivre en autorisation de fusion,
   ni un succès de CI en preuve de publication. Ne pas attendre activement
   GitHub lorsqu'il ne reste plus de travail indépendant.
+
+## Reprise du 3 novembre — lot Marteau
+
+Foreur intégré par PR 80 (`7d3d6d4`). La proposition [Marteau](FORGE_MARTEAU_LEGENDAIRE.md) apporte une évolution supplémentaire : 28 versions Forge, 18 évolutions et 150 recettes dans sa branche. Golem demeure fermé au rang Légendaire : son bonus n’est pas réinterprété comme une récompense de tout coup reçu. Les hauts rangs de plusieurs autres Forge se préparent séparément. L’accord explicite de cette session autorise les fusions des lots prêts après revue/CI ; il ne dispense d’aucun contrôle ni ne crée de fusion automatique.

@@ -75,6 +75,7 @@ export function unitAbilityDetails(d){
  if(a.arrivalInspire)lines.push(`À l’arrivée : +${a.arrivalInspire.amount} ATQ au premier autre allié de sa ligne, maximum ${a.arrivalInspire.cap}.`);
  if(a.ward)lines.push(`À l’arrivée : +${a.ward.amount} bouclier à sa couronne, plafond ${a.ward.cap}.`);
  if(a.strikeWard)lines.push(`Ferraille récupérée : si son attaque normale élimine une unité ennemie, +${a.strikeWard.amount} bouclier à sa couronne, plafond ${a.strikeWard.cap}. Au plus une fois tous les ${a.strikeWard.period} tours ; aucun gain par sort, poison, Riposte, dégâts secondaires ou après sa mort.`);
+ if(a.knockback)lines.push(`Coup de masse : après une attaque normale au contact retirant des PV à une unité ennemie survivante, la repousse de ${a.knockback.cells} case vers sa couronne si la case est libre et dans le plateau. Au plus une fois tous les ${a.knockback.period} tours, après les réactions de contact. Aucun recul sans perte de PV, sous Silence ou après la mort du Marteau ; aucune attaque supplémentaire.`);
  if(a.barrierDrill)lines.push(`Foreuse d’acier : avant les dégâts d'une attaque normale contre une unité ennemie, détruit jusqu'à ${a.barrierDrill.amount} points de sa barrière personnelle ; l'attaque utilise ensuite les protections restantes. Au plus une fois tous les ${a.barrierDrill.period} tours, seulement si une barrière est présente. Aucun dégât supplémentaire aux PV, effet de sort, de poison ou de Riposte.`);
  if(a.arrivalBarrier)lines.push(`À l’arrivée : barrière ${a.arrivalBarrier.amount} à un autre allié de sa ligne, priorité au plus blessé proportionnellement. Plafond ${a.arrivalBarrier.cap} pour cet effet, sans cumul ; aucune autre cible ni effet sans allié.`);
  if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : ${a.harass.period?'Cri d’effroi':'Harcèlement'} −${a.harass.amount} ATQ sur ${a.harass.attacks===1?'sa prochaine attaque d’unité':'ses '+a.harass.attacks+' prochaines attaques d’unité'}, Riposte comprise ; minimum ${a.harass.minimum||0}, aucun effet sur les sorts. ${a.harass.period?'Au plus une fois tous les '+a.harass.period+' tours ; seule la réduction la plus forte persiste.':'Les applications renouvellent le malus sans cumul.'}${a.harass.secondary?' Un autre ennemi à '+a.harass.secondary.range+' case au plus de la cible sur la même ligne : −'+a.harass.secondary.amount+' ATQ pour sa prochaine attaque.':''}`);
@@ -107,6 +108,7 @@ export function unitAbilityDetails(d){
 
 function advancedSummary(a){
  const parts=[];
+ if(a.knockback)parts.push(`Coup de masse : recul ${a.knockback.cells}`);
  if(a.strikeWard)parts.push(`Ferraille récupérée · Couronne +${a.strikeWard.amount}`);
  if(a.barrierDrill)parts.push(`Foreuse : barrière −${a.barrierDrill.amount}`);
  if(a.deathStrike)parts.push(`Fracas ${a.deathStrike.amount}${a.deathStrike.entangle?' · Entrave':''}`);

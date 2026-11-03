@@ -1,4 +1,4 @@
-# Foreur Légendaire — proposition du 3 novembre 2026
+# Foreur Légendaire — intégré par PR 80 le 3 novembre 2026
 
 ## Décision et périmètre
 
@@ -29,3 +29,5 @@ Le Golem et le Marteau Légendaires restent distincts : aucune réinterprétatio
 ## Export et reprise du 3 novembre
 
 Le build officiel produit 34 593 927 octets, blob Git `8e2e44aab953d1660774c162477f8a42f3a686a3`, identique entre génération locale et GitHub. La préparation ponctuelle de ce blob est retirée du diff final ; aucun workflow permanent ajouté. Les builds web/diagnostic, cinq tests de pipeline et la syntaxe Python réussissent aussi localement. La CI de la tête finale, la revue et l’accord spécifique pour cette PR restent requis avant fusion.
+
+Fusion confirmée au commit `7d3d6d4e6b89b763002baee0216ff9828176d65f`, arbre identique à la tête testée après six succès et accord explicite. Les mentions de préparation ci-dessus sont le dossier historique ; la publication reste distincte.
