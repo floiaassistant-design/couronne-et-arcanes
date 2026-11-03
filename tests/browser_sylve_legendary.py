@@ -12,6 +12,7 @@ SCENARIOS={
     'sylve':{'card':'owl','stats':(3,5),'effect':'attackPenalty','status':'Harcèlement','detail':['Harcèlement','−1 ATQ','fusion'],'future':'Ascension requise'},
     'ombre':{'card':'plague','stats':(4,7),'effect':'poisonTurns','status':'Poison 2 tour(s)','detail':['Poison 1','2 tours','fusion'],'future':'Ascension requise'},
     'forge-scrap':{'card':'ironwraith','faction':'forge','stats':(3,9),'effect':'strikeWardReadyRound','effectSide':'p','status':'Ferraille récupérée','detail':['Ferraille récupérée','plafond 20','3 tours','fusion'],'future':'À concevoir'},
+    'forge-smith':{'card':'smith','faction':'forge','stats':(4,8),'effect':'knockbackReadyRound','effectSide':'p','status':'Coup de masse','detail':['Coup de masse','3 tours','fusion'],'future':'À concevoir','prepared':True},
     'forge-drill':{'card':'drill','faction':'forge','stats':(3,7),'effect':'barrierDrillReadyRound','effectSide':'p','status':'Foreuse','detail':['Foreuse d’acier','2 points','3 tours','fusion'],'future':'À concevoir','prepared':True},
     'forge':{'card':'alchemist','stats':(4,7),'effect':'poisonTurns','status':'Poison 2 tour(s)','detail':['Poison 1','2 tours','fusion'],'future':'À concevoir'},
 }
@@ -73,7 +74,7 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
     exported=json.loads(Path(await (await info.value).path()).read_text());assert exported==profile
     await page.locator('#import-file').set_input_files({'name':'sylve-legend.json','mimeType':'application/json','buffer':json.dumps(exported).encode()});await page.locator('#view .hero-copy').wait_for();assert await saved()==profile
     if cfg.get('prepared'):
-        fixture=json.loads(subprocess.check_output(['node','tests/fixtures/foreur-battle.mjs',json.dumps(profile)],cwd=ROOT))
+        fixture=json.loads(subprocess.check_output(['node','tests/fixtures/foreur-battle.mjs',json.dumps(profile),card_id],cwd=ROOT))
         plan=fixture['plan']
         # Fusion et deck réels ci-dessus ; combat préparé valide pour rendre
         # une barrière éligible, avant d'installer l'horloge de cette page.
@@ -96,7 +97,8 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
     b=await saved(BATTLE);u=b['board'][0][1];assert (u['rarity'],u['atk'],u['maxhp'])==('légendaire',*cfg['stats'])
     found=False;trace=[]
     for turn in range(1,plan['turn']+1):
-        shield_before=(await saved(BATTLE))['heroes']['p']['shield']
+        before=await saved(BATTLE)
+        shield_before=before['heroes']['p']['shield']
         await page.locator('[data-action="end-turn"]:enabled').wait_for();await click(page.locator('[data-action="end-turn"]'))
         b=await saved(BATTLE);targets=[u for row in b['board'] for u in row if u and u['side']==cfg.get('effectSide','e') and u.get(cfg['effect'])]
         trace.append({'round':b['round'],'phase':b['phase'],'units':[(u['id'],u['side'],u['hp'],u.get(cfg['effect'])) for row in b['board'] for u in row if u]})
@@ -105,6 +107,15 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
             if scenario=='forge-scrap':
                 assert target[cfg['effect']]==b['round']+3
                 assert b['heroes']['p']['shield']==max(shield_before,min(20,shield_before+2))
+            elif scenario=='forge-smith':
+                assert target[cfg['effect']]==b['round']+3
+                source_before=next((lane,col) for lane,row in enumerate(before['board']) for col,u in enumerate(row) if u and u['uid']==target['uid'])
+                lane,col=source_before
+                victim=before['board'][lane][col+1]
+                assert victim and victim['side']=='e'
+                assert b['board'][lane][col+1] is None
+                assert b['board'][lane][col+2]['uid']==victim['uid']
+                assert b['board'][lane][col]['uid']==target['uid']
             elif scenario=='forge-drill':
                 assert target[cfg['effect']]==b['round']+3
                 victim=next(u for row in b['board'] for u in row if u and u['uid']==plan['targetUid'])

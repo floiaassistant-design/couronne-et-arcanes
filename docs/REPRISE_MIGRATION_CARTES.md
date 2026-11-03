@@ -18,7 +18,7 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
-| Forge | 10 | 39 sur 39 cases futures | 10 Rares/Épiques et 6 Légendaires intégrées par PR 75/78/79 ; autres lots suivis séparément |
+| Forge | 10 | 39 sur 39 cases futures | 10 Rares/Épiques et 7 Légendaires intégrées par PR 75/78/79/80 ; autres lots suivis séparément |
 | Éther | 11 | 9 sur 39 cases futures | Feu follet et Oracle complets ; autres cases encore ouvertes dans cette édition ; règles partielles de Garde distinctes |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
@@ -81,11 +81,11 @@ Relire Notion à la reprise, car la conception continue en parallèle.
 
 Les [cinq Légendaires Forge de statistiques](FORGE_LEGENDAIRES_STATS.md) sont intégrées par la [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78) le 3 novembre 2026, au commit `304e20f1f0d8a5007948ddba6577990d7a5f2123`, avec accord spécifique, six contrôles réussis et export synchronisé. Le Marchefer a ensuite été intégré par la PR 79 ; Foreur, Golem et Marteau restent des tranches distinctes. Aucun succès de la PR 78 ne valide leurs nouveaux pouvoirs.
 
-La [proposition Foreur Légendaire](FORGE_FOREUR_LEGENDAIRE.md) suit le Marchefer : une évolution de plus, 27 versions Forge et 149 recettes dans sa branche, sans activer les rangs Divin/Éveillé, le Marteau ou le Golem.
+Le [Foreur Légendaire](FORGE_FOREUR_LEGENDAIRE.md) est intégré par PR 80 au commit `7d3d6d4` : 27 versions Forge, 17 évolutions Forge et 149 recettes après cette fusion. Le Marteau est la proposition suivante ; le Golem reste distinct.
 
 ## Conditions de reprise
 
-Le [Marchefer Légendaire](FORGE_MARCHEFER_LEGENDAIRE.md) est intégré par la PR 79 au commit `5a70b0c135c938f2417d0d499ea6ab821266dab5`, après accord spécifique et six contrôles réussis : 26 versions Forge, 16 évolutions Forge et 148 recettes au total sur main. Golem et Marteau restent absents au rang Légendaire ; le Foreur est proposé séparément. Cœur runique exige toujours de résoudre le raccordement entre ciblage direct du gardien normal et interception d'une attaque de couronne, sans réinterpréter la validation Notion.
+Marchefer et Foreur sont intégrés par PR 79 et 80. Golem et Marteau demeurent absents du main observé avant cette proposition. Cœur runique exige de résoudre le raccordement entre ciblage direct du gardien normal et interception de couronne, sans réinterpréter la validation Notion.
 
 - Lire main, les branches/PR et `ETAT_PROJET.md`, rapprocher les choix de la
   dernière édition Notion. Les anciens bilans sont historiques.
@@ -98,3 +98,7 @@ Le [Marchefer Légendaire](FORGE_MARCHEFER_LEGENDAIRE.md) est intégré par la P
 - Ne pas transformer une demande de poursuivre en autorisation de fusion,
   ni un succès de CI en preuve de publication. Ne pas attendre activement
   GitHub lorsqu'il ne reste plus de travail indépendant.
+
+## Reprise du 3 novembre — lot Marteau
+
+Foreur intégré par PR 80 (`7d3d6d4`). La proposition [Marteau](FORGE_MARTEAU_LEGENDAIRE.md) apporte une évolution supplémentaire : 28 versions Forge, 18 évolutions et 150 recettes dans sa branche. Golem demeure fermé au rang Légendaire : son bonus n’est pas réinterprété comme une récompense de tout coup reçu. Les hauts rangs de plusieurs autres Forge se préparent séparément. L’accord explicite de cette session autorise les fusions des lots prêts après revue/CI ; il ne dispense d’aucun contrôle ni ne crée de fusion automatique.

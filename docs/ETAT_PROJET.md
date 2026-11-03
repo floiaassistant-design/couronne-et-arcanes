@@ -18,6 +18,10 @@ La [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78)
 
 La [PR 79](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/79) est fusionnée après autorisation et six contrôles réussis au commit `5a70b0c135c938f2417d0d499ea6ab821266dab5`. Arbre `85bd172bb9b7a7efc07abd405f96db2b468e074a` identique à la tête réconciliée et testée `94fc365`, export `4216ff778b363fdaf87e53a7dcd77c2ada7c17fe` synchronisé. Ferraille récupérée, fusion et cadence sauvegardée sont intégrées ; publication Sites distincte.
 
+## Forge — Foreur Légendaire intégré le 3 novembre
+
+La [PR 80](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/80) est fusionnée au commit `7d3d6d4e6b89b763002baee0216ff9828176d65f`, après accord explicite, revue et six contrôles réussis. Arbre `7d4a2e59c56b438447b7bee4b9eac9201679bea9` identique à la tête testée ; Foreuse, fusion et reprise sont intégrées. Publication distincte, par le suivi existant.
+
 ## Jalons intégrés
 
 - [PR 65](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/65) :
@@ -61,7 +65,7 @@ La [PR 79](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/79)
 
 Les évolutions de l'Aube sont obtenables (41), celles de la Sylve également
 jusqu'au rang Éveillé (48), et celles de l'Ombre jusqu'à Éveillée (43) sont
-intégrées. Dix évolutions Forge Rares/Épiques et six Légendaires supplémentaires, dont le Marchefer, sont également sur main ;
+intégrées. Dix évolutions Forge Rares/Épiques et sept Légendaires supplémentaires, dont le Marchefer, sont également sur main ;
 l'Éther conserve ses versions natives.
 Le laboratoire réutilise le même moteur sans modifier la progression.
 
@@ -98,7 +102,7 @@ La publication du main intégrant ces lots est suivie indépendamment de leur fu
   séparément les hauts rangs Forge encore absents et les évolutions Éther,
   sans appliquer implicitement leurs décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
 - Raccorder le futur Cœur runique du Golem à une interception effective : la Garde normale cible directement le gardien et ne passe pas par l'interception de couronne requise. Respecter les règles validées, sans attribuer le bonus à tous les coups reçus.
-- Préparer le [Foreur Légendaire](FORGE_FOREUR_LEGENDAIRE.md) dans une tranche distincte du Marchefer : retrait de barrière avant frappe, cadence sauvegardée, même moteur et accès de fusion. Proposition non fusionnée, non publiée ; CI du commit final et autorisation spécifique requises.
+- Le Foreur est intégré par PR 80. Préparer le [Marteau Légendaire](FORGE_MARTEAU_LEGENDAIRE.md) : recul au contact après perte de PV, cases libres et cadence sauvegardée. Proposition non fusionnée, non publiée ; CI finale et revue requises. Le propriétaire a explicitement autorisé cette session la fusion des lots prêts après contrôles.
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 

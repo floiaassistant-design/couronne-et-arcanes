@@ -12,7 +12,7 @@ import {saveProfile,loadProfile,validateImportedProfile,storeBattle,restoreBattl
 import {cardPresentation} from '../src/ui/card-presentation.js';
 
 const expected={
- smith:[[3,6,1],[3,8,1],[4,8,1]],
+ smith:[[3,6,1],[3,8,1],[4,8,1],[4,8,1]],
  golem:[[2,12,2],[2,14,2]],
  bomb:[[4,3,2],[4,5,2],[5,5,2]],
  drill:[[2,5,1],[2,7,1],[3,7,1],[3,7,1]],
@@ -34,9 +34,9 @@ function stocked(recipe){
  return p;
 }
 
-test('Forge : dix natives inchangées, dix-sept évolutions validées, aucun rang futur inventé',()=>{
+test('Forge : dix natives inchangées, dix-huit évolutions validées, aucun rang futur inventé',()=>{
  assert.deepEqual([...FORGE_UNIT_IDS].sort(),Object.keys(expected).sort());
- assert.equal(forgeRecipes.length,17);assert.equal(VERSIONED_UNIT_IDS.filter(id=>FORGE_UNIT_IDS.includes(id)).length,9);
+ assert.equal(forgeRecipes.length,18);assert.equal(VERSIONED_UNIT_IDS.filter(id=>FORGE_UNIT_IDS.includes(id)).length,9);
  assert.equal(Object.keys(CARDS).length,76);
  let total=0;
  for(const [id,totals] of Object.entries(expected)){
@@ -51,7 +51,7 @@ test('Forge : dix natives inchangées, dix-sept évolutions validées, aucun ran
    if(!versions.some(version=>version.rarity===rank))assert.equal(resolveUnitDefinition(id,rank),null,id+':'+rank);
   }
  }
- assert.equal(total,27);
+ assert.equal(total,28);
  const p=freshProfile();assert.deepEqual(normalizeProfile(p),p);assert.equal(p.evolvedCollection,undefined);
 });
 
@@ -66,7 +66,7 @@ test('Rares/Épiques : capacités natives et géométrie héritées à l’ident
  assert.deepEqual(Object.keys(a('smith')),[]);assert.equal(a('golem').flying,undefined);
  assert.equal(a('bomb').guard,undefined);assert.equal(a('drill').riposte,undefined);
  assert.equal(evolutionFusionFor('colossus','divine'),null);assert.ok(evolutionFusionFor('engineer','légendaire'));
- assert.equal(playableCardReference({id:'smith',rarity:'légendaire'}),false);
+ assert.equal(playableCardReference({id:'smith',rarity:'légendaire'}),true);
 });
 
 test('Fusions Forge : trois copies libres du rang exact, mission requise et deck protégé',()=>{
@@ -126,7 +126,7 @@ test('Chaque Rare/Épique Forge peut être tirée, sauvegardée, mise au deck et
  assert.notDeepEqual(p,before);
 });
 
-test('Laboratoire : 27 versions Forge × 4 niveaux × 2 camps, aucun gain réel',()=>{
+test('Laboratoire : 28 versions Forge × 4 niveaux × 2 camps, aucun gain réel',()=>{
  for(const id of FORGE_UNIT_IDS)for(const [i,def] of unitVersions(id).entries())for(const level of [0,1,2,3])for(const side of ['p','e']){
   const lab=freshLab();
   assert.equal(setLabRarity(lab,side,id,def.rarity).ok,true);
@@ -166,7 +166,7 @@ test('Forge Légendaire : cinq gains de statistiques sans pouvoir ajouté ni acc
   profile.completed.push('06');assert.equal(fuseEvolutionCopies(profile,recipe.id).ok,true);
   assert.equal(ownedCardCopies(profile,{id,rarity:'légendaire'}),1);
  }
- for(const id of ['smith','golem']){
+ for(const id of ['golem']){
   assert.equal(resolveUnitDefinition(id,'légendaire'),null,'mécanique de haut rang encore absente');
  }
 });

@@ -89,7 +89,7 @@ refusé, double clic, Collection/deck, import/export, attaque éliminatrice, bou
 de couronne et reprise, dans les quatre parties déjà distribuées aux groupes.
 Aucun nouveau job ni exécution de la suite entière en double.
 
-## Foreur Légendaire — proposition du 3 novembre
+## Foreur Légendaire — intégré par PR 80 du 3 novembre
 
 `forge_foreur.test.mjs` ajoute les cas de retrait de barrière avant frappe,
 provenance, plafonnement du retrait, armure, cadence, cible éligible, Silence,
@@ -171,3 +171,7 @@ Prochain contrôle utile : campagne/IA de bout en bout, en distinguant les
 rencontres simulées des actions réellement couvertes dans l'UI, puis mesures
 de lisibilité mobile. Firefox, Safari, téléphone physique, panne électrique
 réelle, couverture exhaustive et équilibrage humain ne sont pas validés ici.
+
+## Marteau Légendaire — proposition du 3 novembre
+
+`forge_marteau.test.mjs` couvre vraie fusion, deux camps, géométries 5/10 cases, perte de PV, barrières, Silence, attaque nulle, blocage/bord, cadence et reprise, Riposte avant recul, mort de l’attaquant, piège à l’arrivée, exclusions, interception interligne, instantanés, fiches et vrai export embarqué. Les 150 recettes passent par le robot commun. Le parcours `forge-smith` ajoute le même contrôle UI fusion/deck/import-export/combat préparé/reprise aux quatre parties existantes, sans nouveau job. Ce combat préparé ne remplace pas une campagne complète depuis zéro.

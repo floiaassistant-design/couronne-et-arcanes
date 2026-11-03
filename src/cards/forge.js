@@ -6,7 +6,7 @@ export const FORGE_DESIGN_SOURCE=freezeCardData({
  editedAt:'2026-11-02T16:09:01.799Z'
 });
 export const FORGE_EVOLUTIONS=freezeCardData({
- smith:{rare:{stats:{hp:8}},'épique':{stats:{attack:4}}},
+ smith:{rare:{stats:{hp:8}},'épique':{stats:{attack:4}},'légendaire':{abilities:{knockback:{cells:1,period:3}}}},
  golem:{'épique':{stats:{hp:14}}},
  bomb:{'épique':{stats:{hp:5}},'légendaire':{stats:{attack:5}}},
  drill:{rare:{stats:{hp:7}},'épique':{stats:{attack:3}},'légendaire':{abilities:{barrierDrill:{amount:2,period:3}}}},
