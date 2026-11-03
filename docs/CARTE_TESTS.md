@@ -77,7 +77,7 @@ L'existence d'un ancien script `browser_*.py` dans le dépôt ne prouve donc ni
 son exécution en CI ni son abandon. Lire la matrice et les appels transitifs
 avant de le lancer ou de le déclarer manquant.
 
-## Marchefer Légendaire — proposition du 3 novembre
+## Marchefer Légendaire — intégré par PR 79 le 3 novembre
 
 `forge_marchefer.test.mjs` vérifie la fusion, Protection héritée, élimination
 normale réelle, refus sur les autres causes, plafond/surplus, cadence, Silence,

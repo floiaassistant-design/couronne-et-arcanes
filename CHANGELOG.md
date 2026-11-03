@@ -6,11 +6,11 @@
 - Trois Épiques libres après mission 06 ; cadence et provenance de barrière sauvegardées, paquets et natifs inchangés.
 - Tests métier, moteur embarqué et parcours navigateur sur combat préparé valide. Proposition non fusionnée et non publiée. [Contrat](docs/FORGE_FOREUR_LEGENDAIRE.md).
 
-## En préparation — Marchefer Légendaire, 3 novembre 2026
+## Intégré — Marchefer Légendaire, 3 novembre 2026
 
 - Ferraille récupérée : une attaque normale éliminant une unité ennemie rend 2 boucliers à sa couronne, plafond 20, au plus une fois tous les 3 tours ; Protection +3 et statistiques 3/9/1 conservées.
 - Fusion de trois Épiques libres après mission 06, quota par invocation sauvegardé et validé ; paquets et sauvegardes historiques conservés.
-- Primitive de bouclier partagée, tests de combat et parcours navigateur réel ; proposition distincte, non fusionnée et non publiée. [Contrat](docs/FORGE_MARCHEFER_LEGENDAIRE.md).
+- Primitive de bouclier partagée, tests de combat et parcours navigateur réel ; intégré par la PR 79 au commit `5a70b0c`, après accord spécifique et six contrôles réussis. Publication distincte. [Contrat](docs/FORGE_MARCHEFER_LEGENDAIRE.md).
 
 ## Intégré — cinq Légendaires Forge de statistiques, 3 novembre 2026
 

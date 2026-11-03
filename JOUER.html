@@ -5268,7 +5268,7 @@ Object.assign(__exports,{OMBRE_DESIGN_SOURCE,OMBRE_EVOLUTIONS});
 
 },
 "src/cards/forge.js":function(__exports,__load){
-// Forge : Rares/Épiques, cinq Légendaires de statistiques et Ferraille récupérée ; natifs inchangés.
+// Forge : évolutions validées, Ferraille récupérée et Foreuse d'acier ; natifs inchangés.
 const {freezeCardData}=__load("src/cards/schema.js");
 const FORGE_DESIGN_SOURCE=freezeCardData({
  url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
@@ -5278,7 +5278,7 @@ const FORGE_EVOLUTIONS=freezeCardData({
  smith:{rare:{stats:{hp:8}},'épique':{stats:{attack:4}}},
  golem:{'épique':{stats:{hp:14}}},
  bomb:{'épique':{stats:{hp:5}},'légendaire':{stats:{attack:5}}},
- drill:{rare:{stats:{hp:7}},'épique':{stats:{attack:3}}},
+ drill:{rare:{stats:{hp:7}},'épique':{stats:{attack:3}},'légendaire':{abilities:{barrierDrill:{amount:2,period:3}}}},
  engineer:{'légendaire':{stats:{hp:9}}},
  cannon:{'légendaire':{stats:{hp:9}}},
  mechanist:{'épique':{stats:{hp:10}},'légendaire':{stats:{attack:3}}},
@@ -5541,6 +5541,7 @@ function unitAbilityDetails(d){
  if(a.arrivalInspire)lines.push(`À l’arrivée : +${a.arrivalInspire.amount} ATQ au premier autre allié de sa ligne, maximum ${a.arrivalInspire.cap}.`);
  if(a.ward)lines.push(`À l’arrivée : +${a.ward.amount} bouclier à sa couronne, plafond ${a.ward.cap}.`);
  if(a.strikeWard)lines.push(`Ferraille récupérée : si son attaque normale élimine une unité ennemie, +${a.strikeWard.amount} bouclier à sa couronne, plafond ${a.strikeWard.cap}. Au plus une fois tous les ${a.strikeWard.period} tours ; aucun gain par sort, poison, Riposte, dégâts secondaires ou après sa mort.`);
+ if(a.barrierDrill)lines.push(`Foreuse d’acier : avant les dégâts d'une attaque normale contre une unité ennemie, détruit jusqu'à ${a.barrierDrill.amount} points de sa barrière personnelle ; l'attaque utilise ensuite les protections restantes. Au plus une fois tous les ${a.barrierDrill.period} tours, seulement si une barrière est présente. Aucun dégât supplémentaire aux PV, effet de sort, de poison ou de Riposte.`);
  if(a.arrivalBarrier)lines.push(`À l’arrivée : barrière ${a.arrivalBarrier.amount} à un autre allié de sa ligne, priorité au plus blessé proportionnellement. Plafond ${a.arrivalBarrier.cap} pour cet effet, sans cumul ; aucune autre cible ni effet sans allié.`);
  if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : ${a.harass.period?'Cri d’effroi':'Harcèlement'} −${a.harass.amount} ATQ sur ${a.harass.attacks===1?'sa prochaine attaque d’unité':'ses '+a.harass.attacks+' prochaines attaques d’unité'}, Riposte comprise ; minimum ${a.harass.minimum||0}, aucun effet sur les sorts. ${a.harass.period?'Au plus une fois tous les '+a.harass.period+' tours ; seule la réduction la plus forte persiste.':'Les applications renouvellent le malus sans cumul.'}${a.harass.secondary?' Un autre ennemi à '+a.harass.secondary.range+' case au plus de la cible sur la même ligne : −'+a.harass.secondary.amount+' ATQ pour sa prochaine attaque.':''}`);
  if(a.intervention)lines.push(`À l’arrivée : ${a.intervention.amount} dégâts au premier ennemi devant, même ligne, jusqu’à ${a.intervention.range} cases ; protections normales, une seule frappe d’arrivée.`);
@@ -5573,6 +5574,7 @@ function unitAbilityDetails(d){
 function advancedSummary(a){
  const parts=[];
  if(a.strikeWard)parts.push(`Ferraille récupérée · Couronne +${a.strikeWard.amount}`);
+ if(a.barrierDrill)parts.push(`Foreuse : barrière −${a.barrierDrill.amount}`);
  if(a.deathStrike)parts.push(`Fracas ${a.deathStrike.amount}${a.deathStrike.entangle?' · Entrave':''}`);
  if(a.devour)parts.push(`Dévoration ${a.devour.heal}${a.devour.attack?' · +'+a.devour.attack+' ATQ (max +'+a.devour.cap+')':''}`);
  if(a.execution)parts.push(`Exécution +${a.execution.amount}${a.execution.killHaste?' · Célérité après élimination':''}`);
@@ -5963,7 +5965,7 @@ const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitCh
 const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
 const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {tickUnitPoison,clearUnitPoison}=__load("src/engine/unit-poison.js");
-const {resolveStrikeRewards}=__load("src/engine/unit-triggers.js");
+const {resolveStrikeRewards,resolveStrikePreparation}=__load("src/engine/unit-triggers.js");
 const {contiguousSplashTargets}=__load("src/engine/unit-targets.js");
 const {resolveUnitDeath}=__load("src/engine/unit-death.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
@@ -6192,7 +6194,10 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
 function strike(b,u,target,atk,from,to,sameLine=true,charged=false,suppressed=false,attackState=null){
  const execution=executionBonus(u,target,suppressed),before=target.hp;
  const raw=execution&&attackState?attackAfterPenalty(attackState.unit,attackState.raw+execution):atk;
- if(raw>0)hit(b,target,raw,u.side,unitHasPierce(u,suppressed,charged),true,{attacker:u,from,to,sameLine});
+ if(raw>0){
+  resolveStrikePreparation(b,u,target,suppressed,fx);
+  hit(b,target,raw,u.side,unitHasPierce(u,suppressed,charged),true,{attacker:u,from,to,sameLine});
+ }
  const damage=Math.max(0,before-target.hp);
  if(sameLine&&(to-from)*(u.side==='p'?1:-1)>=2)recordTrialFact(b,u,'rangedDamage',damage);
  return {primaryAlive:before>0,performed:raw>0,killed:raw>0&&before>0&&target.hp<=0,damaged:damage>0,execution:execution>0};
@@ -6672,7 +6677,7 @@ function silenceValue(u){
  const future=versionUnitAbilities(u);
  return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
   (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0)+
-  (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0)+(future?.strikeWard?2:0);
+  (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0)+(future?.strikeWard?2:0)+(future?.barrierDrill?3:0);
 }
 function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 function silenceTarget(b,side,lane){
@@ -6955,7 +6960,7 @@ function validUnitEffects(u){
   (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
   (u.deathStrikeUsed===undefined||typeof u.deathStrikeUsed==='boolean')&&
   (u.devourAttack===undefined||integer(u.devourAttack,2))&&
-  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
+  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
@@ -7301,10 +7306,21 @@ Object.assign(__exports,{resolveUnitArrival,resolveUnitSupport});
 
 },
 "src/engine/unit-triggers.js":function(__exports,__load){
-// Déclencheurs de protection après frappe, moteur commun.
+// Préparation des protections et récompenses de frappe, moteur commun.
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
-const {grantAbilityBarrier,grantCrownShield}=__load("src/engine/unit-barriers.js");
+const {grantAbilityBarrier,grantCrownShield,absorbBarrier}=__load("src/engine/unit-barriers.js");
 const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
+function resolveStrikePreparation(b,u,target,suppressed,emit){
+ const p=versionUnitAbilities(u)?.barrierDrill;
+ if(!p||suppressed||!target||target.hp<=0||target.side===u.side||!(target.barrier>0)||u.barrierDrillReadyRound>b.round)return 0;
+ const removed=absorbBarrier(target,p.amount);
+ if(!removed)return 0;
+ u.barrierDrillReadyRound=b.round+p.period;
+ const lane=b.board.findIndex(row=>row.includes(target));
+ if(lane>=0)emit(b,{type:'state',side:target.side,lane,col:b.board[lane].indexOf(target),barrierRemoved:removed});
+ return removed;
+}
+
 function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,damaged,execution},emit){
  if(suppressed||u.hp<=0)return;
  const a=versionUnitAbilities(u);
@@ -7332,7 +7348,7 @@ function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,da
  }
 }
 
-Object.assign(__exports,{resolveStrikeRewards});
+Object.assign(__exports,{resolveStrikePreparation,resolveStrikeRewards});
 
 },
 "src/ai.js":function(__exports,__load){

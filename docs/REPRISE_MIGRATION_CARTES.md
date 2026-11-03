@@ -18,7 +18,7 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
-| Forge | 10 | 39 sur 39 cases futures | 10 Rares/Épiques et 5 Légendaires de statistiques intégrées par PR 75/78 ; autres lots suivis séparément |
+| Forge | 10 | 39 sur 39 cases futures | 10 Rares/Épiques et 6 Légendaires intégrées par PR 75/78/79 ; autres lots suivis séparément |
 | Éther | 11 | 9 sur 39 cases futures | Feu follet et Oracle complets ; autres cases encore ouvertes dans cette édition ; règles partielles de Garde distinctes |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
@@ -79,13 +79,13 @@ La nouvelle portée native 3 du Feu follet est une décision séparée du natif 
 encore au moteur ; elle exige son propre périmètre, contrôle et documentation.
 Relire Notion à la reprise, car la conception continue en parallèle.
 
-Les [cinq Légendaires Forge de statistiques](FORGE_LEGENDAIRES_STATS.md) sont intégrées par la [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78) le 3 novembre 2026, au commit `304e20f1f0d8a5007948ddba6577990d7a5f2123`, avec accord spécifique, six contrôles réussis et export synchronisé. Marchefer, Foreur, Golem et Marteau restent des tranches distinctes ; aucun succès de cette PR ne valide leurs nouveaux pouvoirs.
+Les [cinq Légendaires Forge de statistiques](FORGE_LEGENDAIRES_STATS.md) sont intégrées par la [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78) le 3 novembre 2026, au commit `304e20f1f0d8a5007948ddba6577990d7a5f2123`, avec accord spécifique, six contrôles réussis et export synchronisé. Le Marchefer a ensuite été intégré par la PR 79 ; Foreur, Golem et Marteau restent des tranches distinctes. Aucun succès de la PR 78 ne valide leurs nouveaux pouvoirs.
 
 La [proposition Foreur Légendaire](FORGE_FOREUR_LEGENDAIRE.md) suit le Marchefer : une évolution de plus, 27 versions Forge et 149 recettes dans sa branche, sans activer les rangs Divin/Éveillé, le Marteau ou le Golem.
 
 ## Conditions de reprise
 
-La [proposition Marchefer Légendaire](FORGE_MARCHEFER_LEGENDAIRE.md) suit les cinq versions de statistiques : une évolution supplémentaire, 26 versions Forge et 148 recettes dans sa branche, sans nouvelle version du Golem, du Marteau ou du Foreur. Le pouvoir Cœur runique nécessite de résoudre la différence entre ciblage direct de la Garde normale et interception d'une attaque visant la couronne ; aucun assouplissement de sa validation Notion n'est appliqué.
+Le [Marchefer Légendaire](FORGE_MARCHEFER_LEGENDAIRE.md) est intégré par la PR 79 au commit `5a70b0c135c938f2417d0d499ea6ab821266dab5`, après accord spécifique et six contrôles réussis : 26 versions Forge, 16 évolutions Forge et 148 recettes au total sur main. Golem et Marteau restent absents au rang Légendaire ; le Foreur est proposé séparément. Cœur runique exige toujours de résoudre le raccordement entre ciblage direct du gardien normal et interception d'une attaque de couronne, sans réinterpréter la validation Notion.
 
 - Lire main, les branches/PR et `ETAT_PROJET.md`, rapprocher les choix de la
   dernière édition Notion. Les anciens bilans sont historiques.

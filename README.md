@@ -6,7 +6,7 @@ a intégré dix évolutions Rares/Épiques Forge et leur paquet à `main`,
 avec six contrôles réussis. Leur publication sur Sites reste à vérifier séparément.
 Les autres hauts rangs Forge et les évolutions Éther font l’objet de lots séparés.
 Les [cinq Légendaires Forge de statistiques](docs/FORGE_LEGENDAIRES_STATS.md) sont intégrées par la PR 78 le 3 novembre 2026, avec leurs fusions et leur export synchronisé. Leur publication Sites reste distincte.
-La [suite Marchefer Légendaire](docs/FORGE_MARCHEFER_LEGENDAIRE.md) prépare son pouvoir de récupération de bouclier après élimination, dans une PR distincte et dépendante du lot précédent. Ce pouvoir n'est pas encore intégré ou publié.
+Le [Marchefer Légendaire](docs/FORGE_MARCHEFER_LEGENDAIRE.md) et sa récupération de bouclier après élimination sont intégrés par la PR 79 le 3 novembre 2026. La publication reste suivie séparément.
 Le [Foreur Légendaire](docs/FORGE_FOREUR_LEGENDAIRE.md) est proposé séparément : Foreuse d'acier retire jusqu'à 2 points de barrière personnelle avant l'attaque normale, au plus une fois tous les 3 tours. Ce lot reste soumis à revue et validation.
 [Contrat Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md).
 [État intégré et publication](docs/ETAT_PROJET.md) · [Carte des tests](docs/CARTE_TESTS.md).
@@ -26,7 +26,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 évolutions Rares, puis du Milicien Épique après le premier boss. Accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve, 43 Ombre et quinze évolutions Forge supplémentaires. Les 64 Divines/Éveillées Aube/Sylve/Ombre exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
+sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve, 43 Ombre et seize évolutions Forge supplémentaires. Les 64 Divines/Éveillées Aube/Sylve/Ombre exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche

@@ -16,7 +16,7 @@ Le scénario navigateur partagé utilise un combat préparé valide pour garanti
 la barrière adverse après une véritable fusion dans l'interface.
 [Contrat et limites](FORGE_FOREUR_LEGENDAIRE.md).
 
-## Marchefer Légendaire — proposition du 3 novembre 2026
+## Marchefer Légendaire — intégré par PR 79 le 3 novembre 2026
 
 `unit-barriers.js` partage `grantCrownShield` entre Protection d'arrivée,
 Dernière lumière à la mort et Ferraille récupérée. Les calculs historiques

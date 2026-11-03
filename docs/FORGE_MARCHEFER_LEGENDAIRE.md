@@ -1,8 +1,8 @@
-# Marchefer Légendaire — proposition du 3 novembre 2026
+# Marchefer Légendaire — intégré le 3 novembre 2026
 
 ## Décision et périmètre
 
-Source : [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f), édition relue du 2 novembre 2026 à 16:09:01 UTC. Cette proposition dépend du lot de cinq Légendaires de statistiques de la PR 78. Elle ne se substitue ni à sa fusion ni à son autorisation.
+Source : [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f), édition relue du 2 novembre 2026 à 16:09:01 UTC. La PR 79 a intégré ce lot après la PR 78 au commit `5a70b0c135c938f2417d0d499ea6ab821266dab5`, après accord spécifique et six contrôles réussis. L'arbre intégré `85bd172bb9b7a7efc07abd405f96db2b468e074a` est identique à la tête testée `94fc365` ; publication Sites distincte.
 
 Le Marchefer (`ironwraith`) devient Légendaire à **3 ATQ / 9 PV / délai 1**, sans changement de portée ou de déplacement. **Ferraille récupérée** : si son attaque normale élimine une unité ennemie, rend **2 boucliers à sa couronne**, **plafond 20**, **au plus une fois tous les 3 tours**. Protection +3 à l'arrivée est héritée, sans seconde activation d'arrivée. La définition contient les paramètres, le moteur partagé les résout et les fiches les décrivent.
 
@@ -22,7 +22,7 @@ Le nouveau champ facultatif `strikeWardReadyRound` est propre à l'unité du com
 - Le catalogue et les fusions vérifient toutes les versions/recettes, stocks, sauvegardes et simulations déterministes ; les valeurs absentes restent absentes.
 - Le pilote navigateur Légendaire ajoute `forge-scrap` sur les quatre formats/parties existants, sans nouveau job : fusion réelle, panne, double clic, Collection/deck, export/import, attente de main réelle, élimination, gain de bouclier et reprise.
 - Générer l'export avec le builder officiel, contrôler son identité locale/distante, puis lire la CI du commit final. Les tests d'une branche antérieure ne valident pas cette proposition.
-- Mettre à jour les mentions d'intégration après la fusion réelle des dépendances. Avant toute fusion de cette proposition : revue complète et autorisation spécifique du propriétaire.
+- La fusion est effectuée après revue et autorisation spécifique ; reprendre les lots suivants depuis le main et les PR réellement observés.
 
 ## Travaux distincts et limites
 
