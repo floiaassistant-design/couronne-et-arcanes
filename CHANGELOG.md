@@ -1,5 +1,11 @@
 # Journal des changements
 
+## En préparation — cinq Légendaires Forge à statistiques, 3 novembre 2026
+
+- Cinq versions proposées : Sapeur gobelin (+1 ATQ), Ingénieure d’acier (+2 PV), Canon des Terres Rouges (+2 PV), Mécaniste des Hauts-Fours (+1 ATQ) et Alchimiste des Braises (+1 ATQ), sans nouveau pouvoir.
+- Fusion de trois Épiques libres après mission 06 ; paquets et sauvegardes historiques inchangés. [Contrat et limites](docs/FORGE_LEGENDAIRES_STATS.md).
+- **Non intégré / non publié** avant revue, export `JOUER.html` régénéré, contrôles GitHub exacts et accord explicite de fusion.
+
 ## Intégré — Forge Rare / Épique, 2 novembre 2026
 
 - Dix évolutions validées pour sept personnages Forge, uniquement en statistiques ATQ/PV ; 20 versions Forge définies dont dix natives et 142 recettes au total sur main.
