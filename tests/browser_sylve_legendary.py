@@ -12,6 +12,7 @@ SCENARIOS={
     'sylve':{'card':'owl','stats':(3,5),'effect':'attackPenalty','status':'Harcèlement','detail':['Harcèlement','−1 ATQ','fusion'],'future':'Ascension requise'},
     'ombre':{'card':'plague','stats':(4,7),'effect':'poisonTurns','status':'Poison 2 tour(s)','detail':['Poison 1','2 tours','fusion'],'future':'Ascension requise'},
     'forge-scrap':{'card':'ironwraith','faction':'forge','stats':(3,9),'effect':'strikeWardReadyRound','effectSide':'p','status':'Ferraille récupérée','detail':['Ferraille récupérée','plafond 20','3 tours','fusion'],'future':'À concevoir'},
+    'forge-drill':{'card':'drill','faction':'forge','stats':(3,7),'effect':'barrierDrillReadyRound','effectSide':'p','status':'Foreuse','detail':['Foreuse d’acier','2 points','3 tours','fusion'],'future':'À concevoir','prepared':True},
     'forge':{'card':'alchemist','stats':(4,7),'effect':'poisonTurns','status':'Poison 2 tour(s)','detail':['Poison 1','2 tours','fusion'],'future':'À concevoir'},
 }
 PROFILE_SCRIPT="import {freshProfile} from './src/engine.js';const p=freshProfile(),id=process.argv[1];p.completed=['01','02','03','04','05'];p.unlocked=6;p.guideSeen=true;p.evolvedCollection={[id+':épique']:3};p.deck[0]={id,rarity:'épique'};console.log(JSON.stringify(p));"
@@ -71,19 +72,27 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
     async with page.expect_download() as info:await click(page.locator('[data-action="export-save"]'))
     exported=json.loads(Path(await (await info.value).path()).read_text());assert exported==profile
     await page.locator('#import-file').set_input_files({'name':'sylve-legend.json','mimeType':'application/json','buffer':json.dumps(exported).encode()});await page.locator('#view .hero-copy').wait_for();assert await saved()==profile
-    plan=json.loads(subprocess.check_output(['node','--input-type=module','-e',PLAN,json.dumps(profile),card_id,cfg['effect'],cfg.get('effectSide','e')],cwd=ROOT))
+    if cfg.get('prepared'):
+        fixture=json.loads(subprocess.check_output(['node','tests/fixtures/foreur-battle.mjs',json.dumps(profile)],cwd=ROOT))
+        plan=fixture['plan']
+        # Fusion et deck réels ci-dessus ; combat préparé valide pour rendre
+        # une barrière éligible, avant d'installer l'horloge de cette page.
+        await page.evaluate('([key,b])=>localStorage.setItem(key,JSON.stringify(b))',[BATTLE,fixture['battle']])
+        await page.reload();await page.locator('.combat-screen').wait_for();assert await saved()==profile
+    else:plan=json.loads(subprocess.check_output(['node','--input-type=module','-e',PLAN,json.dumps(profile),card_id,cfg['effect'],cfg.get('effectSide','e')],cwd=ROOT))
     # Horloge de test : observer la sauvegarde entre les deux camps, sans changer le moteur.
     await page.clock.install(time='2026-10-29T00:00:00Z')
     await page.clock.pause_at('2026-10-29T00:00:01Z')
-    await page.evaluate('(seed)=>{Date.now=()=>seed}',plan['seed']);await nav('campaign');await click(page.locator('[data-action="start-mission"][data-id="06"]'))
-    for _ in range(plan['opening']):
-        await click(page.locator('[data-action="end-turn"]'))
-        await page.clock.run_for(1000)
-        await page.wait_for_function("()=>{const b=JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'));return b?.phase==='player'}")
-    b=await saved(BATTLE);index=next(i for i,c in enumerate(b['heroes']['p']['hand']) if c['id']==card_id and c.get('rarity')=='légendaire')
-    hand=page.locator(f'.hand [data-action="select-card"][data-index="{index}"]');await click(hand)
-    if touch:await click(hand)
-    await click(page.locator('[data-action="deploy"][data-lane="0"][data-col="1"]'))
+    if not cfg.get('prepared'):
+        await page.evaluate('(seed)=>{Date.now=()=>seed}',plan['seed']);await nav('campaign');await click(page.locator('[data-action="start-mission"][data-id="06"]'))
+        for _ in range(plan['opening']):
+            await click(page.locator('[data-action="end-turn"]'))
+            await page.clock.run_for(1000)
+            await page.wait_for_function("()=>{const b=JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'));return b?.phase==='player'}")
+        b=await saved(BATTLE);index=next(i for i,c in enumerate(b['heroes']['p']['hand']) if c['id']==card_id and c.get('rarity')=='légendaire')
+        hand=page.locator(f'.hand [data-action="select-card"][data-index="{index}"]');await click(hand)
+        if touch:await click(hand)
+        await click(page.locator('[data-action="deploy"][data-lane="0"][data-col="1"]'))
     b=await saved(BATTLE);u=b['board'][0][1];assert (u['rarity'],u['atk'],u['maxhp'])==('légendaire',*cfg['stats'])
     found=False;trace=[]
     for turn in range(1,plan['turn']+1):
@@ -96,6 +105,11 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
             if scenario=='forge-scrap':
                 assert target[cfg['effect']]==b['round']+3
                 assert b['heroes']['p']['shield']==max(shield_before,min(20,shield_before+2))
+            elif scenario=='forge-drill':
+                assert target[cfg['effect']]==b['round']+3
+                victim=next(u for row in b['board'] for u in row if u and u['uid']==plan['targetUid'])
+                assert victim['barrier']==2 and victim['hp']==victim['maxhp']
+                assert b['heroes']['p']['shield']==shield_before
             else:assert target[cfg['effect']]==({'amount':1,'remaining':1} if scenario=='sylve' else 2)
             found=True;break
         await page.clock.run_for(1000)

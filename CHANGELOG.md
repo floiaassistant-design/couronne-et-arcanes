@@ -1,17 +1,23 @@
 # Journal des changements
 
-## En préparation — Marchefer Légendaire, 3 novembre 2026
+## En préparation — Foreur Légendaire, 3 novembre 2026
+
+- Foreuse d'acier : jusqu'à 2 points de barrière personnelle détruits avant une attaque normale, au plus une fois tous les 3 tours ; 3 ATQ / 7 PV / délai 1 et Armure 2 conservés.
+- Trois Épiques libres après mission 06 ; cadence et provenance de barrière sauvegardées, paquets et natifs inchangés.
+- Tests métier, moteur embarqué et parcours navigateur sur combat préparé valide. Proposition non fusionnée et non publiée. [Contrat](docs/FORGE_FOREUR_LEGENDAIRE.md).
+
+## Intégré — Marchefer Légendaire, 3 novembre 2026
 
 - Ferraille récupérée : une attaque normale éliminant une unité ennemie rend 2 boucliers à sa couronne, plafond 20, au plus une fois tous les 3 tours ; Protection +3 et statistiques 3/9/1 conservées.
 - Fusion de trois Épiques libres après mission 06, quota par invocation sauvegardé et validé ; paquets et sauvegardes historiques conservés.
-- Primitive de bouclier partagée, tests de combat et parcours navigateur réel ; proposition distincte, non fusionnée et non publiée. [Contrat](docs/FORGE_MARCHEFER_LEGENDAIRE.md).
+- Primitive de bouclier partagée, tests de combat et parcours navigateur réel ; intégré par la PR 79 au commit `5a70b0c`, après accord spécifique et six contrôles réussis. Publication distincte. [Contrat](docs/FORGE_MARCHEFER_LEGENDAIRE.md).
 
-## En préparation — cinq Légendaires Forge à statistiques, 3 novembre 2026
+## Intégré — cinq Légendaires Forge de statistiques, 3 novembre 2026
 
-- Cinq versions proposées : Sapeur gobelin (+1 ATQ), Ingénieure d’acier (+2 PV), Canon des Terres Rouges (+2 PV), Mécaniste des Hauts-Fours (+1 ATQ) et Alchimiste des Braises (+1 ATQ), sans nouveau pouvoir.
+- Cinq versions intégrées : Sapeur gobelin (+1 ATQ), Ingénieure d’acier (+2 PV), Canon des Terres Rouges (+2 PV), Mécaniste des Hauts-Fours (+1 ATQ) et Alchimiste des Braises (+1 ATQ), sans nouveau pouvoir.
 - Fusion de trois Épiques libres après mission 06 ; paquets et sauvegardes historiques inchangés. [Contrat et limites](docs/FORGE_LEGENDAIRES_STATS.md).
 - Export autonome régénéré, références des 147 recettes et des cinq nouvelles versions de Collection actualisées ; parcours Légendaire partagé étendu à l'Alchimiste Forge, avec Poison réel et reprise.
-- **Non intégré / non publié** avant revue, export `JOUER.html` régénéré, contrôles GitHub exacts et accord explicite de fusion.
+- Intégrées par la PR 78 au commit `304e20f`, après accord spécifique et six contrôles réussis ; publication confirmée dans la version Sites 23.
 
 ## Intégré — Forge Rare / Épique, 2 novembre 2026
 

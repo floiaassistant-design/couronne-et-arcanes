@@ -7,7 +7,7 @@ import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitC
 import {resolveUnitArrival,resolveUnitSupport} from './unit-support.js';
 import {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty} from './unit-effects.js';
 import {tickUnitPoison,clearUnitPoison} from './unit-poison.js';
-import {resolveStrikeRewards} from './unit-triggers.js';
+import {resolveStrikeRewards,resolveStrikePreparation} from './unit-triggers.js';
 import {contiguousSplashTargets} from './unit-targets.js';
 import {resolveUnitDeath} from './unit-death.js';
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
@@ -236,7 +236,10 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
 function strike(b,u,target,atk,from,to,sameLine=true,charged=false,suppressed=false,attackState=null){
  const execution=executionBonus(u,target,suppressed),before=target.hp;
  const raw=execution&&attackState?attackAfterPenalty(attackState.unit,attackState.raw+execution):atk;
- if(raw>0)hit(b,target,raw,u.side,unitHasPierce(u,suppressed,charged),true,{attacker:u,from,to,sameLine});
+ if(raw>0){
+  resolveStrikePreparation(b,u,target,suppressed,fx);
+  hit(b,target,raw,u.side,unitHasPierce(u,suppressed,charged),true,{attacker:u,from,to,sameLine});
+ }
  const damage=Math.max(0,before-target.hp);
  if(sameLine&&(to-from)*(u.side==='p'?1:-1)>=2)recordTrialFact(b,u,'rangedDamage',damage);
  return {primaryAlive:before>0,performed:raw>0,killed:raw>0&&before>0&&target.hp<=0,damaged:damage>0,execution:execution>0};

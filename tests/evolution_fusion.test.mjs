@@ -17,7 +17,7 @@ for(const [id,stats] of Object.entries({bone:[4,6],shade:[4,5],crypt:[3,9],plagu
 for(const [id,stats] of Object.entries({bone:[4,6],shade:[4,5],crypt:[3,9],plague:[4,7],lich:[6,9],banshee:[4,7],vampire:[5,8],graveknight:[5,10],nightblade:[4,6],spectre:[4,6],mist_inquisitor:[3,8]})){expected[id]??={};expected[id].divine=[...stats];expected[id]['éveillée']=[...stats];}
 Object.assign(expected,{
  smith:{rare:[3,8],'épique':[4,8]},golem:{'épique':[2,14]},bomb:{'épique':[4,5],'légendaire':[5,5]},
- drill:{rare:[2,7],'épique':[3,7]},mechanist:{'épique':[2,10],'légendaire':[3,10]},
+ drill:{rare:[2,7],'épique':[3,7],'légendaire':[3,7]},mechanist:{'épique':[2,10],'légendaire':[3,10]},
  ironwraith:{rare:[2,9],'épique':[3,9],'légendaire':[3,9]},alchemist:{'épique':[3,7],'légendaire':[4,7]},
  engineer:{'légendaire':[3,9]},cannon:{'légendaire':[5,9]}
 });
@@ -32,8 +32,8 @@ function stocked(recipe){
 }
 function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v)},removeItem:k=>{delete data[k]}};return data;}
 
-test('148 recettes explicites, transitions adjacentes et autres rangs/factions fermés',()=>{
- assert.equal(EVOLUTION_FUSIONS.length,148);
+test('149 recettes explicites, transitions adjacentes et autres rangs/factions fermés',()=>{
+ assert.equal(EVOLUTION_FUSIONS.length,149);
  assert.deepEqual(EVOLUTION_FUSIONS.map(r=>r.id).sort(),Object.entries(expected).flatMap(([id,ranks])=>Object.keys(ranks).map(rank=>id+':'+rank)).sort());
  for(const recipe of EVOLUTION_FUSIONS){assert.equal(recipe.copies,3);assert.equal(recipe.from,{rare:'commun','épique':'rare','légendaire':'épique',divine:'légendaire','éveillée':'divine'}[recipe.to]);assert.equal(recipe.mission,{rare:'01','épique':'03','légendaire':'06',divine:'09','éveillée':'12'}[recipe.to]);}
  const p=ready();
@@ -73,7 +73,7 @@ test('Rangs distincts, copies du deck et manque de doublons : aucun prélèvemen
  const held=structuredClone(p);assert.equal(fuseEvolutionCopies(p,'militia:épique').ok,false);assert.deepEqual(p,held);
 });
 
-test('2368 exécutions de combat avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
+test('2384 exécutions de combat avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
  for(const recipe of EVOLUTION_FUSIONS){
   const p=stocked(recipe),result=fuseEvolutionCopies(p,recipe.id);modifyDeck(p,result.target,1);
   const before=structuredClone(p);
@@ -147,8 +147,8 @@ test('Sauvegarde en échec, manque de copies ou début de combat après prévisu
  }
 });
 
-test('Les 36 Légendaires Aube/Sylve/Ombre/Forge exigent la victoire réelle du deuxième boss, pas le niveau ou la mission accessible',()=>{
- const recipes=EVOLUTION_FUSIONS.filter(r=>r.to==='légendaire');assert.equal(recipes.length,36);
+test('Les 37 Légendaires Aube/Sylve/Ombre/Forge exigent la victoire réelle du deuxième boss, pas le niveau ou la mission accessible',()=>{
+ const recipes=EVOLUTION_FUSIONS.filter(r=>r.to==='légendaire');assert.equal(recipes.length,37);
  for(const recipe of recipes){
   const p=stocked(recipe);p.completed=['01','02','03','04','05'];p.unlocked=12;p.heroXp=100000;
   const before=structuredClone(p);

@@ -1,7 +1,18 @@
-// Déclencheurs de protection après frappe, moteur commun.
+// Préparation des protections et récompenses de frappe, moteur commun.
 import {versionUnitAbilities} from '../cards/definitions.js';
-import {grantAbilityBarrier,grantCrownShield} from './unit-barriers.js';
+import {grantAbilityBarrier,grantCrownShield,absorbBarrier} from './unit-barriers.js';
 import {alliedTargets,injuryOrder} from './unit-targets.js';
+
+export function resolveStrikePreparation(b,u,target,suppressed,emit){
+ const p=versionUnitAbilities(u)?.barrierDrill;
+ if(!p||suppressed||!target||target.hp<=0||target.side===u.side||!(target.barrier>0)||u.barrierDrillReadyRound>b.round)return 0;
+ const removed=absorbBarrier(target,p.amount);
+ if(!removed)return 0;
+ u.barrierDrillReadyRound=b.round+p.period;
+ const lane=b.board.findIndex(row=>row.includes(target));
+ if(lane>=0)emit(b,{type:'state',side:target.side,lane,col:b.board[lane].indexOf(target),barrierRemoved:removed});
+ return removed;
+}
 
 export function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,damaged,execution},emit){
  if(suppressed||u.hp<=0)return;
