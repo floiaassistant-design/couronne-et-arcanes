@@ -83,7 +83,7 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         await click(page.locator('#nav [data-page="collection"]'),touch)
         if faction!='aube':await click(page.locator(f'[data-action="collection-faction"][data-id="{faction}"]'),touch)
         row=page.locator(f'[data-collection-character="{card_id}"]')
-        assert await row.locator('td').count()==8
+        assert await row.locator('td').count()==6
         assert 'Possédée ×1' in await row.locator(f'[data-collection-rarity="{s["trial"]["to"]}"]').inner_text()
         await click(page.locator('#nav [data-page="deck"]'),touch)
         await click(page.locator(f'[data-deck-card="{target}"] [data-action="deck-add"]'),touch)

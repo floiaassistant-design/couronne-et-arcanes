@@ -158,7 +158,7 @@ test('Forge Légendaire : cinq gains de statistiques sans pouvoir ajouté ni acc
   assert.deepEqual(legend.geometry,epic.geometry,id+' : géométrie inchangée');
   assert.equal(legend.status.obtaining,'fusion');
   const recipe=evolutionFusionFor(id,'légendaire');assert.equal(recipe.from,'épique');
-  assert.equal(recipe.mission,'06');assert.equal(recipe.copies,3);assert.equal(recipe.ascension,['divine','éveillée'].includes(recipe.to)?'forge-ascension-'+(recipe.to==='divine'?'divine':'eveillee'):undefined);
+  assert.equal(recipe.mission,'06');assert.equal(recipe.copies,3);assert.equal(recipe.ascension,undefined);
   assert.equal(evolutionPackFor(id,'légendaire'),null);
   const profile=stocked(recipe);profile.completed=['01','02','03','04','05'];
   const before=structuredClone(profile);assert.equal(fuseEvolutionCopies(profile,recipe.id).ok,false);

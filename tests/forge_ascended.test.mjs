@@ -144,6 +144,23 @@ test('Colosse : coups absorbés, sorts, impacts secondaires, Silence, alliés et
  }
 });
 
+test('Deux vrais tirs dans le tour adverse activent la Cuirasse/Fournaise, aux deux camps',()=>{
+ for(const side of ['p','e'])for(const rank of ranks){
+  const c=contact('colossus',rank,{side});for(const row of c.b.board)row.fill(null);
+  const foe=side==='p'?'e':'p',col=side==='p'?4:7,dir=side==='p'?1:-1;
+  c.b.board[0][col]=c.u;
+  for(const distance of [1,2])c.b.board[0][col+dir*distance]=unit('archer',foe);
+  c.b.phase=foe==='p'?'player':'enemy';(foe==='p'?endPlayerTurn:finishEnemyTurn)(c.b);
+  assert.equal(c.u.hp,11);assert.equal(c.u.barrier,rank==='divine'?2:4);assert.equal(c.u.scoriaHits,0);assert.equal(c.u.scoriaReadyRound,4);
+ }
+});
+
+test('Le vrai Fracas du Marteau ne compte pas comme une deuxième attaque directe sur le Colosse',()=>{
+ const c=contact('smith','éveillée');c.target=unit('colossus','e',{rarity:'divine'});c.b.board[0][5]=c.target;c.b.board[0][6]=unit('militia','e',{stun:99});
+ attack(c);assert.equal(c.target.hp,10);assert.equal(c.target.scoriaHits,1);assert.equal(c.target.barrier,undefined);assert.equal(c.target.scoriaReadyRound,undefined);
+ c.b.round=2;c.b.phase='player';attack(c);assert.equal(c.target.hp,8);assert.equal(c.target.barrier,2);assert.equal(c.target.scoriaHits,0);
+});
+
 test('Colosse : une Riposte est directe ; compteur conservé en cadence et aucune barrière avant la prochaine blessure',()=>{
  const c=contact('colossus','divine');c.u.hp=c.u.maxhp=50;c.target=unit('golem','e',{atk:3,hp:50,maxhp:50});c.b.board[0][5]=c.target;
  assert(resolveRetaliation(c.b,c.target,c.u,0,5,4));assert.equal(c.u.scoriaHits,1);direct(c.b,c.u,c.target);assert.equal(c.u.barrier,2);

@@ -1,4 +1,4 @@
-# Marteau Légendaire — proposition du 3 novembre 2026
+# Marteau Légendaire — intégré par PR 81 le 3 novembre 2026
 
 Source : tableau maître Notion, édition relue du 2 novembre 2026 à 16:09:01 UTC.
 Base : main intégrant le Foreur par PR 80, commit `7d3d6d4`.
@@ -52,3 +52,5 @@ reste fermé pendant que les autres cartes progressent.
 Le propriétaire a explicitement autorisé la fusion des lots prêts pendant cette
 session : revue complète, CI du commit exact et vérification de main restent
 obligatoires. Publication distincte par le suivi existant, sans flux concurrent.
+
+Fusion confirmée au commit `b54e567a477c2c9e64c7b51ccb49eb492176050b`, arbre `01ee415dcf4a03be1902191cf48c3cf824deb975` identique à la tête testée après six succès. Les mentions de préparation ci-dessus conservent les preuves et limites du lot ; publication distincte.

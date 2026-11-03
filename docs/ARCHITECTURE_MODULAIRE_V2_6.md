@@ -6,7 +6,7 @@ Le registre paramètre quatre cartes et leurs remplacements de pouvoirs. `unit-t
 
 `evolution-trials.js` décrit deux ascensions Forge. Les accès, objectifs, reçus et affichages sont communs ; les recettes réellement présentes déterminent le nombre proposé. Les fixtures réutilisent le robot et un deck de versions effectivement disponibles, sans référence future inventée. [Contrat](FORGE_HAUTS_RANGS_BLINDAGES.md).
 
-## Marteau Légendaire — proposition du 3 novembre 2026
+## Marteau Légendaire — intégré par PR 81 le 3 novembre 2026
 
 `unit-triggers.js` porte le recul après frappe normale et réactions de contact. Il lit les positions réelles, le registre et la géométrie de `board.js`, déplace une seule cible puis réutilise le hook d’entrée de case de `battle.js` pour les pièges et morts. Aucun second calcul de dégâts ni attaque supplémentaire. La cadence facultative est validée par `unit-effects.js` ; fiches et Silence lisent le registre. Aucun nouveau module de production, dépendance ou actif. [Contrat](FORGE_MARTEAU_LEGENDAIRE.md).
 

@@ -1,7 +1,7 @@
 # Forge — Marteau et blindages Divins / Éveillés
 
-Proposition du 3 novembre 2026, après le Foreur (PR 80) et dépendante du Marteau
-Légendaire (PR 81). Conception : tableau maître Notion, édition relue
+Proposition du 3 novembre 2026, après les intégrations du Foreur (PR 80) et du Marteau
+Légendaire (PR 81). Base main vérifiée : `b54e567a477c2c9e64c7b51ccb49eb492176050b`. Conception : tableau maître Notion, édition relue
 `2026-11-02T16:09:01.799Z`. Aucune nouvelle validation de conception ni écriture
 Notion. Les gains remplacent ou complètent le pouvoir précédent dans le registre.
 
@@ -98,3 +98,7 @@ Golem Légendaire/Divin/Éveillé et hauts rangs des cinq autres Forge restent h
 de ce lot. Le raccordement de Cœur runique à une interception de couronne n'est
 pas remplacé par un bonus sur tous les coups reçus. Aucune règle Notion nouvelle
 n'est déduite d'une clarification laissée sans réponse.
+
+## Vérifications locales du 3 novembre
+
+685 tests Node et 120 scénarios de parité réussis ; builds autonome, diagnostic et web ainsi que syntaxe Python réussis. Export généré de 34 600 975 octets, blob Git `0a8f3516142817e60333b493bcc1fa52ed904bfc`, identique à la génération GitHub. La préparation ponctuelle est retirée du diff final. La CI et les parcours Chromium du dernier commit demeurent requis avant fusion ; les succès d’une PR précédente ne les remplacent pas.
