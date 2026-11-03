@@ -102,3 +102,7 @@ Marchefer et Foreur sont intégrés par PR 79 et 80. Golem et Marteau demeurent 
 ## Reprise du 3 novembre — lot Marteau
 
 Foreur intégré par PR 80 (`7d3d6d4`). La proposition [Marteau](FORGE_MARTEAU_LEGENDAIRE.md) apporte une évolution supplémentaire : 28 versions Forge, 18 évolutions et 150 recettes dans sa branche. Golem demeure fermé au rang Légendaire : son bonus n’est pas réinterprété comme une récompense de tout coup reçu. Les hauts rangs de plusieurs autres Forge se préparent séparément. L’accord explicite de cette session autorise les fusions des lots prêts après revue/CI ; il ne dispense d’aucun contrôle ni ne crée de fusion automatique.
+
+## Proposition — hauts rangs Forge et blindages
+
+Le lot [Marteau / Foreur / Colosse / Marchefer](FORGE_HAUTS_RANGS_BLINDAGES.md) prépare huit évolutions et deux ascensions. Les deux défis ouvrent quatre recettes définies chacun, pas les cartes encore absentes. Le pilote et les simulations d’ascension sont partagés ; les pouvoirs lisent le registre et les primitives de protections/mouvement. 36 versions Forge, 26 évolutions et 158 recettes dans cette branche ; intégration/publication distinctes. Golem et les autres hauts rangs attendent leurs lots.

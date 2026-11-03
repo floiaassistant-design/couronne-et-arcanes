@@ -1,5 +1,11 @@
 # Architecture modulaire — lecture courante
 
+## Forge — hauts rangs et blindages, proposition du 3 novembre
+
+Le registre paramètre quatre cartes et leurs remplacements de pouvoirs. `unit-triggers.js` prolonge préparation/recul/récompenses et reçoit de `battle-defense.js` les attaques directes survécues par le Colosse. L’origine de frappe distingue les sorts et effets secondaires, sans recopier les dégâts. Les nouvelles barrières utilisent `grantAbilityBarrier`, plafonds propres et objets remplacés ; `unit-effects.js` valide les deux champs facultatifs du Colosse. `battle.js` ne fait que fournir le hook `hit` commun pour le Fracas alternatif. Aucun module nouveau ni cycle ; l’export conserve les 77 modules et 76 illustrations.
+
+`evolution-trials.js` décrit deux ascensions Forge. Les accès, objectifs, reçus et affichages sont communs ; les recettes réellement présentes déterminent le nombre proposé. Les fixtures réutilisent le robot et un deck de versions effectivement disponibles, sans référence future inventée. [Contrat](FORGE_HAUTS_RANGS_BLINDAGES.md).
+
 ## Marteau Légendaire — proposition du 3 novembre 2026
 
 `unit-triggers.js` porte le recul après frappe normale et réactions de contact. Il lit les positions réelles, le registre et la géométrie de `board.js`, déplace une seule cible puis réutilise le hook d’entrée de case de `battle.js` pour les pièges et morts. Aucun second calcul de dégâts ni attaque supplémentaire. La cadence facultative est validée par `unit-effects.js` ; fiches et Silence lisent le registre. Aucun nouveau module de production, dépendance ou actif. [Contrat](FORGE_MARTEAU_LEGENDAIRE.md).

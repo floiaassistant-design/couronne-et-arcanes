@@ -114,3 +114,7 @@ La publication du main intégrant ces lots est suivie indépendamment de leur fu
 [Audit campagne/IA](AUDIT_CAMPAGNE_IA_2026_10_31.md) ·
 [Historique des états](HISTORIQUE_ETAT_2026_10_31.md) ·
 [Historique des consignes](HISTORIQUE_CONSIGNES_2026_10_31.md).
+
+## Proposition distincte — hauts rangs Forge et blindages
+
+Après le Marteau Légendaire (PR 81), [huit évolutions Divines/Éveillées](FORGE_HAUTS_RANGS_BLINDAGES.md) du Marteau, du Foreur, du Colosse et du Marchefer sont préparées avec deux ascensions Forge. La branche définit 36 versions Forge, 26 évolutions et 158 recettes. Ce lot n’est ni fusionné ni publié avant ses propres contrôles et sa revue ; l’accord de fusion des lots prêts a été reçu cette session. Golem et les cinq autres hauts rangs Forge demeurent distincts.

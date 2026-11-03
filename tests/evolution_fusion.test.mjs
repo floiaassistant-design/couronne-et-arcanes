@@ -21,6 +21,7 @@ Object.assign(expected,{
  ironwraith:{rare:[2,9],'épique':[3,9],'légendaire':[3,9]},alchemist:{'épique':[3,7],'légendaire':[4,7]},
  engineer:{'légendaire':[3,9]},cannon:{'légendaire':[5,9]}
 });
+for(const [id,stats] of Object.entries({smith:[4,8],drill:[3,7],colossus:[6,13],ironwraith:[3,9]})){expected[id]??={};expected[id].divine=[...stats];expected[id]['éveillée']=[...stats];}
 const ready=()=>{const p=freshProfile();p.completed=['01','02','03','04','05','06','07','08','09','10','11','12'];return p;};
 function stocked(recipe){
  const p=ready(),source=cardReference({id:recipe.cardId,rarity:recipe.from});
@@ -32,15 +33,15 @@ function stocked(recipe){
 }
 function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v)},removeItem:k=>{delete data[k]}};return data;}
 
-test('150 recettes explicites, transitions adjacentes et autres rangs/factions fermés',()=>{
- assert.equal(EVOLUTION_FUSIONS.length,150);
+test('158 recettes explicites, transitions adjacentes et autres rangs/factions fermés',()=>{
+ assert.equal(EVOLUTION_FUSIONS.length,158);
  assert.deepEqual(EVOLUTION_FUSIONS.map(r=>r.id).sort(),Object.entries(expected).flatMap(([id,ranks])=>Object.keys(ranks).map(rank=>id+':'+rank)).sort());
  for(const recipe of EVOLUTION_FUSIONS){assert.equal(recipe.copies,3);assert.equal(recipe.from,{rare:'commun','épique':'rare','légendaire':'épique',divine:'légendaire','éveillée':'divine'}[recipe.to]);assert.equal(recipe.mission,{rare:'01','épique':'03','légendaire':'06',divine:'09','éveillée':'12'}[recipe.to]);}
  const p=ready();
- for(const id of ['smith:divine','firebolt:rare','militia:commun','constructor']){
+ for(const id of ['golem:divine','firebolt:rare','militia:commun','constructor']){
   const before=structuredClone(p);assert.equal(fuseEvolutionCopies(p,id).ok,false);assert.deepEqual(p,before,id);
  }
- for(const ref of [{id:'smith',rarity:'divine'}])assert.equal(playableCardReference(ref),false);
+ for(const ref of [{id:'golem',rarity:'divine'}])assert.equal(playableCardReference(ref),false);
 });
 
 test('Chaque recette consomme 3 stocks du rang exact, crée 1 carte jouable et protège le deck et toute autre progression',()=>{
@@ -73,7 +74,7 @@ test('Rangs distincts, copies du deck et manque de doublons : aucun prélèvemen
  const held=structuredClone(p);assert.equal(fuseEvolutionCopies(p,'militia:épique').ok,false);assert.deepEqual(p,held);
 });
 
-test('2400 exécutions de combat avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
+test('2528 exécutions de combat avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
  for(const recipe of EVOLUTION_FUSIONS){
   const p=stocked(recipe),result=fuseEvolutionCopies(p,recipe.id);modifyDeck(p,result.target,1);
   const before=structuredClone(p);

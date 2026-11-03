@@ -5,6 +5,7 @@ import {silenced} from './battle-control.js';
 import {recordCombatEvent} from './combat-events.js';
 import {consumeAttackPenalty} from './unit-effects.js';
 import {resolveUnitDeath} from './unit-death.js';
+import {resolveSurvivedStrike} from './unit-triggers.js';
 
 import {absorbBarrier,grantAbilityBarrier} from './unit-barriers.js';
 // Préserver les imports existants des appelants.
@@ -32,6 +33,7 @@ export function hit(b,u,raw,bySide,ignoreArmor=false,attack=false,direct=null){
   recordCombatEvent(b,{type:'damage',side:u.side,lane,col,damage:Math.max(0,before-u.hp),absorbed,armor:ignoreArmor?0:Math.min(raw-1,armor)});
  }
  if(u.hp<=0){const lane=b.board.findIndex(row=>row.includes(u));if(lane>=0)resolveUnitDeath(b,u,lane,b.board[lane].indexOf(u),recordCombatEvent);}
+ if(attack&&direct?.attacker)resolveSurvivedStrike(b,u,direct.attacker,before>u.hp,silenced(b,u),recordCombatEvent);
  const deathStrike=abilities?.deathStrike,attacker=direct?.attacker;
  if(u.hp<=0&&deathStrike&&!u.deathStrikeUsed&&attack&&direct?.sameLine&&attacker?.hp>0&&attacker.side!==u.side&&
     Math.abs(direct.from-direct.to)<=deathStrike.range&&!silenced(b,{...u,hp:before})){

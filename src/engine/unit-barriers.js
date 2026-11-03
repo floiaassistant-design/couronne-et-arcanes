@@ -1,5 +1,6 @@
 // Barrières partagées par les défenses et les réactions aux morts, sans cycle.
-const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier','funeralBarrier'];
+const legacyBarrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier'];
+const barrierKeys=[...legacyBarrierKeys,'funeralBarrier','drillBarrier','scoriaBarrier','scrapBarrier'];
 export function grantCrownShield(hero,parameters){
  const before=hero.shield;
  hero.shield=Math.max(before,Math.min(parameters.cap,before+parameters.amount));
@@ -26,7 +27,7 @@ export function absorbBarrier(u,damage){
   // Conserver l'ordre et les champs historiques, sans ajouter l'état nouveau
   // aux unités qui n'ont jamais reçu de barrière funéraire.
   for(const key of barrierKeys){
-   if(key==='funeralBarrier'&&!Object.hasOwn(sources,key))continue;
+   if(!legacyBarrierKeys.includes(key)&&!Object.hasOwn(sources,key))continue;
    const used=Math.min(sources[key]||0,left);sources[key]=(sources[key]||0)-used;left-=used;
   }
   u.abilityBarriers=sources;

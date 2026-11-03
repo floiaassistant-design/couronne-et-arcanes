@@ -171,3 +171,5 @@ pas sa publication. Réutiliser le Site et le workflow existants :
 [procédure de publication](docs/PUBLICATION_WEB_2026_10_23.md).
 
 La proposition [Marteau Légendaire](docs/FORGE_MARTEAU_LEGENDAIRE.md) ajoute Coup de masse dans une PR distincte : recul après blessure au contact, sans attaque supplémentaire. Sa disponibilité reste conditionnée à la fusion de cette proposition.
+
+La proposition [Forge — hauts rangs et blindages](docs/FORGE_HAUTS_RANGS_BLINDAGES.md) prépare huit versions Divines/Éveillées du Marteau, du Foreur, du Colosse et du Marchefer, avec deux ascensions communes. Les pouvoirs et recettes du Golem et des autres hauts rangs restent distincts.

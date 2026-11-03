@@ -1,5 +1,11 @@
 # Journal des changements
 
+## En préparation — Forge, hauts rangs et blindages, 3 novembre 2026
+
+- Huit évolutions : Marteau (recul/avancée ou Fracas), Foreur (retrait 4 et récupération), Colosse (barrière après deux coups) et Marchefer (recyclage sur blessure et surplus).
+- Deux ascensions Forge communes et quatre recettes par rang, sans carte offerte ni déblocage des versions absentes ; paquets inchangés.
+- Barrières par origine, compteurs/cadences repris, tests métier, rencontres complètes et pilote navigateur partagé. [Contrat](docs/FORGE_HAUTS_RANGS_BLINDAGES.md).
+
 ## En préparation — Marteau Légendaire, 3 novembre 2026
 
 - Coup de masse : recul d’une case après une blessure au contact sur une cible survivante, après Riposte, au plus une fois tous les 3 tours.

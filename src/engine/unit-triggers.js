@@ -13,11 +13,21 @@ export function resolveStrikeDisplacement(b,u,target,{damaged,suppressed},hooks)
  const from=row.indexOf(u),col=row.indexOf(target),dir=target.side==='p'?-1:1;
  if(col-from!==dir)return false;
  const destination=col+dir*p.cells;
- if(destination<1||destination>lastCell(b)||row[destination])return false;
+ if(destination<1||destination>lastCell(b)||row[destination]){
+  if(!p.blockedDamage)return false;
+  u.knockbackReadyRound=b.round+p.period;
+  hooks.hit(b,target,p.blockedDamage,u.side);
+  return true;
+ }
  u.knockbackReadyRound=b.round+p.period;
  row[destination]=target;row[col]=null;
  hooks.emit(b,{type:'move',side:target.side,lane,from:col,to:destination,knockback:true});
  hooks.enter(b,target,lane,destination);
+ if(p.follow&&u.hp>0&&row[from]===u&&!row[col]){
+  row[col]=u;row[from]=null;
+  hooks.emit(b,{type:'move',side:u.side,lane,from,to:col,followKnockback:true});
+  hooks.enter(b,u,lane,col);
+ }
  return true;
 }
 
@@ -27,6 +37,7 @@ export function resolveStrikePreparation(b,u,target,suppressed,emit){
  const removed=absorbBarrier(target,p.amount);
  if(!removed)return 0;
  u.barrierDrillReadyRound=b.round+p.period;
+ if(p.breakBarrier&&!target.barrier)grantAbilityBarrier(u,'drillBarrier',p.breakBarrier);
  const lane=b.board.findIndex(row=>row.includes(target));
  if(lane>=0)emit(b,{type:'state',side:target.side,lane,col:b.board[lane].indexOf(target),barrierRemoved:removed});
  return removed;
@@ -35,9 +46,11 @@ export function resolveStrikePreparation(b,u,target,suppressed,emit){
 export function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,damaged,execution},emit){
  if(suppressed||u.hp<=0)return;
  const a=versionUnitAbilities(u);
- if(a.strikeWard&&(!a.strikeWard.requiresKill||killed)&&!(u.strikeWardReadyRound>b.round)){
+ if(a.strikeWard&&(a.strikeWard.requiresKill?killed:damaged)&&!(u.strikeWardReadyRound>b.round)){
   u.strikeWardReadyRound=b.round+a.strikeWard.period;
-  if(grantCrownShield(b.heroes[u.side],a.strikeWard))emit(b,{type:'state',side:u.side,lane,col});
+  const gained=grantCrownShield(b.heroes[u.side],a.strikeWard),p=a.strikeWard.overflowBarrier;
+  const barrier=p?grantAbilityBarrier(u,'scrapBarrier',{...p,amount:Math.min(p.amount,a.strikeWard.amount-gained)}):0;
+  if(gained||barrier)emit(b,{type:'state',side:u.side,lane,col});
  }
  const protect=(target,key,p)=>{if(grantAbilityBarrier(target.u,key,p))emit(b,{type:'state',side:u.side,lane:target.lane,col:target.col});};
  if(charged&&a.chargeBarrier&&(!a.chargeBarrier.requiresKill||killed)&&(!a.chargeBarrier.frequency||u.lastChargeBarrierRound!==b.round)){
@@ -56,5 +69,18 @@ export function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppre
  if(killed&&execution&&a.execution?.killHaste)u.killHasteRound=b.round+1;
  if(furious&&killed&&a.furyBarrier&&u.lastFuryBarrierRound!==b.round){
   u.lastFuryBarrierRound=b.round;protect({u,lane,col},'furyBarrier',a.furyBarrier);
+ }
+}
+
+// Une attaque directe qui retire des PV et laisse le défenseur vivant compte.
+export function resolveSurvivedStrike(b,u,attacker,damaged,suppressed,emit){
+ const p=versionUnitAbilities(u)?.scoria;
+ if(!p||suppressed||!damaged||u.hp<=0||!attacker||attacker.side===u.side)return;
+ u.scoriaHits=Math.min(p.hits,(u.scoriaHits||0)+1);
+ if(u.scoriaHits<p.hits||u.scoriaReadyRound>b.round)return;
+ u.scoriaHits=0;u.scoriaReadyRound=b.round+p.period;
+ if(grantAbilityBarrier(u,'scoriaBarrier',p)){
+  const lane=b.board.findIndex(row=>row.includes(u));
+  if(lane>=0)emit(b,{type:'state',side:u.side,lane,col:b.board[lane].indexOf(u)});
  }
 }
