@@ -31,3 +31,7 @@ Les autres Légendaires Forge **ne sont pas ajoutées dans cette PR** : Marteau 
 - Les CI de `main` obtenues avant ce travail ne valident pas ce changement ; les tests de la PR, le rendu mobile physique, l'équilibrage humain, la fusion et la publication Sites demandent des constats séparés.
 
 **Statut : proposition en cours sur branche dédiée.** Ne pas confondre avec le code intégré à `main` ou la version publique. Une autorisation explicite et spécifique est nécessaire pour fusionner. Reprendre en vérifiant main, l'état de la PR, le diff complet, l'export autonome et les contrôles du commit exact.
+
+### Vérifications locales du 3 novembre
+
+Les 624 tests Node, les 120 scénarios de parité, les builds autonome et diagnostic, la construction web et la syntaxe des quatre scripts navigateur modifiés sont réussis. L'export autonome généré localement et celui généré sur GitHub ont le même blob Git `27ba32eff561b798471ae8b2cf914fc06dc29025` (34 591 695 octets). Le générateur reconstitue aussi exactement le précédent export de main : le diff généré porte uniquement sur les cinq patches Forge. Aucun parcours Chromium local n'est revendiqué ; les quatre groupes navigateur restent à vérifier dans la CI du commit final. La préparation ponctuelle du blob est retirée de la branche avant cette validation finale ; aucun workflow permanent n'est ajouté.
