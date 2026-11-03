@@ -80,6 +80,8 @@ La nouvelle portée native 3 du Feu follet est une décision séparée du natif 
 encore au moteur ; elle exige son propre périmètre, contrôle et documentation.
 Relire Notion à la reprise, car la conception continue en parallèle.
 
+La tranche suivante, [cinq Légendaires Forge uniquement statistiques](FORGE_LEGENDAIRES_STATS.md), est préparée dans une PR distincte à partir du main du 2 novembre 2026. Elle n'est **pas intégrée** par la présente note. Le recul du Marteau, la réaction de Garde du Golem, la Foreuse et le bouclier du Marchefer restent des travaux séparés. La régénération de `JOUER.html` et la validation de la CI sur le commit exact sont obligatoires avant proposition de fusion.
+
 ## Conditions de reprise
 
 - Lire main, les branches/PR et `ETAT_PROJET.md`, rapprocher les choix de la
