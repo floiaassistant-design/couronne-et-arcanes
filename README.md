@@ -5,6 +5,7 @@ les paquets/fusions et les ascensions Aube, Sylve et Ombre. La [PR 75](https://g
 a intégré dix évolutions Rares/Épiques Forge et leur paquet à `main`,
 avec six contrôles réussis. Leur publication sur Sites reste à vérifier séparément.
 Les rangs supérieurs Forge et les évolutions Éther restent hors de cette tranche.
+Une [proposition distincte de cinq Légendaires Forge](docs/FORGE_LEGENDAIRES_STATS.md) est en préparation : elle n'est ni intégrée à `main` ni publiée tant que sa PR et son export autonome ne sont pas validés.
 [Contrat Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md).
 [État intégré et publication](docs/ETAT_PROJET.md) · [Carte des tests](docs/CARTE_TESTS.md).
 
