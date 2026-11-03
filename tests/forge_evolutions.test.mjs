@@ -14,17 +14,17 @@ import {cardPresentation} from '../src/ui/card-presentation.js';
 const expected={
  smith:[[3,6,1],[3,8,1],[4,8,1]],
  golem:[[2,12,2],[2,14,2]],
- bomb:[[4,3,2],[4,5,2]],
+ bomb:[[4,3,2],[4,5,2],[5,5,2]],
  drill:[[2,5,1],[2,7,1],[3,7,1]],
  colossus:[[6,13,4]],
- engineer:[[3,7,3]],
- cannon:[[5,7,3]],
- mechanist:[[2,8,2],[2,10,2]],
+ engineer:[[3,7,3],[3,9,3]],
+ cannon:[[5,7,3],[5,9,3]],
+ mechanist:[[2,8,2],[2,10,2],[3,10,2]],
  ironwraith:[[2,7,1],[2,9,1],[3,9,1]],
- alchemist:[[3,5,2],[3,7,2]]
+ alchemist:[[3,5,2],[3,7,2],[4,7,2]]
 };
 const forgeRecipes=EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction==='forge');
-const ready=()=>{const p=freshProfile();p.gold=2000;p.completed=['01','02','03'];return p;};
+const ready=()=>{const p=freshProfile();p.gold=2000;p.completed=['01','02','03','04','05','06'];return p;};
 function localStorageMock(){const values={};globalThis.localStorage={getItem:k=>values[k]??null,setItem:(k,v)=>{values[k]=String(v)},removeItem:k=>{delete values[k]}};}
 function stocked(recipe){
  const p=ready(),source=cardReference({id:recipe.cardId,rarity:recipe.from});
@@ -34,9 +34,9 @@ function stocked(recipe){
  return p;
 }
 
-test('Forge : dix natives inchangées, dix évolutions validées, aucun rang futur inventé',()=>{
+test('Forge : dix natives inchangées, quinze évolutions validées, aucun rang futur inventé',()=>{
  assert.deepEqual([...FORGE_UNIT_IDS].sort(),Object.keys(expected).sort());
- assert.equal(forgeRecipes.length,10);assert.equal(VERSIONED_UNIT_IDS.filter(id=>FORGE_UNIT_IDS.includes(id)).length,7);
+ assert.equal(forgeRecipes.length,15);assert.equal(VERSIONED_UNIT_IDS.filter(id=>FORGE_UNIT_IDS.includes(id)).length,9);
  assert.equal(Object.keys(CARDS).length,76);
  let total=0;
  for(const [id,totals] of Object.entries(expected)){
@@ -48,14 +48,14 @@ test('Forge : dix natives inchangées, dix évolutions validées, aucun rang fut
    else assert.equal(d.rarity,CARDS[id].rarity);
   }
   for(const rank of ['légendaire','divine','éveillée']){
-   if(rank!==CARDS[id].rarity)assert.equal(resolveUnitDefinition(id,rank),null,id+':'+rank);
+   if(!versions.some(version=>version.rarity===rank))assert.equal(resolveUnitDefinition(id,rank),null,id+':'+rank);
   }
  }
- assert.equal(total,20);
+ assert.equal(total,25);
  const p=freshProfile();assert.deepEqual(normalizeProfile(p),p);assert.equal(p.evolvedCollection,undefined);
 });
 
-test('Dix évolutions : capacités natives et géométrie héritées à l’identique',()=>{
+test('Quinze évolutions : capacités natives et géométrie héritées à l’identique',()=>{
  const a=(id,r='épique')=>resolveUnitDefinition(id,r).abilities;
  assert.equal(a('golem').armor.amount,2);assert.equal(a('golem').guard.scope,'positioned');assert.equal(a('golem').riposte.damageMode,'effective-attack');
  assert.equal(a('bomb').splash.amount,2);assert.equal(a('bomb').splash.target,'contiguous-enemies-behind-primary');
@@ -65,13 +65,13 @@ test('Dix évolutions : capacités natives et géométrie héritées à l’iden
  assert.deepEqual([a('alchemist').poison.amount,a('alchemist').poison.resolutions],[1,2]);
  assert.deepEqual(Object.keys(a('smith')),[]);assert.equal(a('golem').flying,undefined);
  assert.equal(a('bomb').guard,undefined);assert.equal(a('drill').riposte,undefined);
- assert.equal(evolutionFusionFor('colossus','divine'),null);assert.equal(evolutionFusionFor('engineer','légendaire'),null);
+ assert.equal(evolutionFusionFor('colossus','divine'),null);assert.ok(evolutionFusionFor('engineer','légendaire'));
  assert.equal(playableCardReference({id:'smith',rarity:'légendaire'}),false);
 });
 
 test('Fusions Forge : trois copies libres du rang exact, mission requise et deck protégé',()=>{
  for(const recipe of forgeRecipes){
-  assert.equal(recipe.copies,3);assert.equal(recipe.mission,recipe.to==='rare'?'01':'03');assert.equal(recipe.ascension,undefined);
+  assert.equal(recipe.copies,3);assert.equal(recipe.mission,recipe.to==='rare'?'01':recipe.to==='épique'?'03':'06');assert.equal(recipe.ascension,undefined);
   const p=stocked(recipe),before=structuredClone(p);
   assert.equal(previewEvolutionFusion(p,recipe.id).ok,true);
   const result=fuseEvolutionCopies(p,recipe.id);assert.equal(result.ok,true,recipe.id);
@@ -101,7 +101,7 @@ test('Paquet Forge : 7 natives, 3 Rares, 7 Épiques ; aucun mélange ni rang sup
   assert.equal(playableCardReference(ref),true);
   if(typeof ref==='object')assert.ok(['rare','épique'].includes(ref.rarity));
  }
- for(const recipe of forgeRecipes)assert.equal(evolutionPackFor(recipe.cardId,recipe.to)?.id,'forge-evolution');
+ for(const recipe of forgeRecipes)assert.equal(evolutionPackFor(recipe.cardId,recipe.to)?.id,recipe.to==='légendaire'?undefined:'forge-evolution');
  for(const id of ['colossus','engineer','cannon'])assert.equal(evolutionPackFor(id,'légendaire'),null);
  assert.deepEqual(cardPack('aube-evolution').groups.map(g=>g.cards.length),[8,4,8]);
  assert.deepEqual(cardPack('sylve-evolution').groups.map(g=>g.cards.length),[9,6,9]);
@@ -126,7 +126,7 @@ test('Chaque Rare/Épique Forge peut être tirée, sauvegardée, mise au deck et
  assert.notDeepEqual(p,before);
 });
 
-test('Laboratoire : 20 versions Forge × 4 niveaux × 2 camps, aucun gain réel',()=>{
+test('Laboratoire : 25 versions Forge × 4 niveaux × 2 camps, aucun gain réel',()=>{
  for(const id of FORGE_UNIT_IDS)for(const [i,def] of unitVersions(id).entries())for(const level of [0,1,2,3])for(const side of ['p','e']){
   const lab=freshLab();
   assert.equal(setLabRarity(lab,side,id,def.rarity).ok,true);
@@ -146,5 +146,27 @@ test('Fiches Forge : versions définies lisibles et futures non jouables',()=>{
   assert.equal(d.stats.delay,CARDS[recipe.cardId].delay);
   assert.ok(view.card.description.length>0);
   assert.equal(view.card.id,recipe.cardId);
+ }
+});
+
+test('Forge Légendaire : cinq gains de statistiques sans pouvoir ajouté ni accès avant mission 06',()=>{
+ const cases={bomb:[5,5,2],engineer:[3,9,3],cannon:[5,9,3],mechanist:[3,10,2],alchemist:[4,7,2]};
+ for(const [id,totals] of Object.entries(cases)){
+  const epic=resolveUnitDefinition(id,'épique'),legend=resolveUnitDefinition(id,'légendaire');
+  assert.deepEqual([legend.stats.attack,legend.stats.hp,legend.stats.delay],totals);
+  assert.deepEqual(legend.abilities,epic.abilities,id+' : capacités inchangées');
+  assert.deepEqual(legend.geometry,epic.geometry,id+' : géométrie inchangée');
+  assert.equal(legend.status.obtaining,'fusion');
+  const recipe=evolutionFusionFor(id,'légendaire');assert.equal(recipe.from,'épique');
+  assert.equal(recipe.mission,'06');assert.equal(recipe.copies,3);assert.equal(recipe.ascension,undefined);
+  assert.equal(evolutionPackFor(id,'légendaire'),null);
+  const profile=stocked(recipe);profile.completed=['01','02','03','04','05'];
+  const before=structuredClone(profile);assert.equal(fuseEvolutionCopies(profile,recipe.id).ok,false);
+  assert.deepEqual(profile,before,'une mission manquante ne consomme pas de copies');
+  profile.completed.push('06');assert.equal(fuseEvolutionCopies(profile,recipe.id).ok,true);
+  assert.equal(ownedCardCopies(profile,{id,rarity:'légendaire'}),1);
+ }
+ for(const id of ['smith','golem','drill','ironwraith']){
+  assert.equal(resolveUnitDefinition(id,'légendaire'),null,'mécanique de haut rang encore absente');
  }
 });

@@ -1,4 +1,4 @@
-"""Fusions Légendaires Sylve/Ombre, vrai combat et reprise des effets dans le jeu distribué."""
+"""Fusions Légendaires Sylve/Ombre/Forge, vrai combat et reprise dans le jeu distribué."""
 import argparse,asyncio,copy,json,subprocess,threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
@@ -11,6 +11,7 @@ BATTLE='couronnes_arcanes_bataille_v1'
 SCENARIOS={
     'sylve':{'card':'owl','stats':(3,5),'effect':'attackPenalty','status':'Harcèlement','detail':['Harcèlement','−1 ATQ','fusion'],'future':'Ascension requise'},
     'ombre':{'card':'plague','stats':(4,7),'effect':'poisonTurns','status':'Poison 2 tour(s)','detail':['Poison 1','2 tours','fusion'],'future':'Ascension requise'},
+    'forge':{'card':'alchemist','stats':(4,7),'effect':'poisonTurns','status':'Poison 2 tour(s)','detail':['Poison 1','2 tours','fusion'],'future':'À concevoir'},
 }
 PROFILE_SCRIPT="import {freshProfile} from './src/engine.js';const p=freshProfile(),id=process.argv[1];p.completed=['01','02','03','04','05'];p.unlocked=6;p.guideSeen=true;p.evolvedCollection={[id+':épique']:3};p.deck[0]={id,rarity:'épique'};console.log(JSON.stringify(p));"
 PROFILES={name:json.loads(subprocess.check_output(['node','--input-type=module','-e',PROFILE_SCRIPT,cfg['card']],cwd=ROOT)) for name,cfg in SCENARIOS.items()}

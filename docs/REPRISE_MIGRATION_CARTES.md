@@ -80,6 +80,8 @@ La nouvelle portée native 3 du Feu follet est une décision séparée du natif 
 encore au moteur ; elle exige son propre périmètre, contrôle et documentation.
 Relire Notion à la reprise, car la conception continue en parallèle.
 
+La tranche suivante, [cinq Légendaires Forge uniquement statistiques](FORGE_LEGENDAIRES_STATS.md), est préparée dans la [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78) à partir du main du 2 novembre 2026. Elle n'est **pas intégrée** par la présente note. `JOUER.html` a été régénéré, les références de fusion et de Collection actualisées et le parcours navigateur Légendaire partagé étendu à Forge. La CI du commit final et la revue complète restent obligatoires avant proposition de fusion. Le recul du Marteau, la réaction de Garde du Golem, la Foreuse et le bouclier du Marchefer restent des travaux séparés.
+
 ## Conditions de reprise
 
 - Lire main, les branches/PR et `ETAT_PROJET.md`, rapprocher les choix de la

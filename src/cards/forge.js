@@ -1,4 +1,4 @@
-// Première tranche Forge : données validées, sans retouche des versions natives.
+// Forge : Rares/Épiques et cinq Légendaires de statistiques validées ; natifs inchangés.
 import {freezeCardData} from './schema.js';
 
 export const FORGE_DESIGN_SOURCE=freezeCardData({
@@ -8,9 +8,11 @@ export const FORGE_DESIGN_SOURCE=freezeCardData({
 export const FORGE_EVOLUTIONS=freezeCardData({
  smith:{rare:{stats:{hp:8}},'épique':{stats:{attack:4}}},
  golem:{'épique':{stats:{hp:14}}},
- bomb:{'épique':{stats:{hp:5}}},
+ bomb:{'épique':{stats:{hp:5}},'légendaire':{stats:{attack:5}}},
  drill:{rare:{stats:{hp:7}},'épique':{stats:{attack:3}}},
- mechanist:{'épique':{stats:{hp:10}}},
+ engineer:{'légendaire':{stats:{hp:9}}},
+ cannon:{'légendaire':{stats:{hp:9}}},
+ mechanist:{'épique':{stats:{hp:10}},'légendaire':{stats:{attack:3}}},
  ironwraith:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}}},
- alchemist:{'épique':{stats:{hp:7}}}
+ alchemist:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}}}
 });

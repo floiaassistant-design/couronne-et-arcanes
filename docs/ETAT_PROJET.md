@@ -94,6 +94,7 @@ La publication du main intégrant ces lots est suivie indépendamment de leur fu
 - Relire les validations Notion les plus récentes à chaque tranche ; préparer
   séparément les hauts rangs Forge encore absents et les évolutions Éther,
   sans appliquer implicitement leurs décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
+- Terminer la revue des [cinq Légendaires Forge de statistiques](FORGE_LEGENDAIRES_STATS.md) dans la [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78) : export hors ligne régénéré, références des tests actualisées et parcours navigateur Forge ajouté ; CI du commit final puis accord spécifique requis. Proposition non fusionnée, non publiée.
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 
