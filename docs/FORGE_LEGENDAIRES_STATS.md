@@ -24,8 +24,10 @@ Les autres Légendaires Forge **ne sont pas ajoutées dans cette PR** : Marteau 
 
 - `src/cards/forge.js` : valeurs seules ; `cards/evolutions.js`, `cards/definitions.js` et `evolution-fusion.js` assurent la composition, les fiches, les règles et l’obtention sans duplication.
 - `tests/forge_evolutions.test.mjs` : totaux, héritage, absence des autres rangs, mission 06, trois copies exactes, refus sans mutation, paquets inchangés, import/export, poses réelles, laboratoire deux camps/quatre niveaux.
+- `tests/evolution_fusion.test.mjs` vérifie les 147 recettes, dont les cinq nouvelles Légendaires Forge, leurs valeurs exactes, les transactions et 2 352 exécutions déterministes. Les attentes de Collection et de fusion navigateur incluent les nouvelles versions sans retirer les contrôles des rangs encore absents.
+- Le pilote navigateur Légendaire partagé ajoute l'Alchimiste Forge : boss 06, copies du deck protégées, annulation, panne de stockage, double clic, fusion réelle, Collection/deck, export/import, invocation avec délai réel, Poison et reprise. Les quatre parties existantes l'exécutent sans nouvelle commande de matrice.
 - Vérifications à effectuer **sur la tête exacte de la PR** : `npm test`, `npm run test:parity`, `npm run build`, `npm run build:test`, navigateur et synchronisation de l'export.
-- `JOUER.html` doit être **régénéré par `npm run build` depuis les sources** et présent dans la PR, jamais modifié manuellement. Si l'export n'est pas encore synchronisé, la tranche est **incomplète, non fusionnable**.
+- `JOUER.html` est **régénéré par `npm run build` depuis les sources**, avec les 77 modules et 76 illustrations existants, jamais modifié manuellement. Le contrôle strict de synchronisation doit rester réussi sur le commit proposé.
 - Les CI de `main` obtenues avant ce travail ne valident pas ce changement ; les tests de la PR, le rendu mobile physique, l'équilibrage humain, la fusion et la publication Sites demandent des constats séparés.
 
 **Statut : proposition en cours sur branche dédiée.** Ne pas confondre avec le code intégré à `main` ou la version publique. Une autorisation explicite et spécifique est nécessaire pour fusionner. Reprendre en vérifiant main, l'état de la PR, le diff complet, l'export autonome et les contrôles du commit exact.

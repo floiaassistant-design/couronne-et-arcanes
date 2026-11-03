@@ -4,6 +4,7 @@
 
 - Cinq versions proposées : Sapeur gobelin (+1 ATQ), Ingénieure d’acier (+2 PV), Canon des Terres Rouges (+2 PV), Mécaniste des Hauts-Fours (+1 ATQ) et Alchimiste des Braises (+1 ATQ), sans nouveau pouvoir.
 - Fusion de trois Épiques libres après mission 06 ; paquets et sauvegardes historiques inchangés. [Contrat et limites](docs/FORGE_LEGENDAIRES_STATS.md).
+- Export autonome régénéré, références des 147 recettes et des cinq nouvelles versions de Collection actualisées ; parcours Légendaire partagé étendu à l'Alchimiste Forge, avec Poison réel et reprise.
 - **Non intégré / non publié** avant revue, export `JOUER.html` régénéré, contrôles GitHub exacts et accord explicite de fusion.
 
 ## Intégré — Forge Rare / Épique, 2 novembre 2026
