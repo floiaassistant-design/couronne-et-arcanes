@@ -74,7 +74,7 @@ async def run(browser,label,viewport,faction='aube'):
             'engineer':[None,None,7,9,None,None],
             'cannon':[None,None,7,9,None,None],
             'mechanist':[None,8,10,10,None,None],
-            'ironwraith':[7,9,9,None,None,None],
+            'ironwraith':[7,9,9,9,None,None],
             'alchemist':[None,5,7,7,None,None]
         }.get(card_id)
         native=await row.locator('[data-current-version="true"]').get_attribute('data-collection-rarity')

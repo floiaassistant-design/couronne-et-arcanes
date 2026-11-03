@@ -142,6 +142,10 @@
   Riposte à l'ATQ effective, bonus compris, sans Charge.
 - Barrières : plafonds propres à chaque effet, sans réduire un surplus préexistant.
   Les objets des instantanés d'événements ne doivent pas partager d'état mutable.
+- Bouclier de couronne : réutiliser `grantCrownShield` et les paramètres du registre,
+  sans réduire un surplus préexistant. Les quotas déclenchés par les attaques sont
+  propres à l'invocation, facultatifs et validés à la reprise ; une élimination
+  directe ne se confond pas avec une Riposte, un poison ou un dégât secondaire.
 - `unit-effects.js` partage malus d'attaque, poison paramétré et régénération.
   L'ATQ permanente ne change pas ; malus consommé à la prochaine intention d'attaque
   ou Riposte valide, bonus inclus, minimum zéro. Pas de consommation par sort ni

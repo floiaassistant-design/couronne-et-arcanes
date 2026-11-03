@@ -11,14 +11,15 @@ BATTLE='couronnes_arcanes_bataille_v1'
 SCENARIOS={
     'sylve':{'card':'owl','stats':(3,5),'effect':'attackPenalty','status':'Harcèlement','detail':['Harcèlement','−1 ATQ','fusion'],'future':'Ascension requise'},
     'ombre':{'card':'plague','stats':(4,7),'effect':'poisonTurns','status':'Poison 2 tour(s)','detail':['Poison 1','2 tours','fusion'],'future':'Ascension requise'},
+    'forge-scrap':{'card':'ironwraith','faction':'forge','stats':(3,9),'effect':'strikeWardReadyRound','effectSide':'p','status':'Ferraille récupérée','detail':['Ferraille récupérée','plafond 20','3 tours','fusion'],'future':'À concevoir'},
     'forge':{'card':'alchemist','stats':(4,7),'effect':'poisonTurns','status':'Poison 2 tour(s)','detail':['Poison 1','2 tours','fusion'],'future':'À concevoir'},
 }
 PROFILE_SCRIPT="import {freshProfile} from './src/engine.js';const p=freshProfile(),id=process.argv[1];p.completed=['01','02','03','04','05'];p.unlocked=6;p.guideSeen=true;p.evolvedCollection={[id+':épique']:3};p.deck[0]={id,rarity:'épique'};console.log(JSON.stringify(p));"
 PROFILES={name:json.loads(subprocess.check_output(['node','--input-type=module','-e',PROFILE_SCRIPT,cfg['card']],cwd=ROOT)) for name,cfg in SCENARIOS.items()}
-PLAN="""import {createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn} from './src/engine.js';import {CAMPAIGN} from './src/data.js';const p=JSON.parse(process.argv[1]),id=process.argv[2],effect=process.argv[3];let found=null;const enemy=b=>{for(let n=0;n<2&&b.status==='active';n++)if(playEnemyCard(b).done)break;if(b.status==='active')finishEnemyTurn(b);};for(let seed=1;seed<=1000&&!found;seed++){const b=createBattle(p,CAMPAIGN[5],seed,{turnFlow:'alternating'});let i=b.heroes.p.hand.findIndex(c=>c.id===id&&c.rarity==='légendaire'),opening=0;if(i<0)continue;while(b.heroes.p.hand[i].wait>0&&opening<4&&b.status==='active'){endPlayerTurn(b);enemy(b);opening++;i=b.heroes.p.hand.findIndex(c=>c.id===id&&c.rarity==='légendaire');}if(b.status!=='active'||!playPlayerCard(b,i,0,1).ok)continue;for(let turn=1;turn<=10&&b.status==='active';turn++){endPlayerTurn(b);const target=b.board.flat().find(u=>u?.side==='e'&&u[effect]);if(target){found={seed,turn,opening};break;}enemy(b);}}if(!found)throw Error('Aucune graine de combat normale trouvée');console.log(JSON.stringify(found));"""
+PLAN="""import {createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn} from './src/engine.js';import {CAMPAIGN} from './src/data.js';const p=JSON.parse(process.argv[1]),id=process.argv[2],effect=process.argv[3],effectSide=process.argv[4]||'e';let found=null;const enemy=b=>{for(let n=0;n<2&&b.status==='active';n++)if(playEnemyCard(b).done)break;if(b.status==='active')finishEnemyTurn(b);};for(let seed=1;seed<=1000&&!found;seed++){const b=createBattle(p,CAMPAIGN[5],seed,{turnFlow:'alternating'});let i=b.heroes.p.hand.findIndex(c=>c.id===id&&c.rarity==='légendaire'),opening=0;if(i<0)continue;while(b.heroes.p.hand[i].wait>0&&opening<4&&b.status==='active'){endPlayerTurn(b);enemy(b);opening++;i=b.heroes.p.hand.findIndex(c=>c.id===id&&c.rarity==='légendaire');}if(b.status!=='active'||!playPlayerCard(b,i,0,1).ok)continue;for(let turn=1;turn<=10&&b.status==='active';turn++){endPlayerTurn(b);const target=b.board.flat().find(u=>u?.side===effectSide&&u[effect]);if(target){found={seed,turn,opening};break;}enemy(b);}}if(!found)throw Error('Aucune graine de combat normale trouvée');console.log(JSON.stringify(found));"""
 
 async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
-    cfg=SCENARIOS[scenario];card_id=cfg['card'];source=card_id+':épique';target_key=card_id+':légendaire';profile_before=PROFILES[scenario]
+    cfg=SCENARIOS[scenario];faction=cfg.get('faction',scenario);card_id=cfg['card'];source=card_id+':épique';target_key=card_id+':légendaire';profile_before=PROFILES[scenario]
     touch=label in ('portrait','landscape')
     ctx=await browser.new_context(viewport=viewport,has_touch=touch,offline=not bool(url),reduced_motion='reduce',accept_downloads=True)
     page=await ctx.new_page();errors=[];external=[]
@@ -53,7 +54,7 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
     assert 'aucun exemplaire consommé' in await page.locator('#toast').inner_text()
     await page.reload();await nav('alchemy');await prepare();await page.locator('.modal [data-action="evolution-fusion-confirm"]').dblclick()
     fused=await saved();expected=copy.deepcopy(baseline);expected['evolvedCollection']={source:0,target_key:1};assert fused==expected
-    await nav('collection');await click(page.locator(f'[data-action="collection-faction"][data-id="{scenario}"]'))
+    await nav('collection');await click(page.locator(f'[data-action="collection-faction"][data-id="{faction}"]'))
     row=page.locator(f'[data-collection-character="{card_id}"]');assert await row.locator('td').count()==6
     assert 'Possédée ×1' in await row.locator('[data-collection-rarity="légendaire"]').inner_text()
     for rank in ['divine','éveillée']:assert cfg['future'] in await row.locator(f'[data-collection-rarity="{rank}"]').inner_text()
@@ -70,7 +71,7 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
     async with page.expect_download() as info:await click(page.locator('[data-action="export-save"]'))
     exported=json.loads(Path(await (await info.value).path()).read_text());assert exported==profile
     await page.locator('#import-file').set_input_files({'name':'sylve-legend.json','mimeType':'application/json','buffer':json.dumps(exported).encode()});await page.locator('#view .hero-copy').wait_for();assert await saved()==profile
-    plan=json.loads(subprocess.check_output(['node','--input-type=module','-e',PLAN,json.dumps(profile),card_id,cfg['effect']],cwd=ROOT))
+    plan=json.loads(subprocess.check_output(['node','--input-type=module','-e',PLAN,json.dumps(profile),card_id,cfg['effect'],cfg.get('effectSide','e')],cwd=ROOT))
     # Horloge de test : observer la sauvegarde entre les deux camps, sans changer le moteur.
     await page.clock.install(time='2026-10-29T00:00:00Z')
     await page.clock.pause_at('2026-10-29T00:00:01Z')
@@ -86,11 +87,17 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
     b=await saved(BATTLE);u=b['board'][0][1];assert (u['rarity'],u['atk'],u['maxhp'])==('légendaire',*cfg['stats'])
     found=False;trace=[]
     for turn in range(1,plan['turn']+1):
+        shield_before=(await saved(BATTLE))['heroes']['p']['shield']
         await page.locator('[data-action="end-turn"]:enabled').wait_for();await click(page.locator('[data-action="end-turn"]'))
-        b=await saved(BATTLE);targets=[u for row in b['board'] for u in row if u and u['side']=='e' and u.get(cfg['effect'])]
+        b=await saved(BATTLE);targets=[u for row in b['board'] for u in row if u and u['side']==cfg.get('effectSide','e') and u.get(cfg['effect'])]
         trace.append({'round':b['round'],'phase':b['phase'],'units':[(u['id'],u['side'],u['hp'],u.get(cfg['effect'])) for row in b['board'] for u in row if u]})
         if targets:
-            target=targets[0];assert target[cfg['effect']]==({'amount':1,'remaining':1} if scenario=='sylve' else 2);found=True;break
+            target=targets[0]
+            if scenario=='forge-scrap':
+                assert target[cfg['effect']]==b['round']+3
+                assert b['heroes']['p']['shield']==max(shield_before,min(20,shield_before+2))
+            else:assert target[cfg['effect']]==({'amount':1,'remaining':1} if scenario=='sylve' else 2)
+            found=True;break
         await page.clock.run_for(1000)
         await page.wait_for_function("()=>{const b=JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'));return b&&(b.phase==='player'||b.status!=='active')}")
     assert found,(plan,trace)

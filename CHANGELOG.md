@@ -1,5 +1,11 @@
 # Journal des changements
 
+## En préparation — Marchefer Légendaire, 3 novembre 2026
+
+- Ferraille récupérée : une attaque normale éliminant une unité ennemie rend 2 boucliers à sa couronne, plafond 20, au plus une fois tous les 3 tours ; Protection +3 et statistiques 3/9/1 conservées.
+- Fusion de trois Épiques libres après mission 06, quota par invocation sauvegardé et validé ; paquets et sauvegardes historiques conservés.
+- Primitive de bouclier partagée, tests de combat et parcours navigateur réel ; proposition distincte, non fusionnée et non publiée. [Contrat](docs/FORGE_MARCHEFER_LEGENDAIRE.md).
+
 ## En préparation — cinq Légendaires Forge à statistiques, 3 novembre 2026
 
 - Cinq versions proposées : Sapeur gobelin (+1 ATQ), Ingénieure d’acier (+2 PV), Canon des Terres Rouges (+2 PV), Mécaniste des Hauts-Fours (+1 ATQ) et Alchimiste des Braises (+1 ATQ), sans nouveau pouvoir.

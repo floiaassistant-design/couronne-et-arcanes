@@ -6,6 +6,7 @@ a intégré dix évolutions Rares/Épiques Forge et leur paquet à `main`,
 avec six contrôles réussis. Leur publication sur Sites reste à vérifier séparément.
 Les rangs supérieurs Forge et les évolutions Éther restent hors de cette tranche.
 Une [proposition distincte de cinq Légendaires Forge](docs/FORGE_LEGENDAIRES_STATS.md) est en préparation : elle n'est ni intégrée à `main` ni publiée tant que sa PR et son export autonome ne sont pas validés.
+La [suite Marchefer Légendaire](docs/FORGE_MARCHEFER_LEGENDAIRE.md) prépare son pouvoir de récupération de bouclier après élimination, dans une PR distincte et dépendante du lot précédent. Ce pouvoir n'est pas encore intégré ou publié.
 [Contrat Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md).
 [État intégré et publication](docs/ETAT_PROJET.md) · [Carte des tests](docs/CARTE_TESTS.md).
 
