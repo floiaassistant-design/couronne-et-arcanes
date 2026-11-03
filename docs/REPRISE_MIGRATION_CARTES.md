@@ -81,11 +81,11 @@ Relire Notion à la reprise, car la conception continue en parallèle.
 
 Les [cinq Légendaires Forge de statistiques](FORGE_LEGENDAIRES_STATS.md) sont intégrées par la [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78) le 3 novembre 2026, au commit `304e20f1f0d8a5007948ddba6577990d7a5f2123`, avec accord spécifique, six contrôles réussis et export synchronisé. Le Marchefer a ensuite été intégré par la PR 79 ; Foreur, Golem et Marteau restent des tranches distinctes. Aucun succès de la PR 78 ne valide leurs nouveaux pouvoirs.
 
-La [proposition Foreur Légendaire](FORGE_FOREUR_LEGENDAIRE.md) suit le Marchefer : une évolution de plus, 27 versions Forge et 149 recettes dans sa branche, sans activer les rangs Divin/Éveillé, le Marteau ou le Golem.
+Le [Foreur Légendaire](FORGE_FOREUR_LEGENDAIRE.md) est intégré par PR 80 au commit `7d3d6d4` : 27 versions Forge, 17 évolutions Forge et 149 recettes après cette fusion. Le Marteau est la proposition suivante ; le Golem reste distinct.
 
 ## Conditions de reprise
 
-Le [Marchefer Légendaire](FORGE_MARCHEFER_LEGENDAIRE.md) est intégré par la PR 79 au commit `5a70b0c135c938f2417d0d499ea6ab821266dab5`, après accord spécifique et six contrôles réussis : 26 versions Forge, 16 évolutions Forge et 148 recettes au total sur main. Golem et Marteau restent absents au rang Légendaire ; le Foreur est proposé séparément. Cœur runique exige toujours de résoudre le raccordement entre ciblage direct du gardien normal et interception d'une attaque de couronne, sans réinterpréter la validation Notion.
+Marchefer et Foreur sont intégrés par PR 79 et 80. Golem et Marteau demeurent absents du main observé avant cette proposition. Cœur runique exige de résoudre le raccordement entre ciblage direct du gardien normal et interception de couronne, sans réinterpréter la validation Notion.
 
 - Lire main, les branches/PR et `ETAT_PROJET.md`, rapprocher les choix de la
   dernière édition Notion. Les anciens bilans sont historiques.

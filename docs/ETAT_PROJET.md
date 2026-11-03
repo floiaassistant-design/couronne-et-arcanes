@@ -102,7 +102,7 @@ La publication du main intégrant ces lots est suivie indépendamment de leur fu
   séparément les hauts rangs Forge encore absents et les évolutions Éther,
   sans appliquer implicitement leurs décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
 - Raccorder le futur Cœur runique du Golem à une interception effective : la Garde normale cible directement le gardien et ne passe pas par l'interception de couronne requise. Respecter les règles validées, sans attribuer le bonus à tous les coups reçus.
-- Le [Foreur Légendaire](FORGE_FOREUR_LEGENDAIRE.md) est intégré par PR 80. Préparer le [Marteau Légendaire](FORGE_MARTEAU_LEGENDAIRE.md) dans une tranche distincte du Marchefer : retrait de barrière avant frappe, cadence sauvegardée, même moteur et accès de fusion. Proposition Marteau non fusionnée, non publiée ; CI du commit final et revue requises. Le propriétaire a explicitement autorisé cette session la fusion des lots prêts après contrôles, sans attente de nouvelle confirmation.
+- Le Foreur est intégré par PR 80. Préparer le [Marteau Légendaire](FORGE_MARTEAU_LEGENDAIRE.md) : recul au contact après perte de PV, cases libres et cadence sauvegardée. Proposition non fusionnée, non publiée ; CI finale et revue requises. Le propriétaire a explicitement autorisé cette session la fusion des lots prêts après contrôles.
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 
