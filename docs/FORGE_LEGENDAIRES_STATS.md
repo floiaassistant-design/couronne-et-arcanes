@@ -30,7 +30,7 @@ Les autres Légendaires Forge **ne sont pas ajoutées dans cette PR** : Marteau 
 - `JOUER.html` est **régénéré par `npm run build` depuis les sources**, avec les 77 modules et 76 illustrations existants, jamais modifié manuellement. Le contrôle strict de synchronisation doit rester réussi sur le commit proposé.
 - Les CI de `main` obtenues avant ce travail ne valident pas ce changement ; les tests de la PR, le rendu mobile physique, l'équilibrage humain, la fusion et la publication Sites demandent des constats séparés.
 
-**Statut : intégrée par la PR 78**, après accord du propriétaire et six contrôles réussis, au commit `304e20f1f0d8a5007948ddba6577990d7a5f2123`. L'arbre intégré `124b28ad899e225c93baf150ab87ea145deff4cb` est identique à la tête testée `96a0db4`. La publication Sites reste distincte et suivie par le flux existant.
+**Statut : intégrée par la PR 78**, après accord du propriétaire et six contrôles réussis, au commit `304e20f1f0d8a5007948ddba6577990d7a5f2123`. L'arbre intégré `124b28ad899e225c93baf150ab87ea145deff4cb` est identique à la tête testée `96a0db4`. La publication est confirmée le 3 novembre dans la version Sites 23, via le flux existant, au même commit GitHub et arbre vérifiés.
 
 ### Vérifications locales du 3 novembre
 

@@ -5,7 +5,7 @@ les paquets/fusions et les ascensions Aube, Sylve et Ombre. La [PR 75](https://g
 a intégré dix évolutions Rares/Épiques Forge et leur paquet à `main`,
 avec six contrôles réussis. Leur publication sur Sites reste à vérifier séparément.
 Les autres hauts rangs Forge et les évolutions Éther font l’objet de lots séparés.
-Les [cinq Légendaires Forge de statistiques](docs/FORGE_LEGENDAIRES_STATS.md) sont intégrées par la PR 78 le 3 novembre 2026, avec leurs fusions et leur export synchronisé. Leur publication Sites reste distincte.
+Les [cinq Légendaires Forge de statistiques](docs/FORGE_LEGENDAIRES_STATS.md) sont intégrées par la PR 78 le 3 novembre 2026, avec leurs fusions et leur export synchronisé. Leur publication est confirmée dans la version Sites 23.
 Le [Marchefer Légendaire](docs/FORGE_MARCHEFER_LEGENDAIRE.md) et sa récupération de bouclier après élimination sont intégrés par la PR 79 le 3 novembre 2026. La publication reste suivie séparément.
 Le [Foreur Légendaire](docs/FORGE_FOREUR_LEGENDAIRE.md) est proposé séparément : Foreuse d'acier retire jusqu'à 2 points de barrière personnelle avant l'attaque normale, au plus une fois tous les 3 tours. Ce lot reste soumis à revue et validation.
 [Contrat Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md).

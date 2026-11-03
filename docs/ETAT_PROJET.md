@@ -12,7 +12,7 @@ La [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75)
 
 ## Forge — cinq Légendaires de statistiques intégrées le 3 novembre
 
-La [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78) est fusionnée après autorisation et six contrôles réussis au commit `304e20f1f0d8a5007948ddba6577990d7a5f2123`. Arbre `124b28ad899e225c93baf150ab87ea145deff4cb` identique à la tête testée ; export `27ba32eff561b798471ae8b2cf914fc06dc29025` synchronisé. Cinq versions supplémentaires par fusion après mission 06, sans nouveau pouvoir ni changement de paquet. Publication suivie indépendamment par le flux Sites existant.
+La [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78) est fusionnée après autorisation et six contrôles réussis au commit `304e20f1f0d8a5007948ddba6577990d7a5f2123`. Arbre `124b28ad899e225c93baf150ab87ea145deff4cb` identique à la tête testée ; export `27ba32eff561b798471ae8b2cf914fc06dc29025` synchronisé. Cinq versions supplémentaires par fusion après mission 06, sans nouveau pouvoir ni changement de paquet. Publication confirmée dans la version Sites 23 par le flux existant.
 
 ## Forge — Marchefer Légendaire intégré le 3 novembre
 
@@ -74,12 +74,7 @@ L'autorisation explicite du propriétaire est conservée ; aucune fusion
 automatique. Les PR constituent les journaux des travaux en cours et portent
 leurs preuves de tests et points de reprise. `AGENTS.md` fixe les règles.
 
-La distribution du jeu est séparée de la fusion. Le suivi de publication
-existant a confirmé le 2 novembre 2026 la **version publique 22**, basée sur
-le commit GitHub `afdf6543761dd04c832e268f7d5f261cb23addf6` (PR 72),
-avec le commit Sites `10f7143b06bce3a24a61f5ae5462cdea70064714`.
-Ce constat ne prouve pas la publication des PR 73 et 75. Vérifier le paquet
-exact et le flux existant, sans lancer de publication parallèle.
+La distribution du jeu est séparée de la fusion. Le suivi existant a confirmé le 3 novembre 2026 la **version publique 23**, basée sur le commit GitHub `304e20f1f0d8a5007948ddba6577990d7a5f2123` (PR 78, avec les lots précédents), arbre `124b28ad899e225c93baf150ab87ea145deff4cb` et commit Sites `84f92835a71f7f2f3d5a2178d8700e147c23f6ea`. Empreintes et fichiers diffusés ont été vérifiés, audience publique conservée. La publication du Marchefer (PR 79, commit `5a70b0c`) reste distincte et en attente de confirmation dans le suivi existant ; aucune publication concurrente n'est lancée.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
 [Procédure de publication](PUBLICATION_WEB_2026_10_23.md)
