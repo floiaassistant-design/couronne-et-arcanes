@@ -29,3 +29,7 @@ Le nouveau champ facultatif `strikeWardReadyRound` est propre à l'unité du com
 Le Golem Légendaire n'est pas activé. Son Cœur runique exige une attaque visant la couronne interceptée par Garde ; `findTarget` choisit d'abord le gardien normal situé devant cette couronne comme cible d'unité. Le chemin d'interception de couronne ne s'exécute donc pas pour ce cas. Compter une attaque visant directement le Golem changerait la condition Notion : aucune telle réinterprétation n'est appliquée ici. La règle de ciblage/Garde et ce pouvoir demandent une résolution explicite de leur interaction avant livraison.
 
 Marteau Légendaire et Foreur Légendaire restent des travaux séparés, comme les hauts rangs Forge. Aucun nouvel actif ni équilibrage natif. Chromium automatisé ne démontre ni l'équilibrage humain ni le fonctionnement sur téléphone physique ; fusion et publication Sites restent distinctes.
+
+## Vérifications locales du 3 novembre
+
+635 tests Node et 120 scénarios de parité réussis ; builds autonome/diagnostic, construction web, syntaxe Python et contrôles du pipeline réussis. Le plan du parcours navigateur trouve une élimination normale avec la graine 24, sans modification de PV ni attribution artificielle de gain. Export généré de 34 592 625 octets, blob Git `4216ff778b363fdaf87e53a7dcd77c2ada7c17fe`. La préparation ponctuelle de ce blob est retirée du diff final ; la CI complète du dernier commit reste la référence des parcours Chromium.

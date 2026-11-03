@@ -5268,7 +5268,7 @@ Object.assign(__exports,{OMBRE_DESIGN_SOURCE,OMBRE_EVOLUTIONS});
 
 },
 "src/cards/forge.js":function(__exports,__load){
-// Forge : Rares/Épiques et cinq Légendaires de statistiques validées ; natifs inchangés.
+// Forge : Rares/Épiques, cinq Légendaires de statistiques et Ferraille récupérée ; natifs inchangés.
 const {freezeCardData}=__load("src/cards/schema.js");
 const FORGE_DESIGN_SOURCE=freezeCardData({
  url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
@@ -5282,7 +5282,7 @@ const FORGE_EVOLUTIONS=freezeCardData({
  engineer:{'légendaire':{stats:{hp:9}}},
  cannon:{'légendaire':{stats:{hp:9}}},
  mechanist:{'épique':{stats:{hp:10}},'légendaire':{stats:{attack:3}}},
- ironwraith:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}}},
+ ironwraith:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}},'légendaire':{abilities:{strikeWard:{amount:2,cap:20,period:3,requiresKill:true}}}},
  alchemist:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}}}
 });
 
@@ -5540,6 +5540,7 @@ function unitAbilityDetails(d){
  if(a.inspire)lines.push(`Tous les ${a.inspire.period} tours : +${a.inspire.amount} ATQ à ${a.inspire.targets} autre${a.inspire.targets>1?'s':''} allié${a.inspire.targets>1?'s':''} de ${scope(a.inspire)}, ATQ plafonnée à ${a.inspire.cap}.`);
  if(a.arrivalInspire)lines.push(`À l’arrivée : +${a.arrivalInspire.amount} ATQ au premier autre allié de sa ligne, maximum ${a.arrivalInspire.cap}.`);
  if(a.ward)lines.push(`À l’arrivée : +${a.ward.amount} bouclier à sa couronne, plafond ${a.ward.cap}.`);
+ if(a.strikeWard)lines.push(`Ferraille récupérée : si son attaque normale élimine une unité ennemie, +${a.strikeWard.amount} bouclier à sa couronne, plafond ${a.strikeWard.cap}. Au plus une fois tous les ${a.strikeWard.period} tours ; aucun gain par sort, poison, Riposte, dégâts secondaires ou après sa mort.`);
  if(a.arrivalBarrier)lines.push(`À l’arrivée : barrière ${a.arrivalBarrier.amount} à un autre allié de sa ligne, priorité au plus blessé proportionnellement. Plafond ${a.arrivalBarrier.cap} pour cet effet, sans cumul ; aucune autre cible ni effet sans allié.`);
  if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : ${a.harass.period?'Cri d’effroi':'Harcèlement'} −${a.harass.amount} ATQ sur ${a.harass.attacks===1?'sa prochaine attaque d’unité':'ses '+a.harass.attacks+' prochaines attaques d’unité'}, Riposte comprise ; minimum ${a.harass.minimum||0}, aucun effet sur les sorts. ${a.harass.period?'Au plus une fois tous les '+a.harass.period+' tours ; seule la réduction la plus forte persiste.':'Les applications renouvellent le malus sans cumul.'}${a.harass.secondary?' Un autre ennemi à '+a.harass.secondary.range+' case au plus de la cible sur la même ligne : −'+a.harass.secondary.amount+' ATQ pour sa prochaine attaque.':''}`);
  if(a.intervention)lines.push(`À l’arrivée : ${a.intervention.amount} dégâts au premier ennemi devant, même ligne, jusqu’à ${a.intervention.range} cases ; protections normales, une seule frappe d’arrivée.`);
@@ -5571,6 +5572,7 @@ function unitAbilityDetails(d){
 
 function advancedSummary(a){
  const parts=[];
+ if(a.strikeWard)parts.push(`Ferraille récupérée · Couronne +${a.strikeWard.amount}`);
  if(a.deathStrike)parts.push(`Fracas ${a.deathStrike.amount}${a.deathStrike.entangle?' · Entrave':''}`);
  if(a.devour)parts.push(`Dévoration ${a.devour.heal}${a.devour.attack?' · +'+a.devour.attack+' ATQ (max +'+a.devour.cap+')':''}`);
  if(a.execution)parts.push(`Exécution +${a.execution.amount}${a.execution.killHaste?' · Célérité après élimination':''}`);
@@ -6670,7 +6672,7 @@ function silenceValue(u){
  const future=versionUnitAbilities(u);
  return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
   (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0)+
-  (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0);
+  (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0)+(future?.strikeWard?2:0);
 }
 function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 function silenceTarget(b,side,lane){
@@ -6953,7 +6955,7 @@ function validUnitEffects(u){
   (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
   (u.deathStrikeUsed===undefined||typeof u.deathStrikeUsed==='boolean')&&
   (u.devourAttack===undefined||integer(u.devourAttack,2))&&
-  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
+  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
@@ -6968,7 +6970,7 @@ Object.assign(__exports,{attackAfterPenalty,consumeAttackPenalty,applyAttackEffe
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {spreadUnitPoison}=__load("src/engine/unit-poison.js");
 const {alliedTargets}=__load("src/engine/unit-targets.js");
-const {grantAbilityBarrier}=__load("src/engine/unit-barriers.js");
+const {grantAbilityBarrier,grantCrownShield}=__load("src/engine/unit-barriers.js");
 const {silenced}=__load("src/engine/battle-control.js");
 function resolveUnitDeath(b,u,lane,col,emit,poisonReadyRound){
  const p=versionUnitAbilities(u)?.deathWard;
@@ -6978,7 +6980,7 @@ function resolveUnitDeath(b,u,lane,col,emit,poisonReadyRound){
  if(!(p||u.poisonOrigin?.contagion||watchers.length))return;
  u.deathResolved=true;
  if(p&&!(u.silenceUntil>=b.round)){
-  const h=b.heroes[u.side];h.shield=Math.max(h.shield,Math.min(p.cap,h.shield+p.amount));
+  grantCrownShield(b.heroes[u.side],p);
  }
  for(const t of watchers){
   if(silenced(b,t.u)||t.u.lastFuneralWatchRound===b.round)continue;
@@ -7030,6 +7032,11 @@ Object.assign(__exports,{alliedTargets,injuryOrder,contiguousSplashTargets});
 "src/engine/unit-barriers.js":function(__exports,__load){
 // Barrières partagées par les défenses et les réactions aux morts, sans cycle.
 const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier','funeralBarrier'];
+function grantCrownShield(hero,parameters){
+ const before=hero.shield;
+ hero.shield=Math.max(before,Math.min(parameters.cap,before+parameters.amount));
+ return hero.shield-before;
+}
 function grantAbilityBarrier(u,key,parameters){
  if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
  const sources={...u.abilityBarriers};
@@ -7059,7 +7066,7 @@ function absorbBarrier(u,damage){
  return absorbed;
 }
 
-Object.assign(__exports,{grantAbilityBarrier,grantSharedBarrier,absorbBarrier});
+Object.assign(__exports,{grantCrownShield,grantAbilityBarrier,grantSharedBarrier,absorbBarrier});
 
 },
 "src/engine/tempo.js":function(__exports,__load){
@@ -7237,7 +7244,7 @@ const {CARDS}=__load("src/data.js");
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {silenced}=__load("src/engine/battle-control.js");
 const {lastCell}=__load("src/engine/board.js");
-const {grantHealBarrier,grantAbilityBarrier}=__load("src/engine/battle-defense.js");
+const {grantHealBarrier,grantAbilityBarrier,grantCrownShield}=__load("src/engine/battle-defense.js");
 const {grantRegeneration}=__load("src/engine/unit-effects.js");
 const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
 const {clearUnitPoison}=__load("src/engine/unit-poison.js");
@@ -7248,7 +7255,7 @@ function resolveUnitArrival(b,u,lane,col,hooks){
  const a=versionUnitAbilities(u);
  if(!a||u.arrivalResolved||!(a.ward||a.arrivalInspire||a.intervention||a.arrivalBarrier))return;
  u.arrivalResolved=true;
- if(a.ward)b.heroes[u.side].shield=Math.max(b.heroes[u.side].shield,Math.min(a.ward.cap,b.heroes[u.side].shield+a.ward.amount));
+ if(a.ward)grantCrownShield(b.heroes[u.side],a.ward);
  if(a.arrivalBarrier)for(const t of alliedTargets(b,u,lane,a.arrivalBarrier).sort(injuryOrder).slice(0,a.arrivalBarrier.targets)){
   if(grantAbilityBarrier(t.u,'arrivalBarrier',a.arrivalBarrier))hooks.emit(b,{type:'state',side:u.side,lane:t.lane,col:t.col});
  }
@@ -7296,11 +7303,15 @@ Object.assign(__exports,{resolveUnitArrival,resolveUnitSupport});
 "src/engine/unit-triggers.js":function(__exports,__load){
 // Déclencheurs de protection après frappe, moteur commun.
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
-const {grantAbilityBarrier}=__load("src/engine/battle-defense.js");
+const {grantAbilityBarrier,grantCrownShield}=__load("src/engine/unit-barriers.js");
 const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
 function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,damaged,execution},emit){
  if(suppressed||u.hp<=0)return;
  const a=versionUnitAbilities(u);
+ if(a.strikeWard&&(!a.strikeWard.requiresKill||killed)&&!(u.strikeWardReadyRound>b.round)){
+  u.strikeWardReadyRound=b.round+a.strikeWard.period;
+  if(grantCrownShield(b.heroes[u.side],a.strikeWard))emit(b,{type:'state',side:u.side,lane,col});
+ }
  const protect=(target,key,p)=>{if(grantAbilityBarrier(target.u,key,p))emit(b,{type:'state',side:u.side,lane:target.lane,col:target.col});};
  if(charged&&a.chargeBarrier&&(!a.chargeBarrier.requiresKill||killed)&&(!a.chargeBarrier.frequency||u.lastChargeBarrierRound!==b.round)){
   if(a.chargeBarrier.frequency)u.lastChargeBarrierRound=b.round;
