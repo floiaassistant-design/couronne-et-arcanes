@@ -91,7 +91,7 @@ test('Chaque évolution peut réellement être tirée, mise au deck, invoquée e
  }
  assert.ok(pack.groups.every(g=>g.cards.every(ref=>typeof ref==='string'||ref.rarity!=='légendaire')));
  assert.equal(playableCardReference({id:'ranger',rarity:'divine'}),true);
- assert.equal(playableCardReference({id:'smith',rarity:'divine'}),false);
+ assert.equal(playableCardReference({id:'golem',rarity:'divine'}),false);
 });
 
 test('Les doublons de paquet alimentent la fusion, sans épreuve accomplie ni gain supplémentaire',()=>{

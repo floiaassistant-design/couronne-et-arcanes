@@ -12,12 +12,12 @@ import {esc} from '../src/ui/markup.js';
 
 const scenarios=ascensionScenarios('ombre');
 test('Deux ascensions Ombre, onze recettes par rang, indépendantes des deux ascensions Aube',()=>{
- assert.equal(ALL_EVOLUTION_ASCENSIONS.length,6);assert.equal(EVOLUTION_ASCENSIONS.length,2);assert.equal(OMBRE_ASCENSIONS.length,2);
+ assert.equal(ALL_EVOLUTION_ASCENSIONS.length,8);assert.equal(EVOLUTION_ASCENSIONS.length,2);assert.equal(OMBRE_ASCENSIONS.length,2);
  for(const t of OMBRE_ASCENSIONS){
   assert.equal(evolutionAscensionFor('ombre',t.to),t);const recipes=EVOLUTION_FUSIONS.filter(r=>r.ascension===t.id);assert.equal(recipes.length,11);
   assert.ok(recipes.every(r=>CARDS[r.cardId].faction==='ombre'&&r.to===t.to&&r.from===t.from&&r.mission===t.mission));
  }
- assert.equal(evolutionAscensionFor('forge','divine'),null);
+ assert.equal(evolutionAscensionFor('ether','divine'),null);
  const p=freshProfile();assert.deepEqual(normalizeProfile(p),p);assert.equal(p.completedTrials,undefined);
 });
 
@@ -68,7 +68,7 @@ test('128 graines jouées deux fois : rencontres terminées, déterministes, pla
 });
 
 test('Épreuves et résultat : vraie faction, 11 recettes Ombre / 10 Aube, aucun objet de données dans le texte',()=>{
- const html=renderEvolutionTrials(freshProfile(),null,{btn:()=>'',cardUI:()=>'',esc});assert.equal((html.match(/class="card-panel ascension-card"/g)||[]).length,6);
+ const html=renderEvolutionTrials(freshProfile(),null,{btn:()=>'',cardUI:()=>'',esc});assert.equal((html.match(/class="card-panel ascension-card"/g)||[]).length,8);
  assert.equal((html.match(/11 fusions à débloquer/g)||[]).length,4);assert.equal((html.match(/10 fusions à débloquer/g)||[]).length,2);assert.match(html,/3 copies libres/);assert.doesNotMatch(html,/\[object Object\]/);
  for(const s of scenarios){assert.match(s.initial.trialChallenge.text,/Ombre/);const result=evolutionTrialResult({unlocked:true,trial:s.trial},{btn:()=>'',cardUI:()=>'',esc});assert.match(result,/Ombre/);assert.doesNotMatch(result,/Aube/);}
 });

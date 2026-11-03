@@ -26,7 +26,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 évolutions Rares, puis du Milicien Épique après le premier boss. Accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve, 43 Ombre et dix-sept évolutions Forge supplémentaires. Les 64 Divines/Éveillées Aube/Sylve/Ombre exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
+sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve, 43 Ombre et dix-huit évolutions Forge supplémentaires. Les 64 Divines/Éveillées Aube/Sylve/Ombre exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
@@ -98,8 +98,8 @@ La Collection, les classes, les maîtrises, équipements, talents et donjons son
 conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteur,
 sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
 et les **59 versions Sylve** jusqu'à Éveillée, à leurs niveaux 0 à 3 choisis indépendamment.
-L’Ombre compte 54 versions définies, dont onze natives ; Forge compte 27 versions, dont dix natives, et Éther conserve ses versions natives. Les quatre récompenses pilotes se gagnent dans les Épreuves ;
-les 149 évolutions sont obtenables après leurs déblocages ; six grandes ascensions ouvrent les 64 Divines/Éveillées Aube/Sylve/Ombre, sans carte offerte ni consommation du deck. Les paquets Sylve, Ombre et Forge proposent chacun 3 cartes pour 190 or après le premier boss, avec les mêmes taux par groupe que l'Aube : 60/35/5. [Migration des factions](docs/REPRISE_MIGRATION_CARTES.md) · [Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md). La PR Aube nº 53, avec sa présentation commune et sa
+L’Ombre compte 54 versions définies, dont onze natives ; Forge compte 28 versions, dont dix natives, et Éther conserve ses versions natives. Les quatre récompenses pilotes se gagnent dans les Épreuves ;
+les 150 évolutions sont obtenables après leurs déblocages ; six grandes ascensions ouvrent les 64 Divines/Éveillées Aube/Sylve/Ombre, sans carte offerte ni consommation du deck. Les paquets Sylve, Ombre et Forge proposent chacun 3 cartes pour 190 or après le premier boss, avec les mêmes taux par groupe que l'Aube : 60/35/5. [Migration des factions](docs/REPRISE_MIGRATION_CARTES.md) · [Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md). La PR Aube nº 53, avec sa présentation commune et sa
 [revue finale](docs/REVUE_AUBE_PR53_2026_10_27.md), a été fusionnée sur accord du
 propriétaire le 27 octobre 2026. La publication du site reste une opération distincte.
 
@@ -170,4 +170,6 @@ Sites héberge le jeu depuis la distribution de main ; la fusion seule ne prouve
 pas sa publication. Réutiliser le Site et le workflow existants :
 [procédure de publication](docs/PUBLICATION_WEB_2026_10_23.md).
 
-La proposition [Marteau Légendaire](docs/FORGE_MARTEAU_LEGENDAIRE.md) ajoute Coup de masse dans une PR distincte : recul après blessure au contact, sans attaque supplémentaire. Sa disponibilité reste conditionnée à la fusion de cette proposition.
+Le [Marteau Légendaire](docs/FORGE_MARTEAU_LEGENDAIRE.md) est intégré par PR 81 et ajoute Coup de masse : recul après blessure au contact, sans attaque supplémentaire. Sa publication est suivie séparément.
+
+La proposition [Forge — hauts rangs et blindages](docs/FORGE_HAUTS_RANGS_BLINDAGES.md) prépare huit versions Divines/Éveillées du Marteau, du Foreur, du Colosse et du Marchefer, avec deux ascensions communes. Les pouvoirs et recettes du Golem et des autres hauts rangs restent distincts.

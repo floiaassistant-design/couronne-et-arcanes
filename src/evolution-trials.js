@@ -52,7 +52,17 @@ export const OMBRE_ASCENSIONS=freezeCardData([
   enemy:'Gardien de Minuit',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
   deck:['lich','vampire','crypt','graveknight','shade','banshee','mist_inquisitor','lich','vampire','crypt','storm','healing','warcry','plague','spectre','nightblade','bone','graveknight']}
 ]);
-export const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS,...OMBRE_ASCENSIONS]);
+export const FORGE_ASCENSIONS=freezeCardData([
+ {id:'forge-ascension-divine',kind:'ascension',faction:'forge',name:'Le Serment des Fourneaux',from:'légendaire',to:'divine',mission:'09',
+  goal:{distinct:3,crownPercent:40,maxRound:24},
+  enemy:'Conseil des Forges',difficulty:5,hp:48,boss:true,aiStyle:'bastion',
+  deck:['golem','colossus','drill','ironwraith','smith','engineer','golem','cannon','mechanist','alchemist','healing','warcry','bomb','smith','drill','storm']},
+ {id:'forge-ascension-eveillee',kind:'ascension',faction:'forge',name:'L’Éveil du Brasier',from:'divine',to:'éveillée',mission:'12',previous:'forge-ascension-divine',
+  goal:{distinct:4,crownPercent:60,maxRound:24},
+  enemy:'Gardien du Brasier',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
+  deck:['colossus','ironwraith','golem','drill','smith','cannon','engineer','colossus','ironwraith','golem','storm','healing','warcry','bomb','mechanist','alchemist','smith','drill']}
+]);
+export const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS,...OMBRE_ASCENSIONS,...FORGE_ASCENSIONS]);
 export const ALL_EVOLUTION_TRIALS=Object.freeze([...EVOLUTION_TRIALS,...ALL_EVOLUTION_ASCENSIONS]);
 export const evolutionTrial=id=>ALL_EVOLUTION_TRIALS.find(t=>t.id===id)||null;
 export const evolutionTrialFor=(id,rarity)=>EVOLUTION_TRIALS.find(t=>t.cardId===id&&t.to===rarity)||null;

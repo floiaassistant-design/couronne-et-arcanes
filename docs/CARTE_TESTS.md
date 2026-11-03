@@ -172,6 +172,12 @@ rencontres simulées des actions réellement couvertes dans l'UI, puis mesures
 de lisibilité mobile. Firefox, Safari, téléphone physique, panne électrique
 réelle, couverture exhaustive et équilibrage humain ne sont pas validés ici.
 
-## Marteau Légendaire — proposition du 3 novembre
+## Marteau Légendaire — intégré par PR 81 le 3 novembre
 
 `forge_marteau.test.mjs` couvre vraie fusion, deux camps, géométries 5/10 cases, perte de PV, barrières, Silence, attaque nulle, blocage/bord, cadence et reprise, Riposte avant recul, mort de l’attaquant, piège à l’arrivée, exclusions, interception interligne, instantanés, fiches et vrai export embarqué. Les 150 recettes passent par le robot commun. Le parcours `forge-smith` ajoute le même contrôle UI fusion/deck/import-export/combat préparé/reprise aux quatre parties existantes, sans nouveau job. Ce combat préparé ne remplace pas une campagne complète depuis zéro.
+
+## Forge — huit hauts rangs et ascensions, proposition du 3 novembre
+
+`forge_ascended.test.mjs` couvre les huit versions de quatre cartes : vraies fusions, recul/avancée/alternative, protections et plafonds propres, surplus, deux camps, cadence, comptage de Cuirasse, Silence, Riposte, pièges, sauvegarde et véritable export embarqué. `forge_ascensions.test.mjs` réutilise le pilote partagé pour deux combats complets, 128 combinaisons graine/niveau rejouées, accès et déblocage unique sans don. Le catalogue vérifie 36 versions Forge × 4 niveaux × 2 camps ; les 158 recettes passent par 2 528 exécutions déterministes.
+
+Les quatre parties navigateur communes ajoutent Forge aux ascensions : deux parties UI complètes, pannes, reprise, fusion, Collection/deck, export/import et invocation. Le Foreur obtenu est ensuite joué dans un combat préparé qui vérifie réellement retrait 4 et récupération 2 au rang Éveillé ; résultat repris après rechargement. Aucun groupe/job ni second passage de la suite entière ajouté. Ce témoin préparé ne prouve ni campagne complète depuis zéro ni équilibrage humain.

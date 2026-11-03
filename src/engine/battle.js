@@ -30,7 +30,7 @@ function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j
 export function note(b,message){b.log.unshift(message);b.log=b.log.slice(0,12);}
 function fx(b,event){recordCombatEvent(b,event);}
 function enterCell(b,u,lane,col){triggerTrap(b,u,lane,col,hit,fx,note);sweepDead(b);}
-const controlHooks={emit:fx,note,enter:enterCell};
+const controlHooks={emit:fx,note,enter:enterCell,hit};
 
 function draw(b,side,n=1){
  const hero=b.heroes[side];for(let j=0;j<n;j++){

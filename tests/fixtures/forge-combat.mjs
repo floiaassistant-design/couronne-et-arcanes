@@ -2,6 +2,8 @@
 import assert from 'node:assert/strict';
 import {CARDS,CAMPAIGN} from '../../src/data.js';
 import {resolveUnitDefinition} from '../../src/cards/definitions.js';
+import {evolutionFusionFor} from '../../src/evolution-fusion.js';
+import {cardReference} from '../../src/cards/references.js';
 import {freshProfile,fuseEvolutionCopies,modifyDeck,createBattle,playPlayerCard} from '../../src/engine.js';
 
 let uid=4000;
@@ -13,8 +15,11 @@ export function forgeUnit(id,side='e',extra={}){
 }
 export function forgeBattle(id='smith',rarity='légendaire'){
  const p=freshProfile();p.completed=CAMPAIGN.map(m=>m.id);p.unlocked=12;
- p.evolvedCollection={[id+':épique']:3};
- const fused=fuseEvolutionCopies(p,id+':légendaire');assert(fused.ok,fused.reason);
+ p.completedTrials=['forge-ascension-divine','forge-ascension-eveillee'];
+ const recipe=evolutionFusionFor(id,rarity),source=cardReference({id,rarity:recipe.from});
+ if(typeof source==='string')p.collection[id]=(p.collection[id]||0)+3;
+ else p.evolvedCollection={[id+':'+recipe.from]:3};
+ const fused=fuseEvolutionCopies(p,id+':'+rarity);assert(fused.ok,fused.reason);
  assert(modifyDeck(p,fused.target,1));
  const b=createBattle(p,{...CAMPAIGN[0],deck:[],hp:100},11,{turnFlow:'alternating'});
  for(const h of Object.values(b.heroes))Object.assign(h,{hp:100,maxhp:100,hand:[],deck:[],discard:[]});

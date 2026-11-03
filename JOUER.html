@@ -5275,14 +5275,18 @@ const FORGE_DESIGN_SOURCE=freezeCardData({
  editedAt:'2026-11-02T16:09:01.799Z'
 });
 const FORGE_EVOLUTIONS=freezeCardData({
- smith:{rare:{stats:{hp:8}},'épique':{stats:{attack:4}},'légendaire':{abilities:{knockback:{cells:1,period:3}}}},
+ smith:{rare:{stats:{hp:8}},'épique':{stats:{attack:4}},'légendaire':{abilities:{knockback:{cells:1,period:3}}},
+  divine:{abilities:{knockback:{follow:true}}},'éveillée':{abilities:{knockback:{blockedDamage:2}}}},
  golem:{'épique':{stats:{hp:14}}},
  bomb:{'épique':{stats:{hp:5}},'légendaire':{stats:{attack:5}}},
- drill:{rare:{stats:{hp:7}},'épique':{stats:{attack:3}},'légendaire':{abilities:{barrierDrill:{amount:2,period:3}}}},
+ drill:{rare:{stats:{hp:7}},'épique':{stats:{attack:3}},'légendaire':{abilities:{barrierDrill:{amount:2,period:3}}},
+  divine:{abilities:{barrierDrill:{amount:4}}},'éveillée':{abilities:{barrierDrill:{breakBarrier:{amount:2,cap:2}}}}},
+ colossus:{divine:{abilities:{scoria:{hits:2,period:3,amount:2,cap:2}}},'éveillée':{abilities:{scoria:{amount:4,cap:4}}}},
  engineer:{'légendaire':{stats:{hp:9}}},
  cannon:{'légendaire':{stats:{hp:9}}},
  mechanist:{'épique':{stats:{hp:10}},'légendaire':{stats:{attack:3}}},
- ironwraith:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}},'légendaire':{abilities:{strikeWard:{amount:2,cap:20,period:3,requiresKill:true}}}},
+ ironwraith:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}},'légendaire':{abilities:{strikeWard:{amount:2,cap:20,period:3,requiresKill:true}}},
+  divine:{abilities:{strikeWard:{requiresKill:false}}},'éveillée':{abilities:{strikeWard:{amount:3,overflowBarrier:{amount:2,cap:2}}}}},
  alchemist:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}}}
 });
 
@@ -5344,13 +5348,23 @@ const OMBRE_ASCENSIONS=freezeCardData([
   enemy:'Gardien de Minuit',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
   deck:['lich','vampire','crypt','graveknight','shade','banshee','mist_inquisitor','lich','vampire','crypt','storm','healing','warcry','plague','spectre','nightblade','bone','graveknight']}
 ]);
-const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS,...OMBRE_ASCENSIONS]);
+const FORGE_ASCENSIONS=freezeCardData([
+ {id:'forge-ascension-divine',kind:'ascension',faction:'forge',name:'Le Serment des Fourneaux',from:'légendaire',to:'divine',mission:'09',
+  goal:{distinct:3,crownPercent:40,maxRound:24},
+  enemy:'Conseil des Forges',difficulty:5,hp:48,boss:true,aiStyle:'bastion',
+  deck:['golem','colossus','drill','ironwraith','smith','engineer','golem','cannon','mechanist','alchemist','healing','warcry','bomb','smith','drill','storm']},
+ {id:'forge-ascension-eveillee',kind:'ascension',faction:'forge',name:'L’Éveil du Brasier',from:'divine',to:'éveillée',mission:'12',previous:'forge-ascension-divine',
+  goal:{distinct:4,crownPercent:60,maxRound:24},
+  enemy:'Gardien du Brasier',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
+  deck:['colossus','ironwraith','golem','drill','smith','cannon','engineer','colossus','ironwraith','golem','storm','healing','warcry','bomb','mechanist','alchemist','smith','drill']}
+]);
+const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS,...OMBRE_ASCENSIONS,...FORGE_ASCENSIONS]);
 const ALL_EVOLUTION_TRIALS=Object.freeze([...EVOLUTION_TRIALS,...ALL_EVOLUTION_ASCENSIONS]);
 const evolutionTrial=id=>ALL_EVOLUTION_TRIALS.find(t=>t.id===id)||null;
 const evolutionTrialFor=(id,rarity)=>EVOLUTION_TRIALS.find(t=>t.cardId===id&&t.to===rarity)||null;
 const evolutionAscensionFor=(faction,rarity)=>ALL_EVOLUTION_ASCENSIONS.find(t=>t.faction===faction&&t.to===rarity)||null;
 
-Object.assign(__exports,{EVOLUTION_TRIALS,EVOLUTION_ASCENSIONS,SYLVE_ASCENSIONS,OMBRE_ASCENSIONS,ALL_EVOLUTION_ASCENSIONS,ALL_EVOLUTION_TRIALS,evolutionTrial,evolutionTrialFor,evolutionAscensionFor});
+Object.assign(__exports,{EVOLUTION_TRIALS,EVOLUTION_ASCENSIONS,SYLVE_ASCENSIONS,OMBRE_ASCENSIONS,FORGE_ASCENSIONS,ALL_EVOLUTION_ASCENSIONS,ALL_EVOLUTION_TRIALS,evolutionTrial,evolutionTrialFor,evolutionAscensionFor});
 
 },
 "src/evolution-fusion.js":function(__exports,__load){
@@ -5540,9 +5554,10 @@ function unitAbilityDetails(d){
  if(a.inspire)lines.push(`Tous les ${a.inspire.period} tours : +${a.inspire.amount} ATQ à ${a.inspire.targets} autre${a.inspire.targets>1?'s':''} allié${a.inspire.targets>1?'s':''} de ${scope(a.inspire)}, ATQ plafonnée à ${a.inspire.cap}.`);
  if(a.arrivalInspire)lines.push(`À l’arrivée : +${a.arrivalInspire.amount} ATQ au premier autre allié de sa ligne, maximum ${a.arrivalInspire.cap}.`);
  if(a.ward)lines.push(`À l’arrivée : +${a.ward.amount} bouclier à sa couronne, plafond ${a.ward.cap}.`);
- if(a.strikeWard)lines.push(`Ferraille récupérée : si son attaque normale élimine une unité ennemie, +${a.strikeWard.amount} bouclier à sa couronne, plafond ${a.strikeWard.cap}. Au plus une fois tous les ${a.strikeWard.period} tours ; aucun gain par sort, poison, Riposte, dégâts secondaires ou après sa mort.`);
- if(a.knockback)lines.push(`Coup de masse : après une attaque normale au contact retirant des PV à une unité ennemie survivante, la repousse de ${a.knockback.cells} case vers sa couronne si la case est libre et dans le plateau. Au plus une fois tous les ${a.knockback.period} tours, après les réactions de contact. Aucun recul sans perte de PV, sous Silence ou après la mort du Marteau ; aucune attaque supplémentaire.`);
- if(a.barrierDrill)lines.push(`Foreuse d’acier : avant les dégâts d'une attaque normale contre une unité ennemie, détruit jusqu'à ${a.barrierDrill.amount} points de sa barrière personnelle ; l'attaque utilise ensuite les protections restantes. Au plus une fois tous les ${a.barrierDrill.period} tours, seulement si une barrière est présente. Aucun dégât supplémentaire aux PV, effet de sort, de poison ou de Riposte.`);
+ if(a.strikeWard)lines.push(`${strikeWardName(a.strikeWard)} : si son attaque normale ${a.strikeWard.requiresKill?'élimine une unité ennemie':'retire au moins 1 PV à une unité ennemie'}, +${a.strikeWard.amount} bouclier à sa couronne, plafond ${a.strikeWard.cap}. Au plus une fois tous les ${a.strikeWard.period} tours ; aucun gain par sort, poison, Riposte, dégâts secondaires ou après sa mort.${a.strikeWard.overflowBarrier?' Le surplus de restauration devient une barrière personnelle, plafond '+a.strikeWard.overflowBarrier.cap+' pour cet effet, sans cumul.':''}`);
+ if(a.knockback)lines.push(`Coup de masse : après une attaque normale au contact retirant des PV à une unité ennemie survivante, la repousse de ${a.knockback.cells} case vers sa couronne si la case est libre et dans le plateau. Au plus une fois tous les ${a.knockback.period} tours, après les réactions de contact. Aucun recul sans perte de PV, sous Silence ou après la mort du Marteau ; aucune attaque supplémentaire.${a.knockback.follow?' Brèche ouverte : après un recul réussi, avance dans la case libérée, avec déclenchement normal des pièges.':''}${a.knockback.blockedDamage?' Fracas inexorable : si la destination est occupée ou hors plateau, inflige plutôt '+a.knockback.blockedDamage+' dégâts bruts avec protections normales, sans déplacement. Recul et Fracas partagent la même cadence.':''}`);
+ if(a.barrierDrill)lines.push(`Foreuse ${a.barrierDrill.amount>2?'runique':'d’acier'} : avant les dégâts d'une attaque normale contre une unité ennemie, détruit jusqu'à ${a.barrierDrill.amount} points de sa barrière personnelle ; l'attaque utilise ensuite les protections restantes. Au plus une fois tous les ${a.barrierDrill.period} tours, seulement si une barrière est présente. Aucun dégât supplémentaire aux PV, effet de sort, de poison ou de Riposte.${a.barrierDrill.breakBarrier?' Récupération runique : si la Foreuse retire entièrement cette barrière, barrière personnelle +'+a.barrierDrill.breakBarrier.amount+', plafond '+a.barrierDrill.breakBarrier.cap+' pour cet effet. Aucun gain si seule l’attaque normale termine la barrière.':''}`);
+ if(a.scoria)lines.push(`${a.scoria.amount>2?'Fournaise blindée':'Cuirasse de scories'} : après ${a.scoria.hits} attaques directes d’unités ennemies retirant chacune des PV et auxquelles il survit, gagne une barrière personnelle de ${a.scoria.amount}, plafond ${a.scoria.cap} pour cet effet. Compteur remis à zéro après activation, au plus une fois tous les ${a.scoria.period} tours. Les coups éligibles pendant la cadence restent comptés ; activation à la prochaine blessure éligible après disponibilité. Silence bloque le comptage ; aucun gain par sort, poison ou dégât secondaire.`);
  if(a.arrivalBarrier)lines.push(`À l’arrivée : barrière ${a.arrivalBarrier.amount} à un autre allié de sa ligne, priorité au plus blessé proportionnellement. Plafond ${a.arrivalBarrier.cap} pour cet effet, sans cumul ; aucune autre cible ni effet sans allié.`);
  if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : ${a.harass.period?'Cri d’effroi':'Harcèlement'} −${a.harass.amount} ATQ sur ${a.harass.attacks===1?'sa prochaine attaque d’unité':'ses '+a.harass.attacks+' prochaines attaques d’unité'}, Riposte comprise ; minimum ${a.harass.minimum||0}, aucun effet sur les sorts. ${a.harass.period?'Au plus une fois tous les '+a.harass.period+' tours ; seule la réduction la plus forte persiste.':'Les applications renouvellent le malus sans cumul.'}${a.harass.secondary?' Un autre ennemi à '+a.harass.secondary.range+' case au plus de la cible sur la même ligne : −'+a.harass.secondary.amount+' ATQ pour sa prochaine attaque.':''}`);
  if(a.intervention)lines.push(`À l’arrivée : ${a.intervention.amount} dégâts au premier ennemi devant, même ligne, jusqu’à ${a.intervention.range} cases ; protections normales, une seule frappe d’arrivée.`);
@@ -5572,11 +5587,13 @@ function unitAbilityDetails(d){
  return lines;
 }
 
+function strikeWardName(p){return p.overflowBarrier?'Forge infatigable':p.requiresKill?'Ferraille récupérée':'Recyclage actif';}
 function advancedSummary(a){
  const parts=[];
- if(a.knockback)parts.push(`Coup de masse : recul ${a.knockback.cells}`);
- if(a.strikeWard)parts.push(`Ferraille récupérée · Couronne +${a.strikeWard.amount}`);
- if(a.barrierDrill)parts.push(`Foreuse : barrière −${a.barrierDrill.amount}`);
+ if(a.knockback)parts.push(a.knockback.blockedDamage?`Recul ou Fracas +${a.knockback.blockedDamage}`:a.knockback.follow?'Recul · Avancée':`Coup de masse : recul ${a.knockback.cells}`);
+ if(a.strikeWard)parts.push(`${strikeWardName(a.strikeWard)} · Couronne +${a.strikeWard.amount}`);
+ if(a.barrierDrill)parts.push(`Foreuse : barrière −${a.barrierDrill.amount}${a.barrierDrill.breakBarrier?' · Barrière +'+a.barrierDrill.breakBarrier.amount+' si brisée':''}`);
+ if(a.scoria)parts.push(`${a.scoria.amount>2?'Fournaise':'Cuirasse'} : barrière +${a.scoria.amount} après ${a.scoria.hits} coups`);
  if(a.deathStrike)parts.push(`Fracas ${a.deathStrike.amount}${a.deathStrike.entangle?' · Entrave':''}`);
  if(a.devour)parts.push(`Dévoration ${a.devour.heal}${a.devour.attack?' · +'+a.devour.attack+' ATQ (max +'+a.devour.cap+')':''}`);
  if(a.execution)parts.push(`Exécution +${a.execution.amount}${a.execution.killHaste?' · Célérité après élimination':''}`);
@@ -5990,7 +6007,7 @@ function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j
 function note(b,message){b.log.unshift(message);b.log=b.log.slice(0,12);}
 function fx(b,event){recordCombatEvent(b,event);}
 function enterCell(b,u,lane,col){triggerTrap(b,u,lane,col,hit,fx,note);sweepDead(b);}
-const controlHooks={emit:fx,note,enter:enterCell};
+const controlHooks={emit:fx,note,enter:enterCell,hit};
 
 function draw(b,side,n=1){
  const hero=b.heroes[side];for(let j=0;j<n;j++){
@@ -6601,6 +6618,7 @@ const {silenced}=__load("src/engine/battle-control.js");
 const {recordCombatEvent}=__load("src/engine/combat-events.js");
 const {consumeAttackPenalty}=__load("src/engine/unit-effects.js");
 const {resolveUnitDeath}=__load("src/engine/unit-death.js");
+const {resolveSurvivedStrike}=__load("src/engine/unit-triggers.js");
 const {absorbBarrier,grantAbilityBarrier}=__load("src/engine/unit-barriers.js");
 // Préserver les imports existants des appelants.
 Object.assign(__exports,__load("src/engine/unit-barriers.js"));
@@ -6626,6 +6644,7 @@ function hit(b,u,raw,bySide,ignoreArmor=false,attack=false,direct=null){
   recordCombatEvent(b,{type:'damage',side:u.side,lane,col,damage:Math.max(0,before-u.hp),absorbed,armor:ignoreArmor?0:Math.min(raw-1,armor)});
  }
  if(u.hp<=0){const lane=b.board.findIndex(row=>row.includes(u));if(lane>=0)resolveUnitDeath(b,u,lane,b.board[lane].indexOf(u),recordCombatEvent);}
+ if(attack&&direct?.attacker)resolveSurvivedStrike(b,u,direct.attacker,before>u.hp,silenced(b,u),recordCombatEvent);
  const deathStrike=abilities?.deathStrike,attacker=direct?.attacker;
  if(u.hp<=0&&deathStrike&&!u.deathStrikeUsed&&attack&&direct?.sameLine&&attacker?.hp>0&&attacker.side!==u.side&&
     Math.abs(direct.from-direct.to)<=deathStrike.range&&!silenced(b,{...u,hp:before})){
@@ -6681,7 +6700,7 @@ function silenceValue(u){
  const future=versionUnitAbilities(u);
  return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
   (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0)+
-  (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0)+(future?.strikeWard?2:0)+(future?.barrierDrill?3:0)+(future?.knockback?3:0);
+  (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0)+(future?.strikeWard?2:0)+(future?.barrierDrill?3:0)+(future?.knockback?3:0)+(future?.scoria?3:0);
 }
 function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 function silenceTarget(b,side,lane){
@@ -6964,7 +6983,8 @@ function validUnitEffects(u){
   (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
   (u.deathStrikeUsed===undefined||typeof u.deathStrikeUsed==='boolean')&&
   (u.devourAttack===undefined||integer(u.devourAttack,2))&&
-  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
+  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
+  (u.scoriaHits===undefined||Number.isSafeInteger(u.scoriaHits)&&u.scoriaHits>=0&&u.scoriaHits<=2)&&
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
@@ -7040,7 +7060,8 @@ Object.assign(__exports,{alliedTargets,injuryOrder,contiguousSplashTargets});
 },
 "src/engine/unit-barriers.js":function(__exports,__load){
 // Barrières partagées par les défenses et les réactions aux morts, sans cycle.
-const barrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier','funeralBarrier'];
+const legacyBarrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier'];
+const barrierKeys=[...legacyBarrierKeys,'funeralBarrier','drillBarrier','scoriaBarrier','scrapBarrier'];
 function grantCrownShield(hero,parameters){
  const before=hero.shield;
  hero.shield=Math.max(before,Math.min(parameters.cap,before+parameters.amount));
@@ -7067,7 +7088,7 @@ function absorbBarrier(u,damage){
   // Conserver l'ordre et les champs historiques, sans ajouter l'état nouveau
   // aux unités qui n'ont jamais reçu de barrière funéraire.
   for(const key of barrierKeys){
-   if(key==='funeralBarrier'&&!Object.hasOwn(sources,key))continue;
+   if(!legacyBarrierKeys.includes(key)&&!Object.hasOwn(sources,key))continue;
    const used=Math.min(sources[key]||0,left);sources[key]=(sources[key]||0)-used;left-=used;
   }
   u.abilityBarriers=sources;
@@ -7076,6 +7097,96 @@ function absorbBarrier(u,damage){
 }
 
 Object.assign(__exports,{grantCrownShield,grantAbilityBarrier,grantSharedBarrier,absorbBarrier});
+
+},
+"src/engine/unit-triggers.js":function(__exports,__load){
+// Préparation des protections et récompenses de frappe, moteur commun.
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
+const {grantAbilityBarrier,grantCrownShield,absorbBarrier}=__load("src/engine/unit-barriers.js");
+const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
+const {lastCell}=__load("src/engine/board.js");
+// Après les réactions de contact : aucun recul à distance ni attaque ajoutée.
+function resolveStrikeDisplacement(b,u,target,{damaged,suppressed},hooks){
+ const p=versionUnitAbilities(u)?.knockback;
+ if(!p||suppressed||!damaged||u.hp<=0||target?.hp<=0||target?.side===u.side||u.ranged||u.knockbackReadyRound>b.round)return false;
+ const lane=b.board.findIndex(row=>row.includes(u)),row=b.board[lane];
+ if(!row||!row.includes(target))return false;
+ const from=row.indexOf(u),col=row.indexOf(target),dir=target.side==='p'?-1:1;
+ if(col-from!==dir)return false;
+ const destination=col+dir*p.cells;
+ if(destination<1||destination>lastCell(b)||row[destination]){
+  if(!p.blockedDamage)return false;
+  u.knockbackReadyRound=b.round+p.period;
+  hooks.hit(b,target,p.blockedDamage,u.side);
+  return true;
+ }
+ u.knockbackReadyRound=b.round+p.period;
+ row[destination]=target;row[col]=null;
+ hooks.emit(b,{type:'move',side:target.side,lane,from:col,to:destination,knockback:true});
+ hooks.enter(b,target,lane,destination);
+ if(p.follow&&u.hp>0&&row[from]===u&&!row[col]){
+  row[col]=u;row[from]=null;
+  hooks.emit(b,{type:'move',side:u.side,lane,from,to:col,followKnockback:true});
+  hooks.enter(b,u,lane,col);
+ }
+ return true;
+}
+
+function resolveStrikePreparation(b,u,target,suppressed,emit){
+ const p=versionUnitAbilities(u)?.barrierDrill;
+ if(!p||suppressed||!target||target.hp<=0||target.side===u.side||!(target.barrier>0)||u.barrierDrillReadyRound>b.round)return 0;
+ const removed=absorbBarrier(target,p.amount);
+ if(!removed)return 0;
+ u.barrierDrillReadyRound=b.round+p.period;
+ if(p.breakBarrier&&!target.barrier)grantAbilityBarrier(u,'drillBarrier',p.breakBarrier);
+ const lane=b.board.findIndex(row=>row.includes(target));
+ if(lane>=0)emit(b,{type:'state',side:target.side,lane,col:b.board[lane].indexOf(target),barrierRemoved:removed});
+ return removed;
+}
+
+function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,damaged,execution},emit){
+ if(suppressed||u.hp<=0)return;
+ const a=versionUnitAbilities(u);
+ if(a.strikeWard&&(a.strikeWard.requiresKill?killed:damaged)&&!(u.strikeWardReadyRound>b.round)){
+  u.strikeWardReadyRound=b.round+a.strikeWard.period;
+  const gained=grantCrownShield(b.heroes[u.side],a.strikeWard),p=a.strikeWard.overflowBarrier;
+  const barrier=p?grantAbilityBarrier(u,'scrapBarrier',{...p,amount:Math.min(p.amount,a.strikeWard.amount-gained)}):0;
+  if(gained||barrier)emit(b,{type:'state',side:u.side,lane,col});
+ }
+ const protect=(target,key,p)=>{if(grantAbilityBarrier(target.u,key,p))emit(b,{type:'state',side:u.side,lane:target.lane,col:target.col});};
+ if(charged&&a.chargeBarrier&&(!a.chargeBarrier.requiresKill||killed)&&(!a.chargeBarrier.frequency||u.lastChargeBarrierRound!==b.round)){
+  if(a.chargeBarrier.frequency)u.lastChargeBarrierRound=b.round;
+  protect({u,lane,col},'chargeBarrier',a.chargeBarrier);
+  if(a.chargeBarrier.allies)for(const target of alliedTargets(b,u,lane,{includeSelf:false}).sort(injuryOrder).slice(0,a.chargeBarrier.allies))protect(target,'chargeBarrier',a.chargeBarrier);
+ }
+ if(killed&&a.devour){
+  u.hp=Math.min(u.maxhp,u.hp+a.devour.heal);
+  if(a.devour.attack)u.devourAttack=Math.min(a.devour.cap,(u.devourAttack||0)+a.devour.attack);
+  emit(b,{type:'heal',side:u.side,lane,col});
+ }
+ if(damaged&&a.strikeHeal&&u.lastStrikeHealRound!==b.round){
+  u.lastStrikeHealRound=b.round;u.hp=Math.min(u.maxhp,u.hp+a.strikeHeal.amount);emit(b,{type:'heal',side:u.side,lane,col});
+ }
+ if(killed&&execution&&a.execution?.killHaste)u.killHasteRound=b.round+1;
+ if(furious&&killed&&a.furyBarrier&&u.lastFuryBarrierRound!==b.round){
+  u.lastFuryBarrierRound=b.round;protect({u,lane,col},'furyBarrier',a.furyBarrier);
+ }
+}
+
+// Une attaque directe qui retire des PV et laisse le défenseur vivant compte.
+function resolveSurvivedStrike(b,u,attacker,damaged,suppressed,emit){
+ const p=versionUnitAbilities(u)?.scoria;
+ if(!p||suppressed||!damaged||u.hp<=0||!attacker||attacker.side===u.side)return;
+ u.scoriaHits=Math.min(p.hits,(u.scoriaHits||0)+1);
+ if(u.scoriaHits<p.hits||u.scoriaReadyRound>b.round)return;
+ u.scoriaHits=0;u.scoriaReadyRound=b.round+p.period;
+ if(grantAbilityBarrier(u,'scoriaBarrier',p)){
+  const lane=b.board.findIndex(row=>row.includes(u));
+  if(lane>=0)emit(b,{type:'state',side:u.side,lane,col:b.board[lane].indexOf(u)});
+ }
+}
+
+Object.assign(__exports,{resolveStrikeDisplacement,resolveStrikePreparation,resolveStrikeRewards,resolveSurvivedStrike});
 
 },
 "src/engine/tempo.js":function(__exports,__load){
@@ -7307,70 +7418,6 @@ function resolveUnitSupport(b,sideFilter,emit){
 }
 
 Object.assign(__exports,{resolveUnitArrival,resolveUnitSupport});
-
-},
-"src/engine/unit-triggers.js":function(__exports,__load){
-// Préparation des protections et récompenses de frappe, moteur commun.
-const {versionUnitAbilities}=__load("src/cards/definitions.js");
-const {grantAbilityBarrier,grantCrownShield,absorbBarrier}=__load("src/engine/unit-barriers.js");
-const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
-const {lastCell}=__load("src/engine/board.js");
-// Après les réactions de contact : aucun recul à distance ni attaque ajoutée.
-function resolveStrikeDisplacement(b,u,target,{damaged,suppressed},hooks){
- const p=versionUnitAbilities(u)?.knockback;
- if(!p||suppressed||!damaged||u.hp<=0||target?.hp<=0||target?.side===u.side||u.ranged||u.knockbackReadyRound>b.round)return false;
- const lane=b.board.findIndex(row=>row.includes(u)),row=b.board[lane];
- if(!row||!row.includes(target))return false;
- const from=row.indexOf(u),col=row.indexOf(target),dir=target.side==='p'?-1:1;
- if(col-from!==dir)return false;
- const destination=col+dir*p.cells;
- if(destination<1||destination>lastCell(b)||row[destination])return false;
- u.knockbackReadyRound=b.round+p.period;
- row[destination]=target;row[col]=null;
- hooks.emit(b,{type:'move',side:target.side,lane,from:col,to:destination,knockback:true});
- hooks.enter(b,target,lane,destination);
- return true;
-}
-
-function resolveStrikePreparation(b,u,target,suppressed,emit){
- const p=versionUnitAbilities(u)?.barrierDrill;
- if(!p||suppressed||!target||target.hp<=0||target.side===u.side||!(target.barrier>0)||u.barrierDrillReadyRound>b.round)return 0;
- const removed=absorbBarrier(target,p.amount);
- if(!removed)return 0;
- u.barrierDrillReadyRound=b.round+p.period;
- const lane=b.board.findIndex(row=>row.includes(target));
- if(lane>=0)emit(b,{type:'state',side:target.side,lane,col:b.board[lane].indexOf(target),barrierRemoved:removed});
- return removed;
-}
-
-function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,damaged,execution},emit){
- if(suppressed||u.hp<=0)return;
- const a=versionUnitAbilities(u);
- if(a.strikeWard&&(!a.strikeWard.requiresKill||killed)&&!(u.strikeWardReadyRound>b.round)){
-  u.strikeWardReadyRound=b.round+a.strikeWard.period;
-  if(grantCrownShield(b.heroes[u.side],a.strikeWard))emit(b,{type:'state',side:u.side,lane,col});
- }
- const protect=(target,key,p)=>{if(grantAbilityBarrier(target.u,key,p))emit(b,{type:'state',side:u.side,lane:target.lane,col:target.col});};
- if(charged&&a.chargeBarrier&&(!a.chargeBarrier.requiresKill||killed)&&(!a.chargeBarrier.frequency||u.lastChargeBarrierRound!==b.round)){
-  if(a.chargeBarrier.frequency)u.lastChargeBarrierRound=b.round;
-  protect({u,lane,col},'chargeBarrier',a.chargeBarrier);
-  if(a.chargeBarrier.allies)for(const target of alliedTargets(b,u,lane,{includeSelf:false}).sort(injuryOrder).slice(0,a.chargeBarrier.allies))protect(target,'chargeBarrier',a.chargeBarrier);
- }
- if(killed&&a.devour){
-  u.hp=Math.min(u.maxhp,u.hp+a.devour.heal);
-  if(a.devour.attack)u.devourAttack=Math.min(a.devour.cap,(u.devourAttack||0)+a.devour.attack);
-  emit(b,{type:'heal',side:u.side,lane,col});
- }
- if(damaged&&a.strikeHeal&&u.lastStrikeHealRound!==b.round){
-  u.lastStrikeHealRound=b.round;u.hp=Math.min(u.maxhp,u.hp+a.strikeHeal.amount);emit(b,{type:'heal',side:u.side,lane,col});
- }
- if(killed&&execution&&a.execution?.killHaste)u.killHasteRound=b.round+1;
- if(furious&&killed&&a.furyBarrier&&u.lastFuryBarrierRound!==b.round){
-  u.lastFuryBarrierRound=b.round;protect({u,lane,col},'furyBarrier',a.furyBarrier);
- }
-}
-
-Object.assign(__exports,{resolveStrikeDisplacement,resolveStrikePreparation,resolveStrikeRewards});
 
 },
 "src/ai.js":function(__exports,__load){
@@ -8215,7 +8262,7 @@ function trialBattleObjective(battle,esc){
 }
 
 function renderAscensions(profile,battle,{btn,esc}){
- return `<section class="spaced"><h2 class="section-title">Les grandes ascensions</h2><p class="page-sub">Deux défis communs par faction, pour l’Aube et la Sylve. Une réussite débloque les fusions de ce rang pour les personnages de cette faction. Chaque carte demande ensuite ${EVOLUTION_FUSION_COPIES} copies libres du rang précédent ; aucune carte n’est offerte par l’épreuve.</p><div class="trial-grid">${ALL_EVOLUTION_ASCENSIONS.map(t=>{
+ return `<section class="spaced"><h2 class="section-title">Les grandes ascensions</h2><p class="page-sub">Deux défis communs par faction disponible. Une réussite débloque les fusions de ce rang proposées dans Alchimie pour cette faction. Chaque carte demande ensuite ${EVOLUTION_FUSION_COPIES} copies libres du rang précédent ; aucune carte n’est offerte par l’épreuve.</p><div class="trial-grid">${ALL_EVOLUTION_ASCENSIONS.map(t=>{
   const access=evolutionTrialAccess(profile,t.id,battle),rank=CARD_RARITIES.find(r=>r.id===t.to).name,faction=FACTIONS[t.faction].short,count=EVOLUTION_FUSIONS.filter(r=>r.ascension===t.id).length;
   return `<article class="card-panel ascension-card" data-trial-id="${esc(t.id)}"><div class="kicker">ASCENSION ${esc(faction)} · RANG ${esc(rank)}</div><h2>${esc(t.name)}</h2><span class="pill">${access.completed?'✓ Fusions débloquées':`${count} fusions à débloquer`}</span><p class="trial-objective">${esc(trialObjectiveText(t))}</p><p><b>Récompense :</b> accès au rang ${esc(rank)} pour ${esc(faction)} par fusion, sans coût ni copie consommée pour tenter l’épreuve. Pas d’or, d’éclats ou d’XP.</p><p class="hint">${access.ok?'Objectif annoncé : préparez votre deck pour ce combat de boss.':esc(access.reason)}</p>${btn(access.completed?'Ascension accomplie':'Tenter l’ascension','trial-start',`data-id="${esc(t.id)}" ${!access.ok?'disabled':''}`,'primary')}</article>`;
  }).join('')}</div></section>`;
