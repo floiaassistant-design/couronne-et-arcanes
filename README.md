@@ -4,9 +4,10 @@ Le jeu intègre les sauvegardes protégées, Garde/Riposte uniques, le deck manu
 les paquets/fusions et les ascensions Aube, Sylve et Ombre. La [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75)
 a intégré dix évolutions Rares/Épiques Forge et leur paquet à `main`,
 avec six contrôles réussis. Leur publication sur Sites reste à vérifier séparément.
-Les rangs supérieurs Forge et les évolutions Éther restent hors de cette tranche.
-Une [proposition distincte de cinq Légendaires Forge](docs/FORGE_LEGENDAIRES_STATS.md) est en préparation : elle n'est ni intégrée à `main` ni publiée tant que sa PR et son export autonome ne sont pas validés.
+Les autres hauts rangs Forge et les évolutions Éther font l’objet de lots séparés.
+Les [cinq Légendaires Forge de statistiques](docs/FORGE_LEGENDAIRES_STATS.md) sont intégrées par la PR 78 le 3 novembre 2026, avec leurs fusions et leur export synchronisé. Leur publication Sites reste distincte.
 La [suite Marchefer Légendaire](docs/FORGE_MARCHEFER_LEGENDAIRE.md) prépare son pouvoir de récupération de bouclier après élimination, dans une PR distincte et dépendante du lot précédent. Ce pouvoir n'est pas encore intégré ou publié.
+Le [Foreur Légendaire](docs/FORGE_FOREUR_LEGENDAIRE.md) est proposé séparément : Foreuse d'acier retire jusqu'à 2 points de barrière personnelle avant l'attaque normale, au plus une fois tous les 3 tours. Ce lot reste soumis à revue et validation.
 [Contrat Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md).
 [État intégré et publication](docs/ETAT_PROJET.md) · [Carte des tests](docs/CARTE_TESTS.md).
 
@@ -25,7 +26,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 évolutions Rares, puis du Milicien Épique après le premier boss. Accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve, 43 Ombre et dix évolutions Forge supplémentaires. Les 64 Divines/Éveillées Aube/Sylve/Ombre exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
+sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve, 43 Ombre et quinze évolutions Forge supplémentaires. Les 64 Divines/Éveillées Aube/Sylve/Ombre exigent leurs grandes ascensions communes. Le laboratoire reste disponible pour les tester.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
@@ -81,7 +82,7 @@ de Concorde sur l’image est conservée.
 
 ### Collection — six cartes et aperçu rapide
 
-Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube, Sylve, Ombre et Forge définies montrent leurs chiffres et leurs stocks réels : 142 évolutions sont accessibles par fusion, dont 48 aussi dans les paquets et quatre également obtenables par épreuve. Les 64 Divines/Éveillées indiquent « Ascension requise » avant le défi commun correspondant. Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
+Pour chaque unité, la Collection conserve **six emplacements de rareté côte à côte**. Sur la carte, le descriptif reste court ; au **survol**, une fiche synthétique indique les statistiques et pouvoirs de la version affichée. Le focus clavier et le toucher donnent accès au même aperçu directement depuis la carte, **sans bouton de fiche ajouté**. Les versions Aube, Sylve, Ombre et Forge définies montrent leurs chiffres et leurs stocks réels : les versions livrées sont accessibles par fusion ; leurs fiches précisent aussi les paquets ou épreuves disponibles. Les 64 Divines/Éveillées indiquent « Ascension requise » avant le défi commun correspondant. Les rangs inférieurs inexistants et les évolutions encore « À concevoir » restent sans statistiques inventées. La même fiche sert à la main, au plateau des deux camps, aux decks, Atelier/Alchimie, paquets, récompenses et laboratoire. Sur mobile, le premier toucher consulte ; le second sur la même carte de main sélectionne, avant de choisir une case de pose. [Contrat de présentation](docs/AUBE_PRESENTATION.md).
 
 ## Progression et sauvegarde
 

@@ -89,6 +89,18 @@ refusé, double clic, Collection/deck, import/export, attaque éliminatrice, bou
 de couronne et reprise, dans les quatre parties déjà distribuées aux groupes.
 Aucun nouveau job ni exécution de la suite entière en double.
 
+## Foreur Légendaire — proposition du 3 novembre
+
+`forge_foreur.test.mjs` ajoute les cas de retrait de barrière avant frappe,
+provenance, plafonnement du retrait, armure, cadence, cible éligible, Silence,
+attaque nulle, gardien, intentions simultanées, deux camps/quatre niveaux,
+instantanés, sauvegarde/import, fiches et moteur embarqué. 149 recettes passent
+par les fusions et 2 384 exécutions du simulateur commun, sans modifier sa référence.
+`forge-drill` étend les quatre parties du pilote navigateur ; son combat préparé
+garantit une barrière personnelle après le vrai parcours UI de fusion/deck.
+La fixture est validée et n'attribue aucun déclenchement Foreuse à la main.
+Elle ne remplace pas une campagne UI complète ni une preuve d'équilibrage.
+
 ## Lot Sylve Divine / Éveillée proposé le 1er novembre
 
 `sylve_ascended.test.mjs` couvre les nouveaux déclencheurs et états facultatifs,

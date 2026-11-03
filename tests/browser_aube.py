@@ -69,7 +69,7 @@ async def run(browser,label,viewport,faction='aube'):
             'smith':[6,8,8,None,None,None],
             'golem':[None,12,14,None,None,None],
             'bomb':[None,3,5,5,None,None],
-            'drill':[5,7,7,None,None,None],
+            'drill':[5,7,7,7,None,None],
             'colossus':[None,None,None,13,None,None],
             'engineer':[None,None,7,9,None,None],
             'cannon':[None,None,7,9,None,None],

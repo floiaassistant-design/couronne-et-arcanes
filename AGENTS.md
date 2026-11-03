@@ -146,6 +146,10 @@
   sans réduire un surplus préexistant. Les quotas déclenchés par les attaques sont
   propres à l'invocation, facultatifs et validés à la reprise ; une élimination
   directe ne se confond pas avec une Riposte, un poison ou un dégât secondaire.
+- Les préparations de frappe lisent le registre et utilisent les primitives de
+  protection communes ; retirer une barrière conserve ses origines et ne crée
+  aucun dégât aux PV. Le quota ne se consomme qu'avec une cible éligible et une
+  attaque normale réellement effectuée, distincte des sorts et des Ripostes.
 - `unit-effects.js` partage malus d'attaque, poison paramétré et régénération.
   L'ATQ permanente ne change pas ; malus consommé à la prochaine intention d'attaque
   ou Riposte valide, bonus inclus, minimum zéro. Pas de consommation par sort ni

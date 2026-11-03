@@ -1,4 +1,4 @@
-# Reprise des migrations de cartes — Forge Rare/Épique intégrée le 2 novembre 2026
+# Reprise des migrations de cartes — état du 3 novembre 2026
 
 Source de conception : [tableau maître unique](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
 édition relue `2026-11-02T16:09:01.799Z`. Les compteurs ci-dessous décrivent
@@ -18,7 +18,7 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
-| Forge | 10 | 39 sur 39 cases futures | 10 Rares/Épiques intégrées par PR 75 (7 unités) ; autres évolutions non implémentées sur main |
+| Forge | 10 | 39 sur 39 cases futures | 10 Rares/Épiques et 5 Légendaires de statistiques intégrées par PR 75/78 ; autres lots suivis séparément |
 | Éther | 11 | 9 sur 39 cases futures | Feu follet et Oracle complets ; autres cases encore ouvertes dans cette édition ; règles partielles de Garde distinctes |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
@@ -74,13 +74,14 @@ La publication du jeu reste une opération distincte.
 
 Les 39 évolutions Forge sont entièrement validées dans la conception.
 La première tranche [Rare/Épique](FORGE_RARE_EPIQUE.md) est intégrée par la PR 75 :
-dix versions sur sept personnages (3 Rares et 7 Épiques), 142 recettes au total
-sur main. La publication Sites doit être vérifiée indépendamment de la fusion. L'Éther conserve 30 cases futures incomplètes dans cette édition.
+dix versions sur sept personnages (3 Rares et 7 Épiques), 142 recettes au total après cette fusion. La publication Sites doit être vérifiée indépendamment de la fusion. L'Éther conserve 30 cases futures incomplètes dans cette édition.
 La nouvelle portée native 3 du Feu follet est une décision séparée du natif 2
 encore au moteur ; elle exige son propre périmètre, contrôle et documentation.
 Relire Notion à la reprise, car la conception continue en parallèle.
 
-La tranche suivante, [cinq Légendaires Forge uniquement statistiques](FORGE_LEGENDAIRES_STATS.md), est préparée dans la [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78) à partir du main du 2 novembre 2026. Elle n'est **pas intégrée** par la présente note. `JOUER.html` a été régénéré, les références de fusion et de Collection actualisées et le parcours navigateur Légendaire partagé étendu à Forge. La CI du commit final et la revue complète restent obligatoires avant proposition de fusion. Le recul du Marteau, la réaction de Garde du Golem, la Foreuse et le bouclier du Marchefer restent des travaux séparés.
+Les [cinq Légendaires Forge de statistiques](FORGE_LEGENDAIRES_STATS.md) sont intégrées par la [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78) le 3 novembre 2026, au commit `304e20f1f0d8a5007948ddba6577990d7a5f2123`, avec accord spécifique, six contrôles réussis et export synchronisé. Marchefer, Foreur, Golem et Marteau restent des tranches distinctes ; aucun succès de cette PR ne valide leurs nouveaux pouvoirs.
+
+La [proposition Foreur Légendaire](FORGE_FOREUR_LEGENDAIRE.md) suit le Marchefer : une évolution de plus, 27 versions Forge et 149 recettes dans sa branche, sans activer les rangs Divin/Éveillé, le Marteau ou le Golem.
 
 ## Conditions de reprise
 

@@ -1,4 +1,4 @@
-# État du projet — jalons durables (2 novembre 2026)
+# État du projet — jalons durables (3 novembre 2026)
 
 Ce fichier décrit les faits intégrés et les chantiers durables, pas l'état
 instantané des tests, des branches ou des déploiements. **À chaque reprise**,
@@ -9,6 +9,10 @@ Ne pas déduire un état actuel d'un ancien SHA ou d'un compte rendu daté.
 ## Forge Rare/Épique — intégrée le 2 novembre 2026
 
 La [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75) a intégré dix versions Forge sur sept unités et un paquet distinct. Fusion squash au commit `5d9e2861911744ed051d3f656cdb186025451613`, arbre identique à la tête testée `42103d5` ; six contrôles réussis, sans nouveau rang supérieur ni écriture Notion. Publication Sites distincte, à confirmer.
+
+## Forge — cinq Légendaires de statistiques intégrées le 3 novembre
+
+La [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78) est fusionnée après autorisation et six contrôles réussis au commit `304e20f1f0d8a5007948ddba6577990d7a5f2123`. Arbre `124b28ad899e225c93baf150ab87ea145deff4cb` identique à la tête testée ; export `27ba32eff561b798471ae8b2cf914fc06dc29025` synchronisé. Cinq versions supplémentaires par fusion après mission 06, sans nouveau pouvoir ni changement de paquet. Publication suivie indépendamment par le flux Sites existant.
 
 ## Jalons intégrés
 
@@ -53,7 +57,7 @@ La [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75)
 
 Les évolutions de l'Aube sont obtenables (41), celles de la Sylve également
 jusqu'au rang Éveillé (48), et celles de l'Ombre jusqu'à Éveillée (43) sont
-intégrées. Dix évolutions Forge Rares/Épiques sont également sur main ;
+intégrées. Dix évolutions Forge Rares/Épiques et cinq Légendaires de statistiques sont également sur main ;
 l'Éther conserve ses versions natives.
 Le laboratoire réutilise le même moteur sans modifier la progression.
 
@@ -94,8 +98,8 @@ La publication du main intégrant ces lots est suivie indépendamment de leur fu
 - Relire les validations Notion les plus récentes à chaque tranche ; préparer
   séparément les hauts rangs Forge encore absents et les évolutions Éther,
   sans appliquer implicitement leurs décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
-- Terminer la revue des [cinq Légendaires Forge de statistiques](FORGE_LEGENDAIRES_STATS.md) dans la [PR 78](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/78) : export hors ligne régénéré, références des tests actualisées et parcours navigateur Forge ajouté ; CI du commit final puis accord spécifique requis. Proposition non fusionnée, non publiée.
 - Préparer la [suite Marchefer Légendaire](FORGE_MARCHEFER_LEGENDAIRE.md) séparément : Ferraille récupérée, cadence sauvegardée, primitive de bouclier commune et parcours réel de fusion/combat/reprise. Le Golem reste en attente : la Garde normale cible directement le gardien et ne passe pas par l'interception de couronne requise par Cœur runique ; ne pas modifier implicitement cette condition.
+- Préparer le [Foreur Légendaire](FORGE_FOREUR_LEGENDAIRE.md) dans une tranche distincte du Marchefer : retrait de barrière avant frappe, cadence sauvegardée, même moteur et accès de fusion. Proposition non fusionnée, non publiée ; CI du commit final et autorisation spécifique requises.
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 

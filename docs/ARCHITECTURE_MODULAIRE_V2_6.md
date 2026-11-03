@@ -1,5 +1,21 @@
 # Architecture modulaire — lecture courante
 
+## Foreur Légendaire — proposition du 3 novembre 2026
+
+`unit-triggers.js` ajoute la préparation de frappe normale, alimentée par le
+registre, puis réutilise `unit-barriers.absorbBarrier` pour conserver les origines
+et les instantanés. `battle.js` orchestre cet appel avant son `hit` commun,
+sans seconde règle de dégâts, modification de Garde ou nouvel appel pour les
+sorts/Ripostes. Les fichiers gardent leurs responsabilités ; le point de frappe
+ajoute seulement ce raccordement, sans découpage artificiel du moteur.
+
+Le prochain tour éligible est un champ facultatif d'unité validé par
+`unit-effects.js`. Les fiches et Silence lisent la nouvelle capacité. Aucun
+module de production, dépendance, actif, clé de profil ou moteur parallèle.
+Le scénario navigateur partagé utilise un combat préparé valide pour garantir
+la barrière adverse après une véritable fusion dans l'interface.
+[Contrat et limites](FORGE_FOREUR_LEGENDAIRE.md).
+
 ## Marchefer Légendaire — proposition du 3 novembre 2026
 
 `unit-barriers.js` partage `grantCrownShield` entre Protection d'arrivée,
