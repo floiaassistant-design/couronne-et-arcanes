@@ -192,7 +192,11 @@ Les quatre parties d’ascension Forge ajoutent ce combat tactique préparé, é
 
 `ether_evolutions.test.mjs` couvre les 23 versions à quatre niveaux et deux camps, les six évolutions de paquet réellement tirées, pouvoirs natifs, Portail, Silence, protections, instantanés, import/reprise et moteur embarqué. Le catalogue générique vérifie les douze fusions nouvelles et 180 recettes dans 2 880 exécutions déterministes. Les pilotes de paquets et Légendaires partagés ajoutent la Voyante et le Chevalier (source Épique native protégée, boss 06, vraie Perforation contre Golem dans un combat préparé). Les quatre parties existantes couvrent bureau, portrait, paysage et HTTP, sans nouveau job ni répétition de suite entière. Les onze personnages Éther conservent aussi la revue des 66 cases de Collection et des illustrations exactes. [Contrat et limites](ETHER_SOCLE_EVOLUTIONS.md).
 
-## Golem — trois hauts rangs proposés
+## Éther — Repli et présage proposés le 4 novembre
+
+`ether_tactical.test.mjs` ajoute 18 tests métier : deux camps/deux géométries, portée, quotas, protections, exclusions, pièges, mouvement normal/téléportation/recul, immobilisation, source disparue, morts, validation/reprise et instantanés. Deux scénarios navigateur partagent `fixtures/ether-battle.mjs`, sont raccordés aux quatre parties existantes et suivent le présage jusqu’au tour suivant. `ether_evolutions.test.mjs` couvre 27 versions × quatre niveaux × deux camps et les huit références évoluées du paquet ; `evolution_fusion.test.mjs` couvre 187 recettes et 2 992 combats déterministes. Aucun job ajouté, aucune ancienne assertion d’absence supprimée : elles visent les versions encore absentes. Vérifications locales : 764 Node et 120 parité réussies ; navigateur à confirmer par CI, Playwright absent localement.
+
+## Golem — trois hauts rangs intégrés par PR 85
 
 `forge_golem.test.mjs` ajoute quinze cas : vraies fusions, deux camps/deux géométries, menace de couronne, exclusions, gardien dépassé/interligne, priorité, quotas par invocation, plafond/surplus, absorption, Silence, attaque nulle, mort après réaction, reprise/import, instantanés, fiches, moteur embarqué et fixture navigateur partagée. Catalogue : 49 versions Forge × quatre niveaux × deux camps et 183 recettes dans 2 928 exécutions déterministes. Les vérifications d’absence sont déplacées vers la Sentinelle encore absente, sans perdre les assertions. Le contrôle de rendu d’ascension annonce désormais dix recettes Forge par rang, comme Aube.
 

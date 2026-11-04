@@ -1,8 +1,13 @@
-# Golem — trois hauts rangs, proposition du 4 novembre 2026
+# Golem — trois hauts rangs, intégrés par PR 85 le 4 novembre 2026
+
+PR 85 fusionnée sur accord spécifique au commit `4de013ddf06a3a6f6d4f46041af0e63e789f1eef`.
+Arbre `a1df3b30936765d3e02301dc51371d87759df3af` identique à la tête revue/testée,
+six contrôles réussis et export `4ee516061fb62028aa86eb20b02bda19c006113c` confirmé.
+Le périmètre et les comptes ci-dessous décrivent le lot livré ; publication distincte.
 
 ## Statut et conception
 
-Proposition non fusionnée. Le lot Éther PR 84 et sa correction de fiche Portail
+Lot intégré. Le lot Éther PR 84 et sa correction de fiche Portail
 sont intégrés au commit `bc826d3ca1daa2824b9e895c51f4e61077870583`, arbre
 `f83f7819b130ba8d7191053279c69fb65769c3cd`, identique à la tête dont les six
 contrôles ont réussi. La publication terminale confirmée reste Sites v27 / PR 83 ;

@@ -73,8 +73,8 @@ La [PR 82](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/82)
 
 Les évolutions de l'Aube sont obtenables (41), celles de la Sylve également
 jusqu'au rang Éveillé (48), et celles de l'Ombre jusqu'à Éveillée (43) sont
-intégrées. Dix évolutions Forge Rares/Épiques, huit Légendaires supplémentaires et dix-huit Divines/Éveillées sont également sur main ;
-douze évolutions Éther sont également intégrées par PR 84, soit 23 versions de cette faction.
+intégrées. Dix évolutions Forge Rares/Épiques, neuf Légendaires supplémentaires et vingt Divines/Éveillées sont également sur main ;
+douze évolutions Éther sont intégrées par PR 84, soit 23 versions de cette faction.
 Le laboratoire réutilise le même moteur sans modifier la progression.
 
 ## Processus de livraison
@@ -109,8 +109,8 @@ La publication du main intégrant ces lots est suivie indépendamment de leur fu
 - Relire les validations Notion les plus récentes à chaque tranche ; préparer
   séparément les hauts rangs Forge encore absents et les évolutions Éther,
   sans appliquer implicitement leurs décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
-- Terminer le raccordement du Cœur runique préparé dans la PR 85 : le propriétaire a validé le cas interposé le 4 novembre, limité au coup qui aurait effectivement atteint la couronne sans ce Golem. Les autres coups reçus ne donnent aucun bouclier.
-- Les PR Forge jusqu’à la PR 83 et le [lot Éther de statistiques](ETHER_SOCLE_EVOLUTIONS.md) de PR 84 sont intégrés. Les trois hauts rangs du Golem sont préparés dans PR 85, avec règle validée et contrôles à lire sur sa tête finale. L’accord reçu autorise la fusion des lots prêts.
+- Le Golem est intégré par PR 85 ; son cas interposé, validé par le propriétaire et enregistré dans Notion, ne récompense pas tous les coups reçus.
+- Les PR Forge jusqu’à la PR 83 et le [socle Éther](ETHER_SOCLE_EVOLUTIONS.md) de PR 84 sont intégrés. La proposition [Repli et présage](ETHER_REPLI_PRESAGE.md) ajoute quatre versions dans une branche réconciliée avec le Golem intégré. Aucun lot proposé n’est annoncé comme intégré.
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 
@@ -131,10 +131,14 @@ Après le Marteau Légendaire (PR 81), [huit évolutions Divines/Éveillées](FO
 
 La [PR 83](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/83) est fusionnée au commit `86efbca0b62370eb15d46e2d5a577e4bc974b887`, après accord explicite renouvelé, revue et six contrôles réussis. Arbre `10ecd7ce053aadeedffd6edae5771eddffc9ba38` identique à la tête testée ; export `9ed63f64020ecf69d8dedd3424953dcffb256c08` confirmé. Forge compte 46 versions, dont 36 évolutions, et main 168 recettes. Publication par le suivi existant, distincte de la fusion.
 
-## Éther — douze évolutions intégrées par PR 84 le 4 novembre
+## Éther — douze évolutions intégrées par PR 84
 
-Le [socle de statistiques Éther](ETHER_SOCLE_EVOLUTIONS.md), six Rares/Épiques et six Légendaires sur huit personnages, est intégré au commit `bc826d3ca1daa2824b9e895c51f4e61077870583`, après six contrôles réussis. Arbre `f83f7819b130ba8d7191053279c69fb65769c3cd` identique à la tête revue/testée ; export `bcf3ecd146e2ce07be269c4edb82f79fe8c4b195` confirmé sur main. 23 versions Éther et 180 recettes sur main après cette fusion, sans changement natif du Feu follet. La fiche Portail a été corrigée avant fusion. Publication distincte, par le suivi existant.
+Le [socle de statistiques Éther](ETHER_SOCLE_EVOLUTIONS.md) est intégré au commit `bc826d3ca1daa2824b9e895c51f4e61077870583`, arbre `f83f7819b130ba8d7191053279c69fb65769c3cd` identique à la tête testée. 23 versions Éther et 180 recettes sur main ; export `bcf3ecd146e2ce07be269c4edb82f79fe8c4b195` synchronisé. Publication distincte : le dernier résultat terminal confirmé reste Sites v27 / PR83.
 
-## Proposition suivante — trois hauts rangs du Golem
+## Proposition suivante — Repli spectral et Étoile immobile
 
-Le [raccordement du Cœur runique](FORGE_GOLEM_COEUR_RUNIQUE.md) prépare Légendaire, Divin et Éveillé, leurs fusions, sauvegardes et présentations : 49 versions Forge et 183 recettes avec le lot Éther intégré. Garde Divine/Éveillée et Cœur après interception réelle sont transcrits ; le propriétaire a validé le 4 novembre la qualification du Golem interposé devant une couronne atteignable, sans autre unité cible. La clarification est enregistrée dans Notion ; la tête finale documentée doit passer ses contrôles avant fusion. Les versions Rare/Épique de main restent inchangées.
+[Contrat](ETHER_REPLI_PRESAGE.md) : trois évolutions du Feu follet et Voyante Légendaire, quatre fusions, paquet Éther enrichi ; 27 versions Éther et 187 recettes dans cette branche. Natif Feu follet conservé à portée 2, rangs ajoutés à portée 3. La branche contient le main intégrant la PR Golem 85, avec imports, quotas, tests et documents préservés. Chaque fusion exige l’accord spécifique du propriétaire. La publication suit uniquement le main intégré et vérifié.
+
+## Golem — trois hauts rangs intégrés par PR 85 le 4 novembre
+
+La [PR 85](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/85) est fusionnée sur accord spécifique au commit `4de013ddf06a3a6f6d4f46041af0e63e789f1eef`. Arbre `a1df3b30936765d3e02301dc51371d87759df3af` exactement identique à la tête revue/testée `f49b5b1`, six contrôles actuels réussis avant fusion. Export `4ee516061fb62028aa86eb20b02bda19c006113c` confirmé. Forge compte 49 versions, dont 39 évolutions ; main compte 183 recettes. La publication est suivie séparément, sans déploiement concurrent. Les mentions « proposition » et comptes antérieurs du contrat Golem décrivent son lot historique.

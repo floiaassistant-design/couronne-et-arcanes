@@ -2,6 +2,7 @@
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {applyUnitPoison,validPoisonOrigin} from './unit-poison.js';
 import {validStrikeModifiers} from './unit-strike-modifiers.js';
+import {validStillOmen} from './unit-omens.js';
 
 export function attackAfterPenalty(u,raw){const boosted=raw+(u.fury||0)+(u.devourAttack||0);return u.attackPenalty?Math.min(boosted,Math.max(u.attackPenalty.minimum||0,boosted-u.attackPenalty.amount)):boosted;}
 export function consumeAttackPenalty(u,raw){
@@ -71,10 +72,10 @@ export function validUnitEffects(u){
   (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
   (u.deathStrikeUsed===undefined||typeof u.deathStrikeUsed==='boolean')&&
   (u.devourAttack===undefined||integer(u.devourAttack,2))&&
-  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound','spottingReadyRound','catalysisReadyRound','lastGuardWardRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
+  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound','spottingReadyRound','catalysisReadyRound','spectralRetreatReadyRound','stillOmenReadyRound','lastGuardWardRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
   (u.scoriaHits===undefined||Number.isSafeInteger(u.scoriaHits)&&u.scoriaHits>=0&&u.scoriaHits<=2)&&
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
-  (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin)&&validStrikeModifiers(u);
+  (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin)&&validStrikeModifiers(u)&&validStillOmen(u);
 }

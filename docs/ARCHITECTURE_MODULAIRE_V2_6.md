@@ -1,8 +1,12 @@
 # Architecture modulaire — lecture courante
 
-## Golem — trois hauts rangs proposés le 4 novembre
+## Éther — Repli et présage proposés le 4 novembre
 
-`guard-candidates.js` propose une qualification pure du gardien interposé devant une couronne atteignable, avec portée et priorité communes, sans rediriger une attaque. `battle.js` transmet ce fait et l’interception existante après les réactions ; `unit-triggers.js` attribue le bouclier et son quota avec les protections communes. `unit-effects.js` valide `lastGuardWardRound`, les vues lisent ce marqueur et le registre. Aucun module ajouté ni calcul de dégâts dupliqué ; les 79 modules et 76 illustrations restent communs aux distributions. Le cas interposé est validé par le propriétaire le 4 novembre ; la clarification documentaire conserve le code déjà testé. [Contrat](FORGE_GOLEM_COEUR_RUNIQUE.md).
+`unit-omens.js` possède la pose, le remplacement, l’annulation sur entrée réelle, la résolution de fin de tour complet et la validation des présages. Aucun import des défenses : `battle.js` injecte `hit` et ses hooks communs, sans cycle. Le recul personnel reste dans `unit-triggers.js`, après réactions, avec géométrie et pièges partagés. Les quotas et marques facultatifs sont validés par `unit-effects.js`. Fiches et Silence lisent le registre. Le graphe découvre le nouveau module dans les deux distributions : 80 modules, 76 illustrations inchangées. `battle.js` reste une orchestration (445 lignes) ; aucune règle de dégâts ou d’animation ajoutée à son corps. [Contrat et interactions](ETHER_REPLI_PRESAGE.md).
+
+## Golem — trois hauts rangs intégrés par PR 85 le 4 novembre
+
+`guard-candidates.js` porte une qualification pure du gardien interposé devant une couronne atteignable, avec portée et priorité communes, sans rediriger une attaque. `battle.js` transmet ce fait et l’interception existante après les réactions ; `unit-triggers.js` attribue le bouclier et son quota avec les protections communes. `unit-effects.js` valide `lastGuardWardRound`, les vues lisent ce marqueur et le registre. Aucun module ajouté ni calcul de dégâts dupliqué ; les 79 modules et 76 illustrations restent communs aux distributions. Le cas interposé est validé par le propriétaire le 4 novembre ; la clarification documentaire conserve le code déjà testé. [Contrat](FORGE_GOLEM_COEUR_RUNIQUE.md).
 
 ## Éther — douze évolutions de statistiques intégrées par PR 84 le 4 novembre
 
