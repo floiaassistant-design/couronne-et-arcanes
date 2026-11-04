@@ -1,6 +1,12 @@
 # Journal des changements
 
-## En préparation — Éther, douze évolutions de statistiques, 4 novembre 2026
+## En préparation — Éther, Repli spectral et Étoile immobile, 4 novembre 2026
+
+- Trois évolutions du Feu follet, portée 3, avec recul personnel Légendaire ; sa Commune garde la portée 2. Voyante Légendaire et présage annulé par un déplacement réel au tour suivant.
+- Quatre fusions supplémentaires, 27 versions Éther et 184 recettes sur cette base indépendante de la PR Golem. Paquet Éther enrichi de ses Feux follets Rare/Épique, prix et taux conservés.
+- États facultatifs repris, protections et mouvements communs, fiches, moteur embarqué et parcours partagés. [Contrat](docs/ETHER_REPLI_PRESAGE.md).
+
+## Intégré par PR 84 — Éther, douze évolutions de statistiques, 4 novembre 2026
 
 - Douze versions sur huit personnages : six Rares/Épiques et six Légendaires, sans nouvelle capacité ni modification native du Feu follet. 23 versions Éther et 180 recettes dans cette branche.
 - Paquet Éther distinct, trois cartes pour 190 or après mission 03, groupes 60/35/5 et pools 6/1/5 ; fusions après missions 01/03/06, sauvegardes et autres paquets conservés.

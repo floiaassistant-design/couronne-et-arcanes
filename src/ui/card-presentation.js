@@ -74,6 +74,9 @@ export function boardInspectionData(battle,uid){
   if(u.lastStandUsed)statuses.push('Dernier Rempart consommé');
   if(u.attackPenalty)statuses.push(`Harcèlement : −${u.attackPenalty.amount} ATQ, ${u.attackPenalty.remaining} attaque restante`);
   if(u.regeneration)statuses.push(`Régénération : ${u.regeneration.amount} PV au prochain tour, ${u.regeneration.remaining} effet restant`);
+  if(u.stillOmen)statuses.push(`Étoile immobile : présage ${u.stillOmen.amount}, fin du tour ${u.stillOmen.dueRound} sans déplacement`);
+  if(u.spectralRetreatReadyRound>battle.round)statuses.push(`Repli spectral disponible au tour ${u.spectralRetreatReadyRound}`);
+  if(u.stillOmenReadyRound>battle.round)statuses.push(`Prochain présage au tour ${u.stillOmenReadyRound}`);
   const penalty=activeStrikeState(u,'armorPenalty',battle.round),protection=activeStrikeState(u,'temporaryArmor',battle.round),calibration=activeStrikeState(u,'calibration',battle.round),mark=activeStrikeState(u,'spotMark',battle.round);
   if(penalty)statuses.push(`Armure −${penalty.amount} à la prochaine attaque directe subie`);
   if(protection)statuses.push(`Blindage : +${protection.amount} Armure à la prochaine attaque directe subie`);

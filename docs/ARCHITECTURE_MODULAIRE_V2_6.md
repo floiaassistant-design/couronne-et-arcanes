@@ -1,6 +1,10 @@
 # Architecture modulaire — lecture courante
 
-## Éther — douze évolutions de statistiques proposées le 4 novembre
+## Éther — Repli et présage proposés le 4 novembre
+
+`unit-omens.js` possède la pose, le remplacement, l’annulation sur entrée réelle, la résolution de fin de tour complet et la validation des présages. Aucun import des défenses : `battle.js` injecte `hit` et ses hooks communs, sans cycle. Le recul personnel reste dans `unit-triggers.js`, après réactions, avec géométrie et pièges partagés. Les quotas et marques facultatifs sont validés par `unit-effects.js`. Fiches et Silence lisent le registre. Le graphe découvre le nouveau module dans les deux distributions : 80 modules, 76 illustrations inchangées. `battle.js` reste une orchestration (442 lignes) ; aucune règle de dégâts ou d’animation ajoutée à son corps. [Contrat et interactions](ETHER_REPLI_PRESAGE.md).
+
+## Éther — douze évolutions de statistiques intégrées par PR 84 le 4 novembre
 
 `cards/ether.js` contient les patches et leur provenance ; `cards/evolutions.js` partage la famille avec le registre et les recettes. `ETHER_UNIT_IDS` expose les onze natifs, les huit personnages évolutifs utilisent la présentation structurée commune. Le paquet réutilise `evolutionPack` et ses transactions ; aucune règle de moteur modifiée. Le graphe embarque le module supplémentaire dans le web et l’autonome, soit 79 modules et les 76 illustrations existantes. Aucun cycle, nouveau pilote, CSS ou dépendance. [Contrat](ETHER_SOCLE_EVOLUTIONS.md).
 

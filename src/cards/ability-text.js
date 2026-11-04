@@ -63,6 +63,8 @@ export function unitCardText(d){
 
 export function unitAbilityDetails(d){
  const a=d.abilities,lines=[],scope=p=>p.scope==='all-lines'?'toutes les lignes':'sa ligne';
+ if(a.spectralRetreat)lines.push(`Repli spectral : après une attaque normale touchant une unité ennemie qui survit, recule de ${a.spectralRetreat.cells} case vers sa propre couronne sur sa ligne si elle est libre et dans le plateau, au plus une fois tous les ${a.spectralRetreat.period} tours. Une frappe entièrement absorbée compte ; aucun repli sur une couronne, un sort ou une Riposte, ni après la mort du Feu follet. Aucune attaque supplémentaire.`);
+ if(a.stillOmen)lines.push(`Étoile immobile : après une attaque normale retirant au moins 1 PV à un ennemi survivant, place un présage, au plus une fois tous les ${a.stillOmen.period} tours. Si la cible reste sans déplacement réel pendant le tour de combat suivant complet, elle subit ${a.stillOmen.amount} dégâts bruts en fin de tour, protections normales. Tout déplacement pendant ce tour annule le présage, même avec retour à la case initiale ; l’immobilisation seule ne l’annule pas. Une cible par Voyante, sans cumul ni attaque supplémentaire ; la marque disparaît après résolution ou mort de la cible.`);
  if(a.portal)lines.push(`Portail : avant son déplacement normal, change de ligne à la même colonne libre et autorisée si le moteur juge le gain suffisant. Au plus une fois tous les ${a.portal.period} tours ; aucune arrivée devant la couronne adverse. Ne donne ni attaque ni déplacement supplémentaire.`);
  if(a.armor)lines.push(`Armure ${a.armor.amount} : réduit les dégâts, minimum ${a.armor.minimumDamage}.`);
  if(a.firstHitReduction)lines.push(`Premier coup reçu : −${a.firstHitReduction.amount} dégâts, une fois par invocation.`);
@@ -117,6 +119,8 @@ export function unitAbilityDetails(d){
 function strikeWardName(p){return p.overflowBarrier?'Forge infatigable':p.requiresKill?'Ferraille récupérée':'Recyclage actif';}
 function advancedSummary(a){
  const parts=[];
+ if(a.spectralRetreat)parts.push(`Repli spectral : recul ${a.spectralRetreat.cells}`);
+ if(a.stillOmen)parts.push(`Étoile immobile : présage ${a.stillOmen.amount}`);
  if(a.knockback)parts.push(a.knockback.blockedDamage?`Recul ou Fracas +${a.knockback.blockedDamage}`:a.knockback.follow?'Recul · Avancée':`Coup de masse : recul ${a.knockback.cells}`);
  if(a.strikeWard)parts.push(`${strikeWardName(a.strikeWard)} · Couronne +${a.strikeWard.amount}`);
  if(a.barrierDrill)parts.push(`Foreuse : barrière −${a.barrierDrill.amount}${a.barrierDrill.breakBarrier?' · Barrière +'+a.barrierDrill.breakBarrier.amount+' si brisée':''}`);

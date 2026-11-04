@@ -76,12 +76,13 @@ async def run(browser,label,viewport,faction='aube'):
             'mechanist':[None,8,10,10,10,10],
             'ironwraith':[7,9,9,9,9,9],
             'alchemist':[None,5,7,7,7,7],
+            'spark':[3,4,4,4,None,None],
             'mystic':[None,4,6,6,None,None],
             'elemental':[None,None,8,10,None,None],
             'griffin':[None,None,6,8,None,None],
             'sentinel':[None,9,11,None,None,None],
             'tempest':[None,6,8,8,None,None],
-            'seer':[4,5,5,None,None,None],
+            'seer':[4,5,5,5,None,None],
             'aetherknight':[None,None,9,11,None,None],
             'portal_walker':[None,5,7,7,None,None]
         }.get(card_id)

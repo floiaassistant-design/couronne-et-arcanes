@@ -74,7 +74,7 @@ La [PR 82](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/82)
 Les évolutions de l'Aube sont obtenables (41), celles de la Sylve également
 jusqu'au rang Éveillé (48), et celles de l'Ombre jusqu'à Éveillée (43) sont
 intégrées. Dix évolutions Forge Rares/Épiques, huit Légendaires supplémentaires et dix-huit Divines/Éveillées sont également sur main ;
-l'Éther conserve ses versions natives.
+douze évolutions Éther sont intégrées par PR 84, soit 23 versions de cette faction.
 Le laboratoire réutilise le même moteur sans modifier la progression.
 
 ## Processus de livraison
@@ -109,8 +109,8 @@ La publication du main intégrant ces lots est suivie indépendamment de leur fu
 - Relire les validations Notion les plus récentes à chaque tranche ; préparer
   séparément les hauts rangs Forge encore absents et les évolutions Éther,
   sans appliquer implicitement leurs décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
-- Raccorder le futur Cœur runique du Golem à une interception effective : la Garde normale cible directement le gardien et ne passe pas par l'interception de couronne requise. Respecter les règles validées, sans attribuer le bonus à tous les coups reçus.
-- Les PR Forge jusqu’à la PR 83 sont intégrées. Préparer les [évolutions Éther de statistiques](ETHER_SOCLE_EVOLUTIONS.md), avec leurs propres contrôles et revue. Le Golem Rare/Épique est jouable, absent du stock de départ : paquets natifs/Forge et fusion Épique ; ses trois derniers rangs attendent Cœur runique. L’accord reçu autorise la fusion des lots prêts.
+- La PR 85 prépare trois hauts rangs du Golem ; la qualification du coup interposé a été validée par le propriétaire et enregistrée dans Notion le 4 novembre. Les six contrôles de sa tête `f49b5b1` sont réussis. Fusion en attente d’accord spécifique selon les consignes actuelles.
+- Les PR Forge jusqu’à la PR 83 et le [socle Éther](ETHER_SOCLE_EVOLUTIONS.md) de PR 84 sont intégrés. La proposition [Repli et présage](ETHER_REPLI_PRESAGE.md) ajoute quatre versions dans une branche indépendante de la PR 85. Aucun lot proposé n’est annoncé comme intégré.
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 
@@ -131,6 +131,10 @@ Après le Marteau Légendaire (PR 81), [huit évolutions Divines/Éveillées](FO
 
 La [PR 83](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/83) est fusionnée au commit `86efbca0b62370eb15d46e2d5a577e4bc974b887`, après accord explicite renouvelé, revue et six contrôles réussis. Arbre `10ecd7ce053aadeedffd6edae5771eddffc9ba38` identique à la tête testée ; export `9ed63f64020ecf69d8dedd3424953dcffb256c08` confirmé. Forge compte 46 versions, dont 36 évolutions, et main 168 recettes. Publication par le suivi existant, distincte de la fusion.
 
-## Proposition suivante — douze évolutions Éther
+## Éther — douze évolutions intégrées par PR 84
 
-Le [socle de statistiques Éther](ETHER_SOCLE_EVOLUTIONS.md) ajoute six Rares/Épiques et six Légendaires sur huit personnages, avec pouvoirs natifs hérités, fusions et paquet distinct. La branche définit 23 versions Éther et 180 recettes, sans changement natif du Feu follet ni activation des hauts rangs ou des nouvelles capacités Éther. Les trois rangs futurs du Golem restent distincts. L’accord reçu autorise la fusion des lots prêts après leurs propres contrôles et revue ; aucune fusion automatique.
+Le [socle de statistiques Éther](ETHER_SOCLE_EVOLUTIONS.md) est intégré au commit `bc826d3ca1daa2824b9e895c51f4e61077870583`, arbre `f83f7819b130ba8d7191053279c69fb65769c3cd` identique à la tête testée. 23 versions Éther et 180 recettes sur main ; export `bcf3ecd146e2ce07be269c4edb82f79fe8c4b195` synchronisé. Publication distincte : le dernier résultat terminal confirmé reste Sites v27 / PR83.
+
+## Proposition suivante — Repli spectral et Étoile immobile
+
+[Contrat](ETHER_REPLI_PRESAGE.md) : trois évolutions du Feu follet et Voyante Légendaire, quatre fusions, paquet Éther enrichi ; 27 versions Éther et 184 recettes dans cette branche. Natif Feu follet conservé à portée 2, rangs ajoutés à portée 3. Base indépendante de la PR Golem 85 ; les deux PR modifient des imports, quotas et documents communs, à réconcilier avant assemblage. Chaque fusion exige l’accord spécifique du propriétaire. La publication suit uniquement le main intégré et vérifié.

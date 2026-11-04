@@ -6,6 +6,21 @@ import {lastCell} from './board.js';
 import {placeSpotMark} from './unit-strike-modifiers.js';
 import {poisonBelongsTo,clearUnitPoison} from './unit-poison.js';
 
+// Repli personnel après une frappe normale touchant une unité encore vivante.
+export function resolveSpectralRetreat(b,u,target,{performed,suppressed},hooks){
+ const p=versionUnitAbilities(u)?.spectralRetreat;
+ if(!p||!performed||suppressed||u.hp<=0||!target||target.hp<=0||target.side===u.side||u.spectralRetreatReadyRound>b.round)return false;
+ const lane=b.board.findIndex(row=>row.includes(u)),row=b.board[lane];
+ if(!row)return false;
+ const from=row.indexOf(u),to=from+(u.side==='p'?-1:1)*p.cells;
+ if(to<1||to>lastCell(b)||row[to])return false;
+ u.spectralRetreatReadyRound=b.round+p.period;
+ row[to]=u;row[from]=null;
+ hooks.emit(b,{type:'move',side:u.side,lane,from,to,spectralRetreat:true});
+ hooks.enter(b,u,lane,to);
+ return true;
+}
+
 // Détonation secondaire après la frappe : jamais une nouvelle attaque.
 export function resolveAlchemyStrike(b,u,target,poisonedAtStart,suppressed,hit){
  const p=versionUnitAbilities(u)?.catalysis;
