@@ -1,4 +1,4 @@
-"""Fusions Légendaires Sylve/Ombre/Forge, vrai combat et reprise dans le jeu distribué."""
+"""Fusions Légendaires partagées, vrai combat et reprise dans le jeu distribué."""
 import argparse,asyncio,copy,json,subprocess,threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
@@ -15,13 +15,14 @@ SCENARIOS={
     'forge-smith':{'card':'smith','faction':'forge','stats':(4,8),'effect':'knockbackReadyRound','effectSide':'p','status':'Coup de masse','detail':['Coup de masse','3 tours','fusion'],'future':'Ascension requise','prepared':True},
     'forge-drill':{'card':'drill','faction':'forge','stats':(3,7),'effect':'barrierDrillReadyRound','effectSide':'p','status':'Foreuse','detail':['Foreuse d’acier','2 points','3 tours','fusion'],'future':'Ascension requise','prepared':True},
     'forge':{'card':'alchemist','stats':(4,7),'effect':'poisonTurns','status':'Poison 2 tour(s)','detail':['Poison 1','2 tours','fusion'],'future':'Ascension requise'},
+    'ether':{'card':'aetherknight','stats':(5,11),'effect':'hp','status':'Perforation','detail':['Perforation','Charge','fusion'],'future':'À concevoir','prepared':True,'nativeSource':True,'damageOnly':5},
 }
-PROFILE_SCRIPT="import {freshProfile} from './src/engine.js';const p=freshProfile(),id=process.argv[1];p.completed=['01','02','03','04','05'];p.unlocked=6;p.guideSeen=true;p.evolvedCollection={[id+':épique']:3};p.deck[0]={id,rarity:'épique'};console.log(JSON.stringify(p));"
-PROFILES={name:json.loads(subprocess.check_output(['node','--input-type=module','-e',PROFILE_SCRIPT,cfg['card']],cwd=ROOT)) for name,cfg in SCENARIOS.items()}
+PROFILE_SCRIPT="import {freshProfile} from './src/engine.js';const p=freshProfile(),id=process.argv[1],native=process.argv[2]==='native';p.completed=['01','02','03','04','05'];p.unlocked=6;p.guideSeen=true;if(native)p.collection[id]=3;else p.evolvedCollection={[id+':épique']:3};p.deck[0]=native?id:{id,rarity:'épique'};console.log(JSON.stringify(p));"
+PROFILES={name:json.loads(subprocess.check_output(['node','--input-type=module','-e',PROFILE_SCRIPT,cfg['card'],'native' if cfg.get('nativeSource') else 'evolved'],cwd=ROOT)) for name,cfg in SCENARIOS.items()}
 PLAN="""import {createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn} from './src/engine.js';import {CAMPAIGN} from './src/data.js';const p=JSON.parse(process.argv[1]),id=process.argv[2],effect=process.argv[3],effectSide=process.argv[4]||'e';let found=null;const enemy=b=>{for(let n=0;n<2&&b.status==='active';n++)if(playEnemyCard(b).done)break;if(b.status==='active')finishEnemyTurn(b);};for(let seed=1;seed<=1000&&!found;seed++){const b=createBattle(p,CAMPAIGN[5],seed,{turnFlow:'alternating'});let i=b.heroes.p.hand.findIndex(c=>c.id===id&&c.rarity==='légendaire'),opening=0;if(i<0)continue;while(b.heroes.p.hand[i].wait>0&&opening<4&&b.status==='active'){endPlayerTurn(b);enemy(b);opening++;i=b.heroes.p.hand.findIndex(c=>c.id===id&&c.rarity==='légendaire');}if(b.status!=='active'||!playPlayerCard(b,i,0,1).ok)continue;for(let turn=1;turn<=10&&b.status==='active';turn++){endPlayerTurn(b);const target=b.board.flat().find(u=>u?.side===effectSide&&u[effect]);if(target){found={seed,turn,opening};break;}enemy(b);}}if(!found)throw Error('Aucune graine de combat normale trouvée');console.log(JSON.stringify(found));"""
 
 async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
-    cfg=SCENARIOS[scenario];faction=cfg.get('faction',scenario);card_id=cfg['card'];source=card_id+':épique';target_key=card_id+':légendaire';profile_before=PROFILES[scenario]
+    cfg=SCENARIOS[scenario];faction=cfg.get('faction',scenario);card_id=cfg['card'];source=card_id if cfg.get('nativeSource') else card_id+':épique';target_key=card_id+':légendaire';profile_before=PROFILES[scenario]
     touch=label in ('portrait','landscape')
     ctx=await browser.new_context(viewport=viewport,has_touch=touch,offline=not bool(url),reduced_motion='reduce',accept_downloads=True)
     page=await ctx.new_page();errors=[];external=[]
@@ -55,7 +56,10 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
     await prepare();await click(page.locator('.modal [data-action="evolution-fusion-confirm"]'));assert await saved()==baseline
     assert 'aucun exemplaire consommé' in await page.locator('#toast').inner_text()
     await page.reload();await nav('alchemy');await prepare();await page.locator('.modal [data-action="evolution-fusion-confirm"]').dblclick()
-    fused=await saved();expected=copy.deepcopy(baseline);expected['evolvedCollection']={source:0,target_key:1};assert fused==expected
+    fused=await saved();expected=copy.deepcopy(baseline)
+    if cfg.get('nativeSource'):expected['collection'][card_id]-=3;expected['evolvedCollection']={target_key:1}
+    else:expected['evolvedCollection']={source:0,target_key:1}
+    assert fused==expected
     await nav('collection');await click(page.locator(f'[data-action="collection-faction"][data-id="{faction}"]'))
     row=page.locator(f'[data-collection-character="{card_id}"]');assert await row.locator('td').count()==6
     assert 'Possédée ×1' in await row.locator('[data-collection-rarity="légendaire"]').inner_text()
@@ -104,7 +108,10 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
         trace.append({'round':b['round'],'phase':b['phase'],'units':[(u['id'],u['side'],u['hp'],u.get(cfg['effect'])) for row in b['board'] for u in row if u]})
         if targets:
             target=targets[0]
-            if scenario=='forge-scrap':
+            if cfg.get('damageOnly'):
+                previous=next(u for row in before['board'] for u in row if u and u['uid']==plan['targetUid'])
+                assert target['uid']==plan['targetUid'] and target['hp']==previous['hp']-cfg['damageOnly']
+            elif scenario=='forge-scrap':
                 assert target[cfg['effect']]==b['round']+3
                 assert b['heroes']['p']['shield']==max(shield_before,min(20,shield_before+2))
             elif scenario=='forge-smith':
@@ -126,7 +133,8 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
         await page.clock.run_for(1000)
         await page.wait_for_function("()=>{const b=JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'));return b&&(b.phase==='player'||b.status!=='active')}")
     assert found,(plan,trace)
-    card=page.locator(f'.board-card[data-unit-id="{target["uid"]}"]')
+    inspected=next(u for row in b['board'] for u in row if u and u['id']==card_id and u['side']=='p') if cfg.get('damageOnly') else target
+    card=page.locator(f'.board-card[data-unit-id="{inspected["uid"]}"]')
     if touch:await card.tap()
     else:await card.hover()
     assert cfg['status'] in await page.locator('#hand-card-inspection').inner_text()

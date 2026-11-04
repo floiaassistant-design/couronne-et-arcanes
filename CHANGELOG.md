@@ -1,6 +1,12 @@
 # Journal des changements
 
-## En préparation — Forge, dix hauts rangs tactiques, 3 novembre 2026
+## En préparation — Éther, douze évolutions de statistiques, 4 novembre 2026
+
+- Douze versions sur huit personnages : six Rares/Épiques et six Légendaires, sans nouvelle capacité ni modification native du Feu follet. 23 versions Éther et 180 recettes dans cette branche.
+- Paquet Éther distinct, trois cartes pour 190 or après mission 03, groupes 60/35/5 et pools 6/1/5 ; fusions après missions 01/03/06, sauvegardes et autres paquets conservés.
+- Données partagées, pouvoirs hérités, présentation, obtention, laboratoire, moteur embarqué et parcours navigateur communs. Fiche Portail complète rétablie après détection du navigateur, règles et cadence vérifiées explicitement. [Contrat et limites](docs/ETHER_SOCLE_EVOLUTIONS.md).
+
+## Intégré — Forge, dix hauts rangs tactiques, 4 novembre 2026
 
 - Dix évolutions du Sapeur, de l’Ingénieure, du Mécaniste, du Canon et de l’Alchimiste : Fracture, Calibrage, Blindage, Repérage et Catalyse.
 - États d’attaque partagés, consommation/expiration/reprise et dix recettes supplémentaires via les ascensions Forge existantes. Natifs, paquets et sauvegardes historiques conservés. [Contrat](docs/FORGE_HAUTS_RANGS_TACTIQUES.md).

@@ -1,6 +1,10 @@
 # Architecture modulaire — lecture courante
 
-## Forge — dix hauts rangs tactiques, proposition du 3 novembre
+## Éther — douze évolutions de statistiques proposées le 4 novembre
+
+`cards/ether.js` contient les patches et leur provenance ; `cards/evolutions.js` partage la famille avec le registre et les recettes. `ETHER_UNIT_IDS` expose les onze natifs, les huit personnages évolutifs utilisent la présentation structurée commune. Le paquet réutilise `evolutionPack` et ses transactions ; aucune règle de moteur modifiée. Le graphe embarque le module supplémentaire dans le web et l’autonome, soit 79 modules et les 76 illustrations existantes. Aucun cycle, nouveau pilote, CSS ou dépendance. [Contrat](ETHER_SOCLE_EVOLUTIONS.md).
+
+## Forge — dix hauts rangs tactiques, intégrés par PR 83 le 4 novembre
 
 `unit-strike-modifiers.js` centralise états consommables, Armure effective, Calibrage, marques, expiration et validation. `battle-defense.js` passe le contexte direct et conserve les protections communes ; `unit-support.js` pose les états après gain effectif d’ATQ ; `unit-triggers.js` orchestre marquage et détonation avec la provenance de `unit-poison.js`. Le rendu lit les états sans recopier leurs calculs. Un module ajouté, 78 modules et 76 illustrations dans les deux distributions ; les fichiers conservent leurs responsabilités, sans second moteur. [Contrat](FORGE_HAUTS_RANGS_TACTIQUES.md).
 

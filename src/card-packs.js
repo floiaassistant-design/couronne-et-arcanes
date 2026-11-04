@@ -20,7 +20,8 @@ export const CARD_PACKS=freezeCardData([
  evolutionPack('aube','de l’Aube','Aube'),
  evolutionPack('sylve','de la Sylve','Sylve'),
  evolutionPack('ombre','de l’Ombre','Ombre'),
- evolutionPack('forge','de la Forge','Forge')
+ evolutionPack('forge','de la Forge','Forge'),
+ evolutionPack('ether','de l’Éther','Éther')
 ]);
 export const cardPack=id=>CARD_PACKS.find(p=>p.id===id)||null;
 export const evolutionPackFor=(id,rarity)=>CARD_PACKS.find(p=>p.groups.some(g=>g.cards.some(ref=>typeof ref==='object'&&ref.id===id&&ref.rarity===rarity)))||null;

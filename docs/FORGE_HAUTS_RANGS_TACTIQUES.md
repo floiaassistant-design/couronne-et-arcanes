@@ -1,6 +1,7 @@
 # Forge — dix hauts rangs tactiques
 
-Proposition du 3 novembre 2026 après la fusion de la PR 82, main
+Lot intégré par PR 83 le 4 novembre 2026. Base de conception et de développement
+du 3 novembre après la fusion de la PR 82, main
 `e3800b8b581efc89344db267f9a2f5e58884c323`, arbre
 `151beffffdbaf5f296e0a6a0e7e858955215bb1a`. Conception relue dans le tableau
 maître Notion, édition `2026-11-02T16:09:01.799Z`, sans écriture ou nouvelle
@@ -123,3 +124,7 @@ séparée par le suivi existant, sans déploiement concurrent.
 ## Contrôles locaux du 3 novembre
 
 721 tests Node et 120 scénarios de parité réussis ; builds autonome, diagnostic et web, syntaxe Python et contrôles de pipeline réussis. Export généré de 34 612 867 octets, blob Git `9ed63f64020ecf69d8dedd3424953dcffb256c08`, 78 modules et 76 illustrations. L’identité locale/GitHub de cet export est vérifiée ; la préparation ponctuelle est retirée du diff final. La CI de la tête finale reste à vérifier dans la PR ; les succès de la PR 82 ne valident pas ces nouveaux pouvoirs.
+
+## Intégration du 4 novembre 2026
+
+PR 83 fusionnée au commit `86efbca0b62370eb15d46e2d5a577e4bc974b887`, après accord explicite renouvelé et réussite des six contrôles. Arbre `10ecd7ce053aadeedffd6edae5771eddffc9ba38` identique à la tête revue/testée ; export `9ed63f64020ecf69d8dedd3424953dcffb256c08` confirmé sur main. Les formulations de proposition ci-dessus décrivent le lot livré ; sa publication reste distincte.

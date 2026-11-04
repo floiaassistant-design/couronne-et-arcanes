@@ -53,6 +53,7 @@ export function unitCardText(d){
  if(a.poison)parts.push(`Poison ${a.poison.amount} · ${a.poison.resolutions} tours`);
  if(a.trapper)parts.push(`Piège ${a.trapper.damage} / ${a.trapper.period} tours${a.trapper.poison?' · Poison '+a.trapper.poison.amount:''}`);
  if(a.silence)parts.push(`Silence${a.silence.targets>1?' ×'+a.silence.targets:''}${a.silence.resolutions>1?' · '+a.silence.resolutions+' tours':' / '+a.silence.period+' tours'}`);
+ if(a.portal)parts.push(`Portail / ${a.portal.period} tours`);
  if(a.splash&&!a.splash.targets)parts.push(`Impact ${a.splash.amount}`);
  if(a.lifesteal)parts.push(`Vol de vie ${a.lifesteal.amount}`);
  if(a.flying)parts.push('Vol');
@@ -62,6 +63,7 @@ export function unitCardText(d){
 
 export function unitAbilityDetails(d){
  const a=d.abilities,lines=[],scope=p=>p.scope==='all-lines'?'toutes les lignes':'sa ligne';
+ if(a.portal)lines.push(`Portail : avant son déplacement normal, change de ligne à la même colonne libre et autorisée si le moteur juge le gain suffisant. Au plus une fois tous les ${a.portal.period} tours ; aucune arrivée devant la couronne adverse. Ne donne ni attaque ni déplacement supplémentaire.`);
  if(a.armor)lines.push(`Armure ${a.armor.amount} : réduit les dégâts, minimum ${a.armor.minimumDamage}.`);
  if(a.firstHitReduction)lines.push(`Premier coup reçu : −${a.firstHitReduction.amount} dégâts, une fois par invocation.`);
  if(a.guard)lines.push(`Garde : protège sa couronne ${a.guard.scope==='all-lines'?'depuis toutes les lignes':a.guard.scope==='line'?'depuis toute sa ligne, même dépassé':'sur sa ligne, entre l’attaquant et la couronne'} ; ${a.guard.maxPerAttack} gardien par frappe, tant qu’il vit.`);
