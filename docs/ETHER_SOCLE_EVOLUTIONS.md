@@ -97,8 +97,8 @@ Bureau, portrait, paysage et HTTP utilisent les quatre parties existantes ;
 aucun nouveau job, aucune exécution en double de la suite entière.
 
 Résultats locaux : 731 tests Node réussis, 120 scénarios de parité inchangés,
-génération autonome réussie. Les résultats du navigateur et autres builds sont
-consignés avec le commit exact dans la PR. Pas de téléphone physique, de campagne
+builds autonome, diagnostic et web réussis ; syntaxe Python vérifiée. Les résultats
+du navigateur sont consignés avec le commit exact dans la PR. Pas de téléphone physique, de campagne
 UI complète depuis zéro ni de preuve d'équilibrage humain.
 
 Suite : contrôler la CI du commit exact, traiter tout échec, relire main et le

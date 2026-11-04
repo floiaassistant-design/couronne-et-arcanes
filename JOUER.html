@@ -5001,7 +5001,8 @@ const AUBE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='au
 const SYLVE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='sylve'&&c.type==='unité').map(c=>c.id));
 const FORGE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='forge'&&c.type==='unité').map(c=>c.id));
 const OMBRE_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='ombre'&&c.type==='unité').map(c=>c.id));
-const VERSIONED_UNIT_IDS=Object.freeze([...AUBE_UNIT_IDS,...SYLVE_UNIT_IDS,...OMBRE_UNIT_IDS.filter(id=>evolutionFamily(id)),...FORGE_UNIT_IDS.filter(id=>evolutionFamily(id))]);
+const ETHER_UNIT_IDS=Object.freeze(Object.values(CARDS).filter(c=>c.faction==='ether'&&c.type==='unité').map(c=>c.id));
+const VERSIONED_UNIT_IDS=Object.freeze([...AUBE_UNIT_IDS,...SYLVE_UNIT_IDS,...OMBRE_UNIT_IDS.filter(id=>evolutionFamily(id)),...FORGE_UNIT_IDS.filter(id=>evolutionFamily(id)),...ETHER_UNIT_IDS.filter(id=>evolutionFamily(id))]);
 const definitions=new Map();
 const noVersions=Object.freeze([]);
 
@@ -5061,7 +5062,7 @@ const CARD_RULESET='cards-v2';
 const resolveRulesDefinition=resolveUnitDefinition;
 function versionUnitAbilities(unit){return unit?resolveUnitDefinition(unit)?.abilities||null:null;}
 
-Object.assign(__exports,{AUBE_UNIT_IDS,SYLVE_UNIT_IDS,FORGE_UNIT_IDS,OMBRE_UNIT_IDS,VERSIONED_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable,CARD_RULESET,resolveRulesDefinition,versionUnitAbilities});
+Object.assign(__exports,{AUBE_UNIT_IDS,SYLVE_UNIT_IDS,FORGE_UNIT_IDS,OMBRE_UNIT_IDS,ETHER_UNIT_IDS,VERSIONED_UNIT_IDS,resolveUnitDefinition,unitVersions,unitVersionReference,unitVersionPlayable,CARD_RULESET,resolveRulesDefinition,versionUnitAbilities});
 
 },
 "src/cards/abilities.js":function(__exports,__load){
@@ -5114,12 +5115,14 @@ const {AUBE_EVOLUTIONS,AUBE_DESIGN_SOURCE}=__load("src/cards/aube.js");
 const {SYLVE_EVOLUTIONS,SYLVE_DESIGN_SOURCE}=__load("src/cards/sylve.js");
 const {OMBRE_EVOLUTIONS,OMBRE_DESIGN_SOURCE}=__load("src/cards/ombre.js");
 const {FORGE_EVOLUTIONS,FORGE_DESIGN_SOURCE}=__load("src/cards/forge.js");
+const {ETHER_EVOLUTIONS,ETHER_DESIGN_SOURCE}=__load("src/cards/ether.js");
 const {freezeCardData}=__load("src/cards/schema.js");
 const EVOLUTION_FAMILIES=freezeCardData([
  {id:'aube',versions:AUBE_EVOLUTIONS,source:AUBE_DESIGN_SOURCE},
  {id:'sylve',versions:SYLVE_EVOLUTIONS,source:SYLVE_DESIGN_SOURCE},
  {id:'ombre',versions:OMBRE_EVOLUTIONS,source:OMBRE_DESIGN_SOURCE},
- {id:'forge',versions:FORGE_EVOLUTIONS,source:FORGE_DESIGN_SOURCE}
+ {id:'forge',versions:FORGE_EVOLUTIONS,source:FORGE_DESIGN_SOURCE},
+ {id:'ether',versions:ETHER_EVOLUTIONS,source:ETHER_DESIGN_SOURCE}
 ]);
 const evolutionFamily=id=>EVOLUTION_FAMILIES.find(f=>Object.hasOwn(f.versions,id))||null;
 
@@ -5304,6 +5307,28 @@ const FORGE_EVOLUTIONS=freezeCardData({
 Object.assign(__exports,{FORGE_DESIGN_SOURCE,FORGE_EVOLUTIONS});
 
 },
+"src/cards/ether.js":function(__exports,__load){
+// Éther : statistiques validées, capacités natives conservées.
+// Feu follet et nouveaux pouvoirs restent des tranches distinctes.
+const {freezeCardData}=__load("src/cards/schema.js");
+const ETHER_DESIGN_SOURCE=freezeCardData({
+ url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
+ editedAt:'2026-11-02T16:09:01.799Z'
+});
+const ETHER_EVOLUTIONS=freezeCardData({
+ mystic:{'épique':{stats:{hp:6}},'légendaire':{stats:{attack:4}}},
+ elemental:{'légendaire':{stats:{hp:10}}},
+ griffin:{'légendaire':{stats:{hp:8}}},
+ sentinel:{'épique':{stats:{hp:11}}},
+ tempest:{'épique':{stats:{hp:8}},'légendaire':{stats:{attack:4}}},
+ seer:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}}},
+ aetherknight:{'légendaire':{stats:{hp:11}}},
+ portal_walker:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}}}
+});
+
+Object.assign(__exports,{ETHER_DESIGN_SOURCE,ETHER_EVOLUTIONS});
+
+},
 "src/evolution-trials.js":function(__exports,__load){
 // Premier parcours d'obtention : références de versions, objectifs et rencontres.
 // Les chiffres et pouvoirs restent exclusivement dans le registre de cartes.
@@ -5480,7 +5505,8 @@ const CARD_PACKS=freezeCardData([
  evolutionPack('aube','de l’Aube','Aube'),
  evolutionPack('sylve','de la Sylve','Sylve'),
  evolutionPack('ombre','de l’Ombre','Ombre'),
- evolutionPack('forge','de la Forge','Forge')
+ evolutionPack('forge','de la Forge','Forge'),
+ evolutionPack('ether','de l’Éther','Éther')
 ]);
 const cardPack=id=>CARD_PACKS.find(p=>p.id===id)||null;
 const evolutionPackFor=(id,rarity)=>CARD_PACKS.find(p=>p.groups.some(g=>g.cards.some(ref=>typeof ref==='object'&&ref.id===id&&ref.rarity===rarity)))||null;

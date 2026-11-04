@@ -1,6 +1,7 @@
 # Forge — dix hauts rangs tactiques
 
-Proposition du 3 novembre 2026 après la fusion de la PR 82, main
+Lot intégré par PR 83 le 4 novembre 2026. Base de conception et de développement
+du 3 novembre après la fusion de la PR 82, main
 `e3800b8b581efc89344db267f9a2f5e58884c323`, arbre
 `151beffffdbaf5f296e0a6a0e7e858955215bb1a`. Conception relue dans le tableau
 maître Notion, édition `2026-11-02T16:09:01.799Z`, sans écriture ou nouvelle
