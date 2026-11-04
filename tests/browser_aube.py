@@ -67,7 +67,7 @@ async def run(browser,label,viewport,faction='aube'):
             'graveknight':[None,8,10,10,10,10],'nightblade':[3,4,4,6,6,6],
             'spectre':[None,4,6,6,6,6],'mist_inquisitor':[None,6,8,8,8,8],
             'smith':[6,8,8,8,8,8],
-            'golem':[None,12,14,None,None,None],
+            'golem':[None,12,14,14,14,14],
             'bomb':[None,3,5,5,5,5],
             'drill':[5,7,7,7,7,7],
             'colossus':[None,None,None,13,13,13],

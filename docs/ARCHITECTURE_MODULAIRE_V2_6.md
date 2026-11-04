@@ -1,6 +1,10 @@
 # Architecture modulaire — lecture courante
 
-## Éther — douze évolutions de statistiques proposées le 4 novembre
+## Golem — trois hauts rangs proposés le 4 novembre
+
+`guard-candidates.js` propose une qualification pure du gardien interposé devant une couronne atteignable, avec portée et priorité communes, sans rediriger une attaque. `battle.js` transmet ce fait et l’interception existante après les réactions ; `unit-triggers.js` attribue le bouclier et son quota avec les protections communes. `unit-effects.js` valide `lastGuardWardRound`, les vues lisent ce marqueur et le registre. Aucun module ajouté ni calcul de dégâts dupliqué ; les 79 modules et 76 illustrations restent communs aux distributions. Le cas interposé est validé par le propriétaire le 4 novembre ; la clarification documentaire conserve le code déjà testé. [Contrat](FORGE_GOLEM_COEUR_RUNIQUE.md).
+
+## Éther — douze évolutions de statistiques intégrées par PR 84 le 4 novembre
 
 `cards/ether.js` contient les patches et leur provenance ; `cards/evolutions.js` partage la famille avec le registre et les recettes. `ETHER_UNIT_IDS` expose les onze natifs, les huit personnages évolutifs utilisent la présentation structurée commune. Le paquet réutilise `evolutionPack` et ses transactions ; aucune règle de moteur modifiée. Le graphe embarque le module supplémentaire dans le web et l’autonome, soit 79 modules et les 76 illustrations existantes. Aucun cycle, nouveau pilote, CSS ou dépendance. [Contrat](ETHER_SOCLE_EVOLUTIONS.md).
 

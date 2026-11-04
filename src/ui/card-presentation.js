@@ -71,6 +71,7 @@ export function boardInspectionData(battle,uid){
   if(u.firstHitReductionUsed)statuses.push('Réduction du premier coup consommée');
   if(u.riposteUsed)statuses.push('Riposte par invocation consommée');
   if(u.lastRiposteRound===battle.round)statuses.push('Riposte utilisée ce tour');
+  if(u.lastGuardWardRound===battle.round)statuses.push('Cœur runique utilisé ce tour');
   if(u.lastStandUsed)statuses.push('Dernier Rempart consommé');
   if(u.attackPenalty)statuses.push(`Harcèlement : −${u.attackPenalty.amount} ATQ, ${u.attackPenalty.remaining} attaque restante`);
   if(u.regeneration)statuses.push(`Régénération : ${u.regeneration.amount} PV au prochain tour, ${u.regeneration.remaining} effet restant`);

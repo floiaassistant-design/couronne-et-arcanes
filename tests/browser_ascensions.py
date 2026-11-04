@@ -43,6 +43,29 @@ async def run_forge_tactical_case(browser,config,address,profile,rank,make_case,
     await ctx.close()
     print(f'Forge tactique {config["label"]} {rank}: Calibrage/Blindage, Fracture, Repérage allié et Catalyse réels, deux tours et reprise PASS',flush=True)
 
+async def run_golem_case(browser,config,address,profile,rank,make_case,click,stored):
+    fixture=json.loads(subprocess.check_output(['node','tests/fixtures/golem-battle.mjs',json.dumps(profile),rank],cwd=ROOT))
+    touch=config['touch'];ctx,page,errors,external=await make_case(browser,fixture,config['viewport'],touch=touch,url=address,terminal=fixture['battle'])
+    await page.locator('.combat-screen').wait_for()
+    await page.clock.install(time='2026-11-04T00:00:00Z');await page.clock.pause_at('2026-11-04T00:00:01Z')
+    assert (await stored(page,BATTLE))['heroes']['p']['shield']==0
+    await click(page.locator('[data-action="end-turn"]'),touch)
+    await page.clock.run_for(1000)
+    await page.wait_for_function("()=>{const b=JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'));return b?.round===2&&b.phase==='player'}")
+    b=await stored(page,BATTLE);u=next(u for row in b['board'] for u in row if u and u['uid']==fixture['golemUid'])
+    assert (u['hp'],u['lastGuardWardRound'],b['heroes']['p']['shield'])==(fixture['maxhp']-1,1,1)
+    assert b['heroes']['p']['hp']==b['heroes']['p']['maxhp'] and any('intercepte' in t for t in b['log'])
+    card=page.locator(f'.board-card[data-unit-id="{u["uid"]}"]')
+    if touch:await card.tap()
+    else:await card.hover()
+    for phrase in ['Cœur runique','plafond 20','une fois par tour']:assert phrase in await page.locator('#hand-card-inspection').inner_text()
+    await page.screenshot(path=f'/tmp/ca-forge-golem-{config["label"]}-{rank}.png')
+    assert await stored(page)==fixture['profile']
+    await page.reload();await page.locator('.combat-screen').wait_for();assert await stored(page,BATTLE)==b
+    assert not errors,errors;assert not external,external
+    await ctx.close()
+    print(f'Golem {config["label"]} {rank}: fusion réelle, interception de couronne, Cœur +1, fiche et reprise PASS',flush=True)
+
 async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,stored,faction='aube'):
     for config in ascension_cases(part):
         label,touch=config['label'],config['touch'];s=SCENARIOS[faction][config['index']];card_id='drill' if faction=='forge' else 'bone' if faction=='ombre' else 'thorn' if faction=='sylve' else 'dawnbastion'
@@ -165,4 +188,6 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         assert not external,external
         await ctx.close()
         print(f'Ascension {faction} {label}: {s["trial"]["to"]}, {"combat UI complet" if config["full"] else "reprise après panne"}, déblocage sans cadeau, fusion, export/import et vraie invocation/reprise PASS',flush=True)
-        if faction=='forge':await run_forge_tactical_case(browser,config,address,final,s['trial']['to'],make_case,click,stored)
+        if faction=='forge':
+            await run_forge_tactical_case(browser,config,address,final,s['trial']['to'],make_case,click,stored)
+            await run_golem_case(browser,config,address,final,s['trial']['to'],make_case,click,stored)

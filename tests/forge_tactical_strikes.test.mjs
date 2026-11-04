@@ -153,10 +153,10 @@ test('Repérage et poison sourcé : instantanés immuables, compteurs et reprise
  for(const key of ['spottingReadyRound','catalysisReadyRound'])for(const value of [0,-1,101,null,1.5]){const bad=structuredClone(restored);bad.board[0][4][key]=value;assert.equal(validStoredBattle(bad),false);}
 });
 
-test('Fiches : paramètres du registre, états de Repérage et aucun Golem futur activé',()=>{
+test('Fiches : paramètres du registre, états de Repérage et aucune Sentinelle future activée',()=>{
  const c=contact('cannon','éveillée');attack(c);assert.match(boardInspectionData(c.b,c.target.uid).board.statuses.join(' '),/Repérage.*2 attaque.*\+2/);
  for(const [id,label] of Object.entries({cannon:'Barrage coordonné',alchemist:'Combustion totale'}))assert.ok(cardPresentation({id,rarity:'éveillée'}).details.join(' ').includes(label));
- for(const rank of ['légendaire',...ranks])assert.equal(resolveUnitDefinition('golem',rank),null);
+ for(const rank of ['légendaire',...ranks])assert.equal(resolveUnitDefinition('sentinel',rank),null);
 });
 
 test('Véritable export : fracture, marque et catalyse sont exécutées depuis les modules embarqués',()=>{
