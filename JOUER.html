@@ -4734,6 +4734,9 @@ function boardInspectionData(battle,uid){
   if(u.lastStandUsed)statuses.push('Dernier Rempart consommé');
   if(u.attackPenalty)statuses.push(`Harcèlement : −${u.attackPenalty.amount} ATQ, ${u.attackPenalty.remaining} attaque restante`);
   if(u.regeneration)statuses.push(`Régénération : ${u.regeneration.amount} PV au prochain tour, ${u.regeneration.remaining} effet restant`);
+  if(u.stillOmen)statuses.push(`Étoile immobile : présage ${u.stillOmen.amount}, fin du tour ${u.stillOmen.dueRound} sans déplacement`);
+  if(u.spectralRetreatReadyRound>battle.round)statuses.push(`Repli spectral disponible au tour ${u.spectralRetreatReadyRound}`);
+  if(u.stillOmenReadyRound>battle.round)statuses.push(`Prochain présage au tour ${u.stillOmenReadyRound}`);
   const penalty=activeStrikeState(u,'armorPenalty',battle.round),protection=activeStrikeState(u,'temporaryArmor',battle.round),calibration=activeStrikeState(u,'calibration',battle.round),mark=activeStrikeState(u,'spotMark',battle.round);
   if(penalty)statuses.push(`Armure −${penalty.amount} à la prochaine attaque directe subie`);
   if(protection)statuses.push(`Blindage : +${protection.amount} Armure à la prochaine attaque directe subie`);
@@ -5308,12 +5311,11 @@ Object.assign(__exports,{FORGE_DESIGN_SOURCE,FORGE_EVOLUTIONS});
 
 },
 "src/cards/ether.js":function(__exports,__load){
-// Éther : statistiques validées, capacités natives conservées.
-// Feu follet et nouveaux pouvoirs restent des tranches distinctes.
+// Éther : évolutions validées ; les décisions natives restent distinctes.
 const {freezeCardData}=__load("src/cards/schema.js");
 const ETHER_DESIGN_SOURCE=freezeCardData({
  url:'https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f',
- editedAt:'2026-11-02T16:09:01.799Z'
+ editedAt:'2026-11-04T09:02:46.815Z'
 });
 const ETHER_EVOLUTIONS=freezeCardData({
  mystic:{'épique':{stats:{hp:6}},'légendaire':{stats:{attack:4}}},
@@ -5321,9 +5323,10 @@ const ETHER_EVOLUTIONS=freezeCardData({
  griffin:{'légendaire':{stats:{hp:8}}},
  sentinel:{'épique':{stats:{hp:11}}},
  tempest:{'épique':{stats:{hp:8}},'légendaire':{stats:{attack:4}}},
- seer:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}}},
+ seer:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}},'légendaire':{abilities:{stillOmen:{amount:2,period:3,delay:1}}}},
  aetherknight:{'légendaire':{stats:{hp:11}}},
- portal_walker:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}}}
+ portal_walker:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}}},
+ spark:{rare:{stats:{hp:4},geometry:{range:3}},'épique':{stats:{attack:3}},'légendaire':{abilities:{spectralRetreat:{cells:1,period:3}}}}
 });
 
 Object.assign(__exports,{ETHER_DESIGN_SOURCE,ETHER_EVOLUTIONS});
@@ -5580,6 +5583,8 @@ function unitCardText(d){
 
 function unitAbilityDetails(d){
  const a=d.abilities,lines=[],scope=p=>p.scope==='all-lines'?'toutes les lignes':'sa ligne';
+ if(a.spectralRetreat)lines.push(`Repli spectral : après une attaque normale touchant une unité ennemie qui survit, recule de ${a.spectralRetreat.cells} case vers sa propre couronne sur sa ligne si elle est libre et dans le plateau, au plus une fois tous les ${a.spectralRetreat.period} tours. Une frappe entièrement absorbée compte ; aucun repli sur une couronne, un sort ou une Riposte, ni après la mort du Feu follet. Aucune attaque supplémentaire.`);
+ if(a.stillOmen)lines.push(`Étoile immobile : après une attaque normale retirant au moins 1 PV à un ennemi survivant, place un présage, au plus une fois tous les ${a.stillOmen.period} tours. Si la cible reste sans déplacement réel pendant le tour de combat suivant complet, elle subit ${a.stillOmen.amount} dégâts bruts en fin de tour, protections normales. Tout déplacement pendant ce tour annule le présage, même avec retour à la case initiale ; l’immobilisation seule ne l’annule pas. Une cible par Voyante, sans cumul ni attaque supplémentaire ; la marque disparaît après résolution ou mort de la cible.`);
  if(a.portal)lines.push(`Portail : avant son déplacement normal, change de ligne à la même colonne libre et autorisée si le moteur juge le gain suffisant. Au plus une fois tous les ${a.portal.period} tours ; aucune arrivée devant la couronne adverse. Ne donne ni attaque ni déplacement supplémentaire.`);
  if(a.armor)lines.push(`Armure ${a.armor.amount} : réduit les dégâts, minimum ${a.armor.minimumDamage}.`);
  if(a.firstHitReduction)lines.push(`Premier coup reçu : −${a.firstHitReduction.amount} dégâts, une fois par invocation.`);
@@ -5634,6 +5639,8 @@ function unitAbilityDetails(d){
 function strikeWardName(p){return p.overflowBarrier?'Forge infatigable':p.requiresKill?'Ferraille récupérée':'Recyclage actif';}
 function advancedSummary(a){
  const parts=[];
+ if(a.spectralRetreat)parts.push(`Repli spectral : recul ${a.spectralRetreat.cells}`);
+ if(a.stillOmen)parts.push(`Étoile immobile : présage ${a.stillOmen.amount}`);
  if(a.knockback)parts.push(a.knockback.blockedDamage?`Recul ou Fracas +${a.knockback.blockedDamage}`:a.knockback.follow?'Recul · Avancée':`Coup de masse : recul ${a.knockback.cells}`);
  if(a.strikeWard)parts.push(`${strikeWardName(a.strikeWard)} · Couronne +${a.strikeWard.amount}`);
  if(a.barrierDrill)parts.push(`Foreuse : barrière −${a.barrierDrill.amount}${a.barrierDrill.breakBarrier?' · Barrière +'+a.barrierDrill.breakBarrier.amount+' si brisée':''}`);
@@ -6033,7 +6040,8 @@ const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitCh
 const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
 const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {tickUnitPoison,clearUnitPoison,poisonBelongsTo}=__load("src/engine/unit-poison.js");
-const {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike}=__load("src/engine/unit-triggers.js");
+const {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat}=__load("src/engine/unit-triggers.js");
+const {placeStillOmen,noteOmenMovement,resolveStillOmens}=__load("src/engine/unit-omens.js");
 const {applyStrikeFracture}=__load("src/engine/unit-strike-modifiers.js");
 const {contiguousSplashTargets}=__load("src/engine/unit-targets.js");
 const {resolveUnitDeath}=__load("src/engine/unit-death.js");
@@ -6056,7 +6064,7 @@ function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed
 function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand(b)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function note(b,message){b.log.unshift(message);b.log=b.log.slice(0,12);}
 function fx(b,event){recordCombatEvent(b,event);}
-function enterCell(b,u,lane,col){triggerTrap(b,u,lane,col,hit,fx,note);sweepDead(b);}
+function enterCell(b,u,lane,col){noteOmenMovement(b,u);triggerTrap(b,u,lane,col,hit,fx,note);sweepDead(b);}
 const controlHooks={emit:fx,note,enter:enterCell,hit};
 
 function draw(b,side,n=1){
@@ -6312,6 +6320,8 @@ function resolveAttacks(b,sideFilter=null){
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
     resolveStrikeDisplacement(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
+    placeStillOmen(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},fx);
+    resolveSpectralRetreat(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
   } else {
    const result=strike(b,u,target.target,atk,intent.col,target.col,true,charged,intent.suppressed,intent.attackState);
@@ -6322,6 +6332,8 @@ function resolveAttacks(b,sideFilter=null){
    resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);
    resolveStrikeDisplacement(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
+   placeStillOmen(b,u,target.target,{...result,suppressed:intent.suppressed},fx);
+   resolveSpectralRetreat(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
   }
  }
  // Le bonus de charge ne dure qu'un seul tour et doit survivre aux sauvegardes historiques.
@@ -6408,6 +6420,7 @@ function finishEnemyTurn(b){
  const rulesError=battleRulesError(b);if(rulesError)return {ok:false,reason:rulesError};
  if(b.turnFlow!=='alternating'||b.phase!=='enemy'||b.status!=='active')return {ok:false,reason:'Ce n’est pas le tour adverse.'};
  resolvePoison(b,'e');prepareControlUnits(b,controlHooks,'e');moveUnits(b,'e');resolveAttacks(b,'e');expireControl(b,fx);
+ if(resolveStillOmens(b,hit)){sweepDead(b);checkOutcome(b);}
  if(b.round>=17&&b.status==='active'){
   const attrition=1+Math.floor((b.round-17)/6);
   damageHero(b,'p',attrition);damageHero(b,'e',attrition);
@@ -6438,6 +6451,7 @@ function endPlayerTurn(b){
  b.phase='resolving';enemyAct(b);
  if(b.status==='active'){
   resolvePoison(b);prepareControlUnits(b,controlHooks);moveUnits(b);resolveAttacks(b);expireControl(b,fx);
+  if(resolveStillOmens(b,hit)){sweepDead(b);checkOutcome(b);}
   // Fatigue of the battlefield avoids endless defensive stalemates.
   if(b.round>=17&&b.status==='active'){
    const attrition=1+Math.floor((b.round-17)/6);
@@ -6761,7 +6775,7 @@ function silenceValue(u){
  return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
   (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0)+
   (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0)+(future?.strikeWard?2:0)+(future?.barrierDrill?3:0)+(future?.knockback?3:0)+(future?.scoria?3:0)+
-  (future?.fracture?2:0)+(future?.spotting?2:0)+(future?.catalysis?2:0);
+  (future?.fracture?2:0)+(future?.spotting?2:0)+(future?.catalysis?2:0)+(future?.spectralRetreat?2:0)+(future?.stillOmen?2:0);
 }
 function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 function silenceTarget(b,side,lane){
@@ -7097,6 +7111,7 @@ Object.assign(__exports,{captureCombatFrame,recordCombatEvent});
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {applyUnitPoison,validPoisonOrigin}=__load("src/engine/unit-poison.js");
 const {validStrikeModifiers}=__load("src/engine/unit-strike-modifiers.js");
+const {validStillOmen}=__load("src/engine/unit-omens.js");
 function attackAfterPenalty(u,raw){const boosted=raw+(u.fury||0)+(u.devourAttack||0);return u.attackPenalty?Math.min(boosted,Math.max(u.attackPenalty.minimum||0,boosted-u.attackPenalty.amount)):boosted;}
 function consumeAttackPenalty(u,raw){
  const result=attackAfterPenalty(u,raw),p=u.attackPenalty;
@@ -7165,15 +7180,58 @@ function validUnitEffects(u){
   (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
   (u.deathStrikeUsed===undefined||typeof u.deathStrikeUsed==='boolean')&&
   (u.devourAttack===undefined||integer(u.devourAttack,2))&&
-  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound','spottingReadyRound','catalysisReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
+  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound','spottingReadyRound','catalysisReadyRound','spectralRetreatReadyRound','stillOmenReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
   (u.scoriaHits===undefined||Number.isSafeInteger(u.scoriaHits)&&u.scoriaHits>=0&&u.scoriaHits<=2)&&
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
-  (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin)&&validStrikeModifiers(u);
+  (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin)&&validStrikeModifiers(u)&&validStillOmen(u);
 }
 
 Object.assign(__exports,{attackAfterPenalty,consumeAttackPenalty,applyAttackEffects,executionBonus,resolveLifesteal,grantRegeneration,resolveRegeneration,validUnitEffects});
+
+},
+"src/engine/unit-omens.js":function(__exports,__load){
+// Présages différés : état métier attaché à la victime, sans DOM ni dégâts recopiés.
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
+function placeStillOmen(b,source,target,{performed,damaged,suppressed},emit){
+ const p=versionUnitAbilities(source)?.stillOmen;
+ if(!p||!performed||!damaged||suppressed||source.hp<=0||!target||target.hp<=0||target.side===source.side||source.stillOmenReadyRound>b.round)return false;
+ // Un seul présage actif par invocation et par victime ; remplacer, jamais cumuler.
+ for(const row of b.board)for(const u of row)if(u?.stillOmen?.sourceUid===source.uid)delete u.stillOmen;
+ target.stillOmen={sourceUid:source.uid,side:source.side,amount:p.amount,dueRound:b.round+p.delay};
+ source.stillOmenReadyRound=b.round+p.period;
+ const lane=b.board.findIndex(row=>row.includes(target));
+ if(lane>=0)emit(b,{type:'state',side:target.side,lane,col:b.board[lane].indexOf(target),stillOmen:true});
+ return true;
+}
+
+// Appelé uniquement après une véritable entrée de case : bloqué/immobilisé ne compte pas.
+function noteOmenMovement(b,u){
+ if(u.stillOmen?.dueRound===b.round)delete u.stillOmen;
+}
+
+// Fin du tour de combat complet, après les actions des deux camps, avant son incrément.
+function resolveStillOmens(b,hit){
+ let resolved=false;
+ for(const row of b.board)for(const u of row){
+  const p=u?.stillOmen;
+  if(!p||p.dueRound>b.round)continue;
+  delete u.stillOmen;
+  resolved=true;
+  if(u.hp>0)hit(b,u,p.amount,p.side);
+ }
+ return resolved;
+}
+
+const integer=(n,max)=>Number.isSafeInteger(n)&&n>0&&n<=max;
+function validStillOmen(u){
+ const p=u.stillOmen;
+ return p===undefined||!!(p&&typeof p==='object'&&!Array.isArray(p)&&integer(p.sourceUid,1e9)&&
+  ['p','e'].includes(p.side)&&p.side!==u.side&&integer(p.amount,100)&&integer(p.dueRound,100));
+}
+
+Object.assign(__exports,{placeStillOmen,noteOmenMovement,resolveStillOmens,validStillOmen});
 
 },
 "src/engine/unit-death.js":function(__exports,__load){
@@ -7248,6 +7306,21 @@ const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
 const {lastCell}=__load("src/engine/board.js");
 const {placeSpotMark}=__load("src/engine/unit-strike-modifiers.js");
 const {poisonBelongsTo,clearUnitPoison}=__load("src/engine/unit-poison.js");
+// Repli personnel après une frappe normale touchant une unité encore vivante.
+function resolveSpectralRetreat(b,u,target,{performed,suppressed},hooks){
+ const p=versionUnitAbilities(u)?.spectralRetreat;
+ if(!p||!performed||suppressed||u.hp<=0||!target||target.hp<=0||target.side===u.side||u.spectralRetreatReadyRound>b.round)return false;
+ const lane=b.board.findIndex(row=>row.includes(u)),row=b.board[lane];
+ if(!row)return false;
+ const from=row.indexOf(u),to=from+(u.side==='p'?-1:1)*p.cells;
+ if(to<1||to>lastCell(b)||row[to])return false;
+ u.spectralRetreatReadyRound=b.round+p.period;
+ row[to]=u;row[from]=null;
+ hooks.emit(b,{type:'move',side:u.side,lane,from,to,spectralRetreat:true});
+ hooks.enter(b,u,lane,to);
+ return true;
+}
+
 // Détonation secondaire après la frappe : jamais une nouvelle attaque.
 function resolveAlchemyStrike(b,u,target,poisonedAtStart,suppressed,hit){
  const p=versionUnitAbilities(u)?.catalysis;
@@ -7341,7 +7414,7 @@ function resolveSurvivedStrike(b,u,attacker,damaged,suppressed,emit){
  }
 }
 
-Object.assign(__exports,{resolveAlchemyStrike,resolveStrikeDisplacement,resolveStrikePreparation,resolveStrikeRewards,resolveSurvivedStrike});
+Object.assign(__exports,{resolveSpectralRetreat,resolveAlchemyStrike,resolveStrikeDisplacement,resolveStrikePreparation,resolveStrikeRewards,resolveSurvivedStrike});
 
 },
 "src/engine/tempo.js":function(__exports,__load){
