@@ -1,6 +1,12 @@
 # Journal des changements
 
-## En préparation — Éther, Repli spectral et Étoile immobile, 4 novembre 2026
+## En préparation — contours de rareté, 4 novembre 2026
+
+- Filet intérieur de 2 pixels dans la couleur de rareté existante, partagé par toutes les cartes dessinées : main, plateau, Collection, fiches et autres vues.
+- Deux propriétés dans le composant CSS commun ; mêmes dimensions, images et zones de texte. Les signaux de sélection, focus et disponibilité restent distincts.
+- Export autonome régénéré depuis les mêmes sources ; aucun changement du moteur, de l’obtention ou des sauvegardes.
+
+## Intégré par PR 86 — Éther, Repli spectral et Étoile immobile, 4 novembre 2026
 
 - Trois évolutions du Feu follet, portée 3, avec recul personnel Légendaire ; sa Commune garde la portée 2. Voyante Légendaire et présage annulé par un déplacement réel au tour suivant.
 - Quatre fusions supplémentaires, 27 versions Éther et 187 recettes après réconciliation avec le Golem intégré. Paquet Éther enrichi de ses Feux follets Rare/Épique, prix et taux conservés.

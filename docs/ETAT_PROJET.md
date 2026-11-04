@@ -74,7 +74,7 @@ La [PR 82](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/82)
 Les évolutions de l'Aube sont obtenables (41), celles de la Sylve également
 jusqu'au rang Éveillé (48), et celles de l'Ombre jusqu'à Éveillée (43) sont
 intégrées. Dix évolutions Forge Rares/Épiques, neuf Légendaires supplémentaires et vingt Divines/Éveillées sont également sur main ;
-douze évolutions Éther sont intégrées par PR 84, soit 23 versions de cette faction.
+seize évolutions Éther sont intégrées par les PR 84/86, soit 27 versions de cette faction.
 Le laboratoire réutilise le même moteur sans modifier la progression.
 
 ## Processus de livraison
@@ -86,7 +86,7 @@ L'autorisation explicite du propriétaire est conservée ; aucune fusion
 automatique. Les PR constituent les journaux des travaux en cours et portent
 leurs preuves de tests et points de reprise. `AGENTS.md` fixe les règles.
 
-La distribution du jeu est séparée de la fusion. Le suivi existant a confirmé la **version publique 27**, basée sur le commit GitHub `86efbca0b62370eb15d46e2d5a577e4bc974b887` (PR 83), arbre `10ecd7ce053aadeedffd6edae5771eddffc9ba38` et commit Sites `9296c46ad00eb177ba37ce6042cd19bb0e57cb80`. Paquet, fichiers et empreintes vérifiés, audience publique conservée. Les propositions suivantes ne sont pas annoncées comme publiées ; aucun déploiement parallèle.
+La distribution du jeu est séparée de la fusion. Le suivi existant a confirmé la **version publique 28**, basée sur le commit GitHub `4de013ddf06a3a6f6d4f46041af0e63e789f1eef` (PR 84/85), arbre `a1df3b30936765d3e02301dc51371d87759df3af` et commit Sites `bef613172c3d6f23844818f12c919ec0a3633ebb`. Paquet, fichiers et empreintes vérifiés, audience publique conservée. La PR 86 et la proposition de contours ne sont pas annoncées comme diffusées sans résultat terminal ; aucun déploiement parallèle.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
 [Procédure de publication](PUBLICATION_WEB_2026_10_23.md)
@@ -110,7 +110,7 @@ La publication du main intégrant ces lots est suivie indépendamment de leur fu
   séparément les hauts rangs Forge encore absents et les évolutions Éther,
   sans appliquer implicitement leurs décisions natives. [Reprise](REPRISE_MIGRATION_CARTES.md).
 - Le Golem est intégré par PR 85 ; son cas interposé, validé par le propriétaire et enregistré dans Notion, ne récompense pas tous les coups reçus.
-- Les PR Forge jusqu’à la PR 83 et le [socle Éther](ETHER_SOCLE_EVOLUTIONS.md) de PR 84 sont intégrés. La proposition [Repli et présage](ETHER_REPLI_PRESAGE.md) ajoute quatre versions dans une branche réconciliée avec le Golem intégré. Aucun lot proposé n’est annoncé comme intégré.
+- Les PR Forge jusqu’à la PR 83 et le [socle Éther](ETHER_SOCLE_EVOLUTIONS.md) de PR 84 sont intégrés. Le lot [Repli et présage](ETHER_REPLI_PRESAGE.md) est intégré par PR 86 ; les prochaines évolutions Éther restent distinctes.
 - Assurer pour chaque nouvelle PR un bilan documentaire, un point de reprise
   et une relecture du diff avant proposition de fusion.
 
@@ -135,10 +135,14 @@ La [PR 83](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/83)
 
 Le [socle de statistiques Éther](ETHER_SOCLE_EVOLUTIONS.md) est intégré au commit `bc826d3ca1daa2824b9e895c51f4e61077870583`, arbre `f83f7819b130ba8d7191053279c69fb65769c3cd` identique à la tête testée. 23 versions Éther et 180 recettes sur main ; export `bcf3ecd146e2ce07be269c4edb82f79fe8c4b195` synchronisé. Publication distincte : le dernier résultat terminal confirmé reste Sites v27 / PR83.
 
-## Proposition suivante — Repli spectral et Étoile immobile
+## Éther — Repli spectral et Étoile immobile intégrés par PR 86
 
-[Contrat](ETHER_REPLI_PRESAGE.md) : trois évolutions du Feu follet et Voyante Légendaire, quatre fusions, paquet Éther enrichi ; 27 versions Éther et 187 recettes dans cette branche. Natif Feu follet conservé à portée 2, rangs ajoutés à portée 3. La branche contient le main intégrant la PR Golem 85, avec imports, quotas, tests et documents préservés. Chaque fusion exige l’accord spécifique du propriétaire. La publication suit uniquement le main intégré et vérifié.
+La [PR 86](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/86) est fusionnée sur accord spécifique au commit `3fac34fa5a2b94cc705aca086d761bf6e524493c`, arbre `2df95c6538fcff05a3d88d861078a659cd549d4a` identique à la tête dont les six contrôles ont réussi. [Contrat](ETHER_REPLI_PRESAGE.md) : trois évolutions du Feu follet et Voyante Légendaire, quatre fusions, paquet enrichi ; 27 versions Éther et 187 recettes sur main. Le natif Feu follet conserve sa portée 2, les rangs ajoutés leur portée 3. Export `a7bd33c9365a70599c29d67cfbc65d1683292ac2` confirmé ; publication distincte.
 
 ## Golem — trois hauts rangs intégrés par PR 85 le 4 novembre
 
 La [PR 85](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/85) est fusionnée sur accord spécifique au commit `4de013ddf06a3a6f6d4f46041af0e63e789f1eef`. Arbre `a1df3b30936765d3e02301dc51371d87759df3af` exactement identique à la tête revue/testée `f49b5b1`, six contrôles actuels réussis avant fusion. Export `4ee516061fb62028aa86eb20b02bda19c006113c` confirmé. Forge compte 49 versions, dont 39 évolutions ; main compte 183 recettes. La publication est suivie séparément, sans déploiement concurrent. Les mentions « proposition » et comptes antérieurs du contrat Golem décrivent son lot historique.
+
+## Proposition suivante — contours de rareté
+
+Filet intérieur partagé de 2 pixels pour mieux distinguer les six rangs dans toutes les vues des cartes dessinées, sans changement de dimensions ou de moteur. Base : main PR 86, commit `3fac34fa`. Les 764 tests Node et 120 scénarios de parité réussissent localement ; examen bureau de la main, sélection, pose réelle, six raretés, fiches, deck, Alchimie et laboratoire. Bureau/mobile automatisé et CI à lire sur la tête de la PR ; aucun contrôle de téléphone physique. Une branche dédiée prépare l’export et attend son accord spécifique avant fusion.
