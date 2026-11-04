@@ -15,6 +15,7 @@ SCENARIOS={
     'aube':{'pack':'aube-evolution','base':'militia','card':'militia','random':[0,0,.6,0,.95,0],'stats':(2,5),'power':'−2'},
     'ombre':{'pack':'ombre-evolution','base':'bone','card':'nightblade','random':[0,0,.6,.99,.95,.7],'stats':(4,4),'power':'Perforation'},
     'sylve':{'pack':'sylve-evolution','base':'ranger','card':'pixie','random':[0,0,.6,.6,.95,.6],'stats':(2,4),'power':'5 bouclier','shield':5},
+    'ether':{'pack':'ether-evolution','base':'spark','card':'seer','random':[0,0,.6,0,.95,.7],'stats':(3,5),'power':'Portée 2'},
 }
 
 async def run_card_packs(browser,label,viewport,url=None,scenario='aube'):

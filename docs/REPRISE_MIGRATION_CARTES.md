@@ -1,4 +1,4 @@
-# Reprise des migrations de cartes — état du 3 novembre 2026
+# Reprise des migrations de cartes — état du 4 novembre 2026
 
 Source de conception : [tableau maître unique](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
 édition relue `2026-11-02T16:09:01.799Z`. Les compteurs ci-dessous décrivent
@@ -18,8 +18,8 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
-| Forge | 10 | 39 sur 39 cases futures | 26 évolutions intégrées par PR 75/78/79/80/81/82 ; 36 versions Forge, dix autres évolutions proposées séparément |
-| Éther | 11 | 39 sur 39 cases futures | Conception complète des onze personnages ; seules les natives sont au moteur, portée 3 future du Feu follet distincte |
+| Forge | 10 | 39 sur 39 cases futures | 36 évolutions intégrées jusqu’à PR 83 ; 46 versions Forge, trois rangs du Golem encore absents |
+| Éther | 11 | 39 sur 39 cases futures | Onze natives sur main ; douze évolutions de statistiques proposées, 27 autres absentes ; portée 3 future du Feu follet distincte |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
 ou un pouvoir validé ne crée ni exemplaire ni définition jouable. Les onze personnages Éther ont leurs 39 évolutions validées dans cette édition ;
@@ -74,7 +74,7 @@ La publication du jeu reste une opération distincte.
 
 Les 39 évolutions Forge sont entièrement validées dans la conception.
 La première tranche [Rare/Épique](FORGE_RARE_EPIQUE.md) est intégrée par la PR 75 :
-dix versions sur sept personnages (3 Rares et 7 Épiques), 142 recettes au total après cette fusion. La publication Sites doit être vérifiée indépendamment de la fusion. Les 39 évolutions Éther sont validées en conception ; aucune n’est encore intégrée au moteur.
+dix versions sur sept personnages (3 Rares et 7 Épiques), 142 recettes au total après cette fusion. La publication Sites doit être vérifiée indépendamment de la fusion. Les 39 évolutions Éther sont validées en conception ; aucune n’est encore intégrée à main ; douze évolutions de statistiques sont proposées dans cette branche.
 La nouvelle portée native 3 du Feu follet est une décision séparée du natif 2
 encore au moteur ; elle exige son propre périmètre, contrôle et documentation.
 Relire Notion à la reprise, car la conception continue en parallèle.
@@ -107,6 +107,10 @@ Foreur intégré par PR 80 (`7d3d6d4`). Le [Marteau](FORGE_MARTEAU_LEGENDAIRE.md
 
 Le lot [Marteau / Foreur / Colosse / Marchefer](FORGE_HAUTS_RANGS_BLINDAGES.md) a intégré huit évolutions et deux ascensions. Après PR 82, les deux défis ouvrent quatre recettes définies chacun, pas les cartes encore absentes. Le pilote et les simulations d’ascension sont partagés ; les pouvoirs lisent le registre et les primitives de protections/mouvement. 36 versions Forge, 26 évolutions et 158 recettes sur main après PR 82 ; publication distincte. Golem et les autres hauts rangs attendent leurs lots.
 
-## Proposition suivante — dix hauts rangs tactiques
+## Hauts rangs tactiques — intégrés par PR 83
 
-[Contrat](FORGE_HAUTS_RANGS_TACTIQUES.md) : dix évolutions de cinq cartes, 46 versions Forge et 168 recettes dans la branche. Les deux ascensions existantes ouvrent neuf recettes chacune ; les trois rangs futurs du Golem restent fermés. Ensuite : raccordement Golem, puis évolutions Éther et décision native de portée du Feu follet, avec relecture de la conception et périmètres explicites.
+[Contrat](FORGE_HAUTS_RANGS_TACTIQUES.md) : dix évolutions intégrées le 4 novembre au commit `86efbca0`, arbre identique à la tête dont les six contrôles ont réussi. 46 versions Forge et 168 recettes sur main ; les ascensions ouvrent neuf recettes chacune. Golem Rare et Épique sont jouables et obtenables ; ses trois rangs futurs restent fermés pour respecter la condition d’interception de Cœur runique. Publication distincte.
+
+## Proposition suivante — douze évolutions Éther
+
+[Contrat](ETHER_SOCLE_EVOLUTIONS.md) : six Rares/Épiques et six Légendaires sur huit personnages, pouvoirs existants conservés, paquet et fusions partagés. 23 versions Éther et 180 recettes dans cette branche ; les 27 autres évolutions restent absentes. Le Feu follet conserve sa portée 2 et ses seules versions natives, jusqu’au lot explicite de portée 3. Pas de nouvel état de combat, de migration ou d’ascension Éther. Ensuite : raccordement Golem et pouvoirs Éther, avec relecture de Notion et contrôles propres à chaque lot.

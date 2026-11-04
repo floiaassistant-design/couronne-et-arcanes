@@ -75,7 +75,15 @@ async def run(browser,label,viewport,faction='aube'):
             'cannon':[None,None,7,9,9,9],
             'mechanist':[None,8,10,10,10,10],
             'ironwraith':[7,9,9,9,9,9],
-            'alchemist':[None,5,7,7,7,7]
+            'alchemist':[None,5,7,7,7,7],
+            'mystic':[None,4,6,6,None,None],
+            'elemental':[None,None,8,10,None,None],
+            'griffin':[None,None,6,8,None,None],
+            'sentinel':[None,9,11,None,None,None],
+            'tempest':[None,6,8,8,None,None],
+            'seer':[4,5,5,None,None,None],
+            'aetherknight':[None,None,9,11,None,None],
+            'portal_walker':[None,5,7,7,None,None]
         }.get(card_id)
         native=await row.locator('[data-current-version="true"]').get_attribute('data-collection-rarity')
         ranks=['commun','rare','épique','légendaire','divine','éveillée']
