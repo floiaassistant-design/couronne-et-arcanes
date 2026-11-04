@@ -4,7 +4,7 @@ Le jeu intègre les sauvegardes protégées, Garde/Riposte uniques, le deck manu
 les paquets/fusions et les ascensions Aube, Sylve, Ombre et Forge. La [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75)
 a intégré dix évolutions Rares/Épiques Forge et leur paquet à `main`,
 avec six contrôles réussis. Ce lot et les PR suivantes jusqu’à la PR 83 sont publiés dans la version Sites 27.
-La PR 83 a intégré dix hauts rangs tactiques Forge le 4 novembre ; sa publication est confirmée dans Sites v27. Le lot Éther propose [douze évolutions Éther](docs/ETHER_SOCLE_EVOLUTIONS.md) sur huit personnages, avec un paquet distinct. Cette branche prépare les [trois hauts rangs du Golem](docs/FORGE_GOLEM_COEUR_RUNIQUE.md), encore non intégrés, avec une décision explicite à prendre sur le cas interposé. Les pouvoirs Éther restants demeurent des lots séparés.
+La PR 83 a intégré dix hauts rangs tactiques Forge le 4 novembre ; sa publication est confirmée dans Sites v27. La PR 84 a intégré [douze évolutions Éther](docs/ETHER_SOCLE_EVOLUTIONS.md) sur huit personnages, avec un paquet distinct. Cette branche prépare les [trois hauts rangs du Golem](docs/FORGE_GOLEM_COEUR_RUNIQUE.md), encore non intégrés, avec le cas interposé validé le 4 novembre. Les pouvoirs Éther restants demeurent des lots séparés.
 Les [cinq Légendaires Forge de statistiques](docs/FORGE_LEGENDAIRES_STATS.md) sont intégrées par la PR 78 le 3 novembre 2026, avec leurs fusions et leur export synchronisé. Leur publication est confirmée dans la version Sites 23.
 Le [Marchefer Légendaire](docs/FORGE_MARCHEFER_LEGENDAIRE.md) et sa récupération de bouclier après élimination sont intégrés par la PR 79 le 3 novembre 2026. La publication reste suivie séparément.
 Le [Foreur Légendaire](docs/FORGE_FOREUR_LEGENDAIRE.md) est intégré par la PR 80 : Foreuse d'acier retire jusqu'à 2 points de barrière personnelle avant l'attaque normale, au plus une fois tous les 3 tours. Sa publication est suivie séparément.
@@ -26,7 +26,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 évolutions Rares, puis du Milicien Épique après le premier boss. Accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve, 43 Ombre et 36 évolutions Forge supplémentaires. Le lot dépendant Éther propose douze évolutions ; cette branche ajoute les trois rangs du Golem, sous réserve de validation du raccordement de Cœur runique. Les rangs Divin/Éveillé exigent les grandes ascensions communes de leur faction. Le laboratoire reste disponible pour les tester.
+sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve, 43 Ombre et 36 évolutions Forge supplémentaires. Les douze évolutions Éther sont intégrées par PR 84 ; cette branche ajoute les trois rangs du Golem avec le raccordement validé de Cœur runique. Les rangs Divin/Éveillé exigent les grandes ascensions communes de leur faction. Le laboratoire reste disponible pour les tester.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche

@@ -18,8 +18,8 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
-| Forge | 10 | 39 sur 39 cases futures | 36 évolutions intégrées jusqu’à PR 83 ; 46 versions sur main, trois rangs du Golem proposés avec raccordement à confirmer |
-| Éther | 11 | 39 sur 39 cases futures | Onze natives sur main ; douze évolutions de statistiques proposées, 27 autres absentes ; portée 3 future du Feu follet distincte |
+| Forge | 10 | 39 sur 39 cases futures | 36 évolutions intégrées jusqu’à PR 83 ; 46 versions sur main, trois rangs du Golem préparés, raccordement validé le 4 novembre |
+| Éther | 11 | 39 sur 39 cases futures | 23 versions sur main après PR 84, dont douze évolutions de statistiques ; 27 autres évolutions absentes ; portée 3 future du Feu follet distincte |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
 ou un pouvoir validé ne crée ni exemplaire ni définition jouable. Les onze personnages Éther ont leurs 39 évolutions validées dans cette édition ;
@@ -74,7 +74,7 @@ La publication du jeu reste une opération distincte.
 
 Les 39 évolutions Forge sont entièrement validées dans la conception.
 La première tranche [Rare/Épique](FORGE_RARE_EPIQUE.md) est intégrée par la PR 75 :
-dix versions sur sept personnages (3 Rares et 7 Épiques), 142 recettes au total après cette fusion. La publication Sites doit être vérifiée indépendamment de la fusion. Les 39 évolutions Éther sont validées en conception ; aucune n’est encore intégrée à main ; douze évolutions de statistiques sont proposées dans cette branche.
+dix versions sur sept personnages (3 Rares et 7 Épiques), 142 recettes au total après cette fusion. La publication Sites doit être vérifiée indépendamment de la fusion. Les 39 évolutions Éther sont validées en conception ; douze évolutions de statistiques sont intégrées par PR 84 et les 27 autres restent absentes.
 La nouvelle portée native 3 du Feu follet est une décision séparée du natif 2
 encore au moteur ; elle exige son propre périmètre, contrôle et documentation.
 Relire Notion à la reprise, car la conception continue en parallèle.
@@ -111,10 +111,10 @@ Le lot [Marteau / Foreur / Colosse / Marchefer](FORGE_HAUTS_RANGS_BLINDAGES.md) 
 
 [Contrat](FORGE_HAUTS_RANGS_TACTIQUES.md) : dix évolutions intégrées le 4 novembre au commit `86efbca0`, arbre identique à la tête dont les six contrôles ont réussi. 46 versions Forge et 168 recettes sur main ; les ascensions ouvrent neuf recettes chacune. Golem Rare et Épique sont jouables et obtenables ; ses trois rangs futurs restent fermés pour respecter la condition d’interception de Cœur runique. Publication distincte.
 
-## Proposition suivante — douze évolutions Éther
+## Douze évolutions Éther — intégrées par PR 84
 
-[Contrat](ETHER_SOCLE_EVOLUTIONS.md) : six Rares/Épiques et six Légendaires sur huit personnages, pouvoirs existants conservés, paquet et fusions partagés. 23 versions Éther et 180 recettes dans cette branche ; les 27 autres évolutions restent absentes. Le Feu follet conserve sa portée 2 et ses seules versions natives, jusqu’au lot explicite de portée 3. Pas de nouvel état de combat, de migration ou d’ascension Éther. Ensuite : raccordement Golem et pouvoirs Éther, avec relecture de Notion et contrôles propres à chaque lot.
+[Contrat](ETHER_SOCLE_EVOLUTIONS.md) : six Rares/Épiques et six Légendaires sur huit personnages, intégrées au commit `bc826d3`, avec pouvoirs existants conservés, paquet et fusions partagés. 23 versions Éther et 180 recettes sur main après PR 84 ; les 27 autres évolutions restent absentes. Le Feu follet conserve sa portée 2 et ses seules versions natives, jusqu’au lot explicite de portée 3. Pas de nouvel état de combat, de migration ou d’ascension Éther. Ensuite : raccordement Golem et pouvoirs Éther, avec relecture de Notion et contrôles propres à chaque lot.
 
 ## Proposition — trois rangs du Golem
 
-Le [contrat Golem](FORGE_GOLEM_COEUR_RUNIQUE.md) précise les trois évolutions, Cœur +1 après interception/survie, Garde remplaçante et quota sauvegardé. Avec le lot Éther dépendant : 49 versions Forge, 39 évolutions Forge et 183 recettes. Le cas interposé n’est pas assimilé silencieusement à une interception : proposition explicite, tests positifs/négatifs et décision du propriétaire requise avant fusion. Aucune réponse reçue ne valide encore ce choix.
+Le [contrat Golem](FORGE_GOLEM_COEUR_RUNIQUE.md) précise les trois évolutions, Cœur +1 après interception/survie, Garde remplaçante et quota sauvegardé. Avec le lot Éther intégré : 49 versions Forge, 39 évolutions Forge et 183 recettes dans la branche. Le propriétaire a validé le cas interposé le 4 novembre : le coup doit effectivement atteindre la couronne sans ce Golem, sans autre unité cible. La décision est consignée dans Notion ; les tests positifs/négatifs restent conservés. Lire la revue et les contrôles de la tête finale avant fusion.
