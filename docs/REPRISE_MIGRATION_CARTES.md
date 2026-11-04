@@ -18,7 +18,7 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
-| Forge | 10 | 39 sur 39 cases futures | 36 évolutions intégrées jusqu’à PR 83 ; 46 versions Forge, trois rangs du Golem encore absents |
+| Forge | 10 | 39 sur 39 cases futures | 36 évolutions intégrées jusqu’à PR 83 ; 46 versions sur main, trois rangs du Golem proposés avec raccordement à confirmer |
 | Éther | 11 | 39 sur 39 cases futures | Onze natives sur main ; douze évolutions de statistiques proposées, 27 autres absentes ; portée 3 future du Feu follet distincte |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
@@ -114,3 +114,7 @@ Le lot [Marteau / Foreur / Colosse / Marchefer](FORGE_HAUTS_RANGS_BLINDAGES.md) 
 ## Proposition suivante — douze évolutions Éther
 
 [Contrat](ETHER_SOCLE_EVOLUTIONS.md) : six Rares/Épiques et six Légendaires sur huit personnages, pouvoirs existants conservés, paquet et fusions partagés. 23 versions Éther et 180 recettes dans cette branche ; les 27 autres évolutions restent absentes. Le Feu follet conserve sa portée 2 et ses seules versions natives, jusqu’au lot explicite de portée 3. Pas de nouvel état de combat, de migration ou d’ascension Éther. Ensuite : raccordement Golem et pouvoirs Éther, avec relecture de Notion et contrôles propres à chaque lot.
+
+## Proposition — trois rangs du Golem
+
+Le [contrat Golem](FORGE_GOLEM_COEUR_RUNIQUE.md) précise les trois évolutions, Cœur +1 après interception/survie, Garde remplaçante et quota sauvegardé. Avec le lot Éther dépendant : 49 versions Forge, 39 évolutions Forge et 183 recettes. Le cas interposé n’est pas assimilé silencieusement à une interception : proposition explicite, tests positifs/négatifs et décision du propriétaire requise avant fusion. Aucune réponse reçue ne valide encore ce choix.

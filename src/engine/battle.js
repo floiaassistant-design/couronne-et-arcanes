@@ -2,12 +2,12 @@ import {castSpell} from './spell-casting.js';
 import {versionUnitAbilities,CARD_RULESET} from '../cards/definitions.js';
 import {hit,resolveRetaliation} from './battle-defense.js';
 import {recordTrialFact,recordTrialTurn} from './trial-objectives.js';
-import {findCrownGuardian} from './guard-candidates.js';
+import {findCrownGuardian,isInterposedCrownGuardian} from './guard-candidates.js';
 import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError} from './unit-rules.js';
 import {resolveUnitArrival,resolveUnitSupport} from './unit-support.js';
 import {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty} from './unit-effects.js';
 import {tickUnitPoison,clearUnitPoison,poisonBelongsTo} from './unit-poison.js';
-import {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike} from './unit-triggers.js';
+import {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveGuardWard} from './unit-triggers.js';
 import {applyStrikeFracture} from './unit-strike-modifiers.js';
 import {contiguousSplashTargets} from './unit-targets.js';
 import {resolveUnitDeath} from './unit-death.js';
@@ -286,8 +286,10 @@ function resolveAttacks(b,sideFilter=null){
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
     resolveStrikeDisplacement(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
+    resolveGuardWard(b,guardIntercept.u,true,result.performed,silenced(b,guardIntercept.u),fx);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
   } else {
+   const interposed=versionUnitAbilities(target.target)?.guardWard?.interposedCrownThreat&&isInterposedCrownGuardian(b,lane,intent.col,u,target.target);
    const result=strike(b,u,target.target,atk,intent.col,target.col,true,charged,intent.suppressed,intent.attackState);
    if(ability==='lifesteal')resolveLifesteal(b,u);
    applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0,{battle:b,lane,col:target.col,skipPoison:result.catalysed});
@@ -296,6 +298,7 @@ function resolveAttacks(b,sideFilter=null){
    resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);
    resolveStrikeDisplacement(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
+   resolveGuardWard(b,target.target,interposed,result.performed,silenced(b,target.target),fx);
   }
  }
  // Le bonus de charge ne dure qu'un seul tour et doit survivre aux sauvegardes historiques.

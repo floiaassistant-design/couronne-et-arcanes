@@ -13,6 +13,7 @@ export function unitAbilitySummary(definition){
  if(a.inspire)lines.push(`Inspiration : +${a.inspire.amount} ATQ à ${a.inspire.targets} allié(s) / ${a.inspire.period} tours, ${scope(a.inspire)}`);
  if(a.arrivalInspire)lines.push(`Commandement : +${a.arrivalInspire.amount} ATQ à l'arrivée`);
  if(a.ward)lines.push(`Protection : +${a.ward.amount}`);
+ if(a.guardWard)lines.push(`Cœur runique : couronne +${a.guardWard.amount}`);
  if(a.arrivalBarrier)lines.push(`Barrière alliée à l’arrivée : ${a.arrivalBarrier.amount}`);
  if(a.regeneration)lines.push(`Régénération : ${a.regeneration.amount} PV, ${a.regeneration.resolutions} tour(s)`);
  if(a.harass)lines.push(`${a.harass.period?'Cri d’effroi':'Harcèlement'} : −${a.harass.amount} ATQ, ${a.harass.attacks} attaque(s)`);
@@ -31,6 +32,7 @@ export function unitAbilitySummary(definition){
 // Texte de carte et fiche sont deux formats des mêmes paramètres effectifs.
 export function unitCardText(d){
  const a=d.abilities,parts=[...advancedSummary(d.abilities)];
+ if(a.guardWard)parts.unshift(`Cœur runique +${a.guardWard.amount}`);
  if(a.firstHitReduction)parts.push(`Premier coup −${a.firstHitReduction.amount}`);
  if(a.lastStand)parts.push(`Rempart ${a.lastStand.hp} PV`);
  if(a.intervention)parts.push(`Intervention ${a.intervention.amount}`);
@@ -95,6 +97,7 @@ export function unitAbilityDetails(d){
  if(a.strikeHeal)lines.push(`Sang partagé : après une attaque sur une unité lui retirant réellement au moins 1 PV, soin personnel ${a.strikeHeal.amount}, sans dépasser ses PV maximum, au plus une fois par tour. Aucun soin personnel sur barrière seule ni couronne.`);
  if(a.traverseAlly)lines.push(`Traverse au plus ${a.traverseAlly.max} allié pendant son déplacement, arrivée libre et distance totale limitée à ${d.geometry.steps} cases. Ne traverse pas les ennemis et ne change pas de ligne.`);
  if(a.splash)lines.push(`Impact de zone : ${a.splash.amount} dégâts bruts à ${a.splash.targets||1} ennemi(s) supplémentaire(s) au plus, immédiatement derrière la cible précédente et sans case vide, dans le sens de l'attaque sur la même ligne. Protections normales, aucune frappe vers l'arrière, aucune attaque supplémentaire.`);
+ if(a.guardWard)lines.push(`Cœur runique : après interception d’une attaque visant sa couronne et survie, +${a.guardWard.amount} bouclier à sa couronne, plafond ${a.guardWard.cap}, au plus une fois par tour pour ce Golem. Un coup direct reçu loin de la couronne ou devant une autre unité ne compte pas ; l’attaque doit pouvoir atteindre la couronne sans le Golem. Aucun gain à sa destruction ou sous Silence ; aucune limite ajoutée aux interceptions.`);
  if(a.funeralWatch)lines.push(`Veille funéraire : lorsqu’une autre unité alliée meurt sur sa ligne, si le Veilleur vit et n’est pas silencieux, barrière personnelle ${a.funeralWatch.amount}, plafond ${a.funeralWatch.cap} pour cet effet. Au plus une fois par tour, sans cumul ni double déclenchement.`);
  if(a.flying)lines.push('Vol : franchit un allié si la case d’arrivée est libre.');
  if(a.charge)lines.push(`Charge : +${a.charge.amount} ATQ après déplacement avant la frappe.`);

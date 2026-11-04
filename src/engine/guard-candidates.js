@@ -1,6 +1,7 @@
 // Protection des couronnes : éligibilité et priorité validées, sans mutation.
 import {laneCount,lastCell,validLane,crownColumn} from './board.js';
 import {versionUnitAbilities} from '../cards/definitions.js';
+import {unitAttackRange} from './unit-rules.js';
 
 export function crownGuardCandidates(b,attackLane,heroSide,attackerCol){
  if(!['p','e'].includes(heroSide)||!validLane(b,attackLane)||!Number.isInteger(attackerCol)||attackerCol<1||attackerCol>lastCell(b))return [];
@@ -22,4 +23,22 @@ export function findCrownGuardian(b,attackLane,heroSide,attackerCol){
  return guards.sort((a,z)=>
   Number(a.lane!==attackLane)-Number(z.lane!==attackLane)||
   Math.abs(a.col-crown)-Math.abs(z.col-crown)||a.lane-z.lane||a.u.uid-z.u.uid)[0]||null;
+}
+
+// Proposition explicite pour Cœur runique : sans le gardien effectivement
+// ciblé, cette même attaque atteindrait la couronne, pas une autre unité.
+// Ce constat ne redirige aucune attaque et ne change pas les priorités de Garde.
+export function isInterposedCrownGuardian(b,lane,attackerCol,attacker,guardian){
+ if(!attacker||!['p','e'].includes(attacker.side)||!guardian||guardian.hp<=0||guardian.side===attacker.side||!validLane(b,lane))return false;
+ const distance=Math.abs(crownColumn(b,guardian.side)-attackerCol),range=unitAttackRange(attacker);
+ if(distance>range||findCrownGuardian(b,lane,guardian.side,attackerCol)?.u!==guardian)return false;
+ const dir=attacker.side==='p'?1:-1;
+ let found=false;
+ for(let step=1;step<=range;step++){
+  const other=b.board[lane][attackerCol+step*dir];
+  if(!other||other.hp<=0||other.side===attacker.side)continue;
+  if(other!==guardian)return false;
+  found=true;
+ }
+ return found;
 }
