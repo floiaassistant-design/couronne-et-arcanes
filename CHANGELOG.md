@@ -10,7 +10,7 @@
 
 - Douze versions sur huit personnages : six Rares/Épiques et six Légendaires, sans nouvelle capacité ni modification native du Feu follet. 23 versions Éther et 180 recettes dans cette branche.
 - Paquet Éther distinct, trois cartes pour 190 or après mission 03, groupes 60/35/5 et pools 6/1/5 ; fusions après missions 01/03/06, sauvegardes et autres paquets conservés.
-- Données partagées, pouvoirs hérités, présentation, obtention, laboratoire, moteur embarqué et parcours navigateur communs. [Contrat et limites](docs/ETHER_SOCLE_EVOLUTIONS.md).
+- Données partagées, pouvoirs hérités, présentation, obtention, laboratoire, moteur embarqué et parcours navigateur communs. Fiche Portail complète rétablie après détection du navigateur, règles et cadence vérifiées explicitement. [Contrat et limites](docs/ETHER_SOCLE_EVOLUTIONS.md).
 
 ## Intégré — Forge, dix hauts rangs tactiques, 4 novembre 2026
 
