@@ -1,0 +1,38 @@
+name: Préparer l’export Éther
+on:
+  push:
+    branches: [feat/ether-evolutions-socle-20261104]
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: npm run build
+      - name: Vérifier puis enregistrer uniquement le blob généré
+        env:
+          EXPORT_TOKEN: ${{ github.token }}
+          EXPECTED_BLOB: bcf3ecd146e2ce07be269c4edb82f79fe8c4b195
+        run: |
+          node --input-type=module <<'JS'
+          import {readFileSync} from 'node:fs';
+          import {createHash} from 'node:crypto';
+          const bytes=readFileSync('JOUER.html');
+          const sha=createHash('sha1').update(Buffer.from('blob '+bytes.length+'\0')).update(bytes).digest('hex');
+          if(sha!==process.env.EXPECTED_BLOB)throw Error('Export différent de la version vérifiée');
+          const response=await fetch('https://api.github.com/repos/'+process.env.GITHUB_REPOSITORY+'/git/blobs',{
+           method:'POST',headers:{Authorization:'Bearer '+process.env.EXPORT_TOKEN,Accept:'application/vnd.github+json','Content-Type':'application/json'},
+           body:JSON.stringify({content:bytes.toString('base64'),encoding:'base64'})
+          });
+          const body=await response.json();
+          if(!response.ok||body.sha!==sha)throw Error('Échec d’enregistrement du blob : '+response.status);
+          console.log('GENERATED_BLOB='+body.sha);
+          JS

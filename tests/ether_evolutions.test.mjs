@@ -134,6 +134,11 @@ test('Sentinelle Épique : Armure 2, Garde de couronne positionnelle, Riposte ef
 });
 
 test('Marcheur Légendaire : Portail avantageux réel, cadence trois tours, Silence et aucune Faille future',()=>{
+ for(const rank of ['rare','épique','légendaire']){
+  const view=cardPresentation({id:'portal_walker',rarity:rank});assert.equal(view.card.description,'Portail / 3 tours');
+  const detail=view.details.join(' ');
+  for(const phrase of ['avant son déplacement normal','même colonne libre et autorisée','gain suffisant','tous les 3 tours','aucune arrivée devant la couronne adverse','ni attaque ni déplacement supplémentaire'])assert(detail.includes(phrase),phrase);
+ }
  for(const side of ['p','e']){
   const c=summoned('portal_walker','légendaire',side);c.b.board[0][c.col+c.dir]=unit('militia',side,{stun:99});
   const hooks={hit,emit:()=>{},note:()=>{},enter:()=>{}};

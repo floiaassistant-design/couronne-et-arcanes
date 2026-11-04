@@ -106,3 +106,7 @@ diff avant fusion dans le cadre de l'accord reçu. Vérifier ensuite la diffusio
 par le suivi Sites existant. Les trois rangs du Golem restent distincts :
 Cœur runique nécessite une interception de couronne réelle. Puis poursuivre
 les pouvoirs Éther et la décision de portée du Feu follet dans leurs propres lots.
+
+## Correction de fiche avant fusion
+
+Le premier contrôle navigateur a détecté un vrai manque : la fiche structurée du Marcheur n’expliquait plus son Portail. Le libellé bref et le détail lisent maintenant le paramètre de cadence, avec destination libre/autorisée, gain évalué par le moteur et exclusion de la couronne adverse. Le contrôle remplace la seule longueur minimale par les six assertions de règles attendues ; les trois rangs définis sont aussi vérifiés par Node. La mécanique de Portail reste inchangée. Les résultats de la nouvelle tête sont à lire dans la PR ; le premier échec n’est pas effacé.

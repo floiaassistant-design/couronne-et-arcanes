@@ -102,6 +102,13 @@ async def run(browser,label,viewport):
             for phrase in ['Avant son déplacement','pendant 1 tour','tous les 3 tours','Attaques normales et traits passifs conservés']:
                 assert phrase in detail,phrase
             await page.keyboard.press('Escape')
+        elif id=='portal_walker':
+            assert text=='Portail / 3 tours'
+            await card.hover()
+            detail=await page.locator('#collection-hover-inspection:not([hidden])').inner_text()
+            for phrase in ['avant son déplacement normal','même colonne libre et autorisée','gain suffisant','tous les 3 tours','aucune arrivée devant la couronne adverse','ni attaque ni déplacement supplémentaire']:
+                assert phrase in detail,phrase
+            await page.keyboard.press('Escape')
         else:
             assert len(text)>50
     await page.locator('#nav [data-page="campaign"]').click()
