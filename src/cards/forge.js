@@ -8,7 +8,8 @@ export const FORGE_DESIGN_SOURCE=freezeCardData({
 export const FORGE_EVOLUTIONS=freezeCardData({
  smith:{rare:{stats:{hp:8}},'épique':{stats:{attack:4}},'légendaire':{abilities:{knockback:{cells:1,period:3}}},
   divine:{abilities:{knockback:{follow:true}}},'éveillée':{abilities:{knockback:{blockedDamage:2}}}},
- golem:{'épique':{stats:{hp:14}}},
+ golem:{'épique':{stats:{hp:14}},'légendaire':{abilities:{guardWard:{amount:1,cap:20,frequency:'round',interposedCrownThreat:true}}},
+  divine:{abilities:{guard:{scope:'line'}}},'éveillée':{abilities:{guard:{scope:'all-lines'}}}},
  bomb:{'épique':{stats:{hp:5}},'légendaire':{stats:{attack:5}},
   divine:{abilities:{fracture:{amount:1,expiresAfter:1,primary:false}}},'éveillée':{abilities:{fracture:{amount:2,primary:true}}}},
  drill:{rare:{stats:{hp:7}},'épique':{stats:{attack:3}},'légendaire':{abilities:{barrierDrill:{amount:2,period:3}}},

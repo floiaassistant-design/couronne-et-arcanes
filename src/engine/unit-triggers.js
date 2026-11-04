@@ -21,6 +21,19 @@ export function resolveSpectralRetreat(b,u,target,{performed,suppressed},hooks){
  return true;
 }
 
+// Quota propre au gardien, distinct du nombre illimité d'interceptions.
+export function resolveGuardWard(b,u,intercepted,performed,suppressed,emit){
+ const p=versionUnitAbilities(u)?.guardWard;
+ if(!p||!intercepted||!performed||suppressed||u.hp<=0||u.lastGuardWardRound===b.round)return 0;
+ u.lastGuardWardRound=b.round;
+ const gained=grantCrownShield(b.heroes[u.side],p);
+ if(gained){
+  const lane=b.board.findIndex(row=>row.includes(u));
+  if(lane>=0)emit(b,{type:'state',side:u.side,lane,col:b.board[lane].indexOf(u),guardWard:gained});
+ }
+ return gained;
+}
+
 // Détonation secondaire après la frappe : jamais une nouvelle attaque.
 export function resolveAlchemyStrike(b,u,target,poisonedAtStart,suppressed,hit){
  const p=versionUnitAbilities(u)?.catalysis;

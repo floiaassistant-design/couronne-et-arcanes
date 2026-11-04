@@ -115,3 +115,7 @@ les pouvoirs Éther et la décision de portée du Feu follet dans leurs propres 
 ## Correction de fiche avant fusion
 
 Le premier contrôle navigateur a détecté un vrai manque : la fiche structurée du Marcheur n’expliquait plus son Portail. Le libellé bref et le détail lisent maintenant le paramètre de cadence, avec destination libre/autorisée, gain évalué par le moteur et exclusion de la couronne adverse. Le contrôle remplace la seule longueur minimale par les six assertions de règles attendues ; les trois rangs définis sont aussi vérifiés par Node. La mécanique de Portail reste inchangée. Les résultats de la nouvelle tête sont à lire dans la PR ; le premier échec n’est pas effacé.
+
+## Intégration du 4 novembre 2026
+
+PR 84 fusionnée au commit `bc826d3ca1daa2824b9e895c51f4e61077870583`, après accord et six contrôles réussis sur la tête corrigée `c79fb33437e0d69d8c38d4410faa67af1076f197`. Arbre `f83f7819b130ba8d7191053279c69fb65769c3cd` identique à la version revue/testée, export `bcf3ecd146e2ce07be269c4edb82f79fe8c4b195` confirmé. Les formulations de branche/proposition ci-dessus décrivent le lot livré. Publication distincte : dernier terminal confirmé Sites v27 / PR 83, suivi existant réutilisé.

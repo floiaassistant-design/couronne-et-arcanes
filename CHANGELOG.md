@@ -3,10 +3,16 @@
 ## En préparation — Éther, Repli spectral et Étoile immobile, 4 novembre 2026
 
 - Trois évolutions du Feu follet, portée 3, avec recul personnel Légendaire ; sa Commune garde la portée 2. Voyante Légendaire et présage annulé par un déplacement réel au tour suivant.
-- Quatre fusions supplémentaires, 27 versions Éther et 184 recettes sur cette base indépendante de la PR Golem. Paquet Éther enrichi de ses Feux follets Rare/Épique, prix et taux conservés.
+- Quatre fusions supplémentaires, 27 versions Éther et 187 recettes après réconciliation avec le Golem intégré. Paquet Éther enrichi de ses Feux follets Rare/Épique, prix et taux conservés.
 - États facultatifs repris, protections et mouvements communs, fiches, moteur embarqué et parcours partagés. [Contrat](docs/ETHER_REPLI_PRESAGE.md).
 
-## Intégré par PR 84 — Éther, douze évolutions de statistiques, 4 novembre 2026
+## Intégré par PR 85 — Golem Légendaire, Divin et Éveillé, 4 novembre 2026
+
+- Cœur runique : après interception et survie, +1 bouclier à la couronne, plafond 20 et une activation par invocation/tour ; Garde de ligne puis toutes lignes remplaçante.
+- Trois fusions, dix recettes par ascension Forge, état facultatif sauvegardé et présentation commune ; natifs, paquets et 120 références de parité conservés.
+- Cas interposé validé par le propriétaire le 4 novembre, sans redirection d’attaque ni récompense de tous les coups reçus ; clarification enregistrée dans Notion et le contrat. [Contrat et limites](docs/FORGE_GOLEM_COEUR_RUNIQUE.md).
+
+## Intégré — Éther, douze évolutions de statistiques, 4 novembre 2026
 
 - Douze versions sur huit personnages : six Rares/Épiques et six Légendaires, sans nouvelle capacité ni modification native du Feu follet. 23 versions Éther et 180 recettes dans cette branche.
 - Paquet Éther distinct, trois cartes pour 190 or après mission 03, groupes 60/35/5 et pools 6/1/5 ; fusions après missions 01/03/06, sauvegardes et autres paquets conservés.

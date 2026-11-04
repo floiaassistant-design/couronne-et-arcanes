@@ -9,11 +9,11 @@ import {validateImportedProfile,validStoredBattle} from '../src/ui/storage.js';
 import {ascensionProfile,ascensionScenarios,playAscension} from './fixtures/ascension-scenarios.mjs';
 
 const scenarios=ascensionScenarios('forge');
-test('Deux ascensions Forge : neuf recettes par rang, pas de déblocage des cartes absentes ni de récompense',()=>{
+test('Deux ascensions Forge : dix recettes par rang, pas de déblocage des cartes absentes ni de récompense',()=>{
  assert.equal(FORGE_ASCENSIONS.length,2);
  for(const t of FORGE_ASCENSIONS){
   assert.equal(evolutionAscensionFor('forge',t.to),t);
-  assert.deepEqual(EVOLUTION_FUSIONS.filter(r=>r.ascension===t.id).map(r=>r.cardId).sort(),['alchemist','bomb','cannon','colossus','drill','engineer','ironwraith','mechanist','smith']);
+  assert.deepEqual(EVOLUTION_FUSIONS.filter(r=>r.ascension===t.id).map(r=>r.cardId).sort(),['alchemist','bomb','cannon','colossus','drill','engineer','golem','ironwraith','mechanist','smith']);
   assert.deepEqual(t.goal,{distinct:t.to==='divine'?3:4,crownPercent:t.to==='divine'?40:60,maxRound:24});
   assert.equal(t.mission,t.to==='divine'?'09':'12');assert.ok(t.deck.every(id=>typeof id==='string'&&CARDS[id]));
  }

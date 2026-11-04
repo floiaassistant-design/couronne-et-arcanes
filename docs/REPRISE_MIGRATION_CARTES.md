@@ -18,7 +18,7 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Aube | 10 | 41 | 51 versions déjà au moteur ; toutes obtenables depuis PR 62 |
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
-| Forge | 10 | 39 sur 39 cases futures | 36 évolutions intégrées jusqu’à PR 83 ; 46 versions Forge, trois rangs du Golem encore absents |
+| Forge | 10 | 39 sur 39 cases futures | 39 évolutions intégrées jusqu’à PR 85 ; 49 versions Forge |
 | Éther | 11 | 39 sur 39 cases futures | Douze évolutions intégrées par PR 84 ; quatre supplémentaires proposées, 23 autres absentes ; portée 3 native du Feu follet distincte |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
@@ -113,6 +113,6 @@ Le lot [Marteau / Foreur / Colosse / Marchefer](FORGE_HAUTS_RANGS_BLINDAGES.md) 
 
 ## Éther — socle intégré et proposition Repli / présage
 
-Le [socle de statistiques](ETHER_SOCLE_EVOLUTIONS.md) est intégré par PR 84 : douze évolutions, 23 versions et 180 recettes sur main. La [proposition Repli / présage](ETHER_REPLI_PRESAGE.md) ajoute trois Feux follets et la Voyante Légendaire : 16 évolutions Éther, 27 versions et 184 recettes dans cette branche. 23 évolutions Éther restent absentes. Feu follet natif à portée 2, rangs ajoutés à portée 3 ; pas d’ascension Éther, de clé ou de migration.
+Le [socle de statistiques](ETHER_SOCLE_EVOLUTIONS.md) est intégré par PR 84 : douze évolutions, 23 versions et 180 recettes sur main. La [proposition Repli / présage](ETHER_REPLI_PRESAGE.md) ajoute trois Feux follets et la Voyante Légendaire : 16 évolutions Éther, 27 versions et 187 recettes dans cette branche. 23 évolutions Éther restent absentes. Feu follet natif à portée 2, rangs ajoutés à portée 3 ; pas d’ascension Éther, de clé ou de migration.
 
-La PR Golem 85 est distincte : règle interposée validée le 4 novembre et enregistrée dans Notion, six contrôles de sa tête `f49b5b1` réussis. Elle attend son accord spécifique de fusion. Les mentions précédentes d’un arbitrage de conception restant à résoudre sont historiques. Avant intégration des deux propositions, préserver leurs imports, quotas, tests et documents communs ; aucun écrasement d’historique ou déploiement concurrent.
+La PR Golem 85 est intégrée au commit `4de013ddf06a3a6f6d4f46041af0e63e789f1eef`, après accord spécifique et six contrôles réussis. Règle interposée validée et enregistrée dans Notion, 49 versions Forge et 183 recettes sur main. La PR 86 est réconciliée avec ce main : 187 recettes, les deux contributions conservées et contrôlées ensemble. Les mentions précédentes d’un arbitrage ou d’une fusion Golem restant à réaliser sont historiques. Aucune fusion ni publication de la PR 86 n’est déduite de cet assemblage.

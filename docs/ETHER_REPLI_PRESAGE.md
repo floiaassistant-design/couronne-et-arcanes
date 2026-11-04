@@ -4,7 +4,9 @@
 
 Base GitHub : main `bc826d3ca1daa2824b9e895c51f4e61077870583` (PR 84),
 arbre `f83f7819b130ba8d7191053279c69fb65769c3cd`, reproduit exactement avant
-modification. Tableau maître Notion relu, édition `2026-11-04T09:02:46.815Z` :
+modification. La branche est ensuite réconciliée avec main après fusion du Golem :
+`4de013ddf06a3a6f6d4f46041af0e63e789f1eef`, arbre
+`a1df3b30936765d3e02301dc51371d87759df3af`. Tableau maître Notion relu, édition `2026-11-04T09:02:46.815Z` :
 [source de conception](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f).
 Aucune décision de conception nouvelle ni écriture du tableau maître.
 
@@ -16,7 +18,7 @@ Aucune décision de conception nouvelle ni écriture du tableau maître.
 | Voyante Légendaire | 3 | 5 | 1 | 2 | Étoile immobile |
 
 Totaux avant niveaux et bonus du profil. Cette branche définit 27 versions
-Éther, dont 16 évolutions, sur neuf personnages évolutifs ; 184 recettes
+Éther, dont 16 évolutions, sur neuf personnages évolutifs ; 187 recettes
 toutes factions. Les 23 autres évolutions Éther restent absentes, ainsi que
 les deux ascensions de cette faction. Le Feu follet **natif conserve la portée 2** :
 son passage validé à 3 demande un changement natif explicite, séparé de ce lot.
@@ -79,10 +81,10 @@ Web, laboratoire et autonome utilisent le même graphe, 80 modules et les
 
 ## Vérifications et reprise
 
-749 tests Node et 120 scénarios de parité natifs réussis localement, dont
+764 tests Node et 120 scénarios de parité natifs réussis localement, dont
 18 tests tactiques dédiés. Les 27 versions Éther sont invoquées aux quatre
-niveaux dans les deux camps ; les 184 recettes sont réellement fusionnées
-et exécutées dans 2 944 simulations déterministes. Le moteur de l'export
+niveaux dans les deux camps ; les 187 recettes sont réellement fusionnées
+et exécutées dans 2 992 simulations déterministes. Le moteur de l'export
 est également exécuté pour les deux nouveaux pouvoirs.
 
 Deux scénarios raccordés aux quatre parties navigateur existantes couvrent
@@ -93,7 +95,9 @@ pouvoir. CI et parcours navigateur restent à lire sur la tête GitHub exacte :
 Playwright absent de cet environnement local. Ni téléphone physique,
 campagne UI complète depuis zéro, ni preuve d'équilibrage humain.
 
-La PR Golem 85 reste distincte, sans dépendance de gameplay ; les imports de
-`battle.js`, quotas et documents communs devront être réconciliés si elle
-est intégrée d'abord. Chaque PR attend son accord spécifique de fusion.
-Sites ne reçoit que main intégré et vérifié, via le suivi existant.
+La PR Golem 85 est intégrée. L’assemblage conserve ses trois rangs, Cœur, Garde,
+quotas, tests et documentation, avec les quatre évolutions Éther. Les conflits
+sur imports, champs validés, compteurs et documents ont été réconciliés sans
+retirer les contributions. Les 764 tests et 120 scénarios de parité ont réussi
+sur cet assemblage ; sa nouvelle CI reste requise. La PR 86 attend son accord
+spécifique de fusion. Sites ne reçoit que main intégré et vérifié, via le suivi existant.

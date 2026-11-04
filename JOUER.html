@@ -4731,6 +4731,7 @@ function boardInspectionData(battle,uid){
   if(u.firstHitReductionUsed)statuses.push('Réduction du premier coup consommée');
   if(u.riposteUsed)statuses.push('Riposte par invocation consommée');
   if(u.lastRiposteRound===battle.round)statuses.push('Riposte utilisée ce tour');
+  if(u.lastGuardWardRound===battle.round)statuses.push('Cœur runique utilisé ce tour');
   if(u.lastStandUsed)statuses.push('Dernier Rempart consommé');
   if(u.attackPenalty)statuses.push(`Harcèlement : −${u.attackPenalty.amount} ATQ, ${u.attackPenalty.remaining} attaque restante`);
   if(u.regeneration)statuses.push(`Régénération : ${u.regeneration.amount} PV au prochain tour, ${u.regeneration.remaining} effet restant`);
@@ -5289,7 +5290,8 @@ const FORGE_DESIGN_SOURCE=freezeCardData({
 const FORGE_EVOLUTIONS=freezeCardData({
  smith:{rare:{stats:{hp:8}},'épique':{stats:{attack:4}},'légendaire':{abilities:{knockback:{cells:1,period:3}}},
   divine:{abilities:{knockback:{follow:true}}},'éveillée':{abilities:{knockback:{blockedDamage:2}}}},
- golem:{'épique':{stats:{hp:14}}},
+ golem:{'épique':{stats:{hp:14}},'légendaire':{abilities:{guardWard:{amount:1,cap:20,frequency:'round',interposedCrownThreat:true}}},
+  divine:{abilities:{guard:{scope:'line'}}},'éveillée':{abilities:{guard:{scope:'all-lines'}}}},
  bomb:{'épique':{stats:{hp:5}},'légendaire':{stats:{attack:5}},
   divine:{abilities:{fracture:{amount:1,expiresAfter:1,primary:false}}},'éveillée':{abilities:{fracture:{amount:2,primary:true}}}},
  drill:{rare:{stats:{hp:7}},'épique':{stats:{attack:3}},'légendaire':{abilities:{barrierDrill:{amount:2,period:3}}},
@@ -5533,6 +5535,7 @@ function unitAbilitySummary(definition){
  if(a.inspire)lines.push(`Inspiration : +${a.inspire.amount} ATQ à ${a.inspire.targets} allié(s) / ${a.inspire.period} tours, ${scope(a.inspire)}`);
  if(a.arrivalInspire)lines.push(`Commandement : +${a.arrivalInspire.amount} ATQ à l'arrivée`);
  if(a.ward)lines.push(`Protection : +${a.ward.amount}`);
+ if(a.guardWard)lines.push(`Cœur runique : couronne +${a.guardWard.amount}`);
  if(a.arrivalBarrier)lines.push(`Barrière alliée à l’arrivée : ${a.arrivalBarrier.amount}`);
  if(a.regeneration)lines.push(`Régénération : ${a.regeneration.amount} PV, ${a.regeneration.resolutions} tour(s)`);
  if(a.harass)lines.push(`${a.harass.period?'Cri d’effroi':'Harcèlement'} : −${a.harass.amount} ATQ, ${a.harass.attacks} attaque(s)`);
@@ -5551,6 +5554,7 @@ function unitAbilitySummary(definition){
 // Texte de carte et fiche sont deux formats des mêmes paramètres effectifs.
 function unitCardText(d){
  const a=d.abilities,parts=[...advancedSummary(d.abilities)];
+ if(a.guardWard)parts.unshift(`Cœur runique +${a.guardWard.amount}`);
  if(a.firstHitReduction)parts.push(`Premier coup −${a.firstHitReduction.amount}`);
  if(a.lastStand)parts.push(`Rempart ${a.lastStand.hp} PV`);
  if(a.intervention)parts.push(`Intervention ${a.intervention.amount}`);
@@ -5617,6 +5621,7 @@ function unitAbilityDetails(d){
  if(a.strikeHeal)lines.push(`Sang partagé : après une attaque sur une unité lui retirant réellement au moins 1 PV, soin personnel ${a.strikeHeal.amount}, sans dépasser ses PV maximum, au plus une fois par tour. Aucun soin personnel sur barrière seule ni couronne.`);
  if(a.traverseAlly)lines.push(`Traverse au plus ${a.traverseAlly.max} allié pendant son déplacement, arrivée libre et distance totale limitée à ${d.geometry.steps} cases. Ne traverse pas les ennemis et ne change pas de ligne.`);
  if(a.splash)lines.push(`Impact de zone : ${a.splash.amount} dégâts bruts à ${a.splash.targets||1} ennemi(s) supplémentaire(s) au plus, immédiatement derrière la cible précédente et sans case vide, dans le sens de l'attaque sur la même ligne. Protections normales, aucune frappe vers l'arrière, aucune attaque supplémentaire.`);
+ if(a.guardWard)lines.push(`Cœur runique : après interception d’une attaque visant sa couronne et survie, +${a.guardWard.amount} bouclier à sa couronne, plafond ${a.guardWard.cap}, au plus une fois par tour pour ce Golem. Un coup direct reçu loin de la couronne ou devant une autre unité ne compte pas ; l’attaque doit pouvoir atteindre la couronne sans le Golem. Aucun gain à sa destruction ou sous Silence ; aucune limite ajoutée aux interceptions.`);
  if(a.funeralWatch)lines.push(`Veille funéraire : lorsqu’une autre unité alliée meurt sur sa ligne, si le Veilleur vit et n’est pas silencieux, barrière personnelle ${a.funeralWatch.amount}, plafond ${a.funeralWatch.cap} pour cet effet. Au plus une fois par tour, sans cumul ni double déclenchement.`);
  if(a.flying)lines.push('Vol : franchit un allié si la case d’arrivée est libre.');
  if(a.charge)lines.push(`Charge : +${a.charge.amount} ATQ après déplacement avant la frappe.`);
@@ -6035,12 +6040,12 @@ const {castSpell}=__load("src/engine/spell-casting.js");
 const {versionUnitAbilities,CARD_RULESET}=__load("src/cards/definitions.js");
 const {hit,resolveRetaliation}=__load("src/engine/battle-defense.js");
 const {recordTrialFact,recordTrialTurn}=__load("src/engine/trial-objectives.js");
-const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
+const {findCrownGuardian,isInterposedCrownGuardian}=__load("src/engine/guard-candidates.js");
 const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError}=__load("src/engine/unit-rules.js");
 const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
 const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {tickUnitPoison,clearUnitPoison,poisonBelongsTo}=__load("src/engine/unit-poison.js");
-const {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat}=__load("src/engine/unit-triggers.js");
+const {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard}=__load("src/engine/unit-triggers.js");
 const {placeStillOmen,noteOmenMovement,resolveStillOmens}=__load("src/engine/unit-omens.js");
 const {applyStrikeFracture}=__load("src/engine/unit-strike-modifiers.js");
 const {contiguousSplashTargets}=__load("src/engine/unit-targets.js");
@@ -6320,10 +6325,12 @@ function resolveAttacks(b,sideFilter=null){
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
     resolveStrikeDisplacement(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
+    resolveGuardWard(b,guardIntercept.u,true,result.performed,silenced(b,guardIntercept.u),fx);
     placeStillOmen(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},fx);
     resolveSpectralRetreat(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
   } else {
+   const interposed=versionUnitAbilities(target.target)?.guardWard?.interposedCrownThreat&&isInterposedCrownGuardian(b,lane,intent.col,u,target.target);
    const result=strike(b,u,target.target,atk,intent.col,target.col,true,charged,intent.suppressed,intent.attackState);
    if(ability==='lifesteal')resolveLifesteal(b,u);
    applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0,{battle:b,lane,col:target.col,skipPoison:result.catalysed});
@@ -6332,6 +6339,7 @@ function resolveAttacks(b,sideFilter=null){
    resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);
    resolveStrikeDisplacement(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
+   resolveGuardWard(b,target.target,interposed,result.performed,silenced(b,target.target),fx);
    placeStillOmen(b,u,target.target,{...result,suppressed:intent.suppressed},fx);
    resolveSpectralRetreat(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
   }
@@ -6775,7 +6783,7 @@ function silenceValue(u){
  return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
   (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0)+
   (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0)+(future?.strikeWard?2:0)+(future?.barrierDrill?3:0)+(future?.knockback?3:0)+(future?.scoria?3:0)+
-  (future?.fracture?2:0)+(future?.spotting?2:0)+(future?.catalysis?2:0)+(future?.spectralRetreat?2:0)+(future?.stillOmen?2:0);
+  (future?.fracture?2:0)+(future?.spotting?2:0)+(future?.catalysis?2:0)+(future?.spectralRetreat?2:0)+(future?.stillOmen?2:0)+(future?.guardWard?2:0);
 }
 function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 function silenceTarget(b,side,lane){
@@ -7180,7 +7188,7 @@ function validUnitEffects(u){
   (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
   (u.deathStrikeUsed===undefined||typeof u.deathStrikeUsed==='boolean')&&
   (u.devourAttack===undefined||integer(u.devourAttack,2))&&
-  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound','spottingReadyRound','catalysisReadyRound','spectralRetreatReadyRound','stillOmenReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
+  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound','spottingReadyRound','catalysisReadyRound','spectralRetreatReadyRound','stillOmenReadyRound','lastGuardWardRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
   (u.scoriaHits===undefined||Number.isSafeInteger(u.scoriaHits)&&u.scoriaHits>=0&&u.scoriaHits<=2)&&
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
@@ -7321,6 +7329,19 @@ function resolveSpectralRetreat(b,u,target,{performed,suppressed},hooks){
  return true;
 }
 
+// Quota propre au gardien, distinct du nombre illimité d'interceptions.
+function resolveGuardWard(b,u,intercepted,performed,suppressed,emit){
+ const p=versionUnitAbilities(u)?.guardWard;
+ if(!p||!intercepted||!performed||suppressed||u.hp<=0||u.lastGuardWardRound===b.round)return 0;
+ u.lastGuardWardRound=b.round;
+ const gained=grantCrownShield(b.heroes[u.side],p);
+ if(gained){
+  const lane=b.board.findIndex(row=>row.includes(u));
+  if(lane>=0)emit(b,{type:'state',side:u.side,lane,col:b.board[lane].indexOf(u),guardWard:gained});
+ }
+ return gained;
+}
+
 // Détonation secondaire après la frappe : jamais une nouvelle attaque.
 function resolveAlchemyStrike(b,u,target,poisonedAtStart,suppressed,hit){
  const p=versionUnitAbilities(u)?.catalysis;
@@ -7414,7 +7435,7 @@ function resolveSurvivedStrike(b,u,attacker,damaged,suppressed,emit){
  }
 }
 
-Object.assign(__exports,{resolveSpectralRetreat,resolveAlchemyStrike,resolveStrikeDisplacement,resolveStrikePreparation,resolveStrikeRewards,resolveSurvivedStrike});
+Object.assign(__exports,{resolveSpectralRetreat,resolveGuardWard,resolveAlchemyStrike,resolveStrikeDisplacement,resolveStrikePreparation,resolveStrikeRewards,resolveSurvivedStrike});
 
 },
 "src/engine/tempo.js":function(__exports,__load){
@@ -7561,6 +7582,7 @@ Object.assign(__exports,{ascensionObjectiveText,createAscensionChallenge,validAs
 // Protection des couronnes : éligibilité et priorité validées, sans mutation.
 const {laneCount,lastCell,validLane,crownColumn}=__load("src/engine/board.js");
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
+const {unitAttackRange}=__load("src/engine/unit-rules.js");
 function crownGuardCandidates(b,attackLane,heroSide,attackerCol){
  if(!['p','e'].includes(heroSide)||!validLane(b,attackLane)||!Number.isInteger(attackerCol)||attackerCol<1||attackerCol>lastCell(b))return [];
  const guards=[];
@@ -7583,7 +7605,25 @@ function findCrownGuardian(b,attackLane,heroSide,attackerCol){
   Math.abs(a.col-crown)-Math.abs(z.col-crown)||a.lane-z.lane||a.u.uid-z.u.uid)[0]||null;
 }
 
-Object.assign(__exports,{crownGuardCandidates,findCrownGuardian});
+// Proposition explicite pour Cœur runique : sans le gardien effectivement
+// ciblé, cette même attaque atteindrait la couronne, pas une autre unité.
+// Ce constat ne redirige aucune attaque et ne change pas les priorités de Garde.
+function isInterposedCrownGuardian(b,lane,attackerCol,attacker,guardian){
+ if(!attacker||!['p','e'].includes(attacker.side)||!guardian||guardian.hp<=0||guardian.side===attacker.side||!validLane(b,lane))return false;
+ const distance=Math.abs(crownColumn(b,guardian.side)-attackerCol),range=unitAttackRange(attacker);
+ if(distance>range||findCrownGuardian(b,lane,guardian.side,attackerCol)?.u!==guardian)return false;
+ const dir=attacker.side==='p'?1:-1;
+ let found=false;
+ for(let step=1;step<=range;step++){
+  const other=b.board[lane][attackerCol+step*dir];
+  if(!other||other.hp<=0||other.side===attacker.side)continue;
+  if(other!==guardian)return false;
+  found=true;
+ }
+ return found;
+}
+
+Object.assign(__exports,{crownGuardCandidates,findCrownGuardian,isInterposedCrownGuardian});
 
 },
 "src/engine/unit-support.js":function(__exports,__load){
