@@ -1,4 +1,4 @@
-# Forge — Marteau et blindages Divins / Éveillés
+# Forge — Marteau et blindages Divins / Éveillés, intégrés par PR 82
 
 Proposition du 3 novembre 2026, après les intégrations du Foreur (PR 80) et du Marteau
 Légendaire (PR 81). Base main vérifiée : `b54e567a477c2c9e64c7b51ccb49eb492176050b`. Conception : tableau maître Notion, édition relue
@@ -102,3 +102,5 @@ n'est déduite d'une clarification laissée sans réponse.
 ## Vérifications locales du 3 novembre
 
 685 tests Node et 120 scénarios de parité réussis ; builds autonome, diagnostic et web ainsi que syntaxe Python réussis. Export généré de 34 600 975 octets, blob Git `0a8f3516142817e60333b493bcc1fa52ed904bfc`, identique à la génération GitHub. La préparation ponctuelle est retirée du diff final. La CI et les parcours Chromium du dernier commit demeurent requis avant fusion ; les succès d’une PR précédente ne les remplacent pas.
+
+Fusion confirmée le 3 novembre 2026 au commit `e3800b8b581efc89344db267f9a2f5e58884c323`, arbre `151beffffdbaf5f296e0a6a0e7e858955215bb1a` identique à la tête validée par six contrôles GitHub. Les notes de préparation ci-dessus sont historiques ; publication séparée.

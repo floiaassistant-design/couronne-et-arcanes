@@ -4673,6 +4673,7 @@ const {unitStatContext,unitStats,versionUnitStats}=__load("src/engine/unit-stats
 const {formationBonus}=__load("src/engine.js");
 const {silenced}=__load("src/engine/battle-control.js");
 const {attackAfterPenalty}=__load("src/engine/unit-effects.js");
+const {activeStrikeState}=__load("src/engine/unit-strike-modifiers.js");
 const {generatedCardFace}=__load("src/ui/generated-card.js");
 const {concordeDetails}=__load("src/ui/concorde.js");
 const {visualFor,artSrc,cardTemplateFor}=__load("src/visuals.js");
@@ -4733,6 +4734,11 @@ function boardInspectionData(battle,uid){
   if(u.lastStandUsed)statuses.push('Dernier Rempart consommé');
   if(u.attackPenalty)statuses.push(`Harcèlement : −${u.attackPenalty.amount} ATQ, ${u.attackPenalty.remaining} attaque restante`);
   if(u.regeneration)statuses.push(`Régénération : ${u.regeneration.amount} PV au prochain tour, ${u.regeneration.remaining} effet restant`);
+  const penalty=activeStrikeState(u,'armorPenalty',battle.round),protection=activeStrikeState(u,'temporaryArmor',battle.round),calibration=activeStrikeState(u,'calibration',battle.round),mark=activeStrikeState(u,'spotMark',battle.round);
+  if(penalty)statuses.push(`Armure −${penalty.amount} à la prochaine attaque directe subie`);
+  if(protection)statuses.push(`Blindage : +${protection.amount} Armure à la prochaine attaque directe subie`);
+  if(calibration)statuses.push(`Calibrage : ignore ${calibration.ignoreArmor} Armure à la prochaine attaque contre une unité`);
+  if(mark)statuses.push(`Repérage : ${mark.remaining} attaque(s) d’un autre allié du Canon à +${mark.amount} dégâts`);
   const stats={atk:attackAfterPenalty(u,u.atk+concord+rallied),hp:u.hp,maxhp:u.maxhp,bonuses:[]};
   const presentation=cardPresentation(u,{context:battle,side:u.side,unit:u,stats});
   return {...presentation,entry:{wait:0},presentation,board:{side:u.side,lane,col,statuses,concordeActive:!!concord}};
@@ -5278,16 +5284,21 @@ const FORGE_EVOLUTIONS=freezeCardData({
  smith:{rare:{stats:{hp:8}},'épique':{stats:{attack:4}},'légendaire':{abilities:{knockback:{cells:1,period:3}}},
   divine:{abilities:{knockback:{follow:true}}},'éveillée':{abilities:{knockback:{blockedDamage:2}}}},
  golem:{'épique':{stats:{hp:14}}},
- bomb:{'épique':{stats:{hp:5}},'légendaire':{stats:{attack:5}}},
+ bomb:{'épique':{stats:{hp:5}},'légendaire':{stats:{attack:5}},
+  divine:{abilities:{fracture:{amount:1,expiresAfter:1,primary:false}}},'éveillée':{abilities:{fracture:{amount:2,primary:true}}}},
  drill:{rare:{stats:{hp:7}},'épique':{stats:{attack:3}},'légendaire':{abilities:{barrierDrill:{amount:2,period:3}}},
   divine:{abilities:{barrierDrill:{amount:4}}},'éveillée':{abilities:{barrierDrill:{breakBarrier:{amount:2,cap:2}}}}},
  colossus:{divine:{abilities:{scoria:{hits:2,period:3,amount:2,cap:2}}},'éveillée':{abilities:{scoria:{amount:4,cap:4}}}},
- engineer:{'légendaire':{stats:{hp:9}}},
- cannon:{'légendaire':{stats:{hp:9}}},
- mechanist:{'épique':{stats:{hp:10}},'légendaire':{stats:{attack:3}}},
+ engineer:{'légendaire':{stats:{hp:9}},divine:{abilities:{calibration:{ignoreArmor:1,expiresAfter:1}}},
+  'éveillée':{abilities:{calibration:{ignoreArmor:2,barrier:{amount:1,cap:1}}}}},
+ cannon:{'légendaire':{stats:{hp:9}},divine:{abilities:{spotting:{amount:2,attacks:1,period:3,expiresAfter:2}}},
+  'éveillée':{abilities:{spotting:{attacks:2}}}},
+ mechanist:{'épique':{stats:{hp:10}},'légendaire':{stats:{attack:3}},
+  divine:{abilities:{inspireArmor:{amount:1,expiresAfter:1}}},'éveillée':{abilities:{inspireArmor:{amount:2}}}},
  ironwraith:{rare:{stats:{hp:9}},'épique':{stats:{attack:3}},'légendaire':{abilities:{strikeWard:{amount:2,cap:20,period:3,requiresKill:true}}},
   divine:{abilities:{strikeWard:{requiresKill:false}}},'éveillée':{abilities:{strikeWard:{amount:3,overflowBarrier:{amount:2,cap:2}}}}},
- alchemist:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}}}
+ alchemist:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}},
+  divine:{abilities:{poison:{sourceBound:true},catalysis:{amount:2,period:3}}},'éveillée':{abilities:{catalysis:{amount:4}}}}
 });
 
 Object.assign(__exports,{FORGE_DESIGN_SOURCE,FORGE_EVOLUTIONS});
@@ -5558,6 +5569,11 @@ function unitAbilityDetails(d){
  if(a.knockback)lines.push(`Coup de masse : après une attaque normale au contact retirant des PV à une unité ennemie survivante, la repousse de ${a.knockback.cells} case vers sa couronne si la case est libre et dans le plateau. Au plus une fois tous les ${a.knockback.period} tours, après les réactions de contact. Aucun recul sans perte de PV, sous Silence ou après la mort du Marteau ; aucune attaque supplémentaire.${a.knockback.follow?' Brèche ouverte : après un recul réussi, avance dans la case libérée, avec déclenchement normal des pièges.':''}${a.knockback.blockedDamage?' Fracas inexorable : si la destination est occupée ou hors plateau, inflige plutôt '+a.knockback.blockedDamage+' dégâts bruts avec protections normales, sans déplacement. Recul et Fracas partagent la même cadence.':''}`);
  if(a.barrierDrill)lines.push(`Foreuse ${a.barrierDrill.amount>2?'runique':'d’acier'} : avant les dégâts d'une attaque normale contre une unité ennemie, détruit jusqu'à ${a.barrierDrill.amount} points de sa barrière personnelle ; l'attaque utilise ensuite les protections restantes. Au plus une fois tous les ${a.barrierDrill.period} tours, seulement si une barrière est présente. Aucun dégât supplémentaire aux PV, effet de sort, de poison ou de Riposte.${a.barrierDrill.breakBarrier?' Récupération runique : si la Foreuse retire entièrement cette barrière, barrière personnelle +'+a.barrierDrill.breakBarrier.amount+', plafond '+a.barrierDrill.breakBarrier.cap+' pour cet effet. Aucun gain si seule l’attaque normale termine la barrière.':''}`);
  if(a.scoria)lines.push(`${a.scoria.amount>2?'Fournaise blindée':'Cuirasse de scories'} : après ${a.scoria.hits} attaques directes d’unités ennemies retirant chacune des PV et auxquelles il survit, gagne une barrière personnelle de ${a.scoria.amount}, plafond ${a.scoria.cap} pour cet effet. Compteur remis à zéro après activation, au plus une fois tous les ${a.scoria.period} tours. Les coups éligibles pendant la cadence restent comptés ; activation à la prochaine blessure éligible après disponibilité. Silence bloque le comptage ; aucun gain par sort, poison ou dégât secondaire.`);
+ if(a.fracture)lines.push(`${a.fracture.primary?'Démolition totale':'Charge fissurante'} : ${a.fracture.primary?'chaque cible principale ou secondaire blessée':'la cible secondaire blessée par Impact de zone'} reçoit −${a.fracture.amount} Armure pour la prochaine attaque directe d’une unité ennemie subie, au plus tard à la fin du tour suivant. Aucun cumul ni Armure effective sous 0 ; pas de malus sans perte de PV. Les dégâts secondaires et les sorts ne consomment pas ce malus.`);
+ if(a.calibration)lines.push(`${a.calibration.barrier?'Calibrage suprême':'Calibrage de précision'} : l’unique allié effectivement renforcé par Inspiration ignore jusqu’à ${a.calibration.ignoreArmor} Armure à sa prochaine attaque contre une unité ennemie, Riposte comprise, au plus tard à la fin du tour suivant. Pas de cumul ni d’attaque supplémentaire ; aucun effet sur une couronne.${a.calibration.barrier?' Si cette attaque retire des PV, l’attaquant vivant reçoit une barrière personnelle de '+a.calibration.barrier.amount+', plafond '+a.calibration.barrier.cap+' pour cet effet.':''}`);
+ if(a.inspireArmor)lines.push(`${a.inspireArmor.amount>1?'Blindage renforcé':'Blindage provisoire'} : l’unique allié effectivement renforcé par Inspiration gagne +${a.inspireArmor.amount} Armure pour la prochaine attaque directe d’une unité ennemie subie, au plus tard à la fin du tour suivant. Sans cumul ; Perforation ignore aussi ce bonus. Aucun bonus sans gain d’ATQ effectif, ni consommation par sort ou dégât secondaire.`);
+ if(a.spotting)lines.push(`${a.spotting.attacks>1?'Barrage coordonné':'Obus de repérage'} : après son tir normal retirant des PV à une unité ennemie survivante, la marque. ${a.spotting.attacks>1?'Les '+a.spotting.attacks+' prochaines attaques':'La prochaine attaque'} d’une autre unité alliée contre cette cible gagne +${a.spotting.amount} dégâts bruts avant protections et consomme une utilisation. Le Canon ne profite pas de sa propre marque. Expire à la fin du deuxième tour suivant ; au plus un marquage tous les ${a.spotting.period} tours. Une seule marque par Canon et par cible ; une nouvelle marque remplace l’ancienne, sans cumul.`);
+ if(a.catalysis)lines.push(`${a.catalysis.amount>2?'Combustion totale':'Catalyse des braises'} : après une attaque normale contre une unité encore vivante qui portait déjà son propre poison avant la frappe, consomme ce poison et inflige ${a.catalysis.amount} dégâts bruts supplémentaires, avec protections normales. Au plus une fois tous les ${a.catalysis.period} tours. Le poison consommé n’est pas réappliqué par cette attaque ; sans détonation, le Poison normal est appliqué ou renouvelé. Aucun poison d’une autre invocation consommé, ni attaque ou chaîne supplémentaire.`);
  if(a.arrivalBarrier)lines.push(`À l’arrivée : barrière ${a.arrivalBarrier.amount} à un autre allié de sa ligne, priorité au plus blessé proportionnellement. Plafond ${a.arrivalBarrier.cap} pour cet effet, sans cumul ; aucune autre cible ni effet sans allié.`);
  if(a.harass)lines.push(`Après une attaque sur une unité ennemie vivante : ${a.harass.period?'Cri d’effroi':'Harcèlement'} −${a.harass.amount} ATQ sur ${a.harass.attacks===1?'sa prochaine attaque d’unité':'ses '+a.harass.attacks+' prochaines attaques d’unité'}, Riposte comprise ; minimum ${a.harass.minimum||0}, aucun effet sur les sorts. ${a.harass.period?'Au plus une fois tous les '+a.harass.period+' tours ; seule la réduction la plus forte persiste.':'Les applications renouvellent le malus sans cumul.'}${a.harass.secondary?' Un autre ennemi à '+a.harass.secondary.range+' case au plus de la cible sur la même ligne : −'+a.harass.secondary.amount+' ATQ pour sa prochaine attaque.':''}`);
  if(a.intervention)lines.push(`À l’arrivée : ${a.intervention.amount} dégâts au premier ennemi devant, même ligne, jusqu’à ${a.intervention.range} cases ; protections normales, une seule frappe d’arrivée.`);
@@ -5594,6 +5610,11 @@ function advancedSummary(a){
  if(a.strikeWard)parts.push(`${strikeWardName(a.strikeWard)} · Couronne +${a.strikeWard.amount}`);
  if(a.barrierDrill)parts.push(`Foreuse : barrière −${a.barrierDrill.amount}${a.barrierDrill.breakBarrier?' · Barrière +'+a.barrierDrill.breakBarrier.amount+' si brisée':''}`);
  if(a.scoria)parts.push(`${a.scoria.amount>2?'Fournaise':'Cuirasse'} : barrière +${a.scoria.amount} après ${a.scoria.hits} coups`);
+ if(a.fracture)parts.push(`${a.fracture.primary?'Démolition':'Impact'} : −${a.fracture.amount} Armure temporaire`);
+ if(a.calibration)parts.push(`Calibrage : ignore Armure ${a.calibration.ignoreArmor}${a.calibration.barrier?' · Barrière +'+a.calibration.barrier.amount:''}`);
+ if(a.inspireArmor)parts.push(`Inspiration · Armure +${a.inspireArmor.amount} temporaire`);
+ if(a.spotting)parts.push(`Repérage : ${a.spotting.attacks} attaque(s) alliée(s) +${a.spotting.amount}`);
+ if(a.catalysis)parts.push(`${a.catalysis.amount>2?'Combustion':'Catalyse'} +${a.catalysis.amount} · consomme Poison`);
  if(a.deathStrike)parts.push(`Fracas ${a.deathStrike.amount}${a.deathStrike.entangle?' · Entrave':''}`);
  if(a.devour)parts.push(`Dévoration ${a.devour.heal}${a.devour.attack?' · +'+a.devour.attack+' ATQ (max +'+a.devour.cap+')':''}`);
  if(a.execution)parts.push(`Exécution +${a.execution.amount}${a.execution.killHaste?' · Célérité après élimination':''}`);
@@ -5983,8 +6004,9 @@ const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
 const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError}=__load("src/engine/unit-rules.js");
 const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
 const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty}=__load("src/engine/unit-effects.js");
-const {tickUnitPoison,clearUnitPoison}=__load("src/engine/unit-poison.js");
-const {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement}=__load("src/engine/unit-triggers.js");
+const {tickUnitPoison,clearUnitPoison,poisonBelongsTo}=__load("src/engine/unit-poison.js");
+const {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike}=__load("src/engine/unit-triggers.js");
+const {applyStrikeFracture}=__load("src/engine/unit-strike-modifiers.js");
 const {contiguousSplashTargets}=__load("src/engine/unit-targets.js");
 const {resolveUnitDeath}=__load("src/engine/unit-death.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
@@ -6211,21 +6233,25 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
 }
 
 function strike(b,u,target,atk,from,to,sameLine=true,charged=false,suppressed=false,attackState=null){
- const execution=executionBonus(u,target,suppressed),before=target.hp;
+ const execution=executionBonus(u,target,suppressed),before=target.hp,poisonedAtStart=poisonBelongsTo(target,u);
  const raw=execution&&attackState?attackAfterPenalty(attackState.unit,attackState.raw+execution):atk;
  if(raw>0){
   resolveStrikePreparation(b,u,target,suppressed,fx);
   hit(b,target,raw,u.side,unitHasPierce(u,suppressed,charged),true,{attacker:u,from,to,sameLine});
  }
+ const catalysed=raw>0&&resolveAlchemyStrike(b,u,target,poisonedAtStart,suppressed,hit);
  const damage=Math.max(0,before-target.hp);
+ if(raw>0)applyStrikeFracture(b,u,target,damage>0,false,suppressed,fx);
  if(sameLine&&(to-from)*(u.side==='p'?1:-1)>=2)recordTrialFact(b,u,'rangedDamage',damage);
- return {primaryAlive:before>0,performed:raw>0,killed:raw>0&&before>0&&target.hp<=0,damaged:damage>0,execution:execution>0};
+ return {primaryAlive:before>0,performed:raw>0,killed:raw>0&&before>0&&target.hp<=0,damaged:damage>0,execution:execution>0,catalysed};
 }
-function resolveSplash(b,u,sourceLane,sourceCol,primaryLane,primaryCol,atk,intercepted=false,primaryAlive=true){
+function resolveSplash(b,u,sourceLane,sourceCol,primaryLane,primaryCol,atk,intercepted=false,primaryAlive=true,suppressed=false){
  const p=versionUnitAbilities(u)?.splash;
  if(!p||atk<=0||sourceLane!==primaryLane||intercepted&&!p.onGuard||p.requiresAttack&&!primaryAlive)return;
  for(const {u:extra} of contiguousSplashTargets(b,primaryLane,sourceCol,primaryCol,u.side,p.targets||1)){
+  const before=extra.hp;
   hit(b,extra,p.amount,u.side,false,true);
+  applyStrikeFracture(b,u,extra,before>extra.hp,true,suppressed,fx);
  }
 }
 function resolveAttacks(b,sideFilter=null){
@@ -6252,9 +6278,9 @@ function resolveAttacks(b,sideFilter=null){
     const result=strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane,charged,intent.suppressed,intent.attackState);
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
     if(ability==='lifesteal')resolveLifesteal(b,u);
-    applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0,{battle:b,lane:guardIntercept.lane,col:guardIntercept.col});
-    if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result},fx);
-    if(ability==='splash')resolveSplash(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,atk,true,result.primaryAlive);
+    applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0,{battle:b,lane:guardIntercept.lane,col:guardIntercept.col,skipPoison:result.catalysed});
+    if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result,victim:guardIntercept.u},fx);
+    if(ability==='splash')resolveSplash(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,atk,true,result.primaryAlive,intent.suppressed);
     resolveAttackExtras(b,u,lane,intent.col,guardIntercept.lane,guardIntercept.col,hit,silenced(b,u));
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
     resolveStrikeDisplacement(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
@@ -6262,9 +6288,9 @@ function resolveAttacks(b,sideFilter=null){
   } else {
    const result=strike(b,u,target.target,atk,intent.col,target.col,true,charged,intent.suppressed,intent.attackState);
    if(ability==='lifesteal')resolveLifesteal(b,u);
-   applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0,{battle:b,lane,col:target.col});
-   if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result},fx);
-   if(ability==='splash')resolveSplash(b,u,lane,intent.col,lane,target.col,atk,false,result.primaryAlive);
+   applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0,{battle:b,lane,col:target.col,skipPoison:result.catalysed});
+   if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result,victim:target.target},fx);
+   if(ability==='splash')resolveSplash(b,u,lane,intent.col,lane,target.col,atk,false,result.primaryAlive,intent.suppressed);
    resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
    retaliate(b,target.target,u,lane,target.col,intent.col);
    resolveStrikeDisplacement(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
@@ -6619,14 +6645,18 @@ const {recordCombatEvent}=__load("src/engine/combat-events.js");
 const {consumeAttackPenalty}=__load("src/engine/unit-effects.js");
 const {resolveUnitDeath}=__load("src/engine/unit-death.js");
 const {resolveSurvivedStrike}=__load("src/engine/unit-triggers.js");
+const {prepareDirectStrike,grantCalibrationReward}=__load("src/engine/unit-strike-modifiers.js");
 const {absorbBarrier,grantAbilityBarrier}=__load("src/engine/unit-barriers.js");
 // Préserver les imports existants des appelants.
 Object.assign(__exports,__load("src/engine/unit-barriers.js"));
 function hit(b,u,raw,bySide,ignoreArmor=false,attack=false,direct=null){
  if(!u||u.hp<=0)return 0; // Une victime ne compte jamais deux fois.
  const abilities=versionUnitAbilities(u);
- const armor=u.armor??abilities?.armor?.amount??0;
- let dmg=Math.max(1,raw-(ignoreArmor?0:armor));
+ const baseArmor=u.armor??abilities?.armor?.amount??0;
+ const directStrike=attack&&direct?.attacker?prepareDirectStrike(b,direct.attacker,u,raw,baseArmor,ignoreArmor):null;
+ const armor=directStrike?.armor??(ignoreArmor?0:baseArmor);
+ if(directStrike)raw=directStrike.raw;
+ let dmg=Math.max(1,raw-armor);
  const reduction=abilities?.firstHitReduction;
  if(reduction&&!u.firstHitReductionUsed&&bySide!==u.side){
   u.firstHitReductionUsed=true;dmg=Math.max(0,dmg-reduction.amount);
@@ -6653,6 +6683,7 @@ function hit(b,u,raw,bySide,ignoreArmor=false,attack=false,direct=null){
   hit(b,attacker,deathStrike.amount,u.side);
   if(attacker.hp>0&&deathStrike.entangle)attacker.movementRoot=1;
  }
+ if(directStrike)grantCalibrationReward(b,direct.attacker,directStrike.calibration,before>u.hp,recordCombatEvent);
  return dmg;
 }
 
@@ -6689,6 +6720,7 @@ const {CARDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {unitAttackRange}=__load("src/engine/unit-rules.js");
 const {applyUnitPoison}=__load("src/engine/unit-poison.js");
+const {expireStrikeModifiers}=__load("src/engine/unit-strike-modifiers.js");
 const {laneCount,lastCell,crownColumn,entryColumn,validLane,trapColumns}=__load("src/engine/board.js");
 const alive=u=>!!u&&u.hp>0;
 const direction=side=>side==='p'?1:-1;
@@ -6700,7 +6732,8 @@ function silenceValue(u){
  const future=versionUnitAbilities(u);
  return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
   (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0)+
-  (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0)+(future?.strikeWard?2:0)+(future?.barrierDrill?3:0)+(future?.knockback?3:0)+(future?.scoria?3:0);
+  (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0)+(future?.strikeWard?2:0)+(future?.barrierDrill?3:0)+(future?.knockback?3:0)+(future?.scoria?3:0)+
+  (future?.fracture?2:0)+(future?.spotting?2:0)+(future?.catalysis?2:0);
 }
 function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 function silenceTarget(b,side,lane){
@@ -6794,6 +6827,7 @@ function triggerTrap(b,u,lane,col,hit,emit=()=>{},note=()=>{}){
  return true;
 }
 function expireControl(b,emit=()=>{}){
+ expireStrikeModifiers(b);
  if(b.traps){
   for(const t of b.traps)if(t.expiresRound<=b.round)emit(b,{type:'trap-expire',lane:t.lane,col:t.col,side:t.owner});
   b.traps=b.traps.filter(t=>t.expiresRound>b.round);
@@ -6857,6 +6891,9 @@ function applyUnitPoison(target,parameters,source,readyRound){
  }else delete target.poisonOrigin;
 }
 function clearUnitPoison(u){u.poison=0;u.poisonTurns=0;delete u.poisonOrigin;}
+function poisonBelongsTo(target,source){
+ return target?.hp>0&&target.side!==source.side&&target.poisonTurns>0&&target.poisonOrigin?.uid===source.uid&&target.poisonOrigin.side===source.side;
+}
 function tickUnitPoison(b,u){
  if(!(u.poisonTurns>0)||u.poisonOrigin?.readyRound>b.round)return false;
  u.hp=Math.max(0,u.hp-u.poison);u.poisonTurns--;
@@ -6886,7 +6923,123 @@ function validPoisonOrigin(p){
 }
 function validPoisonSpreads(ids){return ids===undefined||Array.isArray(ids)&&ids.every(n=>Number.isSafeInteger(n)&&n>=0)&&new Set(ids).size===ids.length;}
 
-Object.assign(__exports,{applyUnitPoison,clearUnitPoison,tickUnitPoison,spreadUnitPoison,validPoisonOrigin,validPoisonSpreads});
+Object.assign(__exports,{applyUnitPoison,clearUnitPoison,poisonBelongsTo,tickUnitPoison,spreadUnitPoison,validPoisonOrigin,validPoisonSpreads});
+
+},
+"src/engine/unit-strike-modifiers.js":function(__exports,__load){
+// États consommés par une attaque directe ; ni DOM ni règles de dégâts copiées.
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
+const {grantAbilityBarrier}=__load("src/engine/unit-barriers.js");
+const keys=['armorPenalty','temporaryArmor','calibration','spotMark'];
+const activeStrikeState=(u,key,round)=>u?.[key]?.expiresRound>=round?u[key]:null;
+function timedArmor(target,key,p,round){
+ const old=activeStrikeState(target,key,round);
+ if(target.hp<=0||old?.amount>p.amount)return false;
+ target[key]={amount:p.amount,expiresRound:round+p.expiresAfter};return true;
+}
+function grantSupportStrikeState(target,abilities,round){
+ let changed=false;
+ if(abilities.inspireArmor)changed=timedArmor(target,'temporaryArmor',abilities.inspireArmor,round)||changed;
+ const p=abilities.calibration,old=activeStrikeState(target,'calibration',round);
+ if(p&&!(old?.ignoreArmor>p.ignoreArmor)&&target.hp>0){
+  target.calibration={ignoreArmor:p.ignoreArmor,expiresRound:round+p.expiresAfter,
+   ...(p.barrier?{barrier:{...p.barrier}}:old?.barrier&&old.ignoreArmor===p.ignoreArmor?{barrier:{...old.barrier}}:{})};
+  changed=true;
+ }
+ return changed;
+}
+function applyStrikeFracture(b,source,target,damaged,secondary,suppressed,emit){
+ const p=versionUnitAbilities(source)?.fracture;
+ if(!p||suppressed||!damaged||!target||target.side===source.side||!secondary&&!p.primary)return false;
+ if(!timedArmor(target,'armorPenalty',p,b.round))return false;
+ const lane=b.board.findIndex(row=>row.includes(target));
+ if(lane>=0)emit(b,{type:'state',side:target.side,lane,col:b.board[lane].indexOf(target)});
+ return true;
+}
+function placeSpotMark(b,source,target,p,emit){
+ if(!target||target.hp<=0||target.side===source.side)return false;
+ // Une seule cible par Canon, une seule marque sur une cible ; remplacement.
+ for(const row of b.board)for(const u of row)if(u?.spotMark?.sourceUid===source.uid)delete u.spotMark;
+ target.spotMark={sourceUid:source.uid,side:source.side,amount:p.amount,remaining:p.attacks,expiresRound:b.round+p.expiresAfter};
+ const lane=b.board.findIndex(row=>row.includes(target));
+ if(lane>=0)emit(b,{type:'state',side:target.side,lane,col:b.board[lane].indexOf(target)});
+ return true;
+}
+function prepareDirectStrike(b,attacker,target,raw,baseArmor,ignoreArmor){
+ if(raw<=0||!attacker||attacker.side===target.side)return {raw,armor:ignoreArmor?0:baseArmor,calibration:null};
+ const penalty=activeStrikeState(target,'armorPenalty',b.round),protection=activeStrikeState(target,'temporaryArmor',b.round);
+ const calibration=activeStrikeState(attacker,'calibration',b.round),mark=activeStrikeState(target,'spotMark',b.round);
+ delete target.armorPenalty;delete target.temporaryArmor;
+ if(calibration)delete attacker.calibration;
+ if(mark&&mark.side===attacker.side&&mark.sourceUid!==attacker.uid){
+  raw+=mark.amount;
+  if(mark.remaining<=1)delete target.spotMark;else target.spotMark={...mark,remaining:mark.remaining-1};
+ }
+ return {raw,armor:ignoreArmor?0:Math.max(0,baseArmor+(protection?.amount||0)-(penalty?.amount||0)-(calibration?.ignoreArmor||0)),calibration};
+}
+function grantCalibrationReward(b,attacker,calibration,damaged,emit){
+ if(!calibration?.barrier||!damaged||!attacker||attacker.hp<=0)return;
+ if(grantAbilityBarrier(attacker,'calibrationBarrier',calibration.barrier)){
+  const lane=b.board.findIndex(row=>row.includes(attacker));
+  if(lane>=0)emit(b,{type:'state',side:attacker.side,lane,col:b.board[lane].indexOf(attacker)});
+ }
+}
+function expireStrikeModifiers(b){
+ for(const row of b.board)for(const u of row)if(u)for(const key of keys)if(u[key]?.expiresRound<=b.round)delete u[key];
+}
+const positive=n=>Number.isSafeInteger(n)&&n>0&&n<=100;
+function validStrikeModifiers(u){
+ const timed=p=>p===undefined||!!p&&positive(p.amount)&&positive(p.expiresRound);
+ const c=u.calibration,m=u.spotMark;
+ return timed(u.armorPenalty)&&timed(u.temporaryArmor)&&
+  (c===undefined||!!c&&positive(c.ignoreArmor)&&positive(c.expiresRound)&&
+   (c.barrier===undefined||!!c.barrier&&positive(c.barrier.amount)&&positive(c.barrier.cap)))&&
+  (m===undefined||!!m&&Number.isSafeInteger(m.sourceUid)&&m.sourceUid>=0&&['p','e'].includes(m.side)&&
+   positive(m.amount)&&Number.isSafeInteger(m.remaining)&&m.remaining>=1&&m.remaining<=2&&positive(m.expiresRound));
+}
+
+Object.assign(__exports,{activeStrikeState,grantSupportStrikeState,applyStrikeFracture,placeSpotMark,prepareDirectStrike,grantCalibrationReward,expireStrikeModifiers,validStrikeModifiers});
+
+},
+"src/engine/unit-barriers.js":function(__exports,__load){
+// Barrières partagées par les défenses et les réactions aux morts, sans cycle.
+const legacyBarrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier'];
+const barrierKeys=[...legacyBarrierKeys,'funeralBarrier','drillBarrier','scoriaBarrier','scrapBarrier','calibrationBarrier'];
+function grantCrownShield(hero,parameters){
+ const before=hero.shield;
+ hero.shield=Math.max(before,Math.min(parameters.cap,before+parameters.amount));
+ return hero.shield-before;
+}
+function grantAbilityBarrier(u,key,parameters){
+ if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
+ const sources={...u.abilityBarriers};
+ const remaining=Math.min(sources[key]||0,u.barrier||0);
+ const added=Math.max(0,Math.min(parameters.amount,parameters.cap-remaining));
+ if(!added)return 0;
+ sources[key]=remaining+added;u.abilityBarriers=sources;
+ u.barrier=(u.barrier||0)+added;
+ return added;
+}
+function grantSharedBarrier(u,amount,cap){
+ const total=u.barrier||0;u.barrier=Math.max(total,Math.min(cap,total+amount));
+}
+function absorbBarrier(u,damage){
+ const absorbed=Math.min(u.barrier||0,damage);
+ if((u.barrier||0)>0)u.barrier-=absorbed;
+ if(absorbed&&u.abilityBarriers){
+  let left=absorbed;const sources={...u.abilityBarriers};
+  // Conserver l'ordre et les champs historiques, sans ajouter l'état nouveau
+  // aux unités qui n'ont jamais reçu de barrière funéraire.
+  for(const key of barrierKeys){
+   if(!legacyBarrierKeys.includes(key)&&!Object.hasOwn(sources,key))continue;
+   const used=Math.min(sources[key]||0,left);sources[key]=(sources[key]||0)-used;left-=used;
+  }
+  u.abilityBarriers=sources;
+ }
+ return absorbed;
+}
+
+Object.assign(__exports,{grantCrownShield,grantAbilityBarrier,grantSharedBarrier,absorbBarrier});
 
 },
 "src/engine/combat-events.js":function(__exports,__load){
@@ -6915,6 +7068,7 @@ Object.assign(__exports,{captureCombatFrame,recordCombatEvent});
 // États temporaires communs aux unités ; jamais de modification permanente d'ATQ.
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {applyUnitPoison,validPoisonOrigin}=__load("src/engine/unit-poison.js");
+const {validStrikeModifiers}=__load("src/engine/unit-strike-modifiers.js");
 function attackAfterPenalty(u,raw){const boosted=raw+(u.fury||0)+(u.devourAttack||0);return u.attackPenalty?Math.min(boosted,Math.max(u.attackPenalty.minimum||0,boosted-u.attackPenalty.amount)):boosted;}
 function consumeAttackPenalty(u,raw){
  const result=attackAfterPenalty(u,raw),p=u.attackPenalty;
@@ -6922,10 +7076,10 @@ function consumeAttackPenalty(u,raw){
  if(u.fury)delete u.fury;
  return result;
 }
-function applyAttackEffects(source,target,suppressed=false,round=0,touched=true,{battle,lane,col}={}){
+function applyAttackEffects(source,target,suppressed=false,round=0,touched=true,{battle,lane,col,skipPoison=false}={}){
  if(suppressed||!target||target.side===source.side)return;
  const a=versionUnitAbilities(source);
- if(a?.poison&&source.ability==='poison'){
+ if(a?.poison&&source.ability==='poison'&&!skipPoison&&(!a.catalysis||touched)){
   applyUnitPoison(target,a.poison,{uid:source.uid,side:source.side,contagion:a.contagion});
  }
  if(a?.harass&&target.hp>0){
@@ -6983,12 +7137,12 @@ function validUnitEffects(u){
   (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
   (u.deathStrikeUsed===undefined||typeof u.deathStrikeUsed==='boolean')&&
   (u.devourAttack===undefined||integer(u.devourAttack,2))&&
-  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
+  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound','spottingReadyRound','catalysisReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
   (u.scoriaHits===undefined||Number.isSafeInteger(u.scoriaHits)&&u.scoriaHits>=0&&u.scoriaHits<=2)&&
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
-  (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin);
+  (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin)&&validStrikeModifiers(u);
 }
 
 Object.assign(__exports,{attackAfterPenalty,consumeAttackPenalty,applyAttackEffects,executionBonus,resolveLifesteal,grantRegeneration,resolveRegeneration,validUnitEffects});
@@ -7058,53 +7212,23 @@ function contiguousSplashTargets(b,lane,sourceCol,primaryCol,side,count=1){
 Object.assign(__exports,{alliedTargets,injuryOrder,contiguousSplashTargets});
 
 },
-"src/engine/unit-barriers.js":function(__exports,__load){
-// Barrières partagées par les défenses et les réactions aux morts, sans cycle.
-const legacyBarrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier'];
-const barrierKeys=[...legacyBarrierKeys,'funeralBarrier','drillBarrier','scoriaBarrier','scrapBarrier'];
-function grantCrownShield(hero,parameters){
- const before=hero.shield;
- hero.shield=Math.max(before,Math.min(parameters.cap,before+parameters.amount));
- return hero.shield-before;
-}
-function grantAbilityBarrier(u,key,parameters){
- if(!u||u.hp<=0||!barrierKeys.includes(key)||!parameters)return 0;
- const sources={...u.abilityBarriers};
- const remaining=Math.min(sources[key]||0,u.barrier||0);
- const added=Math.max(0,Math.min(parameters.amount,parameters.cap-remaining));
- if(!added)return 0;
- sources[key]=remaining+added;u.abilityBarriers=sources;
- u.barrier=(u.barrier||0)+added;
- return added;
-}
-function grantSharedBarrier(u,amount,cap){
- const total=u.barrier||0;u.barrier=Math.max(total,Math.min(cap,total+amount));
-}
-function absorbBarrier(u,damage){
- const absorbed=Math.min(u.barrier||0,damage);
- if((u.barrier||0)>0)u.barrier-=absorbed;
- if(absorbed&&u.abilityBarriers){
-  let left=absorbed;const sources={...u.abilityBarriers};
-  // Conserver l'ordre et les champs historiques, sans ajouter l'état nouveau
-  // aux unités qui n'ont jamais reçu de barrière funéraire.
-  for(const key of barrierKeys){
-   if(!legacyBarrierKeys.includes(key)&&!Object.hasOwn(sources,key))continue;
-   const used=Math.min(sources[key]||0,left);sources[key]=(sources[key]||0)-used;left-=used;
-  }
-  u.abilityBarriers=sources;
- }
- return absorbed;
-}
-
-Object.assign(__exports,{grantCrownShield,grantAbilityBarrier,grantSharedBarrier,absorbBarrier});
-
-},
 "src/engine/unit-triggers.js":function(__exports,__load){
 // Préparation des protections et récompenses de frappe, moteur commun.
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {grantAbilityBarrier,grantCrownShield,absorbBarrier}=__load("src/engine/unit-barriers.js");
 const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
 const {lastCell}=__load("src/engine/board.js");
+const {placeSpotMark}=__load("src/engine/unit-strike-modifiers.js");
+const {poisonBelongsTo,clearUnitPoison}=__load("src/engine/unit-poison.js");
+// Détonation secondaire après la frappe : jamais une nouvelle attaque.
+function resolveAlchemyStrike(b,u,target,poisonedAtStart,suppressed,hit){
+ const p=versionUnitAbilities(u)?.catalysis;
+ if(!p||suppressed||u.hp<=0||!poisonedAtStart||!poisonBelongsTo(target,u)||u.catalysisReadyRound>b.round)return false;
+ clearUnitPoison(target);u.catalysisReadyRound=b.round+p.period;
+ hit(b,target,p.amount,u.side);
+ return true;
+}
+
 // Après les réactions de contact : aucun recul à distance ni attaque ajoutée.
 function resolveStrikeDisplacement(b,u,target,{damaged,suppressed},hooks){
  const p=versionUnitAbilities(u)?.knockback;
@@ -7144,9 +7268,12 @@ function resolveStrikePreparation(b,u,target,suppressed,emit){
  return removed;
 }
 
-function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,damaged,execution},emit){
+function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,damaged,execution,victim},emit){
  if(suppressed||u.hp<=0)return;
  const a=versionUnitAbilities(u);
+ if(a.spotting&&damaged&&victim?.hp>0&&!(u.spottingReadyRound>b.round)){
+  if(placeSpotMark(b,u,victim,a.spotting,emit))u.spottingReadyRound=b.round+a.spotting.period;
+ }
  if(a.strikeWard&&(a.strikeWard.requiresKill?killed:damaged)&&!(u.strikeWardReadyRound>b.round)){
   u.strikeWardReadyRound=b.round+a.strikeWard.period;
   const gained=grantCrownShield(b.heroes[u.side],a.strikeWard),p=a.strikeWard.overflowBarrier;
@@ -7186,7 +7313,7 @@ function resolveSurvivedStrike(b,u,attacker,damaged,suppressed,emit){
  }
 }
 
-Object.assign(__exports,{resolveStrikeDisplacement,resolveStrikePreparation,resolveStrikeRewards,resolveSurvivedStrike});
+Object.assign(__exports,{resolveAlchemyStrike,resolveStrikeDisplacement,resolveStrikePreparation,resolveStrikeRewards,resolveSurvivedStrike});
 
 },
 "src/engine/tempo.js":function(__exports,__load){
@@ -7368,6 +7495,7 @@ const {grantHealBarrier,grantAbilityBarrier,grantCrownShield}=__load("src/engine
 const {grantRegeneration}=__load("src/engine/unit-effects.js");
 const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
 const {clearUnitPoison}=__load("src/engine/unit-poison.js");
+const {grantSupportStrikeState}=__load("src/engine/unit-strike-modifiers.js");
 function inspireTargets(b,u,lane,p){return alliedTargets(b,u,lane,p).slice(0,p.targets);}
 function strengthen(target,p){const before=target.atk;target.atk=Math.max(before,Math.min(p.cap,before+p.amount));return target.atk-before;}
 
@@ -7412,7 +7540,10 @@ function resolveUnitSupport(b,sideFilter,emit){
   }
   if(a.inspire&&b.round%a.inspire.period===0&&u.lastInspireRound!==b.round){
    const targets=inspireTargets(b,u,lane,a.inspire);if(targets.length)u.lastInspireRound=b.round;
-   for(const t of targets)if(strengthen(t.u,a.inspire))emit(b,{type:'state',side:u.side,lane:t.lane,col:t.col});
+   for(const t of targets)if(strengthen(t.u,a.inspire)){
+    grantSupportStrikeState(t.u,a,b.round);
+    emit(b,{type:'state',side:u.side,lane:t.lane,col:t.col});
+   }
   }
  }
 }

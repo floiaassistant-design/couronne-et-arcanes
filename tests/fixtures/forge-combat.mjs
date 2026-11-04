@@ -5,6 +5,7 @@ import {resolveUnitDefinition} from '../../src/cards/definitions.js';
 import {evolutionFusionFor} from '../../src/evolution-fusion.js';
 import {cardReference} from '../../src/cards/references.js';
 import {freshProfile,fuseEvolutionCopies,modifyDeck,createBattle,playPlayerCard} from '../../src/engine.js';
+import {hit} from '../../src/engine/battle-defense.js';
 
 let uid=4000;
 export function forgeUnit(id,side='e',extra={}){
@@ -29,4 +30,15 @@ export function forgeBattle(id='smith',rarity='légendaire'){
 export function testStorage(){
  const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v);},removeItem:k=>{delete data[k];}};
  return data;
+}
+export function forgeContact(id,rarity,side='p'){
+ const c=forgeBattle(id,rarity);for(const row of c.b.board)row.fill(null);c.u.side=side;
+ const col=side==='p'?4:7,dir=side==='p'?1:-1;
+ const target=forgeUnit('militia',side==='p'?'e':'p',{hp:40,maxhp:40,armor:3,stun:99});
+ c.b.board[0][col]=c.u;c.b.board[0][col+dir]=target;c.b.phase=side==='p'?'player':'enemy';
+ return {...c,target,col,dir};
+}
+export function directForgeHit(b,attacker,target,raw=attacker.atk,ignoreArmor=false){
+ const lane=b.board.findIndex(row=>row.includes(target));
+ return hit(b,target,raw,attacker.side,ignoreArmor,true,{attacker,from:b.board[lane].indexOf(attacker),to:b.board[lane].indexOf(target),sameLine:true});
 }

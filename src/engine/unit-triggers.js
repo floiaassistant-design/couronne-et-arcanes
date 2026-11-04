@@ -3,6 +3,17 @@ import {versionUnitAbilities} from '../cards/definitions.js';
 import {grantAbilityBarrier,grantCrownShield,absorbBarrier} from './unit-barriers.js';
 import {alliedTargets,injuryOrder} from './unit-targets.js';
 import {lastCell} from './board.js';
+import {placeSpotMark} from './unit-strike-modifiers.js';
+import {poisonBelongsTo,clearUnitPoison} from './unit-poison.js';
+
+// Détonation secondaire après la frappe : jamais une nouvelle attaque.
+export function resolveAlchemyStrike(b,u,target,poisonedAtStart,suppressed,hit){
+ const p=versionUnitAbilities(u)?.catalysis;
+ if(!p||suppressed||u.hp<=0||!poisonedAtStart||!poisonBelongsTo(target,u)||u.catalysisReadyRound>b.round)return false;
+ clearUnitPoison(target);u.catalysisReadyRound=b.round+p.period;
+ hit(b,target,p.amount,u.side);
+ return true;
+}
 
 // Après les réactions de contact : aucun recul à distance ni attaque ajoutée.
 export function resolveStrikeDisplacement(b,u,target,{damaged,suppressed},hooks){
@@ -43,9 +54,12 @@ export function resolveStrikePreparation(b,u,target,suppressed,emit){
  return removed;
 }
 
-export function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,damaged,execution},emit){
+export function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,damaged,execution,victim},emit){
  if(suppressed||u.hp<=0)return;
  const a=versionUnitAbilities(u);
+ if(a.spotting&&damaged&&victim?.hp>0&&!(u.spottingReadyRound>b.round)){
+  if(placeSpotMark(b,u,victim,a.spotting,emit))u.spottingReadyRound=b.round+a.spotting.period;
+ }
  if(a.strikeWard&&(a.strikeWard.requiresKill?killed:damaged)&&!(u.strikeWardReadyRound>b.round)){
   u.strikeWardReadyRound=b.round+a.strikeWard.period;
   const gained=grantCrownShield(b.heroes[u.side],a.strikeWard),p=a.strikeWard.overflowBarrier;

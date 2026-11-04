@@ -157,6 +157,10 @@
   de sort, poison ou effets secondaires ne deviennent pas des attaques directes.
   Compteurs partiels et cadences sont propres à l’invocation et validés à la
   reprise ; les barrières de pouvoirs conservent leurs plafonds par origine.
+- Les effets consommables d’attaque (Armure temporaire, Calibrage, Repérage)
+  utilisent `unit-strike-modifiers.js` : contexte direct, consommation unique,
+  expiration et validation partagées. Les vues décrivent ces états sans recopier
+  leurs calculs ; les dégâts secondaires ne consomment pas une attaque directe.
 - `unit-effects.js` partage malus d'attaque, poison paramétré et régénération.
   L'ATQ permanente ne change pas ; malus consommé à la prochaine intention d'attaque
   ou Riposte valide, bonus inclus, minimum zéro. Pas de consommation par sort ni

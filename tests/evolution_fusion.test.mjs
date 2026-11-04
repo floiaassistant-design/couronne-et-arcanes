@@ -22,6 +22,7 @@ Object.assign(expected,{
  engineer:{'légendaire':[3,9]},cannon:{'légendaire':[5,9]}
 });
 for(const [id,stats] of Object.entries({smith:[4,8],drill:[3,7],colossus:[6,13],ironwraith:[3,9]})){expected[id]??={};expected[id].divine=[...stats];expected[id]['éveillée']=[...stats];}
+for(const [id,stats] of Object.entries({bomb:[5,5],engineer:[3,9],cannon:[5,9],mechanist:[3,10],alchemist:[4,7]})){expected[id]??={};expected[id].divine=[...stats];expected[id]['éveillée']=[...stats];}
 const ready=()=>{const p=freshProfile();p.completed=['01','02','03','04','05','06','07','08','09','10','11','12'];return p;};
 function stocked(recipe){
  const p=ready(),source=cardReference({id:recipe.cardId,rarity:recipe.from});
@@ -33,8 +34,8 @@ function stocked(recipe){
 }
 function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v)},removeItem:k=>{delete data[k]}};return data;}
 
-test('158 recettes explicites, transitions adjacentes et autres rangs/factions fermés',()=>{
- assert.equal(EVOLUTION_FUSIONS.length,158);
+test('168 recettes explicites, transitions adjacentes et autres rangs/factions fermés',()=>{
+ assert.equal(EVOLUTION_FUSIONS.length,168);
  assert.deepEqual(EVOLUTION_FUSIONS.map(r=>r.id).sort(),Object.entries(expected).flatMap(([id,ranks])=>Object.keys(ranks).map(rank=>id+':'+rank)).sort());
  for(const recipe of EVOLUTION_FUSIONS){assert.equal(recipe.copies,3);assert.equal(recipe.from,{rare:'commun','épique':'rare','légendaire':'épique',divine:'légendaire','éveillée':'divine'}[recipe.to]);assert.equal(recipe.mission,{rare:'01','épique':'03','légendaire':'06',divine:'09','éveillée':'12'}[recipe.to]);}
  const p=ready();
@@ -74,7 +75,7 @@ test('Rangs distincts, copies du deck et manque de doublons : aucun prélèvemen
  const held=structuredClone(p);assert.equal(fuseEvolutionCopies(p,'militia:épique').ok,false);assert.deepEqual(p,held);
 });
 
-test('2528 exécutions de combat avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
+test('2688 exécutions de combat avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
  for(const recipe of EVOLUTION_FUSIONS){
   const p=stocked(recipe),result=fuseEvolutionCopies(p,recipe.id);modifyDeck(p,result.target,1);
   const before=structuredClone(p);
