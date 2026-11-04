@@ -4,7 +4,7 @@ Le jeu intègre les sauvegardes protégées, Garde/Riposte uniques, le deck manu
 les paquets/fusions et les ascensions Aube, Sylve, Ombre et Forge. La [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75)
 a intégré dix évolutions Rares/Épiques Forge et leur paquet à `main`,
 avec six contrôles réussis. Ce lot et les PR suivantes jusqu’à la PR 83 sont publiés dans la version Sites 27.
-La PR 83 a intégré dix hauts rangs tactiques Forge le 4 novembre ; sa publication est confirmée dans Sites v27. La PR 84 a intégré [douze évolutions Éther](docs/ETHER_SOCLE_EVOLUTIONS.md) sur huit personnages, avec un paquet distinct. Cette branche prépare les [trois hauts rangs du Golem](docs/FORGE_GOLEM_COEUR_RUNIQUE.md), encore non intégrés, avec le cas interposé validé le 4 novembre. Les pouvoirs Éther restants demeurent des lots séparés.
+La PR 83 a intégré dix hauts rangs tactiques Forge le 4 novembre ; sa publication est confirmée dans Sites v27. La PR 84 a intégré [douze évolutions Éther](docs/ETHER_SOCLE_EVOLUTIONS.md) sur huit personnages, avec un paquet distinct. La PR 85 a intégré les [trois hauts rangs du Golem](docs/FORGE_GOLEM_COEUR_RUNIQUE.md), avec le cas interposé validé le 4 novembre. Cette branche propose quatre évolutions supplémentaires : [Repli et présage](docs/ETHER_REPLI_PRESAGE.md). Les pouvoirs Éther restants demeurent des lots séparés.
 Les [cinq Légendaires Forge de statistiques](docs/FORGE_LEGENDAIRES_STATS.md) sont intégrées par la PR 78 le 3 novembre 2026, avec leurs fusions et leur export synchronisé. Leur publication est confirmée dans la version Sites 23.
 Le [Marchefer Légendaire](docs/FORGE_MARCHEFER_LEGENDAIRE.md) et sa récupération de bouclier après élimination sont intégrés par la PR 79 le 3 novembre 2026. La publication reste suivie séparément.
 Le [Foreur Légendaire](docs/FORGE_FOREUR_LEGENDAIRE.md) est intégré par la PR 80 : Foreuse d'acier retire jusqu'à 2 points de barrière personnelle avant l'attaque normale, au plus une fois tous les 3 tours. Sa publication est suivie séparément.
@@ -26,7 +26,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 évolutions Rares, puis du Milicien Épique après le premier boss. Accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve, 43 Ombre et 36 évolutions Forge supplémentaires. Les douze évolutions Éther sont intégrées par PR 84 ; cette branche ajoute les trois rangs du Golem avec le raccordement validé de Cœur runique. Les rangs Divin/Éveillé exigent les grandes ascensions communes de leur faction. Le laboratoire reste disponible pour les tester.
+sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve, 43 Ombre et 39 évolutions Forge supplémentaires. Les douze évolutions Éther sont intégrées par PR 84 ; les trois rangs du Golem sont intégrés par PR 85, tandis que cette branche ajoute quatre évolutions Éther. Les rangs Divin/Éveillé exigent les grandes ascensions communes de leur faction. Le laboratoire reste disponible pour les tester.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
@@ -98,8 +98,8 @@ La Collection, les classes, les maîtrises, équipements, talents et donjons son
 conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteur,
 sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
 et les **59 versions Sylve** jusqu'à Éveillée, à leurs niveaux 0 à 3 choisis indépendamment.
-L’Ombre compte 54 versions définies, dont onze natives ; Forge compte 46 versions, dont dix natives. La proposition Golem porte Forge à 49 versions. Le lot Éther compte 23 versions, dont onze natives ; le Feu follet garde sa portée 2 et ses évolutions restent absentes. Les quatre récompenses pilotes se gagnent dans les Épreuves ;
-les 183 évolutions définies dans cette branche sont obtenables après leurs déblocages ; huit grandes ascensions ouvrent les Divines/Éveillées Aube/Sylve/Ombre/Forge définies, sans carte offerte ni consommation du deck. Les paquets Sylve, Ombre, Forge et le paquet Éther proposé offrent chacun 3 cartes pour 190 or après le premier boss, avec les mêmes taux par groupe que l'Aube : 60/35/5. [Migration des factions](docs/REPRISE_MIGRATION_CARTES.md) · [Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md). La PR Aube nº 53, avec sa présentation commune et sa
+L’Ombre compte 54 versions définies, dont onze natives ; Forge compte 49 versions, dont dix natives. Cette proposition porte Éther à 27 versions, dont onze natives, avec les trois évolutions du Feu follet et la Voyante Légendaire. Le Feu follet natif garde la portée 2 ; ses évolutions ont la portée 3. [Repli spectral et Étoile immobile](docs/ETHER_REPLI_PRESAGE.md). Les quatre récompenses pilotes se gagnent dans les Épreuves ;
+les 187 évolutions définies dans cette branche sont obtenables après leurs déblocages ; huit grandes ascensions ouvrent les Divines/Éveillées Aube/Sylve/Ombre/Forge définies, sans carte offerte ni consommation du deck. Les paquets Sylve, Ombre, Forge et le paquet Éther offrent chacun 3 cartes pour 190 or après le premier boss, avec les mêmes taux par groupe que l'Aube : 60/35/5. [Migration des factions](docs/REPRISE_MIGRATION_CARTES.md) · [Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md). La PR Aube nº 53, avec sa présentation commune et sa
 [revue finale](docs/REVUE_AUBE_PR53_2026_10_27.md), a été fusionnée sur accord du
 propriétaire le 27 octobre 2026. La publication du site reste une opération distincte.
 
@@ -174,4 +174,4 @@ Le [Marteau Légendaire](docs/FORGE_MARTEAU_LEGENDAIRE.md) est intégré par PR 
 
 La [PR 82 Forge — hauts rangs et blindages](docs/FORGE_HAUTS_RANGS_BLINDAGES.md) a intégré huit versions Divines/Éveillées du Marteau, du Foreur, du Colosse et du Marchefer, avec deux ascensions communes. Les pouvoirs et recettes du Golem et des autres hauts rangs restent distincts.
 
-La proposition [Forge — dix hauts rangs tactiques](docs/FORGE_HAUTS_RANGS_TACTIQUES.md) ajoute les Divines/Éveillées du Sapeur, de l’Ingénieure, du Mécaniste, du Canon et de l’Alchimiste, avec leurs pouvoirs. Les ascensions Forge ouvrent alors neuf recettes par rang ; les trois versions futures du Golem restent distinctes.
+Le lot intégré [Forge — dix hauts rangs tactiques](docs/FORGE_HAUTS_RANGS_TACTIQUES.md) ajoute les Divines/Éveillées du Sapeur, de l’Ingénieure, du Mécaniste, du Canon et de l’Alchimiste, avec leurs pouvoirs. Les ascensions Forge ouvrent dix recettes par rang depuis l’intégration du Golem par PR 85.

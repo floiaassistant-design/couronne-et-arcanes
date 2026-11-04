@@ -9,6 +9,8 @@ ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
 BATTLE='couronnes_arcanes_bataille_v1'
 SCENARIOS={
+    'ether-spark':{'card':'spark','faction':'ether','stats':(3,4),'effect':'spectralRetreatReadyRound','effectSide':'p','status':'Repli spectral','detail':['Repli spectral','Portée 3','3 tours','fusion'],'future':'À concevoir','prepared':True,'fixture':'ether'},
+    'ether-seer':{'card':'seer','faction':'ether','stats':(3,5),'effect':'stillOmen','status':'Étoile immobile','detail':['Étoile immobile','déplacement réel','3 tours','fusion'],'future':'À concevoir','prepared':True,'fixture':'ether'},
     'sylve':{'card':'owl','stats':(3,5),'effect':'attackPenalty','status':'Harcèlement','detail':['Harcèlement','−1 ATQ','fusion'],'future':'Ascension requise'},
     'ombre':{'card':'plague','stats':(4,7),'effect':'poisonTurns','status':'Poison 2 tour(s)','detail':['Poison 1','2 tours','fusion'],'future':'Ascension requise'},
     'forge-scrap':{'card':'ironwraith','faction':'forge','stats':(3,9),'effect':'strikeWardReadyRound','effectSide':'p','status':'Ferraille récupérée','detail':['Ferraille récupérée','plafond 20','3 tours','fusion'],'future':'Ascension requise'},
@@ -78,7 +80,7 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
     exported=json.loads(Path(await (await info.value).path()).read_text());assert exported==profile
     await page.locator('#import-file').set_input_files({'name':'sylve-legend.json','mimeType':'application/json','buffer':json.dumps(exported).encode()});await page.locator('#view .hero-copy').wait_for();assert await saved()==profile
     if cfg.get('prepared'):
-        fixture=json.loads(subprocess.check_output(['node','tests/fixtures/foreur-battle.mjs',json.dumps(profile),card_id],cwd=ROOT))
+        fixture=json.loads(subprocess.check_output(['node',f'tests/fixtures/{cfg.get("fixture","foreur")}-battle.mjs',json.dumps(profile),card_id],cwd=ROOT))
         plan=fixture['plan']
         # Fusion et deck réels ci-dessus ; combat préparé valide pour rendre
         # une barrière éligible, avant d'installer l'horloge de cette page.
@@ -111,6 +113,15 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
             if cfg.get('damageOnly'):
                 previous=next(u for row in before['board'] for u in row if u and u['uid']==plan['targetUid'])
                 assert target['uid']==plan['targetUid'] and target['hp']==previous['hp']-cfg['damageOnly']
+            elif scenario=='ether-spark':
+                assert target[cfg['effect']]==b['round']+3
+                assert b['board'][0][1]['uid']==target['uid'] and b['board'][0][2] is None
+                victim=next(u for row in b['board'] for u in row if u and u['uid']==plan['targetUid'])
+                assert victim['hp']==victim['maxhp']-1
+            elif scenario=='ether-seer':
+                source=next(u for row in b['board'] for u in row if u and u['id']=='seer' and u['side']=='p')
+                assert target['uid']==plan['targetUid'] and target['hp']==target['maxhp']-1
+                assert target[cfg['effect']]=={'sourceUid':source['uid'],'side':'p','amount':2,'dueRound':b['round']+1}
             elif scenario=='forge-scrap':
                 assert target[cfg['effect']]==b['round']+3
                 assert b['heroes']['p']['shield']==max(shield_before,min(20,shield_before+2))
@@ -143,6 +154,14 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
     await click(page.locator('.combat-menu-link'));frozen=await saved(BATTLE)
     assert any(u and u.get(cfg['effect']) for row in frozen['board'] for u in row)
     await page.reload();await page.locator('.combat-screen').wait_for();assert await saved(BATTLE)==frozen
+    if scenario=='ether-seer':
+        hp=target['hp']
+        await page.clock.run_for(1000)
+        await page.wait_for_function("()=>JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'))?.phase==='player'")
+        await click(page.locator('[data-action="end-turn"]'));await page.clock.run_for(1000)
+        await page.wait_for_function("()=>JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'))?.round===3")
+        resolved=await saved(BATTLE);victim=next(u for row in resolved['board'] for u in row if u and u['uid']==plan['targetUid'])
+        assert victim['hp']==hp-2 and 'stillOmen' not in victim
     await click(page.locator('.combat-menu-link'));assert await saved()==profile
     assert not await page.evaluate("'profile' in window||'battle' in window")
     assert not errors,errors;assert not external,external

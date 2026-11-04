@@ -7,7 +7,8 @@ import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitC
 import {resolveUnitArrival,resolveUnitSupport} from './unit-support.js';
 import {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty} from './unit-effects.js';
 import {tickUnitPoison,clearUnitPoison,poisonBelongsTo} from './unit-poison.js';
-import {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveGuardWard} from './unit-triggers.js';
+import {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard} from './unit-triggers.js';
+import {placeStillOmen,noteOmenMovement,resolveStillOmens} from './unit-omens.js';
 import {applyStrikeFracture} from './unit-strike-modifiers.js';
 import {contiguousSplashTargets} from './unit-targets.js';
 import {resolveUnitDeath} from './unit-death.js';
@@ -30,7 +31,7 @@ function rand(b){b.seed=(Math.imul(b.seed,1664525)+1013904223)>>>0;return b.seed
 function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand(b)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 export function note(b,message){b.log.unshift(message);b.log=b.log.slice(0,12);}
 function fx(b,event){recordCombatEvent(b,event);}
-function enterCell(b,u,lane,col){triggerTrap(b,u,lane,col,hit,fx,note);sweepDead(b);}
+function enterCell(b,u,lane,col){noteOmenMovement(b,u);triggerTrap(b,u,lane,col,hit,fx,note);sweepDead(b);}
 const controlHooks={emit:fx,note,enter:enterCell,hit};
 
 function draw(b,side,n=1){
@@ -287,6 +288,8 @@ function resolveAttacks(b,sideFilter=null){
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
     resolveStrikeDisplacement(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
     resolveGuardWard(b,guardIntercept.u,true,result.performed,silenced(b,guardIntercept.u),fx);
+    placeStillOmen(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},fx);
+    resolveSpectralRetreat(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
   } else {
    const interposed=versionUnitAbilities(target.target)?.guardWard?.interposedCrownThreat&&isInterposedCrownGuardian(b,lane,intent.col,u,target.target);
@@ -299,6 +302,8 @@ function resolveAttacks(b,sideFilter=null){
    retaliate(b,target.target,u,lane,target.col,intent.col);
    resolveStrikeDisplacement(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
    resolveGuardWard(b,target.target,interposed,result.performed,silenced(b,target.target),fx);
+   placeStillOmen(b,u,target.target,{...result,suppressed:intent.suppressed},fx);
+   resolveSpectralRetreat(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
   }
  }
  // Le bonus de charge ne dure qu'un seul tour et doit survivre aux sauvegardes historiques.
@@ -385,6 +390,7 @@ export function finishEnemyTurn(b){
  const rulesError=battleRulesError(b);if(rulesError)return {ok:false,reason:rulesError};
  if(b.turnFlow!=='alternating'||b.phase!=='enemy'||b.status!=='active')return {ok:false,reason:'Ce n’est pas le tour adverse.'};
  resolvePoison(b,'e');prepareControlUnits(b,controlHooks,'e');moveUnits(b,'e');resolveAttacks(b,'e');expireControl(b,fx);
+ if(resolveStillOmens(b,hit)){sweepDead(b);checkOutcome(b);}
  if(b.round>=17&&b.status==='active'){
   const attrition=1+Math.floor((b.round-17)/6);
   damageHero(b,'p',attrition);damageHero(b,'e',attrition);
@@ -415,6 +421,7 @@ export function endPlayerTurn(b){
  b.phase='resolving';enemyAct(b);
  if(b.status==='active'){
   resolvePoison(b);prepareControlUnits(b,controlHooks);moveUnits(b);resolveAttacks(b);expireControl(b,fx);
+  if(resolveStillOmens(b,hit)){sweepDead(b);checkOutcome(b);}
   // Fatigue of the battlefield avoids endless defensive stalemates.
   if(b.round>=17&&b.status==='active'){
    const attrition=1+Math.floor((b.round-17)/6);

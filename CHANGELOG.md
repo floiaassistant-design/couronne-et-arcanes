@@ -1,6 +1,12 @@
 # Journal des changements
 
-## Proposition — Golem Légendaire, Divin et Éveillé, 4 novembre 2026
+## En préparation — Éther, Repli spectral et Étoile immobile, 4 novembre 2026
+
+- Trois évolutions du Feu follet, portée 3, avec recul personnel Légendaire ; sa Commune garde la portée 2. Voyante Légendaire et présage annulé par un déplacement réel au tour suivant.
+- Quatre fusions supplémentaires, 27 versions Éther et 187 recettes après réconciliation avec le Golem intégré. Paquet Éther enrichi de ses Feux follets Rare/Épique, prix et taux conservés.
+- États facultatifs repris, protections et mouvements communs, fiches, moteur embarqué et parcours partagés. [Contrat](docs/ETHER_REPLI_PRESAGE.md).
+
+## Intégré par PR 85 — Golem Légendaire, Divin et Éveillé, 4 novembre 2026
 
 - Cœur runique : après interception et survie, +1 bouclier à la couronne, plafond 20 et une activation par invocation/tour ; Garde de ligne puis toutes lignes remplaçante.
 - Trois fusions, dix recettes par ascension Forge, état facultatif sauvegardé et présentation commune ; natifs, paquets et 120 références de parité conservés.

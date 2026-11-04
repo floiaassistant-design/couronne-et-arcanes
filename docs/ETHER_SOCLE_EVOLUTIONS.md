@@ -1,4 +1,9 @@
-# Éther — douze évolutions de statistiques, intégrées le 4 novembre 2026
+# Éther — douze évolutions de statistiques, intégrées par PR 84 le 4 novembre 2026
+
+Ce document décrit le périmètre historique de la PR 84, intégrée au commit
+`bc826d3ca1daa2824b9e895c51f4e61077870583`. Ses comptes, pools et exclusions
+ne décrivent pas les lots suivants. [Proposition Repli et présage](ETHER_REPLI_PRESAGE.md) :
+quatre versions supplémentaires ; seul le Feu follet natif y conserve la portée 2.
 
 ## Source et périmètre
 
