@@ -1,5 +1,9 @@
 # Éther — cinq versions et première ascension Divine, proposition du 5 novembre 2026
 
+Lot intégré le 5 novembre par la PR 88 au commit
+`3d28789bfc7081aad38f15a05376d6993b0d778f`. Les étapes de proposition ci-dessous
+retracent sa préparation. Le [lot Vol](ETHER_DIVINS_VOL.md) utilise la même ascension.
+
 ## Source et périmètre
 
 Conception relue dans le [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),

@@ -202,7 +202,7 @@ Les quatre parties d’ascension Forge ajoutent ce combat tactique préparé, é
 
 `golem-battle.mjs` fusionne/invoque le Golem Divin/Éveillé, puis laisse le moteur intercepter la véritable frappe adverse. Les quatre parties Forge ajoutent fiche et reprise à ce même scénario, sans nouveau job. Un combat préparé n’est pas une campagne complète ; le propriétaire a validé le cas interposé le 4 novembre, les tests en vérifient l'application.
 
-## Éther — premiers Divins proposés le 5 novembre
+## Éther — premiers Divins intégrés le 5 novembre
 
 `ether_divine.test.mjs` vérifie cinq vraies fusions sur quatre cartes, minimum/cadence du Prisme après menace de couronne, exclusions, deux camps/deux géométries, remplacement du présage par 3, bonus normal consommable/expirable, recul secondaire, pièges, Silence, protections, absence de chaîne, reprise et moteur réellement embarqué. `ether_ascensions.test.mjs` joue la nouvelle rencontre complète, les refus, objectifs, reçu unique et 64 graines/niveaux rejouées. Catalogue : 32 versions × quatre niveaux × deux camps ; 192 recettes dans 3 072 exécutions déterministes.
 

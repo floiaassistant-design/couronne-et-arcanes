@@ -8,22 +8,21 @@ preuves et les limites. Une CI ou une fusion ne prouve pas la publication.
 
 ## Intégré sur main
 
-Dernier main observé : `3ba15786de52f33877b2854bf743430bdc1ca327` (PR 87),
-arbre `698af18ea3ebc97ca33835b9f74d853ba86bf89c`, identique à sa tête revue/testée ;
-six contrôles réussis avant fusion. Export `d6f3a2f42719f6249e96b09c5b092bb6315e2e97` confirmé.
-Les contours intérieurs de rareté de 2 px sont intégrés dans toutes les vues,
-sans changement de dimensions. La publication est une observation distincte.
+Les [premiers Divins Éther](ETHER_PREMIERS_DIVINS.md) sont intégrés par la PR 88
+au commit `3d28789bfc7081aad38f15a05376d6993b0d778f`, dont l’arbre
+`9800b9024fe7e9abbbf7296843b0bfadcaed1d04` correspond à celui des six contrôles
+réussis. L’export intégré est `16f206caae1cc1b895fc19543f3fd05c4a326196`.
+Les contours intérieurs de rareté intégrés par la PR 87 sont inclus.
 
 - Aube : 51 versions, dont 41 évolutions obtenables.
 - Sylve : 59 versions, dont 48 évolutions jusqu’à Éveillée.
 - Ombre : 54 versions, dont 43 évolutions jusqu’à Éveillée.
 - Forge : 49 versions, dont 39 évolutions jusqu’à Éveillée. Le Golem est intégré
   par PR 85 ; Cœur runique exige le cas interposé validé, jamais tout coup reçu.
-- Éther : 27 versions, dont 16 évolutions intégrées par PR 84/86.
-  [Repli et présage](ETHER_REPLI_PRESAGE.md) sont intégrés. Feu follet natif
-  à portée 2 ; ses évolutions définies à portée 3.
+- Éther : 32 versions, dont 21 évolutions et la première ascension Divine.
+  Le Feu follet natif a une portée de 2 et ses évolutions une portée de 3.
 
-187 recettes, huit ascensions communes, 53 unités natives et 23 sorts.
+192 recettes, neuf ascensions communes, 53 unités natives et 23 sorts.
 Le laboratoire utilise le même moteur, sans gain ni écriture dans l’aventure.
 Sauvegardes protégées et transactions du profil/résultats sont intégrées.
 [Migration et limites par faction](REPRISE_MIGRATION_CARTES.md).
@@ -35,8 +34,8 @@ Le suivi existant a confirmé **Sites v29**, commit GitHub `3fac34fa` et arbre
 `ccc8dd42a6f6ffe435ae63c94fc0876ecfbe9e31`.
 Paquet, provenance, empreintes et fichiers après publication vérifiés par ce suivi,
 audience publique conservée. Le suivi du 5 novembre a ensuite signalé la publication
-des contours bloquée : environnement d’exécution indisponible, vérifications du
-paquet non réalisables. Le site reste en v29 ; aucune publication parallèle.
+des contours bloquée faute d’environnement pour vérifier le paquet. Le suivi
+existant a repris à la fusion de la PR 88. Le site reste en v29 à ce relevé.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
 [Export publié](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site/JOUER.html) ·
@@ -44,22 +43,9 @@ paquet non réalisables. Le site reste en v29 ; aucune publication parallèle.
 
 ## Proposé, non intégré et non publié
 
-- [Premiers Divins Éther](ETHER_PREMIERS_DIVINS.md), branche
-  `feat/ether-premiers-divins-20261105`, réconciliée avec main `3ba15786` : cinq versions sur
-  quatre personnages, une ascension Divine et cinq fusions. Dans la proposition :
-  32 versions Éther, 21 évolutions, 192 recettes, neuf ascensions. Aucun Éveillé,
-  changement de natif, paquet ou migration. Lire la PR pour ses contrôles actuels.
 - [Soutiens de Vol](ETHER_DIVINS_VOL.md) : le Griffon et le Séraphin Divins
   reprennent cette ascension. La proposition définit 34 versions Éther, dont
   23 évolutions, et 194 recettes au total. La fusion exige son accord spécifique.
-
-Cette branche réunit les contours intégrés et les évolutions Éther proposées.
-Le contrôle Légendaire distingue désormais les Divines définies mais soumises à
-ascension des Éveillées toujours absentes, avec chiffres attendus indépendants.
-JOUER est régénéré depuis ces sources communes ; lire les contrôles de
-l’assemblage complet sur sa nouvelle tête.
-Chaque PR exige son accord spécifique ; aucun auto-merge. Sites reçoit uniquement
-main intégré et vérifié.
 
 ## Prochain travail utile
 

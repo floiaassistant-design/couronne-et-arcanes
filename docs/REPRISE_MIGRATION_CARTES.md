@@ -19,17 +19,19 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
 | Forge | 10 | 39 sur 39 cases futures | 39 évolutions intégrées jusqu’à PR 85 ; 49 versions Forge |
-| Éther | 11 | 39 sur 39 cases futures | Seize évolutions intégrées par PR 84/86, cinq dans le lot d’ascension et deux dans le lot Vol ; 16 autres absentes ; portée 3 native du Feu follet distincte |
+| Éther | 11 | 39 sur 39 cases futures | 21 évolutions intégrées, deux proposées dans le lot Vol et 16 encore absentes après ce lot. Portée native du Feu follet distincte |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
 ou un pouvoir validé ne crée ni exemplaire ni définition jouable. Les onze personnages Éther ont leurs 39 évolutions validées dans cette édition ;
 la disponibilité réelle reste déterminée par le registre du jeu.
 
-## Reprise du 5 novembre — premiers Divins Éther proposés
+## Reprise du 5 novembre — premiers Divins intégrés, lot Vol proposé
 
 Main `3fac34fa5a2b94cc705aca086d761bf6e524493c` intègre PR 86 et ses quatre évolutions ; leur publication Sites v29 est confirmée par le suivi existant, au commit de diffusion `ccc8dd42a6f6ffe435ae63c94fc0876ecfbe9e31`. Les paragraphes antérieurs mentionnant Repli/présage comme proposés et le Golem comme absent sont des jalons historiques.
 
-[Lot suivant](ETHER_PREMIERS_DIVINS.md) : cinq versions sur quatre personnages, première ascension Divine Éther, 21 évolutions et 32 versions Éther dans cette proposition ; 192 recettes au total. Dix-huit évolutions Éther, tous ses rangs Éveillés et la portée native 3 du Feu follet restent distincts. La PR 87 des contours est fusionnée dans main `3ba15786de52f33877b2854bf743430bdc1ca327` ; cette branche reprend son CSS et ses documents, puis régénère JOUER depuis l’assemblage commun, sans perdre le lot Éther. Sa publication demeure bloquée par l’environnement indisponible ; Sites v29 reste la dernière diffusion confirmée. Chaque PR exige son accord spécifique.
+Le [lot d’ascension Divine](ETHER_PREMIERS_DIVINS.md) est intégré par la PR 88
+au commit `3d28789bfc7081aad38f15a05376d6993b0d778f`. Il porte le jeu à
+192 recettes, dont 21 évolutions Éther. Le suivi de publication est distinct.
 
 Le [lot Vol](ETHER_DIVINS_VOL.md) ajoute le Griffon et le Séraphin Divins à la
 même ascension. La proposition conserve 16 évolutions Éther à intégrer ensuite,

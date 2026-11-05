@@ -4,7 +4,7 @@
 
 `unit-flight-support.js` gère le soin immédiat de survol, le Sillage temporaire et son contrat de sauvegarde. `battle.js` fournit l’allié réellement franchi après la pose dans la case d’arrivée. Le pas supplémentaire emprunte le même déplacement normal et le hook d’entrée de case. `battle-control.js` déclenche l’expiration de fin de tour. La fiche lit l’état partagé. Le builder inclut ce module dans le web et l’autonome. [Contrat](ETHER_DIVINS_VOL.md).
 
-## Éther — cinq versions et ascension Divine proposées le 5 novembre
+## Éther — cinq versions et ascension Divine intégrées le 5 novembre
 
 `cards/ether.js` paramètre cinq patches, sans modifier les natifs. `unit-triggers.js` possède les suites de recul, Impact et interception ; `battle.js` ne fait que transmettre les résultats et hooks communs. `unit-strike-modifiers.js` porte bonus normal consommable, malus Prisme et expiration ; `unit-effects.js` réutilise les intentions/Ripostes et valide les nouveaux quotas. Le plus fort malus est retenu sans addition à Harcèlement, dont la durée propre reste conservée. `unit-omens.js` est réutilisé sans deuxième présage ni résolution recopiée.
 
