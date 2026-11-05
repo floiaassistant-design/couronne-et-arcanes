@@ -4,7 +4,7 @@ Le jeu intègre les sauvegardes protégées, Garde/Riposte uniques, le deck manu
 les paquets/fusions et les ascensions Aube, Sylve, Ombre et Forge. La [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75)
 a intégré dix évolutions Rares/Épiques Forge et leur paquet à `main`,
 avec six contrôles réussis. Ce lot et les PR suivantes jusqu’à la PR 83 sont publiés dans la version Sites 27.
-La PR 83 a intégré dix hauts rangs tactiques Forge le 4 novembre ; sa publication est confirmée dans Sites v27. La PR 84 a intégré [douze évolutions Éther](docs/ETHER_SOCLE_EVOLUTIONS.md) sur huit personnages, avec un paquet distinct. La PR 85 a intégré les [trois hauts rangs du Golem](docs/FORGE_GOLEM_COEUR_RUNIQUE.md), avec le cas interposé validé le 4 novembre. La PR 86 a intégré [Repli et présage](docs/ETHER_REPLI_PRESAGE.md), publiés dans Sites v29. Cette branche prépare [cinq versions Éther et leur ascension Divine](docs/ETHER_PREMIERS_DIVINS.md). Les pouvoirs Éther restants demeurent des lots séparés.
+La PR 83 a intégré dix hauts rangs tactiques Forge le 4 novembre ; sa publication est confirmée dans Sites v27. La PR 84 a intégré [douze évolutions Éther](docs/ETHER_SOCLE_EVOLUTIONS.md) sur huit personnages, avec un paquet distinct. La PR 85 a intégré les [trois hauts rangs du Golem](docs/FORGE_GOLEM_COEUR_RUNIQUE.md), avec le cas interposé validé le 4 novembre. La PR 86 a intégré [Repli et présage](docs/ETHER_REPLI_PRESAGE.md), publiés dans Sites v29. La PR 87 a intégré les contours de rareté le 5 novembre ; leur publication reste bloquée par l’indisponibilité de l’environnement d’exécution. Cette branche prépare [cinq versions Éther et leur ascension Divine](docs/ETHER_PREMIERS_DIVINS.md). Les pouvoirs Éther restants demeurent des lots séparés.
 Les [cinq Légendaires Forge de statistiques](docs/FORGE_LEGENDAIRES_STATS.md) sont intégrées par la PR 78 le 3 novembre 2026, avec leurs fusions et leur export synchronisé. Leur publication est confirmée dans la version Sites 23.
 Le [Marchefer Légendaire](docs/FORGE_MARCHEFER_LEGENDAIRE.md) et sa récupération de bouclier après élimination sont intégrés par la PR 79 le 3 novembre 2026. La publication reste suivie séparément.
 Le [Foreur Légendaire](docs/FORGE_FOREUR_LEGENDAIRE.md) est intégré par la PR 80 : Foreuse d'acier retire jusqu'à 2 points de barrière personnelle avant l'attaque normale, au plus une fois tous les 3 tours. Sa publication est suivie séparément.
@@ -15,6 +15,8 @@ Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
 quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle.
 
 ## Jouer
+
+Les cartes dessinées reprennent le filet intérieur de rareté de 2 pixels intégré par PR 87 : main, plateau, Collection, fiches et autres vues, avec les mêmes dimensions et couleurs.
 
 - Impact de zone : cible secondaire uniquement immédiatement derrière la cible principale, sans case vide, dans le sens de la frappe ; voir le [contrat de ciblage](docs/IMPACT_ZONE_2026_11_02.md), intégré à main par la PR 73.
 

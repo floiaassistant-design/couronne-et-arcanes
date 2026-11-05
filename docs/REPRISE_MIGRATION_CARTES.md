@@ -29,7 +29,7 @@ la disponibilité réelle reste déterminée par le registre du jeu.
 
 Main `3fac34fa5a2b94cc705aca086d761bf6e524493c` intègre PR 86 et ses quatre évolutions ; leur publication Sites v29 est confirmée par le suivi existant, au commit de diffusion `ccc8dd42a6f6ffe435ae63c94fc0876ecfbe9e31`. Les paragraphes antérieurs mentionnant Repli/présage comme proposés et le Golem comme absent sont des jalons historiques.
 
-[Lot suivant](ETHER_PREMIERS_DIVINS.md) : cinq versions sur quatre personnages, première ascension Divine Éther, 21 évolutions et 32 versions Éther dans cette proposition ; 192 recettes au total. Dix-huit évolutions Éther, tous ses rangs Éveillés et la portée native 3 du Feu follet restent distincts. La PR des contours de rareté demeure indépendante ; en cas de fusion, reprendre son CSS, ses documents et régénérer JOUER depuis l’assemblage commun, sans perdre ce lot. Chaque PR exige son accord spécifique.
+[Lot suivant](ETHER_PREMIERS_DIVINS.md) : cinq versions sur quatre personnages, première ascension Divine Éther, 21 évolutions et 32 versions Éther dans cette proposition ; 192 recettes au total. Dix-huit évolutions Éther, tous ses rangs Éveillés et la portée native 3 du Feu follet restent distincts. La PR 87 des contours est fusionnée dans main `3ba15786de52f33877b2854bf743430bdc1ca327` ; cette branche reprend son CSS et ses documents, puis régénère JOUER depuis l’assemblage commun, sans perdre le lot Éther. Sa publication demeure bloquée par l’environnement indisponible ; Sites v29 reste la dernière diffusion confirmée. Chaque PR exige son accord spécifique.
 
 ## Historique des lots précédents
 

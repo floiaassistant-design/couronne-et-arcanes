@@ -7,6 +7,12 @@
 - Une ascension Éther commune après mission 09 ouvre quatre fusions de trois Légendaires libres. Aucun cadeau, accès Éveillé, changement de natif, de paquet ou de sauvegarde historique.
 - État de combat facultatif validé, fiches et Silence, laboratoire/moteur communs, export autonome régénéré et nouveaux parcours raccordés à la CI existante.
 
+## Intégré par PR 87 — contours de rareté, 5 novembre 2026
+
+- Filet intérieur de 2 pixels dans la couleur de rareté existante, partagé par toutes les cartes dessinées : main, plateau, Collection, fiches et autres vues.
+- Deux propriétés dans le composant CSS commun ; mêmes dimensions, images et zones de texte. Les signaux de sélection, focus et disponibilité restent distincts.
+- Export autonome régénéré depuis les mêmes sources ; aucun changement du moteur, de l’obtention ou des sauvegardes.
+
 ## Intégré par PR 86 — Éther, Repli spectral et Étoile immobile, 4 novembre 2026
 
 - Trois évolutions du Feu follet, portée 3, avec recul personnel Légendaire ; sa Commune garde la portée 2. Voyante Légendaire et présage annulé par un déplacement réel au tour suivant.

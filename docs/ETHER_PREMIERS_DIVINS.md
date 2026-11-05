@@ -4,9 +4,11 @@
 
 Conception relue dans le [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f),
 édition `2026-11-04T09:02:46.815Z`, toujours courante à cette reprise.
-Base GitHub : main `3fac34fa5a2b94cc705aca086d761bf6e524493c`, PR 86 intégrée,
-27 versions Éther et 187 recettes. La PR 87 des contours est indépendante et
-attend son accord spécifique ; cette branche ne reprend pas son CSS proposé.
+Base initiale : main `3fac34fa5a2b94cc705aca086d761bf6e524493c`, PR 86 intégrée.
+La branche est réconciliée avec main `3ba15786de52f33877b2854bf743430bdc1ca327`
+après fusion autorisée de PR 87 : contours CSS de 2 px et documents conservés,
+JOUER régénéré depuis les sources communes. Main compte 27 versions Éther et
+187 recettes ; la proposition conserve les cinq versions et l’ascension ci-dessous.
 
 | Personnage | Rang ajouté | ATQ / PV / délai | Gain à ce rang |
 | --- | --- | --- | --- |
@@ -112,3 +114,17 @@ Résultats actuels à lire dans la PR, sur son commit exact. Simulation et Chrom
 simulé ne prouvent ni équilibrage humain, ni Safari/Firefox ou téléphone physique.
 Cette proposition attend son propre accord spécifique avant fusion. Publication
 uniquement après intégration sur main, par le suivi Sites existant.
+
+## Réconciliation avec les contours et correction du contrôle Légendaire
+
+L’ancienne CI attendait encore « À concevoir » pour les Divines du Feu follet et
+de la Voyante. Le parcours partagé attend désormais l’accès par ascension sur
+ces deux cases et vérifie leurs chiffres indépendants (3/4 et 3/5). Il conserve
+l’assertion d’absence pour leurs Éveillées et les contrôles des autres factions.
+La matrice permanente, ses groupes et ses assertions métier restent actifs.
+
+L’environnement local étant indisponible à cette reprise, la génération et les
+contrôles de l’assemblage s’effectuent sur GitHub. Les résultats locaux antérieurs
+restent historiques ; lire les nouvelles preuves dans la PR sur son SHA exact.
+La publication des contours intégrés est également bloquée par cet environnement,
+et le site reste à la dernière version terminale confirmée, v29.

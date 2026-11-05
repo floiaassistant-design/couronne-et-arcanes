@@ -8,9 +8,11 @@ preuves et les limites. Une CI ou une fusion ne prouve pas la publication.
 
 ## Intégré sur main
 
-Dernier main observé : `3fac34fa5a2b94cc705aca086d761bf6e524493c` (PR 86),
-arbre `2df95c6538fcff05a3d88d861078a659cd549d4a`, identique à sa tête revue/testée ;
-six contrôles réussis avant fusion. Export `a7bd33c9365a70599c29d67cfbc65d1683292ac2` confirmé.
+Dernier main observé : `3ba15786de52f33877b2854bf743430bdc1ca327` (PR 87),
+arbre `698af18ea3ebc97ca33835b9f74d853ba86bf89c`, identique à sa tête revue/testée ;
+six contrôles réussis avant fusion. Export `d6f3a2f42719f6249e96b09c5b092bb6315e2e97` confirmé.
+Les contours intérieurs de rareté de 2 px sont intégrés dans toutes les vues,
+sans changement de dimensions. La publication est une observation distincte.
 
 - Aube : 51 versions, dont 41 évolutions obtenables.
 - Sylve : 59 versions, dont 48 évolutions jusqu’à Éveillée.
@@ -29,9 +31,12 @@ Sauvegardes protégées et transactions du profil/résultats sont intégrées.
 ## Publié, observation distincte
 
 Le suivi existant a confirmé **Sites v29**, commit GitHub `3fac34fa` et arbre
-ci-dessus ; commit de diffusion `ccc8dd42a6f6ffe435ae63c94fc0876ecfbe9e31`.
+`2df95c6538fcff05a3d88d861078a659cd549d4a` ; commit de diffusion
+`ccc8dd42a6f6ffe435ae63c94fc0876ecfbe9e31`.
 Paquet, provenance, empreintes et fichiers après publication vérifiés par ce suivi,
-audience publique conservée. Aucun déploiement concurrent.
+audience publique conservée. Le suivi du 5 novembre a ensuite signalé la publication
+des contours bloquée : environnement d’exécution indisponible, vérifications du
+paquet non réalisables. Le site reste en v29 ; aucune publication parallèle.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
 [Export publié](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site/JOUER.html) ·
@@ -39,19 +44,18 @@ audience publique conservée. Aucun déploiement concurrent.
 
 ## Proposé, non intégré et non publié
 
-- [PR 87 — contours de rareté](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/87) :
-  filet intérieur partagé de 2 px, dimensions préservées. Tête `cc17b0b`, diff
-  relu et six contrôles réussis ; accord spécifique toujours requis.
 - [Premiers Divins Éther](ETHER_PREMIERS_DIVINS.md), branche
-  `feat/ether-premiers-divins-20261105`, base main `3fac34fa` : cinq versions sur
+  `feat/ether-premiers-divins-20261105`, réconciliée avec main `3ba15786` : cinq versions sur
   quatre personnages, une ascension Divine et cinq fusions. Dans la proposition :
   32 versions Éther, 21 évolutions, 192 recettes, neuf ascensions. Aucun Éveillé,
   changement de natif, paquet ou migration. Lire la PR pour ses contrôles actuels.
 
-Les deux lots sont indépendants et partagent des documents et l’export généré.
-Après une fusion autorisée, reprendre le nouveau main, préserver les deux apports,
-régénérer JOUER et contrôler leur assemblage. Chaque PR exige son propre accord ;
-aucun auto-merge. Sites reçoit uniquement main intégré et vérifié.
+Cette branche réunit les contours intégrés et les évolutions Éther proposées.
+Le contrôle Légendaire distingue désormais les Divines définies mais soumises à
+ascension des Éveillées toujours absentes, avec chiffres attendus indépendants.
+JOUER doit être régénéré puis l’assemblage complet vérifié sur sa nouvelle tête.
+Chaque PR exige son accord spécifique ; aucun auto-merge. Sites reçoit uniquement
+main intégré et vérifié.
 
 ## Prochain travail utile
 
