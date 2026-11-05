@@ -3,6 +3,7 @@ import {versionUnitAbilities} from '../cards/definitions.js';
 import {applyUnitPoison,validPoisonOrigin} from './unit-poison.js';
 import {validStrikeModifiers,activeStrikeState} from './unit-strike-modifiers.js';
 import {validStillOmen} from './unit-omens.js';
+import {validFlightWake} from './unit-flight-support.js';
 
 export function attackAfterPenalty(u,raw,round=0){
  const boosted=raw+(u.fury||0)+(u.devourAttack||0);
@@ -80,6 +81,7 @@ export function validUnitEffects(u){
   (u.scoriaHits===undefined||Number.isSafeInteger(u.scoriaHits)&&u.scoriaHits>=0&&u.scoriaHits<=2)&&
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
+  (u.flightSupportReadyRound===undefined||integer(u.flightSupportReadyRound,100))&&validFlightWake(u)&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
   (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin)&&validStrikeModifiers(u)&&validStillOmen(u);
 }

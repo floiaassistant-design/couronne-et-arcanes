@@ -79,12 +79,13 @@ async def run(browser,label,viewport,faction='aube'):
             'spark':[3,4,4,4,4,None],
             'mystic':[None,4,6,6,None,None],
             'elemental':[None,None,8,10,None,None],
-            'griffin':[None,None,6,8,None,None],
+            'griffin':[None,None,6,8,8,None],
             'sentinel':[None,9,11,11,11,None],
             'dragon':[None,None,None,12,12,None],
             'tempest':[None,6,8,8,None,None],
             'seer':[4,5,5,5,5,None],
             'aetherknight':[None,None,9,11,None,None],
+            'seraph':[None,None,None,10,10,None],
             'portal_walker':[None,5,7,7,None,None]
         }.get(card_id)
         native=await row.locator('[data-current-version="true"]').get_attribute('data-collection-rarity')

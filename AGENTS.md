@@ -136,6 +136,10 @@
 - `engine/unit-rules.js` partage permissions, portée, mouvement, Charge, Vol et
   Perforation. `unit-support.js` porte arrivées et soutiens avec leurs marqueurs
   anti-répétition. Les pouvoirs viennent du registre, sans chiffres dupliqués.
+- `unit-flight-support.js` traite les effets après un franchissement réel par
+  Vol. Le pas de Sillage utilise le déplacement normal et l’entrée de case
+  commune. Le bonus est consommé au premier déplacement réel ou expire en fin
+  de tour. Les cadences et états facultatifs restent validés à la reprise.
 - `battle-defense.js` résout `hit` et Riposte pour tous les appels. Garde normale
   positionnelle : candidats via `guard-candidates.js`, même ligne puis proximité
   de sa couronne puis ligne/uid ; un gardien choisi, sans quota inventé par tour.

@@ -218,3 +218,7 @@ restent indépendantes du registre et sont vérifiées sur bureau, portrait et p
 Le groupe combat ayant atteint sa limite de 20 minutes dans le run 42056039630,
 la marge des groupes passe à 30 minutes, avec les mêmes quatre groupes et tous
 les contrôles. Aucune durée de réussite anticipée ; lire la nouvelle CI exacte.
+
+## Éther — soutiens de Vol
+
+`ether_evolutions.test.mjs` vérifie désormais 34 versions et les réactions de Vol dans les deux camps. Les valeurs de Collection et des 194 recettes restent explicites. `ether-flight-battle.mjs` prépare les deux fusions et invocations pour `browser_ether_divine.py`. Ce parcours vérifie le Sillage, le soin, le déplacement et les reprises dans les quatre parties d’ascension existantes. [Contrat](ETHER_DIVINS_VOL.md).

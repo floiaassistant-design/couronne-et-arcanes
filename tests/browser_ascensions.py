@@ -2,7 +2,7 @@
 import copy,json,subprocess
 from pathlib import Path
 from evolution_ci_plan import ascension_cases
-from browser_ether_divine import run_ether_divine_case
+from browser_ether_divine import run_ether_divine_case,run_ether_flight_case
 
 ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
@@ -192,4 +192,6 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         if faction=='forge':
             await run_forge_tactical_case(browser,config,address,final,s['trial']['to'],make_case,click,stored)
             await run_golem_case(browser,config,address,final,s['trial']['to'],make_case,click,stored)
-        if faction=='ether':await run_ether_divine_case(browser,config,address,final,make_case,click,stored)
+        if faction=='ether':
+            await run_ether_divine_case(browser,config,address,final,make_case,click,stored)
+            await run_ether_flight_case(browser,config,address,make_case,click,stored)

@@ -1,5 +1,10 @@
 # Journal des changements
 
+## En préparation — deux Divines Éther liées au Vol
+
+- Griffon du Zénith et Séraphin d’Azur Divins. Un survol réussi donne à l’allié un pas supplémentaire au prochain déplacement ou le soigne immédiatement s’il est blessé, selon la carte.
+- Deux fusions après l’ascension Divine Éther existante et contrôles des effets, des fiches et de la reprise sur le moteur commun.
+
 ## En préparation — cinq versions Éther et ascension Divine, 5 novembre 2026
 
 - Sentinelle Légendaire/Divine et Prisme inhibiteur après une interception réelle de couronne survécue. Garde Divine remplace la portée normale, sans double interception.

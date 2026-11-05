@@ -49,6 +49,9 @@ paquet non réalisables. Le site reste en v29 ; aucune publication parallèle.
   quatre personnages, une ascension Divine et cinq fusions. Dans la proposition :
   32 versions Éther, 21 évolutions, 192 recettes, neuf ascensions. Aucun Éveillé,
   changement de natif, paquet ou migration. Lire la PR pour ses contrôles actuels.
+- [Soutiens de Vol](ETHER_DIVINS_VOL.md) : le Griffon et le Séraphin Divins
+  reprennent cette ascension. La proposition définit 34 versions Éther, dont
+  23 évolutions, et 194 recettes au total. La fusion exige son accord spécifique.
 
 Cette branche réunit les contours intégrés et les évolutions Éther proposées.
 Le contrôle Légendaire distingue désormais les Divines définies mais soumises à
@@ -60,7 +63,7 @@ main intégré et vérifié.
 
 ## Prochain travail utile
 
-Poursuivre les 18 évolutions Éther encore absentes après ce lot, selon la dernière
+Poursuivre les 16 évolutions Éther encore absentes après les deux lots, selon la dernière
 validation Notion ; l’ascension Éveillée demeure distincte. La portée native 3 du
 Feu follet exige son propre périmètre, aucune application implicite.
 Auditer aussi une campagne UI complète depuis zéro ; les rencontres isolées et

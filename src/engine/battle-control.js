@@ -5,6 +5,7 @@ import {versionUnitAbilities} from '../cards/definitions.js';
 import {unitAttackRange} from './unit-rules.js';
 import {applyUnitPoison} from './unit-poison.js';
 import {expireStrikeModifiers} from './unit-strike-modifiers.js';
+import {expireFlightWake} from './unit-flight-support.js';
 import {laneCount,lastCell,crownColumn,entryColumn,validLane,trapColumns} from './board.js';
 const alive=u=>!!u&&u.hp>0;
 const direction=side=>side==='p'?1:-1;
@@ -116,7 +117,10 @@ export function expireControl(b,emit=()=>{}){
   for(const t of b.traps)if(t.expiresRound<=b.round)emit(b,{type:'trap-expire',lane:t.lane,col:t.col,side:t.owner});
   b.traps=b.traps.filter(t=>t.expiresRound>b.round);
  }
- for(const row of b.board)for(const u of row)if(u&&u.silenceUntil<=b.round)delete u.silenceUntil;
+ for(const row of b.board)for(const u of row)if(u){
+  if(u.silenceUntil<=b.round)delete u.silenceUntil;
+  expireFlightWake(u,b.round);
+ }
 }
 export function controlTargetError(b,side,card,lane){
  if(card.ability==='spell_silence'&&!silenceTarget(b,side,lane))return 'Aucune capacité ennemie disponible à réduire au silence sur cette ligne.';
