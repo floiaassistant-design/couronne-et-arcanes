@@ -16,7 +16,7 @@ export function forgeUnit(id,side='e',extra={}){
 }
 export function forgeBattle(id='smith',rarity='légendaire'){
  const p=freshProfile();p.completed=CAMPAIGN.map(m=>m.id);p.unlocked=12;
- p.completedTrials=['forge-ascension-divine','forge-ascension-eveillee'];
+ p.completedTrials=[CARDS[id].faction+'-ascension-divine',CARDS[id].faction+'-ascension-eveillee'];
  const recipe=evolutionFusionFor(id,rarity),source=cardReference({id,rarity:recipe.from});
  if(typeof source==='string')p.collection[id]=(p.collection[id]||0)+3;
  else p.evolvedCollection={[id+':'+recipe.from]:3};

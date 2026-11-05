@@ -25,7 +25,7 @@ for(const [id,stats] of Object.entries({smith:[4,8],drill:[3,7],colossus:[6,13],
 for(const [id,stats] of Object.entries({bomb:[5,5],engineer:[3,9],cannon:[5,9],mechanist:[3,10],alchemist:[4,7]})){expected[id]??={};expected[id].divine=[...stats];expected[id]['éveillée']=[...stats];}
 Object.assign(expected,{
  mystic:{'épique':[3,6],'légendaire':[4,6]},elemental:{'légendaire':[5,10]},griffin:{'légendaire':[5,8]},
- sentinel:{'épique':[2,11]},tempest:{'épique':[3,8],'légendaire':[4,8]},seer:{rare:[2,5],'épique':[3,5],'légendaire':[3,5]},spark:{rare:[2,4],'épique':[3,4],'légendaire':[3,4]},
+ sentinel:{'épique':[2,11],'légendaire':[2,11],divine:[2,11]},dragon:{divine:[7,12]},tempest:{'épique':[3,8],'légendaire':[4,8]},seer:{rare:[2,5],'épique':[3,5],'légendaire':[3,5],divine:[3,5]},spark:{rare:[2,4],'épique':[3,4],'légendaire':[3,4],divine:[3,4]},
  aetherknight:{'légendaire':[5,11]},portal_walker:{'épique':[3,7],'légendaire':[4,7]}
 });
 const ready=()=>{const p=freshProfile();p.completed=['01','02','03','04','05','06','07','08','09','10','11','12'];return p;};
@@ -39,15 +39,15 @@ function stocked(recipe){
 }
 function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v)},removeItem:k=>{delete data[k]}};return data;}
 
-test('187 recettes explicites, transitions adjacentes et autres rangs/factions fermés',()=>{
- assert.equal(EVOLUTION_FUSIONS.length,187);
+test('192 recettes explicites, transitions adjacentes et autres rangs/factions fermés',()=>{
+ assert.equal(EVOLUTION_FUSIONS.length,192);
  assert.deepEqual(EVOLUTION_FUSIONS.map(r=>r.id).sort(),Object.entries(expected).flatMap(([id,ranks])=>Object.keys(ranks).map(rank=>id+':'+rank)).sort());
  for(const recipe of EVOLUTION_FUSIONS){assert.equal(recipe.copies,3);assert.equal(recipe.from,{rare:'commun','épique':'rare','légendaire':'épique',divine:'légendaire','éveillée':'divine'}[recipe.to]);assert.equal(recipe.mission,{rare:'01','épique':'03','légendaire':'06',divine:'09','éveillée':'12'}[recipe.to]);}
  const p=ready();
- for(const id of ['sentinel:divine','firebolt:rare','militia:commun','constructor']){
+ for(const id of ['sentinel:éveillée','firebolt:rare','militia:commun','constructor']){
   const before=structuredClone(p);assert.equal(fuseEvolutionCopies(p,id).ok,false);assert.deepEqual(p,before,id);
  }
- for(const ref of [{id:'sentinel',rarity:'divine'}])assert.equal(playableCardReference(ref),false);
+ for(const ref of [{id:'sentinel',rarity:'éveillée'}])assert.equal(playableCardReference(ref),false);
 });
 
 test('Chaque recette consomme 3 stocks du rang exact, crée 1 carte jouable et protège le deck et toute autre progression',()=>{
@@ -80,7 +80,7 @@ test('Rangs distincts, copies du deck et manque de doublons : aucun prélèvemen
  const held=structuredClone(p);assert.equal(fuseEvolutionCopies(p,'militia:épique').ok,false);assert.deepEqual(p,held);
 });
 
-test('2992 exécutions de combat avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
+test('3072 exécutions de combat avec les versions réellement fusionnées : fin, plateau valide, déterminisme et profil conservé',()=>{
  for(const recipe of EVOLUTION_FUSIONS){
   const p=stocked(recipe),result=fuseEvolutionCopies(p,recipe.id);modifyDeck(p,result.target,1);
   const before=structuredClone(p);
@@ -154,8 +154,8 @@ test('Sauvegarde en échec, manque de copies ou début de combat après prévisu
  }
 });
 
-test('Les 47 Légendaires des cinq factions exigent la victoire réelle du deuxième boss, pas le niveau ou la mission accessible',()=>{
- const recipes=EVOLUTION_FUSIONS.filter(r=>r.to==='légendaire');assert.equal(recipes.length,47);
+test('Les 48 Légendaires des cinq factions exigent la victoire réelle du deuxième boss, pas le niveau ou la mission accessible',()=>{
+ const recipes=EVOLUTION_FUSIONS.filter(r=>r.to==='légendaire');assert.equal(recipes.length,48);
  for(const recipe of recipes){
   const p=stocked(recipe);p.completed=['01','02','03','04','05'];p.unlocked=12;p.heroXp=100000;
   const before=structuredClone(p);

@@ -46,7 +46,7 @@ export function cardPresentation(reference,{context={},profile=null,side='p',uni
  const pack=future?evolutionPackFor(id,selected):null;
  const availability=!known?missing:future?evolutionAvailability(profile,{id,rarity:selected},{trial,fusion,pack}):'Version native';
  if(stats===undefined)stats=native.type==='sort'||!known?null:unit?
-  {atk:attackAfterPenalty(unit,unit.atk),hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
+  {atk:attackAfterPenalty(unit,unit.atk,ctx.round),hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);
  let effective=definition;
  if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit,silenced(ctx,unit),ctx.round),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor??definition.abilities.armor.amount}}:{})}};
@@ -78,12 +78,16 @@ export function boardInspectionData(battle,uid){
   if(u.stillOmen)statuses.push(`Étoile immobile : présage ${u.stillOmen.amount}, fin du tour ${u.stillOmen.dueRound} sans déplacement`);
   if(u.spectralRetreatReadyRound>battle.round)statuses.push(`Repli spectral disponible au tour ${u.spectralRetreatReadyRound}`);
   if(u.stillOmenReadyRound>battle.round)statuses.push(`Prochain présage au tour ${u.stillOmenReadyRound}`);
+  if(u.nextStrikeBonus?.expiresRound>=battle.round)statuses.push(`Éclat persistant : prochaine attaque +${u.nextStrikeBonus.amount}, jusqu’à la fin du tour ${u.nextStrikeBonus.expiresRound}`);
+  if(u.prismPenalty?.expiresRound>=battle.round)statuses.push(`Prisme inhibiteur : prochaine attaque −${u.prismPenalty.amount} ATQ, minimum ${u.prismPenalty.minimum}, jusqu’à la fin du tour ${u.prismPenalty.expiresRound}`);
+  if(u.guardPrismReadyRound>battle.round)statuses.push(`Prisme disponible au tour ${u.guardPrismReadyRound}`);
+  if(u.splashKnockbackReadyRound>battle.round)statuses.push(`Souffle disponible au tour ${u.splashKnockbackReadyRound}`);
   const penalty=activeStrikeState(u,'armorPenalty',battle.round),protection=activeStrikeState(u,'temporaryArmor',battle.round),calibration=activeStrikeState(u,'calibration',battle.round),mark=activeStrikeState(u,'spotMark',battle.round);
   if(penalty)statuses.push(`Armure −${penalty.amount} à la prochaine attaque directe subie`);
   if(protection)statuses.push(`Blindage : +${protection.amount} Armure à la prochaine attaque directe subie`);
   if(calibration)statuses.push(`Calibrage : ignore ${calibration.ignoreArmor} Armure à la prochaine attaque contre une unité`);
   if(mark)statuses.push(`Repérage : ${mark.remaining} attaque(s) d’un autre allié du Canon à +${mark.amount} dégâts`);
-  const stats={atk:attackAfterPenalty(u,u.atk+concord+rallied),hp:u.hp,maxhp:u.maxhp,bonuses:[]};
+  const stats={atk:attackAfterPenalty(u,u.atk+concord+rallied,battle.round),hp:u.hp,maxhp:u.maxhp,bonuses:[]};
   const presentation=cardPresentation(u,{context:battle,side:u.side,unit:u,stats});
   return {...presentation,entry:{wait:0},presentation,board:{side:u.side,lane,col,statuses,concordeActive:!!concord}};
  }

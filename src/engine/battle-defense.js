@@ -59,7 +59,7 @@ export function resolveRetaliation(b,defender,attacker,lane,defenderCol,attacker
  if(riposte?.frequency==='invocation')defender.riposteUsed=true;
  else defender.lastRiposteRound=b.round;
  recordCombatEvent(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
- const raw=consumeAttackPenalty(defender,defender.atk+attackBonus);
+ const raw=consumeAttackPenalty(defender,defender.atk+attackBonus,b.round);
  const dealt=raw>0?hit(b,attacker,raw,defender.side,false,true,{attacker:defender,from:defenderCol,to:attackerCol,sameLine:true}):0;
  if(dealt>0)note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
  if(abilities?.riposteBarrier)grantAbilityBarrier(defender,'riposteBarrier',abilities.riposteBarrier);

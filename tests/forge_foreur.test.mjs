@@ -40,7 +40,7 @@ test('Foreur fusionné : 3/7/1 et Armure 2 hérités, unique Foreuse validée et
  assert.deepEqual(d.stats,epic.stats);assert.deepEqual(d.geometry,epic.geometry);
  assert.deepEqual(d.abilities,{...epic.abilities,barrierDrill:{amount:2,period:3}});
  const {p,u}=gained();assert.equal(p.evolvedCollection['drill:légendaire'],1);assert.deepEqual([u.atk,u.maxhp,u.armor],[3,7,2]);
- for(const rank of ['divine','éveillée'])assert.equal(resolveUnitDefinition('sentinel',rank),null);
+ for(const rank of ['divine','éveillée'])assert.equal(resolveUnitDefinition('mystic',rank),null);
 });
 
 test('Foreuse avant frappe : retire seulement la barrière, puis Armure et barrière restante protègent normalement',()=>{
@@ -136,7 +136,7 @@ test('Fiches Foreur : capacité et limites dérivées du registre, fusion et ran
  const view=cardPresentation({id:'drill',rarity:'légendaire'});
  assert.match(view.card.description,/Foreuse : barrière −2/);assert.match(view.card.description,/Armure 2/);
  for(const text of ['Foreuse d’acier','avant les dégâts','2 points','3 tours','Aucun dégât supplémentaire aux PV'])assert.ok(view.details.join(' ').includes(text),text);
- assert.match(view.availability,/fusion/i);assert.equal(cardPresentation({id:'sentinel',rarity:'divine'}).known,false);
+ assert.match(view.availability,/fusion/i);assert.equal(cardPresentation({id:'sentinel',rarity:'éveillée'}).known,false);
 });
 
 test('Export autonome : préparation de barrière exécutée depuis les modules réellement embarqués',()=>{

@@ -1,4 +1,6 @@
-# Éther — Repli spectral et Étoile immobile, proposition du 4 novembre 2026
+# Éther — Repli spectral et Étoile immobile, intégrés par PR 86 le 4 novembre 2026
+
+La PR 86 est intégrée sur accord spécifique au commit `3fac34fa5a2b94cc705aca086d761bf6e524493c`, arbre `2df95c6538fcff05a3d88d861078a659cd549d4a` identique à la tête testée, six contrôles réussis. Publication Sites v29 confirmée par le suivi existant. Les formulations de préparation ci-dessous décrivent le lot historique.
 
 ## Source et versions
 

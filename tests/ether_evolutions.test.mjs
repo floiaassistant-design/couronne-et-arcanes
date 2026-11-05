@@ -20,9 +20,9 @@ import {forgeUnit as unit,testStorage} from './fixtures/forge-combat.mjs';
 
 // Totaux indépendants du registre, transcrits des cellules Notion relues le 04/11.
 const totals={
- spark:[[2,3,1],[2,4,1],[3,4,1],[3,4,1]],mystic:[[3,4,2],[3,6,2],[4,6,2]],elemental:[[5,8,3],[5,10,3]],
- griffin:[[5,6,3],[5,8,3]],sentinel:[[2,9,2],[2,11,2]],dragon:[[7,12,5]],
- tempest:[[3,6,2],[3,8,2],[4,8,2]],seer:[[2,4,1],[2,5,1],[3,5,1],[3,5,1]],
+ spark:[[2,3,1],[2,4,1],[3,4,1],[3,4,1],[3,4,1]],mystic:[[3,4,2],[3,6,2],[4,6,2]],elemental:[[5,8,3],[5,10,3]],
+ griffin:[[5,6,3],[5,8,3]],sentinel:[[2,9,2],[2,11,2],[2,11,2],[2,11,2]],dragon:[[7,12,5],[7,12,5]],
+ tempest:[[3,6,2],[3,8,2],[4,8,2]],seer:[[2,4,1],[2,5,1],[3,5,1],[3,5,1],[3,5,1]],
  aetherknight:[[5,9,3],[5,11,3]],seraph:[[5,10,4]],portal_walker:[[3,5,2],[3,7,2],[4,7,2]]
 };
 const recipes=EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction==='ether');
@@ -39,9 +39,9 @@ function summoned(id,rarity,side='p',level=0){
 const attack=({b,u})=>(u.side==='p'?endPlayerTurn:finishEnemyTurn)(b);
 const enemy=(side,extra={})=>unit('militia',side==='p'?'e':'p',{hp:30,maxhp:30,armor:0,stun:99,...extra});
 
-test('Éther : 27 versions, seize évolutions et neuf personnages ; aucune décision native appliquée implicitement',()=>{
- assert.deepEqual([...ETHER_UNIT_IDS].sort(),Object.keys(totals).sort());assert.equal(recipes.length,16);
- assert.equal(ETHER_UNIT_IDS.filter(id=>VERSIONED_UNIT_IDS.includes(id)).length,9);
+test('Éther : 32 versions, 21 évolutions et dix personnages ; aucune décision native appliquée implicitement',()=>{
+ assert.deepEqual([...ETHER_UNIT_IDS].sort(),Object.keys(totals).sort());assert.equal(recipes.length,21);
+ assert.equal(ETHER_UNIT_IDS.filter(id=>VERSIONED_UNIT_IDS.includes(id)).length,10);
  let count=0;
  for(const [id,values] of Object.entries(totals)){
   const versions=unitVersions(id);assert.equal(versions.length,values.length,id);count+=versions.length;
@@ -50,18 +50,22 @@ test('Éther : 27 versions, seize évolutions et neuf personnages ; aucune déci
    assert.equal(d.status.combat,'implemented');assert.deepEqual(d.pendingDecisions,[]);
    if(i){assert.strictEqual(d.source,ETHER_DESIGN_SOURCE);assert.equal(d.status.obtaining,'fusion');}
    else assert.equal(d.status.obtaining,'existing');
-   const abilities={...versions[0].abilities,...(id==='spark'&&d.rarity==='légendaire'?{spectralRetreat:{cells:1,period:3}}:{}),...(id==='seer'&&d.rarity==='légendaire'?{stillOmen:{amount:2,period:3,delay:1}}:{})};
+   const abilities={...versions[0].abilities,...(id==='spark'&&i>=3?{spectralRetreat:{cells:1,period:3}}:{}),...(id==='seer'&&i>=3?{stillOmen:{amount:i===4?3:2,period:3,delay:1}}:{})};
+   if(id==='spark'&&d.rarity==='divine')abilities.retreatStrike={amount:2,expiresAfter:2};
+   if(id==='dragon'&&i)abilities.splashKnockback={cells:1,period:3};
+   if(id==='sentinel'&&i>=2)abilities.guardPrism={amount:1,minimum:1,period:3,expiresAfter:2};
+   if(id==='sentinel'&&d.rarity==='divine')abilities.guard={...abilities.guard,scope:'line'};
    assert.deepEqual(d.abilities,abilities);assert.deepEqual(d.geometry,{...versions[0].geometry,...(id==='spark'&&i?{range:3}:{})});
   }
-  for(const rarity of ['divine','éveillée'])assert.equal(resolveUnitDefinition(id,rarity),null);
+  for(const rarity of ['divine','éveillée'])if(rarity==='éveillée'||!['spark','seer','sentinel','dragon'].includes(id))assert.equal(resolveUnitDefinition(id,rarity),null);
  }
- assert.equal(count,27);assert.equal(Object.keys(CARDS).length,76);
- for(const id of ['sentinel'])assert.equal(resolveUnitDefinition(id,'légendaire'),null);
+ assert.equal(count,32);assert.equal(Object.keys(CARDS).length,76);
+ assert.equal(resolveUnitDefinition('sentinel','éveillée'),null);
  assert.equal(resolveUnitDefinition('spark').geometry.range,2);assert.equal(resolveUnitDefinition('spark','rare').geometry.range,3);
  const p=freshProfile();assert.deepEqual(normalizeProfile(p),p);assert.equal(p.evolvedCollection,undefined);
 });
 
-test('27 versions Éther × quatre niveaux × deux camps : vraie invocation et aucun gain réel du laboratoire',()=>{
+test('32 versions Éther × quatre niveaux × deux camps : vraie invocation et aucun gain réel du laboratoire',()=>{
  for(const [id,values] of Object.entries(totals))for(const [i,d] of unitVersions(id).entries())for(const level of [0,1,2,3])for(const side of ['p','e']){
   const {b,u}=summoned(id,d.rarity,side,level);
   assert.deepEqual([u.atk,u.maxhp],[values[i][0]+level,values[i][1]+level]);assert.equal(u.rarity,d.rarity);
@@ -83,7 +87,7 @@ test('Paquet Éther : pools 6/2/6, 60/35/5, six tirages et huit évolutions rée
   assert.equal(ownedCardCopies(p,ref),3);assert(modifyDeck(p,ref,1));assert.deepEqual(validateImportedProfile(p),p);
   testStorage();assert(saveProfile(p));assert.deepEqual(loadProfile(),p);
  }
- for(const r of recipes)assert.equal(evolutionPackFor(r.cardId,r.to)?.id,r.to==='légendaire'?undefined:pack.id);
+ for(const r of recipes)assert.equal(evolutionPackFor(r.cardId,r.to)?.id,['rare','épique'].includes(r.to)?pack.id:undefined);
  assert.equal(evolutionPackFor('spark','rare'),pack);
  assert.deepEqual(['aube','sylve','ombre','forge'].map(f=>cardPack(f+'-evolution').groups.map(g=>g.cards.length)),[[8,4,8],[9,6,9],[8,3,8],[7,3,7]]);
  const locked=freshProfile();locked.gold=1000;const before=structuredClone(locked);
@@ -156,7 +160,7 @@ test('Fiches, instantanés et anciennes possessions : chiffres définis seulemen
   const view=cardPresentation({id:r.cardId,rarity:r.to});assert(view.known);assert.match(view.availability,/fusion/);
   assert.equal(view.card.attack,resolveUnitDefinition(r.cardId,r.to).stats.attack);assert(view.details.length);
  }
- for(const ref of [{id:'spark',rarity:'divine'},{id:'sentinel',rarity:'légendaire'},{id:'seer',rarity:'divine'}]){
+ for(const ref of [{id:'spark',rarity:'éveillée'},{id:'sentinel',rarity:'éveillée'},{id:'seer',rarity:'éveillée'}]){
   const p=freshProfile();p.evolvedCollection={[cardKey(ref)]:1};assert.throws(()=>validateImportedProfile(p),/évolution invalide/);
   const view=cardPresentation(ref);assert.equal(view.known,false);assert.equal(view.stats,null);
  }

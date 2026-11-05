@@ -18,6 +18,34 @@ export function resolveSpectralRetreat(b,u,target,{performed,suppressed},hooks){
  row[to]=u;row[from]=null;
  hooks.emit(b,{type:'move',side:u.side,lane,from,to,spectralRetreat:true});
  hooks.enter(b,u,lane,to);
+ const bonus=versionUnitAbilities(u)?.retreatStrike;
+ if(bonus&&u.hp>0)u.nextStrikeBonus={amount:bonus.amount,expiresRound:b.round+bonus.expiresAfter};
+ return true;
+}
+
+// Le Prisme récompense une interception de couronne survécue, pas tout coup reçu.
+export function resolveGuardPrism(b,u,attacker,intercepted,performed,suppressed,emit){
+ const p=versionUnitAbilities(u)?.guardPrism;
+ if(!p||!intercepted||!performed||suppressed||u.hp<=0||!attacker||attacker.hp<=0||attacker.side===u.side||u.guardPrismReadyRound>b.round)return false;
+ u.guardPrismReadyRound=b.round+p.period;
+ attacker.prismPenalty={amount:p.amount,minimum:p.minimum,expiresRound:b.round+p.expiresAfter};
+ const lane=b.board.findIndex(row=>row.includes(attacker));
+ if(lane>=0)emit(b,{type:'state',side:attacker.side,lane,col:b.board[lane].indexOf(attacker)});
+ return true;
+}
+
+// Recul de la seule victime secondaire blessée par l'Impact, sans nouvelle frappe.
+export function resolveSplashDisplacement(b,u,target,damaged,suppressed,hooks){
+ const p=versionUnitAbilities(u)?.splashKnockback;
+ if(!p||!damaged||suppressed||u.hp<=0||target.hp<=0||target.side===u.side||u.splashKnockbackReadyRound>b.round)return false;
+ const lane=b.board.findIndex(row=>row.includes(target)),row=b.board[lane];
+ if(!row)return false;
+ const from=row.indexOf(target),to=from+(target.side==='p'?-1:1)*p.cells;
+ if(to<1||to>lastCell(b)||row[to])return false;
+ u.splashKnockbackReadyRound=b.round+p.period;
+ row[to]=target;row[from]=null;
+ hooks.emit(b,{type:'move',side:target.side,lane,from,to,splashKnockback:true});
+ hooks.enter(b,target,lane,to);
  return true;
 }
 

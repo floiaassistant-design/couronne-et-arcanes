@@ -1,6 +1,13 @@
 # Journal des changements
 
-## En préparation — Éther, Repli spectral et Étoile immobile, 4 novembre 2026
+## En préparation — cinq versions Éther et ascension Divine, 5 novembre 2026
+
+- Sentinelle Légendaire/Divine et Prisme inhibiteur après une interception réelle de couronne survécue. Garde Divine remplace la portée normale, sans double interception.
+- Feu follet Divin : Éclat persistant après repli réussi ; Voyante Divine : Destin scellé, présage 3 remplaçant 2 ; Dragon Divin : recul de la seule victime secondaire blessée par Impact.
+- Une ascension Éther commune après mission 09 ouvre quatre fusions de trois Légendaires libres. Aucun cadeau, accès Éveillé, changement de natif, de paquet ou de sauvegarde historique.
+- État de combat facultatif validé, fiches et Silence, laboratoire/moteur communs, export autonome régénéré et nouveaux parcours raccordés à la CI existante.
+
+## Intégré par PR 86 — Éther, Repli spectral et Étoile immobile, 4 novembre 2026
 
 - Trois évolutions du Feu follet, portée 3, avec recul personnel Légendaire ; sa Commune garde la portée 2. Voyante Légendaire et présage annulé par un déplacement réel au tour suivant.
 - Quatre fusions supplémentaires, 27 versions Éther et 187 recettes après réconciliation avec le Golem intégré. Paquet Éther enrichi de ses Feux follets Rare/Épique, prix et taux conservés.

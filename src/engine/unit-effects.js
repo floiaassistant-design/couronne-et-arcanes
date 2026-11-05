@@ -1,13 +1,17 @@
 // États temporaires communs aux unités ; jamais de modification permanente d'ATQ.
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {applyUnitPoison,validPoisonOrigin} from './unit-poison.js';
-import {validStrikeModifiers} from './unit-strike-modifiers.js';
+import {validStrikeModifiers,activeStrikeState} from './unit-strike-modifiers.js';
 import {validStillOmen} from './unit-omens.js';
 
-export function attackAfterPenalty(u,raw){const boosted=raw+(u.fury||0)+(u.devourAttack||0);return u.attackPenalty?Math.min(boosted,Math.max(u.attackPenalty.minimum||0,boosted-u.attackPenalty.amount)):boosted;}
-export function consumeAttackPenalty(u,raw){
- const result=attackAfterPenalty(u,raw),p=u.attackPenalty;
+export function attackAfterPenalty(u,raw,round=0){
+ const boosted=raw+(u.fury||0)+(u.devourAttack||0);
+ return Math.min(boosted,...[u.attackPenalty,activeStrikeState(u,'prismPenalty',round)].filter(Boolean).map(p=>Math.max(p.minimum||0,boosted-p.amount)));
+}
+export function consumeAttackPenalty(u,raw,round=0){
+ const result=attackAfterPenalty(u,raw,round),p=u.attackPenalty;
  if(p){if(p.remaining<=1)delete u.attackPenalty;else u.attackPenalty={...p,remaining:p.remaining-1};}
+ delete u.prismPenalty;
  if(u.fury)delete u.fury;
  return result;
 }
@@ -72,7 +76,7 @@ export function validUnitEffects(u){
   (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
   (u.deathStrikeUsed===undefined||typeof u.deathStrikeUsed==='boolean')&&
   (u.devourAttack===undefined||integer(u.devourAttack,2))&&
-  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound','spottingReadyRound','catalysisReadyRound','spectralRetreatReadyRound','stillOmenReadyRound','lastGuardWardRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
+  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound','spottingReadyRound','catalysisReadyRound','spectralRetreatReadyRound','stillOmenReadyRound','lastGuardWardRound','guardPrismReadyRound','splashKnockbackReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
   (u.scoriaHits===undefined||Number.isSafeInteger(u.scoriaHits)&&u.scoriaHits>=0&&u.scoriaHits<=2)&&
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
