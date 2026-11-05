@@ -222,3 +222,7 @@ les contrôles. Aucune durée de réussite anticipée ; lire la nouvelle CI exac
 ## Éther — soutiens de Vol
 
 `ether_evolutions.test.mjs` vérifie désormais 34 versions et les réactions de Vol dans les deux camps. Les valeurs de Collection et des 194 recettes restent explicites. `ether-flight-battle.mjs` prépare les deux fusions et invocations pour `browser_ether_divine.py`. Ce parcours vérifie le Sillage, le soin, le déplacement et les reprises dans les quatre parties d’ascension existantes. [Contrat](ETHER_DIVINS_VOL.md).
+
+## Éther — effets suivant l’Impact
+
+`ether_impact.test.mjs` contrôle l’Arc transversal et la Résonance, leurs exclusions, protections, cadence, soins et reprise. Le catalogue vérifie 36 versions et 196 recettes. `ether-impact-battle.mjs` prépare les deux fusions et invocations et le parcours navigateur vérifie l’arc, le malus, sa consommation et deux reprises dans les parties d’ascension existantes. [Contrat](ETHER_DIVINS_IMPACT.md).

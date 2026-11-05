@@ -1,5 +1,9 @@
 # Architecture modulaire — lecture courante
 
+## Éther — effets suivant l’Impact
+
+`unit-triggers.js` reçoit les dégâts effectifs de l’Impact et la position de la cible secondaire. Les dégâts de l’arc utilisent `hit`. `unit-healing.js` partage le traitement du malus, le plafond des soins de créature et la validation de l’état repris. Les appelants conservent leur sélection de cible et leur cadence. La fiche affiche l’état du moteur et le builder inclut le module dans les deux distributions. [Contrat](ETHER_DIVINS_IMPACT.md).
+
 ## Éther — soutiens de Vol
 
 `unit-flight-support.js` gère le soin immédiat de survol, le Sillage temporaire et son contrat de sauvegarde. `battle.js` fournit l’allié réellement franchi après la pose dans la case d’arrivée. Le pas supplémentaire emprunte le même déplacement normal et le hook d’entrée de case. `battle-control.js` déclenche l’expiration de fin de tour. La fiche lit l’état partagé. Le builder inclut ce module dans le web et l’autonome. [Contrat](ETHER_DIVINS_VOL.md).

@@ -1,5 +1,7 @@
 # Éther — Griffon et Séraphin Divins
 
+Lot intégré par la PR 89 au commit `708317c3935f3cf70e754ad7f1df4dc3bee862c7`, après six contrôles réussis.
+
 Les deux rangs reprennent le [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f), édition du 4 novembre 2026. Ils s’appuient sur la première [ascension Divine Éther](ETHER_PREMIERS_DIVINS.md).
 
 | Version | ATQ | PV | Délai | Pouvoir ajouté |

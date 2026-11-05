@@ -5,6 +5,7 @@ import {crownColumn} from './board.js';
 import {resolveClassSkill} from './class-skills.js';
 import {resolveControlSpell} from './battle-control.js';
 import {resolveTempoSpell} from './tempo.js';
+import {healUnit} from './unit-healing.js';
 export function castSpell(b,side,id,lane,{emit,hit,damageHero,sweepDead,checkOutcome,note,controlHooks}){
  const c=CARDS[id],enemy=side==='p'?'e':'p',foe=frontEnemy(b,side,lane);
  let drawAfter=0;
@@ -18,7 +19,7 @@ export function castSpell(b,side,id,lane,{emit,hit,damageHero,sweepDead,checkOut
   if(foe)hit(b,foe.u,4,side);else damageHero(b,enemy,2);
  }else if(c.ability==='spell_heal'){
   const hero=b.heroes[side];hero.hp=Math.min(hero.maxhp,hero.hp+5);
-  b.board[lane].forEach(u=>{if(u&&u.side===side)u.hp=Math.min(u.maxhp,u.hp+2)});
+  for(const u of b.board[lane])if(u?.side===side)healUnit(u,2,b.round);
  }else if(c.ability==='spell_buff'){
   b.board[lane].forEach(u=>{if(u&&u.side===side)u.atk+=2;});
  }else if(c.ability==='spell_storm'){

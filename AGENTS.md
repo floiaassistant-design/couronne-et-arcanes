@@ -125,6 +125,11 @@
 ## Combat et effets
 
 - Impact de zone : les dégâts secondaires ne touchent que les unités ennemies vivantes immédiatement derrière la cible principale, dans le sens de la frappe et sur la même ligne ; aucune case vide ni unité alliée traversée. Les versions ayant plusieurs cibles secondaires exigent des cases consécutives. Le moteur commun gère les protections et les événements de dégâts ; voir `docs/IMPACT_ZONE_2026_11_02.md`.
+- Les effets suivant un Impact lisent la victime secondaire effectivement
+  blessée et survivante. Un éclair transversal utilise les dégâts communs
+  sans ouvrir de nouvelle attaque. Les soins de créature passent par
+  `unit-healing.js` pour appliquer la Résonance, sans toucher aux soins de
+  couronne, barrières et effets de survie.
 
 - `engine/board.js` lit la géométrie du combat sauvegardé. Nouveaux combats :
   dix cases, couronnes 0/11 ; deux lignes en difficulté 1–2, trois au-delà et

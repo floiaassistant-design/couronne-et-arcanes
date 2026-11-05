@@ -14,6 +14,7 @@ import {silenced} from '../engine/battle-control.js';
 import {attackAfterPenalty} from '../engine/unit-effects.js';
 import {activeStrikeState} from '../engine/unit-strike-modifiers.js';
 import {activeFlightWake} from '../engine/unit-flight-support.js';
+import {activeHealingPenalty} from '../engine/unit-healing.js';
 import {generatedCardFace} from './generated-card.js';
 import {concordeDetails} from './concorde.js';
 import {visualFor,artSrc,cardTemplateFor} from '../visuals.js';
@@ -86,6 +87,9 @@ export function boardInspectionData(battle,uid){
   const wake=activeFlightWake(u,battle.round);
   if(wake)statuses.push(`Sillage ascendant : déplacement +${wake.cells} jusqu’à la fin du tour ${wake.expiresRound}`);
   if(u.flightSupportReadyRound>battle.round)statuses.push(`Prochain effet de Vol au tour ${u.flightSupportReadyRound}`);
+  const healingPenalty=activeHealingPenalty(u,battle.round);
+  if(healingPenalty)statuses.push(`Résonance : prochain soin −${healingPenalty.amount} PV, jusqu’à la fin du tour ${healingPenalty.expiresRound}`);
+  if(u.impactExtraReadyRound>battle.round)statuses.push(`Prochain effet d’Impact au tour ${u.impactExtraReadyRound}`);
   const penalty=activeStrikeState(u,'armorPenalty',battle.round),protection=activeStrikeState(u,'temporaryArmor',battle.round),calibration=activeStrikeState(u,'calibration',battle.round),mark=activeStrikeState(u,'spotMark',battle.round);
   if(penalty)statuses.push(`Armure −${penalty.amount} à la prochaine attaque directe subie`);
   if(protection)statuses.push(`Blindage : +${protection.amount} Armure à la prochaine attaque directe subie`);

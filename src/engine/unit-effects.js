@@ -4,6 +4,7 @@ import {applyUnitPoison,validPoisonOrigin} from './unit-poison.js';
 import {validStrikeModifiers,activeStrikeState} from './unit-strike-modifiers.js';
 import {validStillOmen} from './unit-omens.js';
 import {validFlightWake} from './unit-flight-support.js';
+import {healUnit,validHealingPenalty} from './unit-healing.js';
 
 export function attackAfterPenalty(u,raw,round=0){
  const boosted=raw+(u.fury||0)+(u.devourAttack||0);
@@ -64,8 +65,7 @@ export function resolveRegeneration(b,sideFilter,emit){
   if(!p||u.hp<=0||(sideFilter&&u.side!==sideFilter)||b.round<p.readyRound)continue;
   if(p.remaining<=1)delete u.regeneration;
   else u.regeneration={...p,remaining:p.remaining-1,readyRound:b.round+1};
-  const before=u.hp;u.hp=Math.min(u.maxhp,u.hp+p.amount);
-  if(u.hp>before)emit(b,{type:'heal',side:u.side,lane,col,regeneration:true});
+  if(healUnit(u,p.amount,b.round))emit(b,{type:'heal',side:u.side,lane,col,regeneration:true});
  }
 }
 const integer=(n,max)=>Number.isSafeInteger(n)&&n>0&&n<=max;
@@ -82,6 +82,7 @@ export function validUnitEffects(u){
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
   (u.flightSupportReadyRound===undefined||integer(u.flightSupportReadyRound,100))&&validFlightWake(u)&&
+  (u.impactExtraReadyRound===undefined||integer(u.impactExtraReadyRound,100))&&validHealingPenalty(u)&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
   (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin)&&validStrikeModifiers(u)&&validStillOmen(u);
 }

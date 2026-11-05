@@ -2,6 +2,7 @@
 // Les unités anciennes sans barrier/rallyUntil restent totalement compatibles.
 import {validLane} from './board.js';
 import {grantSharedBarrier} from './battle-defense.js';
+import {healUnit} from './unit-healing.js';
 const own=(u,side)=>u&&u.hp>0&&u.side===side;
 export function classSkillAllies(b,side,lane){return b.board[lane].filter(u=>own(u,side));}
 export function classSkillEnemies(b,side,lane){
@@ -45,7 +46,7 @@ export function resolveClassSkill(b,side,card,lane,hit){
   // Le moteur pioche après avoir retiré la carte jouée de la main.
   return 2;
  }else if(ability==='spell_cleric_light'){
-  for(const u of friends)u.hp=Math.min(u.maxhp,u.hp+3);
+  for(const u of friends)healUnit(u,3,b.round);
  }else if(ability==='spell_cleric_bless'){
   const target=blessingTarget(b,side,lane);
   grantSharedBarrier(target,4,6);
