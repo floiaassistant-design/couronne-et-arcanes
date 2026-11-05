@@ -4706,7 +4706,7 @@ function cardPresentation(reference,{context={},profile=null,side='p',unit=null,
  const pack=future?evolutionPackFor(id,selected):null;
  const availability=!known?missing:future?evolutionAvailability(profile,{id,rarity:selected},{trial,fusion,pack}):'Version native';
  if(stats===undefined)stats=native.type==='sort'||!known?null:unit?
-  {atk:attackAfterPenalty(unit,unit.atk),hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
+  {atk:attackAfterPenalty(unit,unit.atk,ctx.round),hp:unit.hp,maxhp:unit.maxhp,bonuses:[]}:
   explicit&&future?versionUnitStats(ctx,{id,rarity:selected},side):unitStats(ctx,reference,side);
  let effective=definition;
  if(unit&&definition)effective={...definition,geometry:{steps:unitMovementSteps(unit,silenced(ctx,unit),ctx.round),range:unitAttackRange(unit)},abilities:{...definition.abilities,...(definition.abilities.armor?{armor:{...definition.abilities.armor,amount:unit.armor??definition.abilities.armor.amount}}:{})}};
@@ -4738,12 +4738,16 @@ function boardInspectionData(battle,uid){
   if(u.stillOmen)statuses.push(`Étoile immobile : présage ${u.stillOmen.amount}, fin du tour ${u.stillOmen.dueRound} sans déplacement`);
   if(u.spectralRetreatReadyRound>battle.round)statuses.push(`Repli spectral disponible au tour ${u.spectralRetreatReadyRound}`);
   if(u.stillOmenReadyRound>battle.round)statuses.push(`Prochain présage au tour ${u.stillOmenReadyRound}`);
+  if(u.nextStrikeBonus?.expiresRound>=battle.round)statuses.push(`Éclat persistant : prochaine attaque +${u.nextStrikeBonus.amount}, jusqu’à la fin du tour ${u.nextStrikeBonus.expiresRound}`);
+  if(u.prismPenalty?.expiresRound>=battle.round)statuses.push(`Prisme inhibiteur : prochaine attaque −${u.prismPenalty.amount} ATQ, minimum ${u.prismPenalty.minimum}, jusqu’à la fin du tour ${u.prismPenalty.expiresRound}`);
+  if(u.guardPrismReadyRound>battle.round)statuses.push(`Prisme disponible au tour ${u.guardPrismReadyRound}`);
+  if(u.splashKnockbackReadyRound>battle.round)statuses.push(`Souffle disponible au tour ${u.splashKnockbackReadyRound}`);
   const penalty=activeStrikeState(u,'armorPenalty',battle.round),protection=activeStrikeState(u,'temporaryArmor',battle.round),calibration=activeStrikeState(u,'calibration',battle.round),mark=activeStrikeState(u,'spotMark',battle.round);
   if(penalty)statuses.push(`Armure −${penalty.amount} à la prochaine attaque directe subie`);
   if(protection)statuses.push(`Blindage : +${protection.amount} Armure à la prochaine attaque directe subie`);
   if(calibration)statuses.push(`Calibrage : ignore ${calibration.ignoreArmor} Armure à la prochaine attaque contre une unité`);
   if(mark)statuses.push(`Repérage : ${mark.remaining} attaque(s) d’un autre allié du Canon à +${mark.amount} dégâts`);
-  const stats={atk:attackAfterPenalty(u,u.atk+concord+rallied),hp:u.hp,maxhp:u.maxhp,bonuses:[]};
+  const stats={atk:attackAfterPenalty(u,u.atk+concord+rallied,battle.round),hp:u.hp,maxhp:u.maxhp,bonuses:[]};
   const presentation=cardPresentation(u,{context:battle,side:u.side,unit:u,stats});
   return {...presentation,entry:{wait:0},presentation,board:{side:u.side,lane,col,statuses,concordeActive:!!concord}};
  }
@@ -5323,12 +5327,13 @@ const ETHER_EVOLUTIONS=freezeCardData({
  mystic:{'épique':{stats:{hp:6}},'légendaire':{stats:{attack:4}}},
  elemental:{'légendaire':{stats:{hp:10}}},
  griffin:{'légendaire':{stats:{hp:8}}},
- sentinel:{'épique':{stats:{hp:11}}},
+ sentinel:{'épique':{stats:{hp:11}},'légendaire':{abilities:{guardPrism:{amount:1,minimum:1,period:3,expiresAfter:2}}},'divine':{abilities:{guard:{scope:'line'}}}},
+ dragon:{'divine':{abilities:{splashKnockback:{cells:1,period:3}}}},
  tempest:{'épique':{stats:{hp:8}},'légendaire':{stats:{attack:4}}},
- seer:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}},'légendaire':{abilities:{stillOmen:{amount:2,period:3,delay:1}}}},
+ seer:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}},'légendaire':{abilities:{stillOmen:{amount:2,period:3,delay:1}}},'divine':{abilities:{stillOmen:{amount:3}}}},
  aetherknight:{'légendaire':{stats:{hp:11}}},
  portal_walker:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}}},
- spark:{rare:{stats:{hp:4},geometry:{range:3}},'épique':{stats:{attack:3}},'légendaire':{abilities:{spectralRetreat:{cells:1,period:3}}}}
+ spark:{rare:{stats:{hp:4},geometry:{range:3}},'épique':{stats:{attack:3}},'légendaire':{abilities:{spectralRetreat:{cells:1,period:3}}},'divine':{abilities:{retreatStrike:{amount:2,expiresAfter:2}}}}
 });
 
 Object.assign(__exports,{ETHER_DESIGN_SOURCE,ETHER_EVOLUTIONS});
@@ -5399,13 +5404,20 @@ const FORGE_ASCENSIONS=freezeCardData([
   enemy:'Gardien du Brasier',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
   deck:['colossus','ironwraith','golem','drill','smith','cannon','engineer','colossus','ironwraith','golem','storm','healing','warcry','bomb','mechanist','alchemist','smith','drill']}
 ]);
-const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS,...OMBRE_ASCENSIONS,...FORGE_ASCENSIONS]);
+// Premier accès Éther ; les rangs Éveillés restent fermés jusqu'à leur lot.
+const ETHER_ASCENSIONS=freezeCardData([
+ {id:'ether-ascension-divine',kind:'ascension',faction:'ether',name:'Le Serment des Hautes Sphères',from:'légendaire',to:'divine',mission:'09',
+  goal:{distinct:3,crownPercent:40,maxRound:24},
+  enemy:'Conseil des Astres',difficulty:5,hp:48,boss:true,aiStyle:'bastion',
+  deck:['sentinel','elemental','mystic','tempest','spark','seer','sentinel','griffin','seraph','portal_walker','healing','warcry','aetherknight','mystic','seer','storm']}
+]);
+const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS,...OMBRE_ASCENSIONS,...FORGE_ASCENSIONS,...ETHER_ASCENSIONS]);
 const ALL_EVOLUTION_TRIALS=Object.freeze([...EVOLUTION_TRIALS,...ALL_EVOLUTION_ASCENSIONS]);
 const evolutionTrial=id=>ALL_EVOLUTION_TRIALS.find(t=>t.id===id)||null;
 const evolutionTrialFor=(id,rarity)=>EVOLUTION_TRIALS.find(t=>t.cardId===id&&t.to===rarity)||null;
 const evolutionAscensionFor=(faction,rarity)=>ALL_EVOLUTION_ASCENSIONS.find(t=>t.faction===faction&&t.to===rarity)||null;
 
-Object.assign(__exports,{EVOLUTION_TRIALS,EVOLUTION_ASCENSIONS,SYLVE_ASCENSIONS,OMBRE_ASCENSIONS,FORGE_ASCENSIONS,ALL_EVOLUTION_ASCENSIONS,ALL_EVOLUTION_TRIALS,evolutionTrial,evolutionTrialFor,evolutionAscensionFor});
+Object.assign(__exports,{EVOLUTION_TRIALS,EVOLUTION_ASCENSIONS,SYLVE_ASCENSIONS,OMBRE_ASCENSIONS,FORGE_ASCENSIONS,ETHER_ASCENSIONS,ALL_EVOLUTION_ASCENSIONS,ALL_EVOLUTION_TRIALS,evolutionTrial,evolutionTrialFor,evolutionAscensionFor});
 
 },
 "src/evolution-fusion.js":function(__exports,__load){
@@ -5588,7 +5600,10 @@ function unitCardText(d){
 function unitAbilityDetails(d){
  const a=d.abilities,lines=[],scope=p=>p.scope==='all-lines'?'toutes les lignes':'sa ligne';
  if(a.spectralRetreat)lines.push(`Repli spectral : après une attaque normale touchant une unité ennemie qui survit, recule de ${a.spectralRetreat.cells} case vers sa propre couronne sur sa ligne si elle est libre et dans le plateau, au plus une fois tous les ${a.spectralRetreat.period} tours. Une frappe entièrement absorbée compte ; aucun repli sur une couronne, un sort ou une Riposte, ni après la mort du Feu follet. Aucune attaque supplémentaire.`);
- if(a.stillOmen)lines.push(`Étoile immobile : après une attaque normale retirant au moins 1 PV à un ennemi survivant, place un présage, au plus une fois tous les ${a.stillOmen.period} tours. Si la cible reste sans déplacement réel pendant le tour de combat suivant complet, elle subit ${a.stillOmen.amount} dégâts bruts en fin de tour, protections normales. Tout déplacement pendant ce tour annule le présage, même avec retour à la case initiale ; l’immobilisation seule ne l’annule pas. Une cible par Voyante, sans cumul ni attaque supplémentaire ; la marque disparaît après résolution ou mort de la cible.`);
+ if(a.stillOmen)lines.push(`${a.stillOmen.amount>2?'Destin scellé':'Étoile immobile'} : après une attaque normale retirant au moins 1 PV à un ennemi survivant, place un présage, au plus une fois tous les ${a.stillOmen.period} tours. Si la cible reste sans déplacement réel pendant le tour de combat suivant complet, elle subit ${a.stillOmen.amount} dégâts bruts en fin de tour, protections normales. Tout déplacement pendant ce tour annule le présage, même avec retour à la case initiale ; l’immobilisation seule ne l’annule pas. Une cible par Voyante, sans cumul ni attaque supplémentaire ; la marque disparaît après résolution ou mort de la cible.`);
+ if(a.retreatStrike)lines.push(`Éclat persistant : après un Repli spectral réussi, la prochaine attaque normale gagne +${a.retreatStrike.amount} dégâts bruts avec les protections normales, au plus tard jusqu’à la fin du deuxième tour suivant. Bonus consommé par cette attaque ou expiré, sans cumul ; aucun gain après un repli bloqué, aucune Riposte renforcée ni attaque supplémentaire.`);
+ if(a.guardPrism)lines.push(`Prisme inhibiteur : après une interception réelle de sa couronne à laquelle la Sentinelle survit, l’attaquant reçoit −${a.guardPrism.amount} ATQ pour sa prochaine attaque d’unité, Riposte comprise, minimum ${a.guardPrism.minimum}. Expire à la fin du deuxième tour suivant ; au plus une activation tous les ${a.guardPrism.period} tours, sans cumul. Un coup reçu qui n’aurait pas atteint la couronne sans elle ne compte pas. Le plus fort malus actif s’applique, sans addition à Harcèlement. Aucun effet si la Sentinelle meurt ou est sous Silence.`);
+ if(a.splashKnockback)lines.push(`Souffle des Sept Vents : si l’Impact de zone retire au moins 1 PV à sa cible secondaire qui survit, la repousse de ${a.splashKnockback.cells} case vers sa couronne sur la même ligne, seulement si l’arrivée est libre et dans le plateau. Au plus une activation tous les ${a.splashKnockback.period} tours ; protections et pièges habituels, aucun quota consommé si le recul échoue, aucune attaque supplémentaire.`);
  if(a.portal)lines.push(`Portail : avant son déplacement normal, change de ligne à la même colonne libre et autorisée si le moteur juge le gain suffisant. Au plus une fois tous les ${a.portal.period} tours ; aucune arrivée devant la couronne adverse. Ne donne ni attaque ni déplacement supplémentaire.`);
  if(a.armor)lines.push(`Armure ${a.armor.amount} : réduit les dégâts, minimum ${a.armor.minimumDamage}.`);
  if(a.firstHitReduction)lines.push(`Premier coup reçu : −${a.firstHitReduction.amount} dégâts, une fois par invocation.`);
@@ -5645,7 +5660,10 @@ function strikeWardName(p){return p.overflowBarrier?'Forge infatigable':p.requir
 function advancedSummary(a){
  const parts=[];
  if(a.spectralRetreat)parts.push(`Repli spectral : recul ${a.spectralRetreat.cells}`);
- if(a.stillOmen)parts.push(`Étoile immobile : présage ${a.stillOmen.amount}`);
+ if(a.stillOmen)parts.push(`${a.stillOmen.amount>2?'Destin scellé':'Étoile immobile'} : présage ${a.stillOmen.amount}`);
+ if(a.retreatStrike)parts.push(`Éclat : prochaine attaque +${a.retreatStrike.amount}`);
+ if(a.guardPrism)parts.push(`Prisme : −${a.guardPrism.amount} ATQ`);
+ if(a.splashKnockback)parts.push(`Souffle : recul secondaire ${a.splashKnockback.cells}`);
  if(a.knockback)parts.push(a.knockback.blockedDamage?`Recul ou Fracas +${a.knockback.blockedDamage}`:a.knockback.follow?'Recul · Avancée':`Coup de masse : recul ${a.knockback.cells}`);
  if(a.strikeWard)parts.push(`${strikeWardName(a.strikeWard)} · Couronne +${a.strikeWard.amount}`);
  if(a.barrierDrill)parts.push(`Foreuse : barrière −${a.barrierDrill.amount}${a.barrierDrill.breakBarrier?' · Barrière +'+a.barrierDrill.breakBarrier.amount+' si brisée':''}`);
@@ -6045,9 +6063,9 @@ const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitCh
 const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
 const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {tickUnitPoison,clearUnitPoison,poisonBelongsTo}=__load("src/engine/unit-poison.js");
-const {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard}=__load("src/engine/unit-triggers.js");
+const {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard,resolveGuardPrism,resolveSplashDisplacement}=__load("src/engine/unit-triggers.js");
 const {placeStillOmen,noteOmenMovement,resolveStillOmens}=__load("src/engine/unit-omens.js");
-const {applyStrikeFracture}=__load("src/engine/unit-strike-modifiers.js");
+const {applyStrikeFracture,consumeNormalStrikeBonus}=__load("src/engine/unit-strike-modifiers.js");
 const {contiguousSplashTargets}=__load("src/engine/unit-targets.js");
 const {resolveUnitDeath}=__load("src/engine/unit-death.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
@@ -6275,7 +6293,7 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
 
 function strike(b,u,target,atk,from,to,sameLine=true,charged=false,suppressed=false,attackState=null){
  const execution=executionBonus(u,target,suppressed),before=target.hp,poisonedAtStart=poisonBelongsTo(target,u);
- const raw=execution&&attackState?attackAfterPenalty(attackState.unit,attackState.raw+execution):atk;
+ const raw=execution&&attackState?attackAfterPenalty(attackState.unit,attackState.raw+execution,b.round):atk;
  if(raw>0){
   resolveStrikePreparation(b,u,target,suppressed,fx);
   hit(b,target,raw,u.side,unitHasPierce(u,suppressed,charged),true,{attacker:u,from,to,sameLine});
@@ -6293,6 +6311,7 @@ function resolveSplash(b,u,sourceLane,sourceCol,primaryLane,primaryCol,atk,inter
   const before=extra.hp;
   hit(b,extra,p.amount,u.side,false,true);
   applyStrikeFracture(b,u,extra,before>extra.hp,true,suppressed,fx);
+  resolveSplashDisplacement(b,u,extra,before>extra.hp,suppressed,controlHooks);
  }
 }
 function resolveAttacks(b,sideFilter=null){
@@ -6302,9 +6321,9 @@ function resolveAttacks(b,sideFilter=null){
   const target=findTarget(b,lane,col,u);
   const charged=!silenced(b,u)&&unitChargeAmount(u)>0&&!!u.movedThisRound;
   if(target){
-   const furious=!!u.fury,raw=u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0);
+   const furious=!!u.fury,raw=u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0)+consumeNormalStrikeBonus(b,u);
    const attackState=versionUnitAbilities(u)?.execution?{unit:{...u,attackPenalty:u.attackPenalty?{...u.attackPenalty}:undefined},raw}:null;
-   intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,raw),attackState,ability:activeAbility(b,u),charged,furious,suppressed:silenced(b,u)});
+   intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,raw,b.round),attackState,ability:activeAbility(b,u),charged,furious,suppressed:silenced(b,u)});
   }
  }
  // All intents are collected before damage; the round is effectively simultaneous.
@@ -6326,11 +6345,13 @@ function resolveAttacks(b,sideFilter=null){
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
     resolveStrikeDisplacement(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
     resolveGuardWard(b,guardIntercept.u,true,result.performed,silenced(b,guardIntercept.u),fx);
+    resolveGuardPrism(b,guardIntercept.u,u,true,result.performed,silenced(b,guardIntercept.u),fx);
     placeStillOmen(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},fx);
     resolveSpectralRetreat(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
   } else {
-   const interposed=versionUnitAbilities(target.target)?.guardWard?.interposedCrownThreat&&isInterposedCrownGuardian(b,lane,intent.col,u,target.target);
+   const guardAbilities=versionUnitAbilities(target.target);
+   const interposed=(guardAbilities?.guardWard?.interposedCrownThreat||guardAbilities?.guardPrism)&&isInterposedCrownGuardian(b,lane,intent.col,u,target.target);
    const result=strike(b,u,target.target,atk,intent.col,target.col,true,charged,intent.suppressed,intent.attackState);
    if(ability==='lifesteal')resolveLifesteal(b,u);
    applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0,{battle:b,lane,col:target.col,skipPoison:result.catalysed});
@@ -6340,6 +6361,7 @@ function resolveAttacks(b,sideFilter=null){
    retaliate(b,target.target,u,lane,target.col,intent.col);
    resolveStrikeDisplacement(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
    resolveGuardWard(b,target.target,interposed,result.performed,silenced(b,target.target),fx);
+   resolveGuardPrism(b,target.target,u,interposed,result.performed,silenced(b,target.target),fx);
    placeStillOmen(b,u,target.target,{...result,suppressed:intent.suppressed},fx);
    resolveSpectralRetreat(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
   }
@@ -6746,7 +6768,7 @@ function resolveRetaliation(b,defender,attacker,lane,defenderCol,attackerCol,att
  if(riposte?.frequency==='invocation')defender.riposteUsed=true;
  else defender.lastRiposteRound=b.round;
  recordCombatEvent(b,{type:'attack',side:defender.side,lane,from:defenderCol,to:attackerCol,ranged:false,magic:false,riposte:true,icon:'↶'});
- const raw=consumeAttackPenalty(defender,defender.atk+attackBonus);
+ const raw=consumeAttackPenalty(defender,defender.atk+attackBonus,b.round);
  const dealt=raw>0?hit(b,attacker,raw,defender.side,false,true,{attacker:defender,from:defenderCol,to:attackerCol,sameLine:true}):0;
  if(dealt>0)note(b,`Riposte de ${CARDS[defender.id]?.name||'la créature'} : ${dealt} dégât(s).`);
  if(abilities?.riposteBarrier)grantAbilityBarrier(defender,'riposteBarrier',abilities.riposteBarrier);
@@ -6783,7 +6805,7 @@ function silenceValue(u){
  return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
   (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0)+
   (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0)+(future?.strikeWard?2:0)+(future?.barrierDrill?3:0)+(future?.knockback?3:0)+(future?.scoria?3:0)+
-  (future?.fracture?2:0)+(future?.spotting?2:0)+(future?.catalysis?2:0)+(future?.spectralRetreat?2:0)+(future?.stillOmen?2:0)+(future?.guardWard?2:0);
+  (future?.fracture?2:0)+(future?.spotting?2:0)+(future?.catalysis?2:0)+(future?.spectralRetreat?2:0)+(future?.stillOmen?2:0)+(future?.guardWard?2:0)+(future?.guardPrism?2:0)+(future?.retreatStrike?2:0)+(future?.splashKnockback?2:0);
 }
 function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 function silenceTarget(b,side,lane){
@@ -6980,8 +7002,14 @@ Object.assign(__exports,{applyUnitPoison,clearUnitPoison,poisonBelongsTo,tickUni
 // États consommés par une attaque directe ; ni DOM ni règles de dégâts copiées.
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {grantAbilityBarrier}=__load("src/engine/unit-barriers.js");
-const keys=['armorPenalty','temporaryArmor','calibration','spotMark'];
+const keys=['armorPenalty','temporaryArmor','calibration','spotMark','prismPenalty','nextStrikeBonus'];
 const activeStrikeState=(u,key,round)=>u?.[key]?.expiresRound>=round?u[key]:null;
+// Bonus de la prochaine attaque normale : consommé à l'intention, jamais à la Riposte.
+function consumeNormalStrikeBonus(b,u){
+ const p=activeStrikeState(u,'nextStrikeBonus',b.round);
+ delete u.nextStrikeBonus;
+ return p?.amount||0;
+}
 function timedArmor(target,key,p,round){
  const old=activeStrikeState(target,key,round);
  if(target.hp<=0||old?.amount>p.amount)return false;
@@ -7041,14 +7069,15 @@ const positive=n=>Number.isSafeInteger(n)&&n>0&&n<=100;
 function validStrikeModifiers(u){
  const timed=p=>p===undefined||!!p&&positive(p.amount)&&positive(p.expiresRound);
  const c=u.calibration,m=u.spotMark;
- return timed(u.armorPenalty)&&timed(u.temporaryArmor)&&
+ return timed(u.armorPenalty)&&timed(u.temporaryArmor)&&timed(u.nextStrikeBonus)&&
+  (u.prismPenalty===undefined||!!u.prismPenalty&&positive(u.prismPenalty.amount)&&positive(u.prismPenalty.expiresRound)&&u.prismPenalty.minimum===1)&&
   (c===undefined||!!c&&positive(c.ignoreArmor)&&positive(c.expiresRound)&&
    (c.barrier===undefined||!!c.barrier&&positive(c.barrier.amount)&&positive(c.barrier.cap)))&&
   (m===undefined||!!m&&Number.isSafeInteger(m.sourceUid)&&m.sourceUid>=0&&['p','e'].includes(m.side)&&
    positive(m.amount)&&Number.isSafeInteger(m.remaining)&&m.remaining>=1&&m.remaining<=2&&positive(m.expiresRound));
 }
 
-Object.assign(__exports,{activeStrikeState,grantSupportStrikeState,applyStrikeFracture,placeSpotMark,prepareDirectStrike,grantCalibrationReward,expireStrikeModifiers,validStrikeModifiers});
+Object.assign(__exports,{activeStrikeState,consumeNormalStrikeBonus,grantSupportStrikeState,applyStrikeFracture,placeSpotMark,prepareDirectStrike,grantCalibrationReward,expireStrikeModifiers,validStrikeModifiers});
 
 },
 "src/engine/unit-barriers.js":function(__exports,__load){
@@ -7118,12 +7147,16 @@ Object.assign(__exports,{captureCombatFrame,recordCombatEvent});
 // États temporaires communs aux unités ; jamais de modification permanente d'ATQ.
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {applyUnitPoison,validPoisonOrigin}=__load("src/engine/unit-poison.js");
-const {validStrikeModifiers}=__load("src/engine/unit-strike-modifiers.js");
+const {validStrikeModifiers,activeStrikeState}=__load("src/engine/unit-strike-modifiers.js");
 const {validStillOmen}=__load("src/engine/unit-omens.js");
-function attackAfterPenalty(u,raw){const boosted=raw+(u.fury||0)+(u.devourAttack||0);return u.attackPenalty?Math.min(boosted,Math.max(u.attackPenalty.minimum||0,boosted-u.attackPenalty.amount)):boosted;}
-function consumeAttackPenalty(u,raw){
- const result=attackAfterPenalty(u,raw),p=u.attackPenalty;
+function attackAfterPenalty(u,raw,round=0){
+ const boosted=raw+(u.fury||0)+(u.devourAttack||0);
+ return Math.min(boosted,...[u.attackPenalty,activeStrikeState(u,'prismPenalty',round)].filter(Boolean).map(p=>Math.max(p.minimum||0,boosted-p.amount)));
+}
+function consumeAttackPenalty(u,raw,round=0){
+ const result=attackAfterPenalty(u,raw,round),p=u.attackPenalty;
  if(p){if(p.remaining<=1)delete u.attackPenalty;else u.attackPenalty={...p,remaining:p.remaining-1};}
+ delete u.prismPenalty;
  if(u.fury)delete u.fury;
  return result;
 }
@@ -7188,7 +7221,7 @@ function validUnitEffects(u){
   (u.deathResolved===undefined||typeof u.deathResolved==='boolean')&&
   (u.deathStrikeUsed===undefined||typeof u.deathStrikeUsed==='boolean')&&
   (u.devourAttack===undefined||integer(u.devourAttack,2))&&
-  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound','spottingReadyRound','catalysisReadyRound','spectralRetreatReadyRound','stillOmenReadyRound','lastGuardWardRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
+  ['harassReadyRound','lastStrikeHealRound','lastChargeBarrierRound','killHasteRound','strikeWardReadyRound','barrierDrillReadyRound','knockbackReadyRound','scoriaReadyRound','spottingReadyRound','catalysisReadyRound','spectralRetreatReadyRound','stillOmenReadyRound','lastGuardWardRound','guardPrismReadyRound','splashKnockbackReadyRound'].every(k=>u[k]===undefined||integer(u[k],100))&&
   (u.scoriaHits===undefined||Number.isSafeInteger(u.scoriaHits)&&u.scoriaHits>=0&&u.scoriaHits<=2)&&
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
@@ -7326,6 +7359,34 @@ function resolveSpectralRetreat(b,u,target,{performed,suppressed},hooks){
  row[to]=u;row[from]=null;
  hooks.emit(b,{type:'move',side:u.side,lane,from,to,spectralRetreat:true});
  hooks.enter(b,u,lane,to);
+ const bonus=versionUnitAbilities(u)?.retreatStrike;
+ if(bonus&&u.hp>0)u.nextStrikeBonus={amount:bonus.amount,expiresRound:b.round+bonus.expiresAfter};
+ return true;
+}
+
+// Le Prisme récompense une interception de couronne survécue, pas tout coup reçu.
+function resolveGuardPrism(b,u,attacker,intercepted,performed,suppressed,emit){
+ const p=versionUnitAbilities(u)?.guardPrism;
+ if(!p||!intercepted||!performed||suppressed||u.hp<=0||!attacker||attacker.hp<=0||attacker.side===u.side||u.guardPrismReadyRound>b.round)return false;
+ u.guardPrismReadyRound=b.round+p.period;
+ attacker.prismPenalty={amount:p.amount,minimum:p.minimum,expiresRound:b.round+p.expiresAfter};
+ const lane=b.board.findIndex(row=>row.includes(attacker));
+ if(lane>=0)emit(b,{type:'state',side:attacker.side,lane,col:b.board[lane].indexOf(attacker)});
+ return true;
+}
+
+// Recul de la seule victime secondaire blessée par l'Impact, sans nouvelle frappe.
+function resolveSplashDisplacement(b,u,target,damaged,suppressed,hooks){
+ const p=versionUnitAbilities(u)?.splashKnockback;
+ if(!p||!damaged||suppressed||u.hp<=0||target.hp<=0||target.side===u.side||u.splashKnockbackReadyRound>b.round)return false;
+ const lane=b.board.findIndex(row=>row.includes(target)),row=b.board[lane];
+ if(!row)return false;
+ const from=row.indexOf(target),to=from+(target.side==='p'?-1:1)*p.cells;
+ if(to<1||to>lastCell(b)||row[to])return false;
+ u.splashKnockbackReadyRound=b.round+p.period;
+ row[to]=target;row[from]=null;
+ hooks.emit(b,{type:'move',side:target.side,lane,from,to,splashKnockback:true});
+ hooks.enter(b,target,lane,to);
  return true;
 }
 
@@ -7435,7 +7496,7 @@ function resolveSurvivedStrike(b,u,attacker,damaged,suppressed,emit){
  }
 }
 
-Object.assign(__exports,{resolveSpectralRetreat,resolveGuardWard,resolveAlchemyStrike,resolveStrikeDisplacement,resolveStrikePreparation,resolveStrikeRewards,resolveSurvivedStrike});
+Object.assign(__exports,{resolveSpectralRetreat,resolveGuardPrism,resolveSplashDisplacement,resolveGuardWard,resolveAlchemyStrike,resolveStrikeDisplacement,resolveStrikePreparation,resolveStrikeRewards,resolveSurvivedStrike});
 
 },
 "src/engine/tempo.js":function(__exports,__load){
@@ -7726,7 +7787,7 @@ function inspectEnemyLane(b,lane){
  // Plus un ennemi est proche de la couronne ennemie (droite), plus il faut l'arrêter.
  const urgency=threats.reduce((sum,{u,col})=>{
   const steps=Math.max(1,crownColumn(b,'e')-col);
-  return sum+(steps<=2?7:steps===3?3:0)+attackAfterPenalty(u,Math.max(1,u.atk))*(steps===1?3:steps===2?1.65:steps===3?.6:.15)
+  return sum+(steps<=2?7:steps===3?3:0)+attackAfterPenalty(u,Math.max(1,u.atk),b.round)*(steps===1?3:steps===2?1.65:steps===3?.6:.15)
    +((unitChargeAmount(u)>0)&&steps<=3?2:0)+(unitAttackRange(u)>1&&steps<=3?2:0)+1/steps;
  },0);
  const frontline=threats.sort((a,z)=>z.col-a.col)[0]||null;
@@ -7743,7 +7804,7 @@ function crownRisk(b,laneInfo){
   if(findCrownGuardian(b,laneInfo.lane,'e',col))return sum;
   const range=unitAttackRange(u);
   if(laneInfo.friends.some(x=>x.col>col&&x.col-col<=range))return sum;
-  return sum+attackAfterPenalty(u,Math.max(1,u.atk))+((unitChargeAmount(u)>0)&&col<lastCell(b)&&!silenced(b,u)?unitChargeAmount(u):0);
+  return sum+attackAfterPenalty(u,Math.max(1,u.atk),b.round)+((unitChargeAmount(u)>0)&&col<lastCell(b)&&!silenced(b,u)?unitChargeAmount(u):0);
  },0);
 }
 
@@ -9368,7 +9429,7 @@ function createBattleView(getState, { btn, cardUI, esc }) {
     const concord = u ? formationBonus(battle, lane, u) : 0;
     const rallied = u && u.rallyUntil >= battle.round ? 1 : 0;
     const targeting=selection?spellCardState(selection,u.uid):null;
-    const attack = u ? attackAfterPenalty(u,u.atk + concord + rallied) : 0;
+    const attack = u ? attackAfterPenalty(u,u.atk + concord + rallied,battle.round) : 0;
     const card=cardPresentation(u,{unit:u,stats:{atk:attack,hp:u.hp,maxhp:u.maxhp}}).card;
     return `<div class="unit-on-board ${u.side === 'e' ? 'enemy' : 'ally'} ${silent ? 'silenced' : ''}" data-actor-id="${u.uid}" data-facing="${u.side === 'p' ? 'right' : 'left'}" data-animation-state="idle" data-owner="${u.side}" data-rarity="${esc(card.rarity)}" style="--tone:${FACTIONS[card.faction].tone}" data-unit-summary="${u.side === 'p' ? 'Votre unité' : 'Unité adverse'} · ${esc(FACTIONS[card.faction].name)} · ${esc(card.rarity)} · ${esc(card.name)} · ${esc(card.description)} · Attaque ${attack}${concord ? ' (dont +1 Concorde)' : ''}${rallied ? ' (dont +1 Ralliement)' : ''} · PV ${u.hp}/${u.maxhp}${u.barrier ? ' · Barrière ' + u.barrier : ''}${silent ? ' · Silence : ' + remaining + ' résolution(s)' : ''}">${silent ? `<div class="silence-badge" role="status">⊘ Silence ${remaining}</div>` : ''}${boardCard(u, attack, selection?{...targeting,lane}:null,battle.round,!!concord)}</div>`;
   }
@@ -9584,7 +9645,8 @@ function campSeal(side){
  const enemy=side==='e';
  return `<svg class="board-camp-seal" data-camp="${enemy?'e':'p'}" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path class="camp-seal-body" d="${enemy?'M6 1 11 6 6 11 1 6Z':'M6 1a5 5 0 1 0 0 10a5 5 0 1 0 0-10Z'}"/></svg>`;
 }
-function boardCard(u,attack=attackAfterPenalty(u,u.atk),targeting=null,round=0,concordeActive=false){
+function boardCard(u,attack=undefined,targeting=null,round=0,concordeActive=false){
+ if(attack===undefined)attack=attackAfterPenalty(u,u.atk,round);
  const c=cardPresentation(u,{unit:u,stats:{atk:attack,hp:u.hp,maxhp:u.maxhp}}).card,v=visualFor(c,{cards:true});
  return `<button type="button" class="board-card ${targeting?(targeting.valid?'spell-eligible':'spell-forbidden'):''} ${u.barrier>0?'protected-card':''} ${targeting?.affected?'spell-affected':''} ${cardTemplateFor(c)?'generated-board':''}" data-unit-id="${esc(u.uid)}" data-rarity="${esc(c.rarity)}" ${targeting?`data-action="${targeting.valid?'spell-target':'spell-invalid'}" data-lane="${targeting.lane}" aria-disabled="${!targeting.valid}"`: ''} aria-controls="hand-card-inspection" aria-expanded="false" data-card-id="${u.id}" data-side="${u.side}" aria-label="${u.side==='e'?'Unité adverse':'Votre unité'}, ${esc(c.name)} : attaque ${attack}, vie ${u.hp} sur ${u.maxhp}${concordeActive?', Concorde active : +1 ATQ incluse':''}${targeting?(targeting.valid?', Cible autorisée':', Cible interdite'):''}">
  ${cardTemplateFor(c)?generatedCardFace(c,{stats:{atk:attack,hp:u.hp},delay:0,kind:'deployed',board:true,concordeActive,esc}):` <img class="board-card-art" src="${artSrc(v.art)}" alt="" draggable="false"><span class="board-card-order">${esc(FACTIONS[c.faction].short)}</span>
