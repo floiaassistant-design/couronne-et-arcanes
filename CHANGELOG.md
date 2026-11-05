@@ -1,13 +1,18 @@
 # Journal des changements
 
-## En préparation — cinq versions Éther et ascension Divine, 5 novembre 2026
+## En préparation — deux Divines Éther liées au Vol
+
+- Griffon du Zénith et Séraphin d’Azur Divins. Un survol réussi donne à l’allié un pas supplémentaire au prochain déplacement ou le soigne immédiatement s’il est blessé, selon la carte.
+- Deux fusions après l’ascension Divine Éther existante et contrôles des effets, des fiches et de la reprise sur le moteur commun.
+
+## Intégré par PR 88 — cinq versions Éther et ascension Divine, 5 novembre 2026
 
 - Sentinelle Légendaire/Divine et Prisme inhibiteur après une interception réelle de couronne survécue. Garde Divine remplace la portée normale, sans double interception.
 - Feu follet Divin : Éclat persistant après repli réussi ; Voyante Divine : Destin scellé, présage 3 remplaçant 2 ; Dragon Divin : recul de la seule victime secondaire blessée par Impact.
 - Une ascension Éther commune après mission 09 ouvre quatre fusions de trois Légendaires libres. Aucun cadeau, accès Éveillé, changement de natif, de paquet ou de sauvegarde historique.
 - État de combat facultatif validé, fiches et Silence, laboratoire/moteur communs, export autonome régénéré et nouveaux parcours raccordés à la CI existante.
 
-## En préparation — contrôle des Divines et durée de CI, 5 novembre 2026
+## Intégré par PR 88 — contrôle des Divines et durée de CI, 5 novembre 2026
 
 - Le parcours Légendaire distingue les Divines Feu follet/Voyante définies mais soumises à ascension de leurs Éveillées absentes, avec vérification des chiffres.
 - Branche réconciliée avec les contours intégrés et export commun régénéré. Après une interruption à 20 minutes du groupe combat, marge portée à 30 minutes ; même matrice, mêmes commandes et assertions.

@@ -65,6 +65,8 @@ export function unitCardText(d){
 
 export function unitAbilityDetails(d){
  const a=d.abilities,lines=[],scope=p=>p.scope==='all-lines'?'toutes les lignes':'sa ligne';
+ if(a.flightWake)lines.push(`Sillage ascendant : après avoir franchi un allié grâce à Vol, cet allié peut avancer de ${a.flightWake.cells} case libre supplémentaire lors de son prochain déplacement normal, jusqu’à la fin de son prochain tour. Sans cumul ; au plus une activation tous les ${a.flightWake.period} tours.`);
+ if(a.flightHeal)lines.push(`Soin de passage : en franchissant un allié blessé grâce à Vol, lui rend jusqu’à ${a.flightHeal.amount} PV. Au plus une fois tous les ${a.flightHeal.period} tours. Son soin habituel après les attaques est conservé.`);
  if(a.spectralRetreat)lines.push(`Repli spectral : après une attaque normale touchant une unité ennemie qui survit, recule de ${a.spectralRetreat.cells} case vers sa propre couronne sur sa ligne si elle est libre et dans le plateau, au plus une fois tous les ${a.spectralRetreat.period} tours. Une frappe entièrement absorbée compte ; aucun repli sur une couronne, un sort ou une Riposte, ni après la mort du Feu follet. Aucune attaque supplémentaire.`);
  if(a.stillOmen)lines.push(`${a.stillOmen.amount>2?'Destin scellé':'Étoile immobile'} : après une attaque normale retirant au moins 1 PV à un ennemi survivant, place un présage, au plus une fois tous les ${a.stillOmen.period} tours. Si la cible reste sans déplacement réel pendant le tour de combat suivant complet, elle subit ${a.stillOmen.amount} dégâts bruts en fin de tour, protections normales. Tout déplacement pendant ce tour annule le présage, même avec retour à la case initiale ; l’immobilisation seule ne l’annule pas. Une cible par Voyante, sans cumul ni attaque supplémentaire ; la marque disparaît après résolution ou mort de la cible.`);
  if(a.retreatStrike)lines.push(`Éclat persistant : après un Repli spectral réussi, la prochaine attaque normale gagne +${a.retreatStrike.amount} dégâts bruts avec les protections normales, au plus tard jusqu’à la fin du deuxième tour suivant. Bonus consommé par cette attaque ou expiré, sans cumul ; aucun gain après un repli bloqué, aucune Riposte renforcée ni attaque supplémentaire.`);
@@ -125,6 +127,8 @@ export function unitAbilityDetails(d){
 function strikeWardName(p){return p.overflowBarrier?'Forge infatigable':p.requiresKill?'Ferraille récupérée':'Recyclage actif';}
 function advancedSummary(a){
  const parts=[];
+ if(a.flightWake)parts.push(`Sillage : déplacement allié +${a.flightWake.cells}`);
+ if(a.flightHeal)parts.push(`Soin de passage ${a.flightHeal.amount}`);
  if(a.spectralRetreat)parts.push(`Repli spectral : recul ${a.spectralRetreat.cells}`);
  if(a.stillOmen)parts.push(`${a.stillOmen.amount>2?'Destin scellé':'Étoile immobile'} : présage ${a.stillOmen.amount}`);
  if(a.retreatStrike)parts.push(`Éclat : prochaine attaque +${a.retreatStrike.amount}`);

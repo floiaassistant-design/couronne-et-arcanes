@@ -14,16 +14,16 @@ import {resolveRetaliation,hit} from '../src/engine/battle-defense.js';
 import {findCrownGuardian} from '../src/engine/guard-candidates.js';
 import {prepareControlUnits,applySilence} from '../src/engine/battle-control.js';
 import {captureCombatFrame} from '../src/engine/combat-events.js';
-import {cardPresentation} from '../src/ui/card-presentation.js';
-import {validateImportedProfile,saveProfile,loadProfile,storeBattle,restoreBattle} from '../src/ui/storage.js';
+import {cardPresentation,boardInspectionData} from '../src/ui/card-presentation.js';
+import {validateImportedProfile,validStoredBattle,saveProfile,loadProfile,storeBattle,restoreBattle} from '../src/ui/storage.js';
 import {forgeUnit as unit,testStorage} from './fixtures/forge-combat.mjs';
 
 // Totaux indépendants du registre, transcrits des cellules Notion relues le 04/11.
 const totals={
  spark:[[2,3,1],[2,4,1],[3,4,1],[3,4,1],[3,4,1]],mystic:[[3,4,2],[3,6,2],[4,6,2]],elemental:[[5,8,3],[5,10,3]],
- griffin:[[5,6,3],[5,8,3]],sentinel:[[2,9,2],[2,11,2],[2,11,2],[2,11,2]],dragon:[[7,12,5],[7,12,5]],
+ griffin:[[5,6,3],[5,8,3],[5,8,3]],sentinel:[[2,9,2],[2,11,2],[2,11,2],[2,11,2]],dragon:[[7,12,5],[7,12,5]],
  tempest:[[3,6,2],[3,8,2],[4,8,2]],seer:[[2,4,1],[2,5,1],[3,5,1],[3,5,1],[3,5,1]],
- aetherknight:[[5,9,3],[5,11,3]],seraph:[[5,10,4]],portal_walker:[[3,5,2],[3,7,2],[4,7,2]]
+ aetherknight:[[5,9,3],[5,11,3]],seraph:[[5,10,4],[5,10,4]],portal_walker:[[3,5,2],[3,7,2],[4,7,2]]
 };
 const recipes=EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction==='ether');
 function summoned(id,rarity,side='p',level=0){
@@ -39,9 +39,9 @@ function summoned(id,rarity,side='p',level=0){
 const attack=({b,u})=>(u.side==='p'?endPlayerTurn:finishEnemyTurn)(b);
 const enemy=(side,extra={})=>unit('militia',side==='p'?'e':'p',{hp:30,maxhp:30,armor:0,stun:99,...extra});
 
-test('Éther : 32 versions, 21 évolutions et dix personnages ; aucune décision native appliquée implicitement',()=>{
- assert.deepEqual([...ETHER_UNIT_IDS].sort(),Object.keys(totals).sort());assert.equal(recipes.length,21);
- assert.equal(ETHER_UNIT_IDS.filter(id=>VERSIONED_UNIT_IDS.includes(id)).length,10);
+test('Éther : 34 versions, 23 évolutions et onze personnages ; aucune décision native appliquée implicitement',()=>{
+ assert.deepEqual([...ETHER_UNIT_IDS].sort(),Object.keys(totals).sort());assert.equal(recipes.length,23);
+ assert.equal(ETHER_UNIT_IDS.filter(id=>VERSIONED_UNIT_IDS.includes(id)).length,11);
  let count=0;
  for(const [id,values] of Object.entries(totals)){
   const versions=unitVersions(id);assert.equal(versions.length,values.length,id);count+=versions.length;
@@ -55,17 +55,19 @@ test('Éther : 32 versions, 21 évolutions et dix personnages ; aucune décision
    if(id==='dragon'&&i)abilities.splashKnockback={cells:1,period:3};
    if(id==='sentinel'&&i>=2)abilities.guardPrism={amount:1,minimum:1,period:3,expiresAfter:2};
    if(id==='sentinel'&&d.rarity==='divine')abilities.guard={...abilities.guard,scope:'line'};
+   if(id==='griffin'&&d.rarity==='divine')abilities.flightWake={cells:1,period:3,duration:1};
+   if(id==='seraph'&&d.rarity==='divine')abilities.flightHeal={amount:2,period:3};
    assert.deepEqual(d.abilities,abilities);assert.deepEqual(d.geometry,{...versions[0].geometry,...(id==='spark'&&i?{range:3}:{})});
   }
-  for(const rarity of ['divine','éveillée'])if(rarity==='éveillée'||!['spark','seer','sentinel','dragon'].includes(id))assert.equal(resolveUnitDefinition(id,rarity),null);
+  for(const rarity of ['divine','éveillée'])if(rarity==='éveillée'||!['spark','seer','sentinel','dragon','griffin','seraph'].includes(id))assert.equal(resolveUnitDefinition(id,rarity),null);
  }
- assert.equal(count,32);assert.equal(Object.keys(CARDS).length,76);
+ assert.equal(count,34);assert.equal(Object.keys(CARDS).length,76);
  assert.equal(resolveUnitDefinition('sentinel','éveillée'),null);
  assert.equal(resolveUnitDefinition('spark').geometry.range,2);assert.equal(resolveUnitDefinition('spark','rare').geometry.range,3);
  const p=freshProfile();assert.deepEqual(normalizeProfile(p),p);assert.equal(p.evolvedCollection,undefined);
 });
 
-test('32 versions Éther × quatre niveaux × deux camps : vraie invocation et aucun gain réel du laboratoire',()=>{
+test('34 versions Éther × quatre niveaux × deux camps : vraie invocation et aucun gain réel du laboratoire',()=>{
  for(const [id,values] of Object.entries(totals))for(const [i,d] of unitVersions(id).entries())for(const level of [0,1,2,3])for(const side of ['p','e']){
   const {b,u}=summoned(id,d.rarity,side,level);
   assert.deepEqual([u.atk,u.maxhp],[values[i][0]+level,values[i][1]+level]);assert.equal(u.rarity,d.rarity);
@@ -122,6 +124,55 @@ test('Griffon : Vol au-dessus d’un allié, deux pas et Charge +2 ; Chevalier :
    k.b.board[0][k.col+k.dir*(moved?2:1)]=victim;attack(k);
    assert.equal(victim.hp,moved?24:26);assert.equal(victim.barrier,0);assert.equal(k.u.atk,5);
    assert.equal(k.b.board[0][k.col+k.dir*(moved?1:0)],k.u);
+  }
+ }
+});
+
+test('Sillage : un franchissement réel donne un déplacement normal +1, une seule fois, aux deux camps',()=>{
+ for(const side of ['p','e']){
+  const c=summoned('griffin','divine',side),ally=unit('militia',side,{stun:1});
+  const first=c.col+c.dir,landing=c.col+2*c.dir;c.b.board[0][first]=ally;
+  c.b.board[0][c.col+3*c.dir]=enemy(side);attack(c);
+  assert.equal(c.b.board[0][landing],c.u);
+  assert.deepEqual(ally.flightWake,{cells:1,expiresRound:2});
+  assert.equal(c.u.flightSupportReadyRound,4);
+  assert.match(boardInspectionData(c.b,ally.uid).board.statuses.join(' '),/Sillage ascendant.*\+1/);
+  testStorage();assert(storeBattle(c.b));assert(validStoredBattle(restoreBattle()));
+  assert.deepEqual(restoreBattle().board[0][first].flightWake,ally.flightWake);
+  const invalid=structuredClone(restoreBattle());invalid.board[0][first].flightWake.cells=2;
+  assert.equal(validStoredBattle(invalid),false);
+  c.b.board[0][landing]=null;c.b.board[0][c.col+3*c.dir]=null;
+  c.b.round=2;c.b.phase=side==='p'?'player':'enemy';attack(c);
+  assert.equal(c.b.board[0][c.col+3*c.dir],ally);assert.equal(ally.flightWake,undefined);
+ }
+});
+
+test('Sillage : pas de bonus si le saut est bloqué ou silencieux ; entrave et expiration conservées',()=>{
+ for(const blocked of [true,false]){
+  const c=summoned('griffin','divine'),ally=unit('militia','p',{stun:99});c.b.board[0][2]=ally;
+  if(blocked)c.b.board[0][3]=unit('militia','p',{stun:99});
+  else assert(applySilence(c.b,c.u));
+  attack(c);assert.equal(c.b.board[0][blocked?1:3],c.u);
+  assert.equal(ally.flightWake,undefined);assert.equal(c.u.flightSupportReadyRound,undefined);
+ }
+ const c=summoned('griffin','divine'),ally=unit('militia','p',{stun:99});c.b.board[0][2]=ally;attack(c);
+ assert(ally.flightWake);assert(finishEnemyTurn(c.b).ok);assert(ally.flightWake);
+ attack(c);assert(ally.flightWake);assert(finishEnemyTurn(c.b).ok);assert.equal(ally.flightWake,undefined);
+});
+
+test('Soin de passage : soin immédiat plafonné, cadence et soin natif distinct',()=>{
+ for(const side of ['p','e'])for(const hp of [1,4,5]){
+  const c=summoned('seraph','divine',side),ally=unit('militia',side,{hp,maxhp:5,stun:99});
+  const col=c.col+c.dir;c.b.board[0][col]=ally;attack(c);
+  assert.equal(c.b.board[0][c.col+2*c.dir],c.u);
+  const heals=c.b.vfx.filter(e=>e.type==='heal'&&e.col===col);
+  assert.equal(heals.length,hp===1?2:hp===4?1:0);
+  if(hp<5)assert.equal(heals[0].frame.board[0][col].hp,Math.min(5,hp+2));
+  assert.equal(ally.hp,5);assert.equal(c.u.flightSupportReadyRound,hp<5?4:undefined);
+  if(hp===1){
+   c.b.board[0][c.col+2*c.dir]=null;c.b.board[0][c.col]=c.u;ally.hp=1;
+   c.b.round=2;c.b.phase=side==='p'?'player':'enemy';c.b.vfx=[];attack(c);
+   assert.equal(ally.hp,3);assert.equal(c.u.flightSupportReadyRound,4);
   }
  }
 });

@@ -11,6 +11,7 @@ import {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,
 import {placeStillOmen,noteOmenMovement,resolveStillOmens} from './unit-omens.js';
 import {applyStrikeFracture,consumeNormalStrikeBonus} from './unit-strike-modifiers.js';
 import {contiguousSplashTargets} from './unit-targets.js';
+import {activeFlightWake,resolveFlightSupport} from './unit-flight-support.js';
 import {resolveUnitDeath} from './unit-death.js';
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 import {CARDS,FACTIONS} from '../data.js';
@@ -197,22 +198,26 @@ function moveUnits(b,sideFilter=null){
    if(u.movementRoot){delete u.movementRoot;continue;}
    const a=versionUnitAbilities(u),tracked=!!(a?.pierce?.minMovedCells||a?.traverseAlly);
    if(tracked)u.movedCellsThisRound=0;
-   let col=original,crossed=0;const steps=unitMovementSteps(u,silenced(b,u),b.round);
-   for(let step=0;step<steps;step++){
+   const suppressed=silenced(b,u),flying=isFlying(u),wake=activeFlightWake(u,b.round);
+   let col=original,crossed=0;const steps=unitMovementSteps(u,suppressed,b.round);
+   for(let step=0;step<steps+(wake?.cells||0);step++){
     if(findTarget(b,lane,col,u))break;
     const next=col+forward(side);
     if(next<1||next>lastCell(b))break;
-    let destination=next;
+    let destination=next,flownAlly=null;
     if(b.board[lane][next]){
-      if(isFlying(u)||!silenced(b,u)&&a?.traverseAlly&&b.board[lane][next].side===u.side&&crossed<a.traverseAlly.max){
+      if(step<steps&&(flying||!suppressed&&a?.traverseAlly&&b.board[lane][next].side===u.side&&crossed<a.traverseAlly.max)){
         const leap=next+forward(side);
         if(leap<1||leap>lastCell(b)||b.board[lane][leap])break;
         if(a?.traverseAlly&&step+2>steps)break;
+        if(flying)flownAlly=b.board[lane][next];
         destination=leap;if(a?.traverseAlly){step++;crossed++;}
       }else break;
     }
     if(tracked)u.movedCellsThisRound+=Math.abs(destination-col);
+    if(wake)delete u.flightWake;
     b.board[lane][destination]=u;b.board[lane][col]=null;u.movedThisRound=true;fx(b,{type:'move',lane,from:col,to:destination,side,icon:CARDS[u.id]?.icon||'♞'});col=destination;
+    if(flownAlly)resolveFlightSupport(b,u,flownAlly,lane,next,suppressed,fx);
     enterCell(b,u,lane,col);if(u.hp<=0||u.stun>0)break;
    }
   }
