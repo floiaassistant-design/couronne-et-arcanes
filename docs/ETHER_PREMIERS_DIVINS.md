@@ -128,3 +128,7 @@ contrôles de l’assemblage s’effectuent sur GitHub. Les résultats locaux an
 restent historiques ; lire les nouvelles preuves dans la PR sur son SHA exact.
 La publication des contours intégrés est également bloquée par cet environnement,
 et le site reste à la dernière version terminale confirmée, v29.
+
+Le run 42056039630 a aussi interrompu le groupe combat à sa limite de 20 minutes
+avant les nouveaux cas. La marge des groupes est portée à 30 minutes ; groupes,
+commandes, graines, assertions et verdicts restent identiques. [Contrat CI](CI_PARALLELE.md).

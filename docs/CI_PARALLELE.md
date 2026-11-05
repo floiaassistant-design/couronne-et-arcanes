@@ -7,6 +7,17 @@ Quatre groupes puis `validation`, propagation des échecs et contrôles sélecti
 des seules PR Markdown sont conservés. Tout push main garde les tests complets
 et le paquet web ; une PR documentaire verte ne produit pas nécessairement de paquet.
 
+## Durée maximale des groupes — 5 novembre 2026
+
+La limite d’exécution de chaque groupe est portée de 20 à 30 minutes. Le run
+42056039630 a interrompu le groupe combat à 20 minutes, pendant les parcours
+paysage, avant même les nouveaux cas Éther. Cette marge permet de terminer les
+contrôles existants après l’ajout des lots ; elle ne constitue pas une promesse
+de durée ni une accélération. Les quatre groupes, leurs 30 commandes, graines,
+assertions, `fail-fast: false`, propagation des erreurs et verdicts sont inchangés.
+Le job final et l’assemblage web conservent leurs propres limites. Une optimisation
+future devra se fonder sur les durées observées, sans supprimer de parcours.
+
 ## Contrôle de documentation proposé le 1er novembre 2026
 
 Le job final `validation` conserve son verdict historique après les quatre

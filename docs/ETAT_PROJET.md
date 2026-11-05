@@ -53,7 +53,8 @@ paquet non réalisables. Le site reste en v29 ; aucune publication parallèle.
 Cette branche réunit les contours intégrés et les évolutions Éther proposées.
 Le contrôle Légendaire distingue désormais les Divines définies mais soumises à
 ascension des Éveillées toujours absentes, avec chiffres attendus indépendants.
-JOUER doit être régénéré puis l’assemblage complet vérifié sur sa nouvelle tête.
+JOUER est régénéré depuis ces sources communes ; lire les contrôles de
+l’assemblage complet sur sa nouvelle tête.
 Chaque PR exige son accord spécifique ; aucun auto-merge. Sites reçoit uniquement
 main intégré et vérifié.
 
