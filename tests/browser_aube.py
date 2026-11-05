@@ -76,20 +76,22 @@ async def run(browser,label,viewport,faction='aube'):
             'mechanist':[None,8,10,10,10,10],
             'ironwraith':[7,9,9,9,9,9],
             'alchemist':[None,5,7,7,7,7],
-            'spark':[3,4,4,4,None,None],
+            'spark':[3,4,4,4,4,None],
             'mystic':[None,4,6,6,None,None],
             'elemental':[None,None,8,10,None,None],
             'griffin':[None,None,6,8,None,None],
-            'sentinel':[None,9,11,None,None,None],
+            'sentinel':[None,9,11,11,11,None],
+            'dragon':[None,None,None,12,12,None],
             'tempest':[None,6,8,8,None,None],
-            'seer':[4,5,5,5,None,None],
+            'seer':[4,5,5,5,5,None],
             'aetherknight':[None,None,9,11,None,None],
             'portal_walker':[None,5,7,7,None,None]
         }.get(card_id)
         native=await row.locator('[data-current-version="true"]').get_attribute('data-collection-rarity')
         ranks=['commun','rare','épique','légendaire','divine','éveillée']
         values=[str(hp) if hp is not None else '—' for rank,hp in zip(ranks,expected) if rank!=native] if expected else ['—']*5
-        assert await row.locator('[data-current-version="false"] .stat.hp b').all_inner_texts()==values,card_id
+        displayed_hp=await row.locator('[data-current-version="false"] .stat.hp b').all_inner_texts()
+        assert displayed_hp==values,(label,card_id,displayed_hp,values)
         # La fiche suit directement la carte : aucun bouton « Fiche », même rendu que la main et le plateau.
         preview=row.locator('[data-current-version="true"] [data-collection-preview]')
         await preview.hover()

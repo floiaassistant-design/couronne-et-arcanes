@@ -211,6 +211,10 @@ Le pilote partagé d’ascension ajoute Éther aux quatre parties existantes. Un
 Le contrôle Légendaire partagé vérifie aussi les Divines du Feu follet et de la
 Voyante : ascension requise, ATQ/PV 3/4 et 3/5 ; leurs Éveillées restent « À concevoir ».
 L’ancienne assertion d’absence des deux rangs n’est pas conservée sur un rang ajouté.
+Le parcours `browser_ether.py` vérifie également les PV affichés en Collection
+pour les cinq nouveaux rangs : Feu follet 4, Voyante 5, Sentinelle 11 à ses deux
+rangs et Dragon 12. Les rangs absents gardent le tiret. Les valeurs attendues
+restent indépendantes du registre et sont vérifiées sur bureau, portrait et paysage.
 Le groupe combat ayant atteint sa limite de 20 minutes dans le run 42056039630,
 la marge des groupes passe à 30 minutes, avec les mêmes quatre groupes et tous
 les contrôles. Aucune durée de réussite anticipée ; lire la nouvelle CI exacte.
