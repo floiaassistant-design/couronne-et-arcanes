@@ -4676,6 +4676,7 @@ const {formationBonus}=__load("src/engine.js");
 const {silenced}=__load("src/engine/battle-control.js");
 const {attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {activeStrikeState}=__load("src/engine/unit-strike-modifiers.js");
+const {activeFlightWake}=__load("src/engine/unit-flight-support.js");
 const {generatedCardFace}=__load("src/ui/generated-card.js");
 const {concordeDetails}=__load("src/ui/concorde.js");
 const {visualFor,artSrc,cardTemplateFor}=__load("src/visuals.js");
@@ -4744,6 +4745,9 @@ function boardInspectionData(battle,uid){
   if(u.prismPenalty?.expiresRound>=battle.round)statuses.push(`Prisme inhibiteur : prochaine attaque −${u.prismPenalty.amount} ATQ, minimum ${u.prismPenalty.minimum}, jusqu’à la fin du tour ${u.prismPenalty.expiresRound}`);
   if(u.guardPrismReadyRound>battle.round)statuses.push(`Prisme disponible au tour ${u.guardPrismReadyRound}`);
   if(u.splashKnockbackReadyRound>battle.round)statuses.push(`Souffle disponible au tour ${u.splashKnockbackReadyRound}`);
+  const wake=activeFlightWake(u,battle.round);
+  if(wake)statuses.push(`Sillage ascendant : déplacement +${wake.cells} jusqu’à la fin du tour ${wake.expiresRound}`);
+  if(u.flightSupportReadyRound>battle.round)statuses.push(`Prochain effet de Vol au tour ${u.flightSupportReadyRound}`);
   const penalty=activeStrikeState(u,'armorPenalty',battle.round),protection=activeStrikeState(u,'temporaryArmor',battle.round),calibration=activeStrikeState(u,'calibration',battle.round),mark=activeStrikeState(u,'spotMark',battle.round);
   if(penalty)statuses.push(`Armure −${penalty.amount} à la prochaine attaque directe subie`);
   if(protection)statuses.push(`Blindage : +${protection.amount} Armure à la prochaine attaque directe subie`);
@@ -5328,12 +5332,13 @@ const ETHER_DESIGN_SOURCE=freezeCardData({
 const ETHER_EVOLUTIONS=freezeCardData({
  mystic:{'épique':{stats:{hp:6}},'légendaire':{stats:{attack:4}}},
  elemental:{'légendaire':{stats:{hp:10}}},
- griffin:{'légendaire':{stats:{hp:8}}},
+ griffin:{'légendaire':{stats:{hp:8}},'divine':{abilities:{flightWake:{cells:1,period:3,duration:1}}}},
  sentinel:{'épique':{stats:{hp:11}},'légendaire':{abilities:{guardPrism:{amount:1,minimum:1,period:3,expiresAfter:2}}},'divine':{abilities:{guard:{scope:'line'}}}},
  dragon:{'divine':{abilities:{splashKnockback:{cells:1,period:3}}}},
  tempest:{'épique':{stats:{hp:8}},'légendaire':{stats:{attack:4}}},
  seer:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}},'légendaire':{abilities:{stillOmen:{amount:2,period:3,delay:1}}},'divine':{abilities:{stillOmen:{amount:3}}}},
  aetherknight:{'légendaire':{stats:{hp:11}}},
+ seraph:{'divine':{abilities:{flightHeal:{amount:2,period:3}}}},
  portal_walker:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}}},
  spark:{rare:{stats:{hp:4},geometry:{range:3}},'épique':{stats:{attack:3}},'légendaire':{abilities:{spectralRetreat:{cells:1,period:3}}},'divine':{abilities:{retreatStrike:{amount:2,expiresAfter:2}}}}
 });
@@ -5601,6 +5606,8 @@ function unitCardText(d){
 
 function unitAbilityDetails(d){
  const a=d.abilities,lines=[],scope=p=>p.scope==='all-lines'?'toutes les lignes':'sa ligne';
+ if(a.flightWake)lines.push(`Sillage ascendant : après avoir franchi un allié grâce à Vol, cet allié peut avancer de ${a.flightWake.cells} case libre supplémentaire lors de son prochain déplacement normal, jusqu’à la fin de son prochain tour. Sans cumul ; au plus une activation tous les ${a.flightWake.period} tours.`);
+ if(a.flightHeal)lines.push(`Soin de passage : en franchissant un allié blessé grâce à Vol, lui rend jusqu’à ${a.flightHeal.amount} PV. Au plus une fois tous les ${a.flightHeal.period} tours. Son soin habituel après les attaques est conservé.`);
  if(a.spectralRetreat)lines.push(`Repli spectral : après une attaque normale touchant une unité ennemie qui survit, recule de ${a.spectralRetreat.cells} case vers sa propre couronne sur sa ligne si elle est libre et dans le plateau, au plus une fois tous les ${a.spectralRetreat.period} tours. Une frappe entièrement absorbée compte ; aucun repli sur une couronne, un sort ou une Riposte, ni après la mort du Feu follet. Aucune attaque supplémentaire.`);
  if(a.stillOmen)lines.push(`${a.stillOmen.amount>2?'Destin scellé':'Étoile immobile'} : après une attaque normale retirant au moins 1 PV à un ennemi survivant, place un présage, au plus une fois tous les ${a.stillOmen.period} tours. Si la cible reste sans déplacement réel pendant le tour de combat suivant complet, elle subit ${a.stillOmen.amount} dégâts bruts en fin de tour, protections normales. Tout déplacement pendant ce tour annule le présage, même avec retour à la case initiale ; l’immobilisation seule ne l’annule pas. Une cible par Voyante, sans cumul ni attaque supplémentaire ; la marque disparaît après résolution ou mort de la cible.`);
  if(a.retreatStrike)lines.push(`Éclat persistant : après un Repli spectral réussi, la prochaine attaque normale gagne +${a.retreatStrike.amount} dégâts bruts avec les protections normales, au plus tard jusqu’à la fin du deuxième tour suivant. Bonus consommé par cette attaque ou expiré, sans cumul ; aucun gain après un repli bloqué, aucune Riposte renforcée ni attaque supplémentaire.`);
@@ -5661,6 +5668,8 @@ function unitAbilityDetails(d){
 function strikeWardName(p){return p.overflowBarrier?'Forge infatigable':p.requiresKill?'Ferraille récupérée':'Recyclage actif';}
 function advancedSummary(a){
  const parts=[];
+ if(a.flightWake)parts.push(`Sillage : déplacement allié +${a.flightWake.cells}`);
+ if(a.flightHeal)parts.push(`Soin de passage ${a.flightHeal.amount}`);
  if(a.spectralRetreat)parts.push(`Repli spectral : recul ${a.spectralRetreat.cells}`);
  if(a.stillOmen)parts.push(`${a.stillOmen.amount>2?'Destin scellé':'Étoile immobile'} : présage ${a.stillOmen.amount}`);
  if(a.retreatStrike)parts.push(`Éclat : prochaine attaque +${a.retreatStrike.amount}`);
@@ -6069,6 +6078,7 @@ const {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,r
 const {placeStillOmen,noteOmenMovement,resolveStillOmens}=__load("src/engine/unit-omens.js");
 const {applyStrikeFracture,consumeNormalStrikeBonus}=__load("src/engine/unit-strike-modifiers.js");
 const {contiguousSplashTargets}=__load("src/engine/unit-targets.js");
+const {activeFlightWake,resolveFlightSupport}=__load("src/engine/unit-flight-support.js");
 const {resolveUnitDeath}=__load("src/engine/unit-death.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 const {CARDS,FACTIONS}=__load("src/data.js");
@@ -6255,22 +6265,26 @@ function moveUnits(b,sideFilter=null){
    if(u.movementRoot){delete u.movementRoot;continue;}
    const a=versionUnitAbilities(u),tracked=!!(a?.pierce?.minMovedCells||a?.traverseAlly);
    if(tracked)u.movedCellsThisRound=0;
-   let col=original,crossed=0;const steps=unitMovementSteps(u,silenced(b,u),b.round);
-   for(let step=0;step<steps;step++){
+   const suppressed=silenced(b,u),flying=isFlying(u),wake=activeFlightWake(u,b.round);
+   let col=original,crossed=0;const steps=unitMovementSteps(u,suppressed,b.round);
+   for(let step=0;step<steps+(wake?.cells||0);step++){
     if(findTarget(b,lane,col,u))break;
     const next=col+forward(side);
     if(next<1||next>lastCell(b))break;
-    let destination=next;
+    let destination=next,flownAlly=null;
     if(b.board[lane][next]){
-      if(isFlying(u)||!silenced(b,u)&&a?.traverseAlly&&b.board[lane][next].side===u.side&&crossed<a.traverseAlly.max){
+      if(step<steps&&(flying||!suppressed&&a?.traverseAlly&&b.board[lane][next].side===u.side&&crossed<a.traverseAlly.max)){
         const leap=next+forward(side);
         if(leap<1||leap>lastCell(b)||b.board[lane][leap])break;
         if(a?.traverseAlly&&step+2>steps)break;
+        if(flying)flownAlly=b.board[lane][next];
         destination=leap;if(a?.traverseAlly){step++;crossed++;}
       }else break;
     }
     if(tracked)u.movedCellsThisRound+=Math.abs(destination-col);
+    if(wake)delete u.flightWake;
     b.board[lane][destination]=u;b.board[lane][col]=null;u.movedThisRound=true;fx(b,{type:'move',lane,from:col,to:destination,side,icon:CARDS[u.id]?.icon||'♞'});col=destination;
+    if(flownAlly)resolveFlightSupport(b,u,flownAlly,lane,next,suppressed,fx);
     enterCell(b,u,lane,col);if(u.hp<=0||u.stun>0)break;
    }
   }
@@ -6795,6 +6809,7 @@ const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {unitAttackRange}=__load("src/engine/unit-rules.js");
 const {applyUnitPoison}=__load("src/engine/unit-poison.js");
 const {expireStrikeModifiers}=__load("src/engine/unit-strike-modifiers.js");
+const {expireFlightWake}=__load("src/engine/unit-flight-support.js");
 const {laneCount,lastCell,crownColumn,entryColumn,validLane,trapColumns}=__load("src/engine/board.js");
 const alive=u=>!!u&&u.hp>0;
 const direction=side=>side==='p'?1:-1;
@@ -6906,7 +6921,10 @@ function expireControl(b,emit=()=>{}){
   for(const t of b.traps)if(t.expiresRound<=b.round)emit(b,{type:'trap-expire',lane:t.lane,col:t.col,side:t.owner});
   b.traps=b.traps.filter(t=>t.expiresRound>b.round);
  }
- for(const row of b.board)for(const u of row)if(u&&u.silenceUntil<=b.round)delete u.silenceUntil;
+ for(const row of b.board)for(const u of row)if(u){
+  if(u.silenceUntil<=b.round)delete u.silenceUntil;
+  expireFlightWake(u,b.round);
+ }
 }
 function controlTargetError(b,side,card,lane){
  if(card.ability==='spell_silence'&&!silenceTarget(b,side,lane))return 'Aucune capacité ennemie disponible à réduire au silence sur cette ligne.';
@@ -7123,6 +7141,42 @@ function absorbBarrier(u,damage){
 Object.assign(__exports,{grantCrownShield,grantAbilityBarrier,grantSharedBarrier,absorbBarrier});
 
 },
+"src/engine/unit-flight-support.js":function(__exports,__load){
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
+function activeFlightWake(unit,round){
+ const wake=unit.flightWake;
+ return wake?.expiresRound>=round?wake:null;
+}
+
+// Called only after a real flying leap has reached a legal landing cell.
+function resolveFlightSupport(b,source,ally,lane,col,suppressed,emit){
+ if(ally.hp<=0||ally.side!==source.side||suppressed||source.flightSupportReadyRound>b.round)return;
+ const abilities=versionUnitAbilities(source);
+ if(abilities?.flightWake){
+  const p=abilities.flightWake;
+  ally.flightWake={cells:p.cells,expiresRound:b.round+p.duration};
+  source.flightSupportReadyRound=b.round+p.period;
+  emit(b,{type:'state',side:ally.side,lane,col});
+ }else if(abilities?.flightHeal&&ally.hp<ally.maxhp){
+  const p=abilities.flightHeal;
+  ally.hp=Math.min(ally.maxhp,ally.hp+p.amount);
+  source.flightSupportReadyRound=b.round+p.period;
+  emit(b,{type:'heal',side:ally.side,lane,col});
+ }
+}
+
+function expireFlightWake(unit,round){
+ if(unit.flightWake?.expiresRound<=round)delete unit.flightWake;
+}
+
+function validFlightWake(unit){
+ const wake=unit.flightWake;
+ return wake===undefined||!!wake&&wake.cells===1&&Number.isSafeInteger(wake.expiresRound)&&wake.expiresRound>0&&wake.expiresRound<=100;
+}
+
+Object.assign(__exports,{activeFlightWake,resolveFlightSupport,expireFlightWake,validFlightWake});
+
+},
 "src/engine/combat-events.js":function(__exports,__load){
 // Instantanés publics de présentation. Aucun calcul de règle, DOM ou stockage.
 function captureCombatFrame(b) {
@@ -7151,6 +7205,7 @@ const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {applyUnitPoison,validPoisonOrigin}=__load("src/engine/unit-poison.js");
 const {validStrikeModifiers,activeStrikeState}=__load("src/engine/unit-strike-modifiers.js");
 const {validStillOmen}=__load("src/engine/unit-omens.js");
+const {validFlightWake}=__load("src/engine/unit-flight-support.js");
 function attackAfterPenalty(u,raw,round=0){
  const boosted=raw+(u.fury||0)+(u.devourAttack||0);
  return Math.min(boosted,...[u.attackPenalty,activeStrikeState(u,'prismPenalty',round)].filter(Boolean).map(p=>Math.max(p.minimum||0,boosted-p.amount)));
@@ -7227,6 +7282,7 @@ function validUnitEffects(u){
   (u.scoriaHits===undefined||Number.isSafeInteger(u.scoriaHits)&&u.scoriaHits>=0&&u.scoriaHits<=2)&&
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
+  (u.flightSupportReadyRound===undefined||integer(u.flightSupportReadyRound,100))&&validFlightWake(u)&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
   (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin)&&validStrikeModifiers(u)&&validStillOmen(u);
 }
