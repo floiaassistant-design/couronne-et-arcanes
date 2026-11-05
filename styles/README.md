@@ -57,3 +57,14 @@ Le premier compare les états du parcours (DOM, styles calculés, rectangles et 
 second exerce l'entrée web, les feuilles effectivement chargées, la pose et la
 reprise sur bureau, portrait et paysage. Les autres parcours du workflow restent
 nécessaires pour les images, la sélection, les anciens combats et le hors ligne.
+
+## Filet de rareté des cartes dessinées
+
+`assets/generated-card.css` applique un filet intérieur de 2 px à `.generated-face`
+(`outline-offset: -2px`). Ce composant est commun aux cartes de la main, des deux
+camps du plateau, de la Collection, des fiches, du deck, des paquets/récompenses,
+de l’Atelier/Alchimie et du laboratoire. Il hérite de `--rarity-border` ; la palette
+reste dans les feuilles de rareté et de Collection existantes. Aucun contour de
+sélection/focus n’est remplacé ; les dimensions, les zones de texte et les images
+peintes restent inchangées. Le builder réutilise cette même feuille pour le web
+et les deux exports, sans nouveau module ni lien CSS.

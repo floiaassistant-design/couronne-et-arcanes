@@ -4,7 +4,7 @@ Le jeu intègre les sauvegardes protégées, Garde/Riposte uniques, le deck manu
 les paquets/fusions et les ascensions Aube, Sylve, Ombre et Forge. La [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75)
 a intégré dix évolutions Rares/Épiques Forge et leur paquet à `main`,
 avec six contrôles réussis. Ce lot et les PR suivantes jusqu’à la PR 83 sont publiés dans la version Sites 27.
-La PR 83 a intégré dix hauts rangs tactiques Forge le 4 novembre ; sa publication est confirmée dans Sites v27. La PR 84 a intégré [douze évolutions Éther](docs/ETHER_SOCLE_EVOLUTIONS.md) sur huit personnages, avec un paquet distinct. La PR 85 a intégré les [trois hauts rangs du Golem](docs/FORGE_GOLEM_COEUR_RUNIQUE.md), avec le cas interposé validé le 4 novembre. Cette branche propose quatre évolutions supplémentaires : [Repli et présage](docs/ETHER_REPLI_PRESAGE.md). Les pouvoirs Éther restants demeurent des lots séparés.
+La PR 83 a intégré dix hauts rangs tactiques Forge le 4 novembre ; sa publication est confirmée dans Sites v27. La PR 84 a intégré [douze évolutions Éther](docs/ETHER_SOCLE_EVOLUTIONS.md) sur huit personnages, avec un paquet distinct. La PR 85 a intégré les [trois hauts rangs du Golem](docs/FORGE_GOLEM_COEUR_RUNIQUE.md), avec le cas interposé validé le 4 novembre. La PR 86 a intégré quatre évolutions supplémentaires : [Repli et présage](docs/ETHER_REPLI_PRESAGE.md). Leur publication reste suivie séparément. Les pouvoirs Éther restants demeurent des lots séparés.
 Les [cinq Légendaires Forge de statistiques](docs/FORGE_LEGENDAIRES_STATS.md) sont intégrées par la PR 78 le 3 novembre 2026, avec leurs fusions et leur export synchronisé. Leur publication est confirmée dans la version Sites 23.
 Le [Marchefer Légendaire](docs/FORGE_MARCHEFER_LEGENDAIRE.md) et sa récupération de bouclier après élimination sont intégrés par la PR 79 le 3 novembre 2026. La publication reste suivie séparément.
 Le [Foreur Légendaire](docs/FORGE_FOREUR_LEGENDAIRE.md) est intégré par la PR 80 : Foreuse d'acier retire jusqu'à 2 points de barrière personnelle avant l'attaque normale, au plus une fois tous les 3 tours. Sa publication est suivie séparément.
@@ -15,6 +15,8 @@ Jeu solo de cartes tactiques fantasy, web et hors ligne : 76 cartes illustrées,
 quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle.
 
 ## Jouer
+
+Cette proposition renforce le filet coloré de rareté de toutes les cartes dessinées : 2 pixels à l’intérieur du cadre, dans la main, sur le plateau, en Collection et dans les autres vues. Les couleurs des six rangs et la taille des cartes restent les mêmes.
 
 - Impact de zone : cible secondaire uniquement immédiatement derrière la cible principale, sans case vide, dans le sens de la frappe ; voir le [contrat de ciblage](docs/IMPACT_ZONE_2026_11_02.md), intégré à main par la PR 73.
 
@@ -98,7 +100,7 @@ La Collection, les classes, les maîtrises, équipements, talents et donjons son
 conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteur,
 sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
 et les **59 versions Sylve** jusqu'à Éveillée, à leurs niveaux 0 à 3 choisis indépendamment.
-L’Ombre compte 54 versions définies, dont onze natives ; Forge compte 49 versions, dont dix natives. Cette proposition porte Éther à 27 versions, dont onze natives, avec les trois évolutions du Feu follet et la Voyante Légendaire. Le Feu follet natif garde la portée 2 ; ses évolutions ont la portée 3. [Repli spectral et Étoile immobile](docs/ETHER_REPLI_PRESAGE.md). Les quatre récompenses pilotes se gagnent dans les Épreuves ;
+L’Ombre compte 54 versions définies, dont onze natives ; Forge compte 49 versions, dont dix natives. Éther compte 27 versions depuis PR 86, dont onze natives, avec les trois évolutions du Feu follet et la Voyante Légendaire. Le Feu follet natif garde la portée 2 ; ses évolutions ont la portée 3. [Repli spectral et Étoile immobile](docs/ETHER_REPLI_PRESAGE.md). Les quatre récompenses pilotes se gagnent dans les Épreuves ;
 les 187 évolutions définies dans cette branche sont obtenables après leurs déblocages ; huit grandes ascensions ouvrent les Divines/Éveillées Aube/Sylve/Ombre/Forge définies, sans carte offerte ni consommation du deck. Les paquets Sylve, Ombre, Forge et le paquet Éther offrent chacun 3 cartes pour 190 or après le premier boss, avec les mêmes taux par groupe que l'Aube : 60/35/5. [Migration des factions](docs/REPRISE_MIGRATION_CARTES.md) · [Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md). La PR Aube nº 53, avec sa présentation commune et sa
 [revue finale](docs/REVUE_AUBE_PR53_2026_10_27.md), a été fusionnée sur accord du
 propriétaire le 27 octobre 2026. La publication du site reste une opération distincte.
