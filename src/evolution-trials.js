@@ -62,7 +62,14 @@ export const FORGE_ASCENSIONS=freezeCardData([
   enemy:'Gardien du Brasier',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
   deck:['colossus','ironwraith','golem','drill','smith','cannon','engineer','colossus','ironwraith','golem','storm','healing','warcry','bomb','mechanist','alchemist','smith','drill']}
 ]);
-export const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS,...OMBRE_ASCENSIONS,...FORGE_ASCENSIONS]);
+// Premier accès Éther ; les rangs Éveillés restent fermés jusqu'à leur lot.
+export const ETHER_ASCENSIONS=freezeCardData([
+ {id:'ether-ascension-divine',kind:'ascension',faction:'ether',name:'Le Serment des Hautes Sphères',from:'légendaire',to:'divine',mission:'09',
+  goal:{distinct:3,crownPercent:40,maxRound:24},
+  enemy:'Conseil des Astres',difficulty:5,hp:48,boss:true,aiStyle:'bastion',
+  deck:['sentinel','elemental','mystic','tempest','spark','seer','sentinel','griffin','seraph','portal_walker','healing','warcry','aetherknight','mystic','seer','storm']}
+]);
+export const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS,...OMBRE_ASCENSIONS,...FORGE_ASCENSIONS,...ETHER_ASCENSIONS]);
 export const ALL_EVOLUTION_TRIALS=Object.freeze([...EVOLUTION_TRIALS,...ALL_EVOLUTION_ASCENSIONS]);
 export const evolutionTrial=id=>ALL_EVOLUTION_TRIALS.find(t=>t.id===id)||null;
 export const evolutionTrialFor=(id,rarity)=>EVOLUTION_TRIALS.find(t=>t.cardId===id&&t.to===rarity)||null;

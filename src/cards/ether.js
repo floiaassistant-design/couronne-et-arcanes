@@ -9,10 +9,11 @@ export const ETHER_EVOLUTIONS=freezeCardData({
  mystic:{'épique':{stats:{hp:6}},'légendaire':{stats:{attack:4}}},
  elemental:{'légendaire':{stats:{hp:10}}},
  griffin:{'légendaire':{stats:{hp:8}}},
- sentinel:{'épique':{stats:{hp:11}}},
+ sentinel:{'épique':{stats:{hp:11}},'légendaire':{abilities:{guardPrism:{amount:1,minimum:1,period:3,expiresAfter:2}}},'divine':{abilities:{guard:{scope:'line'}}}},
+ dragon:{'divine':{abilities:{splashKnockback:{cells:1,period:3}}}},
  tempest:{'épique':{stats:{hp:8}},'légendaire':{stats:{attack:4}}},
- seer:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}},'légendaire':{abilities:{stillOmen:{amount:2,period:3,delay:1}}}},
+ seer:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}},'légendaire':{abilities:{stillOmen:{amount:2,period:3,delay:1}}},'divine':{abilities:{stillOmen:{amount:3}}}},
  aetherknight:{'légendaire':{stats:{hp:11}}},
  portal_walker:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}}},
- spark:{rare:{stats:{hp:4},geometry:{range:3}},'épique':{stats:{attack:3}},'légendaire':{abilities:{spectralRetreat:{cells:1,period:3}}}}
+ spark:{rare:{stats:{hp:4},geometry:{range:3}},'épique':{stats:{attack:3}},'légendaire':{abilities:{spectralRetreat:{cells:1,period:3}}},'divine':{abilities:{retreatStrike:{amount:2,expiresAfter:2}}}}
 });

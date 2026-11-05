@@ -167,6 +167,6 @@ test('Forge Légendaire : cinq gains de statistiques sans pouvoir ajouté ni acc
   assert.equal(ownedCardCopies(profile,{id,rarity:'légendaire'}),1);
  }
  for(const id of ['sentinel']){
-  assert.equal(resolveUnitDefinition(id,'légendaire'),null,'mécanique de haut rang encore absente');
+  assert.equal(resolveUnitDefinition(id,'éveillée'),null,'mécanique de haut rang encore absente');
  }
 });

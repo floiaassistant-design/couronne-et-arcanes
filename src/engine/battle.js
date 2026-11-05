@@ -7,9 +7,9 @@ import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitC
 import {resolveUnitArrival,resolveUnitSupport} from './unit-support.js';
 import {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty} from './unit-effects.js';
 import {tickUnitPoison,clearUnitPoison,poisonBelongsTo} from './unit-poison.js';
-import {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard} from './unit-triggers.js';
+import {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard,resolveGuardPrism,resolveSplashDisplacement} from './unit-triggers.js';
 import {placeStillOmen,noteOmenMovement,resolveStillOmens} from './unit-omens.js';
-import {applyStrikeFracture} from './unit-strike-modifiers.js';
+import {applyStrikeFracture,consumeNormalStrikeBonus} from './unit-strike-modifiers.js';
 import {contiguousSplashTargets} from './unit-targets.js';
 import {resolveUnitDeath} from './unit-death.js';
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
@@ -237,7 +237,7 @@ function resolveAttackExtras(b,u,lane,sourceCol,targetLane,targetCol,hit,suppres
 
 function strike(b,u,target,atk,from,to,sameLine=true,charged=false,suppressed=false,attackState=null){
  const execution=executionBonus(u,target,suppressed),before=target.hp,poisonedAtStart=poisonBelongsTo(target,u);
- const raw=execution&&attackState?attackAfterPenalty(attackState.unit,attackState.raw+execution):atk;
+ const raw=execution&&attackState?attackAfterPenalty(attackState.unit,attackState.raw+execution,b.round):atk;
  if(raw>0){
   resolveStrikePreparation(b,u,target,suppressed,fx);
   hit(b,target,raw,u.side,unitHasPierce(u,suppressed,charged),true,{attacker:u,from,to,sameLine});
@@ -255,6 +255,7 @@ function resolveSplash(b,u,sourceLane,sourceCol,primaryLane,primaryCol,atk,inter
   const before=extra.hp;
   hit(b,extra,p.amount,u.side,false,true);
   applyStrikeFracture(b,u,extra,before>extra.hp,true,suppressed,fx);
+  resolveSplashDisplacement(b,u,extra,before>extra.hp,suppressed,controlHooks);
  }
 }
 function resolveAttacks(b,sideFilter=null){
@@ -264,9 +265,9 @@ function resolveAttacks(b,sideFilter=null){
   const target=findTarget(b,lane,col,u);
   const charged=!silenced(b,u)&&unitChargeAmount(u)>0&&!!u.movedThisRound;
   if(target){
-   const furious=!!u.fury,raw=u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0);
+   const furious=!!u.fury,raw=u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0)+consumeNormalStrikeBonus(b,u);
    const attackState=versionUnitAbilities(u)?.execution?{unit:{...u,attackPenalty:u.attackPenalty?{...u.attackPenalty}:undefined},raw}:null;
-   intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,raw),attackState,ability:activeAbility(b,u),charged,furious,suppressed:silenced(b,u)});
+   intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,raw,b.round),attackState,ability:activeAbility(b,u),charged,furious,suppressed:silenced(b,u)});
   }
  }
  // All intents are collected before damage; the round is effectively simultaneous.
@@ -288,11 +289,13 @@ function resolveAttacks(b,sideFilter=null){
     retaliate(b,guardIntercept.u,u,lane,guardIntercept.col,intent.col,guardIntercept.lane);
     resolveStrikeDisplacement(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
     resolveGuardWard(b,guardIntercept.u,true,result.performed,silenced(b,guardIntercept.u),fx);
+    resolveGuardPrism(b,guardIntercept.u,u,true,result.performed,silenced(b,guardIntercept.u),fx);
     placeStillOmen(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},fx);
     resolveSpectralRetreat(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
   } else {
-   const interposed=versionUnitAbilities(target.target)?.guardWard?.interposedCrownThreat&&isInterposedCrownGuardian(b,lane,intent.col,u,target.target);
+   const guardAbilities=versionUnitAbilities(target.target);
+   const interposed=(guardAbilities?.guardWard?.interposedCrownThreat||guardAbilities?.guardPrism)&&isInterposedCrownGuardian(b,lane,intent.col,u,target.target);
    const result=strike(b,u,target.target,atk,intent.col,target.col,true,charged,intent.suppressed,intent.attackState);
    if(ability==='lifesteal')resolveLifesteal(b,u);
    applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0,{battle:b,lane,col:target.col,skipPoison:result.catalysed});
@@ -302,6 +305,7 @@ function resolveAttacks(b,sideFilter=null){
    retaliate(b,target.target,u,lane,target.col,intent.col);
    resolveStrikeDisplacement(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
    resolveGuardWard(b,target.target,interposed,result.performed,silenced(b,target.target),fx);
+   resolveGuardPrism(b,target.target,u,interposed,result.performed,silenced(b,target.target),fx);
    placeStillOmen(b,u,target.target,{...result,suppressed:intent.suppressed},fx);
    resolveSpectralRetreat(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
   }

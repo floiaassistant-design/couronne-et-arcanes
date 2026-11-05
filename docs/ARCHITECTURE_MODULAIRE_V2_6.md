@@ -1,6 +1,12 @@
 # Architecture modulaire — lecture courante
 
-## Éther — Repli et présage proposés le 4 novembre
+## Éther — cinq versions et ascension Divine proposées le 5 novembre
+
+`cards/ether.js` paramètre cinq patches, sans modifier les natifs. `unit-triggers.js` possède les suites de recul, Impact et interception ; `battle.js` ne fait que transmettre les résultats et hooks communs. `unit-strike-modifiers.js` porte bonus normal consommable, malus Prisme et expiration ; `unit-effects.js` réutilise les intentions/Ripostes et valide les nouveaux quotas. Le plus fort malus est retenu sans addition à Harcèlement, dont la durée propre reste conservée. `unit-omens.js` est réutilisé sans deuxième présage ni résolution recopiée.
+
+L’ascension Éther reprend accès/objectifs/reçu/fusion existants ; une seule rencontre ouvre les quatre Divines effectivement présentes. Fiches lisant le registre, mêmes 80 modules et 76 illustrations dans les distributions, aucune dépendance ni cycle ajoutés. `battle.js` conserve son rôle d’orchestration ; le lot ajoute quatre lignes nettes, sans calcul métier dans les vues. [Contrat et limites](ETHER_PREMIERS_DIVINS.md).
+
+## Éther — Repli et présage intégrés par PR 86 le 4 novembre
 
 `unit-omens.js` possède la pose, le remplacement, l’annulation sur entrée réelle, la résolution de fin de tour complet et la validation des présages. Aucun import des défenses : `battle.js` injecte `hit` et ses hooks communs, sans cycle. Le recul personnel reste dans `unit-triggers.js`, après réactions, avec géométrie et pièges partagés. Les quotas et marques facultatifs sont validés par `unit-effects.js`. Fiches et Silence lisent le registre. Le graphe découvre le nouveau module dans les deux distributions : 80 modules, 76 illustrations inchangées. `battle.js` reste une orchestration (445 lignes) ; aucune règle de dégâts ou d’animation ajoutée à son corps. [Contrat et interactions](ETHER_REPLI_PRESAGE.md).
 
@@ -58,9 +64,9 @@ stratégie d'IA. Les événements de protection utilisent les instantanés exist
 Web, autonome et laboratoire conservent le même graphe ; aucun module de production,
 actif ou dépendance externe ajouté. [Contrat et limites](FORGE_MARCHEFER_LEGENDAIRE.md).
 
-## Correctif proposé — ciblage de l'Impact (2 novembre 2026)
+## Ciblage de l'Impact — intégré par PR 73 (2 novembre 2026)
 
-`unit-targets.js` sélectionne les ennemis secondaires contigus en direction de l'attaque à partir de la position réelle de la cible principale ; `battle.js` conserve conditions de déclenchement et dégâts via `hit()`. Les paramètres natifs et les fiches lisent le même contrat. Les deux cibles secondaires de l'Archiliche Éveillée restent possibles sans sauter une case. Il s'agit d'une PR de règles **non encore intégrée** ; voir [contrat](IMPACT_ZONE_2026_11_02.md).
+`unit-targets.js` sélectionne les ennemis secondaires contigus en direction de l'attaque à partir de la position réelle de la cible principale ; `battle.js` conserve conditions de déclenchement et dégâts via `hit()`. Les paramètres natifs et les fiches lisent le même contrat. Les deux cibles secondaires de l'Archiliche Éveillée restent possibles sans sauter une case. Ce correctif de règles est **intégré par PR 73** ; voir [contrat](IMPACT_ZONE_2026_11_02.md).
 
 
 ## Résultats en attente — correction proposée le 31 octobre 2026

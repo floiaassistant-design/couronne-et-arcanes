@@ -19,11 +19,21 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
 | Forge | 10 | 39 sur 39 cases futures | 39 évolutions intégrées jusqu’à PR 85 ; 49 versions Forge |
-| Éther | 11 | 39 sur 39 cases futures | Douze évolutions intégrées par PR 84 ; quatre supplémentaires proposées, 23 autres absentes ; portée 3 native du Feu follet distincte |
+| Éther | 11 | 39 sur 39 cases futures | Seize évolutions intégrées par PR 84/86 ; cinq proposées ici, 18 autres absentes ; portée 3 native du Feu follet distincte |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
 ou un pouvoir validé ne crée ni exemplaire ni définition jouable. Les onze personnages Éther ont leurs 39 évolutions validées dans cette édition ;
 la disponibilité réelle reste déterminée par le registre du jeu.
+
+## Reprise du 5 novembre — premiers Divins Éther proposés
+
+Main `3fac34fa5a2b94cc705aca086d761bf6e524493c` intègre PR 86 et ses quatre évolutions ; leur publication Sites v29 est confirmée par le suivi existant, au commit de diffusion `ccc8dd42a6f6ffe435ae63c94fc0876ecfbe9e31`. Les paragraphes antérieurs mentionnant Repli/présage comme proposés et le Golem comme absent sont des jalons historiques.
+
+[Lot suivant](ETHER_PREMIERS_DIVINS.md) : cinq versions sur quatre personnages, première ascension Divine Éther, 21 évolutions et 32 versions Éther dans cette proposition ; 192 recettes au total. Dix-huit évolutions Éther, tous ses rangs Éveillés et la portée native 3 du Feu follet restent distincts. La PR 87 des contours est fusionnée dans main `3ba15786de52f33877b2854bf743430bdc1ca327` ; cette branche reprend son CSS et ses documents, puis régénère JOUER depuis l’assemblage commun, sans perdre le lot Éther. Sa publication demeure bloquée par l’environnement indisponible ; Sites v29 reste la dernière diffusion confirmée. Chaque PR exige son accord spécifique.
+
+## Historique des lots précédents
+
+Les sections suivantes conservent les bilans au moment de chaque lot. Les mentions de Golem absent, de Repli proposé et les anciens compteurs décrivent ces jalons ; ils ne remplacent pas la reprise courante ci-dessus.
 
 ## Lot intégré : Sylve Rare/Épique
 
@@ -74,7 +84,7 @@ La publication du jeu reste une opération distincte.
 
 Les 39 évolutions Forge sont entièrement validées dans la conception.
 La première tranche [Rare/Épique](FORGE_RARE_EPIQUE.md) est intégrée par la PR 75 :
-dix versions sur sept personnages (3 Rares et 7 Épiques), 142 recettes au total après cette fusion. La publication Sites doit être vérifiée indépendamment de la fusion. Les 39 évolutions Éther sont validées en conception ; douze sont intégrées par PR 84, quatre supplémentaires sont proposées dans cette branche.
+dix versions sur sept personnages (3 Rares et 7 Épiques), 142 recettes au total après cette fusion. La publication Sites doit être vérifiée indépendamment de la fusion. Les 39 évolutions Éther sont validées en conception ; seize sont intégrées par PR 84/86 ; les propositions suivantes sont suivies dans la reprise courante.
 La nouvelle portée native 3 du Feu follet est une décision séparée du natif 2
 encore au moteur ; elle exige son propre périmètre, contrôle et documentation.
 Relire Notion à la reprise, car la conception continue en parallèle.

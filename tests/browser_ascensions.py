@@ -2,11 +2,12 @@
 import copy,json,subprocess
 from pathlib import Path
 from evolution_ci_plan import ascension_cases
+from browser_ether_divine import run_ether_divine_case
 
 ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
 BATTLE='couronnes_arcanes_bataille_v1'
-SCENARIOS={f:json.loads(subprocess.check_output(['node','tests/fixtures/ascension-scenarios.mjs','--json']+(['--'+f] if f!='aube' else []),cwd=ROOT)) for f in ['aube','sylve','ombre','forge']}
+SCENARIOS={f:json.loads(subprocess.check_output(['node','tests/fixtures/ascension-scenarios.mjs','--json']+(['--'+f] if f!='aube' else []),cwd=ROOT)) for f in ['aube','sylve','ombre','forge','ether']}
 
 async def run_forge_tactical_case(browser,config,address,profile,rank,make_case,click,stored):
     fixture=json.loads(subprocess.check_output(['node','tests/fixtures/forge-tactical-battle.mjs',json.dumps(profile),rank],cwd=ROOT))
@@ -68,14 +69,14 @@ async def run_golem_case(browser,config,address,profile,rank,make_case,click,sto
 
 async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,stored,faction='aube'):
     for config in ascension_cases(part):
-        label,touch=config['label'],config['touch'];s=SCENARIOS[faction][config['index']];card_id='drill' if faction=='forge' else 'bone' if faction=='ombre' else 'thorn' if faction=='sylve' else 'dawnbastion'
+        label,touch=config['label'],config['touch'];s=SCENARIOS[faction][config['index']%len(SCENARIOS[faction])];card_id='seer' if faction=='ether' else 'drill' if faction=='forge' else 'bone' if faction=='ombre' else 'thorn' if faction=='sylve' else 'dawnbastion'
         address=url if label=='web' else None
         locked=copy.deepcopy(s);locked['profile']['completed']=[]
         ctx,page,errors,_=await make_case(browser,locked,config['viewport'],touch=touch,url=address)
         await click(page.locator('#nav [data-page="trials"]'),touch)
         tile=page.locator(f'[data-trial-id="{s["id"]}"]')
         assert await tile.locator('[data-action="trial-start"]').is_disabled()
-        assert await page.locator('.trial-card').count()==4 and await page.locator('.ascension-card').count()==8
+        assert await page.locator('.trial-card').count()==4 and await page.locator('.ascension-card').count()==9
         assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
         assert not errors,errors
         await ctx.close()
@@ -163,7 +164,7 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         await select(page,index,touch)
         await click(page.locator('[data-action="deploy"][data-lane="0"][data-col="1"]'),touch)
         snapshot=await stored(page,BATTLE);unit=snapshot['board'][0][1]
-        assert (unit['id'],unit['rarity'],unit['atk'],unit['maxhp'])==(card_id,s['trial']['to'],(6 if faction=='ombre' else 5 if faction in ('sylve','forge') else 7 if s['trial']['to']=='divine' else 9),(10 if faction=='forge' else 9 if faction in ('sylve','ombre') else 14))
+        assert (unit['id'],unit['rarity'],unit['atk'],unit['maxhp'])==(card_id,s['trial']['to'],(6 if faction=='ombre' else 5 if faction in ('sylve','forge','ether') else 7 if s['trial']['to']=='divine' else 9),(8 if faction=='ether' else 10 if faction=='forge' else 9 if faction in ('sylve','ombre') else 14))
         if faction=='aube':assert unit['arrivalResolved'] and snapshot['heroes']['p']['shield']==3
         await page.reload();await page.locator('.combat-screen').wait_for();assert await stored(page,BATTLE)==snapshot
         if faction=='forge':
@@ -191,3 +192,4 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         if faction=='forge':
             await run_forge_tactical_case(browser,config,address,final,s['trial']['to'],make_case,click,stored)
             await run_golem_case(browser,config,address,final,s['trial']['to'],make_case,click,stored)
+        if faction=='ether':await run_ether_divine_case(browser,config,address,final,make_case,click,stored)

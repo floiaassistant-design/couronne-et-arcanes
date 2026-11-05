@@ -201,3 +201,20 @@ Les quatre parties d’ascension Forge ajoutent ce combat tactique préparé, é
 `forge_golem.test.mjs` ajoute quinze cas : vraies fusions, deux camps/deux géométries, menace de couronne, exclusions, gardien dépassé/interligne, priorité, quotas par invocation, plafond/surplus, absorption, Silence, attaque nulle, mort après réaction, reprise/import, instantanés, fiches, moteur embarqué et fixture navigateur partagée. Catalogue : 49 versions Forge × quatre niveaux × deux camps et 183 recettes dans 2 928 exécutions déterministes. Les vérifications d’absence sont déplacées vers la Sentinelle encore absente, sans perdre les assertions. Le contrôle de rendu d’ascension annonce désormais dix recettes Forge par rang, comme Aube.
 
 `golem-battle.mjs` fusionne/invoque le Golem Divin/Éveillé, puis laisse le moteur intercepter la véritable frappe adverse. Les quatre parties Forge ajoutent fiche et reprise à ce même scénario, sans nouveau job. Un combat préparé n’est pas une campagne complète ; le propriétaire a validé le cas interposé le 4 novembre, les tests en vérifient l'application.
+
+## Éther — premiers Divins proposés le 5 novembre
+
+`ether_divine.test.mjs` vérifie cinq vraies fusions sur quatre cartes, minimum/cadence du Prisme après menace de couronne, exclusions, deux camps/deux géométries, remplacement du présage par 3, bonus normal consommable/expirable, recul secondaire, pièges, Silence, protections, absence de chaîne, reprise et moteur réellement embarqué. `ether_ascensions.test.mjs` joue la nouvelle rencontre complète, les refus, objectifs, reçu unique et 64 graines/niveaux rejouées. Catalogue : 32 versions × quatre niveaux × deux camps ; 192 recettes dans 3 072 exécutions déterministes.
+
+Le pilote partagé d’ascension ajoute Éther aux quatre parties existantes. Un combat préparé commun Node/navigateur fusionne/invoque les quatre Divines, sans préattribuer leurs pouvoirs ; l’interface doit déclencher, lire et reprendre les quatre effets puis leur consommation/résolution au tour suivant. Aucun nouveau job ni seconde exécution de suite entière. Les anciens témoins d’absence visent désormais les versions toujours absentes ; aucune assertion n’est retirée. Résultats et limites à lire dans la PR du SHA exact.
+
+Le contrôle Légendaire partagé vérifie aussi les Divines du Feu follet et de la
+Voyante : ascension requise, ATQ/PV 3/4 et 3/5 ; leurs Éveillées restent « À concevoir ».
+L’ancienne assertion d’absence des deux rangs n’est pas conservée sur un rang ajouté.
+Le parcours `browser_ether.py` vérifie également les PV affichés en Collection
+pour les cinq nouveaux rangs : Feu follet 4, Voyante 5, Sentinelle 11 à ses deux
+rangs et Dragon 12. Les rangs absents gardent le tiret. Les valeurs attendues
+restent indépendantes du registre et sont vérifiées sur bureau, portrait et paysage.
+Le groupe combat ayant atteint sa limite de 20 minutes dans le run 42056039630,
+la marge des groupes passe à 30 minutes, avec les mêmes quatre groupes et tous
+les contrôles. Aucune durée de réussite anticipée ; lire la nouvelle CI exacte.

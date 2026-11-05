@@ -1,6 +1,18 @@
 # Journal des changements
 
-## En préparation — contours de rareté, 4 novembre 2026
+## En préparation — cinq versions Éther et ascension Divine, 5 novembre 2026
+
+- Sentinelle Légendaire/Divine et Prisme inhibiteur après une interception réelle de couronne survécue. Garde Divine remplace la portée normale, sans double interception.
+- Feu follet Divin : Éclat persistant après repli réussi ; Voyante Divine : Destin scellé, présage 3 remplaçant 2 ; Dragon Divin : recul de la seule victime secondaire blessée par Impact.
+- Une ascension Éther commune après mission 09 ouvre quatre fusions de trois Légendaires libres. Aucun cadeau, accès Éveillé, changement de natif, de paquet ou de sauvegarde historique.
+- État de combat facultatif validé, fiches et Silence, laboratoire/moteur communs, export autonome régénéré et nouveaux parcours raccordés à la CI existante.
+
+## En préparation — contrôle des Divines et durée de CI, 5 novembre 2026
+
+- Le parcours Légendaire distingue les Divines Feu follet/Voyante définies mais soumises à ascension de leurs Éveillées absentes, avec vérification des chiffres.
+- Branche réconciliée avec les contours intégrés et export commun régénéré. Après une interruption à 20 minutes du groupe combat, marge portée à 30 minutes ; même matrice, mêmes commandes et assertions.
+
+## Intégré par PR 87 — contours de rareté, 5 novembre 2026
 
 - Filet intérieur de 2 pixels dans la couleur de rareté existante, partagé par toutes les cartes dessinées : main, plateau, Collection, fiches et autres vues.
 - Deux propriétés dans le composant CSS commun ; mêmes dimensions, images et zones de texte. Les signaux de sélection, focus et disponibilité restent distincts.

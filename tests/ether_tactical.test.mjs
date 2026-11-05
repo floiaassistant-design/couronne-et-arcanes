@@ -186,7 +186,7 @@ test('Fiches : pouvoirs, portée effective, présage de la victime et cadence sa
  assert(view.board.statuses.some(s=>s.includes('présage 2, fin du tour 2')));
  assert.match(cardPresentation({id:'spark',rarity:'légendaire'}).card.description,/Portée 3.*Repli spectral/);
  assert.match(cardPresentation({id:'seer',rarity:'légendaire'}).details.join(' '),/déplacement réel.*suivant complet/);
- for(const id of ['spark','seer'])assert.equal(resolveUnitDefinition(id,'divine'),null);
+ for(const id of ['spark','seer'])assert.equal(resolveUnitDefinition(id,'éveillée'),null);
 });
 
 function fixtureProfile(id){const p=freshProfile();p.completed=['01','02','03','04','05','06'];p.evolvedCollection={[id+':épique']:3};const r=fuseEvolutionCopies(p,id+':légendaire');assert(r.ok);assert(modifyDeck(p,r.target,1));return p;}

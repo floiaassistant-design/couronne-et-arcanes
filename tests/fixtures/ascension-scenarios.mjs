@@ -1,6 +1,6 @@
 // Parties complètes du moteur et préparation de profils avancés pour les tests.
 import {CARDS,CAMPAIGN} from '../../src/data.js';
-import {EVOLUTION_ASCENSIONS,SYLVE_ASCENSIONS,OMBRE_ASCENSIONS,FORGE_ASCENSIONS} from '../../src/evolution-trials.js';
+import {EVOLUTION_ASCENSIONS,SYLVE_ASCENSIONS,OMBRE_ASCENSIONS,FORGE_ASCENSIONS,ETHER_ASCENSIONS} from '../../src/evolution-trials.js';
 import {EVOLUTION_FUSIONS} from '../../src/evolution-fusion.js';
 import {unitVersions} from '../../src/cards/definitions.js';
 import {CARD_RARITIES} from '../../src/cards/schema.js';
@@ -13,11 +13,12 @@ const composition=['shield','shield','shield','lancer','lancer','lancer','archer
 const sylveComposition=['treant','treant','treant','bear','bear','wolf','wolf','ranger','ranger','dryad','dryad','archdruid','archdruid','pixie','pixie','owl','sylvan_trapper','stag','healing','healing'];
 const ombreComposition=['crypt','crypt','crypt','graveknight','graveknight','shade','shade','bone','bone','vampire','vampire','banshee','banshee','lich','mist_inquisitor','plague','nightblade','spectre','healing','healing'];
 const forgeComposition=['ironwraith','ironwraith','ironwraith','drill','drill','drill','smith','smith','smith','colossus','colossus','golem','golem','cannon','engineer','engineer','mechanist','alchemist','healing','healing'];
-const factionComposition=faction=>faction==='forge'?forgeComposition:faction==='ombre'?ombreComposition:faction==='sylve'?sylveComposition:composition;
-const factionTrials=faction=>faction==='forge'?FORGE_ASCENSIONS:faction==='ombre'?OMBRE_ASCENSIONS:faction==='sylve'?SYLVE_ASCENSIONS:EVOLUTION_ASCENSIONS;
+const etherComposition=['sentinel','sentinel','sentinel','aetherknight','aetherknight','aetherknight','griffin','griffin','elemental','elemental','mystic','mystic','tempest','tempest','dragon','seraph','seer','spark','healing','healing'];
+const factionComposition=faction=>faction==='ether'?etherComposition:faction==='forge'?forgeComposition:faction==='ombre'?ombreComposition:faction==='sylve'?sylveComposition:composition;
+const factionTrials=faction=>faction==='ether'?ETHER_ASCENSIONS:faction==='forge'?FORGE_ASCENSIONS:faction==='ombre'?OMBRE_ASCENSIONS:faction==='sylve'?SYLVE_ASCENSIONS:EVOLUTION_ASCENSIONS;
 function factionReference(id,rarity,faction){
  if(CARDS[id].type==='sort')return id;
- const rank=faction==='forge'?unitVersions(id).filter(d=>CARD_RARITIES.findIndex(r=>r.id===d.rarity)<=CARD_RARITIES.findIndex(r=>r.id===rarity)).at(-1).rarity:rarity;
+ const rank=['forge','ether'].includes(faction)?unitVersions(id).filter(d=>CARD_RARITIES.findIndex(r=>r.id===d.rarity)<=CARD_RARITIES.findIndex(r=>r.id===rarity)).at(-1).rarity:rarity;
  return cardReference({id,rarity:rank});
 }
 export function ascensionProfile(rarity='légendaire',level=2,faction='aube'){
@@ -69,4 +70,4 @@ export function ascensionScenarios(faction='aube'){
  }
  return scenarios;
 }
-if(process.argv.includes('--json'))console.log(JSON.stringify(ascensionScenarios(process.argv.includes('--forge')?'forge':process.argv.includes('--ombre')?'ombre':process.argv.includes('--sylve')?'sylve':'aube')));
+if(process.argv.includes('--json'))console.log(JSON.stringify(ascensionScenarios(process.argv.includes('--ether')?'ether':process.argv.includes('--forge')?'forge':process.argv.includes('--ombre')?'ombre':process.argv.includes('--sylve')?'sylve':'aube')));

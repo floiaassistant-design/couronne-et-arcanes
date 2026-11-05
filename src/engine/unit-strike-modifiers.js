@@ -2,8 +2,14 @@
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {grantAbilityBarrier} from './unit-barriers.js';
 
-const keys=['armorPenalty','temporaryArmor','calibration','spotMark'];
+const keys=['armorPenalty','temporaryArmor','calibration','spotMark','prismPenalty','nextStrikeBonus'];
 export const activeStrikeState=(u,key,round)=>u?.[key]?.expiresRound>=round?u[key]:null;
+// Bonus de la prochaine attaque normale : consommé à l'intention, jamais à la Riposte.
+export function consumeNormalStrikeBonus(b,u){
+ const p=activeStrikeState(u,'nextStrikeBonus',b.round);
+ delete u.nextStrikeBonus;
+ return p?.amount||0;
+}
 function timedArmor(target,key,p,round){
  const old=activeStrikeState(target,key,round);
  if(target.hp<=0||old?.amount>p.amount)return false;
@@ -63,7 +69,8 @@ const positive=n=>Number.isSafeInteger(n)&&n>0&&n<=100;
 export function validStrikeModifiers(u){
  const timed=p=>p===undefined||!!p&&positive(p.amount)&&positive(p.expiresRound);
  const c=u.calibration,m=u.spotMark;
- return timed(u.armorPenalty)&&timed(u.temporaryArmor)&&
+ return timed(u.armorPenalty)&&timed(u.temporaryArmor)&&timed(u.nextStrikeBonus)&&
+  (u.prismPenalty===undefined||!!u.prismPenalty&&positive(u.prismPenalty.amount)&&positive(u.prismPenalty.expiresRound)&&u.prismPenalty.minimum===1)&&
   (c===undefined||!!c&&positive(c.ignoreArmor)&&positive(c.expiresRound)&&
    (c.barrier===undefined||!!c.barrier&&positive(c.barrier.amount)&&positive(c.barrier.cap)))&&
   (m===undefined||!!m&&Number.isSafeInteger(m.sourceUid)&&m.sourceUid>=0&&['p','e'].includes(m.side)&&

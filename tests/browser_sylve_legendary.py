@@ -9,8 +9,8 @@ ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
 BATTLE='couronnes_arcanes_bataille_v1'
 SCENARIOS={
-    'ether-spark':{'card':'spark','faction':'ether','stats':(3,4),'effect':'spectralRetreatReadyRound','effectSide':'p','status':'Repli spectral','detail':['Repli spectral','Portée 3','3 tours','fusion'],'future':'À concevoir','prepared':True,'fixture':'ether'},
-    'ether-seer':{'card':'seer','faction':'ether','stats':(3,5),'effect':'stillOmen','status':'Étoile immobile','detail':['Étoile immobile','déplacement réel','3 tours','fusion'],'future':'À concevoir','prepared':True,'fixture':'ether'},
+    'ether-spark':{'card':'spark','faction':'ether','stats':(3,4),'futureByRank':{'divine':'Ascension requise'},'divineStats':(3,4),'effect':'spectralRetreatReadyRound','effectSide':'p','status':'Repli spectral','detail':['Repli spectral','Portée 3','3 tours','fusion'],'future':'À concevoir','prepared':True,'fixture':'ether'},
+    'ether-seer':{'card':'seer','faction':'ether','stats':(3,5),'futureByRank':{'divine':'Ascension requise'},'divineStats':(3,5),'effect':'stillOmen','status':'Étoile immobile','detail':['Étoile immobile','déplacement réel','3 tours','fusion'],'future':'À concevoir','prepared':True,'fixture':'ether'},
     'sylve':{'card':'owl','stats':(3,5),'effect':'attackPenalty','status':'Harcèlement','detail':['Harcèlement','−1 ATQ','fusion'],'future':'Ascension requise'},
     'ombre':{'card':'plague','stats':(4,7),'effect':'poisonTurns','status':'Poison 2 tour(s)','detail':['Poison 1','2 tours','fusion'],'future':'Ascension requise'},
     'forge-scrap':{'card':'ironwraith','faction':'forge','stats':(3,9),'effect':'strikeWardReadyRound','effectSide':'p','status':'Ferraille récupérée','detail':['Ferraille récupérée','plafond 20','3 tours','fusion'],'future':'Ascension requise'},
@@ -65,7 +65,13 @@ async def run_sylve_legendary(browser,label,viewport,url=None,scenario='sylve'):
     await nav('collection');await click(page.locator(f'[data-action="collection-faction"][data-id="{faction}"]'))
     row=page.locator(f'[data-collection-character="{card_id}"]');assert await row.locator('td').count()==6
     assert 'Possédée ×1' in await row.locator('[data-collection-rarity="légendaire"]').inner_text()
-    for rank in ['divine','éveillée']:assert cfg['future'] in await row.locator(f'[data-collection-rarity="{rank}"]').inner_text()
+    for rank in ['divine','éveillée']:
+        cell=row.locator(f'[data-collection-rarity="{rank}"]')
+        assert cfg.get('futureByRank',{}).get(rank,cfg['future']) in await cell.inner_text()
+        if rank=='divine' and 'divineStats' in cfg:
+            atk,hp=cfg['divineStats']
+            assert await cell.locator('.stat.atk b').inner_text()==str(atk)
+            assert await cell.locator('.stat.hp b').inner_text()==str(hp)
     if scenario=='ombre':
         preview=page.locator('[data-collection-character="crypt"] [data-collection-rarity="légendaire"] [data-collection-preview]')
         if touch:await preview.tap()

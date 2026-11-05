@@ -163,8 +163,13 @@
   leurs calculs ; les dégâts secondaires ne consomment pas une attaque directe.
 - `unit-effects.js` partage malus d'attaque, poison paramétré et régénération.
   L'ATQ permanente ne change pas ; malus consommé à la prochaine intention d'attaque
-  ou Riposte valide, bonus inclus, minimum zéro. Pas de consommation par sort ni
+  ou Riposte valide, bonus inclus, plancher défini par l'effet (zéro ou un).
+  Pas de consommation par sort ni
   modification rétroactive des intentions simultanées déjà préparées.
+- Les bonus de prochaine attaque normale restent distincts des bonus de Riposte :
+  consommation à l'intention normale, expiration commune et aucune attaque ajoutée.
+  Prisme conserve son plancher et sa durée, sans addition à Harcèlement ; son gain
+  exige une interception réelle de couronne survécue, qualifiée par la Garde commune.
 - Régénération après soin effectif, au prochain tour de son camp avant les nouveaux
   soins ; non cumulable, rafraîchie, indépendante de la survie du soigneur.
   Silence bloque les nouvelles applications, pas les effets déjà appliqués.

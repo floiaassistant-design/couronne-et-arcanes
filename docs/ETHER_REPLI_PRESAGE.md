@@ -4,7 +4,8 @@ La PR 86 est fusionnée sur accord spécifique au commit `3fac34fa5a2b94cc705aca
 Arbre `2df95c6538fcff05a3d88d861078a659cd549d4a` exactement identique à la tête revue/testée
 `725d2f8`, six contrôles réussis, export `a7bd33c9365a70599c29d67cfbc65d1683292ac2`.
 Les formulations de préparation et de CI à attendre ci-dessous décrivent le lot historique ;
-la publication est suivie séparément.
+la publication de ce lot est confirmée dans Sites v29. Les évolutions suivantes
+sont décrites dans [Premiers Divins Éther](ETHER_PREMIERS_DIVINS.md).
 
 ## Source et versions
 
