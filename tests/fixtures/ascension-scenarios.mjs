@@ -62,7 +62,7 @@ export function ascensionScenarios(faction='aube'){
   if(!found)throw Error('Aucun parcours réussi : '+t.id);
   scenarios.push(found);profile=structuredClone(found.expected);
   if(t.to==='divine'){
-   for(const recipe of EVOLUTION_FUSIONS.filter(r=>r.to==='divine'&&CARDS[r.cardId].faction===faction))for(let n=0;n<3+(['ombre','forge'].includes(faction)?factionComposition(faction).filter(id=>id===recipe.cardId).length:0);n++){
+   for(const recipe of EVOLUTION_FUSIONS.filter(r=>r.to==='divine'&&CARDS[r.cardId].faction===faction))for(let n=0;n<3+(['ombre','forge','ether'].includes(faction)?factionComposition(faction).filter(id=>id===recipe.cardId).length:0);n++){
     const r=fuseEvolutionCopies(profile,recipe.id);if(!r.ok)throw Error(r.reason);
    }
    profile.deck=factionComposition(faction).map(id=>factionReference(id,'divine',faction));

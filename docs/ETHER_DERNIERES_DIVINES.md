@@ -16,7 +16,7 @@ L’**Écho dimensionnel** mémorise l’origine d’un vrai changement de ligne
 
 ## Périmètre et vérification
 
-Le lot porte Éther à 39 versions, dont 28 évolutions, avec ses onze Divines et 199 recettes au total. Le rang Éveillé, son ascension et la décision sur la portée du Feu follet natif suivent des chantiers séparés.
+Le lot porte Éther à 39 versions, dont 28 évolutions, avec ses onze Divines et 199 recettes au total. Le [lot des premières Éveillées](ETHER_PREMIERES_EVEILLEES.md) traite la première tranche et son ascension. La portée du Feu follet natif relève d’un chantier séparé.
 
 Le module des présages partage leur pose et la validation de leurs états. Le Portail transmet son origine au ciblage de secours. La Percée réutilise le retrait normal d’une unité vaincue et l’entrée sur la case. Les états facultatifs sont contrôlés à la reprise, y compris les coordonnées de l’Écho. Le web et l’autonome intègrent les mêmes sources et les mêmes illustrations.
 

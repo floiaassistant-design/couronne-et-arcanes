@@ -24,7 +24,7 @@ test('Marteau obtenu par fusion : 4/8/1, recul 1 à cadence 3 et natifs inchang�
  assert.deepEqual(d.stats,epic.stats);assert.deepEqual(d.geometry,{steps:1,range:1});
  assert.deepEqual(d.abilities,{knockback:{cells:1,period:3}});assert.deepEqual(epic.abilities,{});
  assert.deepEqual([u.atk,u.maxhp],[4,8]);assert.equal(p.evolvedCollection['smith:légendaire'],1);
- for(const id of ['mystic','aetherknight'])assert.equal(resolveUnitDefinition(id,'éveillée'),null);
+ for(const id of ['spark','aetherknight'])assert.equal(resolveUnitDefinition(id,'éveillée'),null);
 });
 
 test('Coup de masse : blessure, recul vers la couronne dans les deux camps, une seule attaque et aucun suivi',()=>{

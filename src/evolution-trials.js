@@ -62,12 +62,16 @@ export const FORGE_ASCENSIONS=freezeCardData([
   enemy:'Gardien du Brasier',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
   deck:['colossus','ironwraith','golem','drill','smith','cannon','engineer','colossus','ironwraith','golem','storm','healing','warcry','bomb','mechanist','alchemist','smith','drill']}
 ]);
-// Premier accès Éther ; les rangs Éveillés restent fermés jusqu'à leur lot.
+// Ascensions communes Éther : seules les recettes définies sont débloquées.
 export const ETHER_ASCENSIONS=freezeCardData([
  {id:'ether-ascension-divine',kind:'ascension',faction:'ether',name:'Le Serment des Hautes Sphères',from:'légendaire',to:'divine',mission:'09',
   goal:{distinct:3,crownPercent:40,maxRound:24},
   enemy:'Conseil des Astres',difficulty:5,hp:48,boss:true,aiStyle:'bastion',
-  deck:['sentinel','elemental','mystic','tempest','spark','seer','sentinel','griffin','seraph','portal_walker','healing','warcry','aetherknight','mystic','seer','storm']}
+  deck:['sentinel','elemental','mystic','tempest','spark','seer','sentinel','griffin','seraph','portal_walker','healing','warcry','aetherknight','mystic','seer','storm']},
+ {id:'ether-ascension-eveillee',kind:'ascension',faction:'ether',name:'L’Éveil des Hautes Sphères',from:'divine',to:'éveillée',mission:'12',previous:'ether-ascension-divine',
+  goal:{distinct:4,crownPercent:60,maxRound:24},
+  enemy:'Gardien des Hautes Sphères',difficulty:6,hp:60,boss:true,aiStyle:'assaut',
+  deck:['dragon','sentinel','elemental','griffin','aetherknight','tempest','seraph','dragon','sentinel','mystic','storm','healing','warcry','seer','portal_walker','spark','elemental','tempest']}
 ]);
 export const ALL_EVOLUTION_ASCENSIONS=Object.freeze([...EVOLUTION_ASCENSIONS,...SYLVE_ASCENSIONS,...OMBRE_ASCENSIONS,...FORGE_ASCENSIONS,...ETHER_ASCENSIONS]);
 export const ALL_EVOLUTION_TRIALS=Object.freeze([...EVOLUTION_TRIALS,...ALL_EVOLUTION_ASCENSIONS]);

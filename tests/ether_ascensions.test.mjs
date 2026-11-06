@@ -8,11 +8,30 @@ import {validStoredBattle,validateImportedProfile} from '../src/ui/storage.js';
 import {ascensionProfile,ascensionScenarios,playAscension} from './fixtures/ascension-scenarios.mjs';
 
 const scenarios=ascensionScenarios('ether'),id='ether-ascension-divine';
-test('Une ascension Éther, onze recettes Divines ; aucune Éveillée ni cadeau',()=>{
- assert.equal(ETHER_ASCENSIONS.length,1);const t=ETHER_ASCENSIONS[0];
- assert.equal(evolutionAscensionFor('ether','divine'),t);assert.equal(evolutionAscensionFor('ether','éveillée'),null);
- assert.deepEqual(t.goal,{distinct:3,crownPercent:40,maxRound:24});assert.equal(t.mission,'09');
+test('Deux ascensions Éther : onze recettes Divines, quatre Éveillées',()=>{
+ const [divine,awakened]=ETHER_ASCENSIONS;assert.equal(ETHER_ASCENSIONS.length,2);
+ assert.equal(evolutionAscensionFor('ether','divine'),divine);
+ assert.equal(evolutionAscensionFor('ether','éveillée'),awakened);
+ assert.deepEqual(divine.goal,{distinct:3,crownPercent:40,maxRound:24});assert.equal(divine.mission,'09');
+ assert.deepEqual(awakened.goal,{distinct:4,crownPercent:60,maxRound:24});assert.equal(awakened.mission,'12');assert.equal(awakened.previous,id);
  assert.deepEqual(EVOLUTION_FUSIONS.filter(r=>r.ascension===id).map(r=>r.cardId).sort(),['aetherknight','dragon','elemental','griffin','mystic','portal_walker','seer','sentinel','seraph','spark','tempest']);
+ assert.deepEqual(EVOLUTION_FUSIONS.filter(r=>r.ascension===awakened.id).map(r=>r.cardId).sort(),['elemental','mystic','sentinel','tempest']);
+});
+test('Éveil Éther : victoire en mission 12 et ascension Divine Éther, puis reçu sans cadeau',()=>{
+ const s=scenarios[1];assert(validStoredBattle(s.initial));assert(trialObjectiveState(s.terminal).achieved);
+ for(const change of [p=>{p.completed=p.completed.filter(id=>id!=='12');},p=>{p.completedTrials=['forge-ascension-divine'];},p=>{p.deck=scenarios[0].profile.deck;},p=>{p.deck=Array(12).fill({id:'sentinel',rarity:'divine'});}]){
+  const p=structuredClone(s.profile);change(p);
+  assert.equal(createEvolutionTrial(p,s.id,1).ok,false);assert.equal(fuseEvolutionCopies(p,'mystic:éveillée').ok,false);
+ }
+ const p=structuredClone(s.profile);assert(createEvolutionTrial(p,s.id,s.seed).ok);
+ assert(!fuseEvolutionCopies(p,'mystic:éveillée').ok);
+ assert(settleEvolutionTrial(p,structuredClone(s.terminal)).unlocked);
+ assert.deepEqual(p,{...s.profile,completedTrials:[id,s.id]});assert.deepEqual(validateImportedProfile(p),p);
+ assert(!settleEvolutionTrial(p,structuredClone(s.terminal)).unlocked);
+ for(const id of ['mystic','sentinel','elemental','tempest']){
+  const q=structuredClone(p);assert(fuseEvolutionCopies(q,id+':éveillée').ok);assert.deepEqual(q.deck,p.deck);
+  assert.equal(q.evolvedCollection[id+':divine'],p.evolvedCollection[id+':divine']-3);
+ }
 });
 test('Accès : boss réellement vaincu, trois Légendaires Éther distinctes, exemplaires possédés, aucun combat en attente',()=>{
  const s=scenarios[0];assert(createEvolutionTrial(s.profile,id,1).ok);
