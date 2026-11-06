@@ -7,11 +7,12 @@ import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitC
 import {resolveUnitArrival,resolveUnitSupport} from './unit-support.js';
 import {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty} from './unit-effects.js';
 import {tickUnitPoison,clearUnitPoison,poisonBelongsTo} from './unit-poison.js';
-import {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard,resolveGuardPrism,resolveSplashDisplacement} from './unit-triggers.js';
+import {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard,resolveGuardPrism,resolveSplashDisplacement,resolveImpactEffect} from './unit-triggers.js';
 import {placeStillOmen,noteOmenMovement,resolveStillOmens} from './unit-omens.js';
 import {applyStrikeFracture,consumeNormalStrikeBonus} from './unit-strike-modifiers.js';
 import {contiguousSplashTargets} from './unit-targets.js';
 import {activeFlightWake,resolveFlightSupport} from './unit-flight-support.js';
+import {healUnit} from './unit-healing.js';
 import {resolveUnitDeath} from './unit-death.js';
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 import {CARDS,FACTIONS} from '../data.js';
@@ -256,11 +257,13 @@ function strike(b,u,target,atk,from,to,sameLine=true,charged=false,suppressed=fa
 function resolveSplash(b,u,sourceLane,sourceCol,primaryLane,primaryCol,atk,intercepted=false,primaryAlive=true,suppressed=false){
  const p=versionUnitAbilities(u)?.splash;
  if(!p||atk<=0||sourceLane!==primaryLane||intercepted&&!p.onGuard||p.requiresAttack&&!primaryAlive)return;
- for(const {u:extra} of contiguousSplashTargets(b,primaryLane,sourceCol,primaryCol,u.side,p.targets||1)){
+ for(const {u:extra,col} of contiguousSplashTargets(b,primaryLane,sourceCol,primaryCol,u.side,p.targets||1)){
   const before=extra.hp;
   hit(b,extra,p.amount,u.side,false,true);
-  applyStrikeFracture(b,u,extra,before>extra.hp,true,suppressed,fx);
-  resolveSplashDisplacement(b,u,extra,before>extra.hp,suppressed,controlHooks);
+  const damaged=before>extra.hp;
+  applyStrikeFracture(b,u,extra,damaged,true,suppressed,fx);
+  resolveImpactEffect(b,u,extra,primaryLane,col,damaged,suppressed,controlHooks);
+  resolveSplashDisplacement(b,u,extra,damaged,suppressed,controlHooks);
  }
 }
 function resolveAttacks(b,sideFilter=null){
@@ -337,7 +340,7 @@ export function usePower(b){
   const h=b.heroes.p;h.hp=Math.min(h.maxhp,h.hp+4+(hasBattleTalent(b,'gardien_serment')?2:0));h.shield=Math.min(15,h.shield+2+(hasBattleTalent(b,'gardien_barriere')?1:0));
   if(hasBattleTalent(b,'gardien_sentinelle')){
    const all=b.board.flat().filter(u=>u&&u.side==='p'&&u.hp>0&&u.hp<u.maxhp).sort((a,z)=>a.hp/a.maxhp-z.hp/z.maxhp);
-   if(all[0])all[0].hp=Math.min(all[0].maxhp,all[0].hp+2);
+   if(all[0])healUnit(all[0],2,b.round);
   }
   note(b,'Serment protecteur : le héros et ses alliés sont renforcés.');
  }else if(b.heroClass==='arcaniste'){
@@ -366,7 +369,7 @@ export function usePower(b){
   sweepDead(b);note(b,'Volée : les lignes ennemies sont touchées.');
  }else if(b.heroClass==='clerc'){
   const h=b.heroes.p;h.hp=Math.min(h.maxhp,h.hp+3+(b.powerBonus||0)+(hasBattleTalent(b,'clerc_souffle')?2:0)+(hasBattleTalent(b,'clerc_soutien')?1:0));
-  for(let lane=0;lane<laneCount(b);lane++){const allies=b.board[lane].filter(u=>u&&u.side==='p'&&u.hp<u.maxhp).sort((a,z)=>(a.hp/a.maxhp)-(z.hp/z.maxhp));if(allies[0])allies[0].hp=Math.min(allies[0].maxhp,allies[0].hp+3+(b.powerBonus||0)+(hasBattleTalent(b,'clerc_soutien')?2:0));}
+  for(let lane=0;lane<laneCount(b);lane++){const allies=b.board[lane].filter(u=>u&&u.side==='p'&&u.hp<u.maxhp).sort((a,z)=>(a.hp/a.maxhp)-(z.hp/z.maxhp));if(allies[0])healUnit(allies[0],3+(b.powerBonus||0)+(hasBattleTalent(b,'clerc_soutien')?2:0),b.round);}
   if(hasBattleTalent(b,'clerc_foi'))h.shield=Math.min(15,h.shield+2);
   if(hasBattleTalent(b,'clerc_purification')){
    // Useful between poison encounters, while keeping the branch below major healing.

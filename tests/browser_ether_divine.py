@@ -74,3 +74,33 @@ async def run_ether_flight_case(browser,config,address,make_case,click,stored):
     assert await stored(page)==fixture['profile'];assert not errors,errors;assert not external,external
     await ctx.close()
     print(f'Éther Vol {config["label"]}: fusions, soin, Sillage, déplacement et reprise PASS',flush=True)
+
+async def run_ether_impact_case(browser,config,address,make_case,click,stored):
+    fixture=json.loads(subprocess.check_output(['node','tests/fixtures/ether-impact-battle.mjs'],cwd=ROOT))
+    touch=config['touch']
+    ctx,page,errors,external=await make_case(browser,fixture,config['viewport'],touch=touch,url=address,terminal=fixture['battle'])
+    await page.locator('.combat-screen').wait_for()
+    await page.clock.install(time='2026-11-05T00:00:00Z')
+    await page.clock.pause_at('2026-11-05T00:00:01Z')
+    for turn in (2,3):
+        await click(page.locator('[data-action="end-turn"]'),touch)
+        await page.clock.run_for(1000)
+        await page.wait_for_function("round=>{const b=JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'));return b?.round===round&&b.phase==='player'}",arg=turn)
+        battle=await stored(page,BATTLE)
+        board=battle['board'];target=board[0][3]
+        assert (board[1][3]['hp'],board[3][3]['hp'])==(28,30)
+        if turn==2:
+            assert target['hp']==28 and target['healingPenalty']=={'amount':2,'expiresRound':2}
+            card=page.locator(f'.board-card[data-unit-id="{target["uid"]}"]')
+            if touch:await card.tap()
+            else:await card.hover()
+            assert 'prochain soin −2 PV' in await page.locator('#hand-card-inspection').inner_text()
+            await page.keyboard.press('Escape')
+        else:
+            assert target['hp']==27 and 'healingPenalty' not in target and 'regeneration' not in target
+        await page.reload()
+        await page.locator('.combat-screen').wait_for()
+        assert await stored(page,BATTLE)==battle
+    assert await stored(page)==fixture['profile'];assert not errors,errors;assert not external,external
+    await ctx.close()
+    print(f'Éther Impact {config["label"]}: fusions, Résonance, Arc, cadence et reprises PASS',flush=True)

@@ -19,23 +19,28 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
 | Forge | 10 | 39 sur 39 cases futures | 39 évolutions intégrées jusqu’à PR 85 ; 49 versions Forge |
-| Éther | 11 | 39 sur 39 cases futures | 21 évolutions intégrées, deux proposées dans le lot Vol et 16 encore absentes après ce lot. Portée native du Feu follet distincte |
+| Éther | 11 | 39 sur 39 cases futures | 23 évolutions intégrées, deux proposées dans le lot Impact et 14 encore absentes après ce lot. Portée native du Feu follet distincte |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
 ou un pouvoir validé ne crée ni exemplaire ni définition jouable. Les onze personnages Éther ont leurs 39 évolutions validées dans cette édition ;
 la disponibilité réelle reste déterminée par le registre du jeu.
 
-## Reprise du 5 novembre — premiers Divins intégrés, lot Vol proposé
+## Reprise du 5 novembre — lot Vol intégré, Impact proposé
 
-Main `3fac34fa5a2b94cc705aca086d761bf6e524493c` intègre PR 86 et ses quatre évolutions ; leur publication Sites v29 est confirmée par le suivi existant, au commit de diffusion `ccc8dd42a6f6ffe435ae63c94fc0876ecfbe9e31`. Les paragraphes antérieurs mentionnant Repli/présage comme proposés et le Golem comme absent sont des jalons historiques.
+La PR 86 a intégré quatre évolutions Éther. Sites v29 a diffusé ce lot. Les
+paragraphes antérieurs mentionnant Repli et présage comme proposés ou le Golem
+comme absent sont des jalons historiques.
 
 Le [lot d’ascension Divine](ETHER_PREMIERS_DIVINS.md) est intégré par la PR 88
 au commit `3d28789bfc7081aad38f15a05376d6993b0d778f`. Il porte le jeu à
 192 recettes, dont 21 évolutions Éther. Le suivi de publication est distinct.
 
 Le [lot Vol](ETHER_DIVINS_VOL.md) ajoute le Griffon et le Séraphin Divins à la
-même ascension. La proposition conserve 16 évolutions Éther à intégrer ensuite,
-dont cinq Divines et les onze Éveillées.
+même ascension. Il est intégré par la PR 89 au commit
+`708317c3935f3cf70e754ad7f1df4dc3bee862c7`.
+
+Le [lot Impact](ETHER_DIVINS_IMPACT.md) propose ensuite l’Élémentaire et l’Esprit
+de Tempête Divins. Il reste trois Divines et onze Éveillées après cette tranche.
 
 ## Historique des lots précédents
 

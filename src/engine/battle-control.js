@@ -6,6 +6,7 @@ import {unitAttackRange} from './unit-rules.js';
 import {applyUnitPoison} from './unit-poison.js';
 import {expireStrikeModifiers} from './unit-strike-modifiers.js';
 import {expireFlightWake} from './unit-flight-support.js';
+import {expireHealingPenalty} from './unit-healing.js';
 import {laneCount,lastCell,crownColumn,entryColumn,validLane,trapColumns} from './board.js';
 const alive=u=>!!u&&u.hp>0;
 const direction=side=>side==='p'?1:-1;
@@ -120,6 +121,7 @@ export function expireControl(b,emit=()=>{}){
  for(const row of b.board)for(const u of row)if(u){
   if(u.silenceUntil<=b.round)delete u.silenceUntil;
   expireFlightWake(u,b.round);
+  expireHealingPenalty(u,b.round);
  }
 }
 export function controlTargetError(b,side,card,lane){

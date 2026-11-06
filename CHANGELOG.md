@@ -1,6 +1,11 @@
 # Journal des changements
 
-## En préparation — deux Divines Éther liées au Vol
+## En préparation — deux Divines Éther liées à l’Impact
+
+- Élémentaire Divin, dont l’Impact peut affaiblir le prochain soin de la cible secondaire, et Esprit de Tempête Divin, dont l’Impact peut toucher un ennemi sur une ligne voisine.
+- Deux fusions supplémentaires après l’ascension Divine Éther et contrôles du moteur, des protections, des soins et de la reprise.
+
+## Intégré par PR 89 — deux Divines Éther liées au Vol
 
 - Griffon du Zénith et Séraphin d’Azur Divins. Un survol réussi donne à l’allié un pas supplémentaire au prochain déplacement ou le soigne immédiatement s’il est blessé, selon la carte.
 - Deux fusions après l’ascension Divine Éther existante et contrôles des effets, des fiches et de la reprise sur le moteur commun.

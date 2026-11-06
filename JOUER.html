@@ -4677,6 +4677,7 @@ const {silenced}=__load("src/engine/battle-control.js");
 const {attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {activeStrikeState}=__load("src/engine/unit-strike-modifiers.js");
 const {activeFlightWake}=__load("src/engine/unit-flight-support.js");
+const {activeHealingPenalty}=__load("src/engine/unit-healing.js");
 const {generatedCardFace}=__load("src/ui/generated-card.js");
 const {concordeDetails}=__load("src/ui/concorde.js");
 const {visualFor,artSrc,cardTemplateFor}=__load("src/visuals.js");
@@ -4748,6 +4749,9 @@ function boardInspectionData(battle,uid){
   const wake=activeFlightWake(u,battle.round);
   if(wake)statuses.push(`Sillage ascendant : déplacement +${wake.cells} jusqu’à la fin du tour ${wake.expiresRound}`);
   if(u.flightSupportReadyRound>battle.round)statuses.push(`Prochain effet de Vol au tour ${u.flightSupportReadyRound}`);
+  const healingPenalty=activeHealingPenalty(u,battle.round);
+  if(healingPenalty)statuses.push(`Résonance : prochain soin −${healingPenalty.amount} PV, jusqu’à la fin du tour ${healingPenalty.expiresRound}`);
+  if(u.impactExtraReadyRound>battle.round)statuses.push(`Prochain effet d’Impact au tour ${u.impactExtraReadyRound}`);
   const penalty=activeStrikeState(u,'armorPenalty',battle.round),protection=activeStrikeState(u,'temporaryArmor',battle.round),calibration=activeStrikeState(u,'calibration',battle.round),mark=activeStrikeState(u,'spotMark',battle.round);
   if(penalty)statuses.push(`Armure −${penalty.amount} à la prochaine attaque directe subie`);
   if(protection)statuses.push(`Blindage : +${protection.amount} Armure à la prochaine attaque directe subie`);
@@ -5331,11 +5335,11 @@ const ETHER_DESIGN_SOURCE=freezeCardData({
 });
 const ETHER_EVOLUTIONS=freezeCardData({
  mystic:{'épique':{stats:{hp:6}},'légendaire':{stats:{attack:4}}},
- elemental:{'légendaire':{stats:{hp:10}}},
+ elemental:{'légendaire':{stats:{hp:10}},'divine':{abilities:{splashHealingPenalty:{amount:2,duration:1,period:3}}}},
  griffin:{'légendaire':{stats:{hp:8}},'divine':{abilities:{flightWake:{cells:1,period:3,duration:1}}}},
  sentinel:{'épique':{stats:{hp:11}},'légendaire':{abilities:{guardPrism:{amount:1,minimum:1,period:3,expiresAfter:2}}},'divine':{abilities:{guard:{scope:'line'}}}},
  dragon:{'divine':{abilities:{splashKnockback:{cells:1,period:3}}}},
- tempest:{'épique':{stats:{hp:8}},'légendaire':{stats:{attack:4}}},
+ tempest:{'épique':{stats:{hp:8}},'légendaire':{stats:{attack:4}},'divine':{abilities:{splashArc:{amount:2,period:3}}}},
  seer:{rare:{stats:{hp:5}},'épique':{stats:{attack:3}},'légendaire':{abilities:{stillOmen:{amount:2,period:3,delay:1}}},'divine':{abilities:{stillOmen:{amount:3}}}},
  aetherknight:{'légendaire':{stats:{hp:11}}},
  seraph:{'divine':{abilities:{flightHeal:{amount:2,period:3}}}},
@@ -5613,6 +5617,8 @@ function unitAbilityDetails(d){
  if(a.retreatStrike)lines.push(`Éclat persistant : après un Repli spectral réussi, la prochaine attaque normale gagne +${a.retreatStrike.amount} dégâts bruts avec les protections normales, au plus tard jusqu’à la fin du deuxième tour suivant. Bonus consommé par cette attaque ou expiré, sans cumul ; aucun gain après un repli bloqué, aucune Riposte renforcée ni attaque supplémentaire.`);
  if(a.guardPrism)lines.push(`Prisme inhibiteur : après une interception réelle de sa couronne à laquelle la Sentinelle survit, l’attaquant reçoit −${a.guardPrism.amount} ATQ pour sa prochaine attaque d’unité, Riposte comprise, minimum ${a.guardPrism.minimum}. Expire à la fin du deuxième tour suivant ; au plus une activation tous les ${a.guardPrism.period} tours, sans cumul. Un coup reçu qui n’aurait pas atteint la couronne sans elle ne compte pas. Le plus fort malus actif s’applique, sans addition à Harcèlement. Aucun effet si la Sentinelle meurt ou est sous Silence.`);
  if(a.splashKnockback)lines.push(`Souffle des Sept Vents : si l’Impact de zone retire au moins 1 PV à sa cible secondaire qui survit, la repousse de ${a.splashKnockback.cells} case vers sa couronne sur la même ligne, seulement si l’arrivée est libre et dans le plateau. Au plus une activation tous les ${a.splashKnockback.period} tours ; protections et pièges habituels, aucun quota consommé si le recul échoue, aucune attaque supplémentaire.`);
+ if(a.splashHealingPenalty)lines.push(`Résonance perturbatrice : si l’Impact retire au moins 1 PV à sa cible secondaire et qu’elle survit, son prochain soin restaure ${a.splashHealingPenalty.amount} PV de moins, minimum 0. Expire à la fin du tour suivant. Sans cumul, au plus une activation tous les ${a.splashHealingPenalty.period} tours.`);
+ if(a.splashArc)lines.push(`Arc transversal : si l’Impact retire au moins 1 PV à sa cible secondaire et qu’elle survit, frappe un autre ennemi dans la même colonne sur une ligne voisine. Priorité à la ligne au-dessus. ${a.splashArc.amount} dégâts bruts, protections normales, au plus une activation tous les ${a.splashArc.period} tours. L’éclair s’arrête sur cette troisième cible.`);
  if(a.portal)lines.push(`Portail : avant son déplacement normal, change de ligne à la même colonne libre et autorisée si le moteur juge le gain suffisant. Au plus une fois tous les ${a.portal.period} tours ; aucune arrivée devant la couronne adverse. Ne donne ni attaque ni déplacement supplémentaire.`);
  if(a.armor)lines.push(`Armure ${a.armor.amount} : réduit les dégâts, minimum ${a.armor.minimumDamage}.`);
  if(a.firstHitReduction)lines.push(`Premier coup reçu : −${a.firstHitReduction.amount} dégâts, une fois par invocation.`);
@@ -5675,6 +5681,8 @@ function advancedSummary(a){
  if(a.retreatStrike)parts.push(`Éclat : prochaine attaque +${a.retreatStrike.amount}`);
  if(a.guardPrism)parts.push(`Prisme : −${a.guardPrism.amount} ATQ`);
  if(a.splashKnockback)parts.push(`Souffle : recul secondaire ${a.splashKnockback.cells}`);
+ if(a.splashHealingPenalty)parts.push(`Résonance : prochain soin −${a.splashHealingPenalty.amount}`);
+ if(a.splashArc)parts.push(`Arc transversal ${a.splashArc.amount}`);
  if(a.knockback)parts.push(a.knockback.blockedDamage?`Recul ou Fracas +${a.knockback.blockedDamage}`:a.knockback.follow?'Recul · Avancée':`Coup de masse : recul ${a.knockback.cells}`);
  if(a.strikeWard)parts.push(`${strikeWardName(a.strikeWard)} · Couronne +${a.strikeWard.amount}`);
  if(a.barrierDrill)parts.push(`Foreuse : barrière −${a.barrierDrill.amount}${a.barrierDrill.breakBarrier?' · Barrière +'+a.barrierDrill.breakBarrier.amount+' si brisée':''}`);
@@ -6074,11 +6082,12 @@ const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitCh
 const {resolveUnitArrival,resolveUnitSupport}=__load("src/engine/unit-support.js");
 const {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {tickUnitPoison,clearUnitPoison,poisonBelongsTo}=__load("src/engine/unit-poison.js");
-const {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard,resolveGuardPrism,resolveSplashDisplacement}=__load("src/engine/unit-triggers.js");
+const {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard,resolveGuardPrism,resolveSplashDisplacement,resolveImpactEffect}=__load("src/engine/unit-triggers.js");
 const {placeStillOmen,noteOmenMovement,resolveStillOmens}=__load("src/engine/unit-omens.js");
 const {applyStrikeFracture,consumeNormalStrikeBonus}=__load("src/engine/unit-strike-modifiers.js");
 const {contiguousSplashTargets}=__load("src/engine/unit-targets.js");
 const {activeFlightWake,resolveFlightSupport}=__load("src/engine/unit-flight-support.js");
+const {healUnit}=__load("src/engine/unit-healing.js");
 const {resolveUnitDeath}=__load("src/engine/unit-death.js");
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 const {CARDS,FACTIONS}=__load("src/data.js");
@@ -6323,11 +6332,13 @@ function strike(b,u,target,atk,from,to,sameLine=true,charged=false,suppressed=fa
 function resolveSplash(b,u,sourceLane,sourceCol,primaryLane,primaryCol,atk,intercepted=false,primaryAlive=true,suppressed=false){
  const p=versionUnitAbilities(u)?.splash;
  if(!p||atk<=0||sourceLane!==primaryLane||intercepted&&!p.onGuard||p.requiresAttack&&!primaryAlive)return;
- for(const {u:extra} of contiguousSplashTargets(b,primaryLane,sourceCol,primaryCol,u.side,p.targets||1)){
+ for(const {u:extra,col} of contiguousSplashTargets(b,primaryLane,sourceCol,primaryCol,u.side,p.targets||1)){
   const before=extra.hp;
   hit(b,extra,p.amount,u.side,false,true);
-  applyStrikeFracture(b,u,extra,before>extra.hp,true,suppressed,fx);
-  resolveSplashDisplacement(b,u,extra,before>extra.hp,suppressed,controlHooks);
+  const damaged=before>extra.hp;
+  applyStrikeFracture(b,u,extra,damaged,true,suppressed,fx);
+  resolveImpactEffect(b,u,extra,primaryLane,col,damaged,suppressed,controlHooks);
+  resolveSplashDisplacement(b,u,extra,damaged,suppressed,controlHooks);
  }
 }
 function resolveAttacks(b,sideFilter=null){
@@ -6404,7 +6415,7 @@ function usePower(b){
   const h=b.heroes.p;h.hp=Math.min(h.maxhp,h.hp+4+(hasBattleTalent(b,'gardien_serment')?2:0));h.shield=Math.min(15,h.shield+2+(hasBattleTalent(b,'gardien_barriere')?1:0));
   if(hasBattleTalent(b,'gardien_sentinelle')){
    const all=b.board.flat().filter(u=>u&&u.side==='p'&&u.hp>0&&u.hp<u.maxhp).sort((a,z)=>a.hp/a.maxhp-z.hp/z.maxhp);
-   if(all[0])all[0].hp=Math.min(all[0].maxhp,all[0].hp+2);
+   if(all[0])healUnit(all[0],2,b.round);
   }
   note(b,'Serment protecteur : le héros et ses alliés sont renforcés.');
  }else if(b.heroClass==='arcaniste'){
@@ -6433,7 +6444,7 @@ function usePower(b){
   sweepDead(b);note(b,'Volée : les lignes ennemies sont touchées.');
  }else if(b.heroClass==='clerc'){
   const h=b.heroes.p;h.hp=Math.min(h.maxhp,h.hp+3+(b.powerBonus||0)+(hasBattleTalent(b,'clerc_souffle')?2:0)+(hasBattleTalent(b,'clerc_soutien')?1:0));
-  for(let lane=0;lane<laneCount(b);lane++){const allies=b.board[lane].filter(u=>u&&u.side==='p'&&u.hp<u.maxhp).sort((a,z)=>(a.hp/a.maxhp)-(z.hp/z.maxhp));if(allies[0])allies[0].hp=Math.min(allies[0].maxhp,allies[0].hp+3+(b.powerBonus||0)+(hasBattleTalent(b,'clerc_soutien')?2:0));}
+  for(let lane=0;lane<laneCount(b);lane++){const allies=b.board[lane].filter(u=>u&&u.side==='p'&&u.hp<u.maxhp).sort((a,z)=>(a.hp/a.maxhp)-(z.hp/z.maxhp));if(allies[0])healUnit(allies[0],3+(b.powerBonus||0)+(hasBattleTalent(b,'clerc_soutien')?2:0),b.round);}
   if(hasBattleTalent(b,'clerc_foi'))h.shield=Math.min(15,h.shield+2);
   if(hasBattleTalent(b,'clerc_purification')){
    // Useful between poison encounters, while keeping the branch below major healing.
@@ -6531,6 +6542,7 @@ const {crownColumn}=__load("src/engine/board.js");
 const {resolveClassSkill}=__load("src/engine/class-skills.js");
 const {resolveControlSpell}=__load("src/engine/battle-control.js");
 const {resolveTempoSpell}=__load("src/engine/tempo.js");
+const {healUnit}=__load("src/engine/unit-healing.js");
 function castSpell(b,side,id,lane,{emit,hit,damageHero,sweepDead,checkOutcome,note,controlHooks}){
  const c=CARDS[id],enemy=side==='p'?'e':'p',foe=frontEnemy(b,side,lane);
  let drawAfter=0;
@@ -6544,7 +6556,7 @@ function castSpell(b,side,id,lane,{emit,hit,damageHero,sweepDead,checkOutcome,no
   if(foe)hit(b,foe.u,4,side);else damageHero(b,enemy,2);
  }else if(c.ability==='spell_heal'){
   const hero=b.heroes[side];hero.hp=Math.min(hero.maxhp,hero.hp+5);
-  b.board[lane].forEach(u=>{if(u&&u.side===side)u.hp=Math.min(u.maxhp,u.hp+2)});
+  for(const u of b.board[lane])if(u?.side===side)healUnit(u,2,b.round);
  }else if(c.ability==='spell_buff'){
   b.board[lane].forEach(u=>{if(u&&u.side===side)u.atk+=2;});
  }else if(c.ability==='spell_storm'){
@@ -6633,6 +6645,7 @@ Object.assign(__exports,{SPELL_TARGET_MODES,frontEnemy,spellTargetOptions,spellT
 // Les unités anciennes sans barrier/rallyUntil restent totalement compatibles.
 const {validLane}=__load("src/engine/board.js");
 const {grantSharedBarrier}=__load("src/engine/battle-defense.js");
+const {healUnit}=__load("src/engine/unit-healing.js");
 const own=(u,side)=>u&&u.hp>0&&u.side===side;
 function classSkillAllies(b,side,lane){return b.board[lane].filter(u=>own(u,side));}
 function classSkillEnemies(b,side,lane){
@@ -6676,7 +6689,7 @@ function resolveClassSkill(b,side,card,lane,hit){
   // Le moteur pioche après avoir retiré la carte jouée de la main.
   return 2;
  }else if(ability==='spell_cleric_light'){
-  for(const u of friends)u.hp=Math.min(u.maxhp,u.hp+3);
+  for(const u of friends)healUnit(u,3,b.round);
  }else if(ability==='spell_cleric_bless'){
   const target=blessingTarget(b,side,lane);
   grantSharedBarrier(target,4,6);
@@ -6810,6 +6823,7 @@ const {unitAttackRange}=__load("src/engine/unit-rules.js");
 const {applyUnitPoison}=__load("src/engine/unit-poison.js");
 const {expireStrikeModifiers}=__load("src/engine/unit-strike-modifiers.js");
 const {expireFlightWake}=__load("src/engine/unit-flight-support.js");
+const {expireHealingPenalty}=__load("src/engine/unit-healing.js");
 const {laneCount,lastCell,crownColumn,entryColumn,validLane,trapColumns}=__load("src/engine/board.js");
 const alive=u=>!!u&&u.hp>0;
 const direction=side=>side==='p'?1:-1;
@@ -6924,6 +6938,7 @@ function expireControl(b,emit=()=>{}){
  for(const row of b.board)for(const u of row)if(u){
   if(u.silenceUntil<=b.round)delete u.silenceUntil;
   expireFlightWake(u,b.round);
+  expireHealingPenalty(u,b.round);
  }
 }
 function controlTargetError(b,side,card,lane){
@@ -7143,6 +7158,7 @@ Object.assign(__exports,{grantCrownShield,grantAbilityBarrier,grantSharedBarrier
 },
 "src/engine/unit-flight-support.js":function(__exports,__load){
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
+const {healUnit}=__load("src/engine/unit-healing.js");
 function activeFlightWake(unit,round){
  const wake=unit.flightWake;
  return wake?.expiresRound>=round?wake:null;
@@ -7159,9 +7175,9 @@ function resolveFlightSupport(b,source,ally,lane,col,suppressed,emit){
   emit(b,{type:'state',side:ally.side,lane,col});
  }else if(abilities?.flightHeal&&ally.hp<ally.maxhp){
   const p=abilities.flightHeal;
-  ally.hp=Math.min(ally.maxhp,ally.hp+p.amount);
+  const healed=healUnit(ally,p.amount,b.round);
   source.flightSupportReadyRound=b.round+p.period;
-  emit(b,{type:'heal',side:ally.side,lane,col});
+  emit(b,{type:healed?'heal':'state',side:ally.side,lane,col});
  }
 }
 
@@ -7175,6 +7191,40 @@ function validFlightWake(unit){
 }
 
 Object.assign(__exports,{activeFlightWake,resolveFlightSupport,expireFlightWake,validFlightWake});
+
+},
+"src/engine/unit-healing.js":function(__exports,__load){
+function activeHealingPenalty(unit,round){
+ const penalty=unit.healingPenalty;
+ return penalty?.expiresRound>=round?penalty:null;
+}
+
+function applyHealingPenalty(unit,round,{amount,duration}){
+ if(activeHealingPenalty(unit,round)?.amount>amount)return;
+ unit.healingPenalty={amount,expiresRound:round+duration};
+}
+
+// Seuls les soins de créature passent ici. Le retour est le gain réel de PV.
+function healUnit(unit,amount,round){
+ if(unit.hp<=0||unit.hp>=unit.maxhp||amount<=0)return 0;
+ const penalty=activeHealingPenalty(unit,round);
+ if(penalty)delete unit.healingPenalty;
+ const healed=Math.min(unit.maxhp-unit.hp,Math.max(0,amount-(penalty?.amount||0)));
+ unit.hp+=healed;
+ return healed;
+}
+
+function expireHealingPenalty(unit,round){
+ if(unit.healingPenalty?.expiresRound<=round)delete unit.healingPenalty;
+}
+
+function validHealingPenalty(unit){
+ const penalty=unit.healingPenalty;
+ const positive=value=>Number.isSafeInteger(value)&&value>0&&value<=100;
+ return penalty===undefined||!!penalty&&positive(penalty.amount)&&positive(penalty.expiresRound);
+}
+
+Object.assign(__exports,{activeHealingPenalty,applyHealingPenalty,healUnit,expireHealingPenalty,validHealingPenalty});
 
 },
 "src/engine/combat-events.js":function(__exports,__load){
@@ -7206,6 +7256,7 @@ const {applyUnitPoison,validPoisonOrigin}=__load("src/engine/unit-poison.js");
 const {validStrikeModifiers,activeStrikeState}=__load("src/engine/unit-strike-modifiers.js");
 const {validStillOmen}=__load("src/engine/unit-omens.js");
 const {validFlightWake}=__load("src/engine/unit-flight-support.js");
+const {healUnit,validHealingPenalty}=__load("src/engine/unit-healing.js");
 function attackAfterPenalty(u,raw,round=0){
  const boosted=raw+(u.fury||0)+(u.devourAttack||0);
  return Math.min(boosted,...[u.attackPenalty,activeStrikeState(u,'prismPenalty',round)].filter(Boolean).map(p=>Math.max(p.minimum||0,boosted-p.amount)));
@@ -7265,8 +7316,7 @@ function resolveRegeneration(b,sideFilter,emit){
   if(!p||u.hp<=0||(sideFilter&&u.side!==sideFilter)||b.round<p.readyRound)continue;
   if(p.remaining<=1)delete u.regeneration;
   else u.regeneration={...p,remaining:p.remaining-1,readyRound:b.round+1};
-  const before=u.hp;u.hp=Math.min(u.maxhp,u.hp+p.amount);
-  if(u.hp>before)emit(b,{type:'heal',side:u.side,lane,col,regeneration:true});
+  if(healUnit(u,p.amount,b.round))emit(b,{type:'heal',side:u.side,lane,col,regeneration:true});
  }
 }
 const integer=(n,max)=>Number.isSafeInteger(n)&&n>0&&n<=max;
@@ -7283,6 +7333,7 @@ function validUnitEffects(u){
   (u.movedCellsThisRound===undefined||Number.isSafeInteger(u.movedCellsThisRound)&&u.movedCellsThisRound>=0&&u.movedCellsThisRound<=10)&&
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
   (u.flightSupportReadyRound===undefined||integer(u.flightSupportReadyRound,100))&&validFlightWake(u)&&
+  (u.impactExtraReadyRound===undefined||integer(u.impactExtraReadyRound,100))&&validHealingPenalty(u)&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
   (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin)&&validStrikeModifiers(u)&&validStillOmen(u);
 }
@@ -7405,6 +7456,7 @@ const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
 const {lastCell}=__load("src/engine/board.js");
 const {placeSpotMark}=__load("src/engine/unit-strike-modifiers.js");
 const {poisonBelongsTo,clearUnitPoison}=__load("src/engine/unit-poison.js");
+const {applyHealingPenalty,healUnit}=__load("src/engine/unit-healing.js");
 // Repli personnel après une frappe normale touchant une unité encore vivante.
 function resolveSpectralRetreat(b,u,target,{performed,suppressed},hooks){
  const p=versionUnitAbilities(u)?.spectralRetreat;
@@ -7446,6 +7498,26 @@ function resolveSplashDisplacement(b,u,target,damaged,suppressed,hooks){
  hooks.emit(b,{type:'move',side:target.side,lane,from,to,splashKnockback:true});
  hooks.enter(b,target,lane,to);
  return true;
+}
+
+function resolveImpactEffect(b,source,target,lane,col,damaged,suppressed,hooks){
+ if(!damaged||suppressed||source.hp<=0||target.hp<=0||source.impactExtraReadyRound>b.round)return;
+ const abilities=versionUnitAbilities(source);
+ const penalty=abilities?.splashHealingPenalty;
+ if(penalty){
+  source.impactExtraReadyRound=b.round+penalty.period;
+  applyHealingPenalty(target,b.round,penalty);
+  hooks.emit(b,{type:'state',side:target.side,lane,col});
+ }
+ const arc=abilities?.splashArc;
+ if(!arc)return;
+ for(const adjacent of [lane-1,lane+1]){
+  const other=b.board[adjacent]?.[col];
+  if(!other||other.hp<=0||other.side!==target.side||other.uid===target.uid)continue;
+  source.impactExtraReadyRound=b.round+arc.period;
+  hooks.hit(b,other,arc.amount,source.side);
+  break;
+ }
 }
 
 // Quota propre au gardien, distinct du nombre illimité d'interceptions.
@@ -7528,12 +7600,12 @@ function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppressed,da
   if(a.chargeBarrier.allies)for(const target of alliedTargets(b,u,lane,{includeSelf:false}).sort(injuryOrder).slice(0,a.chargeBarrier.allies))protect(target,'chargeBarrier',a.chargeBarrier);
  }
  if(killed&&a.devour){
-  u.hp=Math.min(u.maxhp,u.hp+a.devour.heal);
+  healUnit(u,a.devour.heal,b.round);
   if(a.devour.attack)u.devourAttack=Math.min(a.devour.cap,(u.devourAttack||0)+a.devour.attack);
   emit(b,{type:'heal',side:u.side,lane,col});
  }
  if(damaged&&a.strikeHeal&&u.lastStrikeHealRound!==b.round){
-  u.lastStrikeHealRound=b.round;u.hp=Math.min(u.maxhp,u.hp+a.strikeHeal.amount);emit(b,{type:'heal',side:u.side,lane,col});
+  u.lastStrikeHealRound=b.round;healUnit(u,a.strikeHeal.amount,b.round);emit(b,{type:'heal',side:u.side,lane,col});
  }
  if(killed&&execution&&a.execution?.killHaste)u.killHasteRound=b.round+1;
  if(furious&&killed&&a.furyBarrier&&u.lastFuryBarrierRound!==b.round){
@@ -7554,7 +7626,7 @@ function resolveSurvivedStrike(b,u,attacker,damaged,suppressed,emit){
  }
 }
 
-Object.assign(__exports,{resolveSpectralRetreat,resolveGuardPrism,resolveSplashDisplacement,resolveGuardWard,resolveAlchemyStrike,resolveStrikeDisplacement,resolveStrikePreparation,resolveStrikeRewards,resolveSurvivedStrike});
+Object.assign(__exports,{resolveSpectralRetreat,resolveGuardPrism,resolveSplashDisplacement,resolveImpactEffect,resolveGuardWard,resolveAlchemyStrike,resolveStrikeDisplacement,resolveStrikePreparation,resolveStrikeRewards,resolveSurvivedStrike});
 
 },
 "src/engine/tempo.js":function(__exports,__load){
@@ -7756,6 +7828,7 @@ const {grantRegeneration}=__load("src/engine/unit-effects.js");
 const {alliedTargets,injuryOrder}=__load("src/engine/unit-targets.js");
 const {clearUnitPoison}=__load("src/engine/unit-poison.js");
 const {grantSupportStrikeState}=__load("src/engine/unit-strike-modifiers.js");
+const {healUnit}=__load("src/engine/unit-healing.js");
 function inspireTargets(b,u,lane,p){return alliedTargets(b,u,lane,p).slice(0,p.targets);}
 function strengthen(target,p){const before=target.atk;target.atk=Math.max(before,Math.min(p.cap,before+p.amount));return target.atk-before;}
 
@@ -7790,13 +7863,13 @@ function resolveUnitSupport(b,sideFilter,emit){
    const p=a.heal,targets=alliedTargets(b,u,lane,p).filter(t=>t.u.hp<t.u.maxhp)
     .sort(injuryOrder).slice(0,p.targets);
    if(targets.length)u.lastHealRound=b.round;
-   for(const t of targets){const before=t.u.hp;t.u.hp=Math.min(t.u.maxhp,before+p.amount);grantHealBarrier(b,u,t.u,t.u.hp-before);
-    if(t.u.hp>before){
+   for(const t of targets){const healed=healUnit(t.u,p.amount,b.round);grantHealBarrier(b,u,t.u,healed);
+    if(healed){
      if(a.regeneration)grantRegeneration(b,t.u,a.regeneration);
      if(a.purify?.poison)clearUnitPoison(t.u);
      if(a.purify?.movement)delete t.u.movementRoot;
     }
-    emit(b,{type:'heal',side:u.side,lane:t.lane,col:t.col});}
+    emit(b,{type:healed?'heal':'state',side:u.side,lane:t.lane,col:t.col});}
   }
   if(a.inspire&&b.round%a.inspire.period===0&&u.lastInspireRound!==b.round){
    const targets=inspireTargets(b,u,lane,a.inspire);if(targets.length)u.lastInspireRound=b.round;

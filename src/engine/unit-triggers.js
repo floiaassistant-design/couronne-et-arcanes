@@ -5,6 +5,7 @@ import {alliedTargets,injuryOrder} from './unit-targets.js';
 import {lastCell} from './board.js';
 import {placeSpotMark} from './unit-strike-modifiers.js';
 import {poisonBelongsTo,clearUnitPoison} from './unit-poison.js';
+import {applyHealingPenalty,healUnit} from './unit-healing.js';
 
 // Repli personnel après une frappe normale touchant une unité encore vivante.
 export function resolveSpectralRetreat(b,u,target,{performed,suppressed},hooks){
@@ -47,6 +48,26 @@ export function resolveSplashDisplacement(b,u,target,damaged,suppressed,hooks){
  hooks.emit(b,{type:'move',side:target.side,lane,from,to,splashKnockback:true});
  hooks.enter(b,target,lane,to);
  return true;
+}
+
+export function resolveImpactEffect(b,source,target,lane,col,damaged,suppressed,hooks){
+ if(!damaged||suppressed||source.hp<=0||target.hp<=0||source.impactExtraReadyRound>b.round)return;
+ const abilities=versionUnitAbilities(source);
+ const penalty=abilities?.splashHealingPenalty;
+ if(penalty){
+  source.impactExtraReadyRound=b.round+penalty.period;
+  applyHealingPenalty(target,b.round,penalty);
+  hooks.emit(b,{type:'state',side:target.side,lane,col});
+ }
+ const arc=abilities?.splashArc;
+ if(!arc)return;
+ for(const adjacent of [lane-1,lane+1]){
+  const other=b.board[adjacent]?.[col];
+  if(!other||other.hp<=0||other.side!==target.side||other.uid===target.uid)continue;
+  source.impactExtraReadyRound=b.round+arc.period;
+  hooks.hit(b,other,arc.amount,source.side);
+  break;
+ }
 }
 
 // Quota propre au gardien, distinct du nombre illimité d'interceptions.
@@ -129,12 +150,12 @@ export function resolveStrikeRewards(b,u,lane,col,{charged,furious,killed,suppre
   if(a.chargeBarrier.allies)for(const target of alliedTargets(b,u,lane,{includeSelf:false}).sort(injuryOrder).slice(0,a.chargeBarrier.allies))protect(target,'chargeBarrier',a.chargeBarrier);
  }
  if(killed&&a.devour){
-  u.hp=Math.min(u.maxhp,u.hp+a.devour.heal);
+  healUnit(u,a.devour.heal,b.round);
   if(a.devour.attack)u.devourAttack=Math.min(a.devour.cap,(u.devourAttack||0)+a.devour.attack);
   emit(b,{type:'heal',side:u.side,lane,col});
  }
  if(damaged&&a.strikeHeal&&u.lastStrikeHealRound!==b.round){
-  u.lastStrikeHealRound=b.round;u.hp=Math.min(u.maxhp,u.hp+a.strikeHeal.amount);emit(b,{type:'heal',side:u.side,lane,col});
+  u.lastStrikeHealRound=b.round;healUnit(u,a.strikeHeal.amount,b.round);emit(b,{type:'heal',side:u.side,lane,col});
  }
  if(killed&&execution&&a.execution?.killHaste)u.killHasteRound=b.round+1;
  if(furious&&killed&&a.furyBarrier&&u.lastFuryBarrierRound!==b.round){

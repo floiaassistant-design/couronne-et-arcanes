@@ -8,6 +8,7 @@ import {grantRegeneration} from './unit-effects.js';
 import {alliedTargets,injuryOrder} from './unit-targets.js';
 import {clearUnitPoison} from './unit-poison.js';
 import {grantSupportStrikeState} from './unit-strike-modifiers.js';
+import {healUnit} from './unit-healing.js';
 function inspireTargets(b,u,lane,p){return alliedTargets(b,u,lane,p).slice(0,p.targets);}
 function strengthen(target,p){const before=target.atk;target.atk=Math.max(before,Math.min(p.cap,before+p.amount));return target.atk-before;}
 
@@ -42,13 +43,13 @@ export function resolveUnitSupport(b,sideFilter,emit){
    const p=a.heal,targets=alliedTargets(b,u,lane,p).filter(t=>t.u.hp<t.u.maxhp)
     .sort(injuryOrder).slice(0,p.targets);
    if(targets.length)u.lastHealRound=b.round;
-   for(const t of targets){const before=t.u.hp;t.u.hp=Math.min(t.u.maxhp,before+p.amount);grantHealBarrier(b,u,t.u,t.u.hp-before);
-    if(t.u.hp>before){
+   for(const t of targets){const healed=healUnit(t.u,p.amount,b.round);grantHealBarrier(b,u,t.u,healed);
+    if(healed){
      if(a.regeneration)grantRegeneration(b,t.u,a.regeneration);
      if(a.purify?.poison)clearUnitPoison(t.u);
      if(a.purify?.movement)delete t.u.movementRoot;
     }
-    emit(b,{type:'heal',side:u.side,lane:t.lane,col:t.col});}
+    emit(b,{type:healed?'heal':'state',side:u.side,lane:t.lane,col:t.col});}
   }
   if(a.inspire&&b.round%a.inspire.period===0&&u.lastInspireRound!==b.round){
    const targets=inspireTargets(b,u,lane,a.inspire);if(targets.length)u.lastInspireRound=b.round;

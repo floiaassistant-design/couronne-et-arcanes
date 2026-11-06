@@ -1,4 +1,5 @@
 import {versionUnitAbilities} from '../cards/definitions.js';
+import {healUnit} from './unit-healing.js';
 
 export function activeFlightWake(unit,round){
  const wake=unit.flightWake;
@@ -16,9 +17,9 @@ export function resolveFlightSupport(b,source,ally,lane,col,suppressed,emit){
   emit(b,{type:'state',side:ally.side,lane,col});
  }else if(abilities?.flightHeal&&ally.hp<ally.maxhp){
   const p=abilities.flightHeal;
-  ally.hp=Math.min(ally.maxhp,ally.hp+p.amount);
+  const healed=healUnit(ally,p.amount,b.round);
   source.flightSupportReadyRound=b.round+p.period;
-  emit(b,{type:'heal',side:ally.side,lane,col});
+  emit(b,{type:healed?'heal':'state',side:ally.side,lane,col});
  }
 }
 
