@@ -22,39 +22,43 @@ Les [effets d’Impact](ETHER_DIVINS_IMPACT.md) sont intégrés par la PR 90 au
 commit `a5404b8d1c54dd774b9c72be19083ef19eaa1759`. Son arbre
 `2f00dda645335680fe340e79afff2347777aad22` correspond aux six contrôles réussis.
 
+Les [dernières Divines Éther](ETHER_DERNIERES_DIVINES.md) sont intégrées par
+la PR 91 au commit `fc9ec5e55bc7e99bd40be2ca9ed6740ce4e15305`. Son arbre
+`9a62c086ede78b0fd65ea320e07d8f51d13d2afc` correspond aux six contrôles réussis.
+
 - Aube : 51 versions, dont 41 évolutions obtenables.
 - Sylve : 59 versions, dont 48 évolutions jusqu’à Éveillée.
 - Ombre : 54 versions, dont 43 évolutions jusqu’à Éveillée.
 - Forge : 49 versions, dont 39 évolutions jusqu’à Éveillée. Le Golem est intégré
   par PR 85 ; Cœur runique exige le cas interposé validé, jamais tout coup reçu.
-- Éther : 36 versions, dont 25 évolutions et la première ascension Divine.
+- Éther : 39 versions, dont 28 évolutions et les onze Divines après leur ascension.
   Le Feu follet natif a une portée de 2 et ses évolutions une portée de 3.
 
-196 recettes, neuf ascensions communes, 53 unités natives et 23 sorts.
+199 recettes, neuf ascensions communes, 53 unités natives et 23 sorts.
 Le laboratoire utilise le même moteur, sans gain ni écriture dans l’aventure.
 Sauvegardes protégées et transactions du profil/résultats sont intégrées.
 [Migration et limites par faction](REPRISE_MIGRATION_CARTES.md).
 
 ## Publié, observation distincte
 
-**Sites v31** a publié le lot Vol au commit de diffusion
-`eb5975977ca352f0561d20286fc44a1e11c5a2a6`, vérifié sur le site. Le suivi
-existant a démarré pour les effets d’Impact de la PR 90.
+**Sites v32** a publié les effets d’Impact de la PR 90 au commit de diffusion
+`921b15c143b01a96265abfca7405b69cc2e07713`, vérifié sur le site. La publication
+des dernières Divines passe par le suivi existant.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
-[Export hors ligne intégré](https://raw.githubusercontent.com/floiaassistant-design/couronne-et-arcanes/a5404b8d1c54dd774b9c72be19083ef19eaa1759/JOUER.html) ·
+[Export hors ligne intégré](https://raw.githubusercontent.com/floiaassistant-design/couronne-et-arcanes/fc9ec5e55bc7e99bd40be2ca9ed6740ce4e15305/JOUER.html) ·
 [Procédure](PUBLICATION_WEB_2026_10_23.md).
 
 ## Proposé, non intégré et non publié
 
-- [Dernières Divines](ETHER_DERNIERES_DIVINES.md) : Oracle, Chevalier et
-  Marcheur. Ce lot porte la proposition à 39 versions, 28 évolutions et 199
-  recettes, dont les onze Divines Éther.
+- [Premières Éveillées](ETHER_PREMIERES_EVEILLEES.md) : Oracle, Sentinelle,
+  Élémentaire et Esprit de Tempête. Le lot propose une ascension, 43 versions
+  Éther, 32 évolutions Éther et 203 recettes dans le jeu.
 
 ## Prochain travail utile
 
-Poursuivre les onze évolutions Éveillées Éther et leur ascension, selon la dernière
-validation Notion. La portée native 3 du
+Poursuivre les sept autres Éveillées Éther selon la dernière validation Notion.
+La portée native 3 du
 Feu follet exige son propre périmètre, aucune application implicite.
 Auditer aussi une campagne UI complète depuis zéro ; les rencontres isolées et
 combats préparés ne la remplacent pas. Vérifier lisibilité/interactions sur

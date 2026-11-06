@@ -154,7 +154,7 @@ test('Sauvegarde : futures piles/main/unités et quotas conservés, anciennes ba
  assert.equal(validStoredBattle(b),true);assert.equal(storeBattle(b),true);const copy=restoreBattle();assert.ok(copy);
  assert.equal(copy.board[0][1].firstHitReductionUsed,true);assert.equal(cardKey(copy.heroes.p.discard[0]),'militia:rare');
  assert.equal(copy.board[0][1].hp,b.board[0][1].hp);assert.equal(copy.board[0][1].maxhp,b.board[0][1].maxhp);
- const bad=structuredClone(copy);bad.heroes.p.deck.push({id:'sentinel',rarity:'éveillée'});assert.equal(validStoredBattle(bad),false);
+ const bad=structuredClone(copy);bad.heroes.p.deck.push({id:'spark',rarity:'éveillée'});assert.equal(validStoredBattle(bad),false);
  const old=createBattle(freshProfile(),CAMPAIGN[0],2),before=JSON.stringify(old);assert.equal(storeBattle(old),true);assert.deepEqual(restoreBattle(),JSON.parse(before));
 });
 

@@ -1,6 +1,11 @@
 # Journal des changements
 
-## En préparation — les dernières Divines Éther
+## En préparation — premières Éveillées Éther
+
+- Oracle des Astres, Élémentaire azuré, Sentinelle prismatique et Esprit de Tempête Éveillés.
+- L’Éveil des Hautes Sphères donne accès à quatre fusions. Après une victoire en mission 12 et l’ascension Divine Éther, gagner avec quatre Divines Éther distinctes encore vivantes, au moins 60 % de PV de couronne et au plus 24 tours.
+
+## Intégré par PR 91 — les dernières Divines Éther
 
 - Oracle des Astres, Chevalier du Zénith et Marcheur des Portails Divins. Présage après l’attaque ennemie, avancée sur élimination par Charge et frappe de secours après Portail.
 - Les onze Divines Éther deviennent disponibles via leur ascension et 199 recettes sont définies dans le jeu.

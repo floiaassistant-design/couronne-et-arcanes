@@ -27,10 +27,10 @@ function contact(id='spark',side='p',legacy=false){
 }
 const attack=c=>(c.u.side==='p'?endPlayerTurn:finishEnemyTurn)(c.b);
 
-test('Cinq versions : statistiques héritées, pouvoirs remplacés et toutes les Éveillées encore absentes',()=>{
+test('Cinq versions : statistiques héritées, pouvoirs remplacés et Éveillées définies seulement',()=>{
  for(const [id,atk,hp] of [['spark',3,4],['seer',3,5],['sentinel',2,11],['dragon',7,12]]){
   const c=forgeBattle(id,'divine'),d=resolveUnitDefinition(id,'divine');
-  assert.deepEqual([c.u.atk,c.u.maxhp],[atk,hp]);assert.equal(resolveUnitDefinition(id,'éveillée'),null);
+  assert.deepEqual([c.u.atk,c.u.maxhp],[atk,hp]);assert.equal(!!resolveUnitDefinition(id,'éveillée'),id==='sentinel');
   assert.equal(c.p.evolvedCollection[id+':divine'],1);assert.equal(d.status.obtaining,'fusion');
  }
  assert.equal(resolveUnitDefinition('sentinel','légendaire').abilities.guard.scope,'positioned');
@@ -97,9 +97,13 @@ test('Prisme : couronne réellement menacée, minimum 1 et attaque déjà prépa
  }
 });
 
-test('Prisme : Garde normale dépassée exclue, Divine toute sa ligne, jamais une autre ligne',()=>{
- for(const side of ['p','e'])for(const [rank,position,expected] of [['légendaire','behind',false],['divine','behind',true],['divine','cross',false],['divine','far',false]]){
+test('Prisme : Garde normale positionnelle, Divine sur sa ligne, Éveillée sur toutes les lignes',()=>{
+ for(const side of ['p','e'])for(const [rank,position,expected] of [['légendaire','behind',false],['divine','behind',true],['divine','cross',false],['divine','far',false],['éveillée','cross',true],['éveillée','far',false]]){
   const c=guard(side,rank,position);defend(c);assert.equal(!!c.attacker.prismPenalty,expected,rank+position);
+  if(rank==='éveillée'&&position==='cross'){
+   assert.equal(c.b.heroes[side].hp,100);assert.equal(c.u.hp,10);assert.equal(c.u.guardPrismReadyRound,4);
+   assert(c.b.vfx.some(e=>e.type==='attack'&&e.fromLane===0&&e.lane===1));
+  }
  }
 });
 

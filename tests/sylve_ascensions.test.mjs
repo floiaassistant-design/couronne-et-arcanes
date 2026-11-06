@@ -12,12 +12,12 @@ import {esc} from '../src/ui/markup.js';
 
 const scenarios=ascensionScenarios('sylve');
 test('Deux ascensions Sylve, onze recettes par rang, indépendantes des deux ascensions Aube',()=>{
- assert.equal(ALL_EVOLUTION_ASCENSIONS.length,9);assert.equal(EVOLUTION_ASCENSIONS.length,2);assert.equal(SYLVE_ASCENSIONS.length,2);
+ assert.equal(ALL_EVOLUTION_ASCENSIONS.length,10);assert.equal(EVOLUTION_ASCENSIONS.length,2);assert.equal(SYLVE_ASCENSIONS.length,2);
  for(const t of SYLVE_ASCENSIONS){
   assert.equal(evolutionAscensionFor('sylve',t.to),t);const recipes=EVOLUTION_FUSIONS.filter(r=>r.ascension===t.id);assert.equal(recipes.length,11);
   assert.ok(recipes.every(r=>CARDS[r.cardId].faction==='sylve'&&r.to===t.to&&r.from===t.from&&r.mission===t.mission));
  }
- assert.equal(evolutionAscensionFor('ether','éveillée'),null);
+ assert.equal(evolutionAscensionFor('ether','éveillée').previous,'ether-ascension-divine');
  const p=freshProfile();assert.deepEqual(normalizeProfile(p),p);assert.equal(p.completedTrials,undefined);
 });
 
@@ -68,7 +68,7 @@ test('128 graines jouées deux fois : rencontres terminées, déterministes, pla
 });
 
 test('Épreuves et résultat : vraie faction, 11 recettes Sylve/Ombre/Éther et 10 Aube/Forge',()=>{
- const html=renderEvolutionTrials(freshProfile(),null,{btn:()=>'',cardUI:()=>'',esc});assert.equal((html.match(/class="card-panel ascension-card"/g)||[]).length,9);
+ const html=renderEvolutionTrials(freshProfile(),null,{btn:()=>'',cardUI:()=>'',esc});assert.equal((html.match(/class="card-panel ascension-card"/g)||[]).length,10);
  assert.equal((html.match(/11 fusions à débloquer/g)||[]).length,5);assert.equal((html.match(/10 fusions à débloquer/g)||[]).length,4);assert.match(html,/3 copies libres/);assert.doesNotMatch(html,/\[object Object\]/);
  for(const s of scenarios){assert.match(s.initial.trialChallenge.text,/Sylve/);const result=evolutionTrialResult({unlocked:true,trial:s.trial},{btn:()=>'',cardUI:()=>'',esc});assert.match(result,/Sylve/);assert.doesNotMatch(result,/Aube/);}
 });

@@ -11,6 +11,10 @@ Sources : [workflow de tests](../.github/workflows/test.yml),
 [plan navigateur](../scripts/ci_browser_groups.json),
 [tests du pipeline](../tests/ci_pipeline.test.mjs).
 
+## Premières Éveillées Éther
+
+`ether_ascensions.test.mjs` et le parcours partagé `browser_ascensions.py` contrôlent le défi, le reçu et les fusions. Les suites `ether_evolutions`, `ether_divine`, `ether_impact` et `ether_last_divines` vérifient les différences entre rangs et réutilisent les mêmes protections, durées et contrôles de sauvegarde.
+
 ## Commandes et responsabilité
 
 | Commande / contrôle | Ce qu'il vérifie | Limite |

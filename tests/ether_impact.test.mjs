@@ -12,8 +12,8 @@ import {boardInspectionData} from '../src/ui/card-presentation.js';
 import {restoreBattle,storeBattle,validStoredBattle} from '../src/ui/storage.js';
 import {forgeBattle,forgeUnit as unit,testStorage} from './fixtures/forge-combat.mjs';
 
-function impact(id,side='p',legacy=false){
- const c=forgeBattle(id,'divine'),size=legacy?7:12;
+function impact(id,side='p',legacy=false,rarity='divine'){
+ const c=forgeBattle(id,rarity),size=legacy?7:12;
  c.b.board=Array.from({length:3},()=>Array(size).fill(null));
  const from=side==='p'?(legacy?2:4):(legacy?4:7),dir=side==='p'?1:-1;
  const lane=1,col=from+2*dir,enemy=side==='p'?'e':'p';
@@ -26,17 +26,17 @@ function impact(id,side='p',legacy=false){
 }
 const attack=c=>(c.u.side==='p'?endPlayerTurn:finishEnemyTurn)(c.b);
 
-test('Arc transversal : priorité haute, protections, dégâts sur une seule unité et aucun nouveau coup',()=>{
- for(const side of ['p','e'])for(const legacy of [false,true]){
-  const c=impact('tempest',side,legacy);c.upper.barrier=1;
+test('Arc et Foudre : priorité haute, protections, une seule cible et aucun nouveau coup',()=>{
+ for(const [rarity,amount] of [['divine',2],['éveillée',3]])for(const side of ['p','e'])for(const legacy of [false,true]){
+  const c=impact('tempest',side,legacy,rarity);c.upper.barrier=1;
   assert(attack(c).ok);
-  assert.deepEqual([c.primary.hp,c.secondary.hp,c.upper.hp,c.lower.hp],[26,28,29,30]);
+  assert.deepEqual([c.primary.hp,c.secondary.hp,c.upper.hp,c.lower.hp],[26,28,31-amount,30]);
   assert.equal(c.upper.barrier,0);assert.equal(c.u.impactExtraReadyRound,4);
   assert.equal(c.b.vfx.filter(e=>e.type==='attack').length,1);
   c.b.round=2;c.b.phase=side==='p'?'player':'enemy';assert(attack(c).ok);
-  assert.deepEqual([c.secondary.hp,c.upper.hp,c.lower.hp],[26,29,30]);
+  assert.deepEqual([c.secondary.hp,c.upper.hp,c.lower.hp],[26,31-amount,30]);
   c.b.round=4;c.b.phase=side==='p'?'player':'enemy';c.b.board[0][c.col]=null;assert(attack(c).ok);
-  assert.equal(c.lower.hp,28);
+  assert.equal(c.lower.hp,30-amount);
  }
 });
 
@@ -85,4 +85,15 @@ test('Résonance : soin d’unité, de classe et régénération utilisent le m�
  applyHealingPenalty(u,b.round,{amount:2,duration:1});b.heroClass='clerc';
  assert(usePower(b).ok);assert.equal(u.hp,30);assert(!u.healingPenalty);
  applyHealingPenalty(u,b.round,{amount:2,duration:1});assert.equal(healUnit(u,3,b.round),0);assert(u.healingPenalty);
+});
+
+
+test('Résonance majeure : seul le prochain soin perd 4, le soin suivant retrouve sa valeur',()=>{
+ const c=impact('elemental','e',false,'éveillée');assert(attack(c).ok);
+ assert.deepEqual(c.secondary.healingPenalty,{amount:4,expiresRound:2});
+ assert.equal(c.u.impactExtraReadyRound,4);
+ assert.match(boardInspectionData(c.b,c.secondary.uid).board.statuses.join(' '),/prochain soin −4 PV/);
+ c.secondary.hp=20;
+ assert.equal(healUnit(c.secondary,5,c.b.round),1);
+ assert.equal(healUnit(c.secondary,5,c.b.round),5);
 });

@@ -11,8 +11,8 @@ import {forgeBattle,forgeUnit as unit,testStorage} from './fixtures/forge-combat
 const hooks={emit:recordCombatEvent,hit,note:()=>{},enter:()=>{}};
 const attack=({b,u})=>(u.side==='p'?endPlayerTurn:finishEnemyTurn)(b);
 
-function layout(id,side='p',legacy=false){
- const c=forgeBattle(id,'divine');
+function layout(id,side='p',legacy=false,rarity='divine'){
+ const c=forgeBattle(id,rarity);
  c.b.board=Array.from({length:legacy?3:2},()=>Array(legacy?7:12).fill(null));
  const col=side==='p'?(legacy?2:4):(legacy?4:7),dir=side==='p'?1:-1;
  c.u.side=side;c.b.board[1][col]=c.u;c.b.phase=side==='p'?'player':'enemy';
@@ -20,16 +20,19 @@ function layout(id,side='p',legacy=false){
  return {...c,col,dir,target};
 }
 
-test('Présage rétributif : une attaque normale passe avant les dégâts du présage, avec barrières et reprise',()=>{
- const c=layout('mystic'),{b,u,col,dir,target}=c;b.board[1][col+2*dir]=target;
- assert(attack(c).ok);assert.equal(target.hp,26);
- assert.deepEqual(target.retaliatoryOmen,{sourceUid:u.uid,side:'p',amount:2,expiresRound:3});
- assert.equal(u.retaliatoryOmenReadyRound,4);
- testStorage();assert(storeBattle(b));assert(validStoredBattle(restoreBattle()));
- target.barrier=1;b.vfx=[];assert(finishEnemyTurn(b).ok);
- assert.equal(u.hp,3);assert.equal(target.hp,25);assert.equal(target.barrier,0);
- assert.equal(target.retaliatoryOmen,undefined);
- assert.deepEqual(b.vfx.filter(e=>['attack','damage'].includes(e.type)).map(e=>[e.type,e.side]),[['attack','e'],['damage','p'],['damage','e']]);
+test('Présage et Sentence : une attaque normale précède le présage, avec barrières et reprise',()=>{
+ for(const [rarity,amount] of [['divine',2],['éveillée',4]]){
+  const c=layout('mystic','p',false,rarity),{b,u,col,dir,target}=c;b.board[1][col+2*dir]=target;
+  assert(attack(c).ok);assert.equal(target.hp,26);
+  assert.deepEqual(target.retaliatoryOmen,{sourceUid:u.uid,side:'p',amount,expiresRound:3});
+  assert.equal(u.retaliatoryOmenReadyRound,4);
+  testStorage();assert(storeBattle(b));const restored=restoreBattle();assert(validStoredBattle(restored));
+  assert.deepEqual(restored.board[1][col+2*dir].retaliatoryOmen,target.retaliatoryOmen);
+  target.barrier=1;b.vfx=[];assert(finishEnemyTurn(b).ok);
+  assert.equal(u.hp,3);assert.equal(target.hp,27-amount);assert.equal(target.barrier,0);
+  assert.equal(target.retaliatoryOmen,undefined);
+  assert.deepEqual(b.vfx.filter(e=>['attack','damage'].includes(e.type)).map(e=>[e.type,e.side]),[['attack','e'],['damage','p'],['damage','e']]);
+ }
 });
 
 test('Présage : pas de pose sans blessure survivante, aucun déclenchement par Riposte ou sort et expiration au bon tour',()=>{

@@ -6,7 +6,7 @@ import {ownedCardCopies} from '../cards/references.js';
 import {evolutionTrialFor} from '../evolution-trials.js';
 import {evolutionFusionFor} from '../evolution-fusion.js';
 import {evolutionPackFor} from '../card-packs.js';
-import {unitCardText,unitAbilityDetails,unitAbilitySummary} from '../cards/ability-text.js';
+import {unitCardText,unitAbilityDetails,unitAbilitySummary,retaliatoryOmenName} from '../cards/ability-text.js';
 import {battleUnitDefinition,unitAttackRange,unitMovementSteps} from '../engine/unit-rules.js';
 import {unitStatContext,unitStats,versionUnitStats} from '../engine/unit-stats.js';
 import {formationBonus} from '../engine.js';
@@ -66,7 +66,7 @@ export function boardInspectionData(battle,uid){
  for(let lane=0;lane<(battle?.board?.length||0);lane++)for(let col=1;col<battle.board[lane].length-1;col++){
   const u=battle.board[lane][col];if(!u||String(u.uid)!==String(uid))continue;
   const concord=formationBonus(battle,lane,u),rallied=u.rallyUntil>=battle.round?1:0;
-  const armor=u.armor??versionUnitAbilities(u)?.armor?.amount;
+  const abilities=versionUnitAbilities(u),armor=u.armor??abilities?.armor?.amount;
   const statuses=[concord?'Concorde +1 ATQ':'',rallied?'Ralliement +1 ATQ':'',armor?'Armure '+armor:'',u.barrier?'Barrière '+u.barrier:'',u.poisonTurns?'Poison '+u.poisonTurns+' tour(s)':'',u.stun?'Immobilisation '+u.stun:'',silenced(battle,u)?'Silence : capacités déclenchées suspendues':''].filter(Boolean);
   if(u.devourAttack)statuses.push(`Dévoration : +${u.devourAttack} ATQ`);
   if(u.killHasteRound===battle.round)statuses.push('Célérité temporaire ce tour');
@@ -91,9 +91,9 @@ export function boardInspectionData(battle,uid){
   if(healingPenalty)statuses.push(`Résonance : prochain soin −${healingPenalty.amount} PV, jusqu’à la fin du tour ${healingPenalty.expiresRound}`);
   if(u.impactExtraReadyRound>battle.round)statuses.push(`Prochain effet d’Impact au tour ${u.impactExtraReadyRound}`);
   const omen=activeStrikeState(u,'retaliatoryOmen',battle.round),echo=activeStrikeState(u,'portalEcho',battle.round);
-  if(omen)statuses.push(`Présage rétributif : ${omen.amount} dégâts après la prochaine attaque normale, jusqu’à la fin du tour ${omen.expiresRound}`);
+  if(omen)statuses.push(`${retaliatoryOmenName(omen)} : ${omen.amount} dégâts après la prochaine attaque normale, jusqu’à la fin du tour ${omen.expiresRound}`);
   if(echo)statuses.push(`Écho dimensionnel : origine ligne ${echo.lane+1}, case ${echo.col}, jusqu’à la fin du tour ${echo.expiresRound}`);
-  if(u.retaliatoryOmenReadyRound>battle.round)statuses.push(`Présage rétributif disponible au tour ${u.retaliatoryOmenReadyRound}`);
+  if(u.retaliatoryOmenReadyRound>battle.round)statuses.push(`${retaliatoryOmenName(abilities?.retaliatoryOmen)} disponible au tour ${u.retaliatoryOmenReadyRound}`);
   if(u.chargeAdvanceReadyRound>battle.round)statuses.push(`Percée du Zénith disponible au tour ${u.chargeAdvanceReadyRound}`);
   const penalty=activeStrikeState(u,'armorPenalty',battle.round),protection=activeStrikeState(u,'temporaryArmor',battle.round),calibration=activeStrikeState(u,'calibration',battle.round),mark=activeStrikeState(u,'spotMark',battle.round);
   if(penalty)statuses.push(`Armure −${penalty.amount} à la prochaine attaque directe subie`);

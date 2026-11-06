@@ -156,7 +156,7 @@ test('Repérage et poison sourcé : instantanés immuables, compteurs et reprise
 test('Fiches : paramètres du registre, états de Repérage et aucune évolution Éther absente activée',()=>{
  const c=contact('cannon','éveillée');attack(c);assert.match(boardInspectionData(c.b,c.target.uid).board.statuses.join(' '),/Repérage.*2 attaque.*\+2/);
  for(const [id,label] of Object.entries({cannon:'Barrage coordonné',alchemist:'Combustion totale'}))assert.ok(cardPresentation({id,rarity:'éveillée'}).details.join(' ').includes(label));
- for(const [id,rank] of [['sentinel','éveillée'],['portal_walker','éveillée'],['mystic','éveillée']])assert.equal(resolveUnitDefinition(id,rank),null);
+ for(const [id,rank] of [['spark','éveillée'],['portal_walker','éveillée'],['aetherknight','éveillée']])assert.equal(resolveUnitDefinition(id,rank),null);
 });
 
 test('Véritable export : fracture, marque et catalyse sont exécutées depuis les modules embarqués',()=>{
