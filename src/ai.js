@@ -5,6 +5,7 @@ import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitC
 import {unitStats} from './engine/unit-stats.js';
 import {attackAfterPenalty} from './engine/unit-effects.js';
 import {findCrownGuardian} from './engine/guard-candidates.js';
+import {hasClearAttackLine} from './engine/unit-targets.js';
 import {silenceTarget,silenceValue,teleportPlan,teleportGain,trapPlan,activeAbility,silenced} from './engine/battle-control.js';
 import {accelerationTarget} from './engine/tempo.js';
 export const AI_STYLES = Object.freeze({
@@ -45,7 +46,7 @@ function crownRisk(b,laneInfo){
  return laneInfo.threats.reduce((sum,{u,col})=>{
   const steps=crownColumn(b,'e')-col;
   if((u.stun||0)>0||!(steps<=unitAttackRange(u)+unitMovementSteps(u,silenced(b,u))))return sum;
-  if(findCrownGuardian(b,laneInfo.lane,'e',col))return sum;
+  if(findCrownGuardian(b,laneInfo.lane,'e',col)||!hasClearAttackLine(b,laneInfo.lane,col,crownColumn(b,'e'),u))return sum;
   const range=unitAttackRange(u);
   if(laneInfo.friends.some(x=>x.col>col&&x.col-col<=range))return sum;
   return sum+attackAfterPenalty(u,Math.max(1,u.atk),b.round)+((unitChargeAmount(u)>0)&&col<lastCell(b)&&!silenced(b,u)?unitChargeAmount(u):0);

@@ -10,7 +10,7 @@ import {tickUnitPoison,clearUnitPoison,poisonBelongsTo} from './unit-poison.js';
 import {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard,resolveGuardPrism,resolveSplashDisplacement,resolveImpactEffect,resolveChargeAdvance} from './unit-triggers.js';
 import {placeStillOmen,placeRetaliatoryOmen,noteOmenMovement,resolveStillOmens,resolveRetaliatoryOmen} from './unit-omens.js';
 import {applyStrikeFracture,consumeNormalStrikeBonus} from './unit-strike-modifiers.js';
-import {contiguousSplashTargets} from './unit-targets.js';
+import {contiguousSplashTargets,hasClearAttackLine} from './unit-targets.js';
 import {activeFlightWake,resolveFlightSupport} from './unit-flight-support.js';
 import {healUnit} from './unit-healing.js';
 import {findPortalEchoTarget} from './unit-portal-echo.js';
@@ -91,15 +91,13 @@ export function formationBonus(b,lane,unit){
 function enemyAt(b,lane,col,side){return col>=1&&col<=lastCell(b)&&b.board[lane][col]&&b.board[lane][col].side!==side?b.board[lane][col]:null;}
 function findTarget(b,lane,col,unit){
  const range=unitAttackRange(unit);
- let fallback=null;
  for(let d=1;d<=range;d++){
   const targetCol=col+forward(unit.side)*d;
   const target=enemyAt(b,lane,targetCol,unit.side);
-  if(target && !fallback)fallback={type:'unit',target,col:targetCol};
+  if(target)return hasClearAttackLine(b,lane,col,targetCol,unit)?{type:'unit',target,col:targetCol}:null;
  }
- if(fallback)return fallback;
- const heroDist=unit.side==='p'?crownColumn(b,'e')-col:col;
- return heroDist<=range?{type:'hero',side:unit.side==='p'?'e':'p'}:null;
+ const side=unit.side==='p'?'e':'p',crown=crownColumn(b,side);
+ return Math.abs(crown-col)<=range&&hasClearAttackLine(b,lane,col,crown,unit)?{type:'hero',side}:null;
 }
 function spawn(b,side,reference,lane,col=entryColumn(b,side)){
  const id=reference.id,c=CARDS[id];if(!c||c.type==='sort')return false;

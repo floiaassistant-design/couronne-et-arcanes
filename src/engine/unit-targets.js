@@ -1,5 +1,17 @@
 // Sélection pure partagée par les soins et protections des unités.
 import {lastCell} from './board.js';
+import {versionUnitAbilities} from '../cards/definitions.js';
+
+// Les tirs qui l’exigent s’arrêtent à la première unité vivante interposée.
+export function hasClearAttackLine(b,lane,from,to,unit,ignored){
+ if(!versionUnitAbilities(unit)?.ranged?.clearLine)return true;
+ const row=b.board[lane];
+ for(let col=Math.min(from,to)+1;col<Math.max(from,to);col++){
+  const blocker=row[col];
+  if(blocker?.hp>0&&blocker!==ignored)return false;
+ }
+ return true;
+}
 export function alliedTargets(b,u,lane,parameters){
  const found=[];
  for(let l=0;l<b.board.length;l++){

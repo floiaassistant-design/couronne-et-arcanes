@@ -63,13 +63,13 @@ test('Éther : 50 versions, 39 évolutions et onze personnages ; aucune décisio
    if(id==='mystic'&&i>=3)abilities.retaliatoryOmen={amount:i===4?4:2,period:3,expiresAfter:2};
    if(id==='aetherknight'&&i>=2)abilities.chargeAdvance={cells:1,period:3,...(awakened?{strike:{amount:2,expiresAfter:2}}:{})};
    if(id==='portal_walker'&&i>=3)abilities.portalEcho={range:awakened?2:1,expiresAfter:1};
-   assert.deepEqual(d.abilities,abilities);assert.deepEqual(d.geometry,{...versions[0].geometry,...(id==='spark'&&i?{range:3}:{})});
+   assert.deepEqual(d.abilities,abilities);assert.deepEqual(d.geometry,{...versions[0].geometry,});
   }
   assert.equal(resolveUnitDefinition(id,'divine').status.combat,'implemented');
   assert.equal(resolveUnitDefinition(id,'éveillée').status.combat,'implemented');
  }
  assert.equal(count,50);assert.equal(Object.keys(CARDS).length,76);
- assert.equal(resolveUnitDefinition('spark').geometry.range,2);assert.equal(resolveUnitDefinition('spark','rare').geometry.range,3);
+ assert.equal(resolveUnitDefinition('spark').geometry.range,3);assert.equal(resolveUnitDefinition('spark','rare').geometry.range,3);
  const p=freshProfile();assert.deepEqual(normalizeProfile(p),p);assert.equal(p.evolvedCollection,undefined);
 });
 

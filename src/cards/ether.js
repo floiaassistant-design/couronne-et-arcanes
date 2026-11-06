@@ -16,5 +16,5 @@ export const ETHER_EVOLUTIONS=freezeCardData({
  aetherknight:{'légendaire':{stats:{hp:11}},'divine':{abilities:{chargeAdvance:{cells:1,period:3}}},'éveillée':{abilities:{chargeAdvance:{strike:{amount:2,expiresAfter:2}}}}},
  seraph:{'divine':{abilities:{flightHeal:{amount:2,period:3}}},'éveillée':{abilities:{flightHeal:{amount:3,selfHeal:1}}}},
  portal_walker:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}},'divine':{abilities:{portalEcho:{range:1,expiresAfter:1}}},'éveillée':{abilities:{portalEcho:{range:2}}}},
- spark:{rare:{stats:{hp:4},geometry:{range:3}},'épique':{stats:{attack:3}},'légendaire':{abilities:{spectralRetreat:{cells:1,period:3}}},'divine':{abilities:{retreatStrike:{amount:2,expiresAfter:2}}},'éveillée':{abilities:{spectralRetreat:{cells:2}}}}
+ spark:{commun:{geometry:{range:3},abilities:{ranged:{clearLine:true}}},rare:{stats:{hp:4}},'épique':{stats:{attack:3}},'légendaire':{abilities:{spectralRetreat:{cells:1,period:3}}},'divine':{abilities:{retreatStrike:{amount:2,expiresAfter:2}}},'éveillée':{abilities:{spectralRetreat:{cells:2}}}}
 });

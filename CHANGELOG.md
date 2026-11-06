@@ -1,5 +1,9 @@
 # Journal des changements
 
+## En préparation — portée du Feu follet
+
+- Le Feu follet Commun atteint trois cases. Ses six raretés tirent sur la première unité ennemie atteignable de leur ligne, avec blocage par une unité alliée.
+
 ## En préparation — dernières Éveillées Éther
 
 - Sept rangs Éveillés supplémentaires, accessibles par fusion après L’Éveil des Hautes Sphères. La proposition complète les onze Éveillées Éther et porte le jeu à 210 recettes.

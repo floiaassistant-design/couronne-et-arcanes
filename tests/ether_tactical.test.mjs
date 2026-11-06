@@ -29,8 +29,8 @@ const attack=c=>(c.u.side==='p'?endPlayerTurn:finishEnemyTurn)(c.b);
 const cycle=b=>{if(b.phase==='player')endPlayerTurn(b);if(b.status==='active')finishEnemyTurn(b);};
 const outcome={performed:true,damaged:true,suppressed:false};
 
-test('Feu follet : portée 3 des trois évolutions, natif 2 ; cible proche et ligne conservées aux deux camps/deux géométries',()=>{
- assert.equal(resolveUnitDefinition('spark').geometry.range,2);
+test('Feu follet : portée 3 à tous les rangs ; cible proche et ligne conservées aux deux camps/deux géométries',()=>{
+ assert.equal(resolveUnitDefinition('spark').geometry.range,3);
  for(const rank of ['rare','épique','légendaire'])assert.equal(resolveUnitDefinition('spark',rank).geometry.range,3);
  for(const side of ['p','e'])for(const legacy of [false,true]){
   const c=contact('spark',side,legacy);c.b.board[0][c.col+c.dir]=null;c.b.board[0][c.col+3*c.dir]=c.target;
@@ -40,6 +40,41 @@ test('Feu follet : portée 3 des trois évolutions, natif 2 ; cible proche et li
   const near=contact('spark',side,legacy),far=unit('militia',near.target.side,{hp:40,maxhp:40,stun:99});
   near.b.board[0][near.col+3*near.dir]=far;attack(near);assert.equal(near.target.hp,37);assert.equal(far.hp,40);
  }
+});
+
+test('Feu follet Commun : attaque à trois cases, écran allié et Garde réelle, deux camps',()=>{
+ const setup=(side,legacy)=>{
+  const c=contact('spark',side,legacy),row=c.b.board[0];
+  row.fill(null);c.u=unit('spark',side);row[c.col]=c.u;
+  return {...c,row};
+ };
+ for(const side of ['p','e'])for(const legacy of [false,true]){
+  const c=setup(side,legacy),{b,row,col,dir,target}=c;
+  row[col+3*dir]=target;assert(attack(c).ok);
+  assert.equal(target.hp,38);assert.equal(row[col],c.u);
+  assert(b.vfx.some(e=>e.type==='attack'&&e.from===col&&e.to===col+3*dir));
+  for(const offset of [1,2]){
+   const blocked=setup(side,legacy);
+   blocked.row[col+offset*dir]=unit('militia',side,{stun:99});blocked.row[col+3*dir]=blocked.target;
+   assert(attack(blocked).ok);assert.equal(blocked.target.hp,40);
+  }
+  for(const defense of ['aucune','garde','écran']){
+   const crown=setup(side,legacy),enemy=crown.target.side;
+   const nearCrown=side==='p'?crown.last-2:3;
+   crown.row.fill(null);crown.row[nearCrown]=crown.u;
+   if(defense!=='aucune'){
+    const guardian=unit('sentinel',enemy,{rarity:'légendaire',stun:99});
+    crown.row[nearCrown+dir]=guardian;
+    if(defense==='écran')crown.row[nearCrown+2*dir]=unit('militia',side,{stun:99});
+   }
+   assert(attack(crown).ok);
+   assert.equal(crown.b.heroes[enemy].hp,defense==='aucune'?98:100);
+   assert.equal(crown.u.prismPenalty?.amount,defense==='garde'?1:undefined);
+  }
+ }
+ const model=cardPresentation('spark');
+ assert.match(model.card.description,/Portée 3/);assert(model.details.some(line=>line.includes('alliée fait écran')));
+ assert.equal(resolveUnitDefinition('archer').geometry.range,2);
 });
 
 test('Repli spectral : une frappe absorbée compte ; recul personnel, cadence individuelle et aucune attaque ajoutée',()=>{
