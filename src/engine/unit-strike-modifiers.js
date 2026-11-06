@@ -2,7 +2,7 @@
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {grantAbilityBarrier} from './unit-barriers.js';
 
-const keys=['armorPenalty','temporaryArmor','calibration','spotMark','prismPenalty','nextStrikeBonus'];
+const keys=['armorPenalty','temporaryArmor','calibration','spotMark','prismPenalty','nextStrikeBonus','retaliatoryOmen','portalEcho'];
 export const activeStrikeState=(u,key,round)=>u?.[key]?.expiresRound>=round?u[key]:null;
 // Bonus de la prochaine attaque normale : consommé à l'intention, jamais à la Riposte.
 export function consumeNormalStrikeBonus(b,u){

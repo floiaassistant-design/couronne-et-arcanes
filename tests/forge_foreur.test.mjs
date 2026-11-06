@@ -40,7 +40,7 @@ test('Foreur fusionné : 3/7/1 et Armure 2 hérités, unique Foreuse validée et
  assert.deepEqual(d.stats,epic.stats);assert.deepEqual(d.geometry,epic.geometry);
  assert.deepEqual(d.abilities,{...epic.abilities,barrierDrill:{amount:2,period:3}});
  const {p,u}=gained();assert.equal(p.evolvedCollection['drill:légendaire'],1);assert.deepEqual([u.atk,u.maxhp,u.armor],[3,7,2]);
- for(const rank of ['divine','éveillée'])assert.equal(resolveUnitDefinition('mystic',rank),null);
+ for(const id of ['mystic','aetherknight'])assert.equal(resolveUnitDefinition(id,'éveillée'),null);
 });
 
 test('Foreuse avant frappe : retire seulement la barrière, puis Armure et barrière restante protègent normalement',()=>{

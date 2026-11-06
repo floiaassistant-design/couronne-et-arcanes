@@ -7,12 +7,13 @@ import {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitC
 import {resolveUnitArrival,resolveUnitSupport} from './unit-support.js';
 import {consumeAttackPenalty,applyAttackEffects,resolveRegeneration,resolveLifesteal,executionBonus,attackAfterPenalty} from './unit-effects.js';
 import {tickUnitPoison,clearUnitPoison,poisonBelongsTo} from './unit-poison.js';
-import {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard,resolveGuardPrism,resolveSplashDisplacement,resolveImpactEffect} from './unit-triggers.js';
-import {placeStillOmen,noteOmenMovement,resolveStillOmens} from './unit-omens.js';
+import {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard,resolveGuardPrism,resolveSplashDisplacement,resolveImpactEffect,resolveChargeAdvance} from './unit-triggers.js';
+import {placeStillOmen,placeRetaliatoryOmen,noteOmenMovement,resolveStillOmens,resolveRetaliatoryOmen} from './unit-omens.js';
 import {applyStrikeFracture,consumeNormalStrikeBonus} from './unit-strike-modifiers.js';
 import {contiguousSplashTargets} from './unit-targets.js';
 import {activeFlightWake,resolveFlightSupport} from './unit-flight-support.js';
 import {healUnit} from './unit-healing.js';
+import {findPortalEchoTarget} from './unit-portal-echo.js';
 import {resolveUnitDeath} from './unit-death.js';
 // Moteur de combat tactique : aucun navigateur ou stockage externe.
 import {CARDS,FACTIONS} from '../data.js';
@@ -34,7 +35,7 @@ function shuffle(b,list){const a=[...list];for(let i=a.length-1;i>0;i--){const j
 export function note(b,message){b.log.unshift(message);b.log=b.log.slice(0,12);}
 function fx(b,event){recordCombatEvent(b,event);}
 function enterCell(b,u,lane,col){noteOmenMovement(b,u);triggerTrap(b,u,lane,col,hit,fx,note);sweepDead(b);}
-const controlHooks={emit:fx,note,enter:enterCell,hit};
+const controlHooks={emit:fx,note,enter:enterCell,hit,clearDead:clearDefeatedCell};
 
 function draw(b,side,n=1){
  const hero=b.heroes[side];for(let j=0;j<n;j++){
@@ -152,10 +153,14 @@ export function previewPlayerSpell(b,index,lane){
  const detail=ability==='spell_ranger_draw'?`Pioche : ${copy.heroes.p.hand.length-(b.heroes.p.hand.length-1)} carte(s).`:['spell_hasten','spell_slow'].includes(ability)?copy.log.find(s=>s.startsWith(ability==='spell_hasten'?'Élan des Heures :':'Nœud du Temps :'))||'':'';
  return {ok:true,before,after:captureCombatFrame(copy),detail,events:copy.vfx.map(e=>({...e,frame:e.frame}))};
 }
+function clearDefeatedCell(b,lane,col){
+ const u=b.board[lane][col];if(!(u&&u.hp<=0))return;
+ resolveUnitDeath(b,u,lane,col,fx);
+ fx(b,{type:'death',lane,col,side:u.side,icon:CARDS[u.id]?.icon||'✦'});
+ b.board[lane][col]=null;
+}
 function sweepDead(b){
- for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
-  const u=b.board[lane][col];if(u&&u.hp<=0){resolveUnitDeath(b,u,lane,col,fx);fx(b,{type:'death',lane,col,side:u.side,icon:CARDS[u.id]?.icon||'✦'});b.board[lane][col]=null;}
- }
+ for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++)clearDefeatedCell(b,lane,col);
 }
 function checkOutcome(b){
  if(b.heroes.e.hp<=0){b.status='victory';b.phase='finished';note(b,'VICTOIRE ! La couronne ennemie est vaincue.');}
@@ -270,24 +275,31 @@ function resolveAttacks(b,sideFilter=null){
  const intents=[];
  for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
   const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0||(sideFilter&&u.side!==sideFilter))continue;
-  const target=findTarget(b,lane,col,u);
-  const charged=!silenced(b,u)&&unitChargeAmount(u)>0&&!!u.movedThisRound;
+  const suppressed=silenced(b,u);
+  const target=findTarget(b,lane,col,u)||(!suppressed&&findPortalEchoTarget(b,lane,u));
+  const charged=!suppressed&&unitChargeAmount(u)>0&&!!u.movedThisRound;
   if(target){
    const furious=!!u.fury,raw=u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0)+consumeNormalStrikeBonus(b,u);
    const attackState=versionUnitAbilities(u)?.execution?{unit:{...u,attackPenalty:u.attackPenalty?{...u.attackPenalty}:undefined},raw}:null;
-   intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,raw,b.round),attackState,ability:activeAbility(b,u),charged,furious,suppressed:silenced(b,u)});
+   intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,raw,b.round),attackState,ability:activeAbility(b,u),charged,furious,suppressed});
   }
  }
  // All intents are collected before damage; the round is effectively simultaneous.
  for(const intent of intents){const {u,lane,target,atk,ability,charged}=intent;
+  let performed=atk>0;
+  if(target.echo){
+   if(u.hp<=0||target.target.hp<=0||b.board[target.lane][target.col]!==target.target)continue;
+   if(atk>0)delete u.portalEcho;
+  }
   const guardIntercept = target.type==='hero' ? findCrownGuardian(b,lane,target.side,intent.col) : null;
   const targetColForFx = guardIntercept?guardIntercept.col:(target.type==='hero'?crownColumn(b,target.side):target.col);
-  const targetLane=guardIntercept?.lane??lane;
-  fx(b,{type:'attack',side:u.side,lane:targetLane,...(targetLane!==lane?{fromLane:lane}:{}),from:intent.col,to:targetColForFx,ranged:!!u.ranged,magic:['splash','poison'].includes(ability),damage:atk,charged,icon:CARDS[u.id]?.icon||'⚔'});
+  const targetLane=guardIntercept?.lane??target.lane??lane;
+  fx(b,{type:'attack',side:u.side,lane:targetLane,...(targetLane!==lane?{fromLane:lane}:{}),from:intent.col,to:targetColForFx,ranged:!!u.ranged||!!target.echo,magic:!!target.echo||['splash','poison'].includes(ability),damage:atk,charged,icon:CARDS[u.id]?.icon||'⚔'});
   if(charged)note(b,`Charge de ${CARDS[u.id]?.name||'la créature'} : +${unitChargeAmount(u)} attaque sur la ligne ${lane+1}.`);
   if(target.type==='hero'){
    if(guardIntercept){
     const result=strike(b,u,guardIntercept.u,atk,intent.col,guardIntercept.col,guardIntercept.lane===lane,charged,intent.suppressed,intent.attackState);
+    performed=result.performed&&result.primaryAlive;
     note(b,`${CARDS[guardIntercept.u.id]?.name||'Le gardien'} intercepte une attaque destinée à ${target.side==='p'?'votre couronne':'la couronne ennemie'} sur la ligne ${lane+1}.`);
     if(ability==='lifesteal')resolveLifesteal(b,u);
     applyAttackEffects(u,guardIntercept.u,intent.suppressed,b.round,atk>0,{battle:b,lane:guardIntercept.lane,col:guardIntercept.col,skipPoison:result.catalysed});
@@ -299,24 +311,30 @@ function resolveAttacks(b,sideFilter=null){
     resolveGuardWard(b,guardIntercept.u,true,result.performed,silenced(b,guardIntercept.u),fx);
     resolveGuardPrism(b,guardIntercept.u,u,true,result.performed,silenced(b,guardIntercept.u),fx);
     placeStillOmen(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},fx);
+    placeRetaliatoryOmen(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},fx);
     resolveSpectralRetreat(b,u,guardIntercept.u,{...result,suppressed:intent.suppressed},controlHooks);
    }else{damageHero(b,target.side,atk);if(ability==='lifesteal')resolveLifesteal(b,u);}
   } else {
    const guardAbilities=versionUnitAbilities(target.target);
-   const interposed=(guardAbilities?.guardWard?.interposedCrownThreat||guardAbilities?.guardPrism)&&isInterposedCrownGuardian(b,lane,intent.col,u,target.target);
-   const result=strike(b,u,target.target,atk,intent.col,target.col,true,charged,intent.suppressed,intent.attackState);
+   const sameLine=targetLane===lane;
+   const interposed=sameLine&&(guardAbilities?.guardWard?.interposedCrownThreat||guardAbilities?.guardPrism)&&isInterposedCrownGuardian(b,lane,intent.col,u,target.target);
+   const result=strike(b,u,target.target,atk,intent.col,target.col,sameLine,charged,intent.suppressed,intent.attackState);
+   performed=result.performed&&result.primaryAlive;
    if(ability==='lifesteal')resolveLifesteal(b,u);
-   applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0,{battle:b,lane,col:target.col,skipPoison:result.catalysed});
+   applyAttackEffects(u,target.target,intent.suppressed,b.round,atk>0,{battle:b,lane:targetLane,col:target.col,skipPoison:result.catalysed});
    if(result.performed)resolveStrikeRewards(b,u,lane,intent.col,{...intent,...result,victim:target.target},fx);
-   if(ability==='splash')resolveSplash(b,u,lane,intent.col,lane,target.col,atk,false,result.primaryAlive,intent.suppressed);
-   resolveAttackExtras(b,u,lane,intent.col,lane,target.col,hit,silenced(b,u));
-   retaliate(b,target.target,u,lane,target.col,intent.col);
+   if(ability==='splash')resolveSplash(b,u,lane,intent.col,targetLane,target.col,atk,false,result.primaryAlive,intent.suppressed);
+   resolveAttackExtras(b,u,lane,intent.col,targetLane,target.col,hit,silenced(b,u));
+   retaliate(b,target.target,u,lane,target.col,intent.col,targetLane);
    resolveStrikeDisplacement(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
    resolveGuardWard(b,target.target,interposed,result.performed,silenced(b,target.target),fx);
    resolveGuardPrism(b,target.target,u,interposed,result.performed,silenced(b,target.target),fx);
    placeStillOmen(b,u,target.target,{...result,suppressed:intent.suppressed},fx);
+   placeRetaliatoryOmen(b,u,target.target,{...result,suppressed:intent.suppressed},fx);
    resolveSpectralRetreat(b,u,target.target,{...result,suppressed:intent.suppressed},controlHooks);
+   if(sameLine)resolveChargeAdvance(b,u,target.target,lane,intent.col,target.col,{...result,charged,suppressed:intent.suppressed},controlHooks);
   }
+  resolveRetaliatoryOmen(b,u,performed,hit);
  }
  // Le bonus de charge ne dure qu'un seul tour et doit survivre aux sauvegardes historiques.
  for(const row of b.board)for(const u of row)if(u&&(!sideFilter||u.side===sideFilter)){

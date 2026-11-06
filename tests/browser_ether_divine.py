@@ -104,3 +104,37 @@ async def run_ether_impact_case(browser,config,address,make_case,click,stored):
     assert await stored(page)==fixture['profile'];assert not errors,errors;assert not external,external
     await ctx.close()
     print(f'Éther Impact {config["label"]}: fusions, Résonance, Arc, cadence et reprises PASS',flush=True)
+
+async def run_last_ether_divines_case(browser,config,address,make_case,click,stored):
+    fixture=json.loads(subprocess.check_output(['node','tests/fixtures/ether-last-divines-battle.mjs'],cwd=ROOT))
+    touch=config['touch']
+    ctx,page,errors,external=await make_case(browser,fixture,config['viewport'],touch=touch,url=address,terminal=fixture['battle'])
+    await page.locator('.combat-screen').wait_for()
+    await page.clock.install(time='2026-11-06T00:00:00Z')
+    await page.clock.pause_at('2026-11-06T00:00:01Z')
+    for turn in (2,3):
+        await click(page.locator('[data-action="end-turn"]'),touch)
+        await page.clock.run_for(1000)
+        await page.wait_for_function("round=>{const b=JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'));return b?.round===round&&b.phase==='player'}",arg=turn)
+        battle=await stored(page,BATTLE);board=battle['board']
+        if turn==2:
+            marked,knight,walker=board[0][6],board[1][6],board[3][5]
+            assert marked['hp']==26 and marked['retaliatoryOmen']['expiresRound']==3
+            assert knight['id']=='aetherknight' and knight['chargeAdvanceReadyRound']==4
+            assert walker['id']=='portal_walker' and walker['portalEcho']=={'lane':2,'col':4,'expiresRound':2}
+            assert board[2][5]['hp']==30 and board[3][6] is None
+            for unit,label in [(marked,'Présage rétributif'),(knight,'Percée du Zénith'),(walker,'Écho dimensionnel')]:
+                card=page.locator(f'.board-card[data-unit-id="{unit["uid"]}"]')
+                if touch:await card.tap()
+                else:await card.hover()
+                assert label in await page.locator('#hand-card-inspection').inner_text()
+                await page.keyboard.press('Escape')
+        else:
+            assert board[0][4]['hp']==3 and board[0][5]['hp']==20 and 'retaliatoryOmen' not in board[0][5]
+            assert board[2][5]['hp']==26 and 'portalEcho' not in board[3][6]
+        await page.reload()
+        await page.locator('.combat-screen').wait_for()
+        assert await stored(page,BATTLE)==battle
+    assert await stored(page)==fixture['profile'];assert not errors,errors;assert not external,external
+    await ctx.close()
+    print(f'Éther dernières Divines {config["label"]}: fusions, Présage, Percée, Écho et reprises PASS',flush=True)

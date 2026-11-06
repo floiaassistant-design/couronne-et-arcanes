@@ -90,6 +90,11 @@ export function boardInspectionData(battle,uid){
   const healingPenalty=activeHealingPenalty(u,battle.round);
   if(healingPenalty)statuses.push(`Résonance : prochain soin −${healingPenalty.amount} PV, jusqu’à la fin du tour ${healingPenalty.expiresRound}`);
   if(u.impactExtraReadyRound>battle.round)statuses.push(`Prochain effet d’Impact au tour ${u.impactExtraReadyRound}`);
+  const omen=activeStrikeState(u,'retaliatoryOmen',battle.round),echo=activeStrikeState(u,'portalEcho',battle.round);
+  if(omen)statuses.push(`Présage rétributif : ${omen.amount} dégâts après la prochaine attaque normale, jusqu’à la fin du tour ${omen.expiresRound}`);
+  if(echo)statuses.push(`Écho dimensionnel : origine ligne ${echo.lane+1}, case ${echo.col}, jusqu’à la fin du tour ${echo.expiresRound}`);
+  if(u.retaliatoryOmenReadyRound>battle.round)statuses.push(`Présage rétributif disponible au tour ${u.retaliatoryOmenReadyRound}`);
+  if(u.chargeAdvanceReadyRound>battle.round)statuses.push(`Percée du Zénith disponible au tour ${u.chargeAdvanceReadyRound}`);
   const penalty=activeStrikeState(u,'armorPenalty',battle.round),protection=activeStrikeState(u,'temporaryArmor',battle.round),calibration=activeStrikeState(u,'calibration',battle.round),mark=activeStrikeState(u,'spotMark',battle.round);
   if(penalty)statuses.push(`Armure −${penalty.amount} à la prochaine attaque directe subie`);
   if(protection)statuses.push(`Blindage : +${protection.amount} Armure à la prochaine attaque directe subie`);

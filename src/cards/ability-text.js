@@ -74,6 +74,9 @@ export function unitAbilityDetails(d){
  if(a.splashKnockback)lines.push(`Souffle des Sept Vents : si l’Impact de zone retire au moins 1 PV à sa cible secondaire qui survit, la repousse de ${a.splashKnockback.cells} case vers sa couronne sur la même ligne, seulement si l’arrivée est libre et dans le plateau. Au plus une activation tous les ${a.splashKnockback.period} tours ; protections et pièges habituels, aucun quota consommé si le recul échoue, aucune attaque supplémentaire.`);
  if(a.splashHealingPenalty)lines.push(`Résonance perturbatrice : si l’Impact retire au moins 1 PV à sa cible secondaire et qu’elle survit, son prochain soin restaure ${a.splashHealingPenalty.amount} PV de moins, minimum 0. Expire à la fin du tour suivant. Sans cumul, au plus une activation tous les ${a.splashHealingPenalty.period} tours.`);
  if(a.splashArc)lines.push(`Arc transversal : si l’Impact retire au moins 1 PV à sa cible secondaire et qu’elle survit, frappe un autre ennemi dans la même colonne sur une ligne voisine. Priorité à la ligne au-dessus. ${a.splashArc.amount} dégâts bruts, protections normales, au plus une activation tous les ${a.splashArc.period} tours. L’éclair s’arrête sur cette troisième cible.`);
+ if(a.retaliatoryOmen)lines.push(`Présage rétributif : après une attaque blessant un ennemi survivant, le marque. Il subit ${a.retaliatoryOmen.amount} dégâts bruts après sa prochaine attaque normale, protections habituelles. Le présage expire à la fin du deuxième tour suivant et peut être posé tous les ${a.retaliatoryOmen.period} tours. Une cible par Oracle.`);
+ if(a.chargeAdvance)lines.push(`Percée du Zénith : après avoir éliminé un ennemi grâce à une attaque avec Charge, avance de ${a.chargeAdvance.cells} case dans son emplacement si la case est accessible. Au plus une fois tous les ${a.chargeAdvance.period} tours. Le déplacement ne donne aucune attaque supplémentaire.`);
+ if(a.portalEcho)lines.push(`Écho dimensionnel : après Portail, si le Marcheur ne trouve pas de cible sur sa nouvelle ligne, il peut utiliser son attaque normale contre un ennemi à ${a.portalEcho.range} case devant son ancienne position. L’Écho est consommé à la frappe ou expire à la fin du tour suivant.`);
  if(a.portal)lines.push(`Portail : avant son déplacement normal, change de ligne à la même colonne libre et autorisée si le moteur juge le gain suffisant. Au plus une fois tous les ${a.portal.period} tours ; aucune arrivée devant la couronne adverse. Ne donne ni attaque ni déplacement supplémentaire.`);
  if(a.armor)lines.push(`Armure ${a.armor.amount} : réduit les dégâts, minimum ${a.armor.minimumDamage}.`);
  if(a.firstHitReduction)lines.push(`Premier coup reçu : −${a.firstHitReduction.amount} dégâts, une fois par invocation.`);
@@ -138,6 +141,9 @@ function advancedSummary(a){
  if(a.splashKnockback)parts.push(`Souffle : recul secondaire ${a.splashKnockback.cells}`);
  if(a.splashHealingPenalty)parts.push(`Résonance : prochain soin −${a.splashHealingPenalty.amount}`);
  if(a.splashArc)parts.push(`Arc transversal ${a.splashArc.amount}`);
+ if(a.retaliatoryOmen)parts.push(`Présage : ${a.retaliatoryOmen.amount} après attaque ennemie`);
+ if(a.chargeAdvance)parts.push(`Charge : avance ${a.chargeAdvance.cells} après élimination`);
+ if(a.portalEcho)parts.push(`Écho dimensionnel : portée ${a.portalEcho.range}`);
  if(a.knockback)parts.push(a.knockback.blockedDamage?`Recul ou Fracas +${a.knockback.blockedDamage}`:a.knockback.follow?'Recul · Avancée':`Coup de masse : recul ${a.knockback.cells}`);
  if(a.strikeWard)parts.push(`${strikeWardName(a.strikeWard)} · Couronne +${a.strikeWard.amount}`);
  if(a.barrierDrill)parts.push(`Foreuse : barrière −${a.barrierDrill.amount}${a.barrierDrill.breakBarrier?' · Barrière +'+a.barrierDrill.breakBarrier.amount+' si brisée':''}`);

@@ -1,16 +1,33 @@
 // Présages différés : état métier attaché à la victime, sans DOM ni dégâts recopiés.
 import {versionUnitAbilities} from '../cards/definitions.js';
+import {activeStrikeState} from './unit-strike-modifiers.js';
 
-export function placeStillOmen(b,source,target,{performed,damaged,suppressed},emit){
- const p=versionUnitAbilities(source)?.stillOmen;
- if(!p||!performed||!damaged||suppressed||source.hp<=0||!target||target.hp<=0||target.side===source.side||source.stillOmenReadyRound>b.round)return false;
+function placeOmen(b,source,target,key,readyKey,parameters,timing,{performed,damaged,suppressed},emit){
+ if(!performed||!damaged||suppressed||source.hp<=0||!target||target.hp<=0||target.side===source.side||source[readyKey]>b.round)return false;
  // Un seul présage actif par invocation et par victime ; remplacer, jamais cumuler.
- for(const row of b.board)for(const u of row)if(u?.stillOmen?.sourceUid===source.uid)delete u.stillOmen;
- target.stillOmen={sourceUid:source.uid,side:source.side,amount:p.amount,dueRound:b.round+p.delay};
- source.stillOmenReadyRound=b.round+p.period;
+ for(const row of b.board)for(const u of row)if(u?.[key]?.sourceUid===source.uid)delete u[key];
+ target[key]={sourceUid:source.uid,side:source.side,amount:parameters.amount,...timing};
+ source[readyKey]=b.round+parameters.period;
  const lane=b.board.findIndex(row=>row.includes(target));
- if(lane>=0)emit(b,{type:'state',side:target.side,lane,col:b.board[lane].indexOf(target),stillOmen:true});
+ if(lane>=0)emit(b,{type:'state',side:target.side,lane,col:b.board[lane].indexOf(target),[key]:true});
  return true;
+}
+
+export function placeStillOmen(b,source,target,result,emit){
+ const p=versionUnitAbilities(source)?.stillOmen;
+ return !!p&&placeOmen(b,source,target,'stillOmen','stillOmenReadyRound',p,{dueRound:b.round+p.delay},result,emit);
+}
+
+export function placeRetaliatoryOmen(b,source,target,result,emit){
+ const p=versionUnitAbilities(source)?.retaliatoryOmen;
+ return !!p&&placeOmen(b,source,target,'retaliatoryOmen','retaliatoryOmenReadyRound',p,{expiresRound:b.round+p.expiresAfter},result,emit);
+}
+
+export function resolveRetaliatoryOmen(b,unit,performed,hit){
+ const omen=activeStrikeState(unit,'retaliatoryOmen',b.round);
+ if(!performed||!omen)return;
+ delete unit.retaliatoryOmen;
+ if(unit.hp>0)hit(b,unit,omen.amount,omen.side);
 }
 
 // Appelé uniquement après une véritable entrée de case : bloqué/immobilisé ne compte pas.
@@ -32,8 +49,9 @@ export function resolveStillOmens(b,hit){
 }
 
 const integer=(n,max)=>Number.isSafeInteger(n)&&n>0&&n<=max;
-export function validStillOmen(u){
- const p=u.stillOmen;
+function validOmen(p,unit,timing){
  return p===undefined||!!(p&&typeof p==='object'&&!Array.isArray(p)&&integer(p.sourceUid,1e9)&&
-  ['p','e'].includes(p.side)&&p.side!==u.side&&integer(p.amount,100)&&integer(p.dueRound,100));
+  ['p','e'].includes(p.side)&&p.side!==unit.side&&integer(p.amount,100)&&integer(p[timing],100));
 }
+export const validStillOmen=unit=>validOmen(unit.stillOmen,unit,'dueRound');
+export const validRetaliatoryOmen=unit=>validOmen(unit.retaliatoryOmen,unit,'expiresRound');

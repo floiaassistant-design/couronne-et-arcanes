@@ -67,8 +67,8 @@ test('128 graines jouées deux fois : rencontres terminées, déterministes, pla
  }
 });
 
-test('Épreuves et résultat : vraie faction, 11 recettes Sylve/Ombre et 10 Aube/Forge, aucun objet de données dans le texte',()=>{
+test('Épreuves et résultat : vraie faction, 11 recettes Sylve/Ombre/Éther et 10 Aube/Forge',()=>{
  const html=renderEvolutionTrials(freshProfile(),null,{btn:()=>'',cardUI:()=>'',esc});assert.equal((html.match(/class="card-panel ascension-card"/g)||[]).length,9);
- assert.equal((html.match(/11 fusions à débloquer/g)||[]).length,4);assert.equal((html.match(/10 fusions à débloquer/g)||[]).length,4);assert.match(html,/3 copies libres/);assert.doesNotMatch(html,/\[object Object\]/);
+ assert.equal((html.match(/11 fusions à débloquer/g)||[]).length,5);assert.equal((html.match(/10 fusions à débloquer/g)||[]).length,4);assert.match(html,/3 copies libres/);assert.doesNotMatch(html,/\[object Object\]/);
  for(const s of scenarios){assert.match(s.initial.trialChallenge.text,/Ombre/);const result=evolutionTrialResult({unlocked:true,trial:s.trial},{btn:()=>'',cardUI:()=>'',esc});assert.match(result,/Ombre/);assert.doesNotMatch(result,/Aube/);}
 });

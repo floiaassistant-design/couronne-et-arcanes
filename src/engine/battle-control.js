@@ -7,6 +7,7 @@ import {applyUnitPoison} from './unit-poison.js';
 import {expireStrikeModifiers} from './unit-strike-modifiers.js';
 import {expireFlightWake} from './unit-flight-support.js';
 import {expireHealingPenalty} from './unit-healing.js';
+import {rememberPortalEcho} from './unit-portal-echo.js';
 import {laneCount,lastCell,crownColumn,entryColumn,validLane,trapColumns} from './board.js';
 const alive=u=>!!u&&u.hp>0;
 const direction=side=>side==='p'?1:-1;
@@ -19,7 +20,7 @@ export function silenceValue(u){
  return value+(CHARGE_IDS.has(u?.id)?2:0)+(RIPOSTE_IDS.has(u?.id)||future?.riposte?2:0)+(future?.lastStand?2:0)+(future?.haste&&u.ability!=='haste'?3:0)+(future?.harass?3:0)+
   (future?.entangle?3:0)+(future?.fury?3:0)+(future?.deathWard?2:0)+(future?.chargeBarrier?2:0)+(future?.contagion?2:0)+(future?.funeralWatch?3:0)+
   (future?.deathStrike?3:0)+(future?.devour?3:0)+(future?.execution?3:0)+(future?.strikeWard?2:0)+(future?.barrierDrill?3:0)+(future?.knockback?3:0)+(future?.scoria?3:0)+
-  (future?.fracture?2:0)+(future?.spotting?2:0)+(future?.catalysis?2:0)+(future?.spectralRetreat?2:0)+(future?.stillOmen?2:0)+(future?.guardWard?2:0)+(future?.guardPrism?2:0)+(future?.retreatStrike?2:0)+(future?.splashKnockback?2:0);
+  (future?.fracture?2:0)+(future?.spotting?2:0)+(future?.catalysis?2:0)+(future?.spectralRetreat?2:0)+(future?.stillOmen?2:0)+(future?.guardWard?2:0)+(future?.guardPrism?2:0)+(future?.retreatStrike?2:0)+(future?.splashKnockback?2:0)+(future?.retaliatoryOmen?2:0);
 }
 export function canSilence(b,u){return alive(u)&&silenceValue(u)>0&&!silenced(b,u)&&!(u.silenceGuardUntil>=b.round);}
 export function silenceTarget(b,side,lane){
@@ -161,7 +162,10 @@ export function prepareControlUnits(b,hooks,sideFilter=null){
     const p={u,fromLane:lane,col,toLane};plans.push({...p,gain:teleportGain(b,u.side,p)});
    }
    const best=plans.sort((a,z)=>z.gain-a.gain||a.toLane-z.toLane)[0];
-   if(best?.gain>=2)used=teleportUnit(b,u.side,best,hooks.emit,hooks.note,hooks.enter);
+   if(best?.gain>=2){
+    used=teleportUnit(b,u.side,best,hooks.emit,hooks.note,hooks.enter);
+    if(used)rememberPortalEcho(b,u,best,hooks.emit);
+   }
   }
   if(used)u.controlReadyRound=b.round+(versionUnitAbilities(u)?.[u.ability]?.period||3);
  }

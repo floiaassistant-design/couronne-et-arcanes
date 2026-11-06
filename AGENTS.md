@@ -130,6 +130,10 @@
   sans ouvrir de nouvelle attaque. Les soins de créature passent par
   `unit-healing.js` pour appliquer la Résonance, sans toucher aux soins de
   couronne, barrières et effets de survie.
+- Les présages rétributifs se résolvent après l’attaque normale de la cible.
+  L’Écho est une cible de secours issue d’un Portail réussi, et garde la
+  priorité des cibles normales. La Percée utilise le retrait normal de la
+  victime puis le circuit d’entrée de case, sans ajouter d’attaque.
 
 - `engine/board.js` lit la géométrie du combat sauvegardé. Nouveaux combats :
   dix cases, couronnes 0/11 ; deux lignes en difficulté 1–2, trois au-delà et

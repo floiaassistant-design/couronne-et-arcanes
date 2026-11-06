@@ -2,7 +2,8 @@
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {applyUnitPoison,validPoisonOrigin} from './unit-poison.js';
 import {validStrikeModifiers,activeStrikeState} from './unit-strike-modifiers.js';
-import {validStillOmen} from './unit-omens.js';
+import {validStillOmen,validRetaliatoryOmen} from './unit-omens.js';
+import {validPortalEcho} from './unit-portal-echo.js';
 import {validFlightWake} from './unit-flight-support.js';
 import {healUnit,validHealingPenalty} from './unit-healing.js';
 
@@ -69,7 +70,7 @@ export function resolveRegeneration(b,sideFilter,emit){
  }
 }
 const integer=(n,max)=>Number.isSafeInteger(n)&&n>0&&n<=max;
-export function validUnitEffects(u){
+export function validUnitEffects(u,battle){
  const p=u.attackPenalty,r=u.regeneration;
  return (p===undefined||p&&integer(p.amount,100)&&integer(p.remaining,10)&&(p.minimum===undefined||p.minimum===0||p.minimum===1))&&
   (r===undefined||r&&integer(r.amount,100)&&integer(r.remaining,10)&&integer(r.readyRound,100))&&
@@ -83,6 +84,8 @@ export function validUnitEffects(u){
   (u.lastFuneralWatchRound===undefined||integer(u.lastFuneralWatchRound,100))&&
   (u.flightSupportReadyRound===undefined||integer(u.flightSupportReadyRound,100))&&validFlightWake(u)&&
   (u.impactExtraReadyRound===undefined||integer(u.impactExtraReadyRound,100))&&validHealingPenalty(u)&&
+  (u.chargeAdvanceReadyRound===undefined||integer(u.chargeAdvanceReadyRound,100))&&
+  (u.retaliatoryOmenReadyRound===undefined||integer(u.retaliatoryOmenReadyRound,100))&&validRetaliatoryOmen(u)&&validPortalEcho(u,battle)&&
   (u.entangleReadyRound===undefined||integer(u.entangleReadyRound,100))&&
   (u.fury===undefined||integer(u.fury,100))&&(u.lastFuryBarrierRound===undefined||integer(u.lastFuryBarrierRound,100))&&validPoisonOrigin(u.poisonOrigin)&&validStrikeModifiers(u)&&validStillOmen(u);
 }

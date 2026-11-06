@@ -8,11 +8,11 @@ import {validStoredBattle,validateImportedProfile} from '../src/ui/storage.js';
 import {ascensionProfile,ascensionScenarios,playAscension} from './fixtures/ascension-scenarios.mjs';
 
 const scenarios=ascensionScenarios('ether'),id='ether-ascension-divine';
-test('Une ascension Éther, huit recettes Divines ; aucune Éveillée ni cadeau',()=>{
+test('Une ascension Éther, onze recettes Divines ; aucune Éveillée ni cadeau',()=>{
  assert.equal(ETHER_ASCENSIONS.length,1);const t=ETHER_ASCENSIONS[0];
  assert.equal(evolutionAscensionFor('ether','divine'),t);assert.equal(evolutionAscensionFor('ether','éveillée'),null);
  assert.deepEqual(t.goal,{distinct:3,crownPercent:40,maxRound:24});assert.equal(t.mission,'09');
- assert.deepEqual(EVOLUTION_FUSIONS.filter(r=>r.ascension===id).map(r=>r.cardId).sort(),['dragon','elemental','griffin','seer','sentinel','seraph','spark','tempest']);
+ assert.deepEqual(EVOLUTION_FUSIONS.filter(r=>r.ascension===id).map(r=>r.cardId).sort(),['aetherknight','dragon','elemental','griffin','mystic','portal_walker','seer','sentinel','seraph','spark','tempest']);
 });
 test('Accès : boss réellement vaincu, trois Légendaires Éther distinctes, exemplaires possédés, aucun combat en attente',()=>{
  const s=scenarios[0];assert(createEvolutionTrial(s.profile,id,1).ok);

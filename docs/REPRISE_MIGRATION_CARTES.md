@@ -19,13 +19,13 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
 | Forge | 10 | 39 sur 39 cases futures | 39 évolutions intégrées jusqu’à PR 85 ; 49 versions Forge |
-| Éther | 11 | 39 sur 39 cases futures | 23 évolutions intégrées, deux proposées dans le lot Impact et 14 encore absentes après ce lot. Portée native du Feu follet distincte |
+| Éther | 11 | 39 sur 39 cases futures | 25 évolutions intégrées. Trois Divines proposées, puis onze Éveillées restent à intégrer. Portée native du Feu follet distincte |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
 ou un pouvoir validé ne crée ni exemplaire ni définition jouable. Les onze personnages Éther ont leurs 39 évolutions validées dans cette édition ;
 la disponibilité réelle reste déterminée par le registre du jeu.
 
-## Reprise du 5 novembre — lot Vol intégré, Impact proposé
+## Reprise du 6 novembre — Impact intégré, dernières Divines proposées
 
 La PR 86 a intégré quatre évolutions Éther. Sites v29 a diffusé ce lot. Les
 paragraphes antérieurs mentionnant Repli et présage comme proposés ou le Golem
@@ -39,8 +39,9 @@ Le [lot Vol](ETHER_DIVINS_VOL.md) ajoute le Griffon et le Séraphin Divins à la
 même ascension. Il est intégré par la PR 89 au commit
 `708317c3935f3cf70e754ad7f1df4dc3bee862c7`.
 
-Le [lot Impact](ETHER_DIVINS_IMPACT.md) propose ensuite l’Élémentaire et l’Esprit
-de Tempête Divins. Il reste trois Divines et onze Éveillées après cette tranche.
+Le [lot Impact](ETHER_DIVINS_IMPACT.md) a intégré l’Élémentaire et l’Esprit de
+Tempête Divins dans la PR 90 au commit `a5404b8`. Le [lot suivant](ETHER_DERNIERES_DIVINES.md)
+propose les trois dernières Divines. Il reste ensuite les onze Éveillées.
 
 ## Historique des lots précédents
 

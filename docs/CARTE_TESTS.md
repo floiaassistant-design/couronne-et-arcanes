@@ -226,3 +226,7 @@ les contrôles. Aucune durée de réussite anticipée ; lire la nouvelle CI exac
 ## Éther — effets suivant l’Impact
 
 `ether_impact.test.mjs` contrôle l’Arc transversal et la Résonance, leurs exclusions, protections, cadence, soins et reprise. Le catalogue vérifie 36 versions et 196 recettes. `ether-impact-battle.mjs` prépare les deux fusions et invocations et le parcours navigateur vérifie l’arc, le malus, sa consommation et deux reprises dans les parties d’ascension existantes. [Contrat](ETHER_DIVINS_IMPACT.md).
+
+## Éther — dernières Divines
+
+`ether_last_divines.test.mjs` vérifie le présage, la Percée et l’Écho, dont les protections, la cadence, les pièges, la priorité de la couronne, les deux géométries et la reprise. Le registre compte 39 versions et 199 recettes. Le parcours navigateur des ascensions joue les trois pouvoirs et leurs reprises sur la même version web et autonome. [Contrat](ETHER_DERNIERES_DIVINES.md).

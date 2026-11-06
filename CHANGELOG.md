@@ -1,6 +1,11 @@
 # Journal des changements
 
-## En préparation — deux Divines Éther liées à l’Impact
+## En préparation — les dernières Divines Éther
+
+- Oracle des Astres, Chevalier du Zénith et Marcheur des Portails Divins. Présage après l’attaque ennemie, avancée sur élimination par Charge et frappe de secours après Portail.
+- Les onze Divines Éther deviennent disponibles via leur ascension et 199 recettes sont définies dans le jeu.
+
+## Intégré par PR 90 — deux Divines Éther liées à l’Impact
 
 - Élémentaire Divin, dont l’Impact peut affaiblir le prochain soin de la cible secondaire, et Esprit de Tempête Divin, dont l’Impact peut toucher un ennemi sur une ligne voisine.
 - Deux fusions supplémentaires après l’ascension Divine Éther et contrôles du moteur, des protections, des soins et de la reprise.
