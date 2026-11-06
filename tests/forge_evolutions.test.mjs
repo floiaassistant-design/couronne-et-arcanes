@@ -166,7 +166,7 @@ test('Forge Légendaire : cinq gains de statistiques sans pouvoir ajouté ni acc
   profile.completed.push('06');assert.equal(fuseEvolutionCopies(profile,recipe.id).ok,true);
   assert.equal(ownedCardCopies(profile,{id,rarity:'légendaire'}),1);
  }
- for(const id of ['spark']){
-  assert.equal(resolveUnitDefinition(id,'éveillée'),null,'mécanique de haut rang encore absente');
+ for(const id of ['dragon']){
+  assert.equal(resolveUnitDefinition(id,'commun'),null,'rang inférieur au natif inexistant');
  }
 });

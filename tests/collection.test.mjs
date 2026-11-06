@@ -60,8 +60,8 @@ test('Les versions définies montrent leurs chiffres, les autres restent sans st
  const future=collectionHoverContent(profile,'militia','éveillée',esc);
  assert.match(future,/Ascension requise/);
  assert.match(future,/ATQ 2 \/ PV 8/);
- const unknown=collectionHoverContent(profile,'spark','éveillée',esc);
- assert.match(unknown,/À concevoir/);
+ const unknown=collectionHoverContent(profile,'dragon','commun',esc);
+ assert.match(unknown,/Rang inexistant/);
  assert.doesNotMatch(unknown,/ATQ [0-9]+ \/ PV [0-9]+/);
  assert.match(future,/milicien_aube_carte_v02\.webp/,'Le futur rang conserve l’illustration autorisée');
 

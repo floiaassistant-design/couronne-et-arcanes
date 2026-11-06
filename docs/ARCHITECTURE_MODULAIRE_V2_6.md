@@ -1,5 +1,9 @@
 # Architecture modulaire — lecture courante
 
+## Éther — dernières Éveillées
+
+`unit-triggers.js` partage le recul par cases et les effets d’entrée. L’Éclat et la Conquête partagent le bonus de la prochaine frappe dans `unit-strike-modifiers.js`. `unit-omens.js` utilise la barrière par source du moteur. Le Sillage enregistre le bonus d’un pas réellement utilisé dans la résolution synchrone du mouvement et de l’attaque. `unit-flight-support.js` applique le soin après survol et valide le Sillage sauvegardé. `unit-portal-echo.js` cherche la cible de secours la plus proche. [Contrat](ETHER_DERNIERES_EVEILLEES.md).
+
 ## Éther — premières Éveillées
 
 Le registre hérite des paramètres Divins et remplace uniquement la valeur ou la portée validée. `evolution-trials.js` déclare le défi commun, dont les conditions, reçus et fusions passent par les mêmes modules que les autres factions. Les pouvoirs conservent les traitements existants du moteur et leurs états sauvegardés. La présentation lit les paramètres effectifs et reprend le nom du présage dans les fiches. [Contrat](ETHER_PREMIERES_EVEILLEES.md).

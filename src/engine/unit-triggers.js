@@ -3,24 +3,34 @@ import {versionUnitAbilities} from '../cards/definitions.js';
 import {grantAbilityBarrier,grantCrownShield,absorbBarrier} from './unit-barriers.js';
 import {alliedTargets,injuryOrder} from './unit-targets.js';
 import {lastCell} from './board.js';
-import {placeSpotMark} from './unit-strike-modifiers.js';
+import {placeSpotMark,grantNormalStrikeBonus} from './unit-strike-modifiers.js';
 import {poisonBelongsTo,clearUnitPoison} from './unit-poison.js';
 import {applyHealingPenalty,healUnit} from './unit-healing.js';
 
+// Recul vers sa couronne, case par case, avec les effets d’entrée partagés.
+function retreatAlongLine(b,unit,parameters,readyKey,eventKey,hooks,source=unit){
+ const lane=b.board.findIndex(row=>row.includes(unit)),row=b.board[lane];
+ if(!row)return false;
+ const direction=unit.side==='p'?-1:1;
+ let from=row.indexOf(unit),moved=false;
+ for(let step=0;step<parameters.cells&&unit.hp>0;step++){
+  const to=from+direction;
+  if(to<1||to>lastCell(b)||row[to])break;
+  source[readyKey]=b.round+parameters.period;
+  row[to]=unit;row[from]=null;
+  hooks.emit(b,{type:'move',side:unit.side,lane,from,to,[eventKey]:true});
+  hooks.enter(b,unit,lane,to);
+  from=to;moved=true;
+ }
+ return moved;
+}
+
 // Repli personnel après une frappe normale touchant une unité encore vivante.
 export function resolveSpectralRetreat(b,u,target,{performed,suppressed},hooks){
- const p=versionUnitAbilities(u)?.spectralRetreat;
+ const abilities=versionUnitAbilities(u),p=abilities?.spectralRetreat;
  if(!p||!performed||suppressed||u.hp<=0||!target||target.hp<=0||target.side===u.side||u.spectralRetreatReadyRound>b.round)return false;
- const lane=b.board.findIndex(row=>row.includes(u)),row=b.board[lane];
- if(!row)return false;
- const from=row.indexOf(u),to=from+(u.side==='p'?-1:1)*p.cells;
- if(to<1||to>lastCell(b)||row[to])return false;
- u.spectralRetreatReadyRound=b.round+p.period;
- row[to]=u;row[from]=null;
- hooks.emit(b,{type:'move',side:u.side,lane,from,to,spectralRetreat:true});
- hooks.enter(b,u,lane,to);
- const bonus=versionUnitAbilities(u)?.retreatStrike;
- if(bonus&&u.hp>0)u.nextStrikeBonus={amount:bonus.amount,expiresRound:b.round+bonus.expiresAfter};
+ if(!retreatAlongLine(b,u,p,'spectralRetreatReadyRound','spectralRetreat',hooks))return false;
+ grantNormalStrikeBonus(b,u,abilities.retreatStrike);
  return true;
 }
 
@@ -39,15 +49,7 @@ export function resolveGuardPrism(b,u,attacker,intercepted,performed,suppressed,
 export function resolveSplashDisplacement(b,u,target,damaged,suppressed,hooks){
  const p=versionUnitAbilities(u)?.splashKnockback;
  if(!p||!damaged||suppressed||u.hp<=0||target.hp<=0||target.side===u.side||u.splashKnockbackReadyRound>b.round)return false;
- const lane=b.board.findIndex(row=>row.includes(target)),row=b.board[lane];
- if(!row)return false;
- const from=row.indexOf(target),to=from+(target.side==='p'?-1:1)*p.cells;
- if(to<1||to>lastCell(b)||row[to])return false;
- u.splashKnockbackReadyRound=b.round+p.period;
- row[to]=target;row[from]=null;
- hooks.emit(b,{type:'move',side:target.side,lane,from,to,splashKnockback:true});
- hooks.enter(b,target,lane,to);
- return true;
+ return retreatAlongLine(b,target,p,'splashKnockbackReadyRound','splashKnockback',hooks,u);
 }
 
 export function resolveImpactEffect(b,source,target,lane,col,damaged,suppressed,hooks){
@@ -80,6 +82,7 @@ export function resolveChargeAdvance(b,unit,victim,lane,from,to,{charged,killed,
  row[from]=null;row[to]=unit;
  hooks.emit(b,{type:'move',side:unit.side,lane,from,to,chargeAdvance:true});
  hooks.enter(b,unit,lane,to);
+ grantNormalStrikeBonus(b,unit,ability.strike);
 }
 
 // Quota propre au gardien, distinct du nombre illimité d'interceptions.

@@ -1,6 +1,11 @@
 # Journal des changements
 
-## En préparation — premières Éveillées Éther
+## En préparation — dernières Éveillées Éther
+
+- Sept rangs Éveillés supplémentaires, accessibles par fusion après L’Éveil des Hautes Sphères. La proposition complète les onze Éveillées Éther et porte le jeu à 210 recettes.
+- Recul de deux cases au plus, frappe renforcée par un pas de Sillage, barrière après présage, frappe après Percée, auto-soin après un soin de survol et portée de secours du Portail.
+
+## Intégré par PR 92 — premières Éveillées Éther
 
 - Oracle des Astres, Élémentaire azuré, Sentinelle prismatique et Esprit de Tempête Éveillés.
 - L’Éveil des Hautes Sphères donne accès à quatre fusions. Après une victoire en mission 12 et l’ascension Divine Éther, gagner avec quatre Divines Éther distinctes encore vivantes, au moins 60 % de PV de couronne et au plus 24 tours.

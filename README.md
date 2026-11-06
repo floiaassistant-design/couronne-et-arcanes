@@ -1,7 +1,7 @@
 # Couronnes & Arcanes
 
 Le jeu intègre les sauvegardes protégées, Garde/Riposte uniques, le deck manuel,
-les paquets/fusions et les ascensions Aube, Sylve, Ombre et Forge. La [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75)
+les paquets/fusions et les ascensions Aube, Sylve, Ombre, Forge et Éther. La [PR 75](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/75)
 a intégré dix évolutions Rares/Épiques Forge et leur paquet à `main`,
 avec six contrôles réussis. Ce lot et les PR suivantes jusqu’à la PR 83 sont publiés dans la version Sites 27.
 La PR 83 a intégré dix hauts rangs tactiques Forge, publiés dans Sites v27. La PR 84 a intégré [douze évolutions Éther](docs/ETHER_SOCLE_EVOLUTIONS.md) avec leur paquet. La PR 85 a intégré les [trois hauts rangs du Golem](docs/FORGE_GOLEM_COEUR_RUNIQUE.md). La PR 86 a intégré [Repli et présage](docs/ETHER_REPLI_PRESAGE.md), publiés dans Sites v29. Les contours de rareté (PR 87) et les [premiers Divins Éther avec leur ascension](docs/ETHER_PREMIERS_DIVINS.md) (PR 88) sont intégrés dans `main`. Leur diffusion est suivie dans [l’état du projet](docs/ETAT_PROJET.md).
@@ -28,7 +28,7 @@ Les cartes dessinées reprennent le filet intérieur de rareté de 2 pixels int�
 évolutions Rares, puis du Milicien Épique après le premier boss. Accomplir son défi et gagner avec le même
 exemplaire vivant transforme un seul exemplaire et
 conserve sa place dans le deck. Une défaite ne consomme rien. Les cartes gagnées
-sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve, 43 Ombre et 39 évolutions Forge supplémentaires. Les douze évolutions Éther sont intégrées par PR 84 ; les trois rangs du Golem sont intégrés par PR 85, tandis que cette branche ajoute quatre évolutions Éther. Les rangs Divin/Éveillé exigent les grandes ascensions communes de leur faction. Le laboratoire reste disponible pour les tester.
+sont utilisables en campagne ; la fusion ouvre sur main 41 évolutions Aube, 48 Sylve, 43 Ombre et 39 évolutions Forge supplémentaires. Éther dispose de 32 évolutions sur main, dont quatre Éveillées. La [proposition des dernières Éveillées](docs/ETHER_DERNIERES_EVEILLEES.md) porte ce total à 39. Les rangs Divin/Éveillé exigent les grandes ascensions communes de leur faction. Le laboratoire reste disponible pour les tester.
 
 Le catalogue impose un **délai de base minimum de 1** : huit unités passent
 de 0 à 1, sans modifier les délais supérieurs ni l'attente effective à la pioche
@@ -101,7 +101,7 @@ conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteu
 sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
 et les **59 versions Sylve** jusqu'à Éveillée, à leurs niveaux 0 à 3 choisis indépendamment.
 L’Ombre compte 54 versions définies, dont onze natives. Forge en compte 49, dont dix natives. `main` définit 36 versions Éther, dont les [Divines d’Impact](docs/ETHER_DIVINS_IMPACT.md). Le Feu follet natif a une portée de 2 et ses évolutions une portée de 3. Les quatre récompenses pilotes se gagnent dans les Épreuves.
-Les grandes ascensions ouvrent les Divines et Éveillées définies, sans carte offerte ni consommation du deck. Le [lot des dernières Divines](docs/ETHER_DERNIERES_DIVINES.md) est intégré. La proposition des [premières Éveillées](docs/ETHER_PREMIERES_EVEILLEES.md) ajoute quatre fusions après L’Éveil des Hautes Sphères, accessible après la mission 12 et l’ascension Divine Éther. Les paquets Sylve, Ombre, Forge et Éther offrent chacun 3 cartes pour 190 or après le premier boss, aux taux de l’Aube (60/35/5). [Migration des factions](docs/REPRISE_MIGRATION_CARTES.md) · [Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md). La PR Aube nº 53, avec sa présentation commune et sa
+Les grandes ascensions ouvrent les Divines et Éveillées définies, sans carte offerte ni consommation du deck. Le [lot des dernières Divines](docs/ETHER_DERNIERES_DIVINES.md) est intégré. Les [premières Éveillées](docs/ETHER_PREMIERES_EVEILLEES.md) s’obtiennent après L’Éveil des Hautes Sphères, accessible après la mission 12 et l’ascension Divine Éther. Les paquets Sylve, Ombre, Forge et Éther offrent chacun 3 cartes pour 190 or après le premier boss, aux taux de l’Aube (60/35/5). [Migration des factions](docs/REPRISE_MIGRATION_CARTES.md) · [Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md). La PR Aube nº 53, avec sa présentation commune et sa
 [revue finale](docs/REVUE_AUBE_PR53_2026_10_27.md), a été fusionnée sur accord du
 propriétaire le 27 octobre 2026. La publication du site reste une opération distincte.
 

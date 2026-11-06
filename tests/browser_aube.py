@@ -76,17 +76,17 @@ async def run(browser,label,viewport,faction='aube'):
             'mechanist':[None,8,10,10,10,10],
             'ironwraith':[7,9,9,9,9,9],
             'alchemist':[None,5,7,7,7,7],
-            'spark':[3,4,4,4,4,None],
+            'spark':[3,4,4,4,4,4],
             'mystic':[None,4,6,6,6,6],
             'elemental':[None,None,8,10,10,10],
-            'griffin':[None,None,6,8,8,None],
+            'griffin':[None,None,6,8,8,8],
             'sentinel':[None,9,11,11,11,11],
-            'dragon':[None,None,None,12,12,None],
+            'dragon':[None,None,None,12,12,12],
             'tempest':[None,6,8,8,8,8],
-            'seer':[4,5,5,5,5,None],
-            'aetherknight':[None,None,9,11,11,None],
-            'seraph':[None,None,None,10,10,None],
-            'portal_walker':[None,5,7,7,7,None]
+            'seer':[4,5,5,5,5,5],
+            'aetherknight':[None,None,9,11,11,11],
+            'seraph':[None,None,None,10,10,10],
+            'portal_walker':[None,5,7,7,7,7]
         }.get(card_id)
         native=await row.locator('[data-current-version="true"]').get_attribute('data-collection-rarity')
         ranks=['commun','rare','épique','légendaire','divine','éveillée']

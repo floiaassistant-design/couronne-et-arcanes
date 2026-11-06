@@ -41,7 +41,7 @@ test('Les decks de test acceptent les cartes non possédées mais gardent leurs 
 
 test('Trois niveaux existants pour les autres cartes, sans fabriquer une rareté nouvelle',()=>{
  const lab=freshLab();
- assert.equal(setLabRarity(lab,'p','dragon','éveillée').ok,false);
+ assert.equal(setLabRarity(lab,'p','dragon','commun').ok,false);
  assert.equal(setLabLevel(lab,'p','dragon',3).ok,true);
  assert.equal(labCardStats(lab,'p','dragon').atk,CARDS.dragon.attack+3);
  const b=createLabBattle(lab,2);

@@ -147,8 +147,9 @@
   anti-répétition. Les pouvoirs viennent du registre, sans chiffres dupliqués.
 - `unit-flight-support.js` traite les effets après un franchissement réel par
   Vol. Le pas de Sillage utilise le déplacement normal et l’entrée de case
-  commune. Le bonus est consommé au premier déplacement réel ou expire en fin
-  de tour. Les cadences et états facultatifs restent validés à la reprise.
+  commune. Le Sillage est consommé au premier déplacement réel ou expire en fin
+  de tour. Le bonus de frappe des Vents exige le pas supplémentaire réellement
+  utilisé et la frappe dans la même résolution. Les états persistants sont validés.
 - `battle-defense.js` résout `hit` et Riposte pour tous les appels. Garde normale
   positionnelle : candidats via `guard-candidates.js`, même ligne puis proximité
   de sa couronne puis ligne/uid ; un gardien choisi, sans quota inventé par tour.

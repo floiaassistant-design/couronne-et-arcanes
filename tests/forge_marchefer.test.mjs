@@ -43,7 +43,7 @@ test('Marchefer Légendaire fusionné : 3/9/1, Protection héritée et unique po
  const {p,b,u}=gained();assert.equal(p.evolvedCollection['ironwraith:légendaire'],1);
  assert.deepEqual([u.atk,u.maxhp,b.heroes.p.shield],[3,9,3]);
  resolveUnitArrival(b,u,0,1,{emit:recordCombatEvent});assert.equal(b.heroes.p.shield,3,'Protection ne se rejoue pas');
- for(const id of ['spark','aetherknight'])assert.equal(resolveUnitDefinition(id,'éveillée'),null);
+ for(const id of ['dragon','aetherknight'])assert.equal(resolveUnitDefinition(id,'commun'),null);
 });
 
 test('Véritable élimination par attaque normale : +2 bouclier, sans second coup ni modification ATQ/PV',()=>{
@@ -122,7 +122,7 @@ test('Fiche et carte : paramètres communs, obtention par fusion et rangs absent
  const view=cardPresentation({id:'ironwraith',rarity:'légendaire'});
  assert.match(view.card.description,/Ferraille récupérée/);assert.match(view.card.description,/Protection \+3/);
  for(const text of ['attaque normale','élimine une unité ennemie','+2 bouclier','plafond 20','3 tours'])assert.ok(view.details.join(' ').includes(text),text);
- assert.match(view.availability,/fusion/i);assert.equal(cardPresentation({id:'spark',rarity:'éveillée'}).known,false);
+ assert.match(view.availability,/fusion/i);assert.equal(cardPresentation({id:'dragon',rarity:'commun'}).known,false);
 });
 
 test('Export autonome : Ferraille exécutée depuis les modules réellement embarqués',()=>{

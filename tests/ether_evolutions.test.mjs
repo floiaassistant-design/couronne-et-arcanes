@@ -20,10 +20,10 @@ import {forgeUnit as unit,testStorage} from './fixtures/forge-combat.mjs';
 
 // Totaux indépendants du registre, transcrits des cellules Notion relues le 04/11.
 const totals={
- spark:[[2,3,1],[2,4,1],[3,4,1],[3,4,1],[3,4,1]],mystic:[[3,4,2],[3,6,2],[4,6,2],[4,6,2],[4,6,2]],elemental:[[5,8,3],[5,10,3],[5,10,3],[5,10,3]],
- griffin:[[5,6,3],[5,8,3],[5,8,3]],sentinel:[[2,9,2],[2,11,2],[2,11,2],[2,11,2],[2,11,2]],dragon:[[7,12,5],[7,12,5]],
- tempest:[[3,6,2],[3,8,2],[4,8,2],[4,8,2],[4,8,2]],seer:[[2,4,1],[2,5,1],[3,5,1],[3,5,1],[3,5,1]],
- aetherknight:[[5,9,3],[5,11,3],[5,11,3]],seraph:[[5,10,4],[5,10,4]],portal_walker:[[3,5,2],[3,7,2],[4,7,2],[4,7,2]]
+ spark:[[2,3,1],[2,4,1],[3,4,1],[3,4,1],[3,4,1],[3,4,1]],mystic:[[3,4,2],[3,6,2],[4,6,2],[4,6,2],[4,6,2]],elemental:[[5,8,3],[5,10,3],[5,10,3],[5,10,3]],
+ griffin:[[5,6,3],[5,8,3],[5,8,3],[5,8,3]],sentinel:[[2,9,2],[2,11,2],[2,11,2],[2,11,2],[2,11,2]],dragon:[[7,12,5],[7,12,5],[7,12,5]],
+ tempest:[[3,6,2],[3,8,2],[4,8,2],[4,8,2],[4,8,2]],seer:[[2,4,1],[2,5,1],[3,5,1],[3,5,1],[3,5,1],[3,5,1]],
+ aetherknight:[[5,9,3],[5,11,3],[5,11,3],[5,11,3]],seraph:[[5,10,4],[5,10,4],[5,10,4]],portal_walker:[[3,5,2],[3,7,2],[4,7,2],[4,7,2],[4,7,2]]
 };
 const recipes=EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction==='ether');
 function summoned(id,rarity,side='p',level=0){
@@ -39,8 +39,8 @@ function summoned(id,rarity,side='p',level=0){
 const attack=({b,u})=>(u.side==='p'?endPlayerTurn:finishEnemyTurn)(b);
 const enemy=(side,extra={})=>unit('militia',side==='p'?'e':'p',{hp:30,maxhp:30,armor:0,stun:99,...extra});
 
-test('Éther : 43 versions, 32 évolutions et onze personnages ; aucune décision native appliquée implicitement',()=>{
- assert.deepEqual([...ETHER_UNIT_IDS].sort(),Object.keys(totals).sort());assert.equal(recipes.length,32);
+test('Éther : 50 versions, 39 évolutions et onze personnages ; aucune décision native appliquée implicitement',()=>{
+ assert.deepEqual([...ETHER_UNIT_IDS].sort(),Object.keys(totals).sort());assert.equal(recipes.length,39);
  assert.equal(ETHER_UNIT_IDS.filter(id=>VERSIONED_UNIT_IDS.includes(id)).length,11);
  let count=0;
  for(const [id,values] of Object.entries(totals)){
@@ -50,29 +50,30 @@ test('Éther : 43 versions, 32 évolutions et onze personnages ; aucune décisio
    assert.equal(d.status.combat,'implemented');assert.deepEqual(d.pendingDecisions,[]);
    if(i){assert.strictEqual(d.source,ETHER_DESIGN_SOURCE);assert.equal(d.status.obtaining,'fusion');}
    else assert.equal(d.status.obtaining,'existing');
-   const abilities={...versions[0].abilities,...(id==='spark'&&i>=3?{spectralRetreat:{cells:1,period:3}}:{}),...(id==='seer'&&i>=3?{stillOmen:{amount:i===4?3:2,period:3,delay:1}}:{})};
-   if(id==='spark'&&d.rarity==='divine')abilities.retreatStrike={amount:2,expiresAfter:2};
-   if(id==='dragon'&&i)abilities.splashKnockback={cells:1,period:3};
+   const awakened=d.rarity==='éveillée';
+   const abilities={...versions[0].abilities,...(id==='spark'&&i>=3?{spectralRetreat:{cells:awakened?2:1,period:3}}:{}),...(id==='seer'&&i>=3?{stillOmen:{amount:i>=4?3:2,period:3,delay:1,...(awakened?{barrier:{amount:1,cap:1}}:{})}}:{})};
+   if(id==='spark'&&i>=4)abilities.retreatStrike={amount:2,expiresAfter:2};
+   if(id==='dragon'&&i)abilities.splashKnockback={cells:awakened?2:1,period:3};
    if(id==='sentinel'&&i>=2)abilities.guardPrism={amount:1,minimum:1,period:3,expiresAfter:2};
    if(id==='sentinel'&&i>=3)abilities.guard={...abilities.guard,scope:i===4?'all-lines':'line'};
-   if(id==='griffin'&&d.rarity==='divine')abilities.flightWake={cells:1,period:3,duration:1};
-   if(id==='seraph'&&d.rarity==='divine')abilities.flightHeal={amount:2,period:3};
+   if(id==='griffin'&&i>=2)abilities.flightWake={cells:1,period:3,duration:1,...(awakened?{strike:1}:{})};
+   if(id==='seraph'&&i)abilities.flightHeal={amount:awakened?3:2,period:3,...(awakened?{selfHeal:1}:{})};
    if(id==='elemental'&&i>=2)abilities.splashHealingPenalty={amount:i===3?4:2,duration:1,period:3};
    if(id==='tempest'&&i>=3)abilities.splashArc={amount:i===4?3:2,period:3};
    if(id==='mystic'&&i>=3)abilities.retaliatoryOmen={amount:i===4?4:2,period:3,expiresAfter:2};
-   if(id==='aetherknight'&&d.rarity==='divine')abilities.chargeAdvance={cells:1,period:3};
-   if(id==='portal_walker'&&d.rarity==='divine')abilities.portalEcho={range:1,expiresAfter:1};
+   if(id==='aetherknight'&&i>=2)abilities.chargeAdvance={cells:1,period:3,...(awakened?{strike:{amount:2,expiresAfter:2}}:{})};
+   if(id==='portal_walker'&&i>=3)abilities.portalEcho={range:awakened?2:1,expiresAfter:1};
    assert.deepEqual(d.abilities,abilities);assert.deepEqual(d.geometry,{...versions[0].geometry,...(id==='spark'&&i?{range:3}:{})});
   }
   assert.equal(resolveUnitDefinition(id,'divine').status.combat,'implemented');
-  assert.equal(!!resolveUnitDefinition(id,'éveillée'),['mystic','elemental','sentinel','tempest'].includes(id));
+  assert.equal(resolveUnitDefinition(id,'éveillée').status.combat,'implemented');
  }
- assert.equal(count,43);assert.equal(Object.keys(CARDS).length,76);
+ assert.equal(count,50);assert.equal(Object.keys(CARDS).length,76);
  assert.equal(resolveUnitDefinition('spark').geometry.range,2);assert.equal(resolveUnitDefinition('spark','rare').geometry.range,3);
  const p=freshProfile();assert.deepEqual(normalizeProfile(p),p);assert.equal(p.evolvedCollection,undefined);
 });
 
-test('43 versions Éther × quatre niveaux × deux camps : vraie invocation et aucun gain réel du laboratoire',()=>{
+test('50 versions Éther × quatre niveaux × deux camps : vraie invocation et aucun gain réel du laboratoire',()=>{
  for(const [id,values] of Object.entries(totals))for(const [i,d] of unitVersions(id).entries())for(const level of [0,1,2,3])for(const side of ['p','e']){
   const {b,u}=summoned(id,d.rarity,side,level);
   assert.deepEqual([u.atk,u.maxhp],[values[i][0]+level,values[i][1]+level]);assert.equal(u.rarity,d.rarity);
@@ -216,11 +217,11 @@ test('Fiches, instantanés et anciennes possessions : chiffres définis seulemen
   const view=cardPresentation({id:r.cardId,rarity:r.to});assert(view.known);assert.match(view.availability,/fusion/);
   assert.equal(view.card.attack,resolveUnitDefinition(r.cardId,r.to).stats.attack);assert(view.details.length);
  }
- for(const [id,label] of [['mystic','Sentence des étoiles'],['elemental','Résonance majeure'],['tempest','Foudre transversale'],['sentinel','depuis toutes les lignes']]){
+ for(const [id,label] of [['mystic','Sentence des étoiles'],['elemental','Résonance majeure'],['tempest','Foudre transversale'],['sentinel','depuis toutes les lignes'],['spark','Fuite lumineuse'],['dragon','Tempête des Hauts Cieux'],['seer','Constellation captive'],['griffin','Vents du Zénith'],['seraph','Ascension secourable'],['aetherknight','Conquête céleste'],['portal_walker','Faille prolongée']]){
   const view=cardPresentation({id,rarity:'éveillée'});assert.match(view.availability,/Ascension requise/);
   assert(view.details.some(text=>text.includes(label)),label);
  }
- for(const ref of [{id:'spark',rarity:'éveillée'},{id:'griffin',rarity:'éveillée'},{id:'seer',rarity:'éveillée'}]){
+ for(const ref of [{id:'dragon',rarity:'commun'},{id:'griffin',rarity:'commun'},{id:'portal_walker',rarity:'commun'}]){
   const p=freshProfile();p.evolvedCollection={[cardKey(ref)]:1};assert.throws(()=>validateImportedProfile(p),/évolution invalide/);
   const view=cardPresentation(ref);assert.equal(view.known,false);assert.equal(view.stats,null);
  }

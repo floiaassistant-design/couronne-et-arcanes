@@ -19,13 +19,13 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Sylve | 11 | 48 | 48 évolutions intégrées, 59 versions définies jusqu’à Éveillée |
 | Ombre | 11 | 43 | 43 évolutions intégrées par les PR 70/71/72, 54 versions définies |
 | Forge | 10 | 39 sur 39 cases futures | 39 évolutions intégrées jusqu’à PR 85 ; 49 versions Forge |
-| Éther | 11 | 39 sur 39 cases futures | 28 évolutions intégrées, dont les onze Divines. Quatre Éveillées et leur ascension sont proposées. Portée native du Feu follet distincte |
+| Éther | 11 | 39 sur 39 cases futures | 32 évolutions intégrées. Les sept dernières Éveillées sont proposées. Portée native du Feu follet distincte |
 
 Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
 ou un pouvoir validé ne crée ni exemplaire ni définition jouable. Les onze personnages Éther ont leurs 39 évolutions validées dans cette édition ;
 la disponibilité réelle reste déterminée par le registre du jeu.
 
-## Reprise du 6 novembre — Divines intégrées, premières Éveillées proposées
+## Reprise du 6 novembre — premières Éveillées intégrées, dernières proposées
 
 La PR 86 a intégré quatre évolutions Éther. Sites v29 a diffusé ce lot. Les
 paragraphes antérieurs mentionnant Repli et présage comme proposés ou le Golem
@@ -42,7 +42,7 @@ même ascension. Il est intégré par la PR 89 au commit
 Le [lot Impact](ETHER_DIVINS_IMPACT.md) a intégré l’Élémentaire et l’Esprit de
 Tempête Divins dans la PR 90 au commit `a5404b8`. Le [lot suivant](ETHER_DERNIERES_DIVINES.md)
 a intégré les trois dernières Divines par la PR 91. Les [premières Éveillées](ETHER_PREMIERES_EVEILLEES.md)
-proposent quatre rangs et un défi commun. Sept autres Éveillées restent à intégrer après ce lot.
+ont intégré quatre rangs et un défi commun dans la PR 92. Les [dernières Éveillées](ETHER_DERNIERES_EVEILLEES.md) complètent la proposition à 39 évolutions Éther et 210 recettes.
 
 ## Historique des lots précédents
 
