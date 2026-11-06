@@ -41,15 +41,17 @@ export function chooseSimulatedMove(b){
  moves.sort((a,b)=>b.score-a.score||a.i-b.i||a.lane-b.lane);
  return moves[0]||null;
 }
-export function simulateBattle(profile,mission,seed,{turnLimit=40,observe,legacy=false,turnFlow}={}){
+export function simulateBattle(profile,mission,seed,{turnLimit=40,observe,observeAction,legacy=false,turnFlow}={}){
  const b=createBattle(profile,mission,seed,{legacy,turnFlow});let turns=0,powers=0;
  while(b.status==='active'&&turns<turnLimit){
-  if(b.powerCooldown===0){const result=usePower(b);if(result.ok)powers++;}
+  if(b.powerCooldown===0){const result=usePower(b);if(result.ok){powers++;observeAction?.({type:'power'});}}
   for(let i=0;i<2&&b.status==='active';i++){
    const best=chooseSimulatedMove(b);if(!best)break;
+   const card=b.heroes.p.hand[best.i];
+   observeAction?.({type:CARDS[card.id].type,id:card.id,i:best.i,lane:best.lane,col:best.col});
    const result=playPlayerCard(b,best.i,best.lane,best.col);if(!result.ok)throw Error(result.reason);
   }
-  if(b.status==='active')endPlayerTurn(b);
+  if(b.status==='active'){observeAction?.({type:'end',round:b.round});endPlayerTurn(b);}
   // Le mode actuel du jeu exige des poses adverses puis leur résolution.
   // L'option absente conserve les simulations et métriques historiques.
   if(b.status==='active'&&b.phase==='enemy'){
