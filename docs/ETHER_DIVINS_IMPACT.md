@@ -1,5 +1,7 @@
 # Éther — Élémentaire et Esprit de Tempête Divins
 
+Lot intégré par la PR 90 au commit `a5404b8d1c54dd774b9c72be19083ef19eaa1759`, après six contrôles réussis.
+
 Les rangs et pouvoirs suivent le [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f), édition du 4 novembre 2026. Les deux cartes suivent l’[ascension Divine Éther existante](ETHER_PREMIERS_DIVINS.md).
 
 | Version | ATQ | PV | Délai | Pouvoir ajouté |

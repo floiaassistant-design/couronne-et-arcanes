@@ -36,7 +36,7 @@ test('Huit hauts rangs : vraie fusion, totaux indépendants, paramètres rempla�
  assert.equal(a('drill','éveillée').barrierDrill.amount,4);assert.equal(a('colossus','éveillée').scoria.amount,4);
  assert.equal(a('ironwraith','divine').strikeWard.requiresKill,false);assert.equal(a('ironwraith','éveillée').strikeWard.amount,3);
  assert.equal(a('colossus','éveillée').guard,undefined);assert.equal(a('colossus','éveillée').riposte,undefined);
- for(const rank of ranks)assert.equal(resolveUnitDefinition('mystic',rank),null);
+ for(const id of ['mystic','aetherknight'])assert.equal(resolveUnitDefinition(id,'éveillée'),null);
 });
 
 test('Brèche ouverte : recul puis avancée dans les deux camps, sans deuxième attaque',()=>{

@@ -70,6 +70,18 @@ export function resolveImpactEffect(b,source,target,lane,col,damaged,suppressed,
  }
 }
 
+export function resolveChargeAdvance(b,unit,victim,lane,from,to,{charged,killed,suppressed},hooks){
+ const ability=versionUnitAbilities(unit)?.chargeAdvance,row=b.board[lane];
+ if(!ability||!charged||!killed||suppressed||unit.hp<=0||unit.chargeAdvanceReadyRound>b.round||
+    to!==from+(unit.side==='p'?1:-1)*ability.cells||to<1||to>lastCell(b)||row[from]!==unit||row[to]!==victim)return;
+ hooks.clearDead(b,lane,to);
+ if(row[to])return;
+ unit.chargeAdvanceReadyRound=b.round+ability.period;
+ row[from]=null;row[to]=unit;
+ hooks.emit(b,{type:'move',side:unit.side,lane,from,to,chargeAdvance:true});
+ hooks.enter(b,unit,lane,to);
+}
+
 // Quota propre au gardien, distinct du nombre illimité d'interceptions.
 export function resolveGuardWard(b,u,intercepted,performed,suppressed,emit){
  const p=versionUnitAbilities(u)?.guardWard;

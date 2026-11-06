@@ -43,7 +43,7 @@ test('Marchefer Légendaire fusionné : 3/9/1, Protection héritée et unique po
  const {p,b,u}=gained();assert.equal(p.evolvedCollection['ironwraith:légendaire'],1);
  assert.deepEqual([u.atk,u.maxhp,b.heroes.p.shield],[3,9,3]);
  resolveUnitArrival(b,u,0,1,{emit:recordCombatEvent});assert.equal(b.heroes.p.shield,3,'Protection ne se rejoue pas');
- for(const rank of ['divine','éveillée'])assert.equal(resolveUnitDefinition('mystic',rank),null);
+ for(const id of ['mystic','aetherknight'])assert.equal(resolveUnitDefinition(id,'éveillée'),null);
 });
 
 test('Véritable élimination par attaque normale : +2 bouclier, sans second coup ni modification ATQ/PV',()=>{

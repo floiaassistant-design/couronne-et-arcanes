@@ -2,7 +2,7 @@
 import copy,json,subprocess
 from pathlib import Path
 from evolution_ci_plan import ascension_cases
-from browser_ether_divine import run_ether_divine_case,run_ether_flight_case,run_ether_impact_case
+from browser_ether_divine import run_ether_divine_case,run_ether_flight_case,run_ether_impact_case,run_last_ether_divines_case
 
 ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
@@ -196,3 +196,4 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
             await run_ether_divine_case(browser,config,address,final,make_case,click,stored)
             await run_ether_flight_case(browser,config,address,make_case,click,stored)
             await run_ether_impact_case(browser,config,address,make_case,click,stored)
+            await run_last_ether_divines_case(browser,config,address,make_case,click,stored)
