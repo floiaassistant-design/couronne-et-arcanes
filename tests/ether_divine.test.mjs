@@ -30,7 +30,7 @@ const attack=c=>(c.u.side==='p'?endPlayerTurn:finishEnemyTurn)(c.b);
 test('Cinq versions : statistiques héritées, pouvoirs remplacés et Éveillées définies seulement',()=>{
  for(const [id,atk,hp] of [['spark',3,4],['seer',3,5],['sentinel',2,11],['dragon',7,12]]){
   const c=forgeBattle(id,'divine'),d=resolveUnitDefinition(id,'divine');
-  assert.deepEqual([c.u.atk,c.u.maxhp],[atk,hp]);assert.equal(!!resolveUnitDefinition(id,'éveillée'),id==='sentinel');
+  assert.deepEqual([c.u.atk,c.u.maxhp],[atk,hp]);assert.equal(resolveUnitDefinition(id,'éveillée').stats.hp,hp);
   assert.equal(c.p.evolvedCollection[id+':divine'],1);assert.equal(d.status.obtaining,'fusion');
  }
  assert.equal(resolveUnitDefinition('sentinel','légendaire').abilities.guard.scope,'positioned');

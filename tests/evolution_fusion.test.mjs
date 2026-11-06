@@ -28,6 +28,7 @@ Object.assign(expected,{
  sentinel:{'épique':[2,11],'légendaire':[2,11],divine:[2,11],'éveillée':[2,11]},dragon:{divine:[7,12]},tempest:{'épique':[3,8],'légendaire':[4,8],divine:[4,8],'éveillée':[4,8]},seer:{rare:[2,5],'épique':[3,5],'légendaire':[3,5],divine:[3,5]},spark:{rare:[2,4],'épique':[3,4],'légendaire':[3,4],divine:[3,4]},
  aetherknight:{'légendaire':[5,11],divine:[5,11]},portal_walker:{'épique':[3,7],'légendaire':[4,7],divine:[4,7]}
 });
+for(const id of ['griffin','seraph','dragon','seer','spark','aetherknight','portal_walker'])expected[id]['éveillée']=[...expected[id].divine];
 const ready=()=>{const p=freshProfile();p.completed=['01','02','03','04','05','06','07','08','09','10','11','12'];return p;};
 function stocked(recipe){
  const p=ready(),source=cardReference({id:recipe.cardId,rarity:recipe.from});
@@ -39,15 +40,15 @@ function stocked(recipe){
 }
 function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??null,setItem:(k,v)=>{data[k]=String(v)},removeItem:k=>{delete data[k]}};return data;}
 
-test('203 recettes explicites, transitions adjacentes et autres rangs/factions fermés',()=>{
- assert.equal(EVOLUTION_FUSIONS.length,203);
+test('210 recettes explicites, transitions adjacentes et autres rangs/factions fermés',()=>{
+ assert.equal(EVOLUTION_FUSIONS.length,210);
  assert.deepEqual(EVOLUTION_FUSIONS.map(r=>r.id).sort(),Object.entries(expected).flatMap(([id,ranks])=>Object.keys(ranks).map(rank=>id+':'+rank)).sort());
  for(const recipe of EVOLUTION_FUSIONS){assert.equal(recipe.copies,3);assert.equal(recipe.from,{rare:'commun','épique':'rare','légendaire':'épique',divine:'légendaire','éveillée':'divine'}[recipe.to]);assert.equal(recipe.mission,{rare:'01','épique':'03','légendaire':'06',divine:'09','éveillée':'12'}[recipe.to]);}
  const p=ready();
- for(const id of ['spark:éveillée','firebolt:rare','militia:commun','constructor']){
+ for(const id of ['dragon:commun','firebolt:rare','militia:commun','constructor']){
   const before=structuredClone(p);assert.equal(fuseEvolutionCopies(p,id).ok,false);assert.deepEqual(p,before,id);
  }
- for(const ref of [{id:'spark',rarity:'éveillée'}])assert.equal(playableCardReference(ref),false);
+ for(const ref of [{id:'dragon',rarity:'commun'}])assert.equal(playableCardReference(ref),false);
 });
 
 test('Chaque recette consomme 3 stocks du rang exact, crée 1 carte jouable et protège le deck et toute autre progression',()=>{

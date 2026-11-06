@@ -69,7 +69,16 @@ async def run_golem_case(browser,config,address,profile,rank,make_case,click,sto
 
 async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,stored,faction='aube'):
     for config in ascension_cases(part):
-        label,touch=config['label'],config['touch'];s=SCENARIOS[faction][config['index']%len(SCENARIOS[faction])];card_id='mystic' if faction=='ether' and s['trial']['to']=='éveillée' else 'seer' if faction=='ether' else 'drill' if faction=='forge' else 'bone' if faction=='ombre' else 'thorn' if faction=='sylve' else 'dawnbastion'
+        label,touch=config['label'],config['touch']
+        s=SCENARIOS[faction][config['index']%len(SCENARIOS[faction])]
+        rank=s['trial']['to']
+        card_id,atk,hp={
+            'aube':('dawnbastion',7 if rank=='divine' else 9,14),
+            'sylve':('thorn',5,9),
+            'ombre':('bone',6,9),
+            'forge':('drill',5,10),
+            'ether':('seer',5,8) if rank=='divine' else ('aetherknight',7,14),
+        }[faction]
         address=url if label=='web' else None
         locked=copy.deepcopy(s);locked['profile']['completed']=[]
         ctx,page,errors,_=await make_case(browser,locked,config['viewport'],touch=touch,url=address)
@@ -164,7 +173,12 @@ async def run_ascension_cases(browser,part,url,*,make_case,click,select,replay,s
         await select(page,index,touch)
         await click(page.locator('[data-action="deploy"][data-lane="0"][data-col="1"]'),touch)
         snapshot=await stored(page,BATTLE);unit=snapshot['board'][0][1]
-        assert (unit['id'],unit['rarity'],unit['atk'],unit['maxhp'])==(card_id,s['trial']['to'],(6 if faction=='ombre' or card_id=='mystic' else 5 if faction in ('sylve','forge','ether') else 7 if s['trial']['to']=='divine' else 9),(9 if card_id=='mystic' else 8 if faction=='ether' else 10 if faction=='forge' else 9 if faction in ('sylve','ombre') else 14))
+        assert (unit['id'],unit['rarity'],unit['atk'],unit['maxhp'])==(card_id,rank,atk,hp)
+        if card_id=='aetherknight':
+            card=page.locator(f'.board-card[data-unit-id="{unit["uid"]}"]')
+            if touch:await card.tap()
+            else:await card.hover()
+            assert 'Conquête céleste' in await page.locator('#hand-card-inspection').inner_text()
         if faction=='aube':assert unit['arrivalResolved'] and snapshot['heroes']['p']['shield']==3
         await page.reload();await page.locator('.combat-screen').wait_for();assert await stored(page,BATTLE)==snapshot
         if faction=='forge':

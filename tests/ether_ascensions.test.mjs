@@ -8,14 +8,14 @@ import {validStoredBattle,validateImportedProfile} from '../src/ui/storage.js';
 import {ascensionProfile,ascensionScenarios,playAscension} from './fixtures/ascension-scenarios.mjs';
 
 const scenarios=ascensionScenarios('ether'),id='ether-ascension-divine';
-test('Deux ascensions Éther : onze recettes Divines, quatre Éveillées',()=>{
+test('Deux ascensions Éther : onze recettes Divines et onze Éveillées',()=>{
  const [divine,awakened]=ETHER_ASCENSIONS;assert.equal(ETHER_ASCENSIONS.length,2);
  assert.equal(evolutionAscensionFor('ether','divine'),divine);
  assert.equal(evolutionAscensionFor('ether','éveillée'),awakened);
  assert.deepEqual(divine.goal,{distinct:3,crownPercent:40,maxRound:24});assert.equal(divine.mission,'09');
  assert.deepEqual(awakened.goal,{distinct:4,crownPercent:60,maxRound:24});assert.equal(awakened.mission,'12');assert.equal(awakened.previous,id);
  assert.deepEqual(EVOLUTION_FUSIONS.filter(r=>r.ascension===id).map(r=>r.cardId).sort(),['aetherknight','dragon','elemental','griffin','mystic','portal_walker','seer','sentinel','seraph','spark','tempest']);
- assert.deepEqual(EVOLUTION_FUSIONS.filter(r=>r.ascension===awakened.id).map(r=>r.cardId).sort(),['elemental','mystic','sentinel','tempest']);
+ assert.deepEqual(EVOLUTION_FUSIONS.filter(r=>r.ascension===awakened.id).map(r=>r.cardId).sort(),['aetherknight','dragon','elemental','griffin','mystic','portal_walker','seer','sentinel','seraph','spark','tempest']);
 });
 test('Éveil Éther : victoire en mission 12 et ascension Divine Éther, puis reçu sans cadeau',()=>{
  const s=scenarios[1];assert(validStoredBattle(s.initial));assert(trialObjectiveState(s.terminal).achieved);
@@ -28,7 +28,7 @@ test('Éveil Éther : victoire en mission 12 et ascension Divine Éther, puis re
  assert(settleEvolutionTrial(p,structuredClone(s.terminal)).unlocked);
  assert.deepEqual(p,{...s.profile,completedTrials:[id,s.id]});assert.deepEqual(validateImportedProfile(p),p);
  assert(!settleEvolutionTrial(p,structuredClone(s.terminal)).unlocked);
- for(const id of ['mystic','sentinel','elemental','tempest']){
+ for(const {cardId:id} of EVOLUTION_FUSIONS.filter(r=>r.ascension===s.id)){
   const q=structuredClone(p);assert(fuseEvolutionCopies(q,id+':éveillée').ok);assert.deepEqual(q.deck,p.deck);
   assert.equal(q.evolvedCollection[id+':divine'],p.evolvedCollection[id+':divine']-3);
  }

@@ -1,5 +1,7 @@
 # Éther — quatre premières Éveillées et ascension commune
 
+Lot intégré dans main par la PR 92. Les [sept dernières Éveillées](ETHER_DERNIERES_EVEILLEES.md) réutilisent la même ascension.
+
 Les quatre versions reprennent les décisions du [tableau maître Notion](https://app.notion.com/p/4036633072a881fdbab8d6e122a43e3f), édité le 4 novembre 2026. Les totaux précédents et la géométrie sont conservés.
 
 | Unité | ATQ / PV / délai | Modification au rang Éveillé |
@@ -15,6 +17,6 @@ Ces valeurs remplacent les paramètres Divins. Le moteur conserve les conditions
 
 Le défi commun reprend le barème des Éveillées des autres factions. Il s’ouvre après une victoire en mission 12 et après l’ascension Divine Éther, avec quatre personnages Divins Éther distincts et possédés dans le deck. Il demande de gagner avant la fin du tour 24 avec quatre Divines Éther distinctes vivantes et au moins 60 % des PV de la couronne. Le Gardien des Hautes Sphères utilise des cartes natives Éther et des sorts existants, difficulté 6, 60 PV et stratégie d’assaut.
 
-Le reçu ouvre les quatre recettes définies. Il ne donne pas de carte ni de ressource. Chaque fusion consomme trois copies Divines libres du même personnage en préservant celles du deck. Les autres factions, les paquets et le laboratoire conservent leur accès. Cette proposition compte 43 versions Éther, 32 évolutions Éther et 203 recettes. Les sept autres Éveillées et la portée native du Feu follet restent à traiter.
+Le reçu ouvre les quatre recettes définies. Il ne donne pas de carte ni de ressource. Chaque fusion consomme trois copies Divines libres du même personnage en préservant celles du deck. Les autres factions, les paquets et le laboratoire conservent leur accès. Cette proposition compte 43 versions Éther, 32 évolutions Éther et 203 recettes. La portée native du Feu follet relève d’un lot séparé.
 
 Les contrôles comparent les rangs, les dégâts et les soins effectivement reçus, l’interception entre lignes et la reprise des états. Le parcours partagé d’ascension couvre le départ, la victoire, le reçu, la fusion et la réouverture de la partie.

@@ -9,15 +9,15 @@ ROOT=Path(__file__).resolve().parents[1]
 SAVE='couronnes_arcanes_v1'
 BATTLE='couronnes_arcanes_bataille_v1'
 SCENARIOS={
-    'ether-spark':{'card':'spark','faction':'ether','stats':(3,4),'futureByRank':{'divine':'Ascension requise'},'divineStats':(3,4),'effect':'spectralRetreatReadyRound','effectSide':'p','status':'Repli spectral','detail':['Repli spectral','Portée 3','3 tours','fusion'],'future':'À concevoir','prepared':True,'fixture':'ether'},
-    'ether-seer':{'card':'seer','faction':'ether','stats':(3,5),'futureByRank':{'divine':'Ascension requise'},'divineStats':(3,5),'effect':'stillOmen','status':'Étoile immobile','detail':['Étoile immobile','déplacement réel','3 tours','fusion'],'future':'À concevoir','prepared':True,'fixture':'ether'},
+    'ether-spark':{'card':'spark','faction':'ether','stats':(3,4),'futureByRank':{'divine':'Ascension requise'},'divineStats':(3,4),'effect':'spectralRetreatReadyRound','effectSide':'p','status':'Repli spectral','detail':['Repli spectral','Portée 3','3 tours','fusion'],'future':'Ascension requise','prepared':True,'fixture':'ether'},
+    'ether-seer':{'card':'seer','faction':'ether','stats':(3,5),'futureByRank':{'divine':'Ascension requise'},'divineStats':(3,5),'effect':'stillOmen','status':'Étoile immobile','detail':['Étoile immobile','déplacement réel','3 tours','fusion'],'future':'Ascension requise','prepared':True,'fixture':'ether'},
     'sylve':{'card':'owl','stats':(3,5),'effect':'attackPenalty','status':'Harcèlement','detail':['Harcèlement','−1 ATQ','fusion'],'future':'Ascension requise'},
     'ombre':{'card':'plague','stats':(4,7),'effect':'poisonTurns','status':'Poison 2 tour(s)','detail':['Poison 1','2 tours','fusion'],'future':'Ascension requise'},
     'forge-scrap':{'card':'ironwraith','faction':'forge','stats':(3,9),'effect':'strikeWardReadyRound','effectSide':'p','status':'Ferraille récupérée','detail':['Ferraille récupérée','plafond 20','3 tours','fusion'],'future':'Ascension requise'},
     'forge-smith':{'card':'smith','faction':'forge','stats':(4,8),'effect':'knockbackReadyRound','effectSide':'p','status':'Coup de masse','detail':['Coup de masse','3 tours','fusion'],'future':'Ascension requise','prepared':True},
     'forge-drill':{'card':'drill','faction':'forge','stats':(3,7),'effect':'barrierDrillReadyRound','effectSide':'p','status':'Foreuse','detail':['Foreuse d’acier','2 points','3 tours','fusion'],'future':'Ascension requise','prepared':True},
     'forge':{'card':'alchemist','stats':(4,7),'effect':'poisonTurns','status':'Poison 2 tour(s)','detail':['Poison 1','2 tours','fusion'],'future':'Ascension requise'},
-    'ether':{'card':'aetherknight','stats':(5,11),'futureByRank':{'divine':'Ascension requise'},'divineStats':(5,11),'effect':'hp','status':'Perforation','detail':['Perforation','Charge','fusion'],'future':'À concevoir','prepared':True,'nativeSource':True,'damageOnly':5},
+    'ether':{'card':'aetherknight','stats':(5,11),'futureByRank':{'divine':'Ascension requise'},'divineStats':(5,11),'effect':'hp','status':'Perforation','detail':['Perforation','Charge','fusion'],'future':'Ascension requise','prepared':True,'nativeSource':True,'damageOnly':5},
 }
 PROFILE_SCRIPT="import {freshProfile} from './src/engine.js';const p=freshProfile(),id=process.argv[1],native=process.argv[2]==='native';p.completed=['01','02','03','04','05'];p.unlocked=6;p.guideSeen=true;if(native)p.collection[id]=3;else p.evolvedCollection={[id+':épique']:3};p.deck[0]=native?id:{id,rarity:'épique'};console.log(JSON.stringify(p));"
 PROFILES={name:json.loads(subprocess.check_output(['node','--input-type=module','-e',PROFILE_SCRIPT,cfg['card'],'native' if cfg.get('nativeSource') else 'evolved'],cwd=ROOT)) for name,cfg in SCENARIOS.items()}

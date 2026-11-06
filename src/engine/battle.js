@@ -197,6 +197,7 @@ function resolvePoison(b,sideFilter=null){
  sweepDead(b);
 }
 function moveUnits(b,sideFilter=null){
+ const wakeStrikes=new Map();
  // Legacy combats alternate initiative; the new mode resolves each camp separately.
  for(const side of sideFilter?[sideFilter]:(b.round%2?['p','e']:['e','p']))for(let lane=0;lane<laneCount(b);lane++){
   const cols=Array.from({length:lastCell(b)},(_,i)=>side==='p'?lastCell(b)-i:i+1);
@@ -223,11 +224,13 @@ function moveUnits(b,sideFilter=null){
     if(tracked)u.movedCellsThisRound+=Math.abs(destination-col);
     if(wake)delete u.flightWake;
     b.board[lane][destination]=u;b.board[lane][col]=null;u.movedThisRound=true;fx(b,{type:'move',lane,from:col,to:destination,side,icon:CARDS[u.id]?.icon||'♞'});col=destination;
-    if(flownAlly)resolveFlightSupport(b,u,flownAlly,lane,next,suppressed,fx);
+    if(step>=steps&&wake?.strike)wakeStrikes.set(u,wake.strike);
+    if(flownAlly)resolveFlightSupport(b,u,flownAlly,lane,next,col,suppressed,fx);
     enterCell(b,u,lane,col);if(u.hp<=0||u.stun>0)break;
    }
   }
  }
+ return wakeStrikes;
 }
 
 function retaliate(b,defender,attacker,lane,defenderCol,attackerCol,defenderLane=lane){
@@ -271,7 +274,7 @@ function resolveSplash(b,u,sourceLane,sourceCol,primaryLane,primaryCol,atk,inter
   resolveSplashDisplacement(b,u,extra,damaged,suppressed,controlHooks);
  }
 }
-function resolveAttacks(b,sideFilter=null){
+function resolveAttacks(b,sideFilter,wakeStrikes){
  const intents=[];
  for(let lane=0;lane<laneCount(b);lane++)for(let col=1;col<=lastCell(b);col++){
   const u=b.board[lane][col];if(!u||u.hp<=0||u.stun>0||(sideFilter&&u.side!==sideFilter))continue;
@@ -279,7 +282,7 @@ function resolveAttacks(b,sideFilter=null){
   const target=findTarget(b,lane,col,u)||(!suppressed&&findPortalEchoTarget(b,lane,u));
   const charged=!suppressed&&unitChargeAmount(u)>0&&!!u.movedThisRound;
   if(target){
-   const furious=!!u.fury,raw=u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0)+consumeNormalStrikeBonus(b,u);
+   const furious=!!u.fury,raw=u.atk+formationBonus(b,lane,u)+(u.rallyUntil>=b.round?1:0)+(charged?unitChargeAmount(u):0)+consumeNormalStrikeBonus(b,u)+(wakeStrikes.get(u)||0);
    const attackState=versionUnitAbilities(u)?.execution?{unit:{...u,attackPenalty:u.attackPenalty?{...u.attackPenalty}:undefined},raw}:null;
    intents.push({u,lane,col,target,atk:consumeAttackPenalty(u,raw,b.round),attackState,ability:activeAbility(b,u),charged,furious,suppressed});
   }
@@ -419,8 +422,8 @@ export function playEnemyCard(b){
 export function finishEnemyTurn(b){
  const rulesError=battleRulesError(b);if(rulesError)return {ok:false,reason:rulesError};
  if(b.turnFlow!=='alternating'||b.phase!=='enemy'||b.status!=='active')return {ok:false,reason:'Ce n’est pas le tour adverse.'};
- resolvePoison(b,'e');prepareControlUnits(b,controlHooks,'e');moveUnits(b,'e');resolveAttacks(b,'e');expireControl(b,fx);
- if(resolveStillOmens(b,hit)){sweepDead(b);checkOutcome(b);}
+ resolvePoison(b,'e');prepareControlUnits(b,controlHooks,'e');resolveAttacks(b,'e',moveUnits(b,'e'));expireControl(b,fx);
+ if(resolveStillOmens(b,hit,fx)){sweepDead(b);checkOutcome(b);}
  if(b.round>=17&&b.status==='active'){
   const attrition=1+Math.floor((b.round-17)/6);
   damageHero(b,'p',attrition);damageHero(b,'e',attrition);
@@ -444,14 +447,14 @@ export function endPlayerTurn(b){
  if(b.phase!=='player'||b.status!=='active')return {ok:false,reason:'Le tour est terminé.'};
  if(b.turnFlow==='alternating'){
   b.phase='enemy';
-  resolvePoison(b,'p');prepareControlUnits(b,controlHooks,'p');moveUnits(b,'p');resolveAttacks(b,'p');recordTrialTurn(b);
+  resolvePoison(b,'p');prepareControlUnits(b,controlHooks,'p');resolveAttacks(b,'p',moveUnits(b,'p'));recordTrialTurn(b);
   if(b.status==='active')note(b,'L’IA prépare ses cartes.');
   return {ok:true};
  }
  b.phase='resolving';enemyAct(b);
  if(b.status==='active'){
-  resolvePoison(b);prepareControlUnits(b,controlHooks);moveUnits(b);resolveAttacks(b);expireControl(b,fx);
-  if(resolveStillOmens(b,hit)){sweepDead(b);checkOutcome(b);}
+  resolvePoison(b);prepareControlUnits(b,controlHooks);resolveAttacks(b,null,moveUnits(b));expireControl(b,fx);
+  if(resolveStillOmens(b,hit,fx)){sweepDead(b);checkOutcome(b);}
   // Fatigue of the battlefield avoids endless defensive stalemates.
   if(b.round>=17&&b.status==='active'){
    const attrition=1+Math.floor((b.round-17)/6);

@@ -1,6 +1,7 @@
 // Présages différés : état métier attaché à la victime, sans DOM ni dégâts recopiés.
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {activeStrikeState} from './unit-strike-modifiers.js';
+import {grantAbilityBarrier} from './unit-barriers.js';
 
 function placeOmen(b,source,target,key,readyKey,parameters,timing,{performed,damaged,suppressed},emit){
  if(!performed||!damaged||suppressed||source.hp<=0||!target||target.hp<=0||target.side===source.side||source[readyKey]>b.round)return false;
@@ -35,15 +36,27 @@ export function noteOmenMovement(b,u){
  if(u.stillOmen?.dueRound===b.round)delete u.stillOmen;
 }
 
+function grantStillOmenBarrier(b,omen,emit){
+ for(const [lane,row] of b.board.entries()){
+  const col=row.findIndex(u=>u?.uid===omen.sourceUid&&u.side===omen.side&&u.hp>0);
+  if(col<0)continue;
+  const source=row[col],parameters=versionUnitAbilities(source)?.stillOmen?.barrier;
+  if(grantAbilityBarrier(source,'stillOmenBarrier',parameters))emit?.(b,{type:'state',side:source.side,lane,col});
+  return;
+ }
+}
+
 // Fin du tour de combat complet, après les actions des deux camps, avant son incrément.
-export function resolveStillOmens(b,hit){
+export function resolveStillOmens(b,hit,emit){
  let resolved=false;
  for(const row of b.board)for(const u of row){
   const p=u?.stillOmen;
   if(!p||p.dueRound>b.round)continue;
   delete u.stillOmen;
   resolved=true;
-  if(u.hp>0)hit(b,u,p.amount,p.side);
+  if(u.hp<=0)continue;
+  const before=u.hp;hit(b,u,p.amount,p.side);
+  if(u.hp<before)grantStillOmenBarrier(b,p,emit);
  }
  return resolved;
 }
@@ -53,5 +66,9 @@ function validOmen(p,unit,timing){
  return p===undefined||!!(p&&typeof p==='object'&&!Array.isArray(p)&&integer(p.sourceUid,1e9)&&
   ['p','e'].includes(p.side)&&p.side!==unit.side&&integer(p.amount,100)&&integer(p[timing],100));
 }
-export const validStillOmen=unit=>validOmen(unit.stillOmen,unit,'dueRound');
+export function validStillOmen(unit){
+ const barrier=unit.abilityBarriers?.stillOmenBarrier;
+ return validOmen(unit.stillOmen,unit,'dueRound')&&
+  (barrier===undefined||barrier===0||barrier===1&&Number.isSafeInteger(unit.barrier)&&unit.barrier>=1);
+}
 export const validRetaliatoryOmen=unit=>validOmen(unit.retaliatoryOmen,unit,'expiresRound');

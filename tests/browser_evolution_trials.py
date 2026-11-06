@@ -142,7 +142,7 @@ async def earned_flow(browser,scenario,label,viewport,*,full=False,touch=False,u
         await click(page.locator('[data-action="export-save"]'),touch)
     exported=json.loads(Path(await (await download_info.value).path()).read_text())
     assert exported==changed
-    invalid=copy.deepcopy(exported);invalid['evolvedCollection']['spark:éveillée']=1
+    invalid=copy.deepcopy(exported);invalid['evolvedCollection']['dragon:commun']=1
     await page.locator('#import-file').set_input_files({'name':'invalide.json','mimeType':'application/json','buffer':json.dumps(invalid).encode()})
     assert await stored(page)==changed
     await page.locator('#import-file').set_input_files({'name':'profil.json','mimeType':'application/json','buffer':json.dumps(exported).encode()})

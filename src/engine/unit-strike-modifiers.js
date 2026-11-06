@@ -4,6 +4,9 @@ import {grantAbilityBarrier} from './unit-barriers.js';
 
 const keys=['armorPenalty','temporaryArmor','calibration','spotMark','prismPenalty','nextStrikeBonus','retaliatoryOmen','portalEcho'];
 export const activeStrikeState=(u,key,round)=>u?.[key]?.expiresRound>=round?u[key]:null;
+export function grantNormalStrikeBonus(b,u,parameters){
+ if(parameters&&u.hp>0)u.nextStrikeBonus={amount:parameters.amount,expiresRound:b.round+parameters.expiresAfter};
+}
 // Bonus de la prochaine attaque normale : consommé à l'intention, jamais à la Riposte.
 export function consumeNormalStrikeBonus(b,u){
  const p=activeStrikeState(u,'nextStrikeBonus',b.round);

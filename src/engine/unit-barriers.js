@@ -1,6 +1,6 @@
 // Barrières partagées par les défenses et les réactions aux morts, sans cycle.
 const legacyBarrierKeys=['healBarrier','riposteBarrier','arrivalBarrier','chargeBarrier','furyBarrier'];
-const barrierKeys=[...legacyBarrierKeys,'funeralBarrier','drillBarrier','scoriaBarrier','scrapBarrier','calibrationBarrier'];
+const barrierKeys=[...legacyBarrierKeys,'funeralBarrier','drillBarrier','scoriaBarrier','scrapBarrier','calibrationBarrier','stillOmenBarrier'];
 export function grantCrownShield(hero,parameters){
  const before=hero.shield;
  hero.shield=Math.max(before,Math.min(parameters.cap,before+parameters.amount));

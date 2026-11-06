@@ -14,10 +14,14 @@ export function findPortalEchoTarget(b,lane,unit){
  if(!echo||echo.lane===lane)return null;
  const ability=versionUnitAbilities(unit)?.portalEcho;
  if(!ability)return null;
- const col=echo.col+(unit.side==='p'?1:-1)*ability.range;
- if(col<1||col>lastCell(b))return null;
- const target=b.board[echo.lane]?.[col];
- return target&&target.hp>0&&target.side!==unit.side?{type:'unit',target,lane:echo.lane,col,echo:true}:null;
+ const direction=unit.side==='p'?1:-1;
+ for(let distance=1;distance<=ability.range;distance++){
+  const col=echo.col+direction*distance;
+  if(col<1||col>lastCell(b))break;
+  const target=b.board[echo.lane]?.[col];
+  if(target&&target.hp>0&&target.side!==unit.side)return {type:'unit',target,lane:echo.lane,col,echo:true};
+ }
+ return null;
 }
 
 export function validPortalEcho(unit,battle){
