@@ -6,10 +6,18 @@ GitHub est la source officielle. À chaque reprise, lire [main](https://github.c
 Ce fichier conserve les jalons durables ; les PR portent le dernier commit, les
 preuves et les limites. Une CI ou une fusion ne prouve pas la publication.
 
-## Ajustement proposé au Comptoir
+## Paquets de faction intégrés
 
-Les cinq paquets d’évolution passent à 125 or. Ils contiennent trois cartes de
-la faction, avec les mêmes taux de 60/35/5 par carte. Le Mystique coûte 95 or.
+La PR 96 a intégré les cinq paquets d’évolution à 125 or au commit
+`a8f3d6b0d5f6b775703d4188ea685e206e71d0c9`. Les trois cartes et les
+taux 60/35/5 restent inchangés. Le Mystique coûte 95 or.
+
+## Contours renforcés proposés, non intégrés
+
+La branche de lisibilité porte le filet intérieur de 2 à 4 px et aligne
+la palette de Collection sur les six couleurs partagées. Aucune règle,
+illustration, dimension ou sauvegarde ne change. Son export JOUER.html doit
+être régénéré et vérifié avant toute proposition de fusion.
 
 ## Intégré sur main
 
