@@ -1,0 +1,33 @@
+# Génération ponctuelle de JOUER.html pour cette branche.
+name: Générer JOUER pour les héros adverses
+on:
+  pull_request:
+    types: [opened]
+permissions:
+  contents: read
+jobs:
+  regenerer:
+    if: ${{ github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'feat/heros-adverses-arene-peinte' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Récupérer le commit de la proposition
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Installer Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Générer et vérifier l’export
+        run: |
+          npm run build
+          printf '%s  JOUER.html\n' '907014e6c3b59302af919ce8dfd6712c9082fbc2c21b83e26c1923f494b9a8f0' | sha256sum --check
+          git diff --exit-code -- . ':!JOUER.html'
+      - name: Pousser l’export sur la branche
+        run: |
+          git add -- JOUER.html
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'build: régénérer JOUER avec les héros adverses'
+          git push origin HEAD:refs/heads/feat/heros-adverses-arene-peinte

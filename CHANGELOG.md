@@ -1,6 +1,10 @@
 # Journal des changements
 
-## En préparation — héros de la Couronne
+## En préparation — héros adverses
+
+- L’adversaire apparaît sur son socle à droite, tourné vers le joueur. Son apparence reprend l’une des quatre illustrations selon son style tactique.
+
+## Héros de la Couronne — PR 99
 
 - Gardien, Arcaniste, Rôdeur et Clerc apparaissent sur le socle du joueur dans l’arène peinte, avec une respiration de quatre secondes et une pose fixe si les animations sont réduites.
 

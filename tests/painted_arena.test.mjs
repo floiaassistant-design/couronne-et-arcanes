@@ -42,15 +42,24 @@ test('arène peinte : une planche par classe sur le socle du joueur, dans les de
  for(const heroClass of Object.keys(CLASSES)){
   const html=paintedArena(3,()=>'',heroClass);
   assert.match(html,new RegExp(`data-side="p"[^>]*data-foot-x="149" data-foot-y="510"[^>]*><div class="arena-hero-actor" data-hero-class="${heroClass}"`));
-  assert.equal((html.match(/data-hero-class=/g)||[]).length,1);
+  assert.equal((html.match(/data-hero-class=/g)||[]).length,2);
  }
- assert.doesNotMatch(paintedArena(3,()=>'','inconnue'),/data-hero-class=/);
+ assert.match(paintedArena(3,()=>'','inconnue'),/data-side="p"[^>]*><div class="arena-hero-actor"><\/div>/);
  const css=readFileSync(new URL('../assets/arena-heroes-art.css',import.meta.url),'utf8');
  const web=readFileSync(new URL('../index.html',import.meta.url),'utf8');
  const offline=readFileSync(new URL('../JOUER.html',import.meta.url),'utf8');
  assert.match(web,/<link[^>]+arena-heroes-art\.css/);
  assert.doesNotMatch(offline,/<link[^>]+arena-heroes-art\.css/);
  assert.ok(offline.includes(css.trim()));
+});
+test('arène peinte : le style adverse choisit une planche tournée vers le plateau',()=>{
+ for(const [style,art] of [
+  ['assaut','gardien'],['bastion','gardien'],['meute','rodeur'],['rituel','arcaniste'],
+  ['equilibre','clerc'],['inconnu','clerc'],[undefined,'clerc']
+ ]){
+  const html=paintedArena(3,()=>'','rodeur',style);
+  assert.match(html,new RegExp(`data-side="e" data-facing="left"[^>]*data-foot-x="1522" data-foot-y="510"[^>]*><div class="arena-hero-actor" data-hero-class="${art}"`));
+ }
 });
 test('arène peinte : ancrage des futures animations suit échelle et défilement',()=>{
  const tile=paintedTile(2,7),scale=.62;

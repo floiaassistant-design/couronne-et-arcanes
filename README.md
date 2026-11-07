@@ -16,7 +16,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 
 ## Jouer
 
-Dans l’arène peinte, votre classe apparaît sur le socle du joueur et respire au repos. Désactivez les animations depuis le combat pour garder une pose fixe. [Héros de la Couronne](docs/HEROS_COURONNE_2026_11_07.md).
+Dans l’arène peinte, votre héros et le héros adverse se font face sur leurs socles et respirent au repos. Désactivez les animations depuis le combat pour garder une pose fixe. [Héros de la Couronne](docs/HEROS_COURONNE_2026_11_07.md).
 
 Les cartes dessinées reprennent le filet intérieur de rareté de 4 pixels (renforcement par PR 97 après PR 87) : main, plateau, Collection, fiches et autres vues, avec les mêmes dimensions et couleurs.
 

@@ -75,7 +75,7 @@ export function createBattleView(getState, { btn, cardUI, esc }) {
         : '';
     const arena =
       cells === 10
-        ? paintedArena(lanes, (lane, col, visual) => battleCell(battle.board[lane][col], lane, col, visual), battle.heroClass)
+        ? paintedArena(lanes, (lane, col, visual) => battleCell(battle.board[lane][col], lane, col, visual), battle.heroClass, aiStyle(battle))
         : `<div class="arena-sky" aria-hidden="true"></div>${Array.from({ length: lanes }, (_, lane) => `<div class="lane-row" data-crown-col="${cells + 1}"><div class="lane-label">${['I', 'II', 'III', 'IV'][lane]}</div><div class="lane-gate" aria-label="Votre couronne"><span class="pixel-tower" aria-hidden="true"></span><b>♜</b></div>${Array.from({ length: cells }, (_, i) => battleCell(battle.board[lane][i + 1], lane, i + 1)).join('')}<div class="lane-gate enemy" aria-label="Couronne adverse"><span class="pixel-tower" aria-hidden="true"></span><b>♛</b></div></div>`).join('')}`;
     return `<div class="combat-screen" data-painted-arena="${cells === 10}" data-card-layout="${immersive}"><div class="split-head combat-titlebar"><div><div class="kicker">${battle.mode==='developer'?'TEST SANS RÉCOMPENSE':'COMBAT TACTIQUE'} · ${esc(battle.missionName)}</div><h1 class="combat-mission-name">${esc(battle.missionName)}</h1></div><span class="pill">2 cartes maximum par tour</span><button type="button" class="combat-menu-link" data-action="${battle.mode==='developer'?'lab-back':'nav'}" data-page="home" aria-label="${battle.mode==='developer'?'Retourner au laboratoire':'Revenir à la Citadelle sans abandonner la bataille'}">${battle.mode==='developer'?'⚙ Laboratoire':'☷ Citadelle'}</button></div>
  <section class="battle-panel arena-lofi combat-stage">${battleHud(p, e)}
