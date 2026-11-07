@@ -46,3 +46,18 @@ test('CSS : les dépendances cachées et fins de style HTML sont refusées',()=>
   assert.throws(()=>readStylesheets(root,link('./styles.css')),/dépendance CSS|Fin de style/);
  }
 }));
+
+test('Le filet intérieur et les six couleurs de rareté restent communs à toutes les vues',()=>{
+ const root=fileURLToPath(new URL('../',import.meta.url));
+ const drawn=fs.readFileSync(path.join(root,'assets/generated-card.css'),'utf8');
+ assert.ok(drawn.includes('.generated-face{outline:4px solid var(--rarity-border,#c9ae7c);outline-offset:-4px}'));
+ const collection=fs.readFileSync(path.join(root,'assets/collection.css'),'utf8');
+ const rarity=fs.readFileSync(path.join(root,'styles/cards/rarity.css'),'utf8');
+ for(const [rank,color] of Object.entries({
+  commun:'#c8d8df',rare:'#69dbf9','épique':'#d4a2ff','légendaire':'#ffd46b',
+  divine:'#f06a5f','éveillée':'#fff09a'
+ })){
+  assert.ok(collection.includes(`[data-rarity=${rank}],.collection-hover-inspection [data-rarity=${rank}]{--collection-rarity:${color};--rarity-border:${color}}`),rank);
+  assert.ok(rarity.includes(`--rarity-border:${color}`) || rarity.includes(`--rarity-border: ${color}`),rank);
+ }
+});
