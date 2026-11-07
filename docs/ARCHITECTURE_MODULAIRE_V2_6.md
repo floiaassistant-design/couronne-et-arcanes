@@ -1,5 +1,9 @@
 # Architecture modulaire — lecture courante
 
+## Héros de la Couronne
+
+`ui/battle-view.js` transmet la classe du combat à `ui/painted-arena.js`, qui place le héros décoratif sur le même repère que le décor. La feuille de l’arène cadence les poses de la planche de classe et gère le repli fixe. Le builder vérifie les ressources et les embarque avec les mêmes feuilles que le web. [Contrat et provenance](HEROS_COURONNE_2026_11_07.md).
+
 ## Portée du Feu follet
 
 Le registre Éther déclare la géométrie et le tir sans traversée au rang natif, puis les transmet aux autres rangs. `unit-targets.js` fournit le contrôle de ligne au combat, à la qualification de la Garde et aux estimations de l’IA. La fiche lit la même définition. [Contrat](ETHER_PORTEE_FEU_FOLLET.md).

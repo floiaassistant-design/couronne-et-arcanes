@@ -1,5 +1,9 @@
 # Journal des changements
 
+## En préparation — héros de la Couronne
+
+- Gardien, Arcaniste, Rôdeur et Clerc apparaissent sur le socle du joueur dans l’arène peinte, avec une respiration de quatre secondes et une pose fixe si les animations sont réduites.
+
 ## Contours de rareté — PR 97
 
 - Le filet intérieur des cartes dessinées passe de 2 à 4 pixels dans toutes les vues ; la Collection reprend les six couleurs de rareté communes. Aucun changement de carte, de règle, de sauvegarde ou de dimensions.
