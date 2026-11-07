@@ -16,8 +16,8 @@ taux 60/35/5 restent inchangés. Le Mystique coûte 95 or.
 
 La branche de lisibilité porte le filet intérieur de 2 à 4 px et aligne
 la palette de Collection sur les six couleurs partagées. Aucune règle,
-illustration, dimension ou sauvegarde ne change. Son export JOUER.html doit
-être régénéré et vérifié avant toute proposition de fusion.
+illustration, dimension ou sauvegarde ne change. JOUER.html a été régénéré depuis les sources du jeu sur la branche ;
+les tests GitHub de la PR restent à confirmer avant toute fusion.
 
 ## Intégré sur main
 
