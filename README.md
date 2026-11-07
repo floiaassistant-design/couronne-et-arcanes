@@ -18,6 +18,8 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 
 Les cartes dessinées reprennent le filet intérieur de rareté de 2 pixels intégré par PR 87 : main, plateau, Collection, fiches et autres vues, avec les mêmes dimensions et couleurs.
 
+- [Portée du Feu follet](docs/ETHER_PORTEE_FEU_FOLLET.md) : cette proposition applique trois cases à ses six raretés, avec un tir arrêté par la première unité rencontrée sur sa ligne.
+
 - Impact de zone : cible secondaire uniquement immédiatement derrière la cible principale, sans case vide, dans le sens de la frappe ; voir le [contrat de ciblage](docs/IMPACT_ZONE_2026_11_02.md), intégré à main par la PR 73.
 
 - `index.html` / `npm run dev` : jeu web modulaire ; publication sur Sites après fusion.

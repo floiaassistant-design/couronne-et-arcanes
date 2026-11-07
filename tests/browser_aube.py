@@ -99,6 +99,9 @@ async def run(browser,label,viewport,faction='aube'):
         assert await preview.get_attribute('aria-expanded')=='true',card_id
         popup=page.locator('#collection-hover-inspection')
         await exact_preview(popup,card_id)
+        if card_id=="spark":
+            details=await popup.inner_text()
+            assert "Portée 3" in details and "alliée fait écran" in details
         await page.keyboard.press('Escape')
         assert await popup.is_hidden(),card_id
     assert await page.evaluate('JSON.stringify(profile)')==before

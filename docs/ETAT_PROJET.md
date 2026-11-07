@@ -58,9 +58,10 @@ des premières Éveillées passe par le suivi existant.
 - [Dernières Éveillées](ETHER_DERNIERES_EVEILLEES.md) : sept rangs proposés,
   50 versions Éther, 39 évolutions Éther et 210 recettes au total.
 
-## Prochain travail utile
+- [Portée du Feu follet](ETHER_PORTEE_FEU_FOLLET.md) : trois cases à toutes
+  les raretés et tir sans traverser une unité, dans une proposition distincte.
 
-Après le lot final, traiter la portée native 3 du Feu follet dans son propre périmètre.
+## Prochain travail utile
 Auditer aussi une campagne UI complète depuis zéro ; les rencontres isolées et
 combats préparés ne la remplacent pas. Vérifier lisibilité/interactions sur
 vrai téléphone : Chromium simulé ne prouve ni Safari/Firefox ni équilibrage humain.

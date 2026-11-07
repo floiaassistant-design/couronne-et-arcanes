@@ -1,5 +1,9 @@
 # Architecture modulaire — lecture courante
 
+## Portée du Feu follet
+
+Le registre Éther déclare la géométrie et le tir sans traversée au rang natif, puis les transmet aux autres rangs. `unit-targets.js` fournit le contrôle de ligne au combat, à la qualification de la Garde et aux estimations de l’IA. La fiche lit la même définition. [Contrat](ETHER_PORTEE_FEU_FOLLET.md).
+
 ## Éther — dernières Éveillées
 
 `unit-triggers.js` partage le recul par cases et les effets d’entrée. L’Éclat et la Conquête partagent le bonus de la prochaine frappe dans `unit-strike-modifiers.js`. `unit-omens.js` utilise la barrière par source du moteur. Le Sillage enregistre le bonus d’un pas réellement utilisé dans la résolution synchrone du mouvement et de l’attaque. `unit-flight-support.js` applique le soin après survol et valide le Sillage sauvegardé. `unit-portal-echo.js` cherche la cible de secours la plus proche. [Contrat](ETHER_DERNIERES_EVEILLEES.md).

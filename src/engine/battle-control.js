@@ -3,6 +3,7 @@
 import {CARDS,CHARGE_IDS,RIPOSTE_IDS} from '../data.js';
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {unitAttackRange} from './unit-rules.js';
+import {hasClearAttackLine} from './unit-targets.js';
 import {applyUnitPoison} from './unit-poison.js';
 import {expireStrikeModifiers} from './unit-strike-modifiers.js';
 import {expireFlightWake} from './unit-flight-support.js';
@@ -59,8 +60,8 @@ function positionValue(b,side,u,lane,col){
  let value=0;
  for(const foe of foes){
   const ahead=(foe.col-col)*direction(side);
-  if(ahead>0&&ahead<=range)value+=u.atk>=foe.u.hp?5:1;
-  if(Math.abs(foe.col-col)<= unitAttackRange(foe.u))value-=foe.u.atk>=u.hp?9:3;
+  if(ahead>0&&ahead<=range&&hasClearAttackLine(b,lane,col,foe.col,u))value+=u.atk>=foe.u.hp?5:1;
+  if(Math.abs(foe.col-col)<=unitAttackRange(foe.u)&&hasClearAttackLine(b,lane,foe.col,col,foe.u))value-=foe.u.atk>=u.hp?9:3;
   const homeDistance=side==='p'?foe.col:crownColumn(b,'e')-foe.col;
   if(homeDistance<=2&&ahead>0)value+=6;
  }

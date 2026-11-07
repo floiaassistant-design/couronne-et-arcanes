@@ -16,4 +16,4 @@ Les deux reculs empruntent chaque case libre de la ligne et déclenchent ses eff
 
 La Conquête réutilise l’état sauvegardé du bonus de frappe. Le Sillage peut enregistrer le paramètre de frappe, mais le pas réellement parcouru est transmis en mémoire uniquement jusqu’à la phase d’attaque du même tour. La barrière du présage utilise la réserve par source existante. Les anciennes sauvegardes restent valides sans ces paramètres facultatifs.
 
-Les scénarios contrôlent les deux camps, l’entrée dans un piège, les protections, la cible la plus proche, les effets conditionnels, la fusion et la reprise. La portée du Feu follet natif reste à 2 cases dans ce lot. Le changement à 3 cases fait l’objet d’un chantier séparé.
+Les scénarios contrôlent les deux camps, l’entrée dans un piège, les protections, la cible la plus proche, les effets conditionnels, la fusion et la reprise. Ce lot conserve la portée native à 2 cases. La [proposition de portée du Feu follet](ETHER_PORTEE_FEU_FOLLET.md) traite séparément le passage à 3 cases.

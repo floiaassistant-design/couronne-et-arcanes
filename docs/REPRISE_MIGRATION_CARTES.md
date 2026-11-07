@@ -21,7 +21,7 @@ La publication est suivie séparément dans [ETAT_PROJET.md](ETAT_PROJET.md).
 | Forge | 10 | 39 sur 39 cases futures | 39 évolutions intégrées jusqu’à PR 85 ; 49 versions Forge |
 | Éther | 11 | 39 sur 39 cases futures | 32 évolutions intégrées. Les sept dernières Éveillées sont proposées. Portée native du Feu follet distincte |
 
-Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
+La [portée du Feu follet](ETHER_PORTEE_FEU_FOLLET.md) est suivie dans une proposition distincte. Les 53 unités natives et les 23 sorts demeurent au catalogue. Une carte affichée
 ou un pouvoir validé ne crée ni exemplaire ni définition jouable. Les onze personnages Éther ont leurs 39 évolutions validées dans cette édition ;
 la disponibilité réelle reste déterminée par le registre du jeu.
 

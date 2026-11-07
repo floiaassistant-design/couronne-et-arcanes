@@ -2,6 +2,7 @@
 import {laneCount,lastCell,validLane,crownColumn} from './board.js';
 import {versionUnitAbilities} from '../cards/definitions.js';
 import {unitAttackRange} from './unit-rules.js';
+import {hasClearAttackLine} from './unit-targets.js';
 
 export function crownGuardCandidates(b,attackLane,heroSide,attackerCol){
  if(!['p','e'].includes(heroSide)||!validLane(b,attackLane)||!Number.isInteger(attackerCol)||attackerCol<1||attackerCol>lastCell(b))return [];
@@ -30,8 +31,9 @@ export function findCrownGuardian(b,attackLane,heroSide,attackerCol){
 // Ce constat ne redirige aucune attaque et ne change pas les priorités de Garde.
 export function isInterposedCrownGuardian(b,lane,attackerCol,attacker,guardian){
  if(!attacker||!['p','e'].includes(attacker.side)||!guardian||guardian.hp<=0||guardian.side===attacker.side||!validLane(b,lane))return false;
- const distance=Math.abs(crownColumn(b,guardian.side)-attackerCol),range=unitAttackRange(attacker);
- if(distance>range||findCrownGuardian(b,lane,guardian.side,attackerCol)?.u!==guardian)return false;
+ const crown=crownColumn(b,guardian.side),distance=Math.abs(crown-attackerCol),range=unitAttackRange(attacker);
+ if(distance>range||findCrownGuardian(b,lane,guardian.side,attackerCol)?.u!==guardian||
+  !hasClearAttackLine(b,lane,attackerCol,crown,attacker,guardian))return false;
  const dir=attacker.side==='p'?1:-1;
  let found=false;
  for(let step=1;step<=range;step++){

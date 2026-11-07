@@ -11,6 +11,10 @@ Sources : [workflow de tests](../.github/workflows/test.yml),
 [plan navigateur](../scripts/ci_browser_groups.json),
 [tests du pipeline](../tests/ci_pipeline.test.mjs).
 
+## Portée du Feu follet
+
+`ether_tactical.test.mjs` contrôle la portée 3 du Commun, la cible proche, les écrans alliés et la Garde sur les deux géométries. La [comparaison de la référence](ETHER_PORTEE_FEU_FOLLET.md) sépare les différences intentionnelles des autres scénarios.
+
 ## Éveillées Éther
 
 `ether_ascensions.test.mjs` et le parcours partagé `browser_ascensions.py` contrôlent le défi, le reçu et les fusions. Les suites `ether_evolutions`, `ether_divine`, `ether_impact` et `ether_last_divines` vérifient les différences entre rangs et réutilisent les mêmes protections, durées et contrôles de sauvegarde. `ether_awakened.test.mjs` couvre les sept derniers pouvoirs par de vraies fusions et résolutions du moteur. Le parcours navigateur vérifie la fiche, la fusion et la reprise avec le Chevalier Éveillé.

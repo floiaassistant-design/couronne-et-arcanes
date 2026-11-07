@@ -124,6 +124,10 @@
 
 ## Combat et effets
 
+- Le Feu follet partage sa portée 3 et son tir sans traversée aux six raretés.
+  Une unité alliée fait écran. Le combat et la Garde utilisent le contrôle de
+  ligne commun, avec les mêmes paramètres pour les deux camps et le laboratoire.
+
 - Impact de zone : les dégâts secondaires ne touchent que les unités ennemies vivantes immédiatement derrière la cible principale, dans le sens de la frappe et sur la même ligne ; aucune case vide ni unité alliée traversée. Les versions ayant plusieurs cibles secondaires exigent des cases consécutives. Le moteur commun gère les protections et les événements de dégâts ; voir `docs/IMPACT_ZONE_2026_11_02.md`.
 - Les effets suivant un Impact lisent la victime secondaire effectivement
   blessée et survivante. Un éclair transversal utilise les dégâts communs

@@ -5349,7 +5349,7 @@ const ETHER_EVOLUTIONS=freezeCardData({
  aetherknight:{'légendaire':{stats:{hp:11}},'divine':{abilities:{chargeAdvance:{cells:1,period:3}}},'éveillée':{abilities:{chargeAdvance:{strike:{amount:2,expiresAfter:2}}}}},
  seraph:{'divine':{abilities:{flightHeal:{amount:2,period:3}}},'éveillée':{abilities:{flightHeal:{amount:3,selfHeal:1}}}},
  portal_walker:{'épique':{stats:{hp:7}},'légendaire':{stats:{attack:4}},'divine':{abilities:{portalEcho:{range:1,expiresAfter:1}}},'éveillée':{abilities:{portalEcho:{range:2}}}},
- spark:{rare:{stats:{hp:4},geometry:{range:3}},'épique':{stats:{attack:3}},'légendaire':{abilities:{spectralRetreat:{cells:1,period:3}}},'divine':{abilities:{retreatStrike:{amount:2,expiresAfter:2}}},'éveillée':{abilities:{spectralRetreat:{cells:2}}}}
+ spark:{commun:{geometry:{range:3},abilities:{ranged:{clearLine:true}}},rare:{stats:{hp:4}},'épique':{stats:{attack:3}},'légendaire':{abilities:{spectralRetreat:{cells:1,period:3}}},'divine':{abilities:{retreatStrike:{amount:2,expiresAfter:2}}},'éveillée':{abilities:{spectralRetreat:{cells:2}}}}
 });
 
 Object.assign(__exports,{ETHER_DESIGN_SOURCE,ETHER_EVOLUTIONS});
@@ -5619,6 +5619,7 @@ function unitCardText(d){
 
 function unitAbilityDetails(d){
  const a=d.abilities,lines=[],scope=p=>p.scope==='all-lines'?'toutes les lignes':'sa ligne';
+ if(a.ranged?.clearLine)lines.push('Tir sur sa ligne : la première unité vivante rencontrée arrête le tir. Une unité alliée fait écran.');
  if(a.flightWake)lines.push(`${a.flightWake.strike?'Vents du Zénith':'Sillage ascendant'} : après avoir franchi un allié grâce à Vol, cet allié peut avancer de ${a.flightWake.cells} case libre supplémentaire lors de son prochain déplacement normal, jusqu’à la fin de son prochain tour. Sans cumul ; au plus une activation tous les ${a.flightWake.period} tours.${a.flightWake.strike?' S’il utilise ce pas et attaque dans la même action, cette frappe gagne +'+a.flightWake.strike+' ATQ.':''}`);
  if(a.flightHeal)lines.push(`${a.flightHeal.selfHeal?'Ascension secourable':'Soin de passage'} : en franchissant un allié blessé grâce à Vol, lui rend jusqu’à ${a.flightHeal.amount} PV. Au plus une fois tous les ${a.flightHeal.period} tours. Son soin habituel après les attaques est conservé.${a.flightHeal.selfHeal?' Si l’allié récupère réellement des PV, le Séraphin se soigne de '+a.flightHeal.selfHeal+' PV au plus.':''}`);
  if(a.spectralRetreat)lines.push(`${a.spectralRetreat.cells>1?'Fuite lumineuse':'Repli spectral'} : après une attaque normale touchant une unité ennemie qui survit, recule jusqu’à ${a.spectralRetreat.cells} case${a.spectralRetreat.cells>1?'s libres':' libre'} vers sa propre couronne sur sa ligne, au plus une fois tous les ${a.spectralRetreat.period} tours. Une frappe entièrement absorbée compte ; aucun repli sur une couronne, un sort ou une Riposte, ni après la mort du Feu follet. Aucune attaque supplémentaire.`);
@@ -6105,7 +6106,7 @@ const {tickUnitPoison,clearUnitPoison,poisonBelongsTo}=__load("src/engine/unit-p
 const {resolveStrikeRewards,resolveStrikePreparation,resolveStrikeDisplacement,resolveAlchemyStrike,resolveSpectralRetreat,resolveGuardWard,resolveGuardPrism,resolveSplashDisplacement,resolveImpactEffect,resolveChargeAdvance}=__load("src/engine/unit-triggers.js");
 const {placeStillOmen,placeRetaliatoryOmen,noteOmenMovement,resolveStillOmens,resolveRetaliatoryOmen}=__load("src/engine/unit-omens.js");
 const {applyStrikeFracture,consumeNormalStrikeBonus}=__load("src/engine/unit-strike-modifiers.js");
-const {contiguousSplashTargets}=__load("src/engine/unit-targets.js");
+const {contiguousSplashTargets,hasClearAttackLine}=__load("src/engine/unit-targets.js");
 const {activeFlightWake,resolveFlightSupport}=__load("src/engine/unit-flight-support.js");
 const {healUnit}=__load("src/engine/unit-healing.js");
 const {findPortalEchoTarget}=__load("src/engine/unit-portal-echo.js");
@@ -6186,15 +6187,13 @@ function formationBonus(b,lane,unit){
 function enemyAt(b,lane,col,side){return col>=1&&col<=lastCell(b)&&b.board[lane][col]&&b.board[lane][col].side!==side?b.board[lane][col]:null;}
 function findTarget(b,lane,col,unit){
  const range=unitAttackRange(unit);
- let fallback=null;
  for(let d=1;d<=range;d++){
   const targetCol=col+forward(unit.side)*d;
   const target=enemyAt(b,lane,targetCol,unit.side);
-  if(target && !fallback)fallback={type:'unit',target,col:targetCol};
+  if(target)return hasClearAttackLine(b,lane,col,targetCol,unit)?{type:'unit',target,col:targetCol}:null;
  }
- if(fallback)return fallback;
- const heroDist=unit.side==='p'?crownColumn(b,'e')-col:col;
- return heroDist<=range?{type:'hero',side:unit.side==='p'?'e':'p'}:null;
+ const side=unit.side==='p'?'e':'p',crown=crownColumn(b,side);
+ return Math.abs(crown-col)<=range&&hasClearAttackLine(b,lane,col,crown,unit)?{type:'hero',side}:null;
 }
 function spawn(b,side,reference,lane,col=entryColumn(b,side)){
  const id=reference.id,c=CARDS[id];if(!c||c.type==='sort')return false;
@@ -6861,6 +6860,7 @@ Object.assign(__exports,{hit,resolveRetaliation,grantHealBarrier});
 const {CARDS,CHARGE_IDS,RIPOSTE_IDS}=__load("src/data.js");
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {unitAttackRange}=__load("src/engine/unit-rules.js");
+const {hasClearAttackLine}=__load("src/engine/unit-targets.js");
 const {applyUnitPoison}=__load("src/engine/unit-poison.js");
 const {expireStrikeModifiers}=__load("src/engine/unit-strike-modifiers.js");
 const {expireFlightWake}=__load("src/engine/unit-flight-support.js");
@@ -6917,8 +6917,8 @@ function positionValue(b,side,u,lane,col){
  let value=0;
  for(const foe of foes){
   const ahead=(foe.col-col)*direction(side);
-  if(ahead>0&&ahead<=range)value+=u.atk>=foe.u.hp?5:1;
-  if(Math.abs(foe.col-col)<= unitAttackRange(foe.u))value-=foe.u.atk>=u.hp?9:3;
+  if(ahead>0&&ahead<=range&&hasClearAttackLine(b,lane,col,foe.col,u))value+=u.atk>=foe.u.hp?5:1;
+  if(Math.abs(foe.col-col)<=unitAttackRange(foe.u)&&hasClearAttackLine(b,lane,foe.col,col,foe.u))value-=foe.u.atk>=u.hp?9:3;
   const homeDistance=side==='p'?foe.col:crownColumn(b,'e')-foe.col;
   if(homeDistance<=2&&ahead>0)value+=6;
  }
@@ -7030,6 +7030,53 @@ function prepareControlUnits(b,hooks,sideFilter=null){
 }
 
 Object.assign(__exports,{CONTROL_IDS,silenced,activeAbility,silenceValue,canSilence,silenceTarget,applySilence,teleportDestinationError,teleportPlan,teleportGain,teleportUnit,trapPlan,placeTrap,triggerTrap,expireControl,controlTargetError,resolveControlSpell,prepareControlUnits});
+
+},
+"src/engine/unit-targets.js":function(__exports,__load){
+// Sélection pure partagée par les soins et protections des unités.
+const {lastCell}=__load("src/engine/board.js");
+const {versionUnitAbilities}=__load("src/cards/definitions.js");
+// Les tirs qui l’exigent s’arrêtent à la première unité vivante interposée.
+function hasClearAttackLine(b,lane,from,to,unit,ignored){
+ if(!versionUnitAbilities(unit)?.ranged?.clearLine)return true;
+ const row=b.board[lane];
+ for(let col=Math.min(from,to)+1;col<Math.max(from,to);col++){
+  const blocker=row[col];
+  if(blocker?.hp>0&&blocker!==ignored)return false;
+ }
+ return true;
+}
+function alliedTargets(b,u,lane,parameters){
+ const found=[];
+ for(let l=0;l<b.board.length;l++){
+  if(parameters.scope!=='all-lines'&&l!==lane)continue;
+  for(let col=1;col<=lastCell(b);col++){
+   const other=b.board[l][col];
+   if(other&&other.hp>0&&other.side===u.side&&(parameters.includeSelf||other.uid!==u.uid))found.push({u:other,lane:l,col});
+  }
+ }
+ return found;
+}
+const injuryOrder=(x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid;
+
+// Cibles secondaires de l'Impact : une chaîne contiguë dans le sens de frappe.
+// La première case vide, alliée ou hors plateau termine la chaîne ; pas de saut.
+function contiguousSplashTargets(b,lane,sourceCol,primaryCol,side,count=1){
+ const row=b.board[lane],dir=side==='p'?1:-1;
+ if(!row||!Number.isInteger(sourceCol)||!Number.isInteger(primaryCol)||
+    (primaryCol-sourceCol)*dir<=0||!Number.isSafeInteger(count)||count<1)return [];
+ const targets=[];
+ for(let n=1;n<=count;n++){
+  const col=primaryCol+n*dir;
+  if(col<1||col>lastCell(b))break;
+  const u=row[col];
+  if(!u||u.hp<=0||u.side===side)break;
+  targets.push({u,col});
+ }
+ return targets;
+}
+
+Object.assign(__exports,{hasClearAttackLine,alliedTargets,injuryOrder,contiguousSplashTargets});
 
 },
 "src/engine/unit-poison.js":function(__exports,__load){
@@ -7536,42 +7583,6 @@ function resolveUnitDeath(b,u,lane,col,emit,poisonReadyRound){
 Object.assign(__exports,{resolveUnitDeath});
 
 },
-"src/engine/unit-targets.js":function(__exports,__load){
-// Sélection pure partagée par les soins et protections des unités.
-const {lastCell}=__load("src/engine/board.js");
-function alliedTargets(b,u,lane,parameters){
- const found=[];
- for(let l=0;l<b.board.length;l++){
-  if(parameters.scope!=='all-lines'&&l!==lane)continue;
-  for(let col=1;col<=lastCell(b);col++){
-   const other=b.board[l][col];
-   if(other&&other.hp>0&&other.side===u.side&&(parameters.includeSelf||other.uid!==u.uid))found.push({u:other,lane:l,col});
-  }
- }
- return found;
-}
-const injuryOrder=(x,z)=>x.u.hp/x.u.maxhp-z.u.hp/z.u.maxhp||x.lane-z.lane||x.col-z.col||x.u.uid-z.u.uid;
-
-// Cibles secondaires de l'Impact : une chaîne contiguë dans le sens de frappe.
-// La première case vide, alliée ou hors plateau termine la chaîne ; pas de saut.
-function contiguousSplashTargets(b,lane,sourceCol,primaryCol,side,count=1){
- const row=b.board[lane],dir=side==='p'?1:-1;
- if(!row||!Number.isInteger(sourceCol)||!Number.isInteger(primaryCol)||
-    (primaryCol-sourceCol)*dir<=0||!Number.isSafeInteger(count)||count<1)return [];
- const targets=[];
- for(let n=1;n<=count;n++){
-  const col=primaryCol+n*dir;
-  if(col<1||col>lastCell(b))break;
-  const u=row[col];
-  if(!u||u.hp<=0||u.side===side)break;
-  targets.push({u,col});
- }
- return targets;
-}
-
-Object.assign(__exports,{alliedTargets,injuryOrder,contiguousSplashTargets});
-
-},
 "src/engine/unit-triggers.js":function(__exports,__load){
 // Préparation des protections et récompenses de frappe, moteur commun.
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
@@ -7913,6 +7924,7 @@ Object.assign(__exports,{ascensionObjectiveText,createAscensionChallenge,validAs
 const {laneCount,lastCell,validLane,crownColumn}=__load("src/engine/board.js");
 const {versionUnitAbilities}=__load("src/cards/definitions.js");
 const {unitAttackRange}=__load("src/engine/unit-rules.js");
+const {hasClearAttackLine}=__load("src/engine/unit-targets.js");
 function crownGuardCandidates(b,attackLane,heroSide,attackerCol){
  if(!['p','e'].includes(heroSide)||!validLane(b,attackLane)||!Number.isInteger(attackerCol)||attackerCol<1||attackerCol>lastCell(b))return [];
  const guards=[];
@@ -7940,8 +7952,9 @@ function findCrownGuardian(b,attackLane,heroSide,attackerCol){
 // Ce constat ne redirige aucune attaque et ne change pas les priorités de Garde.
 function isInterposedCrownGuardian(b,lane,attackerCol,attacker,guardian){
  if(!attacker||!['p','e'].includes(attacker.side)||!guardian||guardian.hp<=0||guardian.side===attacker.side||!validLane(b,lane))return false;
- const distance=Math.abs(crownColumn(b,guardian.side)-attackerCol),range=unitAttackRange(attacker);
- if(distance>range||findCrownGuardian(b,lane,guardian.side,attackerCol)?.u!==guardian)return false;
+ const crown=crownColumn(b,guardian.side),distance=Math.abs(crown-attackerCol),range=unitAttackRange(attacker);
+ if(distance>range||findCrownGuardian(b,lane,guardian.side,attackerCol)?.u!==guardian||
+  !hasClearAttackLine(b,lane,attackerCol,crown,attacker,guardian))return false;
  const dir=attacker.side==='p'?1:-1;
  let found=false;
  for(let step=1;step<=range;step++){
@@ -8031,6 +8044,7 @@ const {battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitCh
 const {unitStats}=__load("src/engine/unit-stats.js");
 const {attackAfterPenalty}=__load("src/engine/unit-effects.js");
 const {findCrownGuardian}=__load("src/engine/guard-candidates.js");
+const {hasClearAttackLine}=__load("src/engine/unit-targets.js");
 const {silenceTarget,silenceValue,teleportPlan,teleportGain,trapPlan,activeAbility,silenced}=__load("src/engine/battle-control.js");
 const {accelerationTarget}=__load("src/engine/tempo.js");
 const AI_STYLES = Object.freeze({
@@ -8071,7 +8085,7 @@ function crownRisk(b,laneInfo){
  return laneInfo.threats.reduce((sum,{u,col})=>{
   const steps=crownColumn(b,'e')-col;
   if((u.stun||0)>0||!(steps<=unitAttackRange(u)+unitMovementSteps(u,silenced(b,u))))return sum;
-  if(findCrownGuardian(b,laneInfo.lane,'e',col))return sum;
+  if(findCrownGuardian(b,laneInfo.lane,'e',col)||!hasClearAttackLine(b,laneInfo.lane,col,crownColumn(b,'e'),u))return sum;
   const range=unitAttackRange(u);
   if(laneInfo.friends.some(x=>x.col>col&&x.col-col<=range))return sum;
   return sum+attackAfterPenalty(u,Math.max(1,u.atk),b.round)+((unitChargeAmount(u)>0)&&col<lastCell(b)&&!silenced(b,u)?unitChargeAmount(u):0);
