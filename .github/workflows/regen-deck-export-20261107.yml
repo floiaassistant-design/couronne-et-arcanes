@@ -1,0 +1,36 @@
+# Atelier temporaire de génération de l'export pour ce correctif.
+# À supprimer de la branche avant la revue de la PR.
+name: Générer JOUER pour correction du deck
+on:
+  pull_request:
+    types: [opened, synchronize]
+permissions:
+  contents: write
+jobs:
+  regenerer:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'fix/retour-deck-apres-combat-20261107'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer la branche exacte
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+          persist-credentials: true
+      - name: Installer Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Reconstruire le seul export autonome
+        run: |
+          npm run build
+          git diff --exit-code -- src/app.js tests/browser_pending_results.py README.md CHANGELOG.md
+      - name: Enregistrer uniquement la génération
+        run: |
+          git add -- JOUER.html
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "build: régénérer JOUER depuis les sources corrigées"
+            git push origin HEAD:refs/heads/fix/retour-deck-apres-combat-20261107
+          fi
