@@ -74,7 +74,7 @@ test('59 versions × quatre niveaux × deux camps : vrais chiffres et invocation
 
 test('Paquets séparés : pools Sylve 9/6/9, aucun mélange dans Aube ou rang supérieur',()=>{
  const sylve=cardPack('sylve-evolution'),aube=cardPack('aube-evolution');
- assert.deepEqual([sylve.cost,sylve.count,sylve.mission],[190,3,'03']);assert.deepEqual(sylve.groups.map(g=>g.weight),[60,35,5]);
+ assert.deepEqual([sylve.cost,sylve.count,sylve.mission],[125,3,'03']);assert.deepEqual(sylve.groups.map(g=>g.weight),[60,35,5]);
  assert.deepEqual(sylve.groups.map(g=>g.cards.length),[9,6,9]);assert.deepEqual(aube.groups.map(g=>g.cards.length),[8,4,8]);
  for(const [pack,faction] of [[sylve,'sylve'],[aube,'aube']])for(const group of pack.groups)for(const ref of group.cards){
   assert.equal(CARDS[typeof ref==='string'?ref:ref.id].faction,faction);assert.ok(playableCardReference(ref));
@@ -88,7 +88,7 @@ test('Les quinze évolutions sont réellement tirées, invoquées, exportables e
  for(const group of pack.groups.slice(1))for(const [index,ref] of group.cards.entries()){
   const p=ready();let calls=0;const roll=ref.rarity==='rare'?.7:.97;
   const result=buyCardPack(p,pack.id,()=>calls++%2===0?roll:(index+.5)/group.cards.length);
-  assert.deepEqual(result.cards,[ref,ref,ref]);assert.equal(calls,6);assert.equal(ownedCardCopies(p,ref),3);assert.equal(p.gold,1810);
+  assert.deepEqual(result.cards,[ref,ref,ref]);assert.equal(calls,6);assert.equal(ownedCardCopies(p,ref),3);assert.equal(p.gold,1875);
   assert.equal(modifyDeck(p,ref,1),true);assert.deepEqual(validateImportedProfile(p),p);
   storage();assert(saveProfile(p));assert.deepEqual(loadProfile(),p);
   const b=createBattle(p,CAMPAIGN[0],1);b.heroes.p.hand=[{...ref,wait:0}];assert.equal(playPlayerCard(b,0,0,1).ok,true);

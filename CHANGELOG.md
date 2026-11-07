@@ -1,5 +1,9 @@
 # Journal des changements
 
+## En préparation — prix des paquets de faction
+
+- Les cinq paquets d’évolution passent de 190 à 125 or. Les trois tirages et les taux de 60/35/5 sont conservés. Le Mystique coûte 95 or.
+
 ## En préparation — portée du Feu follet
 
 - Le Feu follet Commun atteint trois cases. Ses six raretés tirent sur la première unité ennemie atteignable de leur ligne, avec blocage par une unité alliée.

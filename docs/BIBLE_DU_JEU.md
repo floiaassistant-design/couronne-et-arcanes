@@ -162,7 +162,12 @@ Lame de feu, Souffle vital, Cri des anciens, Orage runique, Prison de lierre, Sa
 
 **Récompense d'une mission :** or et éclats à chaque victoire ; une copie de la carte promise lors de la première victoire uniquement. Les défaites offrent 10 pièces d'or pour limiter les impasses.
 
-**Paquets mystiques :** 95 pièces d'or gagnées uniquement en jeu ; 3 cartes avec raretés pondérées. La transparence des probabilités et un mécanisme de protection contre les mauvais tirages restent à ajouter si le système de paquets devient central.
+**Paquets mystiques :** 95 pièces d’or gagnées en jeu pour trois cartes de base.
+Les probabilités et les cartes possibles sont affichées au Comptoir.
+
+**Paquets d’évolution :** un paquet par faction, disponible après la mission 03.
+Trois tirages indépendants à 125 pièces d’or, avec 60 % de base de la faction,
+35 % d’évolution Rare et 5 % d’évolution Épique par carte.
 
 **Cartes améliorables :** unités niveaux 0 à 3 ; coût de 35/70/105 éclats ; bonus d'attaque et de PV par niveau. Les sorts ne sont pas encore améliorables.
 

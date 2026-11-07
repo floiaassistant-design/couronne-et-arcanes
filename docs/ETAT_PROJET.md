@@ -6,6 +6,11 @@ GitHub est la source officielle. À chaque reprise, lire [main](https://github.c
 Ce fichier conserve les jalons durables ; les PR portent le dernier commit, les
 preuves et les limites. Une CI ou une fusion ne prouve pas la publication.
 
+## Ajustement proposé au Comptoir
+
+Les cinq paquets d’évolution passent à 125 or. Ils contiennent trois cartes de
+la faction, avec les mêmes taux de 60/35/5 par carte. Le Mystique coûte 95 or.
+
 ## Intégré sur main
 
 Les [premiers Divins Éther](ETHER_PREMIERS_DIVINS.md) sont intégrés par la PR 88
