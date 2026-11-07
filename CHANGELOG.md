@@ -4,7 +4,7 @@
 
 - Le filet intérieur des cartes dessinées passe de 2 à 4 pixels dans toutes les vues ; la Collection reprend les six couleurs de rareté communes. Aucun changement de carte, de règle, de sauvegarde ou de dimensions.
 
-## En préparation — prix des paquets de faction
+## Intégré par PR 96 — prix des paquets de faction
 
 - Les cinq paquets d’évolution passent de 190 à 125 or. Les trois tirages et les taux de 60/35/5 sont conservés. Le Mystique coûte 95 or.
 
