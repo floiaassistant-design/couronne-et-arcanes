@@ -16,7 +16,7 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 
 ## Jouer
 
-Les cartes dessinées reprennent le filet intérieur de rareté de 2 pixels intégré par PR 87 : main, plateau, Collection, fiches et autres vues, avec les mêmes dimensions et couleurs.
+Les cartes dessinées reprennent le filet intérieur de rareté de 4 pixels (renforcement proposé après PR 87) : main, plateau, Collection, fiches et autres vues, avec les mêmes dimensions et couleurs.
 
 - [Portée du Feu follet](docs/ETHER_PORTEE_FEU_FOLLET.md) : cette proposition applique trois cases à ses six raretés, avec un tir arrêté par la première unité rencontrée sur sa ligne.
 
