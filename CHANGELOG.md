@@ -1,6 +1,6 @@
 # Journal des changements
 
-## En préparation — renforcer les contours de rareté
+## Contours de rareté — PR 97
 
 - Le filet intérieur des cartes dessinées passe de 2 à 4 pixels dans toutes les vues ; la Collection reprend les six couleurs de rareté communes. Aucun changement de carte, de règle, de sauvegarde ou de dimensions.
 
