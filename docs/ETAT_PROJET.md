@@ -1,4 +1,4 @@
-# État du projet — reprise du 6 novembre 2026
+# État du projet — reprise du 7 novembre 2026
 
 GitHub est la source officielle. À chaque reprise, lire [main](https://github.com/floiaassistant-design/couronne-et-arcanes/tree/main),
 [les PR ouvertes](https://github.com/floiaassistant-design/couronne-et-arcanes/pulls) et
@@ -30,41 +30,43 @@ Les [premières Éveillées Éther](ETHER_PREMIERES_EVEILLEES.md) et leur ascens
 intégrées par la PR 92 au commit `2755fdc817295a8b5403c5cb9fb76c4edb746e5f`,
 sur l’arbre contrôlé `14c76638891a5e8dd08dff23ab0effbec00e3ed3`.
 
+Les [sept dernières Éveillées Éther](ETHER_DERNIERES_EVEILLEES.md) sont
+intégrées par la PR 93 au commit `84c6178a85e5e5b5dc0ad42dcf33c74dc92baf35`,
+sur l’arbre contrôlé `3a8ba8261a11a54ff03e3124c140617e34c5939d`.
+
+La [portée du Feu follet](ETHER_PORTEE_FEU_FOLLET.md) est intégrée par la PR 94
+au commit `21e471cb9d1bc45a1e1d2abf4b7be3459e730bdf`. Les six raretés tirent
+à trois cases. Le Feu follet touche le premier ennemi à portée sur sa ligne,
+et une unité alliée fait écran.
+
 - Aube : 51 versions, dont 41 évolutions obtenables.
 - Sylve : 59 versions, dont 48 évolutions jusqu’à Éveillée.
 - Ombre : 54 versions, dont 43 évolutions jusqu’à Éveillée.
 - Forge : 49 versions, dont 39 évolutions jusqu’à Éveillée. Le Golem est intégré
   par PR 85 ; Cœur runique exige le cas interposé validé, jamais tout coup reçu.
-- Éther : 43 versions, dont 32 évolutions, les onze Divines et quatre Éveillées.
-  Le Feu follet natif a une portée de 2 et ses évolutions une portée de 3.
+- Éther : 50 versions, dont 39 évolutions, onze Divines et onze Éveillées.
 
-203 recettes, dix ascensions communes, 53 unités natives et 23 sorts.
+210 recettes, dix ascensions communes, 53 unités natives et 23 sorts.
 Le laboratoire utilise le même moteur, sans gain ni écriture dans l’aventure.
 Sauvegardes protégées et transactions du profil/résultats sont intégrées.
 [Migration et limites par faction](REPRISE_MIGRATION_CARTES.md).
 
 ## Publié, observation distincte
 
-**Sites v33** a publié les dernières Divines de la PR 91 au commit de diffusion
-`50f0e165ce9560f5d25a75504bc7ae1f7e4c184e`, vérifié sur le site. La publication
-des premières Éveillées passe par le suivi existant.
+**Sites v34** a publié les premières Éveillées de la PR 92 au commit de diffusion
+`7c48506f5f44c764b6582649986a7856a6bf5c44`, vérifié sur le site. La mise à jour
+qui inclut les PR 93 et 94 passe par le flux de publication existant.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
-[Export hors ligne intégré](https://raw.githubusercontent.com/floiaassistant-design/couronne-et-arcanes/2755fdc817295a8b5403c5cb9fb76c4edb746e5f/JOUER.html) ·
+[Export hors ligne intégré](https://raw.githubusercontent.com/floiaassistant-design/couronne-et-arcanes/21e471cb9d1bc45a1e1d2abf4b7be3459e730bdf/JOUER.html) ·
 [Procédure](PUBLICATION_WEB_2026_10_23.md).
 
-## Proposé, non intégré et non publié
-
-- [Dernières Éveillées](ETHER_DERNIERES_EVEILLEES.md) : sept rangs proposés,
-  50 versions Éther, 39 évolutions Éther et 210 recettes au total.
-
-- [Portée du Feu follet](ETHER_PORTEE_FEU_FOLLET.md) : trois cases à toutes
-  les raretés et tir sans traverser une unité, dans une proposition distincte.
-
 ## Prochain travail utile
-Auditer aussi une campagne UI complète depuis zéro ; les rencontres isolées et
-combats préparés ne la remplacent pas. Vérifier lisibilité/interactions sur
-vrai téléphone : Chromium simulé ne prouve ni Safari/Firefox ni équilibrage humain.
+Le [parcours campagne web de 01 à 12](AUDIT_CAMPAGNE_CONTINUE_2026_11_06.md) a
+réussi avec un profil neuf et des graines reproductibles sur le code du Feu
+follet intégré à main. Vérifier ensuite lisibilité et interactions sur un
+téléphone physique, puis poursuivre les essais de jouabilité avec d’autres
+parcours.
 
 [Consignes](../AGENTS.md) · [Architecture](ARCHITECTURE_MODULAIRE_V2_6.md) ·
 [Carte des tests](CARTE_TESTS.md) · [Jalons antérieurs conservés](HISTORIQUE_JALONS_2026_11_05.md) ·
