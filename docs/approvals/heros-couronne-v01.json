@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "version": "01",
+  "status": "approved",
+  "approvedBy": "Propriétaire du projet, le 7 novembre 2026",
+  "approval": "Demande explicite « tu peux intégré ca au jeux » après la maquette recentrée",
+  "reference": "https://chatgpt.com/library?file_id=libfile_8397640f3e08819187b81e3e0859f424&account_id=personal",
+  "referenceVersion": 1,
+  "license": "Contenu original généré pour le projet. Aucun actif tiers fourni. Aucune exclusivité juridique revendiquée.",
+  "prompt": "docs/HEROS_COURONNE_2026_11_07.md",
+  "source": {
+    "file": "sources/heros/couronne-v01.png",
+    "width": 1774,
+    "height": 887,
+    "bytes": 2101171,
+    "sha256": "e04142a15640867fbb2fbbcb9542714f4411687a76fe2ac38cadae507b5796e7",
+    "libraryFile": "libfile_a9ebbcf128b48191a504d8f0439d05ec"
+  },
+  "atlas": {
+    "frameWidth": 152,
+    "frameHeight": 183,
+    "frames": 16,
+    "periodMs": 4000,
+    "anchor": [
+      149,
+      510
+    ]
+  },
+  "assets": [
+    {
+      "id": "gardien",
+      "file": "exports/heros/gardien-v01.webp",
+      "bytes": 117906,
+      "sha256": "190ad0ed06bfd357429b708ba7a4005cd3855b6a262b9341ea46d2955e6a39de"
+    },
+    {
+      "id": "arcaniste",
+      "file": "exports/heros/arcaniste-v01.webp",
+      "bytes": 111322,
+      "sha256": "e1b84a0472f296a3b9608a0321ef686c66d8ddf3acaa2df2c38d4b8415419432"
+    },
+    {
+      "id": "rodeur",
+      "file": "exports/heros/rodeur-v01.webp",
+      "bytes": 102432,
+      "sha256": "5b8a41c017d0af9c0d75b1cf891c49582c7f279c8626cb5f2170051059fbe1d9"
+    },
+    {
+      "id": "clerc",
+      "file": "exports/heros/clerc-v01.webp",
+      "bytes": 106028,
+      "sha256": "4fcc8f9668b5e9be026bf0ce9d1a89e1aca189a4d2adf4f4c64ee6e91df9cdd0"
+    }
+  ],
+  "sourceArchive": "https://chatgpt.com/library?file_id=libfile_4145d201b9348191a34d9912941fbfc4&account_id=personal",
+  "stylesheet": "assets/arena-heroes-art.css"
+}

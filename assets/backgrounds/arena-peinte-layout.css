@@ -24,8 +24,21 @@
 .combat-screen[data-painted-arena="true"] .arena-painted .terrain-trap{position:absolute;bottom:2px;z-index:2;font-size:11px}
 .combat-screen[data-painted-arena="true"] .arena-painted .unit-on-board {animation:none!important;transition:none!important}
 .arena-hero-slot{position:absolute;width:180px;height:240px;transform:translate(-50%,-100%);pointer-events:none;z-index:2}
-.arena-hero-actor{position:absolute;inset:0;transform-origin:50% 100%}
-.arena-hero-actor img{width:100%;height:100%;object-fit:contain;object-position:50% 100%}
+.arena-hero-slot[data-side="p"]{width:152px;height:183px}
+.arena-hero-actor{position:absolute;inset:0}
+.arena-hero-actor[data-hero-class]{
+ background-position:0% 0%;
+ background-size:1600% 100%;
+ background-repeat:no-repeat;
+ animation:arena-hero-breath 4s infinite;
+}
+@keyframes arena-hero-breath{
+ 0%{background-position-x:0%;animation-timing-function:steps(15,end)}
+ 42%{background-position-x:100%;animation-timing-function:steps(15,end)}
+ 100%{background-position-x:0%}
+}
+.animations-off .arena-hero-actor[data-hero-class]{animation:none}
+@media(prefers-reduced-motion:reduce){.arena-hero-actor[data-hero-class]{animation:none}}
 .combat-screen[data-painted-arena="true"] .battle-hud{position:absolute;left:12px;right:12px;top:8px;z-index:4;pointer-events:none}
 .combat-screen[data-painted-arena="true"] .fighter{max-width:250px;background:#08172bd6;border-color:#d9c7a661;backdrop-filter:blur(4px)}
 .combat-screen[data-painted-arena="true"] .battle-mid{background:#071727ad;border-radius:10px;padding:3px 12px;color:#ffebbf}

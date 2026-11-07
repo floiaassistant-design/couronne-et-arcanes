@@ -6,6 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {ART_NAMES,UI_ART_NAMES,CARD_ART_NAMES,CARD_TEMPLATES} from '../src/visuals.js';
 import {readArtwork} from './lib/artwork.mjs';
 import {readUIArtwork} from './lib/ui-artwork.mjs';
+import {validateHeroArtwork} from './lib/hero-artwork.mjs';
 import {readStylesheets} from './lib/stylesheets.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -59,6 +60,7 @@ const js=`(function(){\n'use strict';\nconst __factories={\n${factoriesJs}\n};\n
 let html=read('index.html');
 const sheets=readStylesheets(root,html);
 if(!sheets.some(s=>s.file==='styles.css')||!html.includes('<script type="module" src="./src/app.js"></script>'))throw Error('Points d’entrée HTML non reconnus');
+validateHeroArtwork(root,sheets);
 for(const target of Object.keys(uiArt)){
  if(!sheets.some(s=>s.file===target))throw Error('Fond UI non relié à la page : '+target);
 }
