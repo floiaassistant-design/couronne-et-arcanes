@@ -50,13 +50,13 @@ async def run_card_packs(browser,label,viewport,url=None,scenario='aube'):
     await page.locator('#import-file').set_input_files({'name':'boss-termine.json','mimeType':'application/json','buffer':json.dumps(PROFILE).encode()})
     await page.locator('#view .hero-copy').wait_for();await forge();baseline=await saved()
     text=await offer.inner_text()
-    for word in ['190 or','60 %','35 %','5 %','tirages indépendants','aucun rang garanti']:assert word in text,word
+    for word in ['125 or','60 %','35 %','5 %','tirages indépendants','aucun rang garanti']:assert word in text,word
     assert await offer.locator('.pack-rates li').count()==3
     assert await offer.locator('.pack-content').get_attribute('open') is None
     await offer.scroll_into_view_if_needed();await page.screenshot(path=f'/tmp/ca-evolution-packs-{scenario}-{label}.png')
     assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
     await prepare();assert await saved()==baseline
-    assert '190 or seront dépensés' in await page.locator('.modal').inner_text()
+    assert '125 or seront dépensés' in await page.locator('.modal').inner_text()
     await page.screenshot(path=f'/tmp/ca-evolution-packs-confirm-{scenario}-{label}.png')
     await close();assert await saved()==baseline
     # Échec de sauvegarde après tirage : ni débit, ni carte, ni résultat annoncé.
@@ -66,7 +66,7 @@ async def run_card_packs(browser,label,viewport,url=None,scenario='aube'):
     await page.reload();await forge();assert await saved()==baseline
     await prepare();await page.reload();await forge();assert await saved()==baseline
     await prepare();await page.locator('.modal [data-action="card-pack-confirm"]').dblclick()
-    first=await saved();assert first['gold']==810
+    first=await saved();assert first['gold']==875
     assert first['collection'][base_id]==PROFILE['collection'][base_id]+1
     assert first['evolvedCollection']=={rare_key:1,epic_key:1}
     keep=lambda p:{k:v for k,v in p.items() if k not in ('gold','collection','evolvedCollection')}
@@ -84,18 +84,18 @@ async def run_card_packs(browser,label,viewport,url=None,scenario='aube'):
     for rarity in ['rare','épique']:assert 'Possédée ×1' in await row.locator(f'[data-collection-rarity="{rarity}"]').inner_text()
     await page.reload();assert await saved()==first;await forge()
     for _ in range(2):await prepare();await confirm();await close()
-    drawn=await saved();assert drawn['gold']==430
+    drawn=await saved();assert drawn['gold']==625
     assert drawn['evolvedCollection']=={rare_key:3,epic_key:3}
     await click(page.locator('#nav [data-page="alchemy"]'))
     await click(page.locator(f'[data-fusion-id="{epic_key}"] [data-action="evolution-fusion-preview"]'))
     await click(page.locator('.modal [data-action="evolution-fusion-confirm"]'))
-    fused=await saved();assert fused['gold']==430
+    fused=await saved();assert fused['gold']==625
     assert fused['evolvedCollection']=={rare_key:0,epic_key:4}
     assert 'completedTrials' not in fused and fused['deck']==baseline['deck']
     # Le paquet mystique reste un achat de trois cartes natives pour 95 or.
     await forge();await click(page.locator('[data-action="buy-pack"]'))
     assert await page.locator('.modal .unit-card').count()==3
-    native=await saved();assert native['gold']==335 and native['evolvedCollection']==fused['evolvedCollection'];await close()
+    native=await saved();assert native['gold']==530 and native['evolvedCollection']==fused['evolvedCollection'];await close()
     await click(page.locator('#nav [data-page="deck"]'))
     await click(page.locator(f'[data-deck-card="{epic_key}"] [data-action="deck-add"]'))
     final=await saved();assert {'id':card_id,'rarity':'épique'} in final['deck']

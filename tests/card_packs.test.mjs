@@ -15,7 +15,7 @@ function storage(){const data={};globalThis.localStorage={getItem:k=>data[k]??nu
 
 test('Catalogue : ancien paquet conservé, nouveau contenu explicite et les évolutions réellement jouables',()=>{
  assert.equal(CARD_PACKS.length,6);
- const pack=cardPack('aube-evolution');assert.deepEqual([pack.cost,pack.count,pack.mission],[190,3,'03']);
+ const pack=cardPack('aube-evolution');assert.deepEqual([pack.cost,pack.count,pack.mission],[125,3,'03']);
  assert.deepEqual(pack.groups.map(g=>g.weight),[60,35,5]);assert.deepEqual(pack.groups.map(g=>g.cards.length),[8,4,8]);
  assert.deepEqual(pack.groups[0].cards.slice().sort(),['militia','shield','archer','lancer','cleric','banner','scoutcaptain','sunpriest'].sort());
  assert.deepEqual(pack.groups[1].cards.map(cardKey).sort(),['militia:rare','shield:rare','archer:rare','lancer:rare'].sort());
@@ -41,7 +41,7 @@ test('Bornes et répartition du nouveau paquet : trois tirages indépendants, do
   assert.equal(result.ok,true);assert.deepEqual(result.cards.map(kind),[expected,expected,expected]);
   assert.ok(result.cards.every(ref=>cardKey(ref)===cardKey(result.cards[0])));
  }
- const p=ready();p.gold=190*100;const counts={native:0,rare:0,'épique':0};
+ const p=ready();p.gold=125*100;const counts={native:0,rare:0,'épique':0};
  for(let i=0;i<100;i++)for(const ref of buyCardPack(p,'aube-evolution',draws([(i+.5)/100,.5])).cards)counts[kind(ref)]++;
  assert.deepEqual(counts,{native:180,rare:105,'épique':15});assert.equal(p.gold,0);
 });
@@ -49,7 +49,7 @@ test('Bornes et répartition du nouveau paquet : trois tirages indépendants, do
 test('Achat mixte : un seul débit, trois stocks de Milicien distincts et aucune autre progression modifiée',()=>{
  const p=ready(),before=structuredClone(p),result=buyCardPack(p,'aube-evolution',draws([0,0,.6,0,.95,0]));
  assert.deepEqual(result.cards,['militia',{id:'militia',rarity:'rare'},{id:'militia',rarity:'épique'}]);
- const expected=structuredClone(before);expected.gold-=190;expected.collection.militia++;
+ const expected=structuredClone(before);expected.gold-=125;expected.collection.militia++;
  expected.evolvedCollection={'militia:rare':1,'militia:épique':1};assert.deepEqual(p,expected);
  assert.deepEqual(validateImportedProfile(p),p);storage();assert(saveProfile(p));assert.deepEqual(loadProfile(),p);
 });
@@ -58,7 +58,7 @@ test('Boss, fonds, combat actif et résultat en attente : refus avant tout tirag
  for(const reason of ['boss','gold','active','pending','unknown']){
   const p=ready();let battle=null,id='aube-evolution',calls=0;
   if(reason==='boss'){p.completed=['01','02'];p.unlocked=12;}
-  if(reason==='gold')p.gold=189;if(reason==='active')battle={status:'active'};
+  if(reason==='gold')p.gold=124;if(reason==='active')battle={status:'active'};
   if(reason==='pending')battle={status:'victory'};if(reason==='unknown')id='inventé';
   const before=structuredClone(p);assert.equal(buyCardPack(p,id,()=>{calls++;return 0},battle).ok,false,reason);
   assert.equal(calls,0);assert.deepEqual(p,before,reason);
@@ -99,7 +99,7 @@ test('Les doublons de paquet alimentent la fusion, sans épreuve accomplie ni ga
  buyCardPack(p,'aube-evolution',draws([.6,0]));
  assert.equal(p.evolvedCollection['militia:rare'],3);assert.equal(fuseEvolutionCopies(p,'militia:épique').ok,true);
  assert.equal(p.evolvedCollection['militia:rare'],0);assert.equal(p.evolvedCollection['militia:épique'],1);
- assert.equal(p.gold,before.gold-190);assert.deepEqual(p.collection,before.collection);assert.deepEqual(p.deck,before.deck);
+ assert.equal(p.gold,before.gold-125);assert.deepEqual(p.collection,before.collection);assert.deepEqual(p.deck,before.deck);
  assert.equal(p.completedTrials,undefined);
 });
 
@@ -108,7 +108,7 @@ test('Trois Épiques du paquet deviennent une Légendaire après le deuxième bo
  const result=buyCardPack(p,'aube-evolution',draws([.95,0]));assert.equal(result.ok,true);
  assert.deepEqual(result.cards,Array.from({length:3},()=>({id:'militia',rarity:'épique'})));
  assert.equal(fuseEvolutionCopies(p,'militia:légendaire').ok,true);
- const expected=structuredClone(before);expected.gold-=190;
+ const expected=structuredClone(before);expected.gold-=125;
  expected.evolvedCollection={'militia:épique':0,'militia:légendaire':1};assert.deepEqual(p,expected);
 });
 
@@ -120,7 +120,7 @@ function controller(){
 test('Confirmation, annulation et double validation : une seule ouverture adoptée, aucun achat implicite',()=>{
  const c=controller(),before=structuredClone(c.profile);
  c.handle('card-pack-confirm');assert.equal(c.saves,0);
- c.handle('card-pack-preview',{id:'aube-evolution'});assert.match(c.modal,/190 or/);assert.match(c.modal,/5 %/);assert.deepEqual(c.profile,before);
+ c.handle('card-pack-preview',{id:'aube-evolution'});assert.match(c.modal,/125 or/);assert.match(c.modal,/5 %/);assert.deepEqual(c.profile,before);
  c.handle('close-modal');c.handle('card-pack-confirm');assert.equal(c.saves,0);
  c.handle('card-pack-preview',{id:'aube-evolution'});c.handle('card-pack-confirm');const once=structuredClone(c.profile);
  c.handle('card-pack-confirm');c.handle('buy-pack');assert.equal(c.saves,1);assert.deepEqual(c.profile,once);

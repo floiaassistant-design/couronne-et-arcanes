@@ -82,7 +82,7 @@ test('50 versions Éther × quatre niveaux × deux camps : vraie invocation et a
 });
 
 test('Paquet Éther : pools 6/2/6, 60/35/5, six tirages et huit évolutions réellement obtenues',()=>{
- const pack=cardPack('ether-evolution');assert.deepEqual([pack.cost,pack.count,pack.mission],[190,3,'03']);
+ const pack=cardPack('ether-evolution');assert.deepEqual([pack.cost,pack.count,pack.mission],[125,3,'03']);
  assert.deepEqual(pack.groups.map(g=>g.weight),[60,35,5]);assert.deepEqual(pack.groups.map(g=>g.cards.length),[6,2,6]);
  assert.deepEqual(pack.groups[0].cards,['spark','mystic','sentinel','tempest','seer','portal_walker']);
  assert.deepEqual(pack.groups[1].cards,[{id:'seer',rarity:'rare'},{id:'spark',rarity:'rare'}]);
@@ -91,7 +91,7 @@ test('Paquet Éther : pools 6/2/6, 60/35/5, six tirages et huit évolutions rée
  for(const g of pack.groups.slice(1))for(const [i,ref] of g.cards.entries()){
   const p=freshProfile();p.completed=['01','02','03'];p.gold=1000;let calls=0;
   const result=buyCardPack(p,pack.id,()=>calls++%2===0?(ref.rarity==='rare'?.7:.97):(i+.5)/g.cards.length);
-  assert.equal(calls,6);assert.deepEqual(result.cards,[ref,ref,ref]);assert.equal(p.gold,810);
+  assert.equal(calls,6);assert.deepEqual(result.cards,[ref,ref,ref]);assert.equal(p.gold,875);
   assert.equal(ownedCardCopies(p,ref),3);assert(modifyDeck(p,ref,1));assert.deepEqual(validateImportedProfile(p),p);
   testStorage();assert(saveProfile(p));assert.deepEqual(loadProfile(),p);
  }

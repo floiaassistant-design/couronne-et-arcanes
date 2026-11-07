@@ -92,7 +92,7 @@ test('Fusions Forge : trois copies libres du rang exact, mission requise et deck
 
 test('Paquet Forge : 7 natives, 3 Rares, 7 Épiques ; aucun mélange ni rang supérieur',()=>{
  const pack=cardPack('forge-evolution');
- assert.deepEqual([pack.cost,pack.count,pack.mission],[190,3,'03']);
+ assert.deepEqual([pack.cost,pack.count,pack.mission],[125,3,'03']);
  assert.deepEqual(pack.groups.map(g=>g.weight),[60,35,5]);
  assert.deepEqual(pack.groups.map(g=>g.cards.length),[7,3,7]);
  assert.deepEqual(pack.groups[1].cards.map(cardKey).sort(),['smith:rare','drill:rare','ironwraith:rare'].sort());
@@ -114,7 +114,7 @@ test('Chaque Rare/Épique Forge peut être tirée, sauvegardée, mise au deck et
  for(const group of pack.groups.slice(1))for(const [i,ref] of group.cards.entries()){
   const p=ready();let calls=0,roll=ref.rarity==='rare'?.7:.97;
   const result=buyCardPack(p,pack.id,()=>calls++%2===0?roll:(i+.5)/group.cards.length);
-  assert.equal(calls,6);assert.deepEqual(result.cards,[ref,ref,ref]);assert.equal(p.gold,1810);
+  assert.equal(calls,6);assert.deepEqual(result.cards,[ref,ref,ref]);assert.equal(p.gold,1875);
   assert.equal(ownedCardCopies(p,ref),3);assert.equal(modifyDeck(p,ref,1),true);
   assert.deepEqual(validateImportedProfile(p),p);localStorageMock();assert(saveProfile(p));assert.deepEqual(loadProfile(),p);
   const battle=createBattle(p,CAMPAIGN[0],1);battle.heroes.p.hand=[{...ref,wait:0}];
