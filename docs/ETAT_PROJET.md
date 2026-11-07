@@ -12,12 +12,13 @@ La PR 96 a intégré les cinq paquets d’évolution à 125 or au commit
 `a8f3d6b0d5f6b775703d4188ea685e206e71d0c9`. Les trois cartes et les
 taux 60/35/5 restent inchangés. Le Mystique coûte 95 or.
 
-## Contours renforcés proposés, non intégrés
+## Contours de rareté renforcés — PR 97
 
-La branche de lisibilité porte le filet intérieur de 2 à 4 px et aligne
-la palette de Collection sur les six couleurs partagées. Aucune règle,
-illustration, dimension ou sauvegarde ne change. JOUER.html a été régénéré depuis les sources du jeu sur la branche ;
-les tests GitHub de la PR restent à confirmer avant toute fusion.
+La PR 97 porte le filet intérieur de 2 à 4 px et aligne la palette de la
+Collection sur les six couleurs partagées. Aucune règle, illustration,
+dimension ou sauvegarde ne change. JOUER.html est régénéré depuis les sources.
+Fusion et publication sont distinctes : vérifier les statuts actuels de la
+PR 97 et des Actions GitHub, sans déduire l'un de l'autre.
 
 ## Intégré sur main
 
