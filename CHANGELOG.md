@@ -1,5 +1,10 @@
 # Journal des changements
 
+## Correctif proposé — modifier le deck après un combat
+
+- Le bouton « Modifier mon deck » du résultat de campagne ou de Tour ouvre « Mon deck » au lieu de la Collection. Le retour au mode de combat, les gains, les règles et les sauvegardes sont inchangés.
+- Les scénarios navigateur de reprise des gains vérifient la destination après victoire et défaite dans les deux modes. L’export autonome a été régénéré depuis les sources par le builder officiel.
+
 ## Contours de rareté — PR 97
 
 - Le filet intérieur des cartes dessinées passe de 2 à 4 pixels dans toutes les vues ; la Collection reprend les six couleurs de rareté communes. Aucun changement de carte, de règle, de sauvegarde ou de dimensions.

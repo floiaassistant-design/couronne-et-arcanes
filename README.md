@@ -96,7 +96,7 @@ Pour chaque unité, la Collection conserve **six emplacements de rareté côte �
 recherche, filtres par Ordre/type et boutons +/−, quantités disponibles et compteur
 de 12 à 24 cartes. Le deck s'enregistre automatiquement. Les compositions proposées
 restent une aide facultative, repliée en bas de l'écran. Les modifications sont
-bloquées pendant un combat. [Fonctionnement](docs/DECK_MANUEL_2026_10_27.md).
+bloquées pendant un combat. Après une victoire ou une défaite en campagne ou dans la Tour, le bouton « Modifier mon deck » ouvre directement cet écran, et non la Collection. [Fonctionnement](docs/DECK_MANUEL_2026_10_27.md).
 
 La Collection, les classes, les maîtrises, équipements, talents et donjons sont
 conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteur,
