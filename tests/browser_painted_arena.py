@@ -5,22 +5,20 @@ from browser_class_skills_v28 import make_page
 
 async def check_heroes(page):
     grid = page.locator('.arena-painted')
-    heroes = page.locator('.arena-hero-actor[data-hero-class]')
-    cases = [
-        ('gardien', 'assaut', 'gardien'), ('arcaniste', 'bastion', 'gardien'),
-        ('rodeur', 'meute', 'rodeur'), ('clerc', 'rituel', 'arcaniste'),
-        ('gardien', 'equilibre', 'clerc')
-    ]
-    for player_class, enemy_style, enemy_art in cases:
-        await page.evaluate('''([heroClass, aiStyle]) => {
-            battle=createBattle({...profile, heroClass}, {id:'01', name:'Arène peinte',
-              enemy:'Sentinelle', hp:80, difficulty:1, deck:[], aiStyle}, 213);
+    heroes = page.locator('.arena-hero-actor[data-hero-class], .arena-hero-actor[data-enemy-hero]')
+    classes = ['gardien', 'arcaniste', 'rodeur', 'clerc']
+    for number in range(1, 13):
+        mission = f'{number:02d}'
+        player_class = classes[(number - 1) % len(classes)]
+        await page.evaluate('''([heroClass, id]) => {
+            battle=createBattle({...profile, heroClass}, {id, name:'Arène peinte',
+              enemy:'Adversaire', hp:80, difficulty:1, boss:Number(id)%3===0, deck:[]}, 213);
             render();
-        }''', [player_class, enemy_style])
-        for side, art in [('p', player_class), ('e', enemy_art)]:
+        }''', [player_class, mission])
+        for side, attribute, art in [('p', 'data-hero-class', player_class), ('e', 'data-enemy-hero', mission)]:
             await grid.evaluate("(el, side) => { el.scrollLeft = side === 'e' ? el.scrollWidth : 0; }", side)
             hero = page.locator(f'.arena-hero-slot[data-side="{side}"] .arena-hero-actor')
-            assert await hero.get_attribute('data-hero-class') == art
+            assert await hero.get_attribute(attribute) == art
             assert await hero.evaluate('''async (el, side) => {
                 const style = getComputedStyle(el);
                 const image = new Image();
@@ -28,10 +26,10 @@ async def check_heroes(page):
                 await image.decode();
                 const hero = el.getBoundingClientRect();
                 const grid = el.closest('.arena-painted').getBoundingClientRect();
-                return image.naturalWidth === 2432 && image.naturalHeight === 183
+                return image.naturalWidth === (side === 'p' ? 2432 : 152) && image.naturalHeight === 183
                   && style.width === '152px' && style.height === '183px'
                   && style.pointerEvents === 'none'
-                  && new DOMMatrixReadOnly(style.transform).a === (side === 'e' ? -1 : 1)
+                  && new DOMMatrixReadOnly(style.transform).a === 1
                   && hero.left >= grid.left - 1 && hero.right <= grid.right + 1
                   && hero.top >= grid.top - 1 && hero.bottom <= grid.bottom + 1;
             }''', side), (side, art)
@@ -41,19 +39,30 @@ async def check_heroes(page):
         const animation = el.getAnimations()[0];
         animation.pause();
         animation.currentTime = 0;
-        const first = getComputedStyle(el).backgroundPositionX;
+        const first = getComputedStyle(el);
+        const start = el.hasAttribute('data-enemy-hero')
+            ? new DOMMatrixReadOnly(first.transform).d === 1 : first.backgroundPositionX === '0%';
+        const bottom = el.getBoundingClientRect().bottom;
         animation.currentTime = 1680;
-        return first === '0%' && getComputedStyle(el).backgroundPositionX === '100%';
+        const peak = getComputedStyle(el);
+        return start && (el.hasAttribute('data-enemy-hero')
+            ? new DOMMatrixReadOnly(peak.transform).d > 1 && Math.abs(el.getBoundingClientRect().bottom - bottom) < 0.5
+            : peak.backgroundPositionX === '100%');
     })''')
     await page.evaluate('render()')
     assert await heroes.evaluate_all('els => els.every(el => el.getAnimations()[0]?.startTime === 0)')
     await page.locator('[data-action="toggle-animations"]').click()
-    fixed_pose = "els => els.every(el => el.getAnimations().length === 0 && getComputedStyle(el).backgroundPositionX === '0%')"
+    fixed_pose = """els => els.every(el => el.getAnimations().length === 0 &&
+        (el.hasAttribute('data-enemy-hero') ? getComputedStyle(el).transform === 'none'
+            : getComputedStyle(el).backgroundPositionX === '0%'))"""
     assert await heroes.evaluate_all(fixed_pose)
     await page.locator('[data-action="toggle-animations"]').click()
     await page.emulate_media(reduced_motion='reduce')
     assert await heroes.evaluate_all(fixed_pose)
     await page.emulate_media(reduced_motion='no-preference')
+    for mode in ['tower', 'dungeon', 'developer']:
+        await page.evaluate('mode => { battle.mode=mode; render(); }', mode)
+        assert await page.locator('[data-enemy-hero]').count() == 0
 
 async def run(browser,label,viewport):
     errors=[]
@@ -93,7 +102,7 @@ async def run(browser,label,viewport):
         assert all(d['statsBottom']<=d['bottom']+1 and d['statsTop']>=d['top'] for d in dimensions),(label,dimensions)
     assert not errors,errors
     await page.close()
-    print(f'Arène peinte {label} : héros des deux camps, mouvement réduit, clics 2/3/4, défilements et statistiques PASS')
+    print(f'Arène peinte {label} : douze adversaires, quatre classes, mouvement réduit, clics 2/3/4, défilements et statistiques PASS')
 
 async def main():
     async with async_playwright() as pw:

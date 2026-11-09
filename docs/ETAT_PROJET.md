@@ -8,7 +8,11 @@ preuves et les limites. Une CI ou une fusion ne prouve pas la publication.
 
 ## Héros de la Couronne
 
-La PR 99 a intégré le visuel du joueur sur son socle dans l’arène peinte. La proposition pour le socle adverse réutilise les mêmes planches en miroir. Le [contrat des héros](HEROS_COURONNE_2026_11_07.md) documente le cadrage, la provenance et les contrôles.
+La PR 99 a intégré le visuel du joueur sur son socle dans l’arène peinte. Le [contrat des héros](HEROS_COURONNE_2026_11_07.md) documente le cadrage, la provenance et les contrôles.
+
+## Proposé — héros adverses de campagne
+
+Les douze missions affichent chacune un adversaire dédié avec une respiration légère. Les [visuels v01 et leur reçu](HEROS_ADVERSES.md) sont rattachés aux identifiants des missions. Les illustrations de la Tour et des donjons restent à préparer. La PR suit les contrôles et la diffusion.
 
 ## Paquets de faction intégrés
 

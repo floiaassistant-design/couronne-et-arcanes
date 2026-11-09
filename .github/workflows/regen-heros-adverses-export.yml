@@ -24,7 +24,7 @@ jobs:
       - name: Générer et vérifier l’export
         run: |
           npm run build
-          printf '%s  JOUER.html\n' '907014e6c3b59302af919ce8dfd6712c9082fbc2c21b83e26c1923f494b9a8f0' | sha256sum --check
+          printf '%s  JOUER.html\n' '9807fbe3c76ac45d13f13801f97f705417845d7218e3c2bf1273043e91cb66db' | sha256sum --check
           git diff --exit-code -- . ':!JOUER.html'
       - name: Pousser l’export sur la branche
         run: |

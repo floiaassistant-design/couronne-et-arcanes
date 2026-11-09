@@ -2,7 +2,7 @@
 
 ## En préparation — héros adverses
 
-- L’adversaire apparaît sur son socle à droite, tourné vers le joueur. Son apparence reprend l’une des quatre illustrations selon son style tactique.
+- Les douze adversaires de campagne ont chacun leur propre illustration tournée vers le joueur sur le socle de droite, avec une respiration légère et une pose fixe en mouvement réduit. Les mêmes visuels sont intégrés au web et à JOUER.html.
 
 ## Héros de la Couronne — PR 99
 

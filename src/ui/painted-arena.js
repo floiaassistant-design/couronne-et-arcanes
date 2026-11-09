@@ -9,9 +9,8 @@ export const PAINTED_ARENA = Object.freeze({
  heroes:{p:{x:149,y:510,facing:'right'},e:{x:1522,y:510,facing:'left'}}
 });
 
-// Les adversaires ont un style tactique, dont seul le visuel est repris ici.
-const ENEMY_HERO_ART = new Map([
- ['assaut','gardien'],['bastion','gardien'],['meute','rodeur'],['rituel','arcaniste']
+export const CAMPAIGN_HERO_ART_IDS=Object.freeze([
+ '01','02','03','04','05','06','07','08','09','10','11','12'
 ]);
 
 export function paintedTile(visual,col){
@@ -28,7 +27,7 @@ export function paintedTile(visual,col){
   style:`left:${left}px;top:${y}px;width:${width}px;height:${height}px;--tile-shape:${polygon};--foot-x:${percent(footX)};--foot-y:72%`};
 }
 
-export function paintedArena(lanes,renderCell,heroClass,enemyStyle){
+export function paintedArena(lanes,renderCell,heroClass,enemyMissionId){
  const a=PAINTED_ARENA;
  const rows=Array.from({length:4},(_,visual)=>{
   const lane=lanes===2?visual-1:visual,active=lane>=0&&lane<lanes;
@@ -37,8 +36,9 @@ export function paintedArena(lanes,renderCell,heroClass,enemyStyle){
   return `<div class="${active?'lane-row arena-active-row':'arena-dormant-row'}" data-visual-lane="${visual}" ${active?'data-crown-col="11"':'aria-hidden="true"'}><div class="lane-label" style="left:${left-60}px;top:${mid-13}px">${['I','II','III','IV'][visual]}</div><div class="${active?'lane-gate':'arena-dormant-gate'}" style="left:${left-35}px;top:${mid-17}px" ${active?'aria-label="Votre couronne"':''}>♜</div>${tiles}<div class="${active?'lane-gate':'arena-dormant-gate'} enemy" style="left:${right+8}px;top:${mid-17}px" ${active?'aria-label="Couronne adverse"':''}>♛</div></div>`;
  }).join('');
  const heroes=Object.entries(a.heroes).map(([side,h])=>{
-  const art=side==='p'?heroClass:ENEMY_HERO_ART.get(enemyStyle)??'clerc';
-  const outfit=typeof art==='string'&&Object.hasOwn(CLASSES,art)?` data-hero-class="${art}"`:'';
+  const playerOutfit=side==='p'&&typeof heroClass==='string'&&Object.hasOwn(CLASSES,heroClass);
+  const enemyOutfit=side==='e'&&CAMPAIGN_HERO_ART_IDS.includes(enemyMissionId);
+  const outfit=playerOutfit?` data-hero-class="${heroClass}"`:enemyOutfit?` data-enemy-hero="${enemyMissionId}"`:'';
   return `<div class="arena-hero-slot" data-side="${side}" data-facing="${h.facing}" data-animation-state="idle" data-foot-x="${h.x}" data-foot-y="${h.y}" style="left:${h.x}px;top:${h.y}px" aria-hidden="true"><div class="arena-hero-actor"${outfit}></div></div>`;
  }).join('');
  return `<div class="arena-painted-canvas"><div class="arena-painted-frame" data-art-version="${a.version}" data-render-mode="static"><div class="arena-calibrated-art" aria-hidden="true"></div>${rows}${heroes}</div></div>`;
@@ -80,7 +80,7 @@ export function mountPaintedArena(){
  };
  fit();observer=new ResizeObserver(fit);observer.observe(grid);
  // Le DOM du combat est remonté à chaque action. La respiration suit la même horloge.
- for(const hero of frame.querySelectorAll('.arena-hero-actor[data-hero-class]')){
+ for(const hero of frame.querySelectorAll('.arena-hero-actor')){
   for(const animation of hero.getAnimations?.()??[])animation.startTime=0;
  }
 }

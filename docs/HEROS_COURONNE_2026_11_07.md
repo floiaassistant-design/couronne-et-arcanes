@@ -38,20 +38,3 @@ deux distributions. Leur provenance est l’archive de reprise validée. Une
 Le builder contrôle le mapping, le format, les dimensions et les empreintes
 des quatre exports. Les tests de l’arène vérifient le choix par classe, la
 pose fixe, l’ancrage et le déploiement des cartes.
-
-## Héros adverse
-
-Le héros adverse prend place au centre du socle de droite, aux coordonnées
-(1522, 510) du décor original. Sa planche de 152 × 183 pixels est affichée
-en miroir pour qu’il regarde vers le joueur. Les deux côtés réutilisent
-les mêmes ressources approuvées, la boucle et le repli fixe. Sur mobile,
-le socle de droite apparaît en faisant défiler le plateau.
-
-Le style tactique de l’adversaire choisit uniquement son illustration.
-
-| Style tactique | Illustration |
-| --- | --- |
-| Assaut, Bastion | Gardien |
-| Meute | Rôdeur |
-| Rituel | Arcaniste |
-| Équilibré ou style inconnu | Clerc |
