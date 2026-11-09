@@ -1,5 +1,21 @@
 # Journal des changements
 
+## En préparation — héros adverses
+
+- Les douze adversaires de campagne ont chacun leur propre illustration tournée vers le joueur sur le socle de droite, avec une respiration légère et une pose fixe en mouvement réduit. Les mêmes visuels sont intégrés au web et à JOUER.html.
+
+## Héros de la Couronne — PR 99
+
+- Gardien, Arcaniste, Rôdeur et Clerc apparaissent sur le socle du joueur dans l’arène peinte, avec une respiration de quatre secondes et une pose fixe si les animations sont réduites.
+
+## Contours de rareté — PR 97
+
+- Le filet intérieur des cartes dessinées passe de 2 à 4 pixels dans toutes les vues ; la Collection reprend les six couleurs de rareté communes. Aucun changement de carte, de règle, de sauvegarde ou de dimensions.
+
+## Intégré par PR 96 — prix des paquets de faction
+
+- Les cinq paquets d’évolution passent de 190 à 125 or. Les trois tirages et les taux de 60/35/5 sont conservés. Le Mystique coûte 95 or.
+
 ## En préparation — portée du Feu follet
 
 - Le Feu follet Commun atteint trois cases. Ses six raretés tirent sur la première unité ennemie atteignable de leur ligne, avec blocage par une unité alliée.

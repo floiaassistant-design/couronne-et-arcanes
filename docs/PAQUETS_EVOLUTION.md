@@ -5,7 +5,13 @@ Branche `feat/paquet-evolution-aube`, depuis main
 la fusion de PR 59 après vérification et la poursuite des paquets dans une nouvelle
 PR. Aucun accord de fusion/publication de cette nouvelle proposition.
 
-## Produits et probabilités proposés
+## Réglage du prix au 7 novembre 2026
+
+Le prix proposé pour les cinq paquets d’évolution est de 125 or. Ils gardent
+les trois tirages indépendants, les groupes 60/35/5 et l’accès après la mission 03.
+Le Mystique coûte 95 or. Le relevé ci-dessous décrit le lancement du paquet Aube.
+
+## Produits et probabilités du lancement
 
 Le paquet mystique conserve 3 cartes natives, 95 or et les poids historiques
 65 % Commun, 28 % Rare, 7 % Épique, uniformes dans chaque groupe et sans cartes de

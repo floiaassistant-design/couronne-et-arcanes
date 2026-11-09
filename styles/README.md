@@ -60,8 +60,8 @@ nécessaires pour les images, la sélection, les anciens combats et le hors lign
 
 ## Filet de rareté des cartes dessinées
 
-`assets/generated-card.css` applique un filet intérieur de 2 px à `.generated-face`
-(`outline-offset: -2px`). Ce composant est commun aux cartes de la main, des deux
+`assets/generated-card.css` applique un filet intérieur de 4 px à `.generated-face`
+(`outline-offset: -4px`). Ce composant est commun aux cartes de la main, des deux
 camps du plateau, de la Collection, des fiches, du deck, des paquets/récompenses,
 de l’Atelier/Alchimie et du laboratoire. Il hérite de `--rarity-border` ; la palette
 reste dans les feuilles de rareté et de Collection existantes. Aucun contour de

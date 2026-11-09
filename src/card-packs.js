@@ -6,7 +6,7 @@ import {freezeCardData} from './cards/schema.js';
 const natives=Object.values(CARDS).filter(c=>!c.heroClass);
 const nativeRank=rarity=>natives.filter(c=>c.rarity===rarity).map(c=>c.id);
 const evolutionRank=(faction,rarity)=>EVOLUTION_FUSIONS.filter(r=>CARDS[r.cardId].faction===faction&&r.to===rarity).map(r=>({id:r.cardId,rarity:r.to}));
-const evolutionPack=(faction,title,order)=>({id:faction+'-evolution',name:`Paquet d’évolution ${title}`,cost:190,count:3,mission:'03',groups:[
+const evolutionPack=(faction,title,order)=>({id:faction+'-evolution',name:`Paquet d’évolution ${title}`,cost:125,count:3,mission:'03',groups:[
  {label:`Carte de base ${title} (Commune ou Rare)`,weight:60,cards:natives.filter(c=>c.faction===faction&&['commun','rare'].includes(c.rarity)).map(c=>c.id)},
  {label:`Évolution ${order} Rare`,weight:35,cards:evolutionRank(faction,'rare')},
  {label:`Évolution ${order} Épique`,weight:5,cards:evolutionRank(faction,'épique')}

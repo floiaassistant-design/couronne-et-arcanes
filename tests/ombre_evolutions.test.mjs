@@ -83,7 +83,7 @@ test('Onze fusions réelles : rang exact, stocks/deck protégés, aucun gain ni 
 });
 
 test('Nouveau paquet Ombre : pools explicites 8/3/8, prix et taux annoncés, aucune carte haute',()=>{
- const p=cardPack('ombre-evolution');assert.deepEqual([p.cost,p.count,p.mission],[190,3,'03']);assert.deepEqual(p.groups.map(g=>g.weight),[60,35,5]);assert.deepEqual(p.groups.map(g=>g.cards.length),[8,3,8]);
+ const p=cardPack('ombre-evolution');assert.deepEqual([p.cost,p.count,p.mission],[125,3,'03']);assert.deepEqual(p.groups.map(g=>g.weight),[60,35,5]);assert.deepEqual(p.groups.map(g=>g.cards.length),[8,3,8]);
  assert.deepEqual(p.groups[0].cards.slice().sort(),['bone','shade','crypt','plague','graveknight','nightblade','spectre','mist_inquisitor'].sort());
  assert.deepEqual(p.groups[1].cards.map(cardKey).sort(),['bone:rare','crypt:rare','nightblade:rare'].sort());
  for(const g of p.groups)for(const ref of g.cards){assert.equal(CARDS[typeof ref==='string'?ref:ref.id].faction,'ombre');if(typeof ref==='object')assert.ok(['rare','épique'].includes(ref.rarity));}
@@ -95,7 +95,7 @@ test('Onze évolutions réellement tirées : six appels aléatoires, stocks exac
  const pack=cardPack('ombre-evolution');
  for(const group of pack.groups.slice(1))for(const [i,ref] of group.cards.entries()){
   const p=ready();let calls=0;const roll=ref.rarity==='rare'?.7:.97;
-  const result=buyCardPack(p,pack.id,()=>calls++%2===0?roll:(i+.5)/group.cards.length);assert.equal(calls,6);assert.deepEqual(result.cards,[ref,ref,ref]);assert.equal(ownedCardCopies(p,ref),3);assert.equal(p.gold,1810);
+  const result=buyCardPack(p,pack.id,()=>calls++%2===0?roll:(i+.5)/group.cards.length);assert.equal(calls,6);assert.deepEqual(result.cards,[ref,ref,ref]);assert.equal(ownedCardCopies(p,ref),3);assert.equal(p.gold,1875);
   assert.equal(modifyDeck(p,ref,1),true);assert.deepEqual(validateImportedProfile(p),p);const b=createBattle(p,CAMPAIGN[0],1);b.heroes.p.hand=[{...ref,wait:0}];assert(playPlayerCard(b,0,0,1).ok);assert.equal(b.board[0][1].rarity,ref.rarity);
  }
  const p=ready();p.completed=['01','02'];const before=structuredClone(p);assert.equal(buyCardPack(p,pack.id).ok,false);assert.deepEqual(p,before);

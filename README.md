@@ -16,7 +16,9 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 
 ## Jouer
 
-Les cartes dessinées reprennent le filet intérieur de rareté de 2 pixels intégré par PR 87 : main, plateau, Collection, fiches et autres vues, avec les mêmes dimensions et couleurs.
+Dans l’arène peinte, votre classe apparaît sur le socle de gauche. Chacune des douze missions de campagne affiche son propre adversaire sur le socle de droite, accessible en faisant défiler le plateau sur mobile. Désactivez les animations depuis le combat pour garder une pose fixe. [Héros du joueur](docs/HEROS_COURONNE_2026_11_07.md) · [Héros de campagne](docs/HEROS_ADVERSES.md).
+
+Les cartes dessinées reprennent le filet intérieur de rareté de 4 pixels (renforcement par PR 97 après PR 87) : main, plateau, Collection, fiches et autres vues, avec les mêmes dimensions et couleurs.
 
 - [Portée du Feu follet](docs/ETHER_PORTEE_FEU_FOLLET.md) : cette proposition applique trois cases à ses six raretés, avec un tir arrêté par la première unité rencontrée sur sa ligne.
 
@@ -103,7 +105,7 @@ conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteu
 sans récompense ni écriture dans l’aventure. Le laboratoire peut tester les **51 versions définies des dix unités Aube**
 et les **59 versions Sylve** jusqu'à Éveillée, à leurs niveaux 0 à 3 choisis indépendamment.
 L’Ombre compte 54 versions définies, dont onze natives. Forge en compte 49, dont dix natives. `main` définit 36 versions Éther, dont les [Divines d’Impact](docs/ETHER_DIVINS_IMPACT.md). Le Feu follet natif a une portée de 2 et ses évolutions une portée de 3. Les quatre récompenses pilotes se gagnent dans les Épreuves.
-Les grandes ascensions ouvrent les Divines et Éveillées définies, sans carte offerte ni consommation du deck. Le [lot des dernières Divines](docs/ETHER_DERNIERES_DIVINES.md) est intégré. Les [premières Éveillées](docs/ETHER_PREMIERES_EVEILLEES.md) s’obtiennent après L’Éveil des Hautes Sphères, accessible après la mission 12 et l’ascension Divine Éther. Les paquets Sylve, Ombre, Forge et Éther offrent chacun 3 cartes pour 190 or après le premier boss, aux taux de l’Aube (60/35/5). [Migration des factions](docs/REPRISE_MIGRATION_CARTES.md) · [Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md). La PR Aube nº 53, avec sa présentation commune et sa
+Les grandes ascensions ouvrent les Divines et Éveillées définies, sans carte offerte ni consommation du deck. Le [lot des dernières Divines](docs/ETHER_DERNIERES_DIVINES.md) est intégré. Les [premières Éveillées](docs/ETHER_PREMIERES_EVEILLEES.md) s’obtiennent après L’Éveil des Hautes Sphères, accessible après la mission 12 et l’ascension Divine Éther. Les paquets d’évolution Aube, Sylve, Ombre, Forge et Éther offrent chacun trois cartes pour 125 or après le premier boss. Chaque carte a 60 % de chances d’être une carte de base de la faction, 35 % une évolution Rare et 5 % une évolution Épique. Le Mystique coûte 95 or. [Migration des factions](docs/REPRISE_MIGRATION_CARTES.md) · [Forge Rare/Épique](docs/FORGE_RARE_EPIQUE.md). La PR Aube nº 53, avec sa présentation commune et sa
 [revue finale](docs/REVUE_AUBE_PR53_2026_10_27.md), a été fusionnée sur accord du
 propriétaire le 27 octobre 2026. La publication du site reste une opération distincte.
 

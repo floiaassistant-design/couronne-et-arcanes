@@ -1,10 +1,32 @@
-# État du projet — reprise du 7 novembre 2026
+# État du projet — reprise du 9 novembre 2026
 
 GitHub est la source officielle. À chaque reprise, lire [main](https://github.com/floiaassistant-design/couronne-et-arcanes/tree/main),
 [les PR ouvertes](https://github.com/floiaassistant-design/couronne-et-arcanes/pulls) et
 [leurs contrôles exacts](https://github.com/floiaassistant-design/couronne-et-arcanes/actions).
 Ce fichier conserve les jalons durables ; les PR portent le dernier commit, les
 preuves et les limites. Une CI ou une fusion ne prouve pas la publication.
+
+## Héros de la Couronne
+
+La PR 99 a intégré le visuel du joueur sur son socle dans l’arène peinte. Le [contrat des héros](HEROS_COURONNE_2026_11_07.md) documente le cadrage, la provenance et les contrôles.
+
+## Héros adverses de campagne intégrés
+
+Les douze missions affichent chacune un adversaire dédié avec une respiration légère. Les [visuels v01 et leur reçu](HEROS_ADVERSES.md) sont rattachés aux identifiants des missions. Le lot est intégré par la [PR 100](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/100). Les illustrations de la Tour et des donjons restent à préparer.
+
+## Paquets de faction intégrés
+
+La PR 96 a intégré les cinq paquets d’évolution à 125 or au commit
+`a8f3d6b0d5f6b775703d4188ea685e206e71d0c9`. Les trois cartes et les
+taux 60/35/5 restent inchangés. Le Mystique coûte 95 or.
+
+## Contours de rareté renforcés — PR 97
+
+La PR 97 porte le filet intérieur de 2 à 4 px et aligne la palette de la
+Collection sur les six couleurs partagées. Aucune règle, illustration,
+dimension ou sauvegarde ne change. JOUER.html est régénéré depuis les sources.
+Fusion et publication sont distinctes : vérifier les statuts actuels de la
+PR 97 et des Actions GitHub, sans déduire l'un de l'autre.
 
 ## Intégré sur main
 
@@ -53,20 +75,21 @@ Sauvegardes protégées et transactions du profil/résultats sont intégrées.
 
 ## Publié, observation distincte
 
-**Sites v34** a publié les premières Éveillées de la PR 92 au commit de diffusion
-`7c48506f5f44c764b6582649986a7856a6bf5c44`, vérifié sur le site. La mise à jour
-qui inclut les PR 93 et 94 passe par le flux de publication existant.
+**Sites v38** a publié les héros adverses de campagne le 9 novembre 2026,
+depuis main `d8ab41bbfb7ac36bd4b043b5bd4c0d19ed2a2888`.
+Le [bilan de la PR 100](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/100)
+consigne les preuves de publication.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
-[Export hors ligne intégré](https://raw.githubusercontent.com/floiaassistant-design/couronne-et-arcanes/21e471cb9d1bc45a1e1d2abf4b7be3459e730bdf/JOUER.html) ·
+[Export hors ligne intégré](https://raw.githubusercontent.com/floiaassistant-design/couronne-et-arcanes/d8ab41bbfb7ac36bd4b043b5bd4c0d19ed2a2888/JOUER.html) ·
 [Procédure](PUBLICATION_WEB_2026_10_23.md).
 
 ## Prochain travail utile
-Le [parcours campagne web de 01 à 12](AUDIT_CAMPAGNE_CONTINUE_2026_11_06.md) a
-réussi avec un profil neuf et des graines reproductibles sur le code du Feu
-follet intégré à main. Vérifier ensuite lisibilité et interactions sur un
-téléphone physique, puis poursuivre les essais de jouabilité avec d’autres
-parcours.
+
+La PR d’[audit de la campagne](AUDIT_CAMPAGNE_CONTINUE_2026_11_06.md) propose
+un parcours reproductible des douze missions depuis un profil neuf. Vérifier
+la lisibilité et les interactions sur un téléphone physique, puis compléter
+les essais de jouabilité avec d’autres routes.
 
 [Consignes](../AGENTS.md) · [Architecture](ARCHITECTURE_MODULAIRE_V2_6.md) ·
 [Carte des tests](CARTE_TESTS.md) · [Jalons antérieurs conservés](HISTORIQUE_JALONS_2026_11_05.md) ·
