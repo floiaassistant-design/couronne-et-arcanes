@@ -32,8 +32,8 @@ assertions. Aucun profil ni résultat de combat n’est injecté.
 
 ## Points vérifiés
 
-Le parcours web modulaire a été rejoué le 9 novembre 2026 sur Chromium bureau
-en 233 tours, depuis le jeu de la PR 100, commit
+Les parcours web modulaire et hors ligne ont été rejoués le 9 novembre 2026
+sur Chromium bureau, en 233 tours chacun, depuis le jeu de la PR 100, commit
 `d8ab41bbfb7ac36bd4b043b5bd4c0d19ed2a2888`. Les 812 tests Node et les
 120 scénarios de parité ont réussi. Les builds web et hors ligne reproduisent
 le même fichier JOUER que ce main. Le premier audit du 6 novembre avait
