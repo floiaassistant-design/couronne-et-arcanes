@@ -1,6 +1,10 @@
 # Journal des changements
 
-## En préparation — héros de la Couronne
+## En préparation — héros adverses
+
+- Les douze adversaires de campagne ont chacun leur propre illustration tournée vers le joueur sur le socle de droite, avec une respiration légère et une pose fixe en mouvement réduit. Les mêmes visuels sont intégrés au web et à JOUER.html.
+
+## Héros de la Couronne — PR 99
 
 - Gardien, Arcaniste, Rôdeur et Clerc apparaissent sur le socle du joueur dans l’arène peinte, avec une respiration de quatre secondes et une pose fixe si les animations sont réduites.
 

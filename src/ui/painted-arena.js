@@ -6,8 +6,12 @@ export const PAINTED_ARENA = Object.freeze({
  // Limites des quatre pistes relevées sur l'image originale, de haut en bas.
  rows:[344,421,509,605,716],
  left:[355,331,302,271,238],right:[1319,1341,1370,1400,1432],
- heroes:{p:{x:149,y:510,facing:'right'},e:{x:1522,y:559,facing:'left'}}
+ heroes:{p:{x:149,y:510,facing:'right'},e:{x:1522,y:510,facing:'left'}}
 });
+
+export const CAMPAIGN_HERO_ART_IDS=Object.freeze([
+ '01','02','03','04','05','06','07','08','09','10','11','12'
+]);
 
 export function paintedTile(visual,col){
  if(!Number.isInteger(visual)||visual<0||visual>3||!Number.isInteger(col)||col<1||col>10)throw new RangeError('Case visuelle hors du plateau 4×10');
@@ -23,7 +27,7 @@ export function paintedTile(visual,col){
   style:`left:${left}px;top:${y}px;width:${width}px;height:${height}px;--tile-shape:${polygon};--foot-x:${percent(footX)};--foot-y:72%`};
 }
 
-export function paintedArena(lanes,renderCell,heroClass){
+export function paintedArena(lanes,renderCell,heroClass,enemyMissionId){
  const a=PAINTED_ARENA;
  const rows=Array.from({length:4},(_,visual)=>{
   const lane=lanes===2?visual-1:visual,active=lane>=0&&lane<lanes;
@@ -32,7 +36,9 @@ export function paintedArena(lanes,renderCell,heroClass){
   return `<div class="${active?'lane-row arena-active-row':'arena-dormant-row'}" data-visual-lane="${visual}" ${active?'data-crown-col="11"':'aria-hidden="true"'}><div class="lane-label" style="left:${left-60}px;top:${mid-13}px">${['I','II','III','IV'][visual]}</div><div class="${active?'lane-gate':'arena-dormant-gate'}" style="left:${left-35}px;top:${mid-17}px" ${active?'aria-label="Votre couronne"':''}>♜</div>${tiles}<div class="${active?'lane-gate':'arena-dormant-gate'} enemy" style="left:${right+8}px;top:${mid-17}px" ${active?'aria-label="Couronne adverse"':''}>♛</div></div>`;
  }).join('');
  const heroes=Object.entries(a.heroes).map(([side,h])=>{
-  const outfit=side==='p'&&typeof heroClass==='string'&&Object.hasOwn(CLASSES,heroClass)?` data-hero-class="${heroClass}"`:'';
+  const playerOutfit=side==='p'&&typeof heroClass==='string'&&Object.hasOwn(CLASSES,heroClass);
+  const enemyOutfit=side==='e'&&CAMPAIGN_HERO_ART_IDS.includes(enemyMissionId);
+  const outfit=playerOutfit?` data-hero-class="${heroClass}"`:enemyOutfit?` data-enemy-hero="${enemyMissionId}"`:'';
   return `<div class="arena-hero-slot" data-side="${side}" data-facing="${h.facing}" data-animation-state="idle" data-foot-x="${h.x}" data-foot-y="${h.y}" style="left:${h.x}px;top:${h.y}px" aria-hidden="true"><div class="arena-hero-actor"${outfit}></div></div>`;
  }).join('');
  return `<div class="arena-painted-canvas"><div class="arena-painted-frame" data-art-version="${a.version}" data-render-mode="static"><div class="arena-calibrated-art" aria-hidden="true"></div>${rows}${heroes}</div></div>`;
@@ -61,11 +67,16 @@ export function mountPaintedArena(){
    const readout=stage.querySelector('.combat-readout');
    const top=Math.max(hud.getBoundingClientRect().bottom,caption.getBoundingClientRect().bottom,readout?.getBoundingClientRect().bottom||0)-box.top+12;
    const bottom=dock.getBoundingClientRect().top-box.top-14;
-   const scale=Math.min(Math.max(grid.clientWidth/PAINTED_ARENA.width,grid.clientHeight/PAINTED_ARENA.height),Math.max(120,bottom-top)/(last-first));
+   // Sur grand écran, cadrer aussi les deux héros. Sur petit écran, préserver
+   // la taille des cases et garder les socles accessibles par défilement.
+   const heroMargin=Math.min(PAINTED_ARENA.heroes.p.x,PAINTED_ARENA.width-PAINTED_ARENA.heroes.e.x)-80;
+   let scale=Math.min(Math.max(grid.clientWidth/PAINTED_ARENA.width,grid.clientHeight/PAINTED_ARENA.height),Math.max(120,bottom-top)/(last-first));
+   if(grid.clientWidth>=960&&frame.querySelector('[data-enemy-hero]')){
+    scale=Math.min(scale,grid.clientWidth/(PAINTED_ARENA.width-2*heroMargin));
+   }
    const width=PAINTED_ARENA.width*scale,height=PAINTED_ARENA.height*scale;
    const offset=Math.min(bottom-last*scale,Math.max(top-first*scale,(grid.clientHeight-height)/2));
-   // Garder la plateforme du joueur dans la zone défilable, même en portrait.
-   const trim=Math.min(Math.max(0,(width-grid.clientWidth)/2),(PAINTED_ARENA.heroes.p.x-80)*scale);
+   const trim=Math.min(Math.max(0,(width-grid.clientWidth)/2),heroMargin*scale);
    canvas.style.width=Math.max(width-2*trim,grid.clientWidth)+'px';canvas.style.height=grid.clientHeight+'px';canvas.style.marginTop='0px';
    frame.style.left=(Math.max(0,(grid.clientWidth-width)/2)-trim)+'px';frame.style.top=offset+'px';
    frame.style.transform=`scale(${scale})`;
@@ -73,6 +84,7 @@ export function mountPaintedArena(){
  };
  fit();observer=new ResizeObserver(fit);observer.observe(grid);
  // Le DOM du combat est remonté à chaque action. La respiration suit la même horloge.
- const hero=frame.querySelector('.arena-hero-actor[data-hero-class]');
- for(const animation of hero?.getAnimations?.()??[])animation.startTime=0;
+ for(const hero of frame.querySelectorAll('.arena-hero-actor')){
+  for(const animation of hero.getAnimations?.()??[])animation.startTime=0;
+ }
 }

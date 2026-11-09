@@ -6,9 +6,13 @@ GitHub est la source officielle. À chaque reprise, lire [main](https://github.c
 Ce fichier conserve les jalons durables ; les PR portent le dernier commit, les
 preuves et les limites. Une CI ou une fusion ne prouve pas la publication.
 
-## Proposé — héros de la Couronne
+## Héros de la Couronne
 
-Les quatre classes ont un visuel animé sur le socle du joueur dans l’arène peinte. Le [contrat des héros](HEROS_COURONNE_2026_11_07.md) documente le cadrage approuvé, la provenance et les contrôles. La PR porte l’état de revue et de diffusion.
+La PR 99 a intégré le visuel du joueur sur son socle dans l’arène peinte. Le [contrat des héros](HEROS_COURONNE_2026_11_07.md) documente le cadrage, la provenance et les contrôles.
+
+## Proposé — héros adverses de campagne
+
+Les douze missions affichent chacune un adversaire dédié avec une respiration légère. Les [visuels v01 et leur reçu](HEROS_ADVERSES.md) sont rattachés aux identifiants des missions. Les illustrations de la Tour et des donjons restent à préparer. La PR suit les contrôles et la diffusion.
 
 ## Paquets de faction intégrés
 
