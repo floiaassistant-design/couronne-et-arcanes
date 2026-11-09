@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "stylesheet": "assets/arena-enemies-art.css",
+  "importApproval": "Demande du propriétaire de reprendre l’intégration des héros ennemis, dans la suite de la demande d’intégration des visuels dédiés avec respiration.",
+  "provenance": "Génération originale ImageGen dans ChatGPT, le 8 novembre 2026, sans référence tierce.",
+  "rights": "Visuel généré pour Couronnes & Arcanes. Aucun actif tiers fourni. Aucune exclusivité juridique revendiquée.",
+  "sourceArchive": {
+    "libraryFile": "libfile_f72c90383e5c81918c0691e5cff0b159",
+    "file": "Heros-ennemis-Couronnes-Arcanes.zip",
+    "sha256": "3b0cff19f6ec1dc8095e77c57b51c9724cea34c397414c16e06abcb6e51695aa"
+  },
+  "assets": [
+    {
+      "missionId": "01",
+      "id": "01-sentinelle-des-bois",
+      "name": "Sentinelle des bois",
+      "version": "01",
+      "artReview": "en revue",
+      "source": {
+        "path": "sources/heros-adverses/01-sentinelle-des-bois-v01.png",
+        "width": 1145,
+        "height": 1374,
+        "bytes": 1189067,
+        "sha256": "803d437c8f8d2ef5cb977766f9704f732e6cc78c9c9b520c598686d9638cfcb5"
+      },
+      "export": {
+        "path": "exports/heros-adverses/01-sentinelle-des-bois-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 9096,
+        "sha256": "8c126ac909098f3f567b4f4d2bdfc7713a17613adbbbed4569f647d455d5b8c2"
+      },
+      "generationFile": "exec-3e785c2f-e044-4ee0-b127-c4cf3daa2063.png",
+      "prompt": "Use case: stylized-concept. Create exactly ONE original full-body 2D painted fantasy character sprite for the enemy Crown dais at the RIGHT end of the game board, looking and turning three quarters toward SCREEN LEFT. Transparent alpha background throughout, including between limbs. No ground, pedestal, card, text, shadow, aura, scene, loose floating effects or border. Feet solid on one baseline; entirely visible from head to toes including all equipment, with generous margins and no cropping. Single compact silhouette suitable for a 152×183 game slot; keep weapons close. Semi-realistic European medieval fantasy, tactile painted materials, strong simple values and shapes that remain readable at 80 px, subtle cool light for a slate blue celestial arena. Neutral alert idle pose. Original design distinct from the player classes. Portrait composition. Sentinelle des bois, first enemy in Le Sentier des Brumes, Lisières d’Ysara. A rugged forest border guard with weathered face exposed below an asymmetric bark-and-leather helmet, dark pine green brigandine, pale birch small round shield, and short crooked ash spear held upright close to body. Narrow, practical silhouette, amber cloth sash, hints of mist-blue edge light on the armor only."
+    },
+    {
+      "missionId": "02",
+      "id": "02-druide-egare",
+      "name": "Druide égaré",
+      "version": "01",
+      "artReview": "en revue",
+      "source": {
+        "path": "sources/heros-adverses/02-druide-egare-v01.png",
+        "width": 1144,
+        "height": 1375,
+        "bytes": 1763418,
+        "sha256": "e59188e0b66cfa21e983742bea567ffd74ca07f350d9451fce75dca759096f5b"
+      },
+      "export": {
+        "path": "exports/heros-adverses/02-druide-egare-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 12344,
+        "sha256": "a2f2c02a8a7000c3366c910900fda114f59583dde5c67551cbfaa034fcb093b2"
+      },
+      "generationFile": "exec-03b44827-7461-47b9-a3a0-82ba1b0e976a.png",
+      "prompt": "Use case: stylized-concept. Create exactly ONE original full-body 2D painted fantasy character sprite for the enemy Crown dais at the RIGHT end of the game board, looking and turning three quarters toward SCREEN LEFT. Transparent alpha background throughout, including between limbs. No ground, pedestal, card, text, shadow, aura, scene, loose floating effects or border. Feet solid on one baseline; entirely visible from head to toes including all equipment, with generous margins and no cropping. Single compact silhouette suitable for a 152×183 game slot; keep weapons close. Semi-realistic European medieval fantasy, tactile painted materials, strong simple values and shapes that remain readable at 80 px, subtle cool light for a slate blue celestial arena. Neutral alert idle pose. Original design distinct from the player classes. Portrait composition. Druide égaré, Lisières d’Ysara. Gaunt disheveled adult mystic with tangled russet hair, moss-gray patchwork cloak, bent hawthorn staff, knotted root wrapping one shoulder and pale vine embroidery. Bare haunted face. Asymmetric posture, cool green with muted rust. No antler crown.\n\nRévision d’orientation sur le premier PNG généré pour ce projet, sans image tierce.\nEdit the attached transparent full-body sprite of the Druide égaré. Keep the exact same original character, druid costume, hair color, pale vine embroidery, root shoulder ornament, hawthorn staff, painterly style and full-body framing, feet on baseline. Turn his face AND his torso so the nose unmistakably points toward the LEFT EDGE of the image. His gaze is clearly looking to the viewer's left, like a right-hand opponent looking toward a left-hand player. Do not show him looking back to the right. Keep the entire outfit, boots and staff inside the image with margin. One character only on an actual alpha transparent background, no ground, effects or text.",
+      "reference": {
+        "path": "variantes-et-essais/exec-54f5147a-fe80-476c-b70f-5848029ddc6f.png",
+        "sha256": "a4925cab8c7c8129203bd373ac277af5d2be7cfb985517dc885ed7fe4f68ac1d"
+      }
+    },
+    {
+      "missionId": "03",
+      "id": "03-gardien-du-bosquet",
+      "name": "Gardien du Bosquet",
+      "version": "01",
+      "artReview": "en revue",
+      "source": {
+        "path": "sources/heros-adverses/03-gardien-du-bosquet-v01.png",
+        "width": 1143,
+        "height": 1376,
+        "bytes": 1810612,
+        "sha256": "a2018cca0eef14043dffc0a37ac3ad802f0e4755e2ad2ace56279a0965a96987"
+      },
+      "export": {
+        "path": "exports/heros-adverses/03-gardien-du-bosquet-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 14816,
+        "sha256": "c6e66ca188070a6f99ecf57efc8887af6ecb29c554a893c7cfbbd94f7e95f7bb"
+      },
+      "generationFile": "exec-d194e430-ef4c-475b-9ad9-e93f86aa342a.png",
+      "prompt": "Use case: stylized-concept. Create exactly ONE original full-body 2D painted fantasy character sprite for the enemy Crown dais at the RIGHT end of the game board, looking and turning three quarters toward SCREEN LEFT. Transparent alpha background throughout, including between limbs. No ground, pedestal, card, text, shadow, aura, scene, loose floating effects or border. Feet solid on one baseline; entirely visible from head to toes including all equipment, with generous margins and no cropping. Single compact silhouette suitable for a 152×183 game slot; keep weapons close. Semi-realistic European medieval fantasy, tactile painted materials, strong simple values and shapes that remain readable at 80 px, subtle cool light for a slate blue celestial arena. Neutral alert idle pose. Original design distinct from the player classes. Portrait composition. Gardien du Bosquet, ancient guardian and first campaign boss. A massive upright oak creature with a blunt knot-brow face, root toes on the baseline, broad bark arms gathered close, a few moss pads and amber sap inside its chest. Old forest carving forms, distinct tree silhouette. No detached foliage, no human clothing."
+    },
+    {
+      "missionId": "04",
+      "id": "04-capitaine-acier",
+      "name": "Capitaine d’Acier",
+      "version": "01",
+      "artReview": "en revue",
+      "source": {
+        "path": "sources/heros-adverses/04-capitaine-acier-v01.png",
+        "width": 1144,
+        "height": 1375,
+        "bytes": 1323174,
+        "sha256": "5116c2dd8edc37f7dab3e76f6b1a018ceccb4627d3b05d88874fc08c61e75283"
+      },
+      "export": {
+        "path": "exports/heros-adverses/04-capitaine-acier-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 10344,
+        "sha256": "88bc69e9d9d578c2fada2deb99bd5556a415be619163e7c07170f2a3e6a3ce6e"
+      },
+      "generationFile": "exec-492a522f-5bfb-4dd3-b862-7be593abb94e.png",
+      "prompt": "Use case: stylized-concept. Create exactly ONE original full-body 2D painted fantasy character sprite for the enemy Crown dais at the RIGHT end of the game board, looking and turning three quarters toward SCREEN LEFT. Transparent alpha background throughout, including between limbs. No ground, pedestal, card, text, shadow, aura, scene, loose floating effects or border. Feet solid on one baseline; entirely visible from head to toes including all equipment, with generous margins and no cropping. Single compact silhouette suitable for a 152×183 game slot; keep weapons close. Semi-realistic European medieval fantasy, tactile painted materials, strong simple values and shapes that remain readable at 80 px, subtle cool light for a slate blue celestial arena. Neutral alert idle pose. Original design distinct from the player classes. Portrait composition. Capitaine d’Acier, La Marche Cendrée. Hard-eyed woman commanding the bridge, squared blued-steel officer cuirass, ember-red half-cloak, short straight sword in hand pointed safely down, layered fauld and forge-stamped pauldrons. Strong martial stance. No shield or crown."
+    },
+    {
+      "missionId": "05",
+      "id": "05-maitre-des-forges",
+      "name": "Maître des Forges",
+      "version": "01",
+      "artReview": "en revue",
+      "source": {
+        "path": "sources/heros-adverses/05-maitre-des-forges-v01.png",
+        "width": 1145,
+        "height": 1374,
+        "bytes": 1530685,
+        "sha256": "819aaf26a9bae5a16d3b0459573d0891a8884dba961e938386dc000b86226cf5"
+      },
+      "export": {
+        "path": "exports/heros-adverses/05-maitre-des-forges-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 10982,
+        "sha256": "f0e63e586a38611fe6f7fc50938f61f0710d3bd6dbf904d5d1c4deb9838b5d41"
+      },
+      "generationFile": "exec-df9e61e6-5043-4778-af88-562d8cb2a7d4.png",
+      "prompt": "Use case: stylized-concept. Create exactly ONE original full-body 2D painted fantasy character sprite for the enemy Crown dais at the RIGHT end of the game board, looking and turning three quarters toward SCREEN LEFT. Transparent alpha background throughout, including between limbs. No ground, pedestal, card, text, shadow, aura, scene, loose floating effects or border. Feet solid on one baseline; entirely visible from head to toes including all equipment, with generous margins and no cropping. Single compact silhouette suitable for a 152×183 game slot; keep weapons close. Semi-realistic European medieval fantasy, tactile painted materials, strong simple values and shapes that remain readable at 80 px, subtle cool light for a slate blue celestial arena. Neutral alert idle pose. Original design distinct from the player classes. Portrait composition. Maître des Forges, La Marche Cendrée. Broad older master smith, dark braided beard, scorched leather apron over layered copper and soot-stained iron, one furnace-proof gauntlet and a heavy short smithing hammer grounded beside his left boot. Amber glints confined to the metal."
+    },
+    {
+      "missionId": "06",
+      "id": "06-colosse-des-fourneaux",
+      "name": "Colosse des Fourneaux",
+      "version": "01",
+      "artReview": "en revue",
+      "source": {
+        "path": "sources/heros-adverses/06-colosse-des-fourneaux-v01.png",
+        "width": 1145,
+        "height": 1374,
+        "bytes": 1719986,
+        "sha256": "c8f23e5cbdcdb59462727df06272750a7b95400ee19c533080b6adad8d5c15e1"
+      },
+      "export": {
+        "path": "exports/heros-adverses/06-colosse-des-fourneaux-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 13474,
+        "sha256": "d1e89e1428e518f226b568d9340719baa5044f46eae5dc8dc32079d4a6d3d23c"
+      },
+      "generationFile": "exec-80b9dc06-3ff4-4cea-8549-8cbab1ca894a.png",
+      "prompt": "Use case: stylized-concept. Create exactly ONE original full-body 2D painted fantasy character sprite for the enemy Crown dais at the RIGHT end of the game board, looking and turning three quarters toward SCREEN LEFT. Transparent alpha background throughout, including between limbs. No ground, pedestal, card, text, shadow, aura, scene, loose floating effects or border. Feet solid on one baseline; entirely visible from head to toes including all equipment, with generous margins and no cropping. Single compact silhouette suitable for a 152×183 game slot; keep weapons close. Semi-realistic European medieval fantasy, tactile painted materials, strong simple values and shapes that remain readable at 80 px, subtle cool light for a slate blue celestial arena. Neutral alert idle pose. Original design distinct from the player classes. Portrait composition. Colosse des Fourneaux, La Marche Cendrée boss. Hulking humanoid siege automaton, helmet face like an iron furnace grille, internal orange flame behind chest grate, stacked cast-iron shoulders, riveted legs and heavy compact fists. Charred steel and copper, no detached fire or smoke."
+    },
+    {
+      "missionId": "07",
+      "id": "07-heraut-des-ombres",
+      "name": "Héraut des Ombres",
+      "version": "01",
+      "artReview": "en revue",
+      "source": {
+        "path": "sources/heros-adverses/07-heraut-des-ombres-v01.png",
+        "width": 1144,
+        "height": 1375,
+        "bytes": 974957,
+        "sha256": "03766e4e25e66b886f556a9aa96cb6582e343ac9268fa0d995fb6ff632fadc16"
+      },
+      "export": {
+        "path": "exports/heros-adverses/07-heraut-des-ombres-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 8826,
+        "sha256": "bc1978aa176556d35f541bf65deadf2ccd398fcbc21c9b89be6b6eb8e3474908"
+      },
+      "generationFile": "exec-a3a6057b-c7fd-46df-8240-23ede47a5ff3.png",
+      "prompt": "Use case: stylized-concept. Create exactly ONE original full-body 2D painted fantasy character sprite for the enemy Crown dais at the RIGHT end of the game board, looking and turning three quarters toward SCREEN LEFT. Transparent alpha background throughout, including between limbs. No ground, pedestal, card, text, shadow, aura, scene, loose floating effects or border. Feet solid on one baseline; entirely visible from head to toes including all equipment, with generous margins and no cropping. Single compact silhouette suitable for a 152×183 game slot; keep weapons close. Semi-realistic European medieval fantasy, tactile painted materials, strong simple values and shapes that remain readable at 80 px, subtle cool light for a slate blue celestial arena. Neutral alert idle pose. Original design distinct from the player classes. Portrait composition. Héraut des Ombres, Les Terres du Voile. Lean masked grave herald, high black feather collar, smoky purple coat sewn with bone clasps, hook-tipped short heraldic standard with tight tattered pennant kept close. Standing boots and narrow silhouette, readable against blue."
+    },
+    {
+      "missionId": "08",
+      "id": "08-reine-du-neant",
+      "name": "Reine du Néant",
+      "version": "01",
+      "artReview": "en revue",
+      "source": {
+        "path": "sources/heros-adverses/08-reine-du-neant-v01.png",
+        "width": 1142,
+        "height": 1377,
+        "bytes": 1525221,
+        "sha256": "824e46b411dc2dd4d66496523a75a474adddb723c90b3beefccb4c0105c01a9d"
+      },
+      "export": {
+        "path": "exports/heros-adverses/08-reine-du-neant-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 10552,
+        "sha256": "d949a8392c4ae4bd3556c048413a995aabaf4ffb96e0b67422ffe7fce4b87ea1"
+      },
+      "generationFile": "exec-a233cc29-351d-4038-a126-733a760ab718.png",
+      "prompt": "Use case: stylized-concept. Create exactly ONE original full-body 2D painted fantasy character sprite for the enemy Crown dais at the RIGHT end of the game board, looking and turning three quarters toward SCREEN LEFT. Transparent alpha background throughout, including between limbs. No ground, pedestal, card, text, shadow, aura, scene, loose floating effects or border. Feet solid on one baseline; entirely visible from head to toes including all equipment, with generous margins and no cropping. Single compact silhouette suitable for a 152×183 game slot; keep weapons close. Semi-realistic European medieval fantasy, tactile painted materials, strong simple values and shapes that remain readable at 80 px, subtle cool light for a slate blue celestial arena. Neutral alert idle pose. Original design distinct from the player classes. Portrait composition. Reine du Néant, Les Terres du Voile. Tall imposing living queen with ash-toned skin, angular onyx crown, violet-black structured layered dress and fine silver filigree, one curled hand and low crescent scepter held close. Standing with clear visible feet at the hem. Regal gaze left, austere and distinct."
+    },
+    {
+      "missionId": "09",
+      "id": "09-archiliche-eternel",
+      "name": "Archiliche Éternel",
+      "version": "01",
+      "artReview": "en revue",
+      "source": {
+        "path": "sources/heros-adverses/09-archiliche-eternel-v01.png",
+        "width": 1144,
+        "height": 1375,
+        "bytes": 1380953,
+        "sha256": "dcea50a0b4190a1f874707179946634719ed5a227a676a6916d6bcdd07ab9928"
+      },
+      "export": {
+        "path": "exports/heros-adverses/09-archiliche-eternel-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 12124,
+        "sha256": "f8eb5e702993b5f420265f24e9b159f4e7d41e54ebf85092d1a9984c5827c633"
+      },
+      "generationFile": "exec-c31b4d52-6451-4766-aa52-953db6073341.png",
+      "prompt": "Use case: stylized-concept. Create exactly ONE original full-body 2D painted fantasy character sprite for the enemy Crown dais at the RIGHT end of the game board, looking and turning three quarters toward SCREEN LEFT. Transparent alpha background throughout, including between limbs. No ground, pedestal, card, text, shadow, aura, scene, loose floating effects or border. Feet solid on one baseline; entirely visible from head to toes including all equipment, with generous margins and no cropping. Single compact silhouette suitable for a 152×183 game slot; keep weapons close. Semi-realistic European medieval fantasy, tactile painted materials, strong simple values and shapes that remain readable at 80 px, subtle cool light for a slate blue celestial arena. Neutral alert idle pose. Original design distinct from the player classes. Portrait composition. Archiliche Éternel, Les Terres du Voile boss. Ancient tall skeletal sovereign in an antique bone diadem and layered funeral plate over plum tabards, one low hooked relic staff close to body. Empty sockets lit faint pale violet. Ornamental bone shapes, clearly skeletal jaw, armored feet solid on baseline."
+    },
+    {
+      "missionId": "10",
+      "id": "10-oracle-celeste",
+      "name": "Oracle céleste",
+      "version": "01",
+      "artReview": "en revue",
+      "source": {
+        "path": "sources/heros-adverses/10-oracle-celeste-v01.png",
+        "width": 1144,
+        "height": 1375,
+        "bytes": 1400531,
+        "sha256": "33543baf0302479496e2d8669fe25fe4723b9d1c7da752fe5d1ff7c689f0af3f"
+      },
+      "export": {
+        "path": "exports/heros-adverses/10-oracle-celeste-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 8986,
+        "sha256": "ae9aa72d9c8a8476f21e5c1ad7a6c8259b9f3658507605b453f7f360434f53f5"
+      },
+      "generationFile": "exec-80b13298-e507-4e52-8b7c-5ca23c045629.png",
+      "prompt": "Use case: stylized-concept. Create exactly ONE original full-body 2D painted fantasy character sprite for the enemy Crown dais at the RIGHT end of the game board, looking and turning three quarters toward SCREEN LEFT. Transparent alpha background throughout, including between limbs. No ground, pedestal, card, text, shadow, aura, scene, loose floating effects or border. Feet solid on one baseline; entirely visible from head to toes including all equipment, with generous margins and no cropping. Single compact silhouette suitable for a 152×183 game slot; keep weapons close. Semi-realistic European medieval fantasy, tactile painted materials, strong simple values and shapes that remain readable at 80 px, subtle cool light for a slate blue celestial arena. Neutral alert idle pose. Original design distinct from the player classes. Portrait composition. Oracle céleste, Les Hautes Sphères. Older dark-skinned woman, ivory and pale turquoise pleated robes, angular bronze astrolabe held close at the chest, long indigo braids and a thin opal headpiece. No staff or crown. Calm wary eyes turned left, copper rings in the instrument."
+    },
+    {
+      "missionId": "11",
+      "id": "11-gardien-des-ages",
+      "name": "Gardien des Âges",
+      "version": "01",
+      "artReview": "en revue",
+      "source": {
+        "path": "sources/heros-adverses/11-gardien-des-ages-v01.png",
+        "width": 1144,
+        "height": 1375,
+        "bytes": 1236926,
+        "sha256": "6d670aad98cf16d8192ef3712f4287a010a2ba02089ed6f1b33ddaa96f759227"
+      },
+      "export": {
+        "path": "exports/heros-adverses/11-gardien-des-ages-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 10774,
+        "sha256": "83d94d6fb26d4fdc379acbccc24349bcad05ac2f6730e072e776d89f4d7a1cb7"
+      },
+      "generationFile": "exec-6a8e293c-5ab6-4ac1-a8d7-3ca1f663b219.png",
+      "prompt": "Use case: stylized-concept. Create exactly ONE original full-body 2D painted fantasy character sprite for the enemy Crown dais at the RIGHT end of the game board, looking and turning three quarters toward SCREEN LEFT. Transparent alpha background throughout, including between limbs. No ground, pedestal, card, text, shadow, aura, scene, loose floating effects or border. Feet solid on one baseline; entirely visible from head to toes including all equipment, with generous margins and no cropping. Single compact silhouette suitable for a 152×183 game slot; keep weapons close. Semi-realistic European medieval fantasy, tactile painted materials, strong simple values and shapes that remain readable at 80 px, subtle cool light for a slate blue celestial arena. Neutral alert idle pose. Original design distinct from the player classes. Portrait composition. Gardien des Âges, Les Hautes Sphères. Ancient stone-and-crystal sentinel with angular opalescent plates, aged bronze seams like clockwork, a slanted faceless visor and compact integrated shard gauntlets. Tall geometric body, intact left-facing silhouette, stone feet and old gold accent."
+    },
+    {
+      "missionId": "12",
+      "id": "12-dragon-des-sept-cieux",
+      "name": "Dragon des Sept Cieux",
+      "version": "01",
+      "artReview": "en revue",
+      "source": {
+        "path": "sources/heros-adverses/12-dragon-des-sept-cieux-v01.png",
+        "width": 1281,
+        "height": 1228,
+        "bytes": 1756512,
+        "sha256": "b4cd9bd722c93b5c0ef1180a77dde1a3a69efb1df005075e36e6ae487acc3df1"
+      },
+      "export": {
+        "path": "exports/heros-adverses/12-dragon-des-sept-cieux-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 12260,
+        "sha256": "1ee3e1673f9da09ef4849826dc86da6fcb880f2a62865bfc0e6dabd98f2d1e0a"
+      },
+      "generationFile": "exec-23673e02-c731-4baa-8ed4-1b7c5f480802.png",
+      "prompt": "Use case: stylized-concept. Create exactly ONE original full-body 2D painted fantasy character sprite for the enemy Crown dais at the RIGHT end of the game board, looking and turning three quarters toward SCREEN LEFT. Transparent alpha background throughout, including between limbs. No ground, pedestal, card, text, shadow, aura, scene, loose floating effects or border. Feet solid on one baseline; entirely visible from head to toes including all equipment, with generous margins and no cropping. Single compact silhouette suitable for a 152×183 game slot; keep weapons close. Semi-realistic European medieval fantasy, tactile painted materials, strong simple values and shapes that remain readable at 80 px, subtle cool light for a slate blue celestial arena. Neutral alert idle pose. Original design distinct from the player classes. Portrait composition. Dragon des Sept Cieux, final boss of Les Hautes Sphères. One compact ancient four-legged celestial dragon with curled tail kept in silhouette and folded wings; long head and horns looking to screen left, all four taloned feet on baseline. Cobalt and moon-silver scales with subtle bronze edges and tiny opalescent ridge. The dragon fills a nearly square silhouette, no rider, no fire, no aura."
+    }
+  ]
+}

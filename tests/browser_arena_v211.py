@@ -134,6 +134,7 @@ async def production(browser,label,viewport):
     await page.goto((ROOT/'JOUER.html').as_uri())
     await page.locator('[data-action="welcome-start"]').click()
     assert await page.locator('.battle-cell').count()==20
+    assert await page.locator('.arena-hero-slot[data-side="e"] [data-enemy-hero="01"]').count()==1
     await page.locator('.hand .unit-card:not(.on-cooldown)').first.click()
     await play_selected(page,1)
     await page.emulate_media(reduced_motion='reduce')
@@ -141,6 +142,9 @@ async def production(browser,label,viewport):
     await page.wait_for_function("() => JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'))?.round>=2")
     await page.reload()
     assert await page.locator('.turn-n').inner_text()=='2'
+    assert await page.locator('.arena-hero-slot[data-side="e"] [data-enemy-hero="01"]').evaluate(
+        "(el) => getComputedStyle(el).backgroundImage.startsWith('url(\"data:image/webp;base64,')"
+    )
     assert await page.locator('.battle-cell').count()==20
     saved=await page.evaluate("JSON.parse(localStorage.getItem('couronnes_arcanes_bataille_v1'))")
     assert len(saved['board'])==2 and len(saved['board'][0])==12
@@ -166,6 +170,9 @@ async def main():
             await page.goto(f'http://127.0.0.1:{server.server_port}/index.html')
             await page.locator('[data-action="welcome-start"]').click()
             assert await page.locator('.battle-cell').count()==20
+            assert await page.locator('.arena-hero-slot[data-side="e"] [data-enemy-hero="01"]').evaluate(
+                "(el) => getComputedStyle(el).backgroundImage.startsWith('url(\"data:image/webp;base64,')"
+            )
             await page.locator('.hand .unit-card:not(.on-cooldown)').first.click()
             await play_selected(page,0)
             await page.emulate_media(reduced_motion='reduce')

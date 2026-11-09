@@ -1,0 +1,31 @@
+# Génération ponctuelle du fichier autonome sur la branche du correctif.
+name: Générer JOUER pour le retour au deck
+on:
+  pull_request:
+    types: [synchronize]
+permissions:
+  contents: read
+jobs:
+  regenerer:
+    if: ${{ github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'fix/retour-deck-apres-combat-20261107' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Générer et vérifier l’export
+        run: |
+          npm run build
+          printf '%s  JOUER.html\n' 'acced85852fec538adf1c7ed61cb7d8115065d33ae318061fbc5f0547883ef57' | sha256sum --check
+          git diff --exit-code -- . ':!JOUER.html'
+      - name: Pousser l’export sur la branche
+        run: |
+          git add -- JOUER.html
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'build: régénérer JOUER avec le retour au deck'
+          git push origin HEAD:refs/heads/fix/retour-deck-apres-combat-20261107

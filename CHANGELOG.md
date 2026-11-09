@@ -1,9 +1,16 @@
 # Journal des changements
 
-## Correctif proposé — modifier le deck après un combat
+## En préparation — modifier le deck après un combat
 
-- Le bouton « Modifier mon deck » du résultat de campagne ou de Tour ouvre « Mon deck » au lieu de la Collection. Le retour au mode de combat, les gains, les règles et les sauvegardes sont inchangés.
-- Les scénarios navigateur de reprise des gains vérifient la destination après victoire et défaite dans les deux modes. L’export autonome a été régénéré depuis les sources par le builder officiel.
+- Le bouton « Modifier mon deck » du résultat de campagne ou de Tour ouvre « Mon deck ». Les parcours navigateur vérifient la destination après victoire et défaite.
+
+## En préparation — héros adverses
+
+- Les douze adversaires de campagne ont chacun leur propre illustration tournée vers le joueur sur le socle de droite, avec une respiration légère et une pose fixe en mouvement réduit. Les mêmes visuels sont intégrés au web et à JOUER.html.
+
+## Héros de la Couronne — PR 99
+
+- Gardien, Arcaniste, Rôdeur et Clerc apparaissent sur le socle du joueur dans l’arène peinte, avec une respiration de quatre secondes et une pose fixe si les animations sont réduites.
 
 ## Contours de rareté — PR 97
 

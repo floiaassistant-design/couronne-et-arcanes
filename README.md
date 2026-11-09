@@ -16,6 +16,8 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 
 ## Jouer
 
+Dans l’arène peinte, votre classe apparaît sur le socle de gauche. Chacune des douze missions de campagne affiche son propre adversaire sur le socle de droite, accessible en faisant défiler le plateau sur mobile. Désactivez les animations depuis le combat pour garder une pose fixe. [Héros du joueur](docs/HEROS_COURONNE_2026_11_07.md) · [Héros de campagne](docs/HEROS_ADVERSES.md).
+
 Les cartes dessinées reprennent le filet intérieur de rareté de 4 pixels (renforcement par PR 97 après PR 87) : main, plateau, Collection, fiches et autres vues, avec les mêmes dimensions et couleurs.
 
 - [Portée du Feu follet](docs/ETHER_PORTEE_FEU_FOLLET.md) : cette proposition applique trois cases à ses six raretés, avec un tir arrêté par la première unité rencontrée sur sa ligne.
@@ -96,7 +98,7 @@ Pour chaque unité, la Collection conserve **six emplacements de rareté côte �
 recherche, filtres par Ordre/type et boutons +/−, quantités disponibles et compteur
 de 12 à 24 cartes. Le deck s'enregistre automatiquement. Les compositions proposées
 restent une aide facultative, repliée en bas de l'écran. Les modifications sont
-bloquées pendant un combat. Après une victoire ou une défaite en campagne ou dans la Tour, le bouton « Modifier mon deck » ouvre directement cet écran, et non la Collection. [Fonctionnement](docs/DECK_MANUEL_2026_10_27.md).
+bloquées pendant un combat. Après une victoire ou une défaite en campagne ou dans la Tour, le bouton « Modifier mon deck » ouvre directement cet écran. [Fonctionnement](docs/DECK_MANUEL_2026_10_27.md).
 
 La Collection, les classes, les maîtrises, équipements, talents et donjons sont
 conservés. Le bouton Développeur ouvre un laboratoire utilisant le même moteur,
