@@ -2,7 +2,7 @@
 name: Générer JOUER pour les héros adverses
 on:
   pull_request:
-    types: [opened]
+    types: [opened, synchronize]
 permissions:
   contents: read
 jobs:
@@ -24,7 +24,7 @@ jobs:
       - name: Générer et vérifier l’export
         run: |
           npm run build
-          printf '%s  JOUER.html\n' '9807fbe3c76ac45d13f13801f97f705417845d7218e3c2bf1273043e91cb66db' | sha256sum --check
+          printf '%s  JOUER.html\n' '8de9e1e8c30ddea8592af64864ece39537d3a5e5d689fa35df4308df06cf983b' | sha256sum --check
           git diff --exit-code -- . ':!JOUER.html'
       - name: Pousser l’export sur la branche
         run: |

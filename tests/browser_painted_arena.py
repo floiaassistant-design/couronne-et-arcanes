@@ -5,6 +5,7 @@ from browser_class_skills_v28 import make_page
 
 async def check_heroes(page):
     grid = page.locator('.arena-painted')
+    scroll_to_enemy = page.viewport_size['width'] < 960
     heroes = page.locator('.arena-hero-actor[data-hero-class], .arena-hero-actor[data-enemy-hero]')
     classes = ['gardien', 'arcaniste', 'rodeur', 'clerc']
     for number in range(1, 13):
@@ -16,7 +17,8 @@ async def check_heroes(page):
             render();
         }''', [player_class, mission])
         for side, attribute, art in [('p', 'data-hero-class', player_class), ('e', 'data-enemy-hero', mission)]:
-            await grid.evaluate("(el, side) => { el.scrollLeft = side === 'e' ? el.scrollWidth : 0; }", side)
+            await grid.evaluate("(el, scroll) => { el.scrollLeft = scroll ? el.scrollWidth : 0; }",
+                                scroll_to_enemy and side == 'e')
             hero = page.locator(f'.arena-hero-slot[data-side="{side}"] .arena-hero-actor')
             assert await hero.get_attribute(attribute) == art
             assert await hero.evaluate('''async (el, side) => {

@@ -12,8 +12,9 @@ Un décalage du fond de trois pixels aligne le dernier rang de pixels visibles
 sur le point de contact. La respiration étire légèrement la pose en hauteur
 autour de la ligne des pieds, avec un maximum de 1,6 % à 42 % d’une boucle
 de quatre secondes. La pose originale s’affiche si les animations du jeu sont
-désactivées ou si le navigateur demande un mouvement réduit. Le socle défile
-avec le plateau sur mobile. Le visuel reste décoratif et laisse passer les clics.
+désactivées ou si le navigateur demande un mouvement réduit. Le cadrage montre
+les deux socles à partir de 960 pixels de largeur. Sur un écran plus étroit,
+le socle défile avec le plateau. Le visuel décoratif laisse passer les clics.
 
 Les PNG, les WebP exacts et la référence de révision du Druide égaré
 proviennent de l’[archive du 8 novembre 2026](https://chatgpt.com/library?file_id=libfile_f72c90383e5c81918c0691e5cff0b159&account_id=personal).

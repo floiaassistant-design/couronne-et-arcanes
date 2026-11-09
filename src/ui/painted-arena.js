@@ -67,11 +67,15 @@ export function mountPaintedArena(){
    const readout=stage.querySelector('.combat-readout');
    const top=Math.max(hud.getBoundingClientRect().bottom,caption.getBoundingClientRect().bottom,readout?.getBoundingClientRect().bottom||0)-box.top+12;
    const bottom=dock.getBoundingClientRect().top-box.top-14;
-   const scale=Math.min(Math.max(grid.clientWidth/PAINTED_ARENA.width,grid.clientHeight/PAINTED_ARENA.height),Math.max(120,bottom-top)/(last-first));
+   // Sur grand écran, cadrer aussi les deux héros. Sur petit écran, préserver
+   // la taille des cases et garder les socles accessibles par défilement.
+   const heroMargin=Math.min(PAINTED_ARENA.heroes.p.x,PAINTED_ARENA.width-PAINTED_ARENA.heroes.e.x)-80;
+   let scale=Math.min(Math.max(grid.clientWidth/PAINTED_ARENA.width,grid.clientHeight/PAINTED_ARENA.height),Math.max(120,bottom-top)/(last-first));
+   if(grid.clientWidth>=960&&frame.querySelector('[data-enemy-hero]')){
+    scale=Math.min(scale,grid.clientWidth/(PAINTED_ARENA.width-2*heroMargin));
+   }
    const width=PAINTED_ARENA.width*scale,height=PAINTED_ARENA.height*scale;
    const offset=Math.min(bottom-last*scale,Math.max(top-first*scale,(grid.clientHeight-height)/2));
-   // Garder les deux plateformes dans la zone défilable, même en portrait.
-   const heroMargin=Math.min(PAINTED_ARENA.heroes.p.x,PAINTED_ARENA.width-PAINTED_ARENA.heroes.e.x)-80;
    const trim=Math.min(Math.max(0,(width-grid.clientWidth)/2),heroMargin*scale);
    canvas.style.width=Math.max(width-2*trim,grid.clientWidth)+'px';canvas.style.height=grid.clientHeight+'px';canvas.style.marginTop='0px';
    frame.style.left=(Math.max(0,(grid.clientWidth-width)/2)-trim)+'px';frame.style.top=offset+'px';
