@@ -203,6 +203,8 @@ async def production(browser,label,viewport):
     await page.locator('[data-action="retreat"]').click()
     await page.locator('[data-action="confirm-retreat"]').click()
     await page.locator('[data-action="battle-deck"]').click()
+    assert await page.locator('#manual-deck-title').is_visible()
+    await page.locator('.manual-deck-header [data-page="collection"]').click()
     await page.locator('[data-action="collection-faction"][data-id="all"]').click()
     assert await page.locator('[data-collection-character] [data-current-version="true"] .unit-card, .collection-spells .unit-card').count()==76
     await page.locator('#nav [data-page="forge"]').click()

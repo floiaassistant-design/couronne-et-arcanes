@@ -73,8 +73,11 @@ async def pending_case(browser,scenario,label,viewport,*,touch=False,url=None):
     assert await stored(page)==scenario['expected'],label
     assert await stored(page,BATTLE) is None,label
     await page.screenshot(path=f'/tmp/ca-maintenance-pending-{label}.png')
-    exit_action='dungeon-exit' if scenario['mode']=='dungeon' else 'battle-exit'
+    exit_action='dungeon-exit' if scenario['mode']=='dungeon' else 'battle-deck'
     await click(page.locator(f'.modal [data-action="{exit_action}"]'))
+    if scenario['mode']!='dungeon':
+        assert await page.locator('#manual-deck-title').is_visible(),label
+        assert await page.locator('body.collection-mode').count()==0,label
     await page.reload()
     assert await stored(page)==scenario['expected'],'aucun second gain à la reprise'
     await click(page.locator('#nav [data-page="campaign"]'))
