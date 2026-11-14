@@ -6,6 +6,7 @@ import {bossEvolutionUnlocks} from '../engine/evolution-progress.js';
 import {renderEvolutionTrials} from './evolution-trials.js';
 import {renderEvolutionFusions} from './evolution-fusion.js';
 import {renderCardPackShop} from './card-packs.js';
+import {hardCampaignReinforcement} from '../campaign-difficulty.js';
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 import { CARDS, CLASS_SKILLS, FACTIONS, CLASSES, CAMPAIGN, TOWER_MAX, towerMission } from '../data.js';
 import { AI_STYLES } from '../ai.js';
@@ -59,7 +60,11 @@ export function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
          .map((m) => {
            const locked = Number(m.id) > profile.unlocked,
              done = profile.completed.includes(m.id);
-           return `<article class="mission ${locked ? 'locked' : ''} ${done ? 'completed' : ''}"><div class="mission-top"><span>MISSION ${m.id} · ${'✦'.repeat(m.difficulty)}</span><span>${done ? '✓ TERMINÉE' : locked ? '⌁ VERROUILLÉE' : m.boss ? '♛ BOSS' : 'À DÉCOUVRIR'}</span></div><h3>${esc(m.name)}</h3><p>${esc(m.story)}</p><p class="enemy-style-tag">Stratégie : ${esc(AI_STYLES[m.aiStyle]?.name || 'Équilibré')}${m.boss ? ' · Boss à deux phases' : ''}</p><div class="reward">◈ ${m.reward} or &nbsp; ✧ ${m.shards} éclats</div>${bossEvolutionUnlocks(m.id).map(t=>`<p class="evolution-unlock">${done?'Épreuve débloquée':'Débloque une épreuve'} : ${esc(t.kind==='ascension'?t.name:CARDS[t.cardId].name+' '+t.to)}.</p>`).join('')}${btn(locked ? 'Inaccessible' : done ? 'Rejouer la bataille' : 'Lancer le combat', 'start-mission', `data-id="${m.id}" ${locked ? 'disabled' : ''}`, locked ? 'ghost' : 'primary')}</article>`;
+           const reinforcement = hardCampaignReinforcement(m.id);
+           const hardAction = !locked && reinforcement
+             ? `<p class="hint">Renfort adverse en Difficile&nbsp;: <strong>${esc(reinforcement.label)}</strong></p>${btn('Jouer en Difficile', 'start-hard-mission', `data-id="${m.id}"`, 'ghost')}`
+             : '';
+           return `<article class="mission ${locked ? 'locked' : ''} ${done ? 'completed' : ''}"><div class="mission-top"><span>MISSION ${m.id} · ${'✦'.repeat(m.difficulty)}</span><span>${done ? '✓ TERMINÉE' : locked ? '⌁ VERROUILLÉE' : m.boss ? '♛ BOSS' : 'À DÉCOUVRIR'}</span></div><h3>${esc(m.name)}</h3><p>${esc(m.story)}</p><p class="enemy-style-tag">Stratégie : ${esc(AI_STYLES[m.aiStyle]?.name || 'Équilibré')}${m.boss ? ' · Boss à deux phases' : ''}</p><div class="reward">◈ ${m.reward} or &nbsp; ✧ ${m.shards} éclats</div>${bossEvolutionUnlocks(m.id).map(t=>`<p class="evolution-unlock">${done?'Épreuve débloquée':'Débloque une épreuve'} : ${esc(t.kind==='ascension'?t.name:CARDS[t.cardId].name+' '+t.to)}.</p>`).join('')}${btn(locked ? 'Inaccessible' : done ? 'Rejouer la bataille' : 'Lancer le combat', 'start-mission', `data-id="${m.id}" ${locked ? 'disabled' : ''}`, locked ? 'ghost' : 'primary')}${hardAction}</article>`;
          })
          .join('')}</div></section>`
    )

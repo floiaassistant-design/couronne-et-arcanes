@@ -1,5 +1,9 @@
 # Architecture modulaire — lecture courante
 
+## Pilote de campagne Difficile
+
+`campaign-difficulty.js` dérive les deux variantes depuis le catalogue. `engine/unit-rules.js` partage l’autorisation du rang adverse entre classement des actions et invocation. Le moteur conserve le choix dans le combat et `ui/storage.js` le valide à la reprise. Les vues consomment le même contrat. [Pilote](CAMPAGNE_DIFFICILE_PILOTE.md).
+
 ## Héros de la Couronne
 
 `ui/battle-view.js` transmet la classe du joueur, le mode et l’identifiant de la rencontre à `ui/painted-arena.js`. Le rendu choisit le visuel de campagne ou du Gardien de la Tour à partir de ces deux champs, puis place les héros décoratifs dans le repère du décor. La feuille de l’arène cadence les poses du joueur, anime la respiration de l’adversaire et gère le repli fixe. Le builder vérifie les ressources et embarque les mêmes feuilles que le web. [Contrat du joueur](HEROS_COURONNE_2026_11_07.md) · [Contrat des adversaires](HEROS_ADVERSES.md).

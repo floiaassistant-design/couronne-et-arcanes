@@ -7,6 +7,8 @@ import {validTrialChallenge} from '../engine/trial-objectives.js';
 import {CARD_RULESET} from '../cards/definitions.js';
 import {validUnitEffects} from '../engine/unit-effects.js';
 import {validPoisonSpreads} from '../engine/unit-poison.js';
+import {unitCanPlay} from '../engine/unit-rules.js';
+import {hardCampaignReinforcement} from '../campaign-difficulty.js';
 export const SAVE_KEY='couronnes_arcanes_v1';
 export const BATTLE_KEY='couronnes_arcanes_bataille_v1';
 const hasCard=id=>typeof id==='string'&&Object.prototype.hasOwnProperty.call(CARDS,id);
@@ -25,9 +27,18 @@ function validBattleSnapshot(b){
   !validHero(b.heroes?.p)||!validHero(b.heroes?.e)||
   !Array.isArray(b.log)||!b.log.every(x=>typeof x==='string'))return false;
  if(!b.board.every(row=>row.every(unit=>validUnit(unit,b)))||!validTrialChallenge(b)||!validPoisonSpreads(b.poisonSpreads))return false;
- const refs=[...b.heroes.p.deck,...b.heroes.p.discard,...b.heroes.p.hand,...b.heroes.e.deck,...b.heroes.e.discard,...b.heroes.e.hand];
- if(refs.some(ref=>typeof cardReference(ref)==='object')&&b.evolutionsEnabled!==true)return false;
  if(b.evolutionsEnabled!==undefined&&b.evolutionsEnabled!==true)return false;
+ const playerRefs=[...b.heroes.p.deck,...b.heroes.p.discard,...b.heroes.p.hand];
+ const enemyRefs=[...b.heroes.e.deck,...b.heroes.e.discard,...b.heroes.e.hand];
+ const usesEvolution=ref=>typeof cardReference(ref)==='object';
+ if(b.campaignDifficulty===undefined){
+  if(b.evolutionsEnabled!==true&&[...playerRefs,...enemyRefs].some(usesEvolution))return false;
+ }else{
+  if(b.campaignDifficulty!=='hard'||b.mode!=='campaign'||!hardCampaignReinforcement(b.missionId))return false;
+  if(b.evolutionsEnabled!==true&&playerRefs.some(usesEvolution))return false;
+  const enemyUnits=b.board.flat().filter(unit=>unit?.side==='e');
+  if([...enemyRefs,...enemyUnits].some(ref=>usesEvolution(ref)&&!unitCanPlay(b,ref,'e')))return false;
+ }
  if(b.traps!==undefined&&(!Array.isArray(b.traps)||!b.traps.every(t=>t&&['p','e'].includes(t.owner)&&
    Number.isInteger(t.lane)&&t.lane>=0&&t.lane<b.board.length&&
    Number.isInteger(t.col)&&t.col>=1&&t.col<=lastCell(b)&&nonNegative(t.damage)&&

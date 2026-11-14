@@ -65,6 +65,7 @@ export function createBattle(profile,mission,seed=Date.now(),options={}){
  upgrades:bonuses.upgrades,mastery:bonuses.mastery,enemyDifficulty:mission.difficulty,mode:mission.mode||'campaign',stats:{playerKills:0,enemyKills:0}};
  if(options.turnFlow==='alternating')b.turnFlow='alternating';
  b.cardRules=CARD_RULESET;
+ if(b.mode==='campaign'&&mission.campaignDifficulty==='hard')b.campaignDifficulty='hard';
  if(p.deck.some(ref=>typeof ref==='object'))b.evolutionsEnabled=true;
  b.heroes.p.deck=shuffle(b,p.deck);
  b.heroes.e.deck=shuffle(b,mission.deck);

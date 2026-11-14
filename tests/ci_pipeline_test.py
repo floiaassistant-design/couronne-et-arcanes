@@ -57,7 +57,7 @@ class Pipeline(unittest.TestCase):
         groups = runner.load_groups()
         self.assertEqual(set(groups), {'interface', 'combat', 'catalogue', 'moteur'})
         commands = [c for group in groups.values() for c in group]
-        self.assertEqual(len(commands), 30)
+        self.assertEqual(len(commands), 31)
         parts = [c[-1] for c in commands if c[0].endswith('browser_evolution_trials.py')]
         self.assertCountEqual(parts, PARTS)
         result = subprocess.run([sys.executable, str(ROOT / 'scripts/run_browser_group.py'), 'inconnu'], capture_output=True)
