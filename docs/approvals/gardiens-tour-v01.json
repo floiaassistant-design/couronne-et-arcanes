@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "status": "review",
+  "archive": "https://chatgpt.com/library?file_id=libfile_f72c90383e5c81918c0691e5cff0b159&account_id=personal",
+  "gameReference": "d8ab41bbfb7ac36bd4b043b5bd4c0d19ed2a2888",
+  "provenance": "Essais retrouvés dans l’inventaire des générations du 8 novembre 2026. Associations proposées d’après les factions du jeu et les silhouettes.",
+  "rights": "Visuel généré pour Couronnes & Arcanes. Aucun actif tiers fourni. Aucune exclusivité juridique revendiquée.",
+  "prompts": "Les prompts exacts des quatre essais ne sont pas consignés dans le registre récupéré.",
+  "exportMethod": "Recadrage sur l’alpha à 9,4 %, ajustement proportionnel 144 × 174, centrage et base au rang 180 sur fond transparent 152 × 183. WebP qualité 88.",
+  "assets": [
+    {
+      "missionId": "T05",
+      "name": "Gardien du Sceau 5",
+      "faction": "Sylve",
+      "version": "01",
+      "status": "review",
+      "inventoryNumber": 17,
+      "originalPath": "variantes-et-essais/exec-29b4f011-32e8-423c-a804-acce901e675e.png",
+      "source": {
+        "path": "sources/heros-adverses/tour-t05-v01.png",
+        "width": 1143,
+        "height": 1376,
+        "bytes": 1613725,
+        "sha256": "c8eaf3508311840f363c4b284173ab63a9eac7931a39ccdd1f00d25503b47fa3"
+      },
+      "export": {
+        "path": "exports/heros-adverses/tour-t05-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 8376,
+        "sha256": "d9203784e72281ff430a92a08de3d02d7c22a51a1d050258b593252c80a6215f"
+      }
+    },
+    {
+      "missionId": "T10",
+      "name": "Gardien du Sceau 10",
+      "faction": "Ombre",
+      "version": "01",
+      "status": "review",
+      "inventoryNumber": 15,
+      "originalPath": "variantes-et-essais/exec-bc126b83-008c-4d6a-ae89-12b5ed2e9e7d.png",
+      "source": {
+        "path": "sources/heros-adverses/tour-t10-v01.png",
+        "width": 1144,
+        "height": 1375,
+        "bytes": 1389937,
+        "sha256": "a84e49bafc938051742ed5a41d7ba3630918ccbca5c01a51126c8b9516af1b5e"
+      },
+      "export": {
+        "path": "exports/heros-adverses/tour-t10-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 7566,
+        "sha256": "f6e623712710d71fa9bdc1a87fbdf7decd2c2747a8cb0071057631ce7483c1e2"
+      }
+    },
+    {
+      "missionId": "T15",
+      "name": "Gardien du Sceau 15",
+      "faction": "Forge",
+      "version": "01",
+      "status": "review",
+      "inventoryNumber": 19,
+      "originalPath": "variantes-et-essais/exec-77caac31-07f5-4c4c-a386-b50edc2189e4.png",
+      "source": {
+        "path": "sources/heros-adverses/tour-t15-v01.png",
+        "width": 1145,
+        "height": 1374,
+        "bytes": 1929083,
+        "sha256": "5c27f080f792c03058f76aa794cc0b0393a069cefb4bba916da1036ebaee8d7c"
+      },
+      "export": {
+        "path": "exports/heros-adverses/tour-t15-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 9990,
+        "sha256": "ffb46bf9209c08700a5e466c1eed40c35ee5d83c1ab81d3d317eb6a683e770db"
+      }
+    },
+    {
+      "missionId": "T20",
+      "name": "Gardien du Sceau 20",
+      "faction": "Éther",
+      "version": "01",
+      "status": "review",
+      "inventoryNumber": 21,
+      "originalPath": "variantes-et-essais/exec-c7a65382-6a07-4ed6-996e-3fbef2aba2b7.png",
+      "source": {
+        "path": "sources/heros-adverses/tour-t20-v01.png",
+        "width": 1144,
+        "height": 1375,
+        "bytes": 2111255,
+        "sha256": "a791337f7938b18c4b0fb2029f8b1af1bfcb4141885f7257072841851de62870"
+      },
+      "export": {
+        "path": "exports/heros-adverses/tour-t20-v01.webp",
+        "width": 152,
+        "height": 183,
+        "bytes": 11434,
+        "sha256": "0c6f9c089998be837538606e9f4ad88efa0c6d844284e188447edea3656efd12"
+      }
+    }
+  ],
+  "reviewPack": "https://chatgpt.com/library?file_id=libfile_766cf47d21788191ab68874e4605c58a&account_id=personal",
+  "sourceRepo": "floiaassistant-design/couronne-et-arcanes-art",
+  "sourceCommit": "827a8949e68049bf60d869c73818ec67c9ef28d7"
+}

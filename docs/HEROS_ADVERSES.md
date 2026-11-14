@@ -1,10 +1,15 @@
-# Héros adverses de campagne v01
+# Héros adverses de l’arène peinte
 
 Chaque mission de la campagne choisit le WebP dédié à son adversaire via
 l’identifiant de rencontre déjà présent dans le combat, y compris à la reprise.
 Les associations et les noms exacts des douze missions figurent dans le
-[reçu d’import](approvals/heros-adverses-v01.json). La Tour, les donjons et
-le laboratoire gardent un socle adverse libre dans l’attente de visuels dédiés.
+[reçu d’import](approvals/heros-adverses-v01.json).
+
+Dans la Tour, les étages 5, 10, 15 et 20 affichent chacun leur Gardien du
+Sceau. Les autres étages, les donjons et le laboratoire gardent un socle
+adverse libre. Le [registre des Gardiens](approvals/gardiens-tour-v01.json)
+identifie les WebP exacts et leur provenance dans l’atelier. Leur proposition
+artistique conserve le statut en revue dans le registre source.
 
 Les exports transparents de 152 × 183 px sont orientés vers le joueur dans
 l’image source. Leur socle est centré en (1522, 510) dans le repère du décor.
@@ -25,6 +30,7 @@ de reprise est conservé séparément de l’accord d’intégration au jeu.
 
 Les octets WebP sont embarqués dans `assets/arena-enemies-art.css`, feuille
 partagée par le web et JOUER.html. Le builder vérifie la présence des douze
-associations, les dimensions, la transparence, les octets et les empreintes.
+associations de campagne et des quatre boss de la Tour, les dimensions,
+la transparence, les octets et les empreintes.
 Les tests couvrent le rendu, les ancrages, le mouvement réduit, la reprise
 et l’export sans réseau.
