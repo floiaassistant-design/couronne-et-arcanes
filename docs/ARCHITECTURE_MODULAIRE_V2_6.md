@@ -2,7 +2,7 @@
 
 ## Héros de la Couronne
 
-`ui/battle-view.js` transmet la classe du joueur et, en campagne, l’identifiant de la mission à `ui/painted-arena.js`. Le rendu place les héros décoratifs dans le repère du décor. La feuille de l’arène cadence les poses du joueur, anime la respiration de l’adversaire et gère le repli fixe. Le builder vérifie les ressources et embarque les mêmes feuilles que le web. [Contrat du joueur](HEROS_COURONNE_2026_11_07.md) · [Contrat des adversaires](HEROS_ADVERSES.md).
+`ui/battle-view.js` transmet la classe du joueur, le mode et l’identifiant de la rencontre à `ui/painted-arena.js`. Le rendu choisit le visuel de campagne ou du Gardien de la Tour à partir de ces deux champs, puis place les héros décoratifs dans le repère du décor. La feuille de l’arène cadence les poses du joueur, anime la respiration de l’adversaire et gère le repli fixe. Le builder vérifie les ressources et embarque les mêmes feuilles que le web. [Contrat du joueur](HEROS_COURONNE_2026_11_07.md) · [Contrat des adversaires](HEROS_ADVERSES.md).
 
 ## Portée du Feu follet
 

@@ -20,6 +20,12 @@ La [PR 98](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/98)
 ouvre « Mon deck » depuis le résultat de campagne ou de Tour. Elle est intégrée
 au commit `f9b9b1c7febb9d3bbe239e8229d2df8512e5758b`.
 
+## Proposé — Gardiens du Sceau de la Tour
+
+Les quatre visuels des étages 5, 10, 15 et 20 sont associés à leurs rencontres
+dans la proposition d’intégration au jeu. Le socle et la respiration utilisent
+le rendu partagé des [héros adverses](HEROS_ADVERSES.md).
+
 ## Paquets de faction intégrés
 
 La PR 96 a intégré les cinq paquets d’évolution à 125 or au commit

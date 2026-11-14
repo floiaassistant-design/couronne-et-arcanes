@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {CAMPAIGN,CLASSES} from '../src/data.js';
+import {CAMPAIGN,CLASSES,TOWER_MAX,towerMission} from '../src/data.js';
 import {PAINTED_ARENA,paintedTile,paintedArena,paintedFootPoint} from '../src/ui/painted-arena.js';
 
 test('arène peinte : ressource approuvée originale et encodage autonome identifiés',()=>{
@@ -60,6 +60,14 @@ test('arène peinte : chaque mission de la campagne a son propre adversaire dans
  for(const id of [undefined,'T1','inconnue','01" onclick="x']){
   assert.doesNotMatch(paintedArena(3,()=>'','rodeur',id),/data-enemy-hero=/);
  }
+ for(let floor=1;floor<=TOWER_MAX;floor++){
+  const {id,boss}=towerMission(floor);
+  const html=paintedArena(3,()=>'','rodeur',id,'tower');
+  if(boss)assert.match(html,new RegExp(`data-enemy-hero="${id}"`));
+  else assert.doesNotMatch(html,/data-enemy-hero=/);
+  assert.doesNotMatch(paintedArena(3,()=>'','rodeur',id,'dungeon'),/data-enemy-hero=/);
+ }
+ assert.doesNotMatch(paintedArena(3,()=>'','rodeur','05','tower'),/data-enemy-hero=/);
  const css=readFileSync(new URL('../assets/arena-enemies-art.css',import.meta.url),'utf8');
  const web=readFileSync(new URL('../index.html',import.meta.url),'utf8');
  const offline=readFileSync(new URL('../JOUER.html',import.meta.url),'utf8');

@@ -8,14 +8,20 @@ async def check_heroes(page):
     scroll_to_enemy = page.viewport_size['width'] < 960
     heroes = page.locator('.arena-hero-actor[data-hero-class], .arena-hero-actor[data-enemy-hero]')
     classes = ['gardien', 'arcaniste', 'rodeur', 'clerc']
-    for number in range(1, 13):
-        mission = f'{number:02d}'
-        player_class = classes[(number - 1) % len(classes)]
-        await page.evaluate('''([heroClass, id]) => {
-            battle=createBattle({...profile, heroClass}, {id, name:'Arène peinte',
-              enemy:'Adversaire', hp:80, difficulty:1, boss:Number(id)%3===0, deck:[]}, 213);
-            render();
-        }''', [player_class, mission])
+    missions = [f'{number:02d}' for number in range(1, 13)] + ['T05', 'T10', 'T15', 'T20']
+    for index, mission in enumerate(missions):
+        player_class = classes[index % len(classes)]
+        if mission.startswith('T'):
+            await page.evaluate('''([heroClass, floor]) => {
+                profile.heroClass=heroClass;profile.towerUnlocked=20;battle=null;
+                startTower(floor);
+            }''', [player_class, int(mission[1:])])
+        else:
+            await page.evaluate('''([heroClass, id]) => {
+                battle=createBattle({...profile, heroClass}, {id, name:'Arène peinte',
+                  enemy:'Adversaire', hp:80, difficulty:1, boss:Number(id)%3===0, deck:[]}, 213);
+                render();
+            }''', [player_class, mission])
         for side, attribute, art in [('p', 'data-hero-class', player_class), ('e', 'data-enemy-hero', mission)]:
             await grid.evaluate("(el, scroll) => { el.scrollLeft = scroll ? el.scrollWidth : 0; }",
                                 scroll_to_enemy and side == 'e')
@@ -62,9 +68,11 @@ async def check_heroes(page):
     await page.emulate_media(reduced_motion='reduce')
     assert await heroes.evaluate_all(fixed_pose)
     await page.emulate_media(reduced_motion='no-preference')
-    for mode in ['tower', 'dungeon', 'developer']:
+    for mode in ['campaign', 'dungeon', 'developer']:
         await page.evaluate('mode => { battle.mode=mode; render(); }', mode)
         assert await page.locator('[data-enemy-hero]').count() == 0
+    await page.evaluate('() => { battle=null; startTower(6); }')
+    assert await page.locator('[data-enemy-hero]').count() == 0
 
 async def run(browser,label,viewport):
     errors=[]
@@ -104,7 +112,7 @@ async def run(browser,label,viewport):
         assert all(d['statsBottom']<=d['bottom']+1 and d['statsTop']>=d['top'] for d in dimensions),(label,dimensions)
     assert not errors,errors
     await page.close()
-    print(f'Arène peinte {label} : douze adversaires, quatre classes, mouvement réduit, clics 2/3/4, défilements et statistiques PASS')
+    print(f'Arène peinte {label} : campagne, quatre boss de la Tour, mouvement réduit, clics 2/3/4, défilements et statistiques PASS')
 
 async def main():
     async with async_playwright() as pw:
