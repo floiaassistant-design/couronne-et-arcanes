@@ -25,6 +25,8 @@ async def main():
   await page.locator('[data-action="retreat"]').click()
   await page.locator('[data-action="confirm-retreat"]').click()
   await page.locator('[data-action="battle-deck"]').click()
+  assert await page.locator('#manual-deck-title').is_visible()
+  await page.locator('.manual-deck-header [data-page="collection"]').click()
   assert await page.locator('.card-grid .unit-card').count()==60
   await page.locator('[data-action="deck-add"][data-id="bone"]').first.click()
   assert await page.locator('.deck-list .deck-item').count()>0

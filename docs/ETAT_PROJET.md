@@ -14,6 +14,12 @@ La PR 99 a intégré le visuel du joueur sur son socle dans l’arène peinte. L
 
 Les douze missions affichent chacune un adversaire dédié avec une respiration légère. Les [visuels v01 et leur reçu](HEROS_ADVERSES.md) sont rattachés aux identifiants des missions. Le lot est intégré par la [PR 100](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/100). Les illustrations de la Tour et des donjons restent à préparer.
 
+## Retour au deck après un combat
+
+La [PR 98](https://github.com/floiaassistant-design/couronne-et-arcanes/pull/98)
+ouvre « Mon deck » depuis le résultat de campagne ou de Tour. Elle est intégrée
+au commit `f9b9b1c7febb9d3bbe239e8229d2df8512e5758b`.
+
 ## Paquets de faction intégrés
 
 La PR 96 a intégré les cinq paquets d’évolution à 125 or au commit
@@ -81,7 +87,7 @@ Le [bilan de la PR 100](https://github.com/floiaassistant-design/couronne-et-arc
 consigne les preuves de publication.
 
 [Jeu public](https://couronnes-arcanes-jeu.flo-ia-assistant.chatgpt.site) ·
-[Export hors ligne intégré](https://raw.githubusercontent.com/floiaassistant-design/couronne-et-arcanes/d8ab41bbfb7ac36bd4b043b5bd4c0d19ed2a2888/JOUER.html) ·
+[Export hors ligne intégré](https://raw.githubusercontent.com/floiaassistant-design/couronne-et-arcanes/f9b9b1c7febb9d3bbe239e8229d2df8512e5758b/JOUER.html) ·
 [Procédure](PUBLICATION_WEB_2026_10_23.md).
 
 ## Prochain travail utile
