@@ -1,5 +1,9 @@
 # Journal des changements
 
+## En préparation — pilote de campagne Difficile
+
+- Variante facultative des missions 6 et 12. Le boss remplace une carte native par un Golem runique Légendaire ou une Sentinelle prismatique Divine, selon la mission. Les variantes partagent la progression et les récompenses habituelles.
+
 ## Proposition pour les Gardiens du Sceau
 
 - Les boss des étages 5, 10, 15 et 20 de la Tour apparaissent sur leur socle avec la respiration des héros adverses.

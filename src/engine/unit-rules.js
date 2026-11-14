@@ -1,6 +1,7 @@
 // Lecture commune des paramètres de combat, sans moteur, DOM ou accès au profil.
 import {CARDS} from '../data.js';
 import {resolveUnitDefinition,versionUnitAbilities,CARD_RULESET} from '../cards/definitions.js';
+import {hardCampaignReinforcement} from '../campaign-difficulty.js';
 
 export function battleUnitReference(context,reference,side='p'){
  const entry=typeof reference==='string'?{id:reference}:reference;
@@ -16,7 +17,11 @@ export function unitCanPlay(context,reference,side='p'){
  const d=battleUnitDefinition(context,reference,side);if(!d)return false;
  if(d.rarity===d.nativeRarity)return true;
  if(context.mode==='developer')return d.status.engine==='implemented';
- return side==='p'&&context.evolutionsEnabled===true&&d.status.combat==='implemented';
+ if(d.status.combat!=='implemented')return false;
+ if(side==='p')return context.evolutionsEnabled===true;
+ if(side!=='e'||context.mode!=='campaign'||context.campaignDifficulty!=='hard')return false;
+ const reinforcement=hardCampaignReinforcement(context.missionId);
+ return reinforcement?.id===d.id&&reinforcement.rarity===d.rarity;
 }
 export function unitAttackRange(u){
  return u?.ranged?Math.max(2,resolveUnitDefinition(u)?.geometry.range||0):1;

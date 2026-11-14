@@ -98,6 +98,8 @@ consigne les preuves de publication.
 
 ## Prochain travail utile
 
+Le [pilote Difficile](CAMPAGNE_DIFFICILE_PILOTE.md) propose deux combats de boss avec un renfort évolué. Tester ces variantes en jeu avant d’étendre les difficultés au reste de la campagne.
+
 La PR d’[audit de la campagne](AUDIT_CAMPAGNE_CONTINUE_2026_11_06.md) propose
 un parcours reproductible des douze missions depuis un profil neuf. Vérifier
 la lisibilité et les interactions sur un téléphone physique, puis compléter

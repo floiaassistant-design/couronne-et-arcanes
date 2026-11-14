@@ -18,6 +18,10 @@ quatre classes, campagne, Tour et trois donjons. GitHub est la source officielle
 
 Dans l’arène peinte, votre classe apparaît sur le socle de gauche. Les douze adversaires de campagne et les quatre Gardiens du Sceau de la Tour ont chacun un visuel sur le socle de droite, accessible en faisant défiler le plateau sur mobile. Désactivez les animations depuis le combat pour garder une pose fixe. [Héros du joueur](docs/HEROS_COURONNE_2026_11_07.md) · [Héros adverses](docs/HEROS_ADVERSES.md).
 
+Dans la campagne, les missions 6 et 12 proposent un combat Difficile à côté
+du combat habituel. Le boss aligne une carte de rang supérieur et le combat
+peut reprendre après rechargement. [Pilote de difficulté](docs/CAMPAGNE_DIFFICILE_PILOTE.md).
+
 Les cartes dessinées reprennent le filet intérieur de rareté de 4 pixels (renforcement par PR 97 après PR 87) : main, plateau, Collection, fiches et autres vues, avec les mêmes dimensions et couleurs.
 
 - [Portée du Feu follet](docs/ETHER_PORTEE_FEU_FOLLET.md) : cette proposition applique trois cases à ses six raretés, avec un tir arrêté par la première unité rencontrée sur sa ligne.

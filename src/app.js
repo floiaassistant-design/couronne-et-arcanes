@@ -17,6 +17,7 @@ import {inspectStoredProfile,saveProfile,restoreBattle,storeBattle,storedBattleN
 import {commitProfileChange} from './ui/profile-transactions.js';
 import {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission} from './data.js';
 
+import {campaignMission} from './campaign-difficulty.js';
 import {dungeonStageMission} from './dungeons.js';
 import {DECK_STYLES,proposeDeck,applyDeckStyle,createEvolutionTrial,settleEvolutionTrial,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon,freshProfile} from './engine.js';
 const VFX_KEY='couronnes_arcanes_animations_v13';
@@ -226,9 +227,16 @@ function startTower(floor){
  const invalid=validateDeck(profile);if(invalid){toast(invalid);navigate('deck');return;}
  battle=createBattle(profile,towerMission(n),Date.now(),{turnFlow:'alternating'});persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);
 }
-function startMission(id){if(battle?.status==='active'){toast('Terminez le combat en cours.');navigate('battle');return;}const mission=CAMPAIGN.find(x=>x.id===id);if(!mission||Number(id)>profile.unlocked){toast('Cette mission n’est pas encore débloquée.');return;}
- const invalid=validateDeck(profile);if(invalid){toast(invalid);navigate('deck');return;}
- try{battle=createBattle(profile,mission,Date.now(),{turnFlow:'alternating'});persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);}catch(e){toast(e.message);}}
+function startMission(id,difficulty){
+ if(battle?.status==='active'){toast('Terminez le combat en cours.');navigate('battle');return;}
+ try{
+  const mission=campaignMission(id,difficulty);
+  if(!mission||Number(id)>profile.unlocked){toast('Cette mission n’est pas encore débloquée.');return;}
+  const invalid=validateDeck(profile);if(invalid){toast(invalid);navigate('deck');return;}
+  battle=createBattle(profile,mission,Date.now(),{turnFlow:'alternating'});
+  persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);
+ }catch(e){toast(e.message);}
+}
 // Conserver le clavier, la recherche et le défilement lors des retouches du deck.
 function refreshManualDeck(filtersOnly=false){
  if(filtersOnly){
@@ -291,6 +299,7 @@ case 'lab-open':openDeveloper();break;
  case 'nav':navigate(page);break;
  case 'start-next':startMission(CAMPAIGN[Math.min(profile.unlocked-1,11)].id);break;
  case 'start-mission':startMission(id);break;
+ case 'start-hard-mission':startMission(id,'hard');break;
  case 'start-dungeon':startDungeon(id);break;
  case 'dungeon-choice-open':hideModal();battle=null;persistBattle();navigate('dungeons');break;
  case 'dungeon-event':{const change=changeProfile(next=>chooseDungeonEvent(next,id));if(!change.ok)break;const result=change.result;render();toast(id==='rest'?`Halte réparatrice : +${result.restored} PV.`:id==='treasure'?`Trésor récupéré : +${result.gold} or et +${result.shards} éclats.`:'Embuscade acceptée. La récompense exige la victoire.');break;}

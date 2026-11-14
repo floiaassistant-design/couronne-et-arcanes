@@ -13,6 +13,7 @@
     ["tests/browser_battle_control_v29.py"],
     ["tests/browser_painted_arena.py"],
     ["tests/browser_save_integrity_v211.py"],
+    ["tests/browser_campaign_difficulty.py"],
     ["tests/browser_forge.py"],
     ["tests/browser_evolution_trials.py", "--part", "landscape"]
   ],

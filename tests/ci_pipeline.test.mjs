@@ -5,17 +5,17 @@ import {spawnSync} from 'node:child_process';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const groups=JSON.parse(read('scripts/ci_browser_groups.json'));
 
-// Inventaire indépendant des 27 entrées du workflow avant découpage (main 6dee2dc).
-const baseline=`concorde spell_targeting combat_fx card_study deployment card_preview art_reset
+// Inventaire indépendant des suites, y compris celles ajoutées après le découpage du workflow.
+const suites=`concorde spell_targeting combat_fx card_study deployment card_preview art_reset
  developer_lab maintenance collection evolution_trials milicien aube sylve ombre forge ether spells
  class_skills_v28 new_game_legibility_v211 battle_control_v29 illustrated_pilot_v3 card_capabilities
- arena_v211 combat_fullscreen_v211 painted_arena save_integrity_v211`.trim().split(/\s+/).map(n=>'tests/browser_'+n+'.py');
+ arena_v211 combat_fullscreen_v211 painted_arena save_integrity_v211 campaign_difficulty`.trim().split(/\s+/).map(n=>'tests/browser_'+n+'.py');
 
-test('CI : les 27 suites existantes et les quatre parties des épreuves passent exactement une fois',()=>{
+test('CI : les suites prévues et les quatre parties des épreuves passent exactement une fois',()=>{
  const commands=Object.values(groups).flat();
- assert.deepEqual([...new Set(commands.map(c=>c[0]))].sort(),baseline.sort());
- assert.equal(commands.length,30);assert.equal(new Set(commands.map(c=>JSON.stringify(c))).size,30);
- for(const suite of baseline.filter(p=>!p.endsWith('evolution_trials.py')))assert.equal(commands.filter(c=>c[0]===suite).length,1,suite);
+ assert.deepEqual([...new Set(commands.map(c=>c[0]))].sort(),suites.sort());
+ assert.equal(commands.length,31);assert.equal(new Set(commands.map(c=>JSON.stringify(c))).size,31);
+ for(const suite of suites.filter(p=>!p.endsWith('evolution_trials.py')))assert.equal(commands.filter(c=>c[0]===suite).length,1,suite);
  const result=spawnSync('python3',['tests/ci_pipeline_test.py'],{encoding:'utf8'});
  assert.equal(result.status,0,result.stdout+'\n'+result.stderr);
 });
