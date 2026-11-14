@@ -1,5 +1,9 @@
 # Journal des changements
 
+## Proposition pour les Gardiens du Sceau
+
+- Les boss des étages 5, 10, 15 et 20 de la Tour apparaissent sur leur socle avec la respiration des héros adverses.
+
 ## En préparation — modifier le deck après un combat
 
 - Le bouton « Modifier mon deck » du résultat de campagne ou de Tour ouvre « Mon deck ». Les parcours navigateur vérifient la destination après victoire et défaite.

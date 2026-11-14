@@ -14,6 +14,12 @@ La PR 99 a intégré le visuel du joueur sur son socle dans l’arène peinte. L
 
 Les douze missions affichent chacune un adversaire dédié avec une respiration légère. Les [visuels v01 et leur reçu](HEROS_ADVERSES.md) sont rattachés aux identifiants des missions. Les illustrations de la Tour et des donjons restent à préparer. La PR suit les contrôles et la diffusion.
 
+## Proposé — Gardiens du Sceau de la Tour
+
+Les quatre visuels des étages 5, 10, 15 et 20 sont associés à leurs rencontres
+dans la proposition d’intégration au jeu. Le socle et la respiration utilisent
+le rendu partagé des [héros adverses](HEROS_ADVERSES.md).
+
 ## Paquets de faction intégrés
 
 La PR 96 a intégré les cinq paquets d’évolution à 125 or au commit
