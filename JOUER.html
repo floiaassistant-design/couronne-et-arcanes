@@ -4309,6 +4309,7 @@ const {createCardInspection}=__load("src/ui/card-inspection.js");
 const {inspectStoredProfile,saveProfile,restoreBattle,storeBattle,storedBattleNeedsRestart,validateImportedProfile,startNewAdventure,hasPreviousAdventure,restorePreviousAdventure,SAVE_KEY}=__load("src/ui/storage.js");
 const {commitProfileChange}=__load("src/ui/profile-transactions.js");
 const {CARDS,FACTIONS,CLASSES,CAMPAIGN,TOWER_MAX,towerMission}=__load("src/data.js");
+const {campaignMission}=__load("src/campaign-difficulty.js");
 const {dungeonStageMission}=__load("src/dungeons.js");
 const {DECK_STYLES,proposeDeck,applyDeckStyle,createEvolutionTrial,settleEvolutionTrial,changeHeroClass,learnClassSkill,validateDeck,modifyDeck,createBattle,playPlayerCard,endPlayerTurn,playEnemyCard,finishEnemyTurn,usePower,completeBattle,upgradeCard,upgradeBuilding,craftEquipment,equipEquipment,chooseHeroTalent,extractCard,fuseCard,beginDungeon,chooseDungeonEvent,nextDungeonBattle,settleDungeonBattle,abandonDungeon,freshProfile}=__load("src/engine.js");
 const VFX_KEY='couronnes_arcanes_animations_v13';
@@ -4518,9 +4519,16 @@ function startTower(floor){
  const invalid=validateDeck(profile);if(invalid){toast(invalid);navigate('deck');return;}
  battle=createBattle(profile,towerMission(n),Date.now(),{turnFlow:'alternating'});persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);
 }
-function startMission(id){if(battle?.status==='active'){toast('Terminez le combat en cours.');navigate('battle');return;}const mission=CAMPAIGN.find(x=>x.id===id);if(!mission||Number(id)>profile.unlocked){toast('Cette mission n’est pas encore débloquée.');return;}
- const invalid=validateDeck(profile);if(invalid){toast(invalid);navigate('deck');return;}
- try{battle=createBattle(profile,mission,Date.now(),{turnFlow:'alternating'});persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);}catch(e){toast(e.message);}}
+function startMission(id,difficulty){
+ if(battle?.status==='active'){toast('Terminez le combat en cours.');navigate('battle');return;}
+ try{
+  const mission=campaignMission(id,difficulty);
+  if(!mission||Number(id)>profile.unlocked){toast('Cette mission n’est pas encore débloquée.');return;}
+  const invalid=validateDeck(profile);if(invalid){toast(invalid);navigate('deck');return;}
+  battle=createBattle(profile,mission,Date.now(),{turnFlow:'alternating'});
+  persistBattle();selectedCard=-1;screen='battle';render();window.scrollTo(0,0);
+ }catch(e){toast(e.message);}
+}
 // Conserver le clavier, la recherche et le défilement lors des retouches du deck.
 function refreshManualDeck(filtersOnly=false){
  if(filtersOnly){
@@ -4583,6 +4591,7 @@ case 'lab-open':openDeveloper();break;
  case 'nav':navigate(page);break;
  case 'start-next':startMission(CAMPAIGN[Math.min(profile.unlocked-1,11)].id);break;
  case 'start-mission':startMission(id);break;
+ case 'start-hard-mission':startMission(id,'hard');break;
  case 'start-dungeon':startDungeon(id);break;
  case 'dungeon-choice-open':hideModal();battle=null;persistBattle();navigate('dungeons');break;
  case 'dungeon-event':{const change=changeProfile(next=>chooseDungeonEvent(next,id));if(!change.ok)break;const result=change.result;render();toast(id==='rest'?`Halte réparatrice : +${result.restored} PV.`:id==='treasure'?`Trésor récupéré : +${result.gold} or et +${result.shards} éclats.`:'Embuscade acceptée. La récompense exige la victoire.');break;}
@@ -5788,6 +5797,7 @@ Object.assign(__exports,{unitAbilitySummary,unitCardText,unitAbilityDetails,reta
 // Lecture commune des paramètres de combat, sans moteur, DOM ou accès au profil.
 const {CARDS}=__load("src/data.js");
 const {resolveUnitDefinition,versionUnitAbilities,CARD_RULESET}=__load("src/cards/definitions.js");
+const {hardCampaignReinforcement}=__load("src/campaign-difficulty.js");
 function battleUnitReference(context,reference,side='p'){
  const entry=typeof reference==='string'?{id:reference}:reference;
  if(!entry||!CARDS[entry.id])return null;
@@ -5802,7 +5812,11 @@ function unitCanPlay(context,reference,side='p'){
  const d=battleUnitDefinition(context,reference,side);if(!d)return false;
  if(d.rarity===d.nativeRarity)return true;
  if(context.mode==='developer')return d.status.engine==='implemented';
- return side==='p'&&context.evolutionsEnabled===true&&d.status.combat==='implemented';
+ if(d.status.combat!=='implemented')return false;
+ if(side==='p')return context.evolutionsEnabled===true;
+ if(side!=='e'||context.mode!=='campaign'||context.campaignDifficulty!=='hard')return false;
+ const reinforcement=hardCampaignReinforcement(context.missionId);
+ return reinforcement?.id===d.id&&reinforcement.rarity===d.rarity;
 }
 function unitAttackRange(u){
  return u?.ranged?Math.max(2,resolveUnitDefinition(u)?.geometry.range||0):1;
@@ -5819,6 +5833,34 @@ function unitFlying(u){return !!versionUnitAbilities(u)?.flying;}
 const battleRulesError=b=>b?.cardRules===CARD_RULESET?'':'Ce combat doit être relancé après la mise à jour des cartes.';
 
 Object.assign(__exports,{battleUnitReference,battleUnitDefinition,unitCanPlay,unitAttackRange,unitMovementSteps,unitChargeAmount,unitHasPierce,unitFlying,battleRulesError});
+
+},
+"src/campaign-difficulty.js":function(__exports,__load){
+const {CAMPAIGN}=__load("src/data.js");
+const HARD_REINFORCEMENTS=Object.freeze({
+ '06':Object.freeze({id:'golem',rarity:'légendaire',label:'Golem runique Légendaire'}),
+ '12':Object.freeze({id:'sentinel',rarity:'divine',label:'Sentinelle prismatique Divine'})
+});
+
+function hardCampaignReinforcement(missionId){
+ return Object.hasOwn(HARD_REINFORCEMENTS,missionId)?HARD_REINFORCEMENTS[missionId]:null;
+}
+
+function campaignMission(missionId,difficulty='normal'){
+ const mission=CAMPAIGN.find(entry=>entry.id===missionId);
+ if(!mission||difficulty==='normal')return mission;
+ if(difficulty!=='hard')return null;
+
+ const reinforcement=hardCampaignReinforcement(missionId);
+ if(!reinforcement)return null;
+ const index=mission.deck.indexOf(reinforcement.id);
+ if(index===-1)throw Error('La carte à faire évoluer est absente du deck adverse.');
+ const deck=mission.deck.slice();
+ deck[index]={id:reinforcement.id,rarity:reinforcement.rarity};
+ return {...mission,deck,campaignDifficulty:'hard'};
+}
+
+Object.assign(__exports,{hardCampaignReinforcement,campaignMission});
 
 },
 "src/engine/unit-stats.js":function(__exports,__load){
@@ -6213,6 +6255,7 @@ function createBattle(profile,mission,seed=Date.now(),options={}){
  upgrades:bonuses.upgrades,mastery:bonuses.mastery,enemyDifficulty:mission.difficulty,mode:mission.mode||'campaign',stats:{playerKills:0,enemyKills:0}};
  if(options.turnFlow==='alternating')b.turnFlow='alternating';
  b.cardRules=CARD_RULESET;
+ if(b.mode==='campaign'&&mission.campaignDifficulty==='hard')b.campaignDifficulty='hard';
  if(p.deck.some(ref=>typeof ref==='object'))b.evolutionsEnabled=true;
  b.heroes.p.deck=shuffle(b,p.deck);
  b.heroes.e.deck=shuffle(b,mission.deck);
@@ -9285,6 +9328,7 @@ const {bossEvolutionUnlocks}=__load("src/engine/evolution-progress.js");
 const {renderEvolutionTrials}=__load("src/ui/evolution-trials.js");
 const {renderEvolutionFusions}=__load("src/ui/evolution-fusion.js");
 const {renderCardPackShop}=__load("src/ui/card-packs.js");
+const {hardCampaignReinforcement}=__load("src/campaign-difficulty.js");
 // Écrans et cartes : rendu HTML sans gestion de navigation ni de sauvegarde.
 const { CARDS, CLASS_SKILLS, FACTIONS, CLASSES, CAMPAIGN, TOWER_MAX, towerMission }=__load("src/data.js");
 const { AI_STYLES }=__load("src/ai.js");
@@ -9335,7 +9379,11 @@ function createPages(getState, { btn, cardUI, esc, num, heroProgress }) {
          .map((m) => {
            const locked = Number(m.id) > profile.unlocked,
              done = profile.completed.includes(m.id);
-           return `<article class="mission ${locked ? 'locked' : ''} ${done ? 'completed' : ''}"><div class="mission-top"><span>MISSION ${m.id} · ${'✦'.repeat(m.difficulty)}</span><span>${done ? '✓ TERMINÉE' : locked ? '⌁ VERROUILLÉE' : m.boss ? '♛ BOSS' : 'À DÉCOUVRIR'}</span></div><h3>${esc(m.name)}</h3><p>${esc(m.story)}</p><p class="enemy-style-tag">Stratégie : ${esc(AI_STYLES[m.aiStyle]?.name || 'Équilibré')}${m.boss ? ' · Boss à deux phases' : ''}</p><div class="reward">◈ ${m.reward} or &nbsp; ✧ ${m.shards} éclats</div>${bossEvolutionUnlocks(m.id).map(t=>`<p class="evolution-unlock">${done?'Épreuve débloquée':'Débloque une épreuve'} : ${esc(t.kind==='ascension'?t.name:CARDS[t.cardId].name+' '+t.to)}.</p>`).join('')}${btn(locked ? 'Inaccessible' : done ? 'Rejouer la bataille' : 'Lancer le combat', 'start-mission', `data-id="${m.id}" ${locked ? 'disabled' : ''}`, locked ? 'ghost' : 'primary')}</article>`;
+           const reinforcement = hardCampaignReinforcement(m.id);
+           const hardAction = !locked && reinforcement
+             ? `<p class="hint">Renfort adverse en Difficile&nbsp;: <strong>${esc(reinforcement.label)}</strong></p>${btn('Jouer en Difficile', 'start-hard-mission', `data-id="${m.id}"`, 'ghost')}`
+             : '';
+           return `<article class="mission ${locked ? 'locked' : ''} ${done ? 'completed' : ''}"><div class="mission-top"><span>MISSION ${m.id} · ${'✦'.repeat(m.difficulty)}</span><span>${done ? '✓ TERMINÉE' : locked ? '⌁ VERROUILLÉE' : m.boss ? '♛ BOSS' : 'À DÉCOUVRIR'}</span></div><h3>${esc(m.name)}</h3><p>${esc(m.story)}</p><p class="enemy-style-tag">Stratégie : ${esc(AI_STYLES[m.aiStyle]?.name || 'Équilibré')}${m.boss ? ' · Boss à deux phases' : ''}</p><div class="reward">◈ ${m.reward} or &nbsp; ✧ ${m.shards} éclats</div>${bossEvolutionUnlocks(m.id).map(t=>`<p class="evolution-unlock">${done?'Épreuve débloquée':'Débloque une épreuve'} : ${esc(t.kind==='ascension'?t.name:CARDS[t.cardId].name+' '+t.to)}.</p>`).join('')}${btn(locked ? 'Inaccessible' : done ? 'Rejouer la bataille' : 'Lancer le combat', 'start-mission', `data-id="${m.id}" ${locked ? 'disabled' : ''}`, locked ? 'ghost' : 'primary')}${hardAction}</article>`;
          })
          .join('')}</div></section>`
    )
@@ -9814,7 +9862,7 @@ function createBattleView(getState, { btn, cardUI, esc }) {
       cells === 10
         ? paintedArena(lanes, (lane, col, visual) => battleCell(battle.board[lane][col], lane, col, visual), battle.heroClass, battle.missionId, battle.mode ?? '')
         : `<div class="arena-sky" aria-hidden="true"></div>${Array.from({ length: lanes }, (_, lane) => `<div class="lane-row" data-crown-col="${cells + 1}"><div class="lane-label">${['I', 'II', 'III', 'IV'][lane]}</div><div class="lane-gate" aria-label="Votre couronne"><span class="pixel-tower" aria-hidden="true"></span><b>♜</b></div>${Array.from({ length: cells }, (_, i) => battleCell(battle.board[lane][i + 1], lane, i + 1)).join('')}<div class="lane-gate enemy" aria-label="Couronne adverse"><span class="pixel-tower" aria-hidden="true"></span><b>♛</b></div></div>`).join('')}`;
-    return `<div class="combat-screen" data-painted-arena="${cells === 10}" data-card-layout="${immersive}"><div class="split-head combat-titlebar"><div><div class="kicker">${battle.mode==='developer'?'TEST SANS RÉCOMPENSE':'COMBAT TACTIQUE'} · ${esc(battle.missionName)}</div><h1 class="combat-mission-name">${esc(battle.missionName)}</h1></div><span class="pill">2 cartes maximum par tour</span><button type="button" class="combat-menu-link" data-action="${battle.mode==='developer'?'lab-back':'nav'}" data-page="home" aria-label="${battle.mode==='developer'?'Retourner au laboratoire':'Revenir à la Citadelle sans abandonner la bataille'}">${battle.mode==='developer'?'⚙ Laboratoire':'☷ Citadelle'}</button></div>
+    return `<div class="combat-screen" data-painted-arena="${cells === 10}" data-card-layout="${immersive}"><div class="split-head combat-titlebar"><div><div class="kicker">${battle.mode==='developer'?'TEST SANS RÉCOMPENSE':'COMBAT TACTIQUE'} · ${esc(battle.missionName)}</div><h1 class="combat-mission-name">${esc(battle.missionName)}${battle.mode==='campaign'&&battle.campaignDifficulty==='hard'?' · Difficile':''}</h1></div><span class="pill">2 cartes maximum par tour</span><button type="button" class="combat-menu-link" data-action="${battle.mode==='developer'?'lab-back':'nav'}" data-page="home" aria-label="${battle.mode==='developer'?'Retourner au laboratoire':'Revenir à la Citadelle sans abandonner la bataille'}">${battle.mode==='developer'?'⚙ Laboratoire':'☷ Citadelle'}</button></div>
  <section class="battle-panel arena-lofi combat-stage">${battleHud(p, e)}
  <div class="combat-readout" aria-label="Lecture des actions du combat">${trialBattleObjective(battle,esc)}<div class="combat-readout-copy" role="status" aria-live="polite" aria-atomic="true"><b class="combat-phase">${selection?'Ciblage du sort':battle.phase === 'enemy' ? 'Tour adverse' : 'À vous de jouer'}</b><span class="combat-action">${selection?'Cliquez une cible autorisée, puis confirmez dans l’aperçu.':battle.phase === 'enemy' ? 'L’IA prépare ses cartes.' : 'Posez vos cartes, puis validez vos actions.'}</span></div><button type="button" data-action="fx-speed" aria-label="Vitesse de lecture des actions">×1</button><button type="button" data-action="fx-skip" hidden>Passer</button>${spellTargetingUI(selection,spellTarget,spellPreview,esc)}</div>
  <div class="arena-caption"><span>${selectedCard >= 0 ? (selection?'✦ CHOISISSEZ LA CIBLE DU SORT':'✦ CHOISISSEZ UNE CASE DE DÉPART') : '✧ ARÈNE DES SERMENTS'}</span><span>${lanes} lignes · ${cells} cases par ligne</span></div><div class="battle-grid ${cells === 10 ? 'arena-structured arena-painted' : ''}" tabindex="0" role="region" aria-label="Plateau de combat : ${lanes} lignes de ${cells} cases" style="--cells:${cells};--arena-scene:url('${arenaBackdrop()}')">${arena}</div>
@@ -10604,6 +10652,8 @@ const {validTrialChallenge}=__load("src/engine/trial-objectives.js");
 const {CARD_RULESET}=__load("src/cards/definitions.js");
 const {validUnitEffects}=__load("src/engine/unit-effects.js");
 const {validPoisonSpreads}=__load("src/engine/unit-poison.js");
+const {unitCanPlay}=__load("src/engine/unit-rules.js");
+const {hardCampaignReinforcement}=__load("src/campaign-difficulty.js");
 const SAVE_KEY='couronnes_arcanes_v1';
 const BATTLE_KEY='couronnes_arcanes_bataille_v1';
 const hasCard=id=>typeof id==='string'&&Object.prototype.hasOwnProperty.call(CARDS,id);
@@ -10622,9 +10672,18 @@ function validBattleSnapshot(b){
   !validHero(b.heroes?.p)||!validHero(b.heroes?.e)||
   !Array.isArray(b.log)||!b.log.every(x=>typeof x==='string'))return false;
  if(!b.board.every(row=>row.every(unit=>validUnit(unit,b)))||!validTrialChallenge(b)||!validPoisonSpreads(b.poisonSpreads))return false;
- const refs=[...b.heroes.p.deck,...b.heroes.p.discard,...b.heroes.p.hand,...b.heroes.e.deck,...b.heroes.e.discard,...b.heroes.e.hand];
- if(refs.some(ref=>typeof cardReference(ref)==='object')&&b.evolutionsEnabled!==true)return false;
  if(b.evolutionsEnabled!==undefined&&b.evolutionsEnabled!==true)return false;
+ const playerRefs=[...b.heroes.p.deck,...b.heroes.p.discard,...b.heroes.p.hand];
+ const enemyRefs=[...b.heroes.e.deck,...b.heroes.e.discard,...b.heroes.e.hand];
+ const usesEvolution=ref=>typeof cardReference(ref)==='object';
+ if(b.campaignDifficulty===undefined){
+  if(b.evolutionsEnabled!==true&&[...playerRefs,...enemyRefs].some(usesEvolution))return false;
+ }else{
+  if(b.campaignDifficulty!=='hard'||b.mode!=='campaign'||!hardCampaignReinforcement(b.missionId))return false;
+  if(b.evolutionsEnabled!==true&&playerRefs.some(usesEvolution))return false;
+  const enemyUnits=b.board.flat().filter(unit=>unit?.side==='e');
+  if([...enemyRefs,...enemyUnits].some(ref=>usesEvolution(ref)&&!unitCanPlay(b,ref,'e')))return false;
+ }
  if(b.traps!==undefined&&(!Array.isArray(b.traps)||!b.traps.every(t=>t&&['p','e'].includes(t.owner)&&
    Number.isInteger(t.lane)&&t.lane>=0&&t.lane<b.board.length&&
    Number.isInteger(t.col)&&t.col>=1&&t.col<=lastCell(b)&&nonNegative(t.damage)&&
